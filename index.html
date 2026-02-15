@@ -1822,7 +1822,7 @@ function updateSetupUI(){
   hintLine.textContent = !g?.active ? "This game is coming soon." : ok ? "Ready." : `Select exactly ${setupWantedCount} players to continue.`;
 }
 
-async function renderGameSetup(){
+async async function renderGameSetup(){
   const g = getGame(activeGameId);
   if(!g){ screen="home"; return render(); }
 
@@ -1921,7 +1921,7 @@ async function renderGameSetup(){
     }
     // Trim if too many
     setupSelectedEmails = setupSelectedEmails.slice(0, setupWantedCount);
-    if(typeof syncSelectUI==='function'){ syncSelectUI(); } else { updateSelectedNames(); updateSetupUI(); }
+    updateSelectedNames(); updateSetupUI();
   };
 
   document.getElementById("setupBack").onclick = ()=>{ activeGameId=null; match=null; roomId=null; screen="home"; render(); };
@@ -2003,20 +2003,12 @@ async function renderGameSetup(){
       return true;
     });
 
-    if(typeof syncSelectUI==='function'){ syncSelectUI(); } else { updateSelectedNames(); updateSetupUI(); }
+    updateSelectedNames(); updateSetupUI();
   }
 
   slotSelects.forEach(sel=>{
     sel.onchange = ()=>syncSelectUI();
   });
-
-  // Override updateSelectedNames text to show nicer
-  function updateSelectedNames(){
-    const names = setupSelectedEmails
-      .map(e=>setupPlayersAll.find(p=>normEmail(p.email)===normEmail(e))?.name || e);
-    document.getElementById("selectedNames").textContent = names.length ? `Selected: ${names.join(", ")}` : "";
-  }
-  window.updateSelectedNames = updateSelectedNames;
 
   syncSelectUI();
 
