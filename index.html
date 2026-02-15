@@ -67,7 +67,6 @@
 }
 
 *{box-sizing:border-box;}
-[hidden]{display:none !important;}
 html,body{height:100%}
 body{
   margin:0;
@@ -297,26 +296,6 @@ input,select{
 /* ===== Optional user avatar (home only) ===== */
 .rosterSub{ color:var(--muted); font-size:12px; overflow-wrap:anywhere; }
 
-
-/* ===== Roster text layout (bigger name, centered) ===== */
-.rosterText{
- display:flex;
- flex-direction:column;
- gap:2px;
- flex:1;
- min-width:0;
- text-align:center;
-}
-.rosterText .rosterName{
- font-size:16px;
- font-weight:1000;
-}
-.rosterText .rosterSub{
- font-size:12px;
- color:var(--muted);
- overflow-wrap:anywhere;
-}
-
 /* ===== Setup dropdown / modal picker ===== */
 .modal{
   position:fixed;inset:0;z-index:9990;
@@ -325,8 +304,6 @@ input,select{
   background:rgba(0,0,0,.65);
   backdrop-filter: blur(6px);
 }
-.modal.show{display:flex !important;}
-.modal[hidden]{display:none !important;}
 .modal.show{display:flex;}
 .modalCard{
   width:min(520px, 92vw);
@@ -373,20 +350,14 @@ input,select{
 }
 
 
-/* ===== Login logo (Dart Room) ===== */
-.authLogoWrap{
- display:flex;
- justify-content:center;
- align-items:center;
- padding:10px 0 4px;
-}
-.authLogo{
- width:min(520px, 92vw);
- height:auto;
- max-height:210px;
- object-fit:contain;
- filter: saturate(1.25) brightness(1.15) hue-rotate(-10deg);
- drop-shadow: 0 0 22px rgba(34,211,238,.35);
+/* Login logo */
+#loginLogo{
+  display:block;
+  width:min(320px, 78vw);
+  height:auto;
+  margin: 14px auto 0 auto;
+  filter: hue-rotate(185deg) saturate(1.25) brightness(1.15) drop-shadow(0 0 18px rgba(34,211,238,.28));
+  opacity: .98;
 }
 
 </style>
@@ -417,7 +388,7 @@ input,select{
 </div>
 
 <!-- Player picker modal -->
-<div class="modal" id="pickerModal" aria-hidden="true" hidden>
+<div class="modal" id="pickerModal" aria-hidden="true">
   <div class="card modalCard">
     <div class="row">
       <button class="btn ghost" id="pickerClose">Close</button>
@@ -431,81 +402,14 @@ input,select{
   </div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
-<script>
-/* ========= Firebase modular API shims (Compat) =========
-   This lets the rest of the app use the v9+ modular-style helpers
-   without relying on <script type="module"> imports (works on GitHub Pages + local file open).
-*/
-function initializeApp(config){ return firebase.initializeApp(config); }
-function getAnalytics(app){ try{ return firebase.analytics(app); }catch(_){ return null; } }
-function getFirestore(app){ return firebase.firestore(app); }
-
-function collection(db, name){ return db.collection(name); }
-
-function doc(refOrDb, colOrId, maybeId){
-  // doc(db,"players","id") OR doc(collectionRef,"id")
-  if(refOrDb && typeof refOrDb.collection === "function" && typeof colOrId === "string" && typeof maybeId === "string"){
-    return refOrDb.collection(colOrId).doc(maybeId);
-  }
-  if(refOrDb && typeof refOrDb.doc === "function" && typeof colOrId === "string" && maybeId == null){
-    return refOrDb.doc(colOrId);
-  }
-  throw new Error("doc() shim: unsupported arguments");
-}
-
-function where(field, op, value){ return {t:"where", field, op, value}; }
-function orderBy(field, dir){ return {t:"orderBy", field, dir}; }
-function limit(n){ return {t:"limit", n}; }
-function query(ref, ...clauses){ return {ref, clauses}; }
-function serverTimestamp(){ return firebase.firestore.FieldValue.serverTimestamp(); }
-
-async function getDoc(docRef){
-  const snap = await docRef.get();
-  return {
-    exists: ()=> snap.exists,
-    data: ()=> snap.data()
-  };
-}
-
-async function setDoc(docRef, data, options){
-  return docRef.set(data, options);
-}
-
-async function updateDoc(docRef, data){
-  return docRef.update(data);
-}
-
-async function getDocs(q){
-  const ref = (q && q.ref) ? q.ref : q;
-  const clauses = (q && q.clauses) ? q.clauses : [];
-  let built = ref;
-  for(const c of clauses){
-    if(!c) continue;
-    if(c.t==="where") built = built.where(c.field, c.op, c.value);
-    else if(c.t==="orderBy") built = built.orderBy(c.field, c.dir);
-    else if(c.t==="limit") built = built.limit(c.n);
-  }
-  const snap = await built.get();
-  return {
-    empty: snap.empty,
-    docs: snap.docs.map(d=>({ id:d.id, data:()=>d.data() }))
-  };
-}
-
-function onSnapshot(ref, cb){
-  // Return unsubscribe function
-  return ref.onSnapshot(snap=>{
-    cb({
-      data: ()=> snap.data()
-    });
-  });
-}
-</script>
-<script>
+<script type="module">
 /* ========= Firebase (CDN modules) ========= */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
+import {
+  getFirestore, collection, doc, setDoc, getDoc, getDocs, onSnapshot, updateDoc,
+  query, where, orderBy, limit, serverTimestamp, deleteDoc, writeBatch
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 /* ========= CONFIG (yours) ========= */
 const firebaseConfig = {
@@ -891,51 +795,53 @@ let setupPlayersAll = [];           // players from DB
 let setupSelectedEmails = [];       // selected emails
 let setupWantedCount = 2;           // number of players
 
-function openPicker(title, items, selectedSet, onToggle){
- const modal=document.getElementById("pickerModal");
- const titleEl=document.getElementById("pickerTitle");
- const listEl=document.getElementById("playerPicker");
- if(!modal||!titleEl||!listEl) return;
+function openPicker(){
+  pickerList.innerHTML = "";
+  const wanted = setupWantedCount;
+  const selected = new Set(setupSelectedEmails);
 
- // Safety: keep picker hidden unless explicitly opened (even if CSS fails to load)
- modal.hidden = false;
+  setupPlayersAll.forEach(p=>{
+    const e = normEmail(p.email);
+    const row = document.createElement("div");
+    row.className = "pickRow";
+    row.dataset.email = e;
+    row.innerHTML = `
+      <div>
+        <div class="nm">${esc(p.name||e)}</div>
+        <div class="small">${esc(isOnline(e) ? "Online" : "Offline")}</div>
+      </div>
+      <div class="ck">${selected.has(e) ? "✓" : ""}</div>
+    `;
+    row.onclick = ()=>{
+      const em = row.dataset.email;
+      const had = selected.has(em);
+      if(had){
+        selected.delete(em);
+      }else{
+        if(selected.size >= wanted){
+          toastMsg = `You can only pick ${wanted} players.`;
+          requestRender("toast");
+          return;
+        }
+        selected.add(em);
+      }
+      setupSelectedEmails = Array.from(selected);
+      openPicker(); // re-render list quickly
+      updateSetupUI();
+    };
+    pickerList.appendChild(row);
+  });
 
- titleEl.textContent=title||"Pick players";
- listEl.innerHTML = (items||[]).map(it=>{
-   const checked = selectedSet && selectedSet.has(it.value);
-   return `<div class="pickerItem ${checked?'on':''}" data-val="${esc(it.value)}">
-     <span class="chk">${checked?'✓':''}</span>
-     <span class="nm">${esc(it.label||it.value)}</span>
-     ${it.sub?`<span class="sub">${esc(it.sub)}</span>`:''}
-   </div>`;
- }).join("");
-
- // click binding
- Array.from(listEl.querySelectorAll(".pickerItem")).forEach(el=>{
-   el.onclick=()=>{
-     const val=el.getAttribute("data-val");
-     if(!val) return;
-     try{ onToggle && onToggle(val); }catch(_){}
-     // refresh display
-     const checked = selectedSet && selectedSet.has(val);
-     if(checked){ el.classList.add("on"); el.querySelector(".chk").textContent="✓"; }
-     else{ el.classList.remove("on"); el.querySelector(".chk").textContent=""; }
-   };
- });
-
- modal.classList.add("show");
-
- // Close buttons
- document.getElementById("pickerClose").onclick=()=>{ try{ playBeep("back"); }catch{} closePicker(); };
- document.getElementById("pickerDone").onclick=()=>{ try{ playBeep("ok"); }catch{} closePicker(); };
+  pickerModal.classList.add("show");
+  pickerModal.setAttribute("aria-hidden","false");
 }
 function closePicker(){
- const modal=document.getElementById("pickerModal");
- if(modal){
-   modal.classList.remove("show");
-   modal.hidden = true;
- }
+  pickerModal.classList.remove("show");
+  pickerModal.setAttribute("aria-hidden","true");
 }
+pickerClose.onclick = closePicker;
+pickerDone.onclick  = closePicker;
+pickerModal.addEventListener("click", (e)=>{ if(e.target===pickerModal) closePicker(); });
 
 /* ========= Games logic (kept close to your original) ========= */
 const BOARD_NUMS=[20,1,18,4,13,6,10,15,2,17,3,19,7,16,8,11,14,9,12,5];
@@ -1665,12 +1571,27 @@ function requestRender(reason){
   render();
 }
 
+
+
      if(soundBtn){
        soundBtn.onclick=()=>{
          try{ unlockAudio(); }catch{}
          const wasOn = !!soundEnabled;
          if(wasOn) playBeep('toggle');
-    async function renderAuth(){
+         setSoundEnabled(!soundEnabled);
+         if(!wasOn) playBeep('toggle');
+       };
+       setSoundEnabled(soundEnabled);
+     }
+homeBtn.onclick = ()=>{ screen = meUser ? "home" : "auth"; render(); };
+
+signOutBtn.onclick = ()=>{
+  stopPresence();
+  meUser=null; match=null; activeGameId=null; roomId=null;
+  screen="auth"; render();
+};
+
+async function renderAuth(){
   signOutBtn.style.display="none";
   brandTitle.textContent="Game Night";
 
@@ -1698,81 +1619,13 @@ function requestRender(reason){
     </div>
   
      <div class="brandLogoWrap">
-       <div class="loginArtSvg" aria-hidden="true">
-<svg viewBox="0 0 900 260" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="gnTitle" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#22d3ee"/>
-      <stop offset="0.55" stop-color="#3b82f6"/>
-      <stop offset="1" stop-color="#22d3ee"/>
-    </linearGradient>
-    <radialGradient id="gnHalo" cx="50%" cy="45%" r="70%">
-      <stop offset="0" stop-color="rgba(34,211,238,0.22)"/>
-      <stop offset="0.55" stop-color="rgba(59,130,246,0.10)"/>
-      <stop offset="1" stop-color="rgba(6,8,20,0)"/>
-    </radialGradient>
-    <filter id="gnGlow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="6" result="b"/>
-      <feColorMatrix in="b" type="matrix"
-        values="0 0 0 0 0.13  0 0 0 0 0.83  0 0 0 0 0.93  0 0 0 1 0" result="c"/>
-      <feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <!-- Fade edges + bottom so it blends into the page -->
-    <linearGradient id="fadeBottom" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="white" stop-opacity="1"/>
-      <stop offset="0.72" stop-color="white" stop-opacity="1"/>
-      <stop offset="1" stop-color="white" stop-opacity="0"/>
-    </linearGradient>
-    <mask id="gnMask">
-      <rect x="0" y="0" width="900" height="260" fill="url(#fadeBottom)"/>
-    </mask>
-  </defs>
-
-  <g mask="url(#gnMask)">
-    <rect x="0" y="0" width="900" height="260" fill="transparent"/>
-    <ellipse cx="450" cy="128" rx="420" ry="170" fill="url(#gnHalo)"/>
-    <!-- Subtle dartboard ring hint -->
-    <g opacity="0.55" filter="url(#gnGlow)">
-      <circle cx="450" cy="132" r="92" fill="none" stroke="rgba(34,211,238,0.35)" stroke-width="5"/>
-      <circle cx="450" cy="132" r="58" fill="none" stroke="rgba(59,130,246,0.22)" stroke-width="4"/>
-      <circle cx="450" cy="132" r="26" fill="none" stroke="rgba(34,211,238,0.22)" stroke-width="4"/>
-    </g>
-
-    <text x="450" y="128" text-anchor="middle"
-      font-family="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif"
-      font-size="56" font-weight="1000"
-      fill="url(#gnTitle)" filter="url(#gnGlow)"
-      style="letter-spacing:1px">The Dart Room</text>
-
-    <text x="450" y="166" text-anchor="middle"
-      font-family="system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif"
-      font-size="18" font-weight="900"
-      fill="rgba(238,244,255,0.80)"
-      style="letter-spacing:0.6px">Night Games</text>
-  </g>
-</svg>
-</div>
+       <div class="loginArtSvg" aria-hidden="true"><svg viewBox="0 0 900 260" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22d3ee"/><stop offset="0.55" stop-color="#3b82f6"/><stop offset="1" stop-color="#22c55e"/></linearGradient><radialGradient id="rg" cx="50%" cy="50%" r="70%"><stop offset="0" stop-color="rgba(34,211,238,0.35)"/><stop offset="1" stop-color="rgba(6,8,20,0)"/></radialGradient><filter id="gl" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="6" result="b"/><feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.9 0" result="c"/><feMerge><feMergeNode in="c"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="900" height="260" fill="rgba(6,8,20,0.0)"/><ellipse cx="450" cy="150" rx="360" ry="110" fill="url(#rg)"/><g filter="url(#gl)"><path d="M120 210 C 220 70, 360 40, 450 110 C 560 195, 720 150, 820 55" fill="none" stroke="url(#g1)" stroke-width="10" stroke-linecap="round" opacity="0.95"/><circle cx="450" cy="145" r="78" fill="rgba(7,10,20,0.35)" stroke="#22d3ee" stroke-width="6"/><circle cx="450" cy="145" r="50" fill="rgba(7,10,20,0.25)" stroke="#3b82f6" stroke-width="5" opacity="0.9"/><circle cx="450" cy="145" r="22" fill="rgba(34,197,94,0.18)" stroke="#22c55e" stroke-width="4"/><path d="M450 67 L450 223" stroke="rgba(238,244,255,0.35)" stroke-width="2"/><path d="M372 145 L528 145" stroke="rgba(238,244,255,0.35)" stroke-width="2"/></g><text x="450" y="248" text-anchor="middle" font-size="18" font-weight="900" fill="rgba(238,244,255,0.75)">The Dart Room</text></svg></div>
      </div>
 `;
   setHTML(html);
 
   document.getElementById("goBtn").onclick = async()=>{
     const e = normEmail(document.getElementById("inEmail").value);
-    if(!e){ toastMsg="Enter a valid email."; return render(); }
-    const player = await signInEmail(e);
-    if(player){
-      meUser=player;
-      startPresence(meUser.email, meUser.name);
-      screen="home";
-      return render();
-    }
-    meUser={email:e};
-    screen="signup";
-    render();
-  };
-}
-
-.getElementById("inEmail").value);
     if(!e){ toastMsg="Enter a valid email."; return render(); }
     const player = await signInEmail(e);
     if(player){
@@ -1860,24 +1713,17 @@ async function renderHome(){
     `;
   }).join("");
 
-  const roster = players
-     .slice()
-     .sort((a,b)=> (a.email===meUser.email?-1:0) - (b.email===meUser.email?-1:0))
-     .map(p=>`
-       <div class="rosterCard">
-         <div class="rosterLeft">
-           <div class="avatar ${isOnline(p.email)?"online":""}">${esc(initials(p.name))}</div>
-           <div class="rosterText">
-             <div class="rosterName">${esc(p.name)}${p.email===meUser.email?` <span class="badge">YOU</span>`:""}</div>
-             <div class="rosterSub">${esc(p.email)}</div>
-           </div>
-         </div>
-         <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap">
-           <button class="btn ghost" data-view-player="${esc(p.email)}">Stats</button>
-           <button class="btn danger" data-del-player="${esc(p.email)}" ${p.email===meUser.email?"disabled":""}>Remove</button>
-         </div>
-       </div>
-     `).join("");
+  const roster = players.map(p=>`
+    <div class="rosterCard">
+      <div class="rosterLeft">
+        <div class="avatar ${isOnline(p.email)?`online`:``}">${esc(initials(p.name))}</div>
+        <div>
+          <div style="font-weight:1000">${esc(p.name)}${p.email===meUser.email?` <span class="badge">YOU</span>`:""}</div>
+          <div class="rosterSub">${esc(p.email)}</div>
+        </div>
+      </div>
+    </div>
+  `).join("");
 
   setHTML(`
     <div class="card">
@@ -1927,37 +1773,6 @@ async function renderHome(){
       render();
     };
   });
-
-  // Player (person) stats + delete actions
-  appEl.querySelectorAll('button[data-view-player]').forEach(btn=>{
-    btn.onclick=()=>{
-      statsViewerEmail = btn.getAttribute("data-view-player");
-      screen = "stats";
-      render();
-    };
-  });
-
-  appEl.querySelectorAll('button[data-del-player]').forEach(btn=>{
-    btn.onclick=async()=>{
-      const email = btn.getAttribute("data-del-player");
-      if(!email) return;
-      const p = players.find(x=>x.email===email);
-      const name = (p && p.name) || email;
-      if(normEmail(email)===normEmail(meUser.email)){
-        toastMsg="You can’t remove yourself while signed in.";
-        return render();
-      }
-      if(!confirm(`Remove ${name}? This deletes the player, their stats, and their history.`)) return;
-      try{
-        await deletePlayerAndData(email);
-        toastMsg=`Removed ${name}.`;
-        render();
-      }catch(e){
-        showFatal("Delete error", (e && e.message) || String(e));
-      }
-    };
-  });
-
 }
 
 function updateSetupUI(){
@@ -1982,9 +1797,11 @@ async function renderGameSetup(){
 
   setupPlayersAll = await getPlayers();
 
-  // Default selection: none (user picks)
+  // Default selection: me + one more (if exists)
   setupWantedCount = 2;
-  setupSelectedEmails = [];
+  setupSelectedEmails = [normEmail(meUser.email)];
+  const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
+  if(alt) setupSelectedEmails.push(normEmail(alt.email));
 
   // Auto-join if I'm already in a waiting/active room for this game
   try{
@@ -2055,6 +1872,10 @@ async function renderGameSetup(){
   const playerCountEl = document.getElementById("playerCount");
   playerCountEl.onchange = ()=>{
     setupWantedCount = parseInt(playerCountEl.value,10) || 2;
+    // Keep me selected always
+    if(!setupSelectedEmails.includes(normEmail(meUser.email))){
+      setupSelectedEmails.unshift(normEmail(meUser.email));
+    }
     // Trim if too many
     setupSelectedEmails = setupSelectedEmails.slice(0, setupWantedCount);
     updateSelectedNames();
