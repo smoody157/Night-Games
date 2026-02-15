@@ -394,6 +394,186 @@ filter:brightness(1.12) saturate(1.28) contrast(1.06) drop-shadow(0 0 14px rgba(
 select{box-shadow:inset 0 0 10px rgba(255,0,64,.14),0 0 16px rgba(255,40,70,.20)!important;}
 </style>
 
+
+<style id="polish_v7605">
+/* ===========================
+   POLISH v76.06
+   Cosmetic-only + anti-scroll-jump
+   =========================== */
+
+/* Titles: center + slightly larger */
+h1,h2,.title,.screenTitle,.hdrTitle{
+  text-align:center !important;
+  letter-spacing:.5px !important;
+}
+
+/* If there is a "Game Night" title near login/home, make it bigger and centered */
+#loginTitle,.loginTitle,#homeTitle,.homeTitle{
+  text-align:center !important;
+  font-size:28px !important;
+  font-weight:1000 !important;
+}
+
+/* Logo: true center, blend/tint, keep the red pop but soften the “blue” look */
+#loginLogo{
+  display:block !important;
+  margin: 14px auto 10px auto !important;
+  width:min(380px, 84vw) !important;
+  height:auto !important;
+  transform: translateX(0px) rotate(0deg) !important;
+  filter:
+    brightness(1.10)
+    saturate(1.25)
+    contrast(1.06)
+    drop-shadow(0 0 16px rgba(255,40,70,.72))
+    drop-shadow(0 0 30px rgba(255,0,64,.44))
+    drop-shadow(0 0 46px rgba(34,197,94,.18))
+    !important;
+}
+
+/* Games list: keep "Around the World" on one line */
+[data-play], .game-btn, .playGame{
+  white-space: nowrap !important;
+}
+
+/* Make primary "next" actions GREEN-glow (Start Match / Start Game / OK) */
+.btn.ok, .btn.primary, button.ok, button.primary, #startMatch, #startGame{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 0 16px rgba(34,197,94,.55),
+    0 0 34px rgba(34,197,94,.28) !important;
+}
+
+/* Players page: name bigger + centered (more readable but not crazy) */
+.playerHeader .nm, .playerName, .player-name{
+  text-align:center !important;
+  font-size:30px !important;
+  font-weight:1000 !important;
+}
+.playerHeader .em, .playerEmail, .player-email{
+  text-align:center !important;
+  font-size:13px !important;
+  opacity:.92 !important;
+}
+
+/* Make STATS more prominent than REMOVE */
+.playerActionsRow button[data-action="stats"], .playerActionsRow .statsBtn, .btn.stats{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 0 16px rgba(34,197,94,.50),
+    0 0 30px rgba(34,197,94,.24) !important;
+}
+.playerActionsRow button[data-action="remove"], .playerActionsRow .removeBtn, .btn.danger, button.danger{
+  opacity:.92 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 0 0 1px rgba(255,255,255,.05),
+    0 0 10px rgba(255,0,64,.22),
+    0 0 18px rgba(255,0,64,.12) !important;
+}
+
+/* Optional: tiny blue accent (subtle, not dominant) */
+a, .link, .accentBlue{
+  text-shadow: 0 0 10px rgba(59,130,246,.22);
+}
+</style>
+
+
+<style id="wow_v7606">
+/* ===========================================
+   WOW PASS v76.06 (COSMETICS ONLY)
+   - No layout/flow changes, only typography + glow + logo tint
+   =========================================== */
+
+/* Page titles should be the biggest thing on the screen */
+h1, .title, .screenTitle, .hdrTitle, .pageTitle{
+  text-align:center !important;
+  font-weight: 1000 !important;
+  letter-spacing: .6px !important;
+  line-height: 1.05 !important;
+  font-size: clamp(26px, 4.4vw, 34px) !important;
+  text-shadow:
+    0 0 10px rgba(255,40,70,.24),
+    0 0 18px rgba(34,197,94,.16),
+    0 0 16px rgba(59,130,246,.14) !important;
+}
+
+/* Player page identity: Steve Moody should read like a “header” */
+.playerHeader .nm, .playerName, .player-name{
+  font-size: clamp(28px, 4.6vw, 36px) !important;
+}
+
+/* Keep "Around the World" single line and slightly smaller so it fits cleanly */
+[data-play], .game-btn, .playGame{
+  white-space: nowrap !important;
+  font-size: 15px !important;
+  letter-spacing: .2px !important;
+}
+
+/* Brighter, vibrant neon glow (red/pink primary with a hint of blue) */
+:root{
+  --neonR: rgba(255,40,70,.62);
+  --neonR2: rgba(255,0,64,.34);
+  --neonB: rgba(59,130,246,.18);
+}
+
+/* Gloss + brighter glow everywhere */
+.btn, button.btn, button, select, input{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 0 18px var(--neonR),
+    0 0 36px var(--neonR2),
+    0 0 26px var(--neonB) !important;
+}
+
+/* Primary “next” actions keep GREEN glow (go/confirm) */
+.btn.ok, .btn.primary, button.ok, button.primary, #startMatch, #startGame{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 0 0 1px rgba(255,255,255,.07),
+    0 0 18px rgba(34,197,94,.62),
+    0 0 40px rgba(34,197,94,.30),
+    0 0 20px rgba(59,130,246,.14) !important;
+}
+
+/* Make Stats feel like the safe “primary” action on player cards */
+.playerActionsRow button[data-action="stats"], .playerActionsRow .statsBtn, .btn.stats{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 0 0 1px rgba(255,255,255,.07),
+    0 0 18px rgba(34,197,94,.58),
+    0 0 34px rgba(34,197,94,.26) !important;
+}
+
+/* Logo: center, tint to match theme, and make it POP from 10 feet */
+#loginLogo{
+  transform: translateX(0px) rotate(0deg) !important;
+  filter:
+    brightness(1.14)
+    saturate(1.35)
+    contrast(1.08)
+    /* warm red/pink glow */
+    drop-shadow(0 0 18px rgba(255,40,70,.78))
+    drop-shadow(0 0 36px rgba(255,0,64,.50))
+    /* subtle blue edge for “wow” */
+    drop-shadow(0 0 26px rgba(59,130,246,.24))
+    /* tiny green tie-in to primary */
+    drop-shadow(0 0 22px rgba(34,197,94,.18))
+    !important;
+}
+
+/* Optional: subtle background “shine” without changing layout */
+body{
+  background-image:
+    radial-gradient(900px 520px at 50% -10%, rgba(255,0,64,.16), rgba(0,0,0,0) 60%),
+    radial-gradient(700px 420px at 20% 0%, rgba(59,130,246,.10), rgba(0,0,0,0) 62%),
+    radial-gradient(800px 480px at 80% 0%, rgba(34,197,94,.08), rgba(0,0,0,0) 62%) !important;
+}
+</style>
+
 </head>
 
 <body>
@@ -421,7 +601,7 @@ select{box-shadow:inset 0 0 10px rgba(255,0,64,.14),0 0 16px rgba(255,40,70,.20)
 </div>
 
 <script type="module">
-const BUILD_ID = "v76.04";
+const BUILD_ID="v76.06";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -590,7 +770,7 @@ function uuid(){ return (crypto && crypto.randomUUID) ? crypto.randomUUID() : (M
 
 function setHTML(html){
   appEl.innerHTML = html;
-  try{ window.scrollTo({top:0,left:0,behavior:"instant"}); }catch{ window.scrollTo(0,0); }
+  try{ window.scrollTo({top:0,left:0,behavior:"instant"}); }catch{ /* scrollTo removed to prevent jump */ }
 }
 
 /* ========= Firestore collections ========= */
