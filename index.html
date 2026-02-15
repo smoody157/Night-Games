@@ -372,6 +372,23 @@ input,select{
  .loginArtSvg{ height:150px; }
 }
 
+
+/* ===== Login logo (Dart Room) ===== */
+.authLogoWrap{
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ padding:10px 0 4px;
+}
+.authLogo{
+ width:min(520px, 92vw);
+ height:auto;
+ max-height:210px;
+ object-fit:contain;
+ filter: saturate(1.25) brightness(1.15) hue-rotate(-10deg);
+ drop-shadow: 0 0 22px rgba(34,211,238,.35);
+}
+
 </style>
 </head>
 
@@ -852,9 +869,6 @@ function closePicker(){
    modal.hidden = true;
  }
 }
-pickerClose.onclick = closePicker;
-pickerDone.onclick  = closePicker;
-pickerModal.addEventListener("click", (e)=>{ if(e.target===pickerModal) closePicker(); });
 
 /* ========= Games logic (kept close to your original) ========= */
 const BOARD_NUMS=[20,1,18,4,13,6,10,15,2,17,3,19,7,16,8,11,14,9,12,5];
@@ -1591,20 +1605,7 @@ function requestRender(reason){
          try{ unlockAudio(); }catch{}
          const wasOn = !!soundEnabled;
          if(wasOn) playBeep('toggle');
-         setSoundEnabled(!soundEnabled);
-         if(!wasOn) playBeep('toggle');
-       };
-       setSoundEnabled(soundEnabled);
-     }
-homeBtn.onclick = ()=>{ screen = meUser ? "home" : "auth"; render(); };
-
-signOutBtn.onclick = ()=>{
-  stopPresence();
-  meUser=null; match=null; activeGameId=null; roomId=null;
-  screen="auth"; render();
-};
-
-async function renderAuth(){
+    async function renderAuth(){
   signOutBtn.style.display="none";
   brandTitle.textContent="Game Night";
 
@@ -1692,6 +1693,21 @@ async function renderAuth(){
 
   document.getElementById("goBtn").onclick = async()=>{
     const e = normEmail(document.getElementById("inEmail").value);
+    if(!e){ toastMsg="Enter a valid email."; return render(); }
+    const player = await signInEmail(e);
+    if(player){
+      meUser=player;
+      startPresence(meUser.email, meUser.name);
+      screen="home";
+      return render();
+    }
+    meUser={email:e};
+    screen="signup";
+    render();
+  };
+}
+
+.getElementById("inEmail").value);
     if(!e){ toastMsg="Enter a valid email."; return render(); }
     const player = await signInEmail(e);
     if(player){
