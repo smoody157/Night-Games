@@ -2194,3 +2194,76 @@ render();
 </script>
 </body>
 </html>
+
+
+/* =========================
+   COSMETIC OVERRIDES PATCH
+   (auto-added)
+   ========================= */
+
+/* 1) Red glow on ALL buttons to match theme */
+button, .btn {
+  box-shadow:
+    0 0 10px rgba(255, 0, 60, 0.35),
+    0 0 20px rgba(255, 0, 60, 0.25),
+    inset 0 0 6px rgba(255, 0, 60, 0.15);
+}
+
+/* 2) Center + enlarge player names */
+.playerHeader .nm,
+.player-name,
+.card .nm {
+  text-align: center !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+}
+
+/* Center email under name */
+.playerHeader .em,
+.player-email {
+  text-align: center !important;
+  display: block;
+}
+
+/* 3) Remove Close / Done picker buttons visually */
+#pickerClose,
+#pickerDone {
+  display: none !important;
+}
+
+/* 4) Remove online indicator dot */
+.avatar.online::after {
+  display: none !important;
+}
+
+/* 5) Align and organize setup controls */
+.setup-controls,
+.game-setup,
+.select-players-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+}
+
+/* 6) Use same dropdown styling for player select as number-of-players */
+select.player-select,
+.select-players-section select {
+  appearance: none;
+  border-radius: 14px;
+  padding: 14px;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: inset 0 0 10px rgba(255,0,60,0.12);
+}
+
+/* 7) Ensure button sounds fire */
+document.addEventListener('click', function(e){
+  const b = e.target.closest('button,.btn');
+  if(!b) return;
+  try {
+    if (typeof playClick === 'function') playClick();
+    if (typeof playButton === 'function') playButton();
+  } catch(e){}
+});
+
