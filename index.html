@@ -2238,34 +2238,38 @@ render();
 </html>
 
 
-<!-- HOTFIX: game loader + logo polish -->
-<style>
-/* Logo visual nudge + theme blend */
-#loginLogo, .gameLogo, img.logo {
+
+/* ================= FINAL GAME LOAD + LOGO FIX ================= */
+
+/* Logo visual correction + stronger red glow */
+#loginLogo{
+  display:block;
+  margin: 12px auto;
   transform: translateX(6px);
   filter:
+    brightness(1.08)
     saturate(1.15)
-    brightness(1.05)
-    drop-shadow(0 0 14px rgba(255,40,70,.35))
-    drop-shadow(0 0 26px rgba(255,0,64,.22));
+    drop-shadow(0 0 18px rgba(255,40,70,.55))
+    drop-shadow(0 0 32px rgba(255,0,64,.35))
+    drop-shadow(0 0 48px rgba(255,0,64,.18));
 }
-</style>
 
-<script>
-// HOTFIX: ensure game buttons trigger setup even if wiring broke
-document.addEventListener("click", function(e){
+/* Restore game navigation if handler broke */
+document.addEventListener("click", function(e) {
   const btn = e.target.closest("[data-play], .game-btn, .playGame");
-  if(!btn) return;
+  if (!btn) return;
+
+  const game = btn.dataset.play || btn.getAttribute("data-game") || btn.innerText;
+  if (!game) return;
 
   try{
-    if(typeof startGame === "function"){
-      startGame(btn.dataset.play || btn.getAttribute("data-game") || btn.innerText);
-    }
-    if(typeof renderGameSetup === "function"){
-      renderGameSetup();
-    }
+    app.route = "game.setup";
+    app.selectedGame = game;
+    if (typeof render === "function") render();
   }catch(err){
-    console.error("Game hotfix error:", err);
+    console.error("Game launch fix error:", err);
   }
 });
-</script>
+
+/* =============================================================== */
+
