@@ -1899,11 +1899,9 @@ async function renderGameSetup(){
 
   setupPlayersAll = await getPlayers();
 
-  // Default selection: me + one more (if exists)
+  // Default selection: none (user picks)
   setupWantedCount = 2;
-  setupSelectedEmails = [normEmail(meUser.email)];
-  const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
-  if(alt) setupSelectedEmails.push(normEmail(alt.email));
+  setupSelectedEmails = [];
 
   // Auto-join if I'm already in a waiting/active room for this game
   try{
@@ -1974,10 +1972,6 @@ async function renderGameSetup(){
   const playerCountEl = document.getElementById("playerCount");
   playerCountEl.onchange = ()=>{
     setupWantedCount = parseInt(playerCountEl.value,10) || 2;
-    // Keep me selected always
-    if(!setupSelectedEmails.includes(normEmail(meUser.email))){
-      setupSelectedEmails.unshift(normEmail(meUser.email));
-    }
     // Trim if too many
     setupSelectedEmails = setupSelectedEmails.slice(0, setupWantedCount);
     updateSelectedNames();
