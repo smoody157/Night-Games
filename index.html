@@ -431,14 +431,81 @@ input,select{
   </div>
 </div>
 
-<script type="module">
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script>
+/* ========= Firebase modular API shims (Compat) =========
+   This lets the rest of the app use the v9+ modular-style helpers
+   without relying on <script type="module"> imports (works on GitHub Pages + local file open).
+*/
+function initializeApp(config){ return firebase.initializeApp(config); }
+function getAnalytics(app){ try{ return firebase.analytics(app); }catch(_){ return null; } }
+function getFirestore(app){ return firebase.firestore(app); }
+
+function collection(db, name){ return db.collection(name); }
+
+function doc(refOrDb, colOrId, maybeId){
+  // doc(db,"players","id") OR doc(collectionRef,"id")
+  if(refOrDb && typeof refOrDb.collection === "function" && typeof colOrId === "string" && typeof maybeId === "string"){
+    return refOrDb.collection(colOrId).doc(maybeId);
+  }
+  if(refOrDb && typeof refOrDb.doc === "function" && typeof colOrId === "string" && maybeId == null){
+    return refOrDb.doc(colOrId);
+  }
+  throw new Error("doc() shim: unsupported arguments");
+}
+
+function where(field, op, value){ return {t:"where", field, op, value}; }
+function orderBy(field, dir){ return {t:"orderBy", field, dir}; }
+function limit(n){ return {t:"limit", n}; }
+function query(ref, ...clauses){ return {ref, clauses}; }
+function serverTimestamp(){ return firebase.firestore.FieldValue.serverTimestamp(); }
+
+async function getDoc(docRef){
+  const snap = await docRef.get();
+  return {
+    exists: ()=> snap.exists,
+    data: ()=> snap.data()
+  };
+}
+
+async function setDoc(docRef, data, options){
+  return docRef.set(data, options);
+}
+
+async function updateDoc(docRef, data){
+  return docRef.update(data);
+}
+
+async function getDocs(q){
+  const ref = (q && q.ref) ? q.ref : q;
+  const clauses = (q && q.clauses) ? q.clauses : [];
+  let built = ref;
+  for(const c of clauses){
+    if(!c) continue;
+    if(c.t==="where") built = built.where(c.field, c.op, c.value);
+    else if(c.t==="orderBy") built = built.orderBy(c.field, c.dir);
+    else if(c.t==="limit") built = built.limit(c.n);
+  }
+  const snap = await built.get();
+  return {
+    empty: snap.empty,
+    docs: snap.docs.map(d=>({ id:d.id, data:()=>d.data() }))
+  };
+}
+
+function onSnapshot(ref, cb){
+  // Return unsubscribe function
+  return ref.onSnapshot(snap=>{
+    cb({
+      data: ()=> snap.data()
+    });
+  });
+}
+</script>
+<script>
 /* ========= Firebase (CDN modules) ========= */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
-import {
-  getFirestore, collection, doc, setDoc, getDoc, getDocs, onSnapshot, updateDoc,
-  query, where, orderBy, limit, serverTimestamp, deleteDoc, writeBatch
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 /* ========= CONFIG (yours) ========= */
 const firebaseConfig = {
@@ -1598,8 +1665,6 @@ function requestRender(reason){
   render();
 }
 
-
-
      if(soundBtn){
        soundBtn.onclick=()=>{
          try{ unlockAudio(); }catch{}
@@ -1862,7 +1927,6 @@ async function renderHome(){
       render();
     };
   });
-
 
   // Player (person) stats + delete actions
   appEl.querySelectorAll('button[data-view-player]').forEach(btn=>{
