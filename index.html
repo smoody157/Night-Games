@@ -362,45 +362,28 @@ input,select{
 /* Login logo */
 #loginLogo{
   display:block;
-  width:min(320px, 78vw);
-  height:auto;
-  margin: 14px auto 0 auto;
-  transform: translateX(6px);
-  opacity:.98;
-  filter:
-    brightness(1.08)
-    saturate(1.15)
-    drop-shadow(0 0 18px rgba(255,40,70,.55))
-    drop-shadow(0 0 32px rgba(255,0,64,.35))
-    drop-shadow(0 0 48px rgba(255,0,64,.18));
-}
-
-</style>
-
-<style id="polish_v76_small">
-/* Cosmetic polish (safe) */
-#loginLogo{
-  display:block;
   margin: 14px auto 10px auto;
-  width:min(380px,84vw);
+  width:min(380px, 84vw);
   height:auto;
-  transform: translateX(4px) rotate(-0.6deg);
-  filter: brightness(1.12) saturate(1.28) contrast(1.06)
-          drop-shadow(0 0 16px rgba(255,40,70,.75))
-          drop-shadow(0 0 30px rgba(255,0,64,.55))
-          drop-shadow(0 0 54px rgba(255,0,64,.28));
+  transform: translateX(6px) rotate(0deg);
+  /* Blend logo into theme: vivid neon red/pink glow for dark-room visibility */
+  filter:
+    brightness(1.10)
+    saturate(1.25)
+    contrast(1.06)
+    drop-shadow(0 0 14px rgba(255,40,70,.80))
+    drop-shadow(0 0 30px rgba(255,0,64,.55))
+    drop-shadow(0 0 52px rgba(255,0,64,.28));
+  opacity:.99;
 }
-/* Players page name readability */
-.playerHeader .nm, .playerName, .player-name{
-  text-align:center !important;
-  font-size:30px !important;
-  font-weight:1000 !important;
-}
-.playerHeader .em, .playerEmail, .player-email{
-  text-align:center !important;
-}
-</style>
 
+
+/* --- Polish: roster/player readability --- */
+.rosterCard .playerHeader .nm{ text-align:center; font-size:28px !important; }
+.rosterCard .playerHeader .rosterSub{ text-align:center; opacity:.9; }
+.gameActions .btn.ok{ box-shadow: 0 0 18px rgba(255,40,70,.55), 0 0 34px rgba(255,0,64,.30); }
+.btn.danger{ box-shadow: 0 0 18px rgba(255,40,70,.40), 0 0 34px rgba(255,0,64,.22); }
+</style>
 </head>
 
 <body>
@@ -822,7 +805,7 @@ const pickerDone  = document.getElementById("pickerDone");
 
 let setupPlayersAll = [];           // players from DB
 let setupSelectedEmails = [];       // selected emails
-let setupWantedCount = 2;           // number of players
+let setupWantedCount = 1;           // number of players
 
 
 function hidePickerModal(){
@@ -1856,10 +1839,25 @@ async function renderGameSetup(){
 
   setupPlayersAll = await getPlayers();
 
-  // Default selection: solo (you). You can increase player count for multiplayer.
-  setupWantedCount = 1;
+  // Default selection: me + one more (if exists)
+  setupWantedCount = 2;
   setupSelectedEmails = [normEmail(meUser.email)];
-  // Auto-join disabled: it can feel like players “snap back” if an old waiting room exists.
+  const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
+  if(alt) setupSelectedEmails.push(normEmail(alt.email));
+
+  // Auto-join if I'm already in a waiting/active room for this game
+  try{
+    const existing = await findWaitingRoomForPlayer(activeGameId, meUser.email);
+    if(existing){
+      roomId = existing;
+      await joinRoom(roomId);
+      roomHost = false;
+      roomSynced = false;
+      screen="game.play";
+      return render();
+    }
+  }catch(e){ /* ignore */ }
+
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
     <div class="divider"></div>
     <label>Format (Singles / Doubles / Triples)</label>
@@ -1931,7 +1929,7 @@ async function renderGameSetup(){
     }
     // Trim if too many
     setupSelectedEmails = setupSelectedEmails.slice(0, setupWantedCount);
-    if(typeof syncSelectUI==='function'){ syncSelectUI(); } else { updateSelectedNames(); updateSetupUI(); }
+    syncSelectUI();
   };
 
   document.getElementById("setupBack").onclick = ()=>{ activeGameId=null; match=null; roomId=null; screen="home"; render(); };
@@ -1953,7 +1951,7 @@ async function renderGameSetup(){
     list.forEach(p=>{
       const em = normEmail(p.email);
       const nm = p.name || em;
-      opts.push(`<option value="${esc(em)}" ${normEmail(selected)===em?"selected":""}>${esc(nm)} (${esc(em)})</option>`);
+      opts.push(`<option value="${esc(em)}" ${normEmail(selected)===em?"selected":""}>${esc(nm)}</option>`);
     });
     return opts.join("");
   }
@@ -1979,7 +1977,7 @@ async function renderGameSetup(){
       const current = setupSelectedEmails[slot-1] || "";
       if(slot === 1){
         // lock to me
-        sel.innerHTML = `<option value="${esc(me)}" selected>${esc(meUser.name||"You")} (${esc(me)})</option>`;
+        sel.innerHTML = `<option value="${esc(me)}" selected>${esc(meUser.name||\"You\")}</option>`;
         sel.disabled = true;
         setupSelectedEmails[0] = me;
       }else{
@@ -2012,8 +2010,8 @@ async function renderGameSetup(){
       seen.add(em);
       return true;
     });
-    updateSelectedNames();
-    updateSetupUI();
+
+    updateSelectedNames(); updateSetupUI();
   }
 
   slotSelects.forEach(sel=>{
@@ -2035,24 +2033,7 @@ async function renderGameSetup(){
       .map(e=>setupPlayersAll.find(p=>normEmail(p.email)===normEmail(e)))
       .filter(Boolean);
 
-    // SOLO: if only 1 player, start locally (no room)
-    if(setupWantedCount===1){
-      roomHost = false;
-      roomId = null;
-      if(activeGameId==="shanghai") match = ShanghaiGame.initMatch(selectedPlayers);
-      else if(activeGameId==="killer") match = KillerGame.initMatch(selectedPlayers);
-      else if(activeGameId==="around"){
-        const modeEl = document.getElementById("aroundMode");
-        const mode = modeEl ? modeEl.value : "S";
-        match = AroundGame.initMatch(selectedPlayers, mode);
-      }else{
-        toastMsg="Coming soon."; return render();
-      }
-      screen="game.play";
-      return render();
-    }
-
-    // MULTIPLAYER: create room + lock
+    // Create multiplayer room + lock
     roomHost = true;
     roomId = await createRoom(activeGameId, selectedPlayers.map(p=>p.email));
     await joinRoom(roomId); // puts state active if needed
@@ -2143,7 +2124,7 @@ async function renderStats(){
   brandTitle.textContent="Stats";
 
   const players=await getPlayers();
-  const viewerEmail = meUser.email;
+  const viewerEmail = activePlayerEmail || meUser.email;
 
   const statsDoc = await getStatsDoc(viewerEmail);
   const games = statsDoc.games || {};
@@ -2158,6 +2139,12 @@ async function renderStats(){
   setHTML(`
     <div class="card">
       <div class="h1" style="text-align:center;margin:0">Stats</div>
+      <div class="divider"></div>
+      <label>View player</label>
+      <select id="statsPlayerSel">
+        ${players.map(p=>"<option value=\""+esc(p.email)+"\" "+(normEmail(p.email)===normEmail(viewerEmail)?"selected":"")+">"+esc(p.name||p.email)+"</option>").join("")}
+      </select>
+
       <div class="sub" style="text-align:center">Stored online (Firebase) • Everyone can view everyone’s stats.</div>
       <div class="divider"></div>
       <div class="sub">Viewing: <b>${esc(meUser.name||"Player")}</b></div>
@@ -2176,7 +2163,17 @@ async function renderStats(){
         g.id==="killer"   ? `Played: <b>${played}</b> • Wins: <b>${esc(gs.wins||0)}</b>` :
         g.id==="around"   ? aroundLine(gs) :
         (g.active ? `Played: <b>${played}</b>` : `Coming soon`);
-      return `
+      
+  // Stats viewer selector
+  const statsSel = document.getElementById("statsPlayerSel");
+  if(statsSel){
+    statsSel.onchange = ()=>{
+      activePlayerEmail = statsSel.value || meUser.email;
+      screen = "stats";
+      render();
+    };
+  }
+return `
         <div class="gameCard">
           <div class="gameHead">
             <div class="gameTitle">
