@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v76</title>
+<title>Game Night • v76.04</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -384,6 +384,16 @@ input,select{
 .gameActions .btn.ok{ box-shadow: 0 0 18px rgba(255,40,70,.55), 0 0 34px rgba(255,0,64,.30); }
 .btn.danger{ box-shadow: 0 0 18px rgba(255,40,70,.40), 0 0 34px rgba(255,0,64,.22); }
 </style>
+
+<style id="cosmetics_v76.04">
+#loginLogo{display:block!important;margin:14px auto 10px auto!important;width:min(380px,84vw)!important;height:auto!important;transform:translateX(4px) rotate(0deg)!important;
+filter:brightness(1.12) saturate(1.28) contrast(1.06) drop-shadow(0 0 14px rgba(255,40,70,.78)) drop-shadow(0 0 30px rgba(255,0,64,.56)) drop-shadow(0 0 54px rgba(255,0,64,.28))!important;}
+.playerName,.player-name,.playerHeader .nm,.nm{text-align:center!important;font-size:30px!important;font-weight:1000!important;letter-spacing:.4px!important;}
+.playerEmail,.player-email,.playerHeader .em,.em{text-align:center!important;font-size:13px!important;opacity:.92!important;}
+.btn,button.btn,button{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 0 1px rgba(255,255,255,.05),0 0 16px rgba(255,40,70,.55),0 0 36px rgba(255,0,64,.30)!important;}
+select{box-shadow:inset 0 0 10px rgba(255,0,64,.14),0 0 16px rgba(255,40,70,.20)!important;}
+</style>
+
 </head>
 
 <body>
@@ -411,6 +421,20 @@ input,select{
 </div>
 
 <script type="module">
+const BUILD_ID = "v76.04";
+try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
+
+(function buildStamp(){
+  try{
+    const mk=(txt,css)=>{const el=document.createElement("div");el.textContent=txt;el.style.cssText=css;document.body.appendChild(el);};
+    window.addEventListener("load", ()=>{
+      mk(BUILD_ID,"position:fixed;top:8px;right:10px;z-index:99999;font:900 12px/1 system-ui;color:#fff;opacity:.8;text-shadow:0 0 14px rgba(255,0,64,.75)");
+      mk(BUILD_ID,"position:fixed;bottom:8px;right:10px;z-index:99999;font:900 11px/1 system-ui;color:#fff;opacity:.25");
+    },{once:true});
+  }catch(e){}
+})();
+
+
 /* ========= Firebase (CDN modules) ========= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
@@ -1963,6 +1987,13 @@ async function renderGameSetup(){
       setupSelectedEmails = [me, ...setupSelectedEmails.filter(e=>normEmail(e)!==me)];
     }
     setupSelectedEmails = setupSelectedEmails.slice(0, setupWantedCount);
+
+    // Capture current dropdown values FIRST so user changes don't get overwritten on re-render
+    for(let i=2;i<=setupWantedCount;i++){
+      const sel = document.querySelector(`select.playerSlot[data-slot="${i}"]`);
+      const v = sel ? normEmail(sel.value||"") : "";
+      if(v) setupSelectedEmails[i-1] = v;
+    }
 
     // Show/hide slot rows, populate options
     slotSelects.forEach(sel=>{
