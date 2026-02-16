@@ -397,7 +397,7 @@ select{box-shadow:inset 0 0 10px rgba(255,0,64,.14),0 0 16px rgba(255,40,70,.20)
 
 <style id="polish_v7605">
 /* ===========================
-   POLISH v76.17
+   POLISH v76.18
    Cosmetic-only + anti-scroll-jump
    =========================== */
 
@@ -483,7 +483,7 @@ a, .link, .accentBlue{
 
 <style id="wow_v7606">
 /* ===========================================
-   WOW PASS v76.17 (COSMETICS ONLY)
+   WOW PASS v76.18 (COSMETICS ONLY)
    - No layout/flow changes, only typography + glow + logo tint
    =========================================== */
 
@@ -577,7 +577,7 @@ body{
 
 <style id="dart_console_v7607">
 /* =========================================
-   DART CONSOLE THEME v76.17
+   DART CONSOLE THEME v76.18
    Black base + cobalt trim + red/blue env glow + green CTA
    ========================================= */
 
@@ -689,7 +689,7 @@ body::before{
 
 <style id="mascara_v7608">
 /* =========================================
-   MASCARA PASS v76.17 (COSMETICS ONLY)
+   MASCARA PASS v76.18 (COSMETICS ONLY)
    - Center logo (no extra tint experiments)
    - Titles bigger + centered
    - Email INPUT bar: NO glow, cobalt trim only
@@ -801,7 +801,7 @@ input[type="email"], input.email, #email, #emailInput, .emailInput, .login input
 
 <style id="final_requests_v7609">
 /* =========================================
-   FINAL REQUESTS v76.17 (COSMETICS ONLY)
+   FINAL REQUESTS v76.18 (COSMETICS ONLY)
    - Player name centered + bigger
    - Game titles centered + bigger
    - "Game Night" centered + bigger
@@ -892,7 +892,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
 
 
 <style id="final_finish_v7611">
-/* FINAL FINISH PASS v76.17 */
+/* FINAL FINISH PASS v76.18 */
 
 /* LOGO */
 #loginLogo, .logo, .appLogo{
@@ -978,7 +978,7 @@ h1, .title, .gameTitle, .screenTitle{
 </div>
 
 <script type="module">
-const BUILD_ID="v76.17";
+const BUILD_ID="v76.18";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -2909,48 +2909,42 @@ render();
 
 
 
-<script id="runtime_lock_cosmetics_v7617">
-(function(){
-  const BUILD="v76.17";
 
+<script id="runtime_lock_cosmetics_v7618">
+(function(){
+  // v76.18 HOTFIX: prevent infinite MutationObserver loops that can stall loading.
+  const BUILD="v76.18";
   const norm = (s)=> (s||"").trim().toLowerCase();
+  let scheduled=false;
 
   function isInside(el, selector){
     try{ return !!el.closest(selector); }catch(e){ return false; }
   }
+  function looksLikeGameListItem(el){
+    if(!el) return false;
+    if(isInside(el, "button, a")) return true;
+    if(el.classList && (el.classList.contains("game-btn") || el.classList.contains("playGame") || el.classList.contains("playBtn"))) return true;
+    if(el.getAttribute && el.getAttribute("data-play")!=null) return true;
+    return false;
+  }
 
-  // ----- (A) LOGO: center and keep centered even after re-render
-  function fixLogo(){
+  function centerLogo(){
     let logo = document.querySelector("#loginLogo, img#loginLogo, .logo img, img.logo, .appLogo, img#logo, img.logo");
     if(!logo){
-      // heuristic: on login screen, first image near top
       const imgs=[...document.querySelectorAll("img")];
       logo = imgs[0] || null;
     }
     if(!logo) return;
-
-    // center the logo itself
     logo.style.display="block";
     logo.style.marginLeft="auto";
     logo.style.marginRight="auto";
     logo.style.transform="none";
 
-    // also center its parent container (this prevents "snap back" from parent alignment)
     const p = logo.parentElement;
     if(p){
-      p.style.display = p.style.display || "block";
-      p.style.textAlign = "center";
-      p.style.width = "100%";
+      p.style.textAlign="center";
+      p.style.width="100%";
     }
-  }
-
-  // ----- (B) HEADERS: only true page headers (not game list buttons on player page)
-  function looksLikeGameListItem(el){
-    // If it's a button, link, or inside game list controls, it's not a page header
-    if(isInside(el, "button, a")) return true;
-    if(el.classList && (el.classList.contains("game-btn") || el.classList.contains("playGame") || el.classList.contains("playBtn"))) return true;
-    if(el.getAttribute && el.getAttribute("data-play")!=null) return true;
-    return false;
   }
 
   function makeHeader(el, sizeClamp){
@@ -2965,47 +2959,39 @@ render();
   }
 
   function fixHeaders(){
-    // Browser tab stamp only
     try{
       document.title = (document.title||"Game Night").replace(/\s*•\s*BUILD\s*v\d+\.\d+/i,"") + " • BUILD "+BUILD;
     }catch(e){}
 
-    // Game Night title: exact text if present
+    // Game Night exact
     const gn = [...document.querySelectorAll("h1,h2,div,span")]
       .find(n => !looksLikeGameListItem(n) && norm(n.textContent)==="game night");
     if(gn) makeHeader(gn, "clamp(36px,6.4vw,48px)");
 
-    // Game page headers: h1/h2 in header-ish containers
+    // Common header nodes
     const headerNodes=[...document.querySelectorAll("h1,h2,.title,.screenTitle,.hdrTitle,.pageTitle,.gameTitle,.game-title,.matchTitle,.game-header")];
     headerNodes.forEach(n => makeHeader(n));
 
-    // Player page header (Steve Moody): try known selectors first
+    // Player page name
     const pName = document.querySelector("#playerName,.playerName,.player-name,.playerHeader .nm");
     if(pName && !looksLikeGameListItem(pName)){
       makeHeader(pName, "clamp(36px,6.4vw,48px)");
     }
   }
 
-  // ----- (C) PLAYER PAGE GAME LIST: keep small + left aligned (undo accidental centering)
   function fixPlayerGameList(){
-    // likely game list controls are play buttons/tiles
     const items=[...document.querySelectorAll('[data-play], .game-btn, .playGame, .playBtn, button')];
     items.forEach(b=>{
       const t = norm(b.textContent);
       if(!t) return;
-
-      // game list items: around the world / killer / shanghai etc should be left aligned and smaller on PLAYER page
-      // We can't perfectly detect page, but we can safely apply to these "play" entries and keep them readable.
-      if(t.includes("around the world") || t.includes("killer") || t.includes("shanghai") || t.includes("cricket") || t.includes("baseball") || t.includes("around") ){
+      if(t.includes("around the world") || t.includes("killer") || t.includes("shanghai") || t.includes("cricket") || t.includes("baseball") || t==="around the world"){
         b.style.textAlign="left";
-        // Keep them compact in the list
         b.style.fontSize="14px";
-        b.style.whiteSpace="nowrap"; // keep Around the World on one line
+        b.style.whiteSpace="nowrap";
       }
     });
   }
 
-  // ----- (D) STATS/REMOVE: keep labels, keep order, swap skins (Stats red, Remove black)
   function fixStatsRemove(){
     const btns=[...document.querySelectorAll("button, .btn")];
     const stats = btns.find(b => norm(b.textContent)==="stats");
@@ -3017,10 +3003,8 @@ render();
       parent.style.display="flex";
       parent.style.flexDirection="column";
       parent.style.gap="10px";
-      parent.insertBefore(stats, remove); // Stats on top
+      parent.insertBefore(stats, remove);
     }
-
-    // skins only
     stats.style.background="#ff1744";
     stats.style.borderRadius="14px";
     stats.style.boxShadow="0 0 18px rgba(255,23,68,.55)";
@@ -3032,24 +3016,48 @@ render();
     remove.style.color="#fff";
   }
 
+  function fixHeaderButtons(){
+    // Any button inside likely header containers should be small + top-left
+    const headerAreas=[...document.querySelectorAll(".header, .hdr, .topbar, .toolbar, .game-header, .playerHeader, header")];
+    headerAreas.forEach(area=>{
+      const btn = area.querySelector("button, .btn, a");
+      if(!btn) return;
+      btn.style.position="absolute";
+      btn.style.top="10px";
+      btn.style.left="10px";
+      btn.style.zIndex="9999";
+      btn.style.padding="8px 10px";
+      btn.style.minHeight="36px";
+      btn.style.fontSize="12px";
+    });
+  }
+
   function applyAll(){
-    fixLogo();
+    centerLogo();
     fixHeaders();
-    fixPlayerGameList();  // puts those two "title blocks" back (small + left)
+    fixPlayerGameList();
     fixStatsRemove();
+    fixHeaderButtons();
+  }
+
+  function scheduleApply(){
+    if(scheduled) return;
+    scheduled=true;
+    setTimeout(()=>{ scheduled=false; applyAll(); }, 0);
   }
 
   function hook(){
     applyAll();
 
-    // Re-apply after interactions that trigger re-render
-    document.addEventListener("click", ()=>setTimeout(applyAll, 0), true);
-    document.addEventListener("input", ()=>setTimeout(applyAll, 0), true);
-    window.addEventListener("resize", ()=>setTimeout(applyAll, 0), true);
+    document.addEventListener("click", scheduleApply, true);
+    document.addEventListener("input", scheduleApply, true);
+    window.addEventListener("resize", scheduleApply, true);
 
-    // Observe DOM changes and re-apply (prevents "jump back")
-    const obs = new MutationObserver(()=>{ applyAll(); });
-    obs.observe(document.documentElement, {subtree:true, childList:true, attributes:true});
+    // Safe observer: only childList changes, and debounce
+    try{
+      const obs = new MutationObserver(scheduleApply);
+      obs.observe(document.body, {subtree:true, childList:true}); // no attributes to avoid loops
+    }catch(e){}
   }
 
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", hook, {once:true});
