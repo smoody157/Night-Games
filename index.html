@@ -4147,3 +4147,40 @@ button.statsBtn, .statsBtn{
   z-index:5;
 }
 </style>
+
+
+/* === v76.40 STATS/HISTORY FUNCTIONALITY PATCH ===
+   Purpose: Make Stats and History buttons respond when clicked.
+   Scope: Top buttons + per-player buttons.
+   No layout or style changes.
+*/
+(function(){
+  document.addEventListener('click', function(e){
+    const el = e.target.closest('button, .btn, .pill, [data-action]');
+    if(!el) return;
+
+    const label = (el.innerText || '').toLowerCase().trim();
+
+    if(label === 'stats'){
+      e.preventDefault();
+      if(typeof window.openStats === 'function'){
+        window.openStats(el);
+      } else if(typeof window.showStats === 'function'){
+        window.showStats(el);
+      } else {
+        document.dispatchEvent(new CustomEvent('stats:clicked', {detail:{el}}));
+      }
+    }
+
+    if(label === 'history'){
+      e.preventDefault();
+      if(typeof window.openHistory === 'function'){
+        window.openHistory(el);
+      } else if(typeof window.showHistory === 'function'){
+        window.showHistory(el);
+      } else {
+        document.dispatchEvent(new CustomEvent('history:clicked', {detail:{el}}));
+      }
+    }
+  }, true);
+})();
