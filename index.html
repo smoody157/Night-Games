@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v76.31</title>
+<title>Game Night • v76.32</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -385,16 +385,90 @@ input,select{
 .btn.danger{ box-shadow: 0 0 18px rgba(255,40,70,.40), 0 0 34px rgba(255,0,64,.22); }
 
 
-/* ===== v76.31 fixes ===== */
-.loginLogoImg{ margin-left:auto !important; margin-right:auto !important; }
-.brandLogoWrap{ width:100% !important; justify-content:center !important; }
 
-/* auth mode: move Home button to left side; stack volume button under top-right content */
-body.authMode .topActions.right{ flex-direction:column !important; align-items:flex-end !important; gap:8px !important; }
-body.authMode #homeBtn{ position:fixed !important; top:12px !important; left:12px !important; z-index:9999 !important; }
-body.authMode .volBtn{ position:fixed !important; top:52px !important; right:12px !important; z-index:9999 !important; }
+/* ===== v76.32 fixes ===== */
+
+/* 1) Login logo: TRUE horizontal centering */
+.brandLogoWrap{
+  width:100% !important;
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  margin:12px auto 0 !important;
+}
+.loginLogoImg{
+  display:block !important;
+  margin:0 auto !important;
+  height:auto !important;
+  object-fit:contain !important;
+}
+
+/* 2) Auth topbar: never let the title overlap buttons.
+      On auth screen, hide the topbar brand (title is inside the hero card). */
+body.authMode .brand{ display:none !important; }
+body.authMode .topbar{
+  display:flex !important;
+  justify-content:space-between !important;
+  align-items:flex-start !important;
+  gap:12px !important;
+  padding-top:10px !important;
+  padding-bottom:10px !important;
+}
+body.authMode .topActions.left,
+body.authMode .topActions.right{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+/* Right side stacked: sound on top, version under it */
+body.authMode .topActions.right{
+  flex-direction:column !important;
+  align-items:flex-end !important;
+  gap:8px !important;
+}
+/* Never fixed on auth */
+body.authMode #homeBtn,
+body.authMode #volBtn{
+  position:static !important;
+}
+
+/* Default hide auth-only volume pill */
+#volBtn{ display:none; }
 .volBtn{ font-weight:900 !important; padding:6px 10px !important; border-radius:999px !important; opacity:.9; }
 
+/* 3) Home screen alignment rails */
+.wrap{ max-width:980px; margin:0 auto; padding:14px; }
+.playerPage{ max-width:980px; margin:0 auto; }
+.gameGrid{ width:100%; }
+
+/* 4) Players roster cards: prevent name/email from running into buttons */
+.rosterCard{
+  display:grid !important;
+  grid-template-columns:64px 1fr 156px !important;
+  gap:12px !important;
+  align-items:center !important;
+}
+.rosterCard .rosterMain{ min-width:0 !important; padding:0 8px !important; }
+.rosterCard .nm{
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  word-break:break-word !important;
+  text-align:center !important;
+  font-size:clamp(18px, 4.6vw, 26px) !important;
+  line-height:1.08 !important;
+}
+.rosterCard .rosterSub{
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  text-align:center !important;
+}
+.rosterActions{
+  width:156px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+  justify-content:center !important;
+}
 
 
 /* Ensure buttons are tappable (avoid overlay capture) */
@@ -403,7 +477,7 @@ button.btn{ position:relative; z-index:3; }
 
 </style>
 
-<style id="cosmetics_v76.31">
+<style id="cosmetics_v76.32">
 #loginLogo{display:block!important;margin:14px auto 10px auto!important;width:min(380px,84vw)!important;height:auto!important;transform:translateX(4px) rotate(0deg)!important;
 filter:brightness(1.12) saturate(1.28) contrast(1.06) drop-shadow(0 0 14px rgba(255,40,70,.78)) drop-shadow(0 0 30px rgba(255,0,64,.56)) drop-shadow(0 0 54px rgba(255,0,64,.28))!important;}
 .playerName,.player-name,.playerHeader .nm,.nm{text-align:center!important;font-size:30px!important;font-weight:1000!important;letter-spacing:.4px!important;}
@@ -415,7 +489,7 @@ select{box-shadow:inset 0 0 10px rgba(255,0,64,.14),0 0 16px rgba(255,40,70,.20)
 
 <style id="polish_v7605">
 /* ===========================
-   POLISH v76.31
+   POLISH v76.32
    Cosmetic-only + anti-scroll-jump
    =========================== */
 
@@ -497,7 +571,7 @@ a, .link, .accentBlue{
   text-shadow: 0 0 10px rgba(59,130,246,.22);
 }
 
-/* ===== Alignment fixes v76.31_01 ===== */
+/* ===== Alignment fixes v76.32_01 ===== */
 .topLeftBtn{
   position:absolute !important;
   top:12px !important;
@@ -528,7 +602,7 @@ a, .link, .accentBlue{
 
 <style id="wow_v7606">
 /* ===========================================
-   WOW PASS v76.31 (COSMETICS ONLY)
+   WOW PASS v76.32 (COSMETICS ONLY)
    - No layout/flow changes, only typography + glow + logo tint
    =========================================== */
 
@@ -622,7 +696,7 @@ body{
 
 <style id="dart_console_v7607">
 /* =========================================
-   DART CONSOLE THEME v76.31
+   DART CONSOLE THEME v76.32
    Black base + cobalt trim + red/blue env glow + green CTA
    ========================================= */
 
@@ -734,7 +808,7 @@ body::before{
 
 <style id="mascara_v7608">
 /* =========================================
-   MASCARA PASS v76.31 (COSMETICS ONLY)
+   MASCARA PASS v76.32 (COSMETICS ONLY)
    - Center logo (no extra tint experiments)
    - Titles bigger + centered
    - Email INPUT bar: NO glow, cobalt trim only
@@ -846,7 +920,7 @@ input[type="email"], input.email, #email, #emailInput, .emailInput, .login input
 
 <style id="final_requests_v7609">
 /* =========================================
-   FINAL REQUESTS v76.31 (COSMETICS ONLY)
+   FINAL REQUESTS v76.32 (COSMETICS ONLY)
    - Player name centered + bigger
    - Game titles centered + bigger
    - "Game Night" centered + bigger
@@ -937,7 +1011,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
 
 
 <style id="final_finish_v7611">
-/* FINAL FINISH PASS v76.31 */
+/* FINAL FINISH PASS v76.32 */
 
 /* LOGO */
 #loginLogo, .logo, .appLogo{
@@ -998,7 +1072,7 @@ h1, .title, .gameTitle, .screenTitle{
 
 
 <style id="v7620_static_cosmetics_nojs">
-/* v76.31 STATIC COSMETICS (NO JS, NO OBSERVERS)
+/* v76.32 STATIC COSMETICS (NO JS, NO OBSERVERS)
    Goal: Apply the 3 requested items WITHOUT touching startup logic.
    1) Center logo (no bounce): force logo + its wrapper to be centered, static positioning, !important
    2) Headers: Player name + Game page title bigger + centered; keep game list on player page small + left
@@ -1197,7 +1271,7 @@ button.remove,
 
 <style id="player_ui_align_v7623">
 /* =========================================
-   PLAYER UI ALIGN v76.31
+   PLAYER UI ALIGN v76.32
    ONLY requested alignment/size changes.
    ========================================= */
 
@@ -1324,7 +1398,7 @@ button.remove,
 </style>
 
 <style id="final_alignment_v7624">
-/* FINAL ALIGNMENT v76.31
+/* FINAL ALIGNMENT v76.32
    Only remaining fixes:
    - Landing "Game Night" header centered + bigger
    - Logo centered (do not move again)
@@ -1394,7 +1468,7 @@ button.remove,
 </style>
 <style id="v7625_hotfix_from_screenshot">
 /* =========================================
-   v76.31 HOTFIX (from screenshot feedback)
+   v76.32 HOTFIX (from screenshot feedback)
    DO NOT TOUCH Stats/Remove player-card buttons (already perfect)
    Fix:
    - Topbar "Game Night" centered + bigger
@@ -1479,7 +1553,7 @@ body #loginLogo, body img#loginLogo{
 /* 6) Game screens: game name is in the topbar brandTitle already; ensure it stays centered and big via rules above */
 </style>
 <style id="v7626_layout_lock">
-/* v76.31 Layout Lock
+/* v76.32 Layout Lock
    Fix what you called out:
    - Game Night top header centered + bigger
    - Logo centered (no drift)
@@ -1645,7 +1719,7 @@ header, .header {
 
 
 
-/* ===== Alignment pass v76.31: Roster grid + centered names between left dot and right actions ===== */
+/* ===== Alignment pass v76.32: Roster grid + centered names between left dot and right actions ===== */
 .rosterGrid{display:grid;grid-template-columns:1fr;gap:12px}
 .rosterCard{
   display:grid;
@@ -1704,7 +1778,7 @@ header, .header {
 
 
 
-/* ===== Alignment pass v76.31: overall page rails ===== */
+/* ===== Alignment pass v76.32: overall page rails ===== */
 .playerPage{max-width:920px !important; margin:0 auto !important; padding:0 10px;}
 .gameGrid{margin-left:0; margin-right:0;}
 
@@ -1718,12 +1792,12 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • v76.31</div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • v76.32</div>
   </div>
   <div class="topActions right">
     
    <button class="btn ghost" id="soundBtn" type="button" aria-label="Sound toggle">🔊</button>
-<button class="btn ghost volBtn" id="volBtn" type="button">v76.31</button>
+<button class="btn ghost volBtn" id="volBtn" type="button">v76.32</button>
 <button class="btn ghost" id="homeBtn" type="button">Home</button>
   </div>
 </div>
@@ -1733,11 +1807,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v76.31</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v76.32</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v76.31";
+const BUILD_ID="v76.32";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -2949,6 +3023,29 @@ function doSignOut(){
   screen="auth"; render();
 }
 signOutBtn.onclick = doSignOut;
+
+
+function placeTopbarForAuth(){
+  try{
+    const homeBtn=document.getElementById("homeBtn");
+    const volBtn=document.getElementById("volBtn");
+    const left=document.querySelector(".topbar .topActions.left");
+    const right=document.querySelector(".topbar .topActions.right");
+    if(!homeBtn || !left || !right) return;
+
+    if(screen==="auth"){
+      document.body.classList.add("authMode");
+      if(homeBtn.parentElement!==left) left.appendChild(homeBtn);
+      if(volBtn){ volBtn.style.display="inline-flex"; volBtn.textContent = BUILD_ID; }
+    }else{
+      document.body.classList.remove("authMode");
+      if(homeBtn.parentElement!==right) right.appendChild(homeBtn);
+      if(volBtn) volBtn.style.display="none";
+    }
+  }catch(e){}
+}
+
+
 
 
 async function renderAuth(){
