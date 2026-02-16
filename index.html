@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v76.19</title>
+<title>Game Night • v76.20</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -385,7 +385,7 @@ input,select{
 .btn.danger{ box-shadow: 0 0 18px rgba(255,40,70,.40), 0 0 34px rgba(255,0,64,.22); }
 </style>
 
-<style id="cosmetics_v76.19">
+<style id="cosmetics_v76.20">
 #loginLogo{display:block!important;margin:14px auto 10px auto!important;width:min(380px,84vw)!important;height:auto!important;transform:translateX(4px) rotate(0deg)!important;
 filter:brightness(1.12) saturate(1.28) contrast(1.06) drop-shadow(0 0 14px rgba(255,40,70,.78)) drop-shadow(0 0 30px rgba(255,0,64,.56)) drop-shadow(0 0 54px rgba(255,0,64,.28))!important;}
 .playerName,.player-name,.playerHeader .nm,.nm{text-align:center!important;font-size:30px!important;font-weight:1000!important;letter-spacing:.4px!important;}
@@ -397,7 +397,7 @@ select{box-shadow:inset 0 0 10px rgba(255,0,64,.14),0 0 16px rgba(255,40,70,.20)
 
 <style id="polish_v7605">
 /* ===========================
-   POLISH v76.19
+   POLISH v76.20
    Cosmetic-only + anti-scroll-jump
    =========================== */
 
@@ -483,7 +483,7 @@ a, .link, .accentBlue{
 
 <style id="wow_v7606">
 /* ===========================================
-   WOW PASS v76.19 (COSMETICS ONLY)
+   WOW PASS v76.20 (COSMETICS ONLY)
    - No layout/flow changes, only typography + glow + logo tint
    =========================================== */
 
@@ -577,7 +577,7 @@ body{
 
 <style id="dart_console_v7607">
 /* =========================================
-   DART CONSOLE THEME v76.19
+   DART CONSOLE THEME v76.20
    Black base + cobalt trim + red/blue env glow + green CTA
    ========================================= */
 
@@ -689,7 +689,7 @@ body::before{
 
 <style id="mascara_v7608">
 /* =========================================
-   MASCARA PASS v76.19 (COSMETICS ONLY)
+   MASCARA PASS v76.20 (COSMETICS ONLY)
    - Center logo (no extra tint experiments)
    - Titles bigger + centered
    - Email INPUT bar: NO glow, cobalt trim only
@@ -801,7 +801,7 @@ input[type="email"], input.email, #email, #emailInput, .emailInput, .login input
 
 <style id="final_requests_v7609">
 /* =========================================
-   FINAL REQUESTS v76.19 (COSMETICS ONLY)
+   FINAL REQUESTS v76.20 (COSMETICS ONLY)
    - Player name centered + bigger
    - Game titles centered + bigger
    - "Game Night" centered + bigger
@@ -892,7 +892,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
 
 
 <style id="final_finish_v7611">
-/* FINAL FINISH PASS v76.19 */
+/* FINAL FINISH PASS v76.20 */
 
 /* LOGO */
 #loginLogo, .logo, .appLogo{
@@ -951,6 +951,133 @@ h1, .title, .gameTitle, .screenTitle{
 }
 </style>
 
+
+<style id="v7620_static_cosmetics_nojs">
+/* v76.20 STATIC COSMETICS (NO JS, NO OBSERVERS)
+   Goal: Apply the 3 requested items WITHOUT touching startup logic.
+   1) Center logo (no bounce): force logo + its wrapper to be centered, static positioning, !important
+   2) Headers: Player name + Game page title bigger + centered; keep game list on player page small + left
+   3) Buttons: Stats red (top), Remove black (bottom), text unchanged
+   Extra per your last note: header action button smaller + top-left; Around the World kept single-line in list
+*/
+
+/* --- 1) LOGO (login) --- */
+#loginLogo, img#loginLogo, .loginLogo, .logo img, img.logo, .appLogo, img#logo {
+  display:block !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+  max-width: min(240px, 70vw) !important; /* keep sane on phones */
+  height: auto !important;
+}
+#loginLogoWrap, .logoWrap, .loginLogoWrap, .logoContainer, .loginLogoContainer{
+  width:100% !important;
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  text-align:center !important;
+}
+
+/* --- 2) HEADERS (true page headers) --- */
+.playerHeader #playerName,
+.playerHeader .playerName,
+#playerName,
+.playerName,
+.player-name {
+  text-align:center !important;
+  font-size: clamp(34px, 6.2vw, 48px) !important;
+  font-weight: 900 !important;
+  margin: 8px auto 2px auto !important;
+}
+.playerHeader #playerEmail,
+.playerHeader .playerEmail,
+#playerEmail,
+.playerEmail,
+.player-email{
+  text-align:center !important;
+  font-size: 13px !important;
+  opacity: .92 !important;
+  text-shadow:none !important;
+  margin: 0 auto 10px auto !important;
+}
+
+/* Game page title (inside an actual game screen) */
+.gameScreen h1, .gameScreen .gameTitle, .gameScreen .game-title,
+.matchScreen h1, .matchScreen .matchTitle, .matchScreen .game-header,
+#gameTitle, .gameTitle, .game-header, .matchTitle{
+  text-align:center !important;
+  font-size: clamp(32px, 5.8vw, 44px) !important;
+  font-weight: 900 !important;
+  line-height: 1.05 !important;
+  letter-spacing: .6px !important;
+  white-space: nowrap !important;
+}
+
+/* Global "Game Night" title on home/login */
+#homeTitle, #loginTitle, .homeTitle, .loginTitle, .brandTitle{
+  text-align:center !important;
+  font-size: clamp(34px, 6.2vw, 46px) !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+}
+
+/* Keep the player-page game list SMALL + LEFT (do NOT center these) */
+.playerPage .gameList button,
+.playerPage .gameList .btn,
+.playerPage .game-btn,
+.playerPage .playBtn,
+.playerPage .playGame,
+.gameList button, .gameList .game-btn, .gameList .playBtn, .gameList .playGame{
+  text-align:left !important;
+  font-size: 14px !important;
+  white-space: nowrap !important; /* Around the World on one line */
+}
+
+/* --- 3) STATS / REMOVE skins + order (text unchanged) --- */
+.playerActionsRow{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+}
+.playerActionsRow .statsBtn, .playerActionsRow button[data-action="stats"], .btn.stats, button.stats{
+  order:1 !important;
+  background:#ff1744 !important;
+  color:#fff !important;
+  border-radius:14px !important;
+  box-shadow:0 0 18px rgba(255,23,68,.55) !important;
+}
+.playerActionsRow .removeBtn, .playerActionsRow button[data-action="remove"], .btn.danger, button.remove{
+  order:2 !important;
+  background:#000 !important;
+  color:#fff !important;
+  border-radius:14px !important;
+  box-shadow:0 0 12px rgba(0,0,0,.35) !important;
+}
+
+/* --- Header action button: small + top-left, out of the title flow --- */
+header button, header .btn,
+.topbar button, .topbar .btn,
+.toolbar button, .toolbar .btn,
+.game-header button, .game-header .btn,
+.playerHeader button, .playerHeader .btn{
+  position:absolute !important;
+  top:10px !important;
+  left:10px !important;
+  padding:8px 10px !important;
+  font-size:12px !important;
+  min-height:36px !important;
+  z-index:9999 !important;
+}
+
+/* Ensure header containers can anchor absolute button */
+header, .topbar, .toolbar, .game-header, .playerHeader{
+  position:relative !important;
+}
+</style>
+
 </head>
 
 <body>
@@ -978,7 +1105,7 @@ h1, .title, .gameTitle, .screenTitle{
 </div>
 
 <script type="module">
-const BUILD_ID="v76.19";
+const BUILD_ID="v76.20";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
