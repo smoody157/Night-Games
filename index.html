@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v76.22</title>
+<title>Game Night • v76.23</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -385,7 +385,7 @@ input,select{
 .btn.danger{ box-shadow: 0 0 18px rgba(255,40,70,.40), 0 0 34px rgba(255,0,64,.22); }
 </style>
 
-<style id="cosmetics_v76.22">
+<style id="cosmetics_v76.23">
 #loginLogo{display:block!important;margin:14px auto 10px auto!important;width:min(380px,84vw)!important;height:auto!important;transform:translateX(4px) rotate(0deg)!important;
 filter:brightness(1.12) saturate(1.28) contrast(1.06) drop-shadow(0 0 14px rgba(255,40,70,.78)) drop-shadow(0 0 30px rgba(255,0,64,.56)) drop-shadow(0 0 54px rgba(255,0,64,.28))!important;}
 .playerName,.player-name,.playerHeader .nm,.nm{text-align:center!important;font-size:30px!important;font-weight:1000!important;letter-spacing:.4px!important;}
@@ -397,7 +397,7 @@ select{box-shadow:inset 0 0 10px rgba(255,0,64,.14),0 0 16px rgba(255,40,70,.20)
 
 <style id="polish_v7605">
 /* ===========================
-   POLISH v76.22
+   POLISH v76.23
    Cosmetic-only + anti-scroll-jump
    =========================== */
 
@@ -483,7 +483,7 @@ a, .link, .accentBlue{
 
 <style id="wow_v7606">
 /* ===========================================
-   WOW PASS v76.22 (COSMETICS ONLY)
+   WOW PASS v76.23 (COSMETICS ONLY)
    - No layout/flow changes, only typography + glow + logo tint
    =========================================== */
 
@@ -577,7 +577,7 @@ body{
 
 <style id="dart_console_v7607">
 /* =========================================
-   DART CONSOLE THEME v76.22
+   DART CONSOLE THEME v76.23
    Black base + cobalt trim + red/blue env glow + green CTA
    ========================================= */
 
@@ -689,7 +689,7 @@ body::before{
 
 <style id="mascara_v7608">
 /* =========================================
-   MASCARA PASS v76.22 (COSMETICS ONLY)
+   MASCARA PASS v76.23 (COSMETICS ONLY)
    - Center logo (no extra tint experiments)
    - Titles bigger + centered
    - Email INPUT bar: NO glow, cobalt trim only
@@ -801,7 +801,7 @@ input[type="email"], input.email, #email, #emailInput, .emailInput, .login input
 
 <style id="final_requests_v7609">
 /* =========================================
-   FINAL REQUESTS v76.22 (COSMETICS ONLY)
+   FINAL REQUESTS v76.23 (COSMETICS ONLY)
    - Player name centered + bigger
    - Game titles centered + bigger
    - "Game Night" centered + bigger
@@ -892,7 +892,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
 
 
 <style id="final_finish_v7611">
-/* FINAL FINISH PASS v76.22 */
+/* FINAL FINISH PASS v76.23 */
 
 /* LOGO */
 #loginLogo, .logo, .appLogo{
@@ -953,7 +953,7 @@ h1, .title, .gameTitle, .screenTitle{
 
 
 <style id="v7620_static_cosmetics_nojs">
-/* v76.22 STATIC COSMETICS (NO JS, NO OBSERVERS)
+/* v76.23 STATIC COSMETICS (NO JS, NO OBSERVERS)
    Goal: Apply the 3 requested items WITHOUT touching startup logic.
    1) Center logo (no bounce): force logo + its wrapper to be centered, static positioning, !important
    2) Headers: Player name + Game page title bigger + centered; keep game list on player page small + left
@@ -1150,98 +1150,109 @@ button.remove,
 
 </style>
 
-<style id="player_ui_align_v7622">
+<style id="player_ui_align_v7623">
 /* =========================================
-   PLAYER UI ALIGN v76.22
-   ONLY what you asked:
-   - Logo truly centered (login + email flow where logo appears)
-   - Players page: name centered biggest; email under it centered
-   - Players page: game-pick list LEFT + smaller (secondary)
-   - Player cards: Stats glossy/tube on TOP + glowing RED; Remove flat on bottom
-   - Fix top corner buttons piggybacking (restore left/right lanes)
+   PLAYER UI ALIGN v76.23
+   ONLY requested alignment/size changes.
    ========================================= */
 
-/* 0) Top corner buttons: prevent overlap/piggyback */
+/* Topbar title: center + bigger */
+#brandTitle, .brand .t{
+  text-align:center !important;
+  font-size: clamp(26px, 4.8vw, 40px) !important;
+  font-weight: 1000 !important;
+  width: 100% !important;
+}
+
+/* Prevent top-corner buttons from piggybacking */
 .topbar{
   display:grid !important;
   grid-template-columns: 1fr auto 1fr !important;
   align-items:center !important;
 }
+.topbar .topActions{ position: static !important; display:flex !important; gap:10px !important; }
 .topbar .topActions.left{ justify-content:flex-start !important; }
 .topbar .topActions.right{ justify-content:flex-end !important; }
 .topbar .topActions button{ position: static !important; }
 
-/* 1) Logo: TRUE center (override any translateX drift) */
+/* Logo: true center (no transform drift) */
 #loginLogo, img#loginLogo{
   display:block !important;
   margin: 16px auto 14px auto !important;
   transform: none !important;
-  left:auto !important; right:auto !important;
 }
-#loginLogoWrap, .brandLogoWrap, .loginLogoWrap, .logoWrap, .logoContainer, .loginLogoContainer{
-  display:flex !important;
-  justify-content:center !important;
-  align-items:center !important;
-  width:100% !important;
+
+/* ===== Players (home) page ===== */
+.playerPage .h1{
   text-align:center !important;
 }
 
-/* 2) Players page title hierarchy */
-.playerHeader, .playerHeader *{
+/* Player name + email at top of player page */
+.playerPage .card .row[style*="align-items:center"] .h1{
   text-align:center !important;
-}
-.playerHeader #playerName,
-.playerHeader .playerName,
-#playerName,
-.playerName,
-.player-name{
-  text-align:center !important;
-  font-size: clamp(38px, 6.4vw, 54px) !important; /* biggest thing */
+  font-size: clamp(38px, 6.4vw, 54px) !important;
   font-weight: 900 !important;
-  letter-spacing: .5px !important;
   margin: 10px auto 4px auto !important;
+  width:100% !important;
 }
-.playerHeader #playerEmail,
-.playerHeader .playerEmail,
-#playerEmail,
-.playerEmail,
-.player-email{
+.playerPage .card .row[style*="align-items:center"] .sub{
   display:block !important;
   text-align:center !important;
   font-size: 14px !important;
   opacity: .92 !important;
   margin: 0 auto 12px auto !important;
-  text-shadow: none !important;
+  text-shadow:none !important;
 }
 
-/* 3) Players page game-pick list: LEFT + smaller (secondary) */
-[data-play], .game-btn, .playGame{
+/* Game-picker cards ON player page: left + smaller (secondary) */
+.playerPage .gameHead{ justify-content:flex-start !important; }
+.playerPage .gameTitle{ justify-content:flex-start !important; }
+.playerPage .gameTitle > div:first-child{ /* the text block */
   text-align:left !important;
-  font-size: 13.5px !important;   /* smaller than page title */
-  font-weight: 800 !important;
-  white-space: nowrap !important; /* keep Around the World on one line */
+}
+.playerPage .gameTitle .nm, 
+.playerPage .gameHead .h1,
+.playerPage .gameHead h1{
+  text-align:left !important;
+}
+.playerPage .gameTitle, .playerPage .gameMeta{
+  text-align:left !important;
+}
+.playerPage .gameTitle{
+  font-size: 16px !important;
+  font-weight: 900 !important;
+}
+.playerPage .gameMeta{
+  font-size: 12px !important;
+}
+.playerPage .gameActions{ justify-content:flex-start !important; }
+.playerPage .gameActions .btn{ min-height: 44px !important; font-size: 14px !important; }
+
+/* Roster header ("Players") stays centered but smaller than main title */
+.playerPage .card .h1[style*="Players"]{
+  font-size: 24px !important;
 }
 
-/* 4) Player cards: Stats (top) glossy/tube + RED glow; Remove (bottom) flat */
-.playerActionsRow{
+/* Per-player card name/email centered */
+.playerPage .rosterCard .playerHeader .nm{
+  text-align:center !important;
+  font-size: 28px !important;
+  font-weight: 1000 !important;
+}
+.playerPage .rosterCard .playerHeader .rosterSub{
+  text-align:center !important;
+}
+
+/* Player card action buttons: Stats on top glossy red, Remove on bottom flat */
+.playerPage .playerActionsRow{
   display:flex !important;
   flex-direction:column !important;
   gap:10px !important;
 }
-.playerActionsRow button, .playerActionsRow .btn{
-  width:100% !important;
-}
-
-/* Stats stays on top */
-.playerActionsRow .statsBtn,
-.playerActionsRow button[data-action="stats"],
-button.stats,
-.btn.stats{
-  order:1 !important;
+.playerPage .playerActionsRow .statsBtn{
+  order: 1 !important;
   color:#fff !important;
   border: 1px solid rgba(255,255,255,.18) !important;
-
-  /* glossy “tube” look + red tint */
   background:
     linear-gradient(180deg,
       rgba(255,255,255,.24) 0%,
@@ -1252,7 +1263,6 @@ button.stats,
       rgba(255,255,255,.18) 100%
     ),
     linear-gradient(135deg, rgba(239,68,68,.70), rgba(255,0,64,.22)) !important;
-
   box-shadow:
     0 10px 22px rgba(0,0,0,.34),
     0 0 16px rgba(255,23,68,.70),
@@ -1260,14 +1270,9 @@ button.stats,
     inset 0 1px 0 rgba(255,255,255,.22),
     inset 0 -12px 18px rgba(0,0,0,.38) !important;
 }
-
-/* Remove stays on bottom + flat */
-.playerActionsRow .removeBtn,
-.playerActionsRow button[data-action="remove"],
-button.remove,
-.btn.danger{
-  order:2 !important;
-  background: rgba(255,255,255,.06) !important; /* flat */
+.playerPage .playerActionsRow .removeBtn{
+  order: 2 !important;
+  background: rgba(255,255,255,.06) !important;
   border: 1px solid rgba(255,255,255,.14) !important;
   box-shadow: 0 6px 16px rgba(0,0,0,.30) !important;
 }
@@ -1282,7 +1287,7 @@ button.remove,
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • v76.22</div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • v76.23</div>
   </div>
   <div class="topActions right">
     
@@ -1296,11 +1301,11 @@ button.remove,
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v76.22</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v76.23</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v76.22";
+const BUILD_ID="v76.23";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -2565,6 +2570,7 @@ async function renderSignup(){
   brandTitle.textContent="Game Night";
 
   setHTML(`
+    <div class="playerPage">\
     <div class="card">
       <div class="row" style="align-items:center">
         <div class="logoMark"><span>🧾</span></div>
@@ -2640,9 +2646,9 @@ async function renderHome(){
         <div class="nm" style="font-size:22px;font-weight:1000">${esc(p.name)}${p.email===meUser.email?` <span class="badge">YOU</span>`:""}</div>
         <div class="rosterSub" style="margin-top:4px">${esc(p.email)}</div>
       </div>
-      <div class="row" style="gap:10px;margin-top:12px">
-        <button class="btn ghost" data-player-stats="${esc(p.email)}">Stats</button>
-        <button class="btn danger" data-player-remove="${esc(p.email)}" ${p.email===meUser.email?`disabled`:``}>Remove</button>
+      <div class="playerActionsRow" style="gap:10px;margin-top:12px">
+        <button class="btn ghost statsBtn" data-player-stats="${esc(p.email)}">Stats</button>
+        <button class="btn danger removeBtn" data-player-remove="${esc(p.email)}" ${p.email===meUser.email?`disabled`:``}>Remove</button>
       </div>
     </div>
   `).join("");
@@ -2675,6 +2681,8 @@ async function renderHome(){
       <div class="divider"></div>
       <div class="rosterGrid">${roster || `<div class="sub">No players yet.</div>`}</div>
     </div>
+    </div>
+
   `);
    // ===== Home avatar (only for signed-in user) =====
   document.getElementById("statsBtn").onclick = ()=>{ screen="stats"; render(); };
