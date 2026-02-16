@@ -1057,25 +1057,97 @@ h1, .title, .gameTitle, .screenTitle{
   box-shadow:0 0 12px rgba(0,0,0,.35) !important;
 }
 
-/* --- Header action button: small + top-left, out of the title flow --- */
-header button, header .btn,
-.topbar button, .topbar .btn,
-.toolbar button, .toolbar .btn,
-.game-header button, .game-header .btn,
-.playerHeader button, .playerHeader .btn{
-  position:absolute !important;
-  top:10px !important;
-  left:10px !important;
-  padding:8px 10px !important;
-  font-size:12px !important;
-  min-height:36px !important;
-  z-index:9999 !important;
+/* --- FIX: Top corner buttons piggybacking (restore normal flow) --- */
+/* Keep topbar actions in their own left/right lanes */
+.topbar .topActions{ position: static !important; }
+.topbar .topActions.left{ justify-content:flex-start !important; }
+.topbar .topActions.right{ justify-content:flex-end !important; }
+.topbar .topActions button{ position: static !important; }
+
+/* --- HEADERS: center + bigger (page / game / player) --- */
+/* Card/page headers */
+.h1, h1, h2, .title, .screenTitle, .hdrTitle, .pageTitle{
+  text-align:center !important;
+  font-size: clamp(32px, 5.6vw, 46px) !important;
+  font-weight: 900 !important;
+  letter-spacing: .6px !important;
+  line-height: 1.05 !important;
+}
+/* Player name header on player page */
+.playerHeader #playerName,
+.playerHeader .playerName,
+#playerName,
+.playerName,
+.player-name{
+  text-align:center !important;
+  font-size: clamp(34px, 6.2vw, 48px) !important;
+  font-weight: 900 !important;
 }
 
-/* Ensure header containers can anchor absolute button */
-header, .topbar, .toolbar, .game-header, .playerHeader{
-  position:relative !important;
+/* Game title inside game screens */
+.gameTitle, .game-title, .matchTitle, .game-header, #gameTitle{
+  text-align:center !important;
+  font-size: clamp(32px, 5.8vw, 44px) !important;
+  font-weight: 900 !important;
 }
+
+/* --- Players page: game list stays LEFT (do NOT center these) --- */
+.playerPage .gameList button,
+.playerPage .gameList .btn,
+.playerPage .game-btn,
+.playerPage .playBtn,
+.playerPage .playGame,
+.gameList button, .gameList .game-btn, .gameList .playBtn, .gameList .playGame{
+  text-align:left !important;
+}
+
+/* --- Players page: Stats/Remove buttons (keep text, swap STYLE) --- */
+/* Keep the two buttons stacked in each player card and full width */
+.playerActionsRow{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+}
+.playerActionsRow button, .playerActionsRow .btn{
+  width:100% !important;
+}
+
+/* Stats stays on TOP and becomes the SHINY/TUBE button, but RED */
+.playerActionsRow .statsBtn,
+.playerActionsRow button[data-action="stats"],
+button.stats,
+.btn.stats{
+  order:1 !important;              /* top */
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,.22) 0%,
+    rgba(255,255,255,.08) 14%,
+    rgba(0,0,0,.18) 36%,
+    rgba(255,255,255,.10) 52%,
+    rgba(0,0,0,.30) 72%,
+    rgba(255,255,255,.16) 100%
+  ), linear-gradient(135deg, rgba(239,68,68,.55), rgba(249,115,22,.18)) !important;
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.32),
+    0 0 18px rgba(255,23,68,.55),
+    0 0 34px rgba(255,0,64,.30),
+    inset 0 1px 0 rgba(255,255,255,.22),
+    inset 0 -12px 18px rgba(0,0,0,.38) !important;
+}
+
+/* Remove stays on BOTTOM and becomes the FLAT button */
+.playerActionsRow .removeBtn,
+.playerActionsRow button[data-action="remove"],
+button.remove,
+.btn.danger{
+  order:2 !important;              /* bottom */
+  background: rgba(255,255,255,.06) !important; /* flat */
+  border:1px solid rgba(255,255,255,.14) !important;
+  box-shadow: 0 6px 16px rgba(0,0,0,.30) !important;
+}
+
+
 </style>
 
 </head>
