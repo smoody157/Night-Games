@@ -1806,6 +1806,94 @@ header, .header {
 .gameGrid{margin-left:0; margin-right:0;}
 
 </style>
+
+<style id="v7633_fixpack_1">
+/* =========================
+   FIXPACK v76.33 (from screenshots)
+   - Hard center logo (no translateX)
+   - Remove duplicate top-corner version
+   - Keep game grid inside blue bordered cards
+   - Roster: show full name + email (wrap), no ellipsis
+   - Place "U" badge directly under initials (SM)
+   - Ensure Stats/History are clickable
+   ========================= */
+
+/* Logo: absolute final say */
+#loginLogo, .logo, .appLogo{
+  display:block !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  transform:none !important;
+  left:auto !important;
+  right:auto !important;
+}
+
+/* If any wrapper was nudging */
+.brandLogoWrap, .loginLogoWrap{
+  width:100% !important;
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+}
+
+/* Kill any stray top-corner version text if it ever appears */
+#verText, .verText, .authVersion{ display:none !important; }
+
+/* Players page: keep content inside the blue card border */
+.playerPage, .wrap{ max-width:980px !important; margin:0 auto !important; }
+.playerPage .card{ overflow:hidden !important; }
+.playerPage .gameGrid{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+}
+.playerPage .gameCard{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+}
+.playerPage .gameHead, .playerPage .gameTitle{ min-width:0 !important; }
+
+/* Stats/History: force tappable */
+#statsBtn, #historyBtn{
+  pointer-events:auto !important;
+  position:relative !important;
+  z-index:50 !important;
+}
+
+/* Roster cards: show full text (no ellipsis), allow wrap */
+.rosterCard{ overflow:visible !important; }
+.rosterCenter .nm, .rosterCard .nm{
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  overflow-wrap:anywhere !important;
+  word-break:break-word !important;
+  line-height:1.12 !important;
+  font-size:clamp(16px, 4.2vw, 22px) !important;
+}
+.rosterCenter .rosterSub, .rosterCard .rosterSub{
+  white-space:normal !important;
+  overflow:visible !important;
+  overflow-wrap:anywhere !important;
+  word-break:break-word !important;
+}
+
+/* Put the U badge directly under the initials (SM) */
+.rosterAvatar{ position:relative !important; }
+.rosterYou{
+  position:absolute !important;
+  top:42px !important;   /* directly under 34px avatar + spacing */
+  left:0 !important;
+}
+
+/* If roster layout uses grid, keep center column flexible */
+.rosterCard{
+  grid-template-columns:56px minmax(0,1fr) 132px !important;
+}
+</style>
+
 </head>
 
 <body>
@@ -1820,8 +1908,7 @@ header, .header {
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
-      <div class="verText" id="verText">v76.33</div>
-      <button class="btn ghost" id="soundBtn" type="button" aria-label="Sound toggle">🔊</button>
+<button class="btn ghost" id="soundBtn" type="button" aria-label="Sound toggle">🔊</button>
     </div>
   </div>
 </div>
