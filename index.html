@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v76.04</title>
+<title>Game Night • v76.19</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -385,7 +385,7 @@ input,select{
 .btn.danger{ box-shadow: 0 0 18px rgba(255,40,70,.40), 0 0 34px rgba(255,0,64,.22); }
 </style>
 
-<style id="cosmetics_v76.04">
+<style id="cosmetics_v76.19">
 #loginLogo{display:block!important;margin:14px auto 10px auto!important;width:min(380px,84vw)!important;height:auto!important;transform:translateX(4px) rotate(0deg)!important;
 filter:brightness(1.12) saturate(1.28) contrast(1.06) drop-shadow(0 0 14px rgba(255,40,70,.78)) drop-shadow(0 0 30px rgba(255,0,64,.56)) drop-shadow(0 0 54px rgba(255,0,64,.28))!important;}
 .playerName,.player-name,.playerHeader .nm,.nm{text-align:center!important;font-size:30px!important;font-weight:1000!important;letter-spacing:.4px!important;}
@@ -397,7 +397,7 @@ select{box-shadow:inset 0 0 10px rgba(255,0,64,.14),0 0 16px rgba(255,40,70,.20)
 
 <style id="polish_v7605">
 /* ===========================
-   POLISH v76.18
+   POLISH v76.19
    Cosmetic-only + anti-scroll-jump
    =========================== */
 
@@ -483,7 +483,7 @@ a, .link, .accentBlue{
 
 <style id="wow_v7606">
 /* ===========================================
-   WOW PASS v76.18 (COSMETICS ONLY)
+   WOW PASS v76.19 (COSMETICS ONLY)
    - No layout/flow changes, only typography + glow + logo tint
    =========================================== */
 
@@ -577,7 +577,7 @@ body{
 
 <style id="dart_console_v7607">
 /* =========================================
-   DART CONSOLE THEME v76.18
+   DART CONSOLE THEME v76.19
    Black base + cobalt trim + red/blue env glow + green CTA
    ========================================= */
 
@@ -689,7 +689,7 @@ body::before{
 
 <style id="mascara_v7608">
 /* =========================================
-   MASCARA PASS v76.18 (COSMETICS ONLY)
+   MASCARA PASS v76.19 (COSMETICS ONLY)
    - Center logo (no extra tint experiments)
    - Titles bigger + centered
    - Email INPUT bar: NO glow, cobalt trim only
@@ -801,7 +801,7 @@ input[type="email"], input.email, #email, #emailInput, .emailInput, .login input
 
 <style id="final_requests_v7609">
 /* =========================================
-   FINAL REQUESTS v76.18 (COSMETICS ONLY)
+   FINAL REQUESTS v76.19 (COSMETICS ONLY)
    - Player name centered + bigger
    - Game titles centered + bigger
    - "Game Night" centered + bigger
@@ -892,7 +892,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
 
 
 <style id="final_finish_v7611">
-/* FINAL FINISH PASS v76.18 */
+/* FINAL FINISH PASS v76.19 */
 
 /* LOGO */
 #loginLogo, .logo, .appLogo{
@@ -978,7 +978,7 @@ h1, .title, .gameTitle, .screenTitle{
 </div>
 
 <script type="module">
-const BUILD_ID="v76.18";
+const BUILD_ID="v76.19";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -2907,163 +2907,6 @@ render();
 </script>
 
 
-
-
-
-<script id="runtime_lock_cosmetics_v7618">
-(function(){
-  // v76.18 HOTFIX: prevent infinite MutationObserver loops that can stall loading.
-  const BUILD="v76.18";
-  const norm = (s)=> (s||"").trim().toLowerCase();
-  let scheduled=false;
-
-  function isInside(el, selector){
-    try{ return !!el.closest(selector); }catch(e){ return false; }
-  }
-  function looksLikeGameListItem(el){
-    if(!el) return false;
-    if(isInside(el, "button, a")) return true;
-    if(el.classList && (el.classList.contains("game-btn") || el.classList.contains("playGame") || el.classList.contains("playBtn"))) return true;
-    if(el.getAttribute && el.getAttribute("data-play")!=null) return true;
-    return false;
-  }
-
-  function centerLogo(){
-    let logo = document.querySelector("#loginLogo, img#loginLogo, .logo img, img.logo, .appLogo, img#logo, img.logo");
-    if(!logo){
-      const imgs=[...document.querySelectorAll("img")];
-      logo = imgs[0] || null;
-    }
-    if(!logo) return;
-    logo.style.display="block";
-    logo.style.marginLeft="auto";
-    logo.style.marginRight="auto";
-    logo.style.transform="none";
-
-    const p = logo.parentElement;
-    if(p){
-      p.style.textAlign="center";
-      p.style.width="100%";
-    }
-  }
-
-  function makeHeader(el, sizeClamp){
-    if(!el || looksLikeGameListItem(el)) return;
-    el.style.textAlign="center";
-    el.style.fontWeight="900";
-    el.style.fontSize=sizeClamp || "clamp(34px,6vw,46px)";
-    el.style.lineHeight="1.05";
-    el.style.letterSpacing=".6px";
-    el.style.marginLeft="auto";
-    el.style.marginRight="auto";
-  }
-
-  function fixHeaders(){
-    try{
-      document.title = (document.title||"Game Night").replace(/\s*•\s*BUILD\s*v\d+\.\d+/i,"") + " • BUILD "+BUILD;
-    }catch(e){}
-
-    // Game Night exact
-    const gn = [...document.querySelectorAll("h1,h2,div,span")]
-      .find(n => !looksLikeGameListItem(n) && norm(n.textContent)==="game night");
-    if(gn) makeHeader(gn, "clamp(36px,6.4vw,48px)");
-
-    // Common header nodes
-    const headerNodes=[...document.querySelectorAll("h1,h2,.title,.screenTitle,.hdrTitle,.pageTitle,.gameTitle,.game-title,.matchTitle,.game-header")];
-    headerNodes.forEach(n => makeHeader(n));
-
-    // Player page name
-    const pName = document.querySelector("#playerName,.playerName,.player-name,.playerHeader .nm");
-    if(pName && !looksLikeGameListItem(pName)){
-      makeHeader(pName, "clamp(36px,6.4vw,48px)");
-    }
-  }
-
-  function fixPlayerGameList(){
-    const items=[...document.querySelectorAll('[data-play], .game-btn, .playGame, .playBtn, button')];
-    items.forEach(b=>{
-      const t = norm(b.textContent);
-      if(!t) return;
-      if(t.includes("around the world") || t.includes("killer") || t.includes("shanghai") || t.includes("cricket") || t.includes("baseball") || t==="around the world"){
-        b.style.textAlign="left";
-        b.style.fontSize="14px";
-        b.style.whiteSpace="nowrap";
-      }
-    });
-  }
-
-  function fixStatsRemove(){
-    const btns=[...document.querySelectorAll("button, .btn")];
-    const stats = btns.find(b => norm(b.textContent)==="stats");
-    const remove = btns.find(b => norm(b.textContent)==="remove");
-    if(!stats || !remove) return;
-
-    if(stats.parentElement && stats.parentElement===remove.parentElement){
-      const parent=stats.parentElement;
-      parent.style.display="flex";
-      parent.style.flexDirection="column";
-      parent.style.gap="10px";
-      parent.insertBefore(stats, remove);
-    }
-    stats.style.background="#ff1744";
-    stats.style.borderRadius="14px";
-    stats.style.boxShadow="0 0 18px rgba(255,23,68,.55)";
-    stats.style.color="#fff";
-
-    remove.style.background="#000";
-    remove.style.borderRadius="14px";
-    remove.style.boxShadow="0 0 12px rgba(0,0,0,.35)";
-    remove.style.color="#fff";
-  }
-
-  function fixHeaderButtons(){
-    // Any button inside likely header containers should be small + top-left
-    const headerAreas=[...document.querySelectorAll(".header, .hdr, .topbar, .toolbar, .game-header, .playerHeader, header")];
-    headerAreas.forEach(area=>{
-      const btn = area.querySelector("button, .btn, a");
-      if(!btn) return;
-      btn.style.position="absolute";
-      btn.style.top="10px";
-      btn.style.left="10px";
-      btn.style.zIndex="9999";
-      btn.style.padding="8px 10px";
-      btn.style.minHeight="36px";
-      btn.style.fontSize="12px";
-    });
-  }
-
-  function applyAll(){
-    centerLogo();
-    fixHeaders();
-    fixPlayerGameList();
-    fixStatsRemove();
-    fixHeaderButtons();
-  }
-
-  function scheduleApply(){
-    if(scheduled) return;
-    scheduled=true;
-    setTimeout(()=>{ scheduled=false; applyAll(); }, 0);
-  }
-
-  function hook(){
-    applyAll();
-
-    document.addEventListener("click", scheduleApply, true);
-    document.addEventListener("input", scheduleApply, true);
-    window.addEventListener("resize", scheduleApply, true);
-
-    // Safe observer: only childList changes, and debounce
-    try{
-      const obs = new MutationObserver(scheduleApply);
-      obs.observe(document.body, {subtree:true, childList:true}); // no attributes to avoid loops
-    }catch(e){}
-  }
-
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", hook, {once:true});
-  else hook();
-})();
-</script>
 
 </body>
 </html>
