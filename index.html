@@ -397,7 +397,7 @@ select{box-shadow:inset 0 0 10px rgba(255,0,64,.14),0 0 16px rgba(255,40,70,.20)
 
 <style id="polish_v7605">
 /* ===========================
-   POLISH v76.11
+   POLISH v76.15
    Cosmetic-only + anti-scroll-jump
    =========================== */
 
@@ -483,7 +483,7 @@ a, .link, .accentBlue{
 
 <style id="wow_v7606">
 /* ===========================================
-   WOW PASS v76.11 (COSMETICS ONLY)
+   WOW PASS v76.15 (COSMETICS ONLY)
    - No layout/flow changes, only typography + glow + logo tint
    =========================================== */
 
@@ -577,7 +577,7 @@ body{
 
 <style id="dart_console_v7607">
 /* =========================================
-   DART CONSOLE THEME v76.11
+   DART CONSOLE THEME v76.15
    Black base + cobalt trim + red/blue env glow + green CTA
    ========================================= */
 
@@ -689,7 +689,7 @@ body::before{
 
 <style id="mascara_v7608">
 /* =========================================
-   MASCARA PASS v76.11 (COSMETICS ONLY)
+   MASCARA PASS v76.15 (COSMETICS ONLY)
    - Center logo (no extra tint experiments)
    - Titles bigger + centered
    - Email INPUT bar: NO glow, cobalt trim only
@@ -801,7 +801,7 @@ input[type="email"], input.email, #email, #emailInput, .emailInput, .login input
 
 <style id="final_requests_v7609">
 /* =========================================
-   FINAL REQUESTS v76.11 (COSMETICS ONLY)
+   FINAL REQUESTS v76.15 (COSMETICS ONLY)
    - Player name centered + bigger
    - Game titles centered + bigger
    - "Game Night" centered + bigger
@@ -892,7 +892,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
 
 
 <style id="final_finish_v7611">
-/* FINAL FINISH PASS v76.11 */
+/* FINAL FINISH PASS v76.15 */
 
 /* LOGO */
 #loginLogo, .logo, .appLogo{
@@ -978,7 +978,7 @@ h1, .title, .gameTitle, .screenTitle{
 </div>
 
 <script type="module">
-const BUILD_ID="v76.11";
+const BUILD_ID="v76.15";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -2905,5 +2905,73 @@ async function render(){
 
 render();
 </script>
+
+
+
+<script id="runtime_final_three_fixes_v7615">
+(function(){
+  function onReady(fn){
+    if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", fn, {once:true});
+    else fn();
+  }
+
+  function centerLogo(){
+    let logo = document.querySelector("#loginLogo, .logo, .appLogo, img#logo, img.logo");
+    if(!logo){
+      const imgs=[...document.querySelectorAll("img")];
+      logo = imgs[0] || null;
+    }
+    if(!logo) return;
+    logo.style.display="block";
+    logo.style.marginLeft="auto";
+    logo.style.marginRight="auto";
+    logo.style.transform="translateX(0)";
+  }
+
+  function centerAndScaleTitles(){
+    const titles=[...document.querySelectorAll("h1,h2,.title,.screenTitle,.hdrTitle,.pageTitle,.gameTitle,.game-title,.matchTitle,.game-header")];
+    titles.forEach(t=>{
+      t.style.textAlign="center";
+      t.style.fontWeight="900";
+      t.style.fontSize="clamp(34px,6vw,46px)";
+      t.style.lineHeight="1.05";
+      t.style.letterSpacing=".6px";
+    });
+  }
+
+  function swapButtonSkinsKeepText(){
+    const btns=[...document.querySelectorAll("button")];
+    const stats = btns.find(b => (b.textContent||"").trim().toLowerCase()==="stats");
+    const remove = btns.find(b => (b.textContent||"").trim().toLowerCase()==="remove");
+    if(!stats || !remove) return;
+
+    // keep stats on top
+    if(stats.parentElement===remove.parentElement){
+      const parent=stats.parentElement;
+      parent.style.display="flex";
+      parent.style.flexDirection="column";
+      parent.insertBefore(stats, remove);
+    }
+
+    // swap visual skins ONLY
+    stats.style.background="#ff1744";
+    stats.style.borderRadius="14px";
+    stats.style.boxShadow="0 0 18px rgba(255,23,68,.55)";
+    stats.style.color="#fff";
+
+    remove.style.background="#000";
+    remove.style.borderRadius="14px";
+    remove.style.boxShadow="0 0 12px rgba(0,0,0,.35)";
+    remove.style.color="#fff";
+  }
+
+  onReady(function(){
+    centerLogo();
+    centerAndScaleTitles();
+    swapButtonSkinsKeepText();
+  });
+})();
+</script>
+
 </body>
 </html>
