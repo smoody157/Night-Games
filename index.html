@@ -397,7 +397,7 @@ select{box-shadow:inset 0 0 10px rgba(255,0,64,.14),0 0 16px rgba(255,40,70,.20)
 
 <style id="polish_v7605">
 /* ===========================
-   POLISH v76.08
+   POLISH v76.09
    Cosmetic-only + anti-scroll-jump
    =========================== */
 
@@ -483,7 +483,7 @@ a, .link, .accentBlue{
 
 <style id="wow_v7606">
 /* ===========================================
-   WOW PASS v76.08 (COSMETICS ONLY)
+   WOW PASS v76.09 (COSMETICS ONLY)
    - No layout/flow changes, only typography + glow + logo tint
    =========================================== */
 
@@ -577,7 +577,7 @@ body{
 
 <style id="dart_console_v7607">
 /* =========================================
-   DART CONSOLE THEME v76.08
+   DART CONSOLE THEME v76.09
    Black base + cobalt trim + red/blue env glow + green CTA
    ========================================= */
 
@@ -689,7 +689,7 @@ body::before{
 
 <style id="mascara_v7608">
 /* =========================================
-   MASCARA PASS v76.08 (COSMETICS ONLY)
+   MASCARA PASS v76.09 (COSMETICS ONLY)
    - Center logo (no extra tint experiments)
    - Titles bigger + centered
    - Email INPUT bar: NO glow, cobalt trim only
@@ -798,6 +798,98 @@ input[type="email"], input.email, #email, #emailInput, .emailInput, .login input
 }
 </style>
 
+
+<style id="final_requests_v7609">
+/* =========================================
+   FINAL REQUESTS v76.09 (COSMETICS ONLY)
+   - Player name centered + bigger
+   - Game titles centered + bigger
+   - "Game Night" centered + bigger
+   - Stats button ABOVE Remove (buttons swapped, text unchanged)
+   - Logo centered with slight left nudge per shield-peak reference
+   ========================================= */
+
+/* Global screen/game titles (identity) */
+h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
+  text-align:center !important;
+  font-size: clamp(32px, 5.6vw, 42px) !important;
+  font-weight: 1000 !important;
+  letter-spacing: .6px !important;
+  line-height: 1.05 !important;
+}
+
+/* "Game Night" heading */
+#loginTitle, .loginTitle, #homeTitle, .homeTitle, .brandTitle{
+  text-align:center !important;
+  font-size: clamp(34px, 6vw, 46px) !important;
+  font-weight: 1000 !important;
+}
+
+/* Player header: name big + centered, not corner */
+.playerHeader, .playerHeader *{
+  text-align:center !important;
+}
+.playerHeader .nm, .playerName, .player-name, #playerName{
+  text-align:center !important;
+  font-size: clamp(34px, 6.2vw, 46px) !important;
+  font-weight: 1000 !important;
+  letter-spacing: .4px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.playerHeader .em, .playerEmail, .player-email, #playerEmail{
+  text-align:center !important;
+  font-size: 13px !important;
+  opacity: .92 !important;
+  text-shadow: none !important;
+}
+
+/* Logo: hard center, slight left nudge (peak between n and t of Enter) */
+#loginLogo{
+  display:block !important;
+  margin: 16px auto 14px auto !important;
+  transform: translateX(-6px) rotate(0deg) !important;
+}
+
+/* Players page actions: vertical stack, Stats on top, Remove on bottom */
+.playerActionsRow{
+  display:flex !important;
+  flex-direction: column !important;
+  gap:10px !important;
+  align-items: stretch !important;
+}
+.playerActionsRow button, .playerActionsRow .btn{
+  width: 100% !important;
+}
+
+/* Keep styling as-is but swap order */
+.playerActionsRow button[data-action="stats"], .playerActionsRow .statsBtn, .btn.stats{
+  order: 1 !important;
+}
+.playerActionsRow button[data-action="remove"], .playerActionsRow .removeBtn, .btn.danger{
+  order: 2 !important;
+}
+
+/* Make Stats the visually primary “bubble” */
+.playerActionsRow button[data-action="stats"], .playerActionsRow .statsBtn, .btn.stats{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 0 20px rgba(34,197,94,.70),
+    0 0 38px rgba(34,197,94,.34) !important;
+}
+
+/* Tone down Remove (still danger) */
+.playerActionsRow button[data-action="remove"], .playerActionsRow .removeBtn, .btn.danger{
+  opacity: .90 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 0 0 1px rgba(255,255,255,.05),
+    0 0 10px rgba(255,0,64,.18),
+    0 0 18px rgba(255,0,64,.10) !important;
+}
+</style>
+
 </head>
 
 <body>
@@ -825,7 +917,7 @@ input[type="email"], input.email, #email, #emailInput, .emailInput, .login input
 </div>
 
 <script type="module">
-const BUILD_ID="v76.08";
+const BUILD_ID="v76.09";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
