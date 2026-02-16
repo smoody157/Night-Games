@@ -397,7 +397,7 @@ select{box-shadow:inset 0 0 10px rgba(255,0,64,.14),0 0 16px rgba(255,40,70,.20)
 
 <style id="polish_v7605">
 /* ===========================
-   POLISH v76.15
+   POLISH v76.17
    Cosmetic-only + anti-scroll-jump
    =========================== */
 
@@ -483,7 +483,7 @@ a, .link, .accentBlue{
 
 <style id="wow_v7606">
 /* ===========================================
-   WOW PASS v76.15 (COSMETICS ONLY)
+   WOW PASS v76.17 (COSMETICS ONLY)
    - No layout/flow changes, only typography + glow + logo tint
    =========================================== */
 
@@ -577,7 +577,7 @@ body{
 
 <style id="dart_console_v7607">
 /* =========================================
-   DART CONSOLE THEME v76.15
+   DART CONSOLE THEME v76.17
    Black base + cobalt trim + red/blue env glow + green CTA
    ========================================= */
 
@@ -689,7 +689,7 @@ body::before{
 
 <style id="mascara_v7608">
 /* =========================================
-   MASCARA PASS v76.15 (COSMETICS ONLY)
+   MASCARA PASS v76.17 (COSMETICS ONLY)
    - Center logo (no extra tint experiments)
    - Titles bigger + centered
    - Email INPUT bar: NO glow, cobalt trim only
@@ -801,7 +801,7 @@ input[type="email"], input.email, #email, #emailInput, .emailInput, .login input
 
 <style id="final_requests_v7609">
 /* =========================================
-   FINAL REQUESTS v76.15 (COSMETICS ONLY)
+   FINAL REQUESTS v76.17 (COSMETICS ONLY)
    - Player name centered + bigger
    - Game titles centered + bigger
    - "Game Night" centered + bigger
@@ -892,7 +892,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
 
 
 <style id="final_finish_v7611">
-/* FINAL FINISH PASS v76.15 */
+/* FINAL FINISH PASS v76.17 */
 
 /* LOGO */
 #loginLogo, .logo, .appLogo{
@@ -978,7 +978,7 @@ h1, .title, .gameTitle, .screenTitle{
 </div>
 
 <script type="module">
-const BUILD_ID="v76.15";
+const BUILD_ID="v76.17";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -2908,52 +2908,119 @@ render();
 
 
 
-<script id="runtime_final_three_fixes_v7615">
+
+<script id="runtime_lock_cosmetics_v7617">
 (function(){
-  function onReady(fn){
-    if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", fn, {once:true});
-    else fn();
+  const BUILD="v76.17";
+
+  const norm = (s)=> (s||"").trim().toLowerCase();
+
+  function isInside(el, selector){
+    try{ return !!el.closest(selector); }catch(e){ return false; }
   }
 
-  function centerLogo(){
-    let logo = document.querySelector("#loginLogo, .logo, .appLogo, img#logo, img.logo");
+  // ----- (A) LOGO: center and keep centered even after re-render
+  function fixLogo(){
+    let logo = document.querySelector("#loginLogo, img#loginLogo, .logo img, img.logo, .appLogo, img#logo, img.logo");
     if(!logo){
+      // heuristic: on login screen, first image near top
       const imgs=[...document.querySelectorAll("img")];
       logo = imgs[0] || null;
     }
     if(!logo) return;
+
+    // center the logo itself
     logo.style.display="block";
     logo.style.marginLeft="auto";
     logo.style.marginRight="auto";
-    logo.style.transform="translateX(0)";
+    logo.style.transform="none";
+
+    // also center its parent container (this prevents "snap back" from parent alignment)
+    const p = logo.parentElement;
+    if(p){
+      p.style.display = p.style.display || "block";
+      p.style.textAlign = "center";
+      p.style.width = "100%";
+    }
   }
 
-  function centerAndScaleTitles(){
-    const titles=[...document.querySelectorAll("h1,h2,.title,.screenTitle,.hdrTitle,.pageTitle,.gameTitle,.game-title,.matchTitle,.game-header")];
-    titles.forEach(t=>{
-      t.style.textAlign="center";
-      t.style.fontWeight="900";
-      t.style.fontSize="clamp(34px,6vw,46px)";
-      t.style.lineHeight="1.05";
-      t.style.letterSpacing=".6px";
+  // ----- (B) HEADERS: only true page headers (not game list buttons on player page)
+  function looksLikeGameListItem(el){
+    // If it's a button, link, or inside game list controls, it's not a page header
+    if(isInside(el, "button, a")) return true;
+    if(el.classList && (el.classList.contains("game-btn") || el.classList.contains("playGame") || el.classList.contains("playBtn"))) return true;
+    if(el.getAttribute && el.getAttribute("data-play")!=null) return true;
+    return false;
+  }
+
+  function makeHeader(el, sizeClamp){
+    if(!el || looksLikeGameListItem(el)) return;
+    el.style.textAlign="center";
+    el.style.fontWeight="900";
+    el.style.fontSize=sizeClamp || "clamp(34px,6vw,46px)";
+    el.style.lineHeight="1.05";
+    el.style.letterSpacing=".6px";
+    el.style.marginLeft="auto";
+    el.style.marginRight="auto";
+  }
+
+  function fixHeaders(){
+    // Browser tab stamp only
+    try{
+      document.title = (document.title||"Game Night").replace(/\s*•\s*BUILD\s*v\d+\.\d+/i,"") + " • BUILD "+BUILD;
+    }catch(e){}
+
+    // Game Night title: exact text if present
+    const gn = [...document.querySelectorAll("h1,h2,div,span")]
+      .find(n => !looksLikeGameListItem(n) && norm(n.textContent)==="game night");
+    if(gn) makeHeader(gn, "clamp(36px,6.4vw,48px)");
+
+    // Game page headers: h1/h2 in header-ish containers
+    const headerNodes=[...document.querySelectorAll("h1,h2,.title,.screenTitle,.hdrTitle,.pageTitle,.gameTitle,.game-title,.matchTitle,.game-header")];
+    headerNodes.forEach(n => makeHeader(n));
+
+    // Player page header (Steve Moody): try known selectors first
+    const pName = document.querySelector("#playerName,.playerName,.player-name,.playerHeader .nm");
+    if(pName && !looksLikeGameListItem(pName)){
+      makeHeader(pName, "clamp(36px,6.4vw,48px)");
+    }
+  }
+
+  // ----- (C) PLAYER PAGE GAME LIST: keep small + left aligned (undo accidental centering)
+  function fixPlayerGameList(){
+    // likely game list controls are play buttons/tiles
+    const items=[...document.querySelectorAll('[data-play], .game-btn, .playGame, .playBtn, button')];
+    items.forEach(b=>{
+      const t = norm(b.textContent);
+      if(!t) return;
+
+      // game list items: around the world / killer / shanghai etc should be left aligned and smaller on PLAYER page
+      // We can't perfectly detect page, but we can safely apply to these "play" entries and keep them readable.
+      if(t.includes("around the world") || t.includes("killer") || t.includes("shanghai") || t.includes("cricket") || t.includes("baseball") || t.includes("around") ){
+        b.style.textAlign="left";
+        // Keep them compact in the list
+        b.style.fontSize="14px";
+        b.style.whiteSpace="nowrap"; // keep Around the World on one line
+      }
     });
   }
 
-  function swapButtonSkinsKeepText(){
-    const btns=[...document.querySelectorAll("button")];
-    const stats = btns.find(b => (b.textContent||"").trim().toLowerCase()==="stats");
-    const remove = btns.find(b => (b.textContent||"").trim().toLowerCase()==="remove");
+  // ----- (D) STATS/REMOVE: keep labels, keep order, swap skins (Stats red, Remove black)
+  function fixStatsRemove(){
+    const btns=[...document.querySelectorAll("button, .btn")];
+    const stats = btns.find(b => norm(b.textContent)==="stats");
+    const remove = btns.find(b => norm(b.textContent)==="remove");
     if(!stats || !remove) return;
 
-    // keep stats on top
-    if(stats.parentElement===remove.parentElement){
+    if(stats.parentElement && stats.parentElement===remove.parentElement){
       const parent=stats.parentElement;
       parent.style.display="flex";
       parent.style.flexDirection="column";
-      parent.insertBefore(stats, remove);
+      parent.style.gap="10px";
+      parent.insertBefore(stats, remove); // Stats on top
     }
 
-    // swap visual skins ONLY
+    // skins only
     stats.style.background="#ff1744";
     stats.style.borderRadius="14px";
     stats.style.boxShadow="0 0 18px rgba(255,23,68,.55)";
@@ -2965,11 +3032,28 @@ render();
     remove.style.color="#fff";
   }
 
-  onReady(function(){
-    centerLogo();
-    centerAndScaleTitles();
-    swapButtonSkinsKeepText();
-  });
+  function applyAll(){
+    fixLogo();
+    fixHeaders();
+    fixPlayerGameList();  // puts those two "title blocks" back (small + left)
+    fixStatsRemove();
+  }
+
+  function hook(){
+    applyAll();
+
+    // Re-apply after interactions that trigger re-render
+    document.addEventListener("click", ()=>setTimeout(applyAll, 0), true);
+    document.addEventListener("input", ()=>setTimeout(applyAll, 0), true);
+    window.addEventListener("resize", ()=>setTimeout(applyAll, 0), true);
+
+    // Observe DOM changes and re-apply (prevents "jump back")
+    const obs = new MutationObserver(()=>{ applyAll(); });
+    obs.observe(document.documentElement, {subtree:true, childList:true, attributes:true});
+  }
+
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", hook, {once:true});
+  else hook();
 })();
 </script>
 
