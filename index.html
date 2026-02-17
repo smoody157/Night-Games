@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v76.70</title>
+<title>Game Night • v76.75</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1894,6 +1894,226 @@ header, .header {
 }
 </style>
 
+
+
+<!-- ===== Moved from bottom for valid HTML ===== -->
+<style>
+/* v76.70: roster one-line (no wrap) but still viewable by horizontal swipe */
+.rosterCenter .nm, .rosterCenter .rosterSub{
+  white-space:nowrap !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  text-overflow:clip !important;
+}
+.rosterCenter .nm::-webkit-scrollbar,
+.rosterCenter .rosterSub::-webkit-scrollbar{ height:0 !important; }
+
+/* Neat stacked actions on roster rows */
+.rosterActions{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:8px !important;
+  align-items:stretch !important;
+  justify-content:center !important;
+}
+.rosterActions .btn{ width:100% !important; }
+</style>
+
+
+<style id="v76.70_player_roster_override">
+/* v76.70: Players section polish + working actions (only players area) */
+
+/* Layout: avatar + YOU badge beside it, centered name/email, actions across bottom */
+.rosterCard{
+  display:grid !important;
+  grid-template-columns:auto 1fr !important;
+  grid-template-areas:
+    "left center"
+    "actions actions" !important;
+  align-items:center !important;
+  gap:12px !important;
+}
+
+/* Left cluster: initials + YOU badge side-by-side (no overlap) */
+.rosterLeft{ 
+  grid-area:left !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+}
+.rosterAvatar{ align-self:center !important; }
+.rosterYou{
+  position:static !important;
+  margin:0 !important;
+  padding:4px 8px !important;
+  border-radius:999px !important;
+  line-height:1 !important;
+}
+
+/* Center: name + email centered */
+.rosterCenter{
+  grid-area:center !important;
+  min-width:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+  align-items:center !important;
+  text-align:center !important;
+}
+.rosterCenter .nm{
+  font-size:15px !important;
+  font-weight:900 !important;
+  margin:0 !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  overflow-wrap:anywhere !important;
+}
+.rosterCenter .rosterSub{
+  font-size:12px !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  overflow-wrap:anywhere !important;
+  opacity:.9 !important;
+}
+
+/* Actions: side-by-side across bottom. Visual order right→left: Stats | History | Remove */
+.rosterActions{
+  grid-area:actions !important;
+  width:100% !important;
+  display:flex !important;
+  flex-direction:row-reverse !important;
+  flex-wrap:nowrap !important;
+  gap:10px !important;
+  margin-top:8px !important;
+}
+.rosterActions .btn{
+  flex:1 1 0 !important;
+  justify-content:center !important;
+  min-height:44px !important;
+}
+
+/* Distinct History: glossy + stronger blue glow */
+.btn.hist{
+  border-color:rgba(59,130,246,.70) !important;
+  box-shadow:
+    0 12px 30px rgba(59,130,246,.22),
+    0 0 22px rgba(59,130,246,.38),
+    inset 0 1px 0 rgba(255,255,255,.18) !important;
+}
+.btn.hist:hover{
+  filter:brightness(1.08) saturate(1.05);
+}
+.btn.hist:active{
+  transform:translateY(1px);
+  box-shadow:
+    0 10px 24px rgba(59,130,246,.18),
+    0 0 18px rgba(59,130,246,.32),
+    inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+
+/* Make sure action buttons are clickable */
+.rosterActions, .rosterActions *{ pointer-events:auto !important; }
+</style>
+<style id="v76.70_players_final_override">
+/* v76.70: Players section final layout + glow + clickability (players only) */
+
+/* Center name/email and make name larger */
+.rosterCenter{ text-align:center !important; }
+.rosterCenter .nm{ font-size:16px !important; font-weight:1000 !important; line-height:1.15 !important; }
+.rosterCenter .rosterSub{ font-size:13px !important; opacity:.92 !important; line-height:1.15 !important; }
+
+/* Allow full visibility (wrap if needed instead of cutting off) */
+.rosterCenter .nm, .rosterCenter .rosterSub{
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  word-break:break-word !important;
+}
+
+/* Actions across bottom, side-by-side; Stats | History | Remove from right-to-left */
+.playerActionsRow.rosterActions{
+  display:flex !important;
+  flex-direction: row !important;
+  gap:10px !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  width:100% !important;
+}
+.playerActionsRow.rosterActions .btn{
+  flex:1 1 0 !important;
+  min-height:42px !important;
+  width:auto !important;
+}
+/* v76.70: enforce button order inside rosterActions */
+.playerActionsRow.rosterActions .statsBtn{ order:1 !important; }
+.playerActionsRow.rosterActions .historyBtn{ order:2 !important; }
+.playerActionsRow.rosterActions .removeBtn{ order:3 !important; }
+
+
+/* Ensure rosterCard can hold bottom row by stacking content */
+.rosterCard{
+  grid-template-columns:auto 1fr !important;
+  grid-template-rows:auto auto !important;
+  align-items:center !important;
+}
+.rosterCard .playerActionsRow.rosterActions{
+  grid-column:1 / -1 !important;
+  margin-top:10px !important;
+}
+
+/* YOU badge next to initials without overlap */
+.rosterLeft{ align-items:center !important; }
+.rosterYou{
+  margin-left:8px !important;
+  position:static !important;
+  transform:none !important;
+}
+
+/* Strong blue glow for History; green glow for Stats; red for Remove */
+button.historyBtn, .historyBtn{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 0 18px rgba(59,130,246,.65),
+    0 0 38px rgba(59,130,246,.30) !important;
+}
+button.statsBtn, .statsBtn{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 0 16px rgba(34,197,94,.55),
+    0 0 32px rgba(34,197,94,.26) !important;
+}
+
+/* Make top player Stats/History glow blue as requested */
+#statsBtn, #historyBtn{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 0 18px rgba(59,130,246,.55),
+    0 0 34px rgba(59,130,246,.24) !important;
+}
+
+/* Login dart icon glow blue */
+#authDart{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    inset 0 0 0 1px rgba(255,255,255,.05),
+    0 0 18px rgba(59,130,246,.55),
+    0 0 34px rgba(59,130,246,.24) !important;
+}
+
+/* Ensure buttons clickable (no overlay blocks) */
+#statsBtn,#historyBtn,button[data-player-stats],button[data-player-history],button[data-player-remove],#authDart{
+  pointer-events:auto !important;
+  position:relative;
+  z-index:5;
+}
+</style>
+<!-- ===== End moved styles ===== -->
+
 </head>
 
 <body>
@@ -1922,7 +2142,7 @@ header, .header {
 </div>
 
 <script type="module">
-const BUILD_ID="v76.70";
+const BUILD_ID="v76.75";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -1939,6 +2159,7 @@ try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 /* ========= Firebase (CDN modules) ========= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
   getFirestore, collection, doc, setDoc, getDoc, getDocs, onSnapshot, updateDoc,
   query, where, orderBy, limit, serverTimestamp, deleteDoc, writeBatch
@@ -1958,6 +2179,8 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 try { getAnalytics(fbApp); } catch {}
 const db = getFirestore(fbApp);
+const auth = getAuth(fbApp);
+try { await signInAnonymously(auth); } catch(e) { /* ignore */ }
 
 /* ========= Helpers ========= */
 const appEl = document.getElementById("app");
@@ -3944,227 +4167,5 @@ bindDelegatedButtons();
 render();
 </script>
 
-
-
-
-<style>
-/* v76.70: roster one-line (no wrap) but still viewable by horizontal swipe */
-.rosterCenter .nm, .rosterCenter .rosterSub{
-  white-space:nowrap !important;
-  overflow-x:auto !important;
-  overflow-y:hidden !important;
-  text-overflow:clip !important;
-}
-.rosterCenter .nm::-webkit-scrollbar,
-.rosterCenter .rosterSub::-webkit-scrollbar{ height:0 !important; }
-
-/* Neat stacked actions on roster rows */
-.rosterActions{
-  display:flex !important;
-  flex-direction:column !important;
-  gap:8px !important;
-  align-items:stretch !important;
-  justify-content:center !important;
-}
-.rosterActions .btn{ width:100% !important; }
-</style>
-
-
-<style id="v76.70_player_roster_override">
-/* v76.70: Players section polish + working actions (only players area) */
-
-/* Layout: avatar + YOU badge beside it, centered name/email, actions across bottom */
-.rosterCard{
-  display:grid !important;
-  grid-template-columns:auto 1fr !important;
-  grid-template-areas:
-    "left center"
-    "actions actions" !important;
-  align-items:center !important;
-  gap:12px !important;
-}
-
-/* Left cluster: initials + YOU badge side-by-side (no overlap) */
-.rosterLeft{ 
-  grid-area:left !important;
-  display:flex !important;
-  align-items:center !important;
-  gap:8px !important;
-}
-.rosterAvatar{ align-self:center !important; }
-.rosterYou{
-  position:static !important;
-  margin:0 !important;
-  padding:4px 8px !important;
-  border-radius:999px !important;
-  line-height:1 !important;
-}
-
-/* Center: name + email centered */
-.rosterCenter{
-  grid-area:center !important;
-  min-width:0 !important;
-  display:flex !important;
-  flex-direction:column !important;
-  justify-content:center !important;
-  align-items:center !important;
-  text-align:center !important;
-}
-.rosterCenter .nm{
-  font-size:15px !important;
-  font-weight:900 !important;
-  margin:0 !important;
-  white-space:normal !important;
-  overflow:visible !important;
-  text-overflow:clip !important;
-  overflow-wrap:anywhere !important;
-}
-.rosterCenter .rosterSub{
-  font-size:12px !important;
-  white-space:normal !important;
-  overflow:visible !important;
-  text-overflow:clip !important;
-  overflow-wrap:anywhere !important;
-  opacity:.9 !important;
-}
-
-/* Actions: side-by-side across bottom. Visual order right→left: Stats | History | Remove */
-.rosterActions{
-  grid-area:actions !important;
-  width:100% !important;
-  display:flex !important;
-  flex-direction:row-reverse !important;
-  flex-wrap:nowrap !important;
-  gap:10px !important;
-  margin-top:8px !important;
-}
-.rosterActions .btn{
-  flex:1 1 0 !important;
-  justify-content:center !important;
-  min-height:44px !important;
-}
-
-/* Distinct History: glossy + stronger blue glow */
-.btn.hist{
-  border-color:rgba(59,130,246,.70) !important;
-  box-shadow:
-    0 12px 30px rgba(59,130,246,.22),
-    0 0 22px rgba(59,130,246,.38),
-    inset 0 1px 0 rgba(255,255,255,.18) !important;
-}
-.btn.hist:hover{
-  filter:brightness(1.08) saturate(1.05);
-}
-.btn.hist:active{
-  transform:translateY(1px);
-  box-shadow:
-    0 10px 24px rgba(59,130,246,.18),
-    0 0 18px rgba(59,130,246,.32),
-    inset 0 1px 0 rgba(255,255,255,.14) !important;
-}
-
-/* Make sure action buttons are clickable */
-.rosterActions, .rosterActions *{ pointer-events:auto !important; }
-</style>
-
 </body>
 </html>
-
-<style id="v76.70_players_final_override">
-/* v76.70: Players section final layout + glow + clickability (players only) */
-
-/* Center name/email and make name larger */
-.rosterCenter{ text-align:center !important; }
-.rosterCenter .nm{ font-size:16px !important; font-weight:1000 !important; line-height:1.15 !important; }
-.rosterCenter .rosterSub{ font-size:13px !important; opacity:.92 !important; line-height:1.15 !important; }
-
-/* Allow full visibility (wrap if needed instead of cutting off) */
-.rosterCenter .nm, .rosterCenter .rosterSub{
-  white-space:normal !important;
-  overflow:visible !important;
-  text-overflow:clip !important;
-  word-break:break-word !important;
-}
-
-/* Actions across bottom, side-by-side; Stats | History | Remove from right-to-left */
-.playerActionsRow.rosterActions{
-  display:flex !important;
-  flex-direction: row !important;
-  gap:10px !important;
-  align-items:center !important;
-  justify-content:flex-start !important;
-  width:100% !important;
-}
-.playerActionsRow.rosterActions .btn{
-  flex:1 1 0 !important;
-  min-height:42px !important;
-  width:auto !important;
-}
-/* v76.70: enforce button order inside rosterActions */
-.playerActionsRow.rosterActions .statsBtn{ order:1 !important; }
-.playerActionsRow.rosterActions .historyBtn{ order:2 !important; }
-.playerActionsRow.rosterActions .removeBtn{ order:3 !important; }
-
-
-/* Ensure rosterCard can hold bottom row by stacking content */
-.rosterCard{
-  grid-template-columns:auto 1fr !important;
-  grid-template-rows:auto auto !important;
-  align-items:center !important;
-}
-.rosterCard .playerActionsRow.rosterActions{
-  grid-column:1 / -1 !important;
-  margin-top:10px !important;
-}
-
-/* YOU badge next to initials without overlap */
-.rosterLeft{ align-items:center !important; }
-.rosterYou{
-  margin-left:8px !important;
-  position:static !important;
-  transform:none !important;
-}
-
-/* Strong blue glow for History; green glow for Stats; red for Remove */
-button.historyBtn, .historyBtn{
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    0 0 18px rgba(59,130,246,.65),
-    0 0 38px rgba(59,130,246,.30) !important;
-}
-button.statsBtn, .statsBtn{
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    0 0 16px rgba(34,197,94,.55),
-    0 0 32px rgba(34,197,94,.26) !important;
-}
-
-/* Make top player Stats/History glow blue as requested */
-#statsBtn, #historyBtn{
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    inset 0 0 0 1px rgba(255,255,255,.06),
-    0 0 18px rgba(59,130,246,.55),
-    0 0 34px rgba(59,130,246,.24) !important;
-}
-
-/* Login dart icon glow blue */
-#authDart{
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.08),
-    inset 0 0 0 1px rgba(255,255,255,.05),
-    0 0 18px rgba(59,130,246,.55),
-    0 0 34px rgba(59,130,246,.24) !important;
-}
-
-/* Ensure buttons clickable (no overlay blocks) */
-#statsBtn,#historyBtn,button[data-player-stats],button[data-player-history],button[data-player-remove],#authDart{
-  pointer-events:auto !important;
-  position:relative;
-  z-index:5;
-}
-</style>
-
-
