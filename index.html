@@ -1918,33 +1918,12 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v76.70</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v76.71</div>
 </div>
 
 <script type="module">
 const BUILD_ID="v76.71";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
-
-/* ========= Crash Overlay (shows runtime errors on-screen) ========= */
-(function crashOverlay(){
-  const show = (msg)=>{
-    try{
-      let box=document.getElementById("__gnCrash");
-      if(!box){
-        box=document.createElement("div");
-        box.id="__gnCrash";
-        box.style.cssText="position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;background:rgba(0,0,0,.85);border:1px solid rgba(255,0,64,.55);border-radius:14px;padding:10px 12px;color:#ffd6da;font:900 12px/1.35 system-ui;box-shadow:0 10px 30px rgba(0,0,0,.55);white-space:pre-wrap;max-height:40vh;overflow:auto";
-        box.addEventListener("click",()=>box.remove());
-        document.body.appendChild(box);
-      }
-      box.textContent = "APP ERROR (tap to dismiss)
-" + msg;
-    }catch{}
-  };
-  window.addEventListener("error",(e)=>show(String(e?.message||e)));
-  window.addEventListener("unhandledrejection",(e)=>show(String(e?.reason?.message||e?.reason||e)));
-})();
-
 
 (function buildStamp(){
   try{
@@ -1957,13 +1936,95 @@ try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 })();
 
 
-/* ========= Firebase (CDN modules) ========= */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAnalytics, isSupported as analyticsIsSupported } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
-import {
-  getFirestore, collection, doc, setDoc, getDoc, getDocs, onSnapshot, updateDoc,
-  query, where, orderBy, limit, serverTimestamp, deleteDoc, writeBatch
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+/* ========= Firebase (dynamic modules; non-blocking boot) =========
+   Why: static `import ... from https://...` can hard-fail and leave you stuck on
+   "Loading… Starting up…" with no error surface (bad Wi‑Fi, captive portal,
+   blocked gstatic, file:// origin quirks).
+   This build boots UI first, then connects Firebase in the background.
+=============================================================== */
+
+let fbApp = null;
+let db = null;
+let fbAuth = null;
+let __fbReady = false;
+let __fbErr = null;
+
+function showBootBanner(msg){
+  try{
+    const host = document.getElementById("app");
+    if(!host) return;
+    const existing = document.getElementById("bootBanner");
+    const el = existing || document.createElement("div");
+    el.id="bootBanner";
+    el.className="toast";
+    el.textContent = msg;
+    if(!existing) host.prepend(el);
+  }catch{}
+}
+
+/* Crash overlay: never silently freeze */
+(function attachCrashOverlay(){
+  const mk=(title,body)=>{
+    try{
+      let box=document.getElementById("crashOverlay");
+      if(!box){
+        box=document.createElement("div");
+        box.id="crashOverlay";
+        box.style.cssText="position:fixed;left:12px;right:12px;bottom:12px;z-index:999999;background:rgba(239,68,68,.14);border:1px solid rgba(239,68,68,.45);color:#ffd6da;padding:10px 12px;border-radius:14px;font:900 12px/1.35 system-ui;box-shadow:0 12px 30px rgba(0,0,0,.5);backdrop-filter:blur(6px);";
+        document.body.appendChild(box);
+      }
+      box.innerHTML = `<div style="font-size:13px;margin-bottom:6px;">${title}</div><div style="font-weight:700;white-space:pre-wrap;word-break:break-word;">${body}</div>`;
+    }catch{}
+  };
+  window.addEventListener("error",(e)=>mk("APP ERROR", (e?.message||"") + (e?.error?.stack?("\n\n"+e.error.stack):"")));
+  window.addEventListener("unhandledrejection",(e)=>mk("UNHANDLED PROMISE", String(e?.reason?.message||e?.reason||e)));
+})();
+
+async function initFirebase(){
+  try{
+    // If you're behind a captive portal / DNS issue, gstatic fetch can hang; fail fast.
+    const withTimeout = (p, ms, label)=>new Promise((res, rej)=>{
+      const t=setTimeout(()=>rej(new Error(label||("Timed out after "+ms+"ms"))), ms);
+      p.then(v=>{clearTimeout(t);res(v);}).catch(err=>{clearTimeout(t);rej(err);});
+    });
+
+    const v = "10.12.5";
+    const appMod = await withTimeout(import(`https://www.gstatic.com/firebasejs/${v}/firebase-app.js`), 7000, "Firebase app module load timed out");
+    const fsMod  = await withTimeout(import(`https://www.gstatic.com/firebasejs/${v}/firebase-firestore.js`), 7000, "Firebase Firestore module load timed out");
+    const authMod= await withTimeout(import(`https://www.gstatic.com/firebasejs/${v}/firebase-auth.js`), 7000, "Firebase Auth module load timed out");
+
+    fbApp = appMod.initializeApp(firebaseConfig);
+    db = fsMod.getFirestore(fbApp);
+    fbAuth = authMod.getAuth(fbApp);
+
+    // Anonymous auth (best effort). If your Firestore rules require auth, this helps.
+    try{ await authMod.signInAnonymously(fbAuth); }catch(_){}
+
+    // Analytics should never block boot.
+    try{
+      const anMod = await import(`https://www.gstatic.com/firebasejs/${v}/firebase-analytics.js`);
+      const supported = typeof anMod.isSupported==="function" ? await anMod.isSupported() : true;
+      if(supported) anMod.getAnalytics(fbApp);
+    }catch(_){}
+
+    __fbReady = true;
+    return true;
+  }catch(err){
+    __fbErr = err;
+    // Surface a human-readable hint.
+    showBootBanner("Online features unavailable (Firebase failed to load). If you're opening from a file:// link, use a web host (HTTPS) or localhost. Details: " + (err?.message||String(err)));
+    return false;
+  }
+}
+
+const __fbInitPromise = initFirebase();
+
+async function ensureDB(){
+  if(db) return db;
+  await __fbInitPromise;
+  if(db) return db;
+  throw (__fbErr || new Error("Firebase not initialized"));
+}
 
 /* ========= CONFIG (yours) ========= */
 const firebaseConfig = {
@@ -1976,17 +2037,7 @@ const firebaseConfig = {
   measurementId: "G-M60TDFYBW0"
 };
 
-const fbApp = initializeApp(firebaseConfig);
-// Analytics is optional and can throw on file://, http, or unsupported environments.
-let analytics = null;
-try{
-  const okOrigin = (location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1");
-  if(okOrigin && await analyticsIsSupported()){
-    analytics = getAnalytics(fbApp);
-  }
-}catch{}
-const db = getFirestore(fbApp);
-
+/* Firebase initialized asynchronously above (db available after ensureDB()) */
 /* ========= Helpers ========= */
 const appEl = document.getElementById("app");
 const homeBtn = document.getElementById("homeBtn");
@@ -2129,22 +2180,26 @@ const C_ROOMS   = "rooms";
 const C_PRES    = "presence";
 
 /* ========= Players ========= */
-async function getPlayers(){
+\1
+  await ensureDB();
   const snap = await getDocs(query(collection(db,C_PLAYERS), orderBy("name")));
   return snap.docs.map(d=>d.data());
 }
-async function upsertPlayer(name,email){
+\1
+  await ensureDB();
   const e = normEmail(email);
   await setDoc(doc(db,C_PLAYERS,e), { name, email:e, updatedAt:serverTimestamp() }, {merge:true});
 }
-async function signInEmail(email){
+\1
+  await ensureDB();
   const e = normEmail(email);
   const ref = doc(db,C_PLAYERS,e);
   const snap = await getDoc(ref);
   if(!snap.exists()) return null;
   return snap.data();
 }
-async function signUpEmail(name,email){
+\1
+  await ensureDB();
   const e = normEmail(email);
   await setDoc(doc(db,C_PLAYERS,e), { name, email:e, createdAt:serverTimestamp() });
   return {name,email:e};
@@ -2165,6 +2220,7 @@ function isOnline(email){
 }
 
 function startPresence(email, name){
+  if(!db){ return; }
   const e = normEmail(email);
   stopPresence();
   const ref = doc(db, C_PRES, e);
@@ -2213,7 +2269,8 @@ function stopPresence(){
    - When opponent opens the same game, they auto-join the waiting room.
    - Match state is synced to room.matchData (per action).
 */
-async function createRoom(gameId, playersEmails){
+\1
+  await ensureDB();
   const id = uuid();
   await setDoc(doc(db, C_ROOMS, id), {
     gameId,
@@ -2228,7 +2285,8 @@ async function createRoom(gameId, playersEmails){
   return id;
 }
 
-async function findWaitingRoomForPlayer(gameId, email){
+\1
+  await ensureDB();
   const e = normEmail(email);
   const snap = await getDocs(query(
     collection(db, C_ROOMS),
@@ -2242,7 +2300,8 @@ async function findWaitingRoomForPlayer(gameId, email){
   return snap.docs[0].id;
 }
 
-async function joinRoom(roomId){
+\1
+  await ensureDB();
   const ref = doc(db, C_ROOMS, roomId);
   const snap = await getDoc(ref);
   if(!snap.exists()) throw new Error("Room not found.");
@@ -2255,7 +2314,8 @@ async function joinRoom(roomId){
 }
 
 let roomUnsub = null;
-async function saveMatchState(roomId, match){
+\1
+  await ensureDB();
   const ref = doc(db, C_ROOMS, roomId);
   const payload = structuredClone(match);
   const nextRev = (match._rev||0) + 1;
@@ -2263,6 +2323,7 @@ async function saveMatchState(roomId, match){
   await updateDoc(ref, { matchData: payload, rev: nextRev, updatedBy: normEmail(meUser.email) });
 }
 function listenMatchState(roomId, cb){
+  if(!db){ showBootBanner('Still connecting… online match sync not ready yet.'); throw new Error('Firebase not ready'); }
   const ref = doc(db, C_ROOMS, roomId);
   if(roomUnsub) try{ roomUnsub(); }catch{}
   roomUnsub = onSnapshot(ref, (snap)=>{
@@ -2274,11 +2335,13 @@ function listenMatchState(roomId, cb){
 }
 
 /* ========= History & Stats (stored online) ========= */
-async function saveHistoryEntry(entry){
+\1
+  await ensureDB();
   const id = uuid();
   await setDoc(doc(db, C_HISTORY, id), entry);
 }
-async function getHistory(email){
+\1
+  await ensureDB();
   const e = normEmail(email);
   const snap = await getDocs(query(
     collection(db, C_HISTORY),
