@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v76.54</title>
+<title>Game Night • v76.55</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -397,7 +397,7 @@ input,select{
 
 
 
-/* ===== v76.54 fixes ===== */
+/* ===== v76.55 fixes ===== */
 
 /* 1) Login logo: TRUE horizontal centering */
 .brandLogoWrap{
@@ -493,15 +493,34 @@ button.btn{ position:relative; z-index:3; }
 .card, .gameCard, .playerCard{ position:relative; }
 
 
-.modalBackdrop{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;display:none}
-.modalBackdrop.show{display:block}
-.modal{position:fixed;inset:0;display:none;z-index:9999;align-items:center;justify-content:center;padding:20px}
-.modal.show{display:flex}
-.modalCard{max-width:420px;width:100%;background:rgba(10,18,44,.94);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
 
+/* v76.55 overlays */
+.globalToast{
+  position:fixed; left:50%; top:14px; transform:translateX(-50%);
+  z-index:99999; padding:10px 14px; border-radius:12px;
+  background:rgba(10,20,40,.92); border:1px solid rgba(120,170,255,.45);
+  color:var(--text); font-weight:700; max-width:min(92vw,560px);
+  box-shadow:0 10px 30px rgba(0,0,0,.45);
+}
+.inviteModal{
+  position:fixed; inset:0; z-index:99998;
+  background:rgba(0,0,0,.55);
+  display:flex; align-items:center; justify-content:center;
+}
+.inviteCard{
+  width:min(92vw,520px);
+  background:rgba(10,16,34,.98);
+  border:1px solid rgba(120,170,255,.35);
+  border-radius:18px;
+  padding:16px 16px 14px;
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+}
+.inviteTitle{ font-size:18px; font-weight:900; margin-bottom:6px; }
+.inviteSub{ opacity:.9; margin-bottom:12px; line-height:1.25; }
+.inviteBtns{ display:flex; gap:10px; justify-content:flex-end; }
 </style>
 
-<style id="cosmetics_v76.54">
+<style id="cosmetics_v76.55">
 #loginLogo{display:block!important;margin:14px auto 10px auto!important;width:min(380px,84vw)!important;height:auto!important;transform:translateX(4px) rotate(0deg)!important;
 filter:brightness(1.12) saturate(1.28) contrast(1.06) drop-shadow(0 0 14px rgba(255,40,70,.78)) drop-shadow(0 0 30px rgba(255,0,64,.56)) drop-shadow(0 0 54px rgba(255,0,64,.28))!important;}
 .playerName,.player-name,.playerHeader .nm,.nm{text-align:center!important;font-size:30px!important;font-weight:1000!important;letter-spacing:.4px!important;}
@@ -513,7 +532,7 @@ select{box-shadow:inset 0 0 10px rgba(255,0,64,.14),0 0 16px rgba(255,40,70,.20)
 
 <style id="polish_v7605">
 /* ===========================
-   POLISH v76.54
+   POLISH v76.55
    Cosmetic-only + anti-scroll-jump
    =========================== */
 
@@ -595,7 +614,7 @@ a, .link, .accentBlue{
   text-shadow: 0 0 10px rgba(59,130,246,.22);
 }
 
-/* ===== Alignment fixes v76.54_01 ===== */
+/* ===== Alignment fixes v76.55_01 ===== */
 .topLeftBtn{
   position:absolute !important;
   top:12px !important;
@@ -626,7 +645,7 @@ a, .link, .accentBlue{
 
 <style id="wow_v7606">
 /* ===========================================
-   WOW PASS v76.54 (COSMETICS ONLY)
+   WOW PASS v76.55 (COSMETICS ONLY)
    - No layout/flow changes, only typography + glow + logo tint
    =========================================== */
 
@@ -720,7 +739,7 @@ body{
 
 <style id="dart_console_v7607">
 /* =========================================
-   DART CONSOLE THEME v76.54
+   DART CONSOLE THEME v76.55
    Black base + cobalt trim + red/blue env glow + green CTA
    ========================================= */
 
@@ -832,7 +851,7 @@ body::before{
 
 <style id="mascara_v7608">
 /* =========================================
-   MASCARA PASS v76.54 (COSMETICS ONLY)
+   MASCARA PASS v76.55 (COSMETICS ONLY)
    - Center logo (no extra tint experiments)
    - Titles bigger + centered
    - Email INPUT bar: NO glow, cobalt trim only
@@ -944,7 +963,7 @@ input[type="email"], input.email, #email, #emailInput, .emailInput, .login input
 
 <style id="final_requests_v7609">
 /* =========================================
-   FINAL REQUESTS v76.54 (COSMETICS ONLY)
+   FINAL REQUESTS v76.55 (COSMETICS ONLY)
    - Player name centered + bigger
    - Game titles centered + bigger
    - "Game Night" centered + bigger
@@ -1035,7 +1054,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
 
 
 <style id="final_finish_v7611">
-/* FINAL FINISH PASS v76.54 */
+/* FINAL FINISH PASS v76.55 */
 
 /* LOGO */
 #loginLogo, .logo, .appLogo{
@@ -1096,7 +1115,7 @@ h1, .title, .gameTitle, .screenTitle{
 
 
 <style id="v7620_static_cosmetics_nojs">
-/* v76.54 STATIC COSMETICS (NO JS, NO OBSERVERS)
+/* v76.55 STATIC COSMETICS (NO JS, NO OBSERVERS)
    Goal: Apply the 3 requested items WITHOUT touching startup logic.
    1) Center logo (no bounce): force logo + its wrapper to be centered, static positioning, !important
    2) Headers: Player name + Game page title bigger + centered; keep game list on player page small + left
@@ -1295,7 +1314,7 @@ button.remove,
 
 <style id="player_ui_align_v7623">
 /* =========================================
-   PLAYER UI ALIGN v76.54
+   PLAYER UI ALIGN v76.55
    ONLY requested alignment/size changes.
    ========================================= */
 
@@ -1422,7 +1441,7 @@ button.remove,
 </style>
 
 <style id="final_alignment_v7624">
-/* FINAL ALIGNMENT v76.54
+/* FINAL ALIGNMENT v76.55
    Only remaining fixes:
    - Landing "Game Night" header centered + bigger
    - Logo centered (do not move again)
@@ -1492,7 +1511,7 @@ button.remove,
 </style>
 <style id="v7625_hotfix_from_screenshot">
 /* =========================================
-   v76.54 HOTFIX (from screenshot feedback)
+   v76.55 HOTFIX (from screenshot feedback)
    DO NOT TOUCH Stats/Remove player-card buttons (already perfect)
    Fix:
    - Topbar "Game Night" centered + bigger
@@ -1577,7 +1596,7 @@ body #loginLogo, body img#loginLogo{
 /* 6) Game screens: game name is in the topbar brandTitle already; ensure it stays centered and big via rules above */
 </style>
 <style id="v7626_layout_lock">
-/* v76.54 Layout Lock
+/* v76.55 Layout Lock
    Fix what you called out:
    - Game Night top header centered + bigger
    - Logo centered (no drift)
@@ -1743,7 +1762,7 @@ header, .header {
 
 
 
-/* ===== Alignment pass v76.54: Roster grid + centered names between left dot and right actions ===== */
+/* ===== Alignment pass v76.55: Roster grid + centered names between left dot and right actions ===== */
 .rosterGrid{display:grid;grid-template-columns:1fr;gap:12px}
 .rosterCard{
   display:grid;
@@ -1808,7 +1827,7 @@ header, .header {
 
 
 
-/* ===== Alignment pass v76.54: overall page rails ===== */
+/* ===== Alignment pass v76.55: overall page rails ===== */
 .playerPage{max-width:920px !important; margin:0 auto !important; padding:0 10px;}
 .gameGrid{margin-left:0; margin-right:0;}
 
@@ -1816,7 +1835,7 @@ header, .header {
 
 <style id="v7633_fixpack_1">
 /* =========================
-   FIXPACK v76.54 (from screenshots)
+   FIXPACK v76.55 (from screenshots)
    - Hard center logo (no translateX)
    - Remove duplicate top-corner version
    - Keep game grid inside blue bordered cards
@@ -1899,16 +1918,25 @@ header, .header {
 .rosterCard{
   grid-template-columns:56px minmax(0,1fr) 132px !important;
 }
-
-/* v76.54 in-app invite + presence UI (minimal) */
-.setupInviteRow{display:flex;gap:8px;align-items:center;justify-content:center;margin:8px 0;}
-.setupInviteText{font-size:12px;opacity:.9;margin-right:6px;}
-.presenceLine{text-align:center;font-size:12px;margin:6px 0;opacity:.9;}
 </style>
 
 </head>
 
 <body>
+
+<!-- v76.55 global overlays -->
+<div id="globalToast" class="globalToast" style="display:none"></div>
+<div id="inviteModal" class="inviteModal" style="display:none">
+  <div class="inviteCard">
+    <div class="inviteTitle" id="inviteTitle">Invite</div>
+    <div class="inviteSub" id="inviteSub"></div>
+    <div class="inviteBtns">
+      <button class="btn" id="inviteJoinBtn" type="button">Join now</button>
+      <button class="btn ghost" id="inviteLaterBtn" type="button">Later</button>
+    </div>
+  </div>
+</div>
+
 <div class="topbar">
   <div class="topActions left">
     <button class="btn ghost" id="homeBtn" type="button">Home</button>
@@ -1916,7 +1944,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v76.54</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v76.55</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -1930,11 +1958,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v76.54</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v76.55</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v76.54";
+const BUILD_ID="v76.55";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -2105,13 +2133,141 @@ function setHTML(html){
   appEl.innerHTML = html;
 }
 
+function renderWithConnection(innerHtml){
+  try{
+    if(roomId && roomMeta && Array.isArray(roomMeta.players)){
+      const joined = roomMeta.joined || {};
+      const x = Object.keys(joined).length;
+      const y = roomMeta.players.length;
+      const bar = `<div class="card" style="margin-bottom:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between">
+        <div class="h2" style="margin:0">Connected</div>
+        <div class="pill" style="font-weight:900">${x}/${y}</div>
+      </div>`;
+      return bar + innerHtml;
+    }
+  }catch(e){}
+  return innerHtml;
+}
+
 /* ========= Firestore collections ========= */
 const C_PLAYERS = "players";
 const C_STATS   = "stats";
 const C_HISTORY = "history";
-const C_ROOMS="rooms";
-const C_INVITES="invites";
+const C_ROOMS   = "rooms";
 const C_PRES    = "presence";
+const C_INVITES = "invites";
+
+
+/* ========= In-app invites + match presence (v76.55) ========= */
+let inviteUnsub = null;
+let pendingInvite = null;
+
+function showToast(msg, ms=2500){
+  const el = document.getElementById("globalToast");
+  if(!el) return;
+  el.textContent = msg;
+  el.style.display = "block";
+  clearTimeout(window.__toastT);
+  window.__toastT = setTimeout(()=>{ el.style.display="none"; }, ms);
+}
+
+function showInviteModal(inv){
+  pendingInvite = inv;
+  const modal = document.getElementById("inviteModal");
+  const title = document.getElementById("inviteTitle");
+  const sub = document.getElementById("inviteSub");
+  if(!modal||!title||!sub) return;
+  title.textContent = "Game Invite";
+  sub.textContent = `${inv.fromName||inv.from||"Someone"} invited you to ${inv.gameName||inv.gameId}.`;
+  modal.style.display = "flex";
+}
+function hideInviteModal(){
+  const modal = document.getElementById("inviteModal");
+  if(modal) modal.style.display = "none";
+  pendingInvite = null;
+}
+
+async function acceptInvite(inv){
+  if(!inv) return;
+  try{
+    // mark accepted
+    if(inv._docId){
+      await updateDoc(doc(db, C_INVITES, inv._docId), { status:"accepted", acceptedAt: serverTimestamp() });
+    }
+  }catch(e){}
+  // join the room
+  roomId = inv.roomId;
+  roomHost = false;
+  await joinRoom(roomId);
+  screen = "play";
+  render();
+  hideInviteModal();
+}
+
+function startInviteListener(){
+  try{
+    if(inviteUnsub) inviteUnsub();
+    if(!meUser?.email) return;
+    const me = normEmail(meUser.email);
+    inviteUnsub = onSnapshot(query(
+      collection(db, C_INVITES),
+      where("to","==", me),
+      where("status","==","pending"),
+      orderBy("createdAt","desc"),
+      limit(5)
+    ), (snap)=>{
+      // show the most recent pending invite
+      let latest = null;
+      snap.forEach(d=>{
+        const v = d.data()||{};
+        if(!latest) latest = { ...v, _docId:d.id };
+      });
+      if(latest){
+        // Avoid re-show spam if already visible for same room
+        if(pendingInvite && pendingInvite.roomId===latest.roomId) return;
+        showInviteModal(latest);
+      }
+    });
+  }catch(e){
+    // if query/orderBy requires index, fall back to a simpler query
+    try{
+      if(inviteUnsub) inviteUnsub();
+      const me = normEmail(meUser.email);
+      inviteUnsub = onSnapshot(query(
+        collection(db, C_INVITES),
+        where("to","==", me),
+        where("status","==","pending"),
+        limit(5)
+      ), (snap)=>{
+        let latest = null;
+        snap.forEach(d=>{ if(!latest) latest = { ...(d.data()||{}), _docId:d.id }; });
+        if(latest){
+          if(pendingInvite && pendingInvite.roomId===latest.roomId) return;
+          showInviteModal(latest);
+        }
+      });
+    }catch(e2){}
+  }
+}
+
+// Wire invite modal buttons once
+document.addEventListener("click",(e)=>{
+  const j = e.target && e.target.id==="inviteJoinBtn";
+  const l = e.target && e.target.id==="inviteLaterBtn";
+  if(j){ e.preventDefault(); acceptInvite(pendingInvite).catch(err=>{ showToast(err?.message||String(err)); }); }
+  if(l){ e.preventDefault(); hideInviteModal(); showToast("Invite saved — join anytime from the game list.", 2200); }
+}, true);
+
+// Room presence: track who has joined
+async function markRoomJoined(rid){
+  try{
+    if(!rid || !meUser?.email) return;
+    const ref = doc(db, C_ROOMS, rid);
+    const e = normEmail(meUser.email);
+    const path = `joined.${e}`;
+    await updateDoc(ref, { [path]: serverTimestamp() });
+  }catch(e){}
+}
 
 /* ========= Players ========= */
 async function getPlayers(){
@@ -2208,9 +2364,29 @@ async function createRoom(gameId, playersEmails){
     hostEmail: normEmail(meUser.email),
     matchData: null,
     rev: 0,
-    updatedBy: null
+    updatedBy: null,
+    joined: { [normEmail(meUser.email)]: serverTimestamp() }
   });
-  return id;
+  // v76.55: create in-app invites for other players
+try{
+  const from = normEmail(meUser.email);
+  const fromName = meUser.name || "";
+  const gameName = (Games.find(g=>g.id===gameId)?.name)||gameId;
+  for(const em of playersEmails.map(normEmail)){
+    if(!em || em===from) continue;
+    await setDoc(doc(db, C_INVITES, uuid()), {
+      roomId: id,
+      gameId,
+      gameName,
+      from,
+      fromName,
+      to: em,
+      status: "pending",
+      createdAt: serverTimestamp()
+    });
+  }
+}catch(e){}
+return id;
 }
 
 async function findWaitingRoomForPlayer(gameId, email){
@@ -2237,101 +2413,8 @@ async function joinRoom(roomId){
   if(data.state==="waiting"){
     await updateDoc(ref, { state:"active" });
   }
+  try{ await markRoomJoined(roomId); }catch(e){}
 }
-
-// v76.54: In-app invites + presence (no OS notifications)
-async function createInvitesForRoom(roomId, gameId, invitedEmails){
-  try{
-    const from = normEmail(meUser.email);
-    const now = Date.now();
-    for(const e of invitedEmails.map(normEmail)){
-      if(!e || e===from) continue;
-      const invId = uuid();
-      await setDoc(doc(db, C_INVITES, invId), {
-        roomId,
-        gameId,
-        from,
-        to: e,
-        status: "pending",
-        createdAt: now,
-      });
-    }
-    toastMsg = "Invites sent";
-  }catch(err){
-    console.warn("createInvitesForRoom failed", err);
-  }
-}
-
-async function listenForInvites(){
-  try{
-    if(!meUser?.email) return;
-    const me = normEmail(meUser.email);
-  try{
-    await updateDoc(doc(db, C_ROOMS, roomId), { [("joined."+me)]: serverTimestamp() });
-  }catch(e){}
-
-    const qInv = query(
-      collection(db, C_INVITES),
-      where("to","==", me),
-      where("status","==","pending"),
-      orderBy("createdAt","desc"),
-      limit(10)
-    );
-    onSnapshot(qInv, (snap)=>{
-      const next = {};
-      snap.forEach(d=>{
-        const v=d.data();
-        if(v?.gameId && v?.roomId){
-          next[v.gameId] = { id:d.id, ...v };
-        }
-      });
-      pendingInvitesByGame = next;
-      // If I'm on setup for a game with a pending invite, show a prompt via toast
-      if(screen==="game.setup" && pendingInvitesByGame[activeGameId]){
-        const inv = pendingInvitesByGame[activeGameId];
-        toastMsg = `Invite from ${inv.from} — Join now?`;
-        if(!dismissedInviteIds.has(inv.id)){
-          invitePrompt = inv;
-          requestRender('invitePrompt');
-        }
-      }
-      // Host/game screen can also re-render to show presence counts
-      if(screen==="home" || screen==="game.setup"){
-        render();
-      }
-    });
-  }catch(err){
-    console.warn("listenForInvites failed", err);
-  }
-
-
-async function acceptInvite(inv){
-  try{
-    if(!inv || !inv.id) return;
-    // mark accepted
-    await updateDoc(doc(db, C_INVITES, inv.id), { status:"accepted", acceptedAt: Date.now() });
-    // join room
-    roomId = inv.roomId;
-    roomHost = false;
-    roomSynced = false;
-    await joinRoom(roomId);
-    // mark presence
-    try{
-      const me = normEmail(meUser.email);
-      updateDoc(doc(db, C_ROOMS, roomId), { [("joined."+me)]: serverTimestamp() }).catch(()=>{});
-    }catch(e){}
-    invitePrompt = null;
-    screen = "game.play";
-    render();
-  }catch(err){
-    console.warn("acceptInvite failed", err);
-    toastMsg = "Could not join invite.";
-    requestRender("toast");
-  }
-}
-
-}
-
 
 let roomUnsub = null;
 async function saveMatchState(roomId, match){
@@ -2403,10 +2486,6 @@ async function deletePlayerAndData(email){
 }
 
 /* ========= UI State ========= */
-let pendingInvitesByGame = {};
-let invitePrompt = null;
-let dismissedInviteIds = new Set();
- // gameId -> {id, from, roomId, ts}
 let toastMsg = "";
 
 // Ensure dynamic buttons always work even after re-render (event delegation)
@@ -2428,96 +2507,10 @@ function wireDelegatedClicks(){
       if(!em || em===meUser?.email) return;
       deletePlayerAndData(em).then(()=>render()).catch(err=>alert(err?.message||String(err)));
     }
-  }, {passive:false});
-
-// CAPTURE ROUTER v76.54: ensure critical buttons always work
-document.addEventListener("click", (e)=>{
-  const el = e.target.closest("#statsBtn,#historyBtn,[data-player-stats],[data-player-history],#inviteJoinBtn,#inviteLaterBtn");
-  if(!el) return;
-  // Invite prompt buttons
-  if(el.id==="inviteJoinBtn"){
-    e.preventDefault(); e.stopPropagation();
-    if(invitePrompt) acceptInvite(invitePrompt);
-    return;
-  }
-  if(el.id==="inviteLaterBtn"){
-    e.preventDefault(); e.stopPropagation();
-    if(invitePrompt){ dismissedInviteIds.add(invitePrompt.id); invitePrompt = null; render(); }
-    return;
-  }
-
-  // Stats / History routing
-  if(el.id==="statsBtn"){
-    e.preventDefault();
-    activePlayerEmail = normEmail(meUser.email);
-    screen = "stats";
-    render();
-    return;
-  }
-  if(el.id==="historyBtn"){
-    e.preventDefault();
-    activePlayerEmail = normEmail(meUser.email);
-    screen = "history";
-    render();
-    return;
-  }
-  if(el.dataset && el.dataset.playerStats){
-    e.preventDefault();
-    activePlayerEmail = normEmail(el.dataset.playerStats);
-    screen = "stats";
-    render();
-    return;
-  }
-  if(el.dataset && el.dataset.playerHistory){
-    e.preventDefault();
-    activePlayerEmail = normEmail(el.dataset.playerHistory);
-    screen = "history";
-    render();
-    return;
-  }
-}, true);
-
+  }, {capture:true, passive:false});
 }
 
-// Added v76.54: alias for legacy builds expecting this name
-
-// v76.54: Capture-phase router so Stats/History ALWAYS fire (even if something stops propagation).
-function wireStatsHistoryCapture(){
-  // Capture-phase router so clicks can't be swallowed by stopPropagation
-  document.addEventListener("click", (e)=>{
-    const el = e.target.closest("#statsBtn,#historyBtn,[data-player-stats],[data-player-history]");
-    if(!el) return;
-
-    // Top buttons
-    if(el.id==="statsBtn"){
-      activePlayerEmail = meUser?.email || activePlayerEmail;
-      screen="stats";
-      render();
-      return;
-    }
-    if(el.id==="historyBtn"){
-      activePlayerEmail = meUser?.email || activePlayerEmail;
-      screen="history";
-      render();
-      return;
-    }
-
-    // Per-player
-    if(el.hasAttribute("data-player-stats")){
-      activePlayerEmail = el.getAttribute("data-player-stats");
-      screen="stats";
-      render();
-      return;
-    }
-    if(el.hasAttribute("data-player-history")){
-      activePlayerEmail = el.getAttribute("data-player-history");
-      screen="history";
-      render();
-      return;
-    }
-  }, true);
-}
-
+// Added v76.55: alias for legacy builds expecting this name
 function bindDelegatedButtons(){
   try{ wireDelegatedClicks(); }catch(e){ /* noop */ }
 }
@@ -2530,10 +2523,8 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 let roomHost = false;       // am I host of room?
-let roomSynced = false;
-let roomConnectedCount = 0;
-let roomTotalCount = 0;
-     // have we received initial matchData?
+let roomSynced = false;     // have we received initial matchData?
+let roomMeta = null;       // latest room doc (for presence)
 
 const Games = [
   {id:"shanghai", name:"Shanghai", icon:"🎯", active:true,  tagline:"20 → 15 → Bull"},
@@ -3392,25 +3383,6 @@ async function renderAuth(){
   let html = `${toastMsg?`<div class="toast">${esc(toastMsg)}</div>`:""}`;
   toastMsg="";
 
-// v76.54: In-app invite prompt modal (Join now / Later)
-if(invitePrompt){
-  const fromName = esc(invitePrompt.from||"Someone");
-  html += `
-    <div class="modalBackdrop show" id="inviteBackdrop"></div>
-    <div class="modal show" id="inviteModal" role="dialog" aria-modal="true" aria-label="Game invite">
-      <div class="modalCard">
-        <div class="h1" style="margin:0 0 6px 0;font-size:20px;">Game Invite</div>
-        <div class="sub" style="margin-bottom:12px;">${fromName} invited you to join <b>${esc(invitePrompt.gameId||"a game")}</b>.</div>
-        <div style="display:flex;gap:10px;justify-content:center;">
-          <button class="btn" id="inviteJoinBtn">Join now</button>
-          <button class="btn ghost" id="inviteLaterBtn">Later</button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-
   html += `
     <div class="card authHero" style="position:relative">
       <button class="btn ghost iconBtn topLeftBtn" id="authDart" aria-label="Menu">🎯</button>
@@ -3439,6 +3411,7 @@ if(invitePrompt){
     if(player){
       meUser=player;
       startPresence(meUser.email, meUser.name);
+      try{ startInviteListener(); }catch(e){}
       screen="home";
       return render();
     }
@@ -3653,47 +3626,24 @@ async function renderGameSetup(){
 
   setupPlayersAll = await getPlayers();
 
-  // v76.54: Persist setup selection and NEVER auto-switch back to "me + Bill" (or any other default).
-  // This prevents the setup screen from changing selections after presence refresh / re-render.
-  const setupKey = "gn_setup_v7651_" + normEmail(meUser.email) + "_" + activeGameId;
+  // Default selection: me + one more (if exists)
+  setupWantedCount = 2;
+  setupSelectedEmails = [normEmail(meUser.email)];
+  const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
+  if(alt) setupSelectedEmails.push(normEmail(alt.email));
 
-  const sameSetupSession =
-    (window.__gn_setupGameId === activeGameId) &&
-    Array.isArray(window.__gn_setupSelectedEmails) &&
-    (typeof window.__gn_setupWantedCount === "number");
-
-  if(sameSetupSession){
-    setupWantedCount = window.__gn_setupWantedCount;
-    setupSelectedEmails = window.__gn_setupSelectedEmails.slice();
-  }else{
-    let saved = null;
-    try{ saved = JSON.parse(localStorage.getItem(setupKey) || "null"); }catch(e){ saved = null; }
-
-    // Default is SOLO (just me). User can switch to 2/3/4.
-    setupWantedCount = (saved && typeof saved.wanted === "number") ? Math.max(1, Math.min(4, saved.wanted)) : 1;
-
-    const me = normEmail(meUser.email);
-    const savedEmails = (saved && Array.isArray(saved.emails)) ? saved.emails.map(normEmail).filter(Boolean) : [me];
-
-    // Always keep me as first selection.
-    setupSelectedEmails = [me, ...savedEmails.filter(e=>normEmail(e)!==me)];
-    setupSelectedEmails = setupSelectedEmails.slice(0, setupWantedCount);
-
-    window.__gn_setupGameId = activeGameId;
-    window.__gn_setupWantedCount = setupWantedCount;
-    window.__gn_setupSelectedEmails = setupSelectedEmails.slice();
-  }
-
-  function persistSetupSelection(){
-    try{
-      localStorage.setItem(setupKey, JSON.stringify({wanted: setupWantedCount, emails: setupSelectedEmails}));
-    }catch(e){}
-    window.__gn_setupGameId = activeGameId;
-    window.__gn_setupWantedCount = setupWantedCount;
-    window.__gn_setupSelectedEmails = setupSelectedEmails.slice();
-  }
-
-  // v76.54: NO auto-join / NO auto-resume in setup. Multiplayer join happens only after Start/Play.
+  // Auto-join if I'm already in a waiting/active room for this game
+  try{
+    const existing = await findWaitingRoomForPlayer(activeGameId, meUser.email);
+    if(existing){
+      roomId = existing;
+      await joinRoom(roomId);
+      roomHost = false;
+      roomSynced = false;
+      screen="game.play";
+      return render();
+    }
+  }catch(e){ /* ignore */ }
 
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
     <div class="divider"></div>
@@ -3848,8 +3798,8 @@ async function renderGameSetup(){
       return true;
     });
 
-    updateSelectedNames(); updateSetupUI(); persistSetupSelection();
-    }
+    updateSelectedNames(); updateSetupUI();
+  }
 
   slotSelects.forEach(sel=>{
     sel.onchange = ()=>syncSelectUI();
@@ -3873,13 +3823,8 @@ async function renderGameSetup(){
     // Create multiplayer room + lock
     roomHost = true;
     roomId = await createRoom(activeGameId, selectedPlayers.map(p=>p.email));
-    await joinRoom(roomId);
-    
-    try{ await createInvitesForRoom(roomId, activeGameId, selectedPlayers.map(p=>p.email)); }catch(e){}
-if(selectedPlayers.length>1){
-      try{ await createInvitesForRoom(roomId, activeGameId, selectedPlayers.map(p=>p.email)); }catch(e){}
-    }
-// puts state active if needed
+    await joinRoom(roomId); // puts state active if needed
+    try{ showToast("Invite sent. Waiting for others to join…"); }catch(e){}
 
     // Start local match + write initial matchData (host)
     if(activeGameId==="shanghai") match = ShanghaiGame.initMatch(selectedPlayers);
@@ -3911,26 +3856,14 @@ async function renderGamePlay(){
   // Multiplayer: subscribe to room state and matchData
   if(roomId){
     listenMatchState(roomId, (roomDoc)=>{
+      roomMeta = roomDoc;
+      try{ markRoomJoined(roomId); }catch(e){}
       // Security: only allow if I'm listed
       const plist = Array.isArray(roomDoc.players)?roomDoc.players:[];
       if(!plist.includes(normEmail(meUser.email))) return;
 
       // If matchData exists and it's newer than ours, adopt it
-      
-// v76.54: compute connected count
-try{
-  roomTotalCount = plist.length || 0;
-  const joined = roomDoc.joined || {};
-  const keys = Object.keys(joined||{});
-  // count only players that are in plist
-  roomConnectedCount = plist.filter(e=>joined && joined[e]).length;
-  // ensure host counts as connected
-  const me = normEmail(meUser.email);
-  if(plist.includes(me) && !(joined && joined[me])){ roomConnectedCount = Math.max(roomConnectedCount, 1); }
-}catch(e){}
-
-if(roomDoc.matchData){
-
+      if(roomDoc.matchData){
         const incoming = roomDoc.matchData;
         const inRev = Number(roomDoc.rev||0);
         const myRev = Number(match?match._rev||0:0);
@@ -3953,33 +3886,25 @@ if(roomDoc.matchData){
   }
 
   if(!match){
-    setHTML(`<div class="card"><div class="h1">Waiting…</div><div class="sub">Joining the match room…</div><div class="sub" style="margin-top:10px;">Connected ${roomConnectedCount}/${roomTotalCount||0}</div></div>`);
+    setHTML(`<div class="card"><div class="h1">Waiting…</div><div class="sub">Joining the match room…</div></div>`);
     // If not host, we wait for host to publish matchData
     return;
   }
 
-  
-function presenceBanner(){
-  if(!roomId) return "";
-  const total = roomTotalCount || (match?.players?.length||0) || 0;
-  const conn = roomConnectedCount || 0;
-  return `<div class="sub" style="text-align:center;margin:6px 0 10px 0;">Connected ${conn}/${total}</div>`;
-}
-
-const ctx={meUser, match};
+  const ctx={meUser, match};
 
   if(activeGameId==="shanghai"){
-    setHTML(ShanghaiGame.renderPlay(ctx));
+    setHTML(renderWithConnection(ShanghaiGame.renderPlay(ctx)));
     ShanghaiGame.bindPlay(ctx);
     return;
   }
   if(activeGameId==="killer"){
-    setHTML(KillerGame.renderPlay(ctx));
+    setHTML(renderWithConnection(KillerGame.renderPlay(ctx)));
     KillerGame.bindPlay(ctx);
     return;
   }
   if(activeGameId==="around"){
-    setHTML(AroundGame.renderPlay(ctx));
+    setHTML(renderWithConnection(AroundGame.renderPlay(ctx)));
     AroundGame.bindPlay(ctx);
     return;
   }
@@ -4198,16 +4123,25 @@ async function render(){
   }
 }
 
+// v76.55: expose core state for any inline handlers (module-safe)
+try{
+  window.render = render;
+  window.goScreen = (name, email)=>{ if(email) activePlayerEmail=email; screen=name; render(); };
+  Object.defineProperty(window,"screen",{get:()=>screen,set:(v)=>{screen=v;}});
+  Object.defineProperty(window,"activePlayerEmail",{get:()=>activePlayerEmail,set:(v)=>{activePlayerEmail=v;}});
+  Object.defineProperty(window,"meUser",{get:()=>meUser,set:(v)=>{meUser=v;}});
+}catch(e){}
+
 bindDelegatedButtons();
-  try{ wireStatsHistoryCapture(); }catch(e){}
-  render();
+render();
+
 </script>
 
 
 
 
 <style>
-/* v76.54: roster one-line (no wrap) but still viewable by horizontal swipe */
+/* v76.55: roster one-line (no wrap) but still viewable by horizontal swipe */
 .rosterCenter .nm, .rosterCenter .rosterSub{
   white-space:nowrap !important;
   overflow-x:auto !important;
@@ -4229,8 +4163,8 @@ bindDelegatedButtons();
 </style>
 
 
-<style id="v76.54_player_roster_override">
-/* v76.54: Players section polish + working actions (only players area) */
+<style id="v76.55_player_roster_override">
+/* v76.55: Players section polish + working actions (only players area) */
 
 /* Layout: avatar + YOU badge beside it, centered name/email, actions across bottom */
 .rosterCard{
@@ -4329,8 +4263,8 @@ bindDelegatedButtons();
 </body>
 </html>
 
-<style id="v76.54_players_final_override">
-/* v76.54: Players section final layout + glow + clickability (players only) */
+<style id="v76.55_players_final_override">
+/* v76.55: Players section final layout + glow + clickability (players only) */
 
 /* Center name/email and make name larger */
 .rosterCenter{ text-align:center !important; }
@@ -4359,7 +4293,7 @@ bindDelegatedButtons();
   min-height:42px !important;
   width:auto !important;
 }
-/* v76.54: enforce button order inside rosterActions */
+/* v76.55: enforce button order inside rosterActions */
 .playerActionsRow.rosterActions .statsBtn{ order:1 !important; }
 .playerActionsRow.rosterActions .historyBtn{ order:2 !important; }
 .playerActionsRow.rosterActions .removeBtn{ order:3 !important; }
