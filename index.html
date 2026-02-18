@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v168</title>
+<title>Game Night • v172</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2237,7 +2237,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v168</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v172</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2251,11 +2251,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v168</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v172</div>
 </div>
 
 <script>
-const BUILD_ID="v168";
+const BUILD_ID="v172";
 
 
 
@@ -2265,7 +2265,7 @@ const BUILD_ID="v168";
 
 
 
-/* v168: Firebase presence guard */
+/* v172: Firebase presence guard */
 (function(){
   window.__FIREBASE_PRESENT__ = !!(window.firebase && typeof window.firebase.initializeApp === "function");
 })();
@@ -2549,7 +2549,7 @@ try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 
 /* ========= Firebase (CDN modules) REMOVED in v163 (was breaking runtime) ========= */
-/* v168: removed duplicate modular Firebase block (was breaking startup) */
+/* v172: removed duplicate modular Firebase block (was breaking startup) */
 /* ========= Helpers ========= */
 const appEl = document.getElementById("app");
 const homeBtn = document.getElementById("homeBtn");
@@ -2991,6 +2991,8 @@ function __goRender(){
 
 let screen = "auth";
 let meUser = null;
+  let activePlayerEmail = null; // selected player for Stats/History
+
 
 let activeGameId = null;
 let match = null;
