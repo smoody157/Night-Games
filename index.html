@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v152</title>
+<title>Game Night • v153</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1908,7 +1908,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v152</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v153</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -1922,11 +1922,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v152</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v153</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v152";
+const BUILD_ID="v153";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -1994,7 +1994,7 @@ try{
 }catch{}
 
 let __audioCtx = null;
-const MASTER_GAIN = 5.0; // boosted (v152)
+const MASTER_GAIN = 3.5; // MAX LOUD (v153) // boosted (v152)
 
 function ensureAudio(){
   if(__audioCtx) return __audioCtx;
@@ -2021,6 +2021,7 @@ function unlockAudio(){
 }
 window.addEventListener("pointerdown", unlockAudio, {passive:true});
 window.addEventListener("touchstart", unlockAudio, {passive:true});
+window.addEventListener("click", unlockAudio, {passive:true, once:true});
 
 
 /* v137 landing page harden */
@@ -2104,7 +2105,7 @@ function playBeep(kind){
   o.frequency.setValueAtTime(preset.f, t0);
 
   g.gain.setValueAtTime(0.0001, t0);
-  const g1 = Math.min(1.0, preset.gain * MASTER_GAIN);
+  const g1 = Math.min(4.0, preset.gain * MASTER_GAIN); // allow >1 for louder (may clip)
   g.gain.exponentialRampToValueAtTime(g1, t0 + 0.015);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + preset.dur);
 
@@ -4021,7 +4022,10 @@ async function renderHistory(){
 
 
 async function render(){
-  wireDelegatedClicks();
+  try{ if(typeof screen==="undefined") screen="auth"; }catch(e){}
+  if(screen==="history") return renderHistory();
+  if(screen==="history_detail") return renderHistoryDetail();
+wireDelegatedClicks();
 
   if(window.__rendering){ window.__renderAgain=true; return; }
   window.__rendering=true;
