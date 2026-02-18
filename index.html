@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v173</title>
+<title>Game Night • v176</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1900,7 +1900,11 @@ header, .header {
 
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
 /* v156 startup cloud sync */
 try{
   const last = (function(){ try{return localStorage.getItem('gn_email_last');}catch(e){return null;} })();
@@ -2193,7 +2197,7 @@ async function renderGameHistory(){
   try{
     const ok = await fbEnsureAnon();
     if(ok){
-      let q = __fb.db.collection("games").orderBy("tsEnd","desc").limit(100);
+      let q = col("Games").orderBy("tsEnd","desc").limit(100);
       if(game) q = q.where("gameType","==", game);
       const snap = await q.get();
       snap.forEach(d=>rows.push(d.data()));
@@ -2224,8 +2228,6 @@ async function renderGameHistory(){
 }
 
 </script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 </head>
 
@@ -2237,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v173</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v176</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2251,11 +2253,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v173</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v176</div>
 </div>
 
 <script>
-const BUILD_ID="v173";
+const BUILD_ID="v176";
 
 
 
@@ -2397,6 +2399,14 @@ const FIREBASE_CONFIG = {
 
 let __fb = { app:null, auth:null, db:null, ready:false, anonOk:false };
 
+// Firestore root doc: all app data lives under /Test/Test/...
+let ROOT_DOC = null;
+function col(name){
+  if(!ROOT_DOC) throw new Error("Firestore ROOT_DOC not initialized yet");
+  return ROOT_DOC.collection(name);
+}
+
+
 function fbInit(){
   try{
     if(__fb.ready) return true;
@@ -2404,6 +2414,8 @@ function fbInit(){
     __fb.app = firebase.initializeApp(FIREBASE_CONFIG);
     __fb.auth = firebase.auth();
     __fb.db = firebase.firestore();
+    ROOT_DOC = __fb.db.collection("Test").doc("Test");
+
     __fb.ready = true;
     return true;
   }catch(e){
@@ -2451,7 +2463,7 @@ async function syncDown(email){
   if(!ok) return;
 
   try{
-    const pRef = __fb.db.collection("players").doc(pk);
+    const pRef = col("Players").doc(pk);
     const pSnap = await pRef.get();
     if(pSnap.exists){
       cacheSet("gn_player_"+pk, pSnap.data() || {});
@@ -2478,12 +2490,12 @@ async function writeMatchAndIndexes(match){
 
   try{
     // 1) global match
-    await __fb.db.collection("games").doc(gameId).set(payload, {merge:true});
+    await col("Games").doc(gameId).set(payload, {merge:true});
 
     // 2) per-player index row + update player doc updatedAt
     await Promise.all(match.players.map(async (email)=>{
       const pk = playerKey(email);
-      const pRef = __fb.db.collection("players").doc(pk);
+      const pRef = col("Players").doc(pk);
       await pRef.set({ email: String(email).toLowerCase(), updatedAt: Date.now() }, {merge:true});
 
       // build lightweight history row
@@ -2734,9 +2746,9 @@ function setHTML(html){
 }
 
 /* ========= Firestore collections ========= */
-const C_PLAYERS = "players";
+const C_PLAYERS = "Players";
 const C_STATS   = "stats";
-const C_HISTORY = "history";
+const C_HISTORY = "History";
 const C_ROOMS   = "rooms";
 const C_PRES    = "presence";
 
