@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v157</title>
+<title>Game Night • v158</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -93,7 +93,7 @@ body{
 
 .topbar{
   position:sticky;top:0;z-index:10;
-  display:grid;grid-template-columns: auto 1fr auto;
+  display:grid;grid-template-columns: 1fr auto 1fr;
   align-items:center;gap:10px;
   padding:10px 12px;
   padding-top:calc(10px + env(safe-area-inset-top));
@@ -1924,12 +1924,12 @@ try{
       if(act==="player_history"){
         if(email) window.activePlayerEmail = email;
         window.screen = "history";
-        if(typeof scheduleRender==="function") scheduleRender(); else if(typeof render==="function") render();
+        if(typeof scheduleRender==="function") __goRender(); else if(typeof render==="function") render();
       }
       if(act==="player_stats"){
         if(email) window.activePlayerEmail = email;
         window.screen = "stats";
-        if(typeof scheduleRender==="function") scheduleRender(); else if(typeof render==="function") render();
+        if(typeof scheduleRender==="function") __goRender(); else if(typeof render==="function") render();
       }
     }catch(e){ console.warn("nav wiring failed", e); }
   }, true);
@@ -1950,7 +1950,7 @@ document.addEventListener("click", function(ev){
   }
   if(act==="back_players"){
     window.screen="players";
-    if(typeof scheduleRender==="function") scheduleRender(); else if(typeof render==="function") render();
+    if(typeof scheduleRender==="function") __goRender(); else if(typeof render==="function") render();
     ev.preventDefault();
   }
 }, true);
@@ -2075,7 +2075,7 @@ document.addEventListener("visibilitychange", ()=>{
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v157</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v158</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2089,11 +2089,11 @@ document.addEventListener("visibilitychange", ()=>{
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v157</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v158</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v157";
+const BUILD_ID="v158";
 
 /* ===== Cloud Sync Core (Firestore) — v156 =====
    UI/graphics/layout unchanged. This only adds durable data sync.
@@ -2691,10 +2691,10 @@ function wireDelegatedClicks(){
     const t = e.target && e.target.closest ? e.target.closest("#statsBtn,#historyBtn,button[data-player-stats],button[data-player-history],button[data-player-remove]") : null;
     if(!t) return;
     // Let explicit onclicks (set during render) run if present; delegation is fallback safety.
-    if(t.id==="statsBtn"){ e.preventDefault(); activePlayerEmail = meUser?.email || activePlayerEmail; screen="stats"; scheduleRender(); }
-    else if(t.id==="historyBtn"){ e.preventDefault(); activePlayerEmail = meUser?.email || activePlayerEmail; screen="history"; scheduleRender(); }
-    else if(t.hasAttribute("data-player-stats")){ e.preventDefault(); activePlayerEmail = t.getAttribute("data-player-stats"); screen="stats"; scheduleRender(); }
-    else if(t.hasAttribute("data-player-history")){ e.preventDefault(); activePlayerEmail = t.getAttribute("data-player-history"); screen="history"; scheduleRender(); }
+    if(t.id==="statsBtn"){ e.preventDefault(); activePlayerEmail = meUser?.email || activePlayerEmail; screen="stats"; __goRender(); }
+    else if(t.id==="historyBtn"){ e.preventDefault(); activePlayerEmail = meUser?.email || activePlayerEmail; screen="history"; __goRender(); }
+    else if(t.hasAttribute("data-player-stats")){ e.preventDefault(); activePlayerEmail = t.getAttribute("data-player-stats"); screen="stats"; __goRender(); }
+    else if(t.hasAttribute("data-player-history")){ e.preventDefault(); activePlayerEmail = t.getAttribute("data-player-history"); screen="history"; __goRender(); }
     else if(t.hasAttribute("data-player-remove")){
       e.preventDefault();
       const em = t.getAttribute("data-player-remove");
@@ -2719,6 +2719,13 @@ function scheduleRender(){
     try{ render(); }catch(e){ try{ console.error(e); }catch(_){ } }
   });
 }
+function __goRender(){
+  try{
+    if(typeof scheduleRender==="function") return __goRender();
+    if(typeof render==="function") return render();
+  }catch(e){}
+}
+
 
 
 let screen = "auth";
@@ -3109,7 +3116,7 @@ const ShanghaiGame=(()=>{
       match=initMatch(pls); render(); if(roomId) saveMatchState(roomId, match).catch(()=>{});
     };
     document.getElementById("backToSetup").onclick=()=>{
-      match=null; roomId=null; screen="game.setup"; scheduleRender();
+      match=null; roomId=null; screen="game.setup"; __goRender();
       if(roomUnsub) try{ roomUnsub(); }catch{}
     };
   }
@@ -3275,7 +3282,7 @@ const KillerGame = (() => {
     const m=ctx.match;
     try{ if(m.phase==="play" && !m.finished) animateTurnName("killer", m.players[m.turnIndex].name); }catch{}
 
-    document.getElementById("backToSetup").onclick=()=>{ match=null; roomId=null; screen="game.setup"; scheduleRender(); if(roomUnsub) try{roomUnsub();}catch{} };
+    document.getElementById("backToSetup").onclick=()=>{ match=null; roomId=null; screen="game.setup"; __goRender(); if(roomUnsub) try{roomUnsub();}catch{} };
     document.getElementById("resetBtn").onclick=()=>{
       const pls=m.players.map(p=>({name:p.name,email:p.email}));
       match=KillerGame.initMatch(pls); render(); if(roomId) saveMatchState(roomId, match).catch(()=>{});
@@ -3501,7 +3508,7 @@ const AroundGame = (()=>{
     try{ animateTurnName("around", ctx.match.players[ctx.match.turnIndex].name); }catch{}
     const m=ctx.match;
 
-    document.getElementById("backToSetup").onclick=()=>{ match=null; roomId=null; screen="game.setup"; scheduleRender(); if(roomUnsub) try{roomUnsub();}catch{} };
+    document.getElementById("backToSetup").onclick=()=>{ match=null; roomId=null; screen="game.setup"; __goRender(); if(roomUnsub) try{roomUnsub();}catch{} };
     document.getElementById("resetBtn").onclick=()=>{
       const pls=m.players.map(p=>({name:p.name,email:p.email}));
       match=AroundGame.initMatch(pls, m.mode); render(); if(roomId) saveMatchState(roomId, match).catch(()=>{});
@@ -3554,7 +3561,7 @@ homeBtn.onclick = ()=>{ screen = meUser ? "home" : "auth"; render(); };
 function doSignOut(){
   stopPresence();
   meUser=null; match=null; activeGameId=null; roomId=null;
-  screen="auth"; scheduleRender();
+  screen="auth"; __goRender();
 }
 signOutBtn.onclick = doSignOut;
 
@@ -3636,7 +3643,7 @@ document.getElementById("goBtn").onclick = async()=>{
   document.getElementById("inEmail").addEventListener("keydown",(ev)=>{ if(ev.key==="Enter"){ ev.preventDefault(); document.getElementById("goBtn").click(); }});
 
     screen="signup";
-    scheduleRender();
+    __goRender();
   };
 }
 
@@ -3666,14 +3673,14 @@ async function renderSignup(){
     </div>
   `);
 
-  document.getElementById("backBtn").onclick=()=>{ meUser=null; screen="auth"; scheduleRender(); };
+  document.getElementById("backBtn").onclick=()=>{ meUser=null; screen="auth"; __goRender(); };
   document.getElementById("createBtn").onclick=async()=>{
     const n=String(document.getElementById("upName").value).trim();
     if(!n){ toastMsg="Enter your name."; return render(); }
     meUser = await signUpEmail(n, meUser.email);
     startPresence(meUser.email, meUser.name);
     screen="home";
-    scheduleRender();
+    __goRender();
   };
 }
 
@@ -3730,9 +3737,9 @@ async function renderHome(){
       </div>
       <div class="playerActionsRow rosterActions">
         <button class="btn action statsBtn" data-player-stats="${esc(p.email)}" type="button"
-          onclick="try{activePlayerEmail='${esc(p.email)}';screen='stats';scheduleRender();}catch(e){}">Stats</button>
+          onclick="try{activePlayerEmail='${esc(p.email)}';screen='stats';__goRender();}catch(e){}">Stats</button>
         <button class="btn action hist historyBtn" data-player-history="${esc(p.email)}" type="button"
-          onclick="try{activePlayerEmail='${esc(p.email)}';screen='history';scheduleRender();}catch(e){}">History</button>
+          onclick="try{activePlayerEmail='${esc(p.email)}';screen='history';__goRender();}catch(e){}">History</button>
         <button class="btn danger removeBtn" data-player-remove="${esc(p.email)}" type="button" ${p.email===meUser.email?`disabled`:``}>Remove</button>
       </div>
     </div>
@@ -3751,8 +3758,8 @@ async function renderHome(){
       <div class="divider"></div>
 
     <div class="row">
-      <button class="btn ghost" id="statsBtn" type="button" onclick="try{activePlayerEmail=meUser.email;screen='stats';scheduleRender();}catch(e){}">Stats</button>
-      <button class="btn ghost" id="historyBtn" type="button" onclick="try{activePlayerEmail=meUser.email;screen='history';scheduleRender();}catch(e){}">History</button>
+      <button class="btn ghost" id="statsBtn" type="button" onclick="try{activePlayerEmail=meUser.email;screen='stats';__goRender();}catch(e){}">Stats</button>
+      <button class="btn ghost" id="historyBtn" type="button" onclick="try{activePlayerEmail=meUser.email;screen='history';__goRender();}catch(e){}">History</button>
     </div>
 
     <div class="divider"></div>
@@ -3771,23 +3778,23 @@ async function renderHome(){
   `);
    // ===== Home avatar (only for signed-in user) =====
   const _s=document.getElementById("statsBtn");
-  if(_s) _s.onclick = (e)=>{ if(e) e.preventDefault(); activePlayerEmail = meUser.email; screen="stats"; scheduleRender(); };
+  if(_s) _s.onclick = (e)=>{ if(e) e.preventDefault(); activePlayerEmail = meUser.email; screen="stats"; __goRender(); };
   const _h=document.getElementById("historyBtn");
-  if(_h) _h.onclick = (e)=>{ if(e) e.preventDefault(); activePlayerEmail = meUser.email; screen="history"; scheduleRender(); };
+  if(_h) _h.onclick = (e)=>{ if(e) e.preventDefault(); activePlayerEmail = meUser.email; screen="history"; __goRender(); };
 
   appEl.querySelectorAll("button[data-play]").forEach(btn=>{
     btn.onclick = ()=>{
       activeGameId = btn.getAttribute("data-play");
       match=null;
       screen="game.setup";
-      scheduleRender();
+      __goRender();
     };
   });
   appEl.querySelectorAll("button[data-stats]").forEach(btn=>{
     btn.onclick = ()=>{
       activeGameId = btn.getAttribute("data-stats");
       screen="stats.game";
-      scheduleRender();
+      __goRender();
     };
   });
   // Player card actions
@@ -3795,14 +3802,14 @@ async function renderHome(){
     btn.onclick = ()=>{
       activePlayerEmail = btn.getAttribute("data-player-stats");
       screen = "stats";
-      scheduleRender();
+      __goRender();
     };
   });
   appEl.querySelectorAll("button[data-player-history]").forEach(btn=>{
     btn.onclick = ()=>{
       activePlayerEmail = btn.getAttribute("data-player-history");
       screen = "history";
-      scheduleRender();
+      __goRender();
     };
   });
 
@@ -3831,7 +3838,7 @@ async function renderGameSetup(){
 
   signOutBtn.style.display="inline-block";
   signOutBtn.textContent="Back";
-  signOutBtn.onclick = ()=>{ roomId=null; match=null; screen="home"; scheduleRender(); };
+  signOutBtn.onclick = ()=>{ roomId=null; match=null; screen="home"; __goRender(); };
   brandTitle.textContent=g.name;
 
   setupPlayersAll = await getPlayers();
@@ -4049,7 +4056,7 @@ async function renderGameSetup(){
     // Initial sync
     try{ await saveMatchState(roomId, match); }catch{}
     screen="game.play";
-    scheduleRender();
+    __goRender();
   };
 }
 
@@ -4059,7 +4066,7 @@ async function renderGamePlay(){
 
   signOutBtn.style.display="inline-block";
   signOutBtn.textContent="Back";
-  signOutBtn.onclick = ()=>{ roomId=null; match=null; screen="home"; scheduleRender(); };
+  signOutBtn.onclick = ()=>{ roomId=null; match=null; screen="home"; __goRender(); };
   brandTitle.textContent=g.name;
 
   // Multiplayer: subscribe to room state and matchData
@@ -4115,7 +4122,7 @@ async function renderGamePlay(){
     AroundGame.bindPlay(ctx);
     return;
   }
-  screen="home"; scheduleRender();
+  screen="home"; __goRender();
 }
 
 async function renderStats(){
@@ -4173,7 +4180,7 @@ async function renderStats(){
     statsSel.onchange = ()=>{
       activePlayerEmail = statsSel.value || meUser.email;
       screen = "stats";
-      scheduleRender();
+      __goRender();
     };
   }
 return `
@@ -4193,7 +4200,7 @@ return `
     }).join("")}
   `);
 
-  document.getElementById("statsBack").onclick=()=>{ screen="home"; scheduleRender(); };
+  document.getElementById("statsBack").onclick=()=>{ screen="home"; __goRender(); };
   document.getElementById("resetAllStatsBtn").onclick=async()=>{
     if(!confirm("Reset ALL your stats?")) return;
     await resetStatsAll(meUser.email);
@@ -4202,7 +4209,7 @@ return `
   };
 
   appEl.querySelectorAll("button[data-open]").forEach(btn=>{
-    btn.onclick=()=>{ activeGameId=btn.getAttribute("data-open"); screen="stats.game"; scheduleRender(); };
+    btn.onclick=()=>{ activeGameId=btn.getAttribute("data-open"); screen="stats.game"; __goRender(); };
   });
 }
 
@@ -4260,7 +4267,7 @@ async function renderStatsGame(){
     </div>
   `);
 
-  document.getElementById("statsGameBack").onclick=()=>{ screen="stats"; scheduleRender(); };
+  document.getElementById("statsGameBack").onclick=()=>{ screen="stats"; __goRender(); };
   document.getElementById("resetGameStatsBtn").onclick=async()=>{
     if(!confirm(`Reset ${g.name} stats?`)) return;
     await resetStatsGame(meUser.email, g.id);
@@ -4295,7 +4302,7 @@ async function renderHistory(){
     ${items}
   `);
 
-  document.getElementById("historyBack").onclick=()=>{ screen="home"; scheduleRender(); };
+  document.getElementById("historyBack").onclick=()=>{ screen="home"; __goRender(); };
 }
 
 async function render(){
@@ -4326,7 +4333,7 @@ async function render(){
     setHTML(`<div class="card"><div class="h1">App error</div><div class="sub">${esc(e?.message||String(e))}</div></div>`);
   }finally{
     window.__rendering=false;
-    if(window.__renderAgain){ window.__renderAgain=false; scheduleRender(); }
+    if(window.__renderAgain){ window.__renderAgain=false; __goRender(); }
   }
 }
 
