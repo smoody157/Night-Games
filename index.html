@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v172</title>
+<title>Game Night • v173</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2237,7 +2237,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v172</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v173</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2251,11 +2251,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v172</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v173</div>
 </div>
 
 <script>
-const BUILD_ID="v172";
+const BUILD_ID="v173";
 
 
 
@@ -3892,7 +3892,7 @@ document.getElementById("goBtn").onclick = async()=>{
     const e = normEmail(document.getElementById("inEmail").value);
     if(!e){ toastMsg="Enter a valid email."; return render(); }
     // ensure Firebase Auth exists so Firestore rules (request.auth != null) pass
-    try { await Promise.race([authReady, new Promise((_,rej)=>setTimeout(()=>rej(new Error("Auth timeout")), 8000))]); } catch(err){ toastMsg = "Auth not ready. Refresh and try again."; return render(); }
+    try { await Promise.race([fbEnsureAnon(), new Promise((_,rej)=>setTimeout(()=>rej(new Error("Auth timeout")), 8000))]); } catch(err){ toastMsg = "Auth not ready. Refresh and try again."; return render(); }
     toastMsg = "Signing in…"; render();
     let player = null;
     try { player = await signInEmail(e); } catch(err){ toastMsg = "Sign-in failed. Check Firestore rules and reload."; return render(); }
