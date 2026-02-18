@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v176</title>
+<title>Game Night • v177</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2239,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v176</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v177</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2253,11 +2253,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v176</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v177</div>
 </div>
 
 <script>
-const BUILD_ID="v176";
+const BUILD_ID="v177";
 
 
 
@@ -2443,6 +2443,46 @@ async function fbEnsureAnon(){
     return false;
   }
 }
+
+
+// ===== Auth readiness (v177) =====
+let __authReadyP = null;
+function __kickAuthReady(){
+  if(__authReadyP) return __authReadyP;
+  __authReadyP = (async()=>{
+    try{
+      // Try quickly; if it fails we return false and allow retry.
+      const ok = await fbEnsureAnon();
+      return !!ok;
+    }catch(e){
+      console.warn("Auth readiness kick failed", e);
+      return false;
+    }
+  })();
+  return __authReadyP;
+}
+
+async function ensureAuthReady({timeoutMs=12000, retries=2} = {}){
+  for(let i=0;i<=retries;i++){
+    const p = __kickAuthReady();
+    try{
+      const ok = await Promise.race([
+        p,
+        new Promise((_,rej)=>setTimeout(()=>rej(new Error("Auth timeout")), timeoutMs))
+      ]);
+      if(ok) return true;
+    }catch(e){
+      console.warn("Auth wait failed", e);
+    }
+    // Reset and retry
+    __authReadyP = null;
+  }
+  return false;
+}
+
+// Kick auth as early as possible so the landing button doesn't race it.
+__kickAuthReady();
+
 
 function cacheSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
 function cacheGet(k, dflt){
@@ -3904,7 +3944,8 @@ document.getElementById("goBtn").onclick = async()=>{
     const e = normEmail(document.getElementById("inEmail").value);
     if(!e){ toastMsg="Enter a valid email."; return render(); }
     // ensure Firebase Auth exists so Firestore rules (request.auth != null) pass
-    try { await Promise.race([fbEnsureAnon(), new Promise((_,rej)=>setTimeout(()=>rej(new Error("Auth timeout")), 8000))]); } catch(err){ toastMsg = "Auth not ready. Refresh and try again."; return render(); }
+    const __okAuth = await ensureAuthReady({timeoutMs:12000,retries:2});
+    if(!__okAuth){ toastMsg = "Auth not ready. Refresh and try again."; return render(); }
     toastMsg = "Signing in…"; render();
     let player = null;
     try { player = await signInEmail(e); } catch(err){ toastMsg = "Sign-in failed. Check Firestore rules and reload."; return render(); }
