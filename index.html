@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v164</title>
+<title>Game Night • v166</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2237,7 +2237,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v163</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v166</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2251,11 +2251,111 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v164</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v166</div>
 </div>
 
-<script type="module">
-const BUILD_ID="v164";
+<script>
+const BUILD_ID="v166";
+
+
+
+
+
+/* ===== v166 VERIFICATION + ALWAYS-BIND BUTTONS =====
+   Goal: ensure login proceeds + buttons respond + sound enabled.
+*/
+(function(){
+  window.__GN_LAST_RENDER_TS = 0;
+
+  function isBtn(el){ return !!(el && el.tagName==="BUTTON"); }
+
+  function bindAllKnownButtons(){
+    try{
+      // Player buttons
+      document.querySelectorAll('button[data-player-stats],button[data-action="player_stats"]').forEach((btn)=>{
+        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activePlayerEmail = btn.getAttribute("data-player-stats")||btn.getAttribute("data-email")||btn.getAttribute("data-player")||""; window.screen="stats"; __goRender(); };
+      });
+      document.querySelectorAll('button[data-player-history],button[data-action="player_history"]').forEach((btn)=>{
+        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activePlayerEmail = btn.getAttribute("data-player-history")||btn.getAttribute("data-email")||btn.getAttribute("data-player")||""; window.screen="history"; __goRender(); };
+      });
+      // Game history (new or legacy)
+      document.querySelectorAll('button[data-game-history],button[data-action="game_history"],button[data-stats]').forEach((btn)=>{
+        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activeGameType = btn.getAttribute("data-game-history")||btn.getAttribute("data-stats")||btn.getAttribute("data-game")||btn.getAttribute("data-gametype")||""; window.screen="game_history"; __goRender(); };
+      });
+    }catch(e){ console.warn("bindAllKnownButtons failed", e); }
+  }
+
+  // Delegated catch-all click (if overlays swallow clicks, this won't fire either)
+  document.addEventListener("click", function(ev){
+    try{ if(typeof unlockAudio==="function") unlockAudio(); }catch(e){}
+    const b = ev.target && ev.target.closest ? ev.target.closest("button") : null;
+    if(!b) return;
+    // If button has no onclick, attempt to bind and re-run
+    if(!b.onclick) bindAllKnownButtons();
+  }, true);
+
+  // Wrap render to always rebind after DOM updates
+  if(typeof window.render === "function" && !window.render.__gn_wrapped){
+    const _r = window.render;
+    window.render = function(){
+      const out = _r.apply(this, arguments);
+      window.__GN_LAST_RENDER_TS = Date.now();
+      try{ bindAllKnownButtons(); }catch(e){}
+      return out;
+    };
+    window.render.__gn_wrapped = true;
+  }
+
+  // Boot: if login works, ensure home renders within 2s
+  setTimeout(()=>{
+    try{
+      if(typeof __landingLocalSignIn==="function"){
+        // no-op, just ensures function exists
+      }
+      if(!window.screen) window.screen="landing";
+      // If stuck in loading text, force render
+      const app = document.getElementById("app");
+      if(app && /loading/i.test(app.textContent||"")){
+        try{ window.screen = window.screen || "landing"; }catch(e){}
+        try{ __goRender(); }catch(e){ try{ render(); }catch(_){} }
+      }
+      bindAllKnownButtons();
+    }catch(e){}
+  }, 1200);
+})();
+
+/* ===== v165 BOOT FAILSAFE ===== */
+(function(){
+  function showBootError(msg){
+    try{
+      const app = document.getElementById("app");
+      if(!app) return;
+      app.innerHTML = `<div class="card"><div class="h1">Startup Error</div><div class="sub">${String(msg||"Unknown error")}</div></div>`;
+    }catch(e){}
+  }
+  window.addEventListener("error", (e)=>{
+    try{ showBootError(e.message || e.error || e); }catch(_){};
+  });
+  window.addEventListener("unhandledrejection", (e)=>{
+    try{ showBootError(e.reason || e); }catch(_){};
+  });
+
+  // If nothing renders within 1500ms, force a render attempt (prevents infinite "Loading…")
+  setTimeout(()=>{
+    try{
+      if(typeof renderHome==="function"){
+        // If we're still showing Loading, force home screen
+        const app = document.getElementById("app");
+        if(app && app.textContent && app.textContent.includes("Loading")){
+          window.screen = window.screen || "home";
+          if(typeof __goRender==="function") __goRender();
+          else if(typeof render==="function") render();
+          else renderHome();
+        }
+      }
+    }catch(e){ showBootError(e.message||e); }
+  }, 1500);
+})();
 
 /* ===== Cloud Sync Core (Firestore) — v156 =====
    UI/graphics/layout unchanged. This only adds durable data sync.
@@ -2469,7 +2569,7 @@ try{
 }catch{}
 
 let __audioCtx = null;
-const MASTER_GAIN = 8.0; // MAX (may clip) // phone-friendly
+const MASTER_GAIN = 10.0; // MAX // MAX (may clip) // phone-friendly
 
 function ensureAudio(){
   if(__audioCtx) return __audioCtx;
