@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v162</title>
+<title>Game Night • v163</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2237,7 +2237,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v162</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v163</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2251,11 +2251,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v162</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v163</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v162";
+const BUILD_ID="v163";
 
 /* ===== Cloud Sync Core (Firestore) — v156 =====
    UI/graphics/layout unchanged. This only adds durable data sync.
@@ -2424,16 +2424,7 @@ try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 })();
 
 
-/* ========= Firebase (CDN modules) ========= */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
-import {
-  getFirestore, collection, doc, setDoc, getDoc, getDocs, onSnapshot, updateDoc,
-  query, where, orderBy, limit, serverTimestamp, deleteDoc, writeBatch
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-
-
+/* ========= Firebase (CDN modules) REMOVED in v163 (was breaking runtime) ========= */
 /* ========= CONFIG (yours) ========= */
 const firebaseConfig = {
   apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
@@ -2478,7 +2469,7 @@ try{
 }catch{}
 
 let __audioCtx = null;
-const MASTER_GAIN = 3.2; // phone-friendly
+const MASTER_GAIN = 8.0; // MAX (may clip) // phone-friendly
 
 function ensureAudio(){
   if(__audioCtx) return __audioCtx;
@@ -4679,6 +4670,22 @@ render();
   white-space: normal !important;
   overflow-wrap: anywhere !important;
 }
+</style>
+
+
+<style id="v163_click_layer_fix">
+/* v163: ensure interactive layers are on top and taps reach buttons */
+#app, .playerPage, .gameGrid, .rosterCard, .playerActionsRow, .rosterActions{
+  position: relative !important;
+  z-index: 50 !important;
+  pointer-events: auto !important;
+}
+/* v163: decorative layers should never steal taps */
+#loginIntroVideo, video, canvas, .loginArtSvg, .heroVideo, .bgLayer, .scanlines{
+  pointer-events: none !important;
+}
+/* v163: games list not hidden under dark panel */
+.gameGrid{ z-index: 60 !important; }
 </style>
 
 </body>
