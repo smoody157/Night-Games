@@ -1,14 +1,4 @@
 
-/* v132 video autoplay assist */
-(function(){
-  if(window.__v132VideoAssist) return;
-  window.__v132VideoAssist = true;
-  const kick = ()=>{ try{ __enforceSilentLoginVideo(); }catch(e){} };
-  window.addEventListener("pointerdown", kick, {passive:true, once:true});
-  window.addEventListener("touchstart",  kick, {passive:true, once:true});
-  window.addEventListener("click",       kick, {passive:true, once:true});
-})();
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -17,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v132</title>
+<title>Game Night • v133</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1915,7 +1905,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v132</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v133</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -1929,11 +1919,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v132</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v133</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v132";
+const BUILD_ID="v133";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -3243,8 +3233,8 @@ async function renderAuth(){
 
     <div class="card" style="padding:14px 14px 10px 14px">
       <video id="loginIntroVideo" playsinline muted autoplay loop preload="auto"
-        style="width:100%;max-width:520px;border-radius:16px;display:block;margin:0 auto;">
-        <source src="0217.mp4" type="video/mp4">
+        style="width:100%;max-width:520px;min-height:220px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);">
+        <source src="./0217.mp4" type="video/mp4">
       </video>
     </div>
 
@@ -4205,3 +4195,14 @@ button.statsBtn, .statsBtn{
 </style>
 
 
+
+
+/* v133 video autoplay assist (kept out of HTML) */
+(function(){
+  if(window.__v133VideoAssist) return;
+  window.__v133VideoAssist = true;
+  const kick = ()=>{ try{ __enforceSilentLoginVideo(); }catch(e){} };
+  window.addEventListener("pointerdown", kick, {passive:true, once:true});
+  window.addEventListener("touchstart",  kick, {passive:true, once:true});
+  window.addEventListener("click",       kick, {passive:true, once:true});
+})();
