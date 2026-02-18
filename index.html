@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v161</title>
+<title>Game Night • v162</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2119,10 +2119,10 @@ function bindHomeActionButtons(){
       };
     });
     // Game History (replacing old "Stats" at game cards)
-    document.querySelectorAll('button[data-game-history],button[data-action="game_history"]').forEach((btn)=>{
+    document.querySelectorAll('button[data-game-history],button[data-stats],button[data-action="game_history"]').forEach((btn)=>{
       btn.onclick = ()=>{
         try{
-          const game = btn.getAttribute("data-game-history") || btn.getAttribute("data-game") || btn.getAttribute("data-gameid") || btn.getAttribute("data-gametype") || "";
+          const game = btn.getAttribute("data-game-history") || btn.getAttribute("data-game") || btn.getAttribute("data-gameid") || btn.getAttribute("data-gametype") || btn.getAttribute("data-stats") || "";
           window.activeGameType = game;
           window.screen = "game_history";
           __goRender();
@@ -2134,37 +2134,48 @@ function bindHomeActionButtons(){
 
 
 
-/* v161: delegated fallback so buttons never go dead after re-render */
+
+/* v162: delegated fallback so buttons never go dead after re-render */
 document.addEventListener("click", function(ev){
-  const b = ev.target && ev.target.closest ? ev.target.closest('button[data-player-stats],button[data-player-history],button[data-game-history],button[data-action="player_stats"],button[data-action="player_history"],button[data-action="game_history"]') : null;
+  const b = ev.target && ev.target.closest ? ev.target.closest(
+    'button[data-player-stats],button[data-player-history],button[data-game-history],button[data-stats],button[data-action="player_stats"],button[data-action="player_history"],button[data-action="game_history"]'
+  ) : null;
   if(!b) return;
-  const act = b.getAttribute("data-action");
+
+  const act = b.getAttribute("data-action") || "";
+
   try{ if(typeof playBeep==="function") playBeep("nav"); }catch(e){}
+
+  // Player Stats
   if(act==="player_stats" || b.hasAttribute("data-player-stats")){
     ev.preventDefault();
     const email = b.getAttribute("data-email") || b.getAttribute("data-player") || b.getAttribute("data-player-stats") || (window.meUser && meUser.email) || "";
     window.activePlayerEmail = email;
     window.screen="stats";
     __goRender();
+    return;
   }
+
+  // Player History
   if(act==="player_history" || b.hasAttribute("data-player-history")){
     ev.preventDefault();
     const email = b.getAttribute("data-email") || b.getAttribute("data-player") || b.getAttribute("data-player-history") || (window.meUser && meUser.email) || "";
     window.activePlayerEmail = email;
     window.screen="history";
     __goRender();
+    return;
   }
-  if(act==="game_history" || b.hasAttribute("data-game-history")){
+
+  // Game History (from new button OR legacy data-stats)
+  if(act==="game_history" || b.hasAttribute("data-game-history") || b.hasAttribute("data-stats")){
     ev.preventDefault();
-    const game = b.getAttribute("data-game-history") || b.getAttribute("data-game") || b.getAttribute("data-gameid") || b.getAttribute("data-gametype") || "";
+    const game = b.getAttribute("data-game-history") || b.getAttribute("data-game") || b.getAttribute("data-gameid") || b.getAttribute("data-gametype") || b.getAttribute("data-stats") || "";
     window.activeGameType = game;
     window.screen="game_history";
     __goRender();
+    return;
   }
 }, true);
-
-
-
 /* ===== v161: Game History (last 100 games by game type) ===== */
 async function renderGameHistory(){
   const game = window.activeGameType || "";
@@ -2226,7 +2237,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v161</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v162</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2240,11 +2251,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v161</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v162</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v161";
+const BUILD_ID="v162";
 
 /* ===== Cloud Sync Core (Firestore) — v156 =====
    UI/graphics/layout unchanged. This only adds durable data sync.
@@ -3877,7 +3888,7 @@ async function renderHome(){
         </div>
         <div class="gameActions">
           <button class="btn ok" data-play="${esc(g.id)}" ${soon?"disabled":""}>Play</button>
-          <button class="btn ghost" data-stats="${esc(g.id)}">Stats</button>
+          <button class="btn ghost" data-action="game_history" data-game-history="${esc(g.id)}">History</button>
         </div>
       </div>
     `;
@@ -4657,6 +4668,16 @@ render();
   line-height:1.15 !important;
   font-size:12px !important;
   max-width:100% !important;
+}
+</style>
+
+
+<style id="v162_footer_no_overlap">
+/* v162: keep the tiny dev credit from overflowing into buttons */
+#devTag, .devTag, .devCredit, .creditLine{
+  max-width: 92vw !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
 }
 </style>
 
