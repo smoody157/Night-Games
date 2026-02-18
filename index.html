@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v167</title>
+<title>Game Night • v168</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2237,7 +2237,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v167</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v168</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2251,17 +2251,24 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v167</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v168</div>
 </div>
 
 <script>
-const BUILD_ID="v167";
+const BUILD_ID="v168";
 
 
 
 
 
 
+
+
+
+/* v168: Firebase presence guard */
+(function(){
+  window.__FIREBASE_PRESENT__ = !!(window.firebase && typeof window.firebase.initializeApp === "function");
+})();
 
 /* ===== v167 FIREBASE INIT SHIM (prevents initializeApp ReferenceError) ===== */
 (function(){
@@ -2542,28 +2549,7 @@ try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 
 /* ========= Firebase (CDN modules) REMOVED in v163 (was breaking runtime) ========= */
-/* ========= CONFIG (yours) ========= */
-const firebaseConfig = {
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-  projectId: "gamenightdarts-e7601",
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-  messagingSenderId: "270045452251",
-  appId: "1:270045452251:web:5a4a661140a60780e939fe",
-  measurementId: "G-M60TDFYBW0"
-};
-
-const fbApp = window.initializeApp(firebaseConfig);
-const fbAuth = getAuth(fbApp);
-let __authReadyResolve;
-const authReady = new Promise(res=>__authReadyResolve=res);
-onAuthStateChanged(fbAuth,(u)=>{ if(u) __authReadyResolve(u); });
-signInAnonymously(fbAuth).catch(()=>{ /* ignore */ });
-
-
-try { getAnalytics(fbApp); } catch {}
-const db = getFirestore(fbApp);
-
+/* v168: removed duplicate modular Firebase block (was breaking startup) */
 /* ========= Helpers ========= */
 const appEl = document.getElementById("app");
 const homeBtn = document.getElementById("homeBtn");
