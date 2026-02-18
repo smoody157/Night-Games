@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v121</title>
+<title>Game Night • v124</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2042,7 +2042,7 @@ button.statsBtn, .statsBtn{
 </div>
 
 <script type="module">
-const BUILD_ID="v123";
+const BUILD_ID="v124";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 // --- Firebase dynamic loader (prevents hard-boot failure if CDN blocked) ---
@@ -2130,6 +2130,11 @@ if(!firebaseOk){
     },0);
   }
 }
+
+// v124 boot guard: if Firebase isn't available, default to offline-safe mode and avoid firebase calls.
+if(!firebaseOk){
+  window.__OFFLINE_MODE__ = true;
+}
 const firebaseConfig = {
   apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
   authDomain: "gamenightdarts-e7601.firebaseapp.com",
@@ -2202,10 +2207,14 @@ function ensureMasterBus(){
     comp.ratio.setValueAtTime(12, ctx.currentTime);
     comp.attack.setValueAtTime(0.002, ctx.currentTime);
     comp.release.setValueAtTime(0.18, ctx.currentTime);
+
     const mg = ctx.createGain();
-    mg.gain.setValueAtTime(2.2, ctx.currentTime);
+    // Stronger master gain; user can lower device volume
+    mg.gain.setValueAtTime(2.8, ctx.currentTime);
+
     comp.connect(mg);
-    mg.connect(ensureMasterBus() || ctx.destination);
+    mg.connect(ctx.destination);
+
     __masterIn = comp;
     __masterGain = mg;
     return __masterIn;
