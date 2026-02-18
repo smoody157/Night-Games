@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v160</title>
+<title>Game Night • v161</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2091,6 +2091,127 @@ function bindPlayerActionButtons(){
   }catch(e){ console.warn(e); }
 }
 
+
+
+/* ===== v161: HARD BIND PLAYER + GAME HISTORY BUTTONS AFTER HOME RENDER ===== */
+function bindHomeActionButtons(){
+  try{
+    // Player Stats
+    document.querySelectorAll('button[data-player-stats],button[data-action="player_stats"]').forEach((btn)=>{
+      btn.onclick = ()=>{
+        try{
+          const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-stats") || (window.meUser && meUser.email) || "";
+          window.activePlayerEmail = email;
+          window.screen = "stats";
+          __goRender();
+        }catch(e){ console.warn("player_stats click failed", e); }
+      };
+    });
+    // Player History
+    document.querySelectorAll('button[data-player-history],button[data-action="player_history"]').forEach((btn)=>{
+      btn.onclick = ()=>{
+        try{
+          const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-history") || (window.meUser && meUser.email) || "";
+          window.activePlayerEmail = email;
+          window.screen = "history";
+          __goRender();
+        }catch(e){ console.warn("player_history click failed", e); }
+      };
+    });
+    // Game History (replacing old "Stats" at game cards)
+    document.querySelectorAll('button[data-game-history],button[data-action="game_history"]').forEach((btn)=>{
+      btn.onclick = ()=>{
+        try{
+          const game = btn.getAttribute("data-game-history") || btn.getAttribute("data-game") || btn.getAttribute("data-gameid") || btn.getAttribute("data-gametype") || "";
+          window.activeGameType = game;
+          window.screen = "game_history";
+          __goRender();
+        }catch(e){ console.warn("game_history click failed", e); }
+      };
+    });
+  }catch(e){ console.warn("bindHomeActionButtons failed", e); }
+}
+
+
+
+/* v161: delegated fallback so buttons never go dead after re-render */
+document.addEventListener("click", function(ev){
+  const b = ev.target && ev.target.closest ? ev.target.closest('button[data-player-stats],button[data-player-history],button[data-game-history],button[data-action="player_stats"],button[data-action="player_history"],button[data-action="game_history"]') : null;
+  if(!b) return;
+  const act = b.getAttribute("data-action");
+  try{ if(typeof playBeep==="function") playBeep("nav"); }catch(e){}
+  if(act==="player_stats" || b.hasAttribute("data-player-stats")){
+    ev.preventDefault();
+    const email = b.getAttribute("data-email") || b.getAttribute("data-player") || b.getAttribute("data-player-stats") || (window.meUser && meUser.email) || "";
+    window.activePlayerEmail = email;
+    window.screen="stats";
+    __goRender();
+  }
+  if(act==="player_history" || b.hasAttribute("data-player-history")){
+    ev.preventDefault();
+    const email = b.getAttribute("data-email") || b.getAttribute("data-player") || b.getAttribute("data-player-history") || (window.meUser && meUser.email) || "";
+    window.activePlayerEmail = email;
+    window.screen="history";
+    __goRender();
+  }
+  if(act==="game_history" || b.hasAttribute("data-game-history")){
+    ev.preventDefault();
+    const game = b.getAttribute("data-game-history") || b.getAttribute("data-game") || b.getAttribute("data-gameid") || b.getAttribute("data-gametype") || "";
+    window.activeGameType = game;
+    window.screen="game_history";
+    __goRender();
+  }
+}, true);
+
+
+
+/* ===== v161: Game History (last 100 games by game type) ===== */
+async function renderGameHistory(){
+  const game = window.activeGameType || "";
+  let html = '';
+  html += `<div class="card" style="position:relative">
+    <button class="btn ghost iconBtn topLeftBtn" id="ghBack">⬅️</button>
+    <div class="authCenter">
+      <div class="h1" style="margin:0;font-size:28px;font-weight:1000;text-align:center">Game History</div>
+      <div class="sub" style="text-align:center;margin-top:6px">${esc(game||"")}</div>
+    </div>
+  </div>`;
+
+  // Pull from cloud (best-effort) then show
+  let rows = [];
+  try{
+    const ok = await fbEnsureAnon();
+    if(ok){
+      let q = __fb.db.collection("games").orderBy("tsEnd","desc").limit(100);
+      if(game) q = q.where("gameType","==", game);
+      const snap = await q.get();
+      snap.forEach(d=>rows.push(d.data()));
+    }
+  }catch(e){ console.warn("renderGameHistory query failed", e); }
+
+  if(!rows.length){
+    html += `<div class="card" style="margin-top:14px"><div class="sub" style="text-align:center">No games yet.</div></div>`;
+  }else{
+    html += `<div class="card" style="margin-top:14px;padding:10px">
+      <div style="display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow:auto;padding-right:4px">`;
+    rows.forEach((g)=>{
+      const when = new Date(g.tsEnd||g.ts||Date.now()).toLocaleString();
+      const players = Array.isArray(g.players)? g.players.join(", ") : "";
+      const scoreLine = esc(g.scoreLine||"");
+      const status = String(g.status||"completed").toLowerCase();
+      html += `<button class="btn action" data-action="history_detail" data-gameid="${esc(g.id||g.gameId||"")}" style="text-align:left;padding:12px">
+        <div style="font-weight:900">${esc(g.gameType||g.game||"Game")}</div>
+        <div class="sub" style="margin-top:2px">${when}${players?(" • "+esc(players)):""}${scoreLine?(" • "+scoreLine):""} • ${status}</div>
+      </button>`;
+    });
+    html += `</div></div>`;
+  }
+
+  setHTML(html);
+  const back=document.getElementById("ghBack");
+  if(back) back.onclick=()=>{ window.screen="home"; __goRender(); };
+}
+
 </script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2105,7 +2226,7 @@ function bindPlayerActionButtons(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v160</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v161</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2119,11 +2240,11 @@ function bindPlayerActionButtons(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v160</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v161</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v160";
+const BUILD_ID="v161";
 
 /* ===== Cloud Sync Core (Firestore) — v156 =====
    UI/graphics/layout unchanged. This only adds durable data sync.
@@ -4343,7 +4464,8 @@ async function renderHistory(){
 }
 
 async function render(){
-  wireDelegatedClicks();
+  if(window.screen==="game_history") return renderGameHistory();
+wireDelegatedClicks();
 
   if(window.__rendering){ window.__renderAgain=true; return; }
   window.__rendering=true;
@@ -4502,11 +4624,14 @@ render();
 </style>
 
 
-<style id="v160_topbar_gap_center">
-/* v160: center title inside the available middle space (between button groups) */
+
+
+
+<style id="v161_topbar_safe_center">
+/* v161: center title/subtitle in the middle gap without overlap, allow 2-3 lines, no truncation */
 .topbar{
   display:grid !important;
-  grid-template-columns: auto 1fr auto !important; /* gap-centered */
+  grid-template-columns: auto 1fr auto !important;
   align-items:center !important;
   gap:10px !important;
 }
@@ -4518,12 +4643,20 @@ render();
   text-align:center !important;
   min-width:0 !important;
   max-width:100% !important;
-  padding:0 10px !important; /* breathing room from buttons */
+  padding:0 12px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
 }
-.topbar .brand .t, .topbar .brand .s{
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
+.topbar .brand .t{white-space:nowrap !important; overflow:visible !important;}
+.topbar .brand .s{
+  white-space:normal !important; /* allow wrap */
+  overflow:visible !important;
+  text-overflow:clip !important;
+  display:block !important;
+  line-height:1.15 !important;
+  font-size:12px !important;
+  max-width:100% !important;
 }
 </style>
 
