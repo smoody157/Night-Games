@@ -1,3 +1,14 @@
+
+/* v132 video autoplay assist */
+(function(){
+  if(window.__v132VideoAssist) return;
+  window.__v132VideoAssist = true;
+  const kick = ()=>{ try{ __enforceSilentLoginVideo(); }catch(e){} };
+  window.addEventListener("pointerdown", kick, {passive:true, once:true});
+  window.addEventListener("touchstart",  kick, {passive:true, once:true});
+  window.addEventListener("click",       kick, {passive:true, once:true});
+})();
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,7 +17,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v129</title>
+<title>Game Night • v132</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1904,7 +1915,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v129</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v132</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -1918,11 +1929,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v129</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v132</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v129";
+const BUILD_ID="v132";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -3222,8 +3233,12 @@ async function renderAuth(){
       </div>
     </div>
 
-    <div class="brandLogoWrap" style="margin-top:16px">
-      <img class="loginLogoImg" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo"/>
+    <div class="card" style="margin-top:14px">
+      <label>Email</label>
+      <div class="stack">
+        <input id="inEmail" type="email" placeholder="you@email.com" autocomplete="email"/>
+        <button class="btn ok" id="goBtn">Enter</button>
+      </div>
     </div>
 
     <div class="card" style="padding:14px 14px 10px 14px">
@@ -3233,17 +3248,14 @@ async function renderAuth(){
       </video>
     </div>
 
-    <div class="card">
-      <label>Email</label>
-      <div class="stack">
-        <input id="inEmail" type="email" placeholder="you@email.com" autocomplete="email"/>
-        <button class="btn ok" id="goBtn">Enter</button>
-      </div>
+    <div class="brandLogoWrap" style="margin-top:16px">
+      <img class="loginLogoImg" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo"/>
     </div>
 `;
 setHTML(html);
 
   __enforceSilentLoginVideo();
+__enforceSilentLoginVideo();
 document.getElementById("goBtn").onclick = async()=>{
     const e = normEmail(document.getElementById("inEmail").value);
     if(!e){ toastMsg="Enter a valid email."; return render(); }
