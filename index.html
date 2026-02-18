@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v158</title>
+<title>Game Night • v159</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2075,7 +2075,7 @@ document.addEventListener("visibilitychange", ()=>{
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v158</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v159</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2089,11 +2089,11 @@ document.addEventListener("visibilitychange", ()=>{
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v158</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v159</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v158";
+const BUILD_ID="v159";
 
 /* ===== Cloud Sync Core (Firestore) — v156 =====
    UI/graphics/layout unchanged. This only adds durable data sync.
@@ -2690,6 +2690,13 @@ function wireDelegatedClicks(){
   document.addEventListener("click",(e)=>{
     const t = e.target && e.target.closest ? e.target.closest("#statsBtn,#historyBtn,button[data-player-stats],button[data-player-history],button[data-player-remove]") : null;
     if(!t) return;
+
+    const act = t.getAttribute && t.getAttribute("data-action");
+    if(act==="player_stats"){ e.preventDefault(); activePlayerEmail = t.getAttribute("data-email")||t.getAttribute("data-player")||t.getAttribute("data-player-stats")||meUser?.email||activePlayerEmail; screen="stats"; __goRender(); return; }
+    if(act==="player_history"){ e.preventDefault(); activePlayerEmail = t.getAttribute("data-email")||t.getAttribute("data-player")||t.getAttribute("data-player-history")||meUser?.email||activePlayerEmail; screen="history"; __goRender(); return; }
+    if(act==="stats" || act==="stats.game"){ e.preventDefault(); screen=act; __goRender(); return; }
+    if(act==="history"){ e.preventDefault(); screen="history"; __goRender(); return; }
+
     // Let explicit onclicks (set during render) run if present; delegation is fallback safety.
     if(t.id==="statsBtn"){ e.preventDefault(); activePlayerEmail = meUser?.email || activePlayerEmail; screen="stats"; __goRender(); }
     else if(t.id==="historyBtn"){ e.preventDefault(); activePlayerEmail = meUser?.email || activePlayerEmail; screen="history"; __goRender(); }
@@ -2699,7 +2706,7 @@ function wireDelegatedClicks(){
       e.preventDefault();
       const em = t.getAttribute("data-player-remove");
       if(!em || em===meUser?.email) return;
-      deletePlayerAndData(em).then(()=>scheduleRender()).catch(err=>alert(err?.message||String(err)));
+      deletePlayerAndData(em).then(()=>__goRender()).catch(err=>alert(err?.message||String(err)));
     }
   }, {passive:false});
 }
