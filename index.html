@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v166</title>
+<title>Game Night • v167</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2237,7 +2237,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v166</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v167</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2251,15 +2251,32 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v166</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v167</div>
 </div>
 
 <script>
-const BUILD_ID="v166";
+const BUILD_ID="v167";
 
 
 
 
+
+
+
+/* ===== v167 FIREBASE INIT SHIM (prevents initializeApp ReferenceError) ===== */
+(function(){
+  if(typeof window.initializeApp !== "function"){
+    window.initializeApp = function(cfg){
+      if(window.firebase && typeof window.firebase.initializeApp === "function"){
+        return window.firebase.initializeApp(cfg);
+      }
+      throw new Error("Firebase SDK not loaded");
+    };
+  }
+  if(typeof window.getAnalytics !== "function"){
+    window.getAnalytics = function(){ return null; };
+  }
+})();
 
 /* ===== v166 VERIFICATION + ALWAYS-BIND BUTTONS =====
    Goal: ensure login proceeds + buttons respond + sound enabled.
@@ -2536,7 +2553,7 @@ const firebaseConfig = {
   measurementId: "G-M60TDFYBW0"
 };
 
-const fbApp = initializeApp(firebaseConfig);
+const fbApp = window.initializeApp(firebaseConfig);
 const fbAuth = getAuth(fbApp);
 let __authReadyResolve;
 const authReady = new Promise(res=>__authReadyResolve=res);
