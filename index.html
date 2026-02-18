@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v159</title>
+<title>Game Night • v160</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2061,6 +2061,36 @@ document.addEventListener("visibilitychange", ()=>{
   }
 });
 
+
+
+/* ===== v160: HARD BIND STATS/HISTORY BUTTONS (no delegation, no guessing) ===== */
+function bindPlayerActionButtons(){
+  try{
+    // Stats buttons
+    document.querySelectorAll('button[data-action="player_stats"],button[data-player-stats]').forEach((btn)=>{
+      btn.onclick = ()=>{
+        try{
+          const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-stats") || window.activePlayerEmail || (window.meUser && meUser.email) || "";
+          window.activePlayerEmail = email;
+          window.screen = "stats";
+          __goRender();
+        }catch(e){ console.warn(e); }
+      };
+    });
+    // History buttons
+    document.querySelectorAll('button[data-action="player_history"],button[data-player-history]').forEach((btn)=>{
+      btn.onclick = ()=>{
+        try{
+          const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-history") || window.activePlayerEmail || (window.meUser && meUser.email) || "";
+          window.activePlayerEmail = email;
+          window.screen = "history";
+          __goRender();
+        }catch(e){ console.warn(e); }
+      };
+    });
+  }catch(e){ console.warn(e); }
+}
+
 </script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2075,7 +2105,7 @@ document.addEventListener("visibilitychange", ()=>{
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v159</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v160</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2089,11 +2119,11 @@ document.addEventListener("visibilitychange", ()=>{
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v159</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v160</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v159";
+const BUILD_ID="v160";
 
 /* ===== Cloud Sync Core (Firestore) — v156 =====
    UI/graphics/layout unchanged. This only adds durable data sync.
@@ -3743,9 +3773,9 @@ async function renderHome(){
         <div class="rosterSub">${esc(p.email)}</div>
       </div>
       <div class="playerActionsRow rosterActions">
-        <button class="btn action statsBtn" data-player-stats="${esc(p.email)}" type="button"
+        <button class="btn action statsBtn" data-player-stats="${esc(p.email)}" data-action="player_stats" type="button"
           onclick="try{activePlayerEmail='${esc(p.email)}';screen='stats';__goRender();}catch(e){}">Stats</button>
-        <button class="btn action hist historyBtn" data-player-history="${esc(p.email)}" type="button"
+        <button class="btn action hist historyBtn" data-player-history="${esc(p.email)}" data-action="player_history" type="button"
           onclick="try{activePlayerEmail='${esc(p.email)}';screen='history';__goRender();}catch(e){}">History</button>
         <button class="btn danger removeBtn" data-player-remove="${esc(p.email)}" type="button" ${p.email===meUser.email?`disabled`:``}>Remove</button>
       </div>
@@ -4469,6 +4499,32 @@ render();
 
 /* Make sure action buttons are clickable */
 .rosterActions, .rosterActions *{ pointer-events:auto !important; }
+</style>
+
+
+<style id="v160_topbar_gap_center">
+/* v160: center title inside the available middle space (between button groups) */
+.topbar{
+  display:grid !important;
+  grid-template-columns: auto 1fr auto !important; /* gap-centered */
+  align-items:center !important;
+  gap:10px !important;
+}
+.topbar .topActions.left{justify-content:flex-start !important;}
+.topbar .topActions.right{justify-content:flex-end !important;}
+.topbar .brand{
+  grid-column:2 !important;
+  justify-self:center !important;
+  text-align:center !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  padding:0 10px !important; /* breathing room from buttons */
+}
+.topbar .brand .t, .topbar .brand .s{
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
 </style>
 
 </body>
