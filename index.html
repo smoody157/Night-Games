@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v156</title>
+<title>Game Night • v157</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1955,6 +1955,112 @@ document.addEventListener("click", function(ev){
   }
 }, true);
 
+
+
+/* ===== v157 SYNC STRATEGY (Durable + Simple) =====
+   - Sync DOWN once on email sign-in (connect)
+   - Sync UP on game end (completed) OR abort/disconnect (incomplete)
+   - Queue unsent uploads locally; flush on next connect
+*/
+function _queueKey(){ return "gn_pending_uploads_v157"; }
+function queueUpload(match){
+  try{
+    const q = cacheGet(_queueKey(), []);
+    q.push(match);
+    cacheSet(_queueKey(), q.slice(-50)); // keep last 50 pending
+  }catch(e){}
+}
+async function flushQueue(email){
+  try{
+    const q = cacheGet(_queueKey(), []);
+    if(!q || !q.length) return;
+    const remain = [];
+    for(const m of q){
+      try{
+        await writeMatchAndIndexes(m);
+      }catch(e){
+        remain.push(m);
+      }
+    }
+    cacheSet(_queueKey(), remain);
+  }catch(e){}
+}
+
+/* Ensure "connect" means: after email sign-in we sync down + flush pending uploads */
+async function GN_ON_CONNECT(email){
+  try{
+    if(!email) return;
+    await syncDown(email);
+    await flushQueue(email);
+  }catch(e){}
+}
+
+/* Ensure "sync up" on game end */
+async function GN_ON_GAME_END(match){
+  try{
+    if(!match) return;
+    // local-first cache always
+    GN_SAVE_GAME_RESULT(match);
+  }catch(e){
+    // if cloud write fails, queue it
+    try{ queueUpload(match); }catch(_){}
+  }
+}
+
+/* Auto-patch known game-end function names without changing UI */
+(function(){
+  const candidates = ["endGame","finishGame","completeGame","declareWinner","onGameEnd","gameOver","finalizeGame"];
+  for(const name of candidates){
+    try{
+      const fn = window[name];
+      if(typeof fn === "function" && !fn.__gn_wrapped){
+        const wrapped = function(...args){
+          let res;
+          try{ res = fn.apply(this,args); }catch(e){ throw e; }
+          try{
+            // try to build a minimal match object from globals if present
+            const email = (window.meUser && meUser.email) || cacheGet("gn_email_last","");
+            const match = (window.__lastMatchResult) || null;
+            // If the original function set some global, prefer it; else skip.
+            if(match) GN_ON_GAME_END(match);
+            // Always queue a best-effort incomplete snapshot if gameState exists
+            if(!match && window.gameState){
+              const gs = window.gameState;
+              const players = (gs.players||[]).map(p=>p.email||p).filter(Boolean);
+              if(players.length){
+                GN_ON_GAME_END({
+                  id: "g_"+Date.now()+"_"+Math.floor(Math.random()*1e6),
+                  tsStart: gs.tsStart||Date.now(),
+                  tsEnd: Date.now(),
+                  status: "incomplete",
+                  gameType: gs.gameType||gs.game||"",
+                  players,
+                  scoreLine: gs.scoreLine||"",
+                  scores: gs.scores||{},
+                  notes: "Auto-saved (incomplete)"
+                });
+              }
+            }
+          }catch(e){}
+          return res;
+        };
+        wrapped.__gn_wrapped = true;
+        window[name] = wrapped;
+      }
+    }catch(e){}
+  }
+})();
+
+/* Best-effort: on page hide, attempt to flush queue (doesn't block UI) */
+document.addEventListener("visibilitychange", ()=>{
+  if(document.visibilityState==="hidden"){
+    try{
+      const email = (window.meUser && meUser.email) || cacheGet("gn_email_last","");
+      if(email) flushQueue(email);
+    }catch(e){}
+  }
+});
+
 </script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -1969,7 +2075,7 @@ document.addEventListener("click", function(ev){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v156</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v157</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -1983,11 +2089,11 @@ document.addEventListener("click", function(ev){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v156</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v157</div>
 </div>
 
 <script type="module">
-const BUILD_ID="v156";
+const BUILD_ID="v157";
 
 /* ===== Cloud Sync Core (Firestore) — v156 =====
    UI/graphics/layout unchanged. This only adds durable data sync.
