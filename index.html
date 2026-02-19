@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v177</title>
+<title>Game Night • v178</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2239,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v177</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v178</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2253,11 +2253,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v177</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v178</div>
 </div>
 
 <script>
-const BUILD_ID="v177";
+const BUILD_ID="v178";
 
 
 
@@ -2411,7 +2411,8 @@ function fbInit(){
   try{
     if(__fb.ready) return true;
     if(typeof firebase === "undefined") return false;
-    __fb.app = firebase.initializeApp(FIREBASE_CONFIG);
+    // Avoid "Firebase App named '[DEFAULT]' already exists" on reload/hot swaps.
+    __fb.app = (firebase.apps && firebase.apps.length) ? firebase.app() : firebase.initializeApp(FIREBASE_CONFIG);
     __fb.auth = firebase.auth();
     __fb.db = firebase.firestore();
     ROOT_DOC = __fb.db.collection("Test").doc("Test");
@@ -2445,7 +2446,7 @@ async function fbEnsureAnon(){
 }
 
 
-// ===== Auth readiness (v177) =====
+// ===== Auth readiness (v178) =====
 let __authReadyP = null;
 function __kickAuthReady(){
   if(__authReadyP) return __authReadyP;
@@ -3945,16 +3946,36 @@ document.getElementById("goBtn").onclick = async()=>{
     if(!e){ toastMsg="Enter a valid email."; return render(); }
     // ensure Firebase Auth exists so Firestore rules (request.auth != null) pass
     const __okAuth = await ensureAuthReady({timeoutMs:12000,retries:2});
-    if(!__okAuth){ toastMsg = "Auth not ready. Refresh and try again."; return render(); }
+    if(!__okAuth){
+      // Don't brick the app. Enter offline/local mode and let the user in.
+      toastMsg = "Online sync unavailable (auth). Entering offline mode…";
+      meUser = { email:e, name:"" };
+      screen = "home";
+      render();
+      return;
+    }
+
     toastMsg = "Signing in…"; render();
     let player = null;
-    try { player = await signInEmail(e); } catch(err){ toastMsg = "Sign-in failed. Check Firestore rules and reload."; return render(); }
+    try {
+      player = await signInEmail(e);
+    } catch(err){
+      console.warn("Sign-in/read failed; entering offline mode", err);
+      toastMsg = "Online sync unavailable (db). Entering offline mode…";
+      meUser = { email:e, name:"" };
+      screen = "home";
+      render();
+      return;
+    }
+
     if(player){
       meUser=player;
       startPresence(meUser.email, meUser.name);
       screen="home";
       return render();
     }
+
+    // If no player doc yet, continue to signup (online) but don't block navigation.
     meUser={email:e};
   document.getElementById("inEmail").addEventListener("keydown",(ev)=>{ if(ev.key==="Enter"){ ev.preventDefault(); document.getElementById("goBtn").click(); }});
 
