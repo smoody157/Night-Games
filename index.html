@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v181</title>
+<title>Game Night • v182</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2239,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v181</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v182</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2253,13 +2253,13 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v181</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v182</div>
 </div>
 
 <script>
-const BUILD_ID="v181";
+const BUILD_ID="v182";
 
-// ===== v181: ALWAYS-SHOW STARTUP ERRORS (iPhone-safe) =====
+// ===== v182: ALWAYS-SHOW STARTUP ERRORS (iPhone-safe) =====
 (function(){
   function esc0(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
   function show(msg){
@@ -2435,6 +2435,7 @@ function fbInit(){
     __fb.app = (firebase.apps && firebase.apps.length) ? firebase.app() : firebase.initializeApp(FIREBASE_CONFIG);
     __fb.auth = firebase.auth();
     __fb.db = firebase.firestore();
+        db = __fb.db;
     ROOT_DOC = __fb.db.collection("Test").doc("Test");
 
     __fb.ready = true;
@@ -2526,7 +2527,7 @@ async function fbEnsureAnon(){
 }
 
 
-// ===== Auth readiness (v181) =====
+// ===== Auth readiness (v182) =====
 let __authReadyP = null;
 function __kickAuthReady(){
   if(__authReadyP) return __authReadyP;
@@ -3124,6 +3125,7 @@ function __goRender(){
 
 let screen = "auth";
 let meUser = null;
+let db = null; // Firestore alias (compat) for modular-style helpers
   let activePlayerEmail = null; // selected player for Stats/History
 
 
