@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v205</title>
+<title>Game Night • v207</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v205) =====
+/* ===== Robust Navigation Wiring (v207) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,11 +1934,11 @@ try{
     }catch(e){}
   }
   
-  // ===== v205: tiny navigation stack so Back works on every page =====
+  // ===== v207: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
-      const cur = screen || "home";
+      const cur = window.screen || "home";
       // avoid stacking same screen repeatedly
       if(next && cur !== next){
         window.__navStack.push(cur);
@@ -1954,7 +1954,7 @@ try{
   }
   function goBack(){
     const prev = popScreen();
-    screen = prev || "home";
+    window.screen = prev || "home";
     try{ goRenderSafe(); }catch(e){ try{ if(typeof render==="function") render(); }catch(_){ } }
   }
 document.addEventListener("click", function(ev){
@@ -1969,9 +1969,7 @@ document.addEventListener("click", function(ev){
       else if(el.hasAttribute("data-player-stats")) act = "player_stats";
     }
     // normalize aliases
-    if(act==="stats") act = "stats";
-    if(act==="player_stats") act = "stats";
-    if(act==="player_history") act = "history";
+    if(act==="stats") act = "player_stats";
 
     // id-based actions (some pages use ids instead of data-action)
     try{
@@ -1997,13 +1995,13 @@ document.addEventListener("click", function(ev){
       }
       if(act==="home"){
         pushScreen("home"); // no-op stack safety
-        screen = "home";
+        window.screen = "home";
         goRenderSafe();
         ev.preventDefault(); ev.stopPropagation();
         return;
       }
       if(act==="back_to_setup"){
-        screen = "game.setup";
+        window.screen = "game.setup";
         goRenderSafe();
         ev.preventDefault(); ev.stopPropagation();
         return;
@@ -2012,7 +2010,7 @@ document.addEventListener("click", function(ev){
         const email = getFirstAttr(el, ["data-email","data-player","data-player-history"]) || (window.meUser && meUser.email) || "";
         if(email) window.activePlayerEmail = email;
         pushScreen("history");
-        screen = "history";
+        window.screen = "history";
         goRenderSafe();
         ev.preventDefault(); ev.stopPropagation();
         return;
@@ -2021,7 +2019,7 @@ document.addEventListener("click", function(ev){
         const email = getFirstAttr(el, ["data-email","data-player","data-player-stats"]) || (window.meUser && meUser.email) || "";
         if(email) window.activePlayerEmail = email;
         pushScreen("stats");
-        screen = "stats";
+        window.screen = "stats";
         goRenderSafe();
         ev.preventDefault(); ev.stopPropagation();
         return;
@@ -2030,7 +2028,7 @@ document.addEventListener("click", function(ev){
         const game = getFirstAttr(el, ["data-game-history","data-game","data-gameid","data-gametype","data-stats"]) || (window.activeGameType||"");
         window.activeGameType = game;
         pushScreen("game_history");
-        screen = "game_history";
+        window.screen = "game_history";
         goRenderSafe();
         ev.preventDefault(); ev.stopPropagation();
         return;
@@ -2038,7 +2036,7 @@ document.addEventListener("click", function(ev){
       if(act==="history_detail"){
         const gid = getFirstAttr(el, ["data-gameid"]);
         pushScreen("history_detail");
-        screen = "history_detail";
+        window.screen = "history_detail";
         window.__activeGameId = gid;
         if(typeof renderHistoryDetail==="function") renderHistoryDetail(gid);
         else goRenderSafe();
@@ -2047,7 +2045,7 @@ document.addEventListener("click", function(ev){
       }
       if(act==="back_players"){
         pushScreen("players");
-        screen = "players";
+        window.screen = "players";
         goRenderSafe();
         ev.preventDefault(); ev.stopPropagation();
         return;
@@ -2075,13 +2073,13 @@ document.addEventListener("click", function(ev){
   if(act==="history_detail"){
     const gid = el.getAttribute("data-gameid");
     pushScreen("history_detail");
-        screen = "history_detail";
+        window.screen = "history_detail";
     window.__activeGameId = gid;
     if(typeof renderHistoryDetail==="function") renderHistoryDetail(gid);
     ev.preventDefault();
   }
   if(act==="back_players"){
-    screen="players";
+    window.screen="players";
     if(typeof scheduleRender==="function") __goRender(); else if(typeof render==="function") render();
     ev.preventDefault();
   }
@@ -2205,7 +2203,7 @@ function bindPlayerActionButtons(){
           const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-stats") || window.activePlayerEmail || (window.meUser && meUser.email) || "";
           window.activePlayerEmail = email;
           pushScreen("stats");
-        screen = "stats";
+        window.screen = "stats";
           __goRender();
         }catch(e){ console.warn(e); }
       };
@@ -2217,7 +2215,7 @@ function bindPlayerActionButtons(){
           const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-history") || window.activePlayerEmail || (window.meUser && meUser.email) || "";
           window.activePlayerEmail = email;
           pushScreen("history");
-        screen = "history";
+        window.screen = "history";
           __goRender();
         }catch(e){ console.warn(e); }
       };
@@ -2237,7 +2235,7 @@ function bindHomeActionButtons(){
           const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-stats") || (window.meUser && meUser.email) || "";
           window.activePlayerEmail = email;
           pushScreen("stats");
-        screen = "stats";
+        window.screen = "stats";
           __goRender();
         }catch(e){ console.warn("player_stats click failed", e); }
       };
@@ -2249,7 +2247,7 @@ function bindHomeActionButtons(){
           const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-history") || (window.meUser && meUser.email) || "";
           window.activePlayerEmail = email;
           pushScreen("history");
-        screen = "history";
+        window.screen = "history";
           __goRender();
         }catch(e){ console.warn("player_history click failed", e); }
       };
@@ -2261,7 +2259,7 @@ function bindHomeActionButtons(){
           const game = btn.getAttribute("data-game-history") || btn.getAttribute("data-game") || btn.getAttribute("data-gameid") || btn.getAttribute("data-gametype") || btn.getAttribute("data-stats") || "";
           window.activeGameType = game;
           pushScreen("game_history");
-        screen = "game_history";
+        window.screen = "game_history";
           __goRender();
         }catch(e){ console.warn("game_history click failed", e); }
       };
@@ -2288,7 +2286,7 @@ document.addEventListener("click", function(ev){
     ev.preventDefault();
     const email = b.getAttribute("data-email") || b.getAttribute("data-player") || b.getAttribute("data-player-stats") || (window.meUser && meUser.email) || "";
     window.activePlayerEmail = email;
-    screen="stats";
+    window.screen="stats";
     __goRender();
     return;
   }
@@ -2298,7 +2296,7 @@ document.addEventListener("click", function(ev){
     ev.preventDefault();
     const email = b.getAttribute("data-email") || b.getAttribute("data-player") || b.getAttribute("data-player-history") || (window.meUser && meUser.email) || "";
     window.activePlayerEmail = email;
-    screen="history";
+    window.screen="history";
     __goRender();
     return;
   }
@@ -2308,7 +2306,7 @@ document.addEventListener("click", function(ev){
     ev.preventDefault();
     const game = b.getAttribute("data-game-history") || b.getAttribute("data-game") || b.getAttribute("data-gameid") || b.getAttribute("data-gametype") || b.getAttribute("data-stats") || "";
     window.activeGameType = game;
-    screen="game_history";
+    window.screen="game_history";
     __goRender();
     return;
   }
@@ -2330,11 +2328,10 @@ async function renderGameHistory(){
   try{
     const ok = await fbEnsureAnon();
     if(ok){
-      let q = col("Games").orderBy("tsEnd","desc").limit(200);
+      let q = col("Games").orderBy("tsEnd","desc").limit(100);
+      if(game) q = q.where("gameType","==", game);
       const snap = await q.get();
       snap.forEach(d=>rows.push(d.data()));
-      if(game) rows = rows.filter(r=>String(r.gameType||"")===String(game));
-      rows = rows.slice(0,100);
     }
   }catch(e){ console.warn("renderGameHistory query failed", e); }
 
@@ -2358,7 +2355,7 @@ async function renderGameHistory(){
 
   setHTML(html);
   const back=document.getElementById("ghBack");
-  if(back) back.onclick=()=>{ screen="home"; __goRender(); };
+  if(back) back.onclick=()=>{ window.screen="home"; __goRender(); };
 }
 
 </script>
@@ -2373,7 +2370,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v205</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v207</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2387,11 +2384,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v205</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v207</div>
 </div>
 
 <script>
-const BUILD_ID="v205";
+const BUILD_ID="v207";
 
 
 
@@ -2433,14 +2430,14 @@ const BUILD_ID="v205";
     try{
       // Player buttons
       document.querySelectorAll('button[data-player-stats],button[data-action="player_stats"]').forEach((btn)=>{
-        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activePlayerEmail = btn.getAttribute("data-player-stats")||btn.getAttribute("data-email")||btn.getAttribute("data-player")||""; screen="stats"; __goRender(); };
+        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activePlayerEmail = btn.getAttribute("data-player-stats")||btn.getAttribute("data-email")||btn.getAttribute("data-player")||""; window.screen="stats"; __goRender(); };
       });
       document.querySelectorAll('button[data-player-history],button[data-action="player_history"]').forEach((btn)=>{
-        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activePlayerEmail = btn.getAttribute("data-player-history")||btn.getAttribute("data-email")||btn.getAttribute("data-player")||""; screen="history"; __goRender(); };
+        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activePlayerEmail = btn.getAttribute("data-player-history")||btn.getAttribute("data-email")||btn.getAttribute("data-player")||""; window.screen="history"; __goRender(); };
       });
       // Game history (new or legacy)
       document.querySelectorAll('button[data-game-history],button[data-action="game_history"],button[data-stats]').forEach((btn)=>{
-        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activeGameType = btn.getAttribute("data-game-history")||btn.getAttribute("data-stats")||btn.getAttribute("data-game")||btn.getAttribute("data-gametype")||""; screen="game_history"; __goRender(); };
+        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activeGameType = btn.getAttribute("data-game-history")||btn.getAttribute("data-stats")||btn.getAttribute("data-game")||btn.getAttribute("data-gametype")||""; window.screen="game_history"; __goRender(); };
       });
     }catch(e){ console.warn("bindAllKnownButtons failed", e); }
   }
@@ -2472,11 +2469,11 @@ const BUILD_ID="v205";
       if(typeof __landingLocalSignIn==="function"){
         // no-op, just ensures function exists
       }
-      if(!screen) screen="landing";
+      if(!window.screen) window.screen="landing";
       // If stuck in loading text, force render
       const app = document.getElementById("app");
       if(app && /loading/i.test(app.textContent||"")){
-        try{ screen = screen || "landing"; }catch(e){}
+        try{ window.screen = window.screen || "landing"; }catch(e){}
         try{ __goRender(); }catch(e){ try{ render(); }catch(_){} }
       }
       bindAllKnownButtons();
@@ -2507,7 +2504,7 @@ const BUILD_ID="v205";
         // If we're still showing Loading, force home screen
         const app = document.getElementById("app");
         if(app && app.textContent && app.textContent.includes("Loading")){
-          screen = screen || "home";
+          window.screen = window.screen || "home";
           if(typeof __goRender==="function") __goRender();
           else if(typeof render==="function") render();
           else renderHome();
@@ -2626,17 +2623,6 @@ function getFirestore(){ return __fb.db; }
 function playerKey(email){
   // stable key for docs (email UX stays same)
   return String(email||"").trim().toLowerCase().replaceAll(".", "_");
-}
-
-function snapExists(snap){
-  try{
-    if(!snap) return false;
-    // Firestore v9 DocumentSnapshot has exists() method
-    if(typeof snap.exists === "function") return !!snapExists(snap);
-    // Firestore v8 DocumentSnapshot has boolean exists property
-    if(typeof snap.exists === "boolean") return !!snap.exists;
-  }catch(e){}
-  return false;
 }
 async function fbEnsureAnon(){
   if(!fbInit()) return false;
@@ -2865,7 +2851,7 @@ try{
 }catch{}
 
 let __audioCtx = null;
-const MASTER_GAIN = 12.0; // MAX (may clip) // phone-friendly
+const MASTER_GAIN = 10.0; // MAX // MAX (may clip) // phone-friendly
 
 function ensureAudio(){
   if(__audioCtx) return __audioCtx;
@@ -2975,7 +2961,7 @@ function playBeep(kind){
   o.frequency.setValueAtTime(preset.f, t0);
 
   g.gain.setValueAtTime(0.0001, t0);
-  const g1 = Math.min(1.0, preset.gain * MASTER_GAIN);
+  const g1 = Math.min(0.95, preset.gain * MASTER_GAIN);
   g.gain.exponentialRampToValueAtTime(g1, t0 + 0.015);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + preset.dur);
 
@@ -3083,7 +3069,7 @@ async function signInEmail(email){
   try{
     const ref = doc(base, C_PLAYERS, e);
     snap = await getDoc(ref);
-    if(snapExists(snap)){
+    if(snap.exists()){
       const data = normalizePlayerData(snap.data(), e);
       // If name is missing, still return (normalize will derive a readable fallback)
       return data;
@@ -3243,7 +3229,7 @@ async function findWaitingRoomForPlayer(gameId, email){
 async function joinRoom(roomId){
   const ref = doc(ROOT_DOC, C_ROOMS, roomId);
   const snap = await getDoc(ref);
-  if(!snapExists(snap)) throw new Error("Room not found.");
+  if(!snap.exists()) throw new Error("Room not found.");
   const data = snap.data();
   const e = normEmail(meUser.email);
   if(!Array.isArray(data.players) || !data.players.includes(e)) throw new Error("Not allowed in this room.");
@@ -3264,7 +3250,7 @@ function listenMatchState(roomId, cb){
   const ref = doc(ROOT_DOC, C_ROOMS, roomId);
   if(roomUnsub) try{ roomUnsub(); }catch{}
   roomUnsub = onSnapshot(ref, (snap)=>{
-    if(!snapExists(snap)) return;
+    if(!snap.exists()) return;
     const data = snap.data() || {};
     cb(data);
   });
@@ -3281,17 +3267,16 @@ async function getHistory(email){
   const snap = await getDocs(query(
     collection(ROOT_DOC, C_HISTORY),
     where("players","array-contains",e),
-    limit(200)
+    orderBy("endedAt","desc"),
+    limit(50)
   ));
-  const rows = snap.docs.map(d=>d.data());
-  rows.sort((a,b)=> (b.endedAt||0) - (a.endedAt||0));
-  return rows.slice(0,50);
+  return snap.docs.map(d=>d.data());
 }
 
 async function getStatsDoc(email){
   const ref = doc(ROOT_DOC, C_STATS, normEmail(email));
   const snap = await getDoc(ref);
-  return (snapExists(snap)?snap.data():{});
+  return snap.exists()?snap.data():{};
 }
 async function saveStatsDoc(email,data){
   await setDoc(doc(ROOT_DOC, C_STATS, normEmail(email)), data, {merge:true});
@@ -4861,7 +4846,7 @@ return `
             <div class="gameTitle">
               <div class="gameIcon">${esc(g.icon||"🎯")}</div>
               <div>
-                <div class="h1" style="font-size:18px;margin:0">${esc(g.name)}</div>
+                <div class="h1" style="font-size:14px;margin:0;white-space:nowrap">${esc(g.name)}</div>
                 <div class="gameMeta">${line}</div>
               </div>
             </div>
@@ -4978,8 +4963,8 @@ async function renderHistory(){
 }
 
 async function render(){
-  wireDelegatedClicks();
-  if(screen==="game_history") return renderGameHistory();
+  if(window.screen==="game_history") return renderGameHistory();
+wireDelegatedClicks();
 
   if(window.__rendering){ window.__renderAgain=true; return; }
   window.__rendering=true;
@@ -5013,7 +4998,7 @@ async function render(){
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v205: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v207: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
@@ -5038,29 +5023,29 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
     // Home / Back buttons by id
     const id = el.id || "";
-    if(id==="homeBtn"){ screen="landing"; safeRender(); ev.preventDefault(); return; }
-    if(id==="ghBack"){ screen="landing"; safeRender(); ev.preventDefault(); return; }
-    if(id==="backToSetup"){ screen="game.setup"; safeRender(); ev.preventDefault(); return; }
+    if(id==="homeBtn"){ window.screen="landing"; safeRender(); ev.preventDefault(); return; }
+    if(id==="ghBack"){ window.screen="landing"; safeRender(); ev.preventDefault(); return; }
+    if(id==="backToSetup"){ window.screen="game.setup"; safeRender(); ev.preventDefault(); return; }
     if(id==="resetBtn"){ if(typeof resetMatch==="function"){ resetMatch(); } else { window.match=null; } safeRender(); ev.preventDefault(); return; }
     if(id==="signOutBtn"){ if(typeof signOut==="function"){ signOut(); } safeRender(); ev.preventDefault(); return; }
-    if(id==="statsBtn"){ window.activePlayerEmail=(window.meUser&&meUser.email)||window.activePlayerEmail||""; screen="stats"; safeRender(); ev.preventDefault(); return; }
-    if(id==="historyBtn"){ window.activePlayerEmail=(window.meUser&&meUser.email)||window.activePlayerEmail||""; screen="history"; safeRender(); ev.preventDefault(); return; }
+    if(id==="statsBtn"){ window.activePlayerEmail=(window.meUser&&meUser.email)||window.activePlayerEmail||""; window.screen="stats"; safeRender(); ev.preventDefault(); return; }
+    if(id==="historyBtn"){ window.activePlayerEmail=(window.meUser&&meUser.email)||window.activePlayerEmail||""; window.screen="history"; safeRender(); ev.preventDefault(); return; }
 
     // Data-attribute routed buttons (even after re-render)
     const act = el.getAttribute("data-action") || "";
     if(act==="player_stats" || el.hasAttribute("data-player-stats")){
       window.activePlayerEmail = el.getAttribute("data-player-stats") || el.getAttribute("data-email") || el.getAttribute("data-player") || (window.meUser&&meUser.email) || "";
-      screen="stats";
+      window.screen="stats";
       safeRender(); ev.preventDefault(); return;
     }
     if(act==="player_history" || el.hasAttribute("data-player-history")){
       window.activePlayerEmail = el.getAttribute("data-player-history") || el.getAttribute("data-email") || el.getAttribute("data-player") || (window.meUser&&meUser.email) || "";
-      screen="history";
+      window.screen="history";
       safeRender(); ev.preventDefault(); return;
     }
     if(act==="game_history" || el.hasAttribute("data-game-history")){
       window.activeGameType = el.getAttribute("data-game-history") || el.getAttribute("data-gametype") || el.getAttribute("data-game") || window.activeGameType || "";
-      screen="game_history";
+      window.screen="game_history";
       safeRender(); ev.preventDefault(); return;
     }
 
@@ -5068,12 +5053,12 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
     if(el.hasAttribute("data-play")){
       window.activeGameId = el.getAttribute("data-play");
       window.match = null;
-      screen = "game.setup";
+      window.screen = "game.setup";
       safeRender(); ev.preventDefault(); return;
     }
     if(el.hasAttribute("data-open")){
       window.activeGameId = el.getAttribute("data-open");
-      screen = "stats.game";
+      window.screen = "stats.game";
       safeRender(); ev.preventDefault(); return;
     }
 
