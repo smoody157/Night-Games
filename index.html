@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v195</title>
+<title>Game Night • v196</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2239,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v195</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v196</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2253,11 +2253,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v195</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v196</div>
 </div>
 
 <script>
-const BUILD_ID="v195";
+const BUILD_ID="v196";
 
 
 
@@ -2675,6 +2675,14 @@ const brandTitle = document.getElementById("brandTitle");
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
+function normalizePlayerData(d, fallbackEmail){
+  d = d || {};
+  const email = normEmail(d.email || d.Email || fallbackEmail || "");
+  const name  = (d.name || d.Name || d.displayName || d.DisplayName || "").toString().trim();
+  return { ...d, email, name };
+}
+
+
 // Returns a data URI for a player if we have a custom avatar for them.
 
 function now(){ return Date.now(); }
@@ -2895,7 +2903,7 @@ async function getPlayers(){
 async function upsertPlayer(name,email){
   const base = await resolveDataBase();
   const e = normEmail(email);
-  await setDoc(doc(base, C_PLAYERS, e), { name, email:e, updatedAt:serverTimestamp() }, {merge:true});
+  await setDoc(doc(base, C_PLAYERS, e), { name, Name:name, email:e, Email:e, updatedAt:serverTimestamp() }, {merge:true});
 }
 async function signInEmail(email){
   const base = await resolveDataBase();
@@ -2903,11 +2911,11 @@ async function signInEmail(email){
   const ref = doc(base, C_PLAYERS, e);
   const snap = await getDoc(ref);
   if(!snap.exists()) return null;
-  return snap.data();
+  return normalizePlayerData(snap.data(), e);
 }
 async function signUpEmail(name,email){
   const e = normEmail(email);
-  await setDoc(doc(ROOT_DOC, C_PLAYERS,e), { name, email:e, createdAt:serverTimestamp() });
+  await setDoc(doc(ROOT_DOC, C_PLAYERS,e), { name, Name:name, email:e, Email:e, createdAt:serverTimestamp() });
   return {name,email:e};
 }
 
