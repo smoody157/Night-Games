@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v178</title>
+<title>Game Night • v179</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2239,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v178</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v179</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2253,11 +2253,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v178</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v179</div>
 </div>
 
 <script>
-const BUILD_ID="v178";
+const BUILD_ID="v179";
 
 
 
@@ -2425,7 +2425,68 @@ function fbInit(){
   }
 }
 
+//
+// Firestore "modular" compatibility layer (we are using firebase-*-compat.js)
+// This keeps the rest of the app code unchanged (getDocs/query/where/etc.)
+//
+function _fv(){ return firebase.firestore.FieldValue; }
+function serverTimestamp(){ return _fv().serverTimestamp(); }
+function increment(n){ return _fv().increment(n); }
+function arrayUnion(){ return _fv().arrayUnion.apply(null, arguments); }
+function arrayRemove(){ return _fv().arrayRemove.apply(null, arguments); }
+
+function collection(ref, name){
+  // ref can be __fb.db (Firestore) or a DocumentReference (has collection)
+  if(ref && typeof ref.collection === "function") return ref.collection(name);
+  // fallback to main db
+  return __fb.db.collection(ref);
+}
+
+function doc(ref){
+  // doc(db, "Players", "id") OR doc(collectionRef, "id")
+  var args = Array.prototype.slice.call(arguments, 1);
+  if(ref && typeof ref.collection === "function" && typeof ref.doc !== "function"){
+    // db
+    if(args.length >= 2) return ref.collection(args[0]).doc(args[1]);
+  }
+  if(ref && typeof ref.doc === "function"){
+    return ref.doc(args[0]);
+  }
+  // doc("Players","id") fallback
+  if(typeof ref === "string" && args.length >= 1){
+    return __fb.db.collection(ref).doc(args[0]);
+  }
+  throw new Error("doc(): bad arguments");
+}
+
+function where(field, op, value){
+  return function(q){ return q.where(field, op, value); };
+}
+function orderBy(field, dir){
+  return function(q){ return q.orderBy(field, dir); };
+}
+function limit(n){
+  return function(q){ return q.limit(n); };
+}
+function query(base){
+  var q = base;
+  for(var i=1;i<arguments.length;i++){
+    q = arguments[i](q);
+  }
+  return q;
+}
+
+function getDocs(q){ return q.get(); }
+function getDoc(d){ return d.get(); }
+function setDoc(d, data, opts){ return d.set(data, opts || {}); }
+function updateDoc(d, data){ return d.update(data); }
+function onSnapshot(q, cb){ return q.onSnapshot(cb); }
+function runTransaction(db, fn){ return db.runTransaction(fn); }
+
+function getFirestore(){ return __fb.db; }
+
 function playerKey(email){
+(email){
   // stable key for docs (email UX stays same)
   return String(email||"").trim().toLowerCase().replaceAll(".", "_");
 }
@@ -2446,7 +2507,7 @@ async function fbEnsureAnon(){
 }
 
 
-// ===== Auth readiness (v178) =====
+// ===== Auth readiness (v179) =====
 let __authReadyP = null;
 function __kickAuthReady(){
   if(__authReadyP) return __authReadyP;
