@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v184</title>
+<title>Game Night • v186</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2239,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v184</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v186</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2253,50 +2253,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v184</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v186</div>
 </div>
 
 <script>
-const BUILD_ID="v184";
-
-/* ===== v184 BOOT MARKER + ERROR OVERLAY ===== */
-(function(){
-  function bootMark(msg){
-    try{
-      const el = document.getElementById("app");
-      if(!el) return;
-      el.setAttribute("data-js","loaded");
-      // Only replace the placeholder "Loading/Starting up" card (if still present)
-      const t = (el.innerText||"").toLowerCase();
-      if(t.includes("loading") && t.includes("starting")){
-        el.innerHTML = `<div class="card"><div class="h1">Starting…</div><div class="sub">${msg||"Booting UI…"}</div></div>`;
-      }
-    }catch(e){}
-  }
-
-  function showErr(title, detail){
-    try{
-      const el = document.getElementById("app");
-      if(!el) return;
-      const safe = (detail==null) ? "" : String(detail);
-      el.innerHTML = `<div class="card"><div class="h1">${title||"Startup error"}</div><div class="sub">${safe}</div></div>`;
-    }catch(e){}
-  }
-
-  bootMark("JS loaded • v184");
-
-  window.addEventListener("error", function(ev){
-    const msg = ev?.message || (ev?.error && (ev.error.message||String(ev.error))) || String(ev);
-    showErr("Startup error", msg);
-  });
-
-  window.addEventListener("unhandledrejection", function(ev){
-    const r = ev?.reason;
-    const msg = (r && (r.message||String(r))) || "Unhandled promise rejection";
-    showErr("Startup error", msg);
-  });
-})();
-
+const BUILD_ID="v186";
 
 
 
@@ -2525,7 +2486,6 @@ function runTransaction(db, fn){ return db.runTransaction(fn); }
 function getFirestore(){ return __fb.db; }
 
 function playerKey(email){
-(email){
   // stable key for docs (email UX stays same)
   return String(email||"").trim().toLowerCase().replaceAll(".", "_");
 }
@@ -2546,7 +2506,7 @@ async function fbEnsureAnon(){
 }
 
 
-// ===== Auth readiness (v184) =====
+// ===== Auth readiness (v179) =====
 let __authReadyP = null;
 function __kickAuthReady(){
   if(__authReadyP) return __authReadyP;
