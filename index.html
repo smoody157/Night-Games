@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v173</title>
+<title>Game Night • v153</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -93,7 +93,7 @@ body{
 
 .topbar{
   position:sticky;top:0;z-index:10;
-  display:grid;grid-template-columns: 1fr auto 1fr;
+  display:grid;grid-template-columns: auto 1fr auto;
   align-items:center;gap:10px;
   padding:10px 12px;
   padding-top:calc(10px + env(safe-area-inset-top));
@@ -1898,335 +1898,6 @@ header, .header {
 }
 </style>
 
-
-  <!-- Firebase SDK (compat) for Firestore sync (v156) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* v156 startup cloud sync */
-try{
-  const last = (function(){ try{return localStorage.getItem('gn_email_last');}catch(e){return null;} })();
-  if(last) syncDown(last);
-}catch(e){}
-
-/* ===== Robust Navigation Wiring (v156) =====
-   Prevent dead buttons by routing via data-action attributes (delegated).
-*/
-(function(){
-  function closestBtn(el){ return el && (el.closest ? el.closest("[data-action]") : null); }
-  document.addEventListener("click", function(ev){
-    const b = closestBtn(ev.target);
-    if(!b) return;
-    const act = b.getAttribute("data-action");
-    const email = b.getAttribute("data-email") || b.getAttribute("data-player");
-    try{
-      if(typeof playBeep==="function") playBeep("nav");
-    }catch(e){}
-    try{
-      if(act==="player_history"){
-        if(email) window.activePlayerEmail = email;
-        window.screen = "history";
-        if(typeof scheduleRender==="function") __goRender(); else if(typeof render==="function") render();
-      }
-      if(act==="player_stats"){
-        if(email) window.activePlayerEmail = email;
-        window.screen = "stats";
-        if(typeof scheduleRender==="function") __goRender(); else if(typeof render==="function") render();
-      }
-    }catch(e){ console.warn("nav wiring failed", e); }
-  }, true);
-})();
-
-
-/* v156 detail routing */
-document.addEventListener("click", function(ev){
-  const el = ev.target && ev.target.closest ? ev.target.closest("[data-action]") : null;
-  if(!el) return;
-  const act = el.getAttribute("data-action");
-  if(act==="history_detail"){
-    const gid = el.getAttribute("data-gameid");
-    window.screen = "history_detail";
-    window.__activeGameId = gid;
-    if(typeof renderHistoryDetail==="function") renderHistoryDetail(gid);
-    ev.preventDefault();
-  }
-  if(act==="back_players"){
-    window.screen="players";
-    if(typeof scheduleRender==="function") __goRender(); else if(typeof render==="function") render();
-    ev.preventDefault();
-  }
-}, true);
-
-
-
-/* ===== v157 SYNC STRATEGY (Durable + Simple) =====
-   - Sync DOWN once on email sign-in (connect)
-   - Sync UP on game end (completed) OR abort/disconnect (incomplete)
-   - Queue unsent uploads locally; flush on next connect
-*/
-function _queueKey(){ return "gn_pending_uploads_v157"; }
-function queueUpload(match){
-  try{
-    const q = cacheGet(_queueKey(), []);
-    q.push(match);
-    cacheSet(_queueKey(), q.slice(-50)); // keep last 50 pending
-  }catch(e){}
-}
-async function flushQueue(email){
-  try{
-    const q = cacheGet(_queueKey(), []);
-    if(!q || !q.length) return;
-    const remain = [];
-    for(const m of q){
-      try{
-        await writeMatchAndIndexes(m);
-      }catch(e){
-        remain.push(m);
-      }
-    }
-    cacheSet(_queueKey(), remain);
-  }catch(e){}
-}
-
-/* Ensure "connect" means: after email sign-in we sync down + flush pending uploads */
-async function GN_ON_CONNECT(email){
-  try{
-    if(!email) return;
-    await syncDown(email);
-    await flushQueue(email);
-  }catch(e){}
-}
-
-/* Ensure "sync up" on game end */
-async function GN_ON_GAME_END(match){
-  try{
-    if(!match) return;
-    // local-first cache always
-    GN_SAVE_GAME_RESULT(match);
-  }catch(e){
-    // if cloud write fails, queue it
-    try{ queueUpload(match); }catch(_){}
-  }
-}
-
-/* Auto-patch known game-end function names without changing UI */
-(function(){
-  const candidates = ["endGame","finishGame","completeGame","declareWinner","onGameEnd","gameOver","finalizeGame"];
-  for(const name of candidates){
-    try{
-      const fn = window[name];
-      if(typeof fn === "function" && !fn.__gn_wrapped){
-        const wrapped = function(...args){
-          let res;
-          try{ res = fn.apply(this,args); }catch(e){ throw e; }
-          try{
-            // try to build a minimal match object from globals if present
-            const email = (window.meUser && meUser.email) || cacheGet("gn_email_last","");
-            const match = (window.__lastMatchResult) || null;
-            // If the original function set some global, prefer it; else skip.
-            if(match) GN_ON_GAME_END(match);
-            // Always queue a best-effort incomplete snapshot if gameState exists
-            if(!match && window.gameState){
-              const gs = window.gameState;
-              const players = (gs.players||[]).map(p=>p.email||p).filter(Boolean);
-              if(players.length){
-                GN_ON_GAME_END({
-                  id: "g_"+Date.now()+"_"+Math.floor(Math.random()*1e6),
-                  tsStart: gs.tsStart||Date.now(),
-                  tsEnd: Date.now(),
-                  status: "incomplete",
-                  gameType: gs.gameType||gs.game||"",
-                  players,
-                  scoreLine: gs.scoreLine||"",
-                  scores: gs.scores||{},
-                  notes: "Auto-saved (incomplete)"
-                });
-              }
-            }
-          }catch(e){}
-          return res;
-        };
-        wrapped.__gn_wrapped = true;
-        window[name] = wrapped;
-      }
-    }catch(e){}
-  }
-})();
-
-/* Best-effort: on page hide, attempt to flush queue (doesn't block UI) */
-document.addEventListener("visibilitychange", ()=>{
-  if(document.visibilityState==="hidden"){
-    try{
-      const email = (window.meUser && meUser.email) || cacheGet("gn_email_last","");
-      if(email) flushQueue(email);
-    }catch(e){}
-  }
-});
-
-
-
-/* ===== v160: HARD BIND STATS/HISTORY BUTTONS (no delegation, no guessing) ===== */
-function bindPlayerActionButtons(){
-  try{
-    // Stats buttons
-    document.querySelectorAll('button[data-action="player_stats"],button[data-player-stats]').forEach((btn)=>{
-      btn.onclick = ()=>{
-        try{
-          const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-stats") || window.activePlayerEmail || (window.meUser && meUser.email) || "";
-          window.activePlayerEmail = email;
-          window.screen = "stats";
-          __goRender();
-        }catch(e){ console.warn(e); }
-      };
-    });
-    // History buttons
-    document.querySelectorAll('button[data-action="player_history"],button[data-player-history]').forEach((btn)=>{
-      btn.onclick = ()=>{
-        try{
-          const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-history") || window.activePlayerEmail || (window.meUser && meUser.email) || "";
-          window.activePlayerEmail = email;
-          window.screen = "history";
-          __goRender();
-        }catch(e){ console.warn(e); }
-      };
-    });
-  }catch(e){ console.warn(e); }
-}
-
-
-
-/* ===== v161: HARD BIND PLAYER + GAME HISTORY BUTTONS AFTER HOME RENDER ===== */
-function bindHomeActionButtons(){
-  try{
-    // Player Stats
-    document.querySelectorAll('button[data-player-stats],button[data-action="player_stats"]').forEach((btn)=>{
-      btn.onclick = ()=>{
-        try{
-          const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-stats") || (window.meUser && meUser.email) || "";
-          window.activePlayerEmail = email;
-          window.screen = "stats";
-          __goRender();
-        }catch(e){ console.warn("player_stats click failed", e); }
-      };
-    });
-    // Player History
-    document.querySelectorAll('button[data-player-history],button[data-action="player_history"]').forEach((btn)=>{
-      btn.onclick = ()=>{
-        try{
-          const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-history") || (window.meUser && meUser.email) || "";
-          window.activePlayerEmail = email;
-          window.screen = "history";
-          __goRender();
-        }catch(e){ console.warn("player_history click failed", e); }
-      };
-    });
-    // Game History (replacing old "Stats" at game cards)
-    document.querySelectorAll('button[data-game-history],button[data-stats],button[data-action="game_history"]').forEach((btn)=>{
-      btn.onclick = ()=>{
-        try{
-          const game = btn.getAttribute("data-game-history") || btn.getAttribute("data-game") || btn.getAttribute("data-gameid") || btn.getAttribute("data-gametype") || btn.getAttribute("data-stats") || "";
-          window.activeGameType = game;
-          window.screen = "game_history";
-          __goRender();
-        }catch(e){ console.warn("game_history click failed", e); }
-      };
-    });
-  }catch(e){ console.warn("bindHomeActionButtons failed", e); }
-}
-
-
-
-
-/* v162: delegated fallback so buttons never go dead after re-render */
-document.addEventListener("click", function(ev){
-  const b = ev.target && ev.target.closest ? ev.target.closest(
-    'button[data-player-stats],button[data-player-history],button[data-game-history],button[data-stats],button[data-action="player_stats"],button[data-action="player_history"],button[data-action="game_history"]'
-  ) : null;
-  if(!b) return;
-
-  const act = b.getAttribute("data-action") || "";
-
-  try{ if(typeof playBeep==="function") playBeep("nav"); }catch(e){}
-
-  // Player Stats
-  if(act==="player_stats" || b.hasAttribute("data-player-stats")){
-    ev.preventDefault();
-    const email = b.getAttribute("data-email") || b.getAttribute("data-player") || b.getAttribute("data-player-stats") || (window.meUser && meUser.email) || "";
-    window.activePlayerEmail = email;
-    window.screen="stats";
-    __goRender();
-    return;
-  }
-
-  // Player History
-  if(act==="player_history" || b.hasAttribute("data-player-history")){
-    ev.preventDefault();
-    const email = b.getAttribute("data-email") || b.getAttribute("data-player") || b.getAttribute("data-player-history") || (window.meUser && meUser.email) || "";
-    window.activePlayerEmail = email;
-    window.screen="history";
-    __goRender();
-    return;
-  }
-
-  // Game History (from new button OR legacy data-stats)
-  if(act==="game_history" || b.hasAttribute("data-game-history") || b.hasAttribute("data-stats")){
-    ev.preventDefault();
-    const game = b.getAttribute("data-game-history") || b.getAttribute("data-game") || b.getAttribute("data-gameid") || b.getAttribute("data-gametype") || b.getAttribute("data-stats") || "";
-    window.activeGameType = game;
-    window.screen="game_history";
-    __goRender();
-    return;
-  }
-}, true);
-/* ===== v161: Game History (last 100 games by game type) ===== */
-async function renderGameHistory(){
-  const game = window.activeGameType || "";
-  let html = '';
-  html += `<div class="card" style="position:relative">
-    <button class="btn ghost iconBtn topLeftBtn" id="ghBack">⬅️</button>
-    <div class="authCenter">
-      <div class="h1" style="margin:0;font-size:28px;font-weight:1000;text-align:center">Game History</div>
-      <div class="sub" style="text-align:center;margin-top:6px">${esc(game||"")}</div>
-    </div>
-  </div>`;
-
-  // Pull from cloud (best-effort) then show
-  let rows = [];
-  try{
-    const ok = await fbEnsureAnon();
-    if(ok){
-      let q = __fb.db.collection("games").orderBy("tsEnd","desc").limit(100);
-      if(game) q = q.where("gameType","==", game);
-      const snap = await q.get();
-      snap.forEach(d=>rows.push(d.data()));
-    }
-  }catch(e){ console.warn("renderGameHistory query failed", e); }
-
-  if(!rows.length){
-    html += `<div class="card" style="margin-top:14px"><div class="sub" style="text-align:center">No games yet.</div></div>`;
-  }else{
-    html += `<div class="card" style="margin-top:14px;padding:10px">
-      <div style="display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow:auto;padding-right:4px">`;
-    rows.forEach((g)=>{
-      const when = new Date(g.tsEnd||g.ts||Date.now()).toLocaleString();
-      const players = Array.isArray(g.players)? g.players.join(", ") : "";
-      const scoreLine = esc(g.scoreLine||"");
-      const status = String(g.status||"completed").toLowerCase();
-      html += `<button class="btn action" data-action="history_detail" data-gameid="${esc(g.id||g.gameId||"")}" style="text-align:left;padding:12px">
-        <div style="font-weight:900">${esc(g.gameType||g.game||"Game")}</div>
-        <div class="sub" style="margin-top:2px">${when}${players?(" • "+esc(players)):""}${scoreLine?(" • "+scoreLine):""} • ${status}</div>
-      </button>`;
-    });
-    html += `</div></div>`;
-  }
-
-  setHTML(html);
-  const back=document.getElementById("ghBack");
-  if(back) back.onclick=()=>{ window.screen="home"; __goRender(); };
-}
-
-</script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
 </head>
 
 <body>
@@ -2237,7 +1908,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v173</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v153</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2251,290 +1922,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v173</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v153</div>
 </div>
 
-<script>
-const BUILD_ID="v173";
-
-
-
-
-
-
-
-
-
-/* v172: Firebase presence guard */
-(function(){
-  window.__FIREBASE_PRESENT__ = !!(window.firebase && typeof window.firebase.initializeApp === "function");
-})();
-
-/* ===== v167 FIREBASE INIT SHIM (prevents initializeApp ReferenceError) ===== */
-(function(){
-  if(typeof window.initializeApp !== "function"){
-    window.initializeApp = function(cfg){
-      if(window.firebase && typeof window.firebase.initializeApp === "function"){
-        return window.firebase.initializeApp(cfg);
-      }
-      throw new Error("Firebase SDK not loaded");
-    };
-  }
-  if(typeof window.getAnalytics !== "function"){
-    window.getAnalytics = function(){ return null; };
-  }
-})();
-
-/* ===== v166 VERIFICATION + ALWAYS-BIND BUTTONS =====
-   Goal: ensure login proceeds + buttons respond + sound enabled.
-*/
-(function(){
-  window.__GN_LAST_RENDER_TS = 0;
-
-  function isBtn(el){ return !!(el && el.tagName==="BUTTON"); }
-
-  function bindAllKnownButtons(){
-    try{
-      // Player buttons
-      document.querySelectorAll('button[data-player-stats],button[data-action="player_stats"]').forEach((btn)=>{
-        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activePlayerEmail = btn.getAttribute("data-player-stats")||btn.getAttribute("data-email")||btn.getAttribute("data-player")||""; window.screen="stats"; __goRender(); };
-      });
-      document.querySelectorAll('button[data-player-history],button[data-action="player_history"]').forEach((btn)=>{
-        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activePlayerEmail = btn.getAttribute("data-player-history")||btn.getAttribute("data-email")||btn.getAttribute("data-player")||""; window.screen="history"; __goRender(); };
-      });
-      // Game history (new or legacy)
-      document.querySelectorAll('button[data-game-history],button[data-action="game_history"],button[data-stats]').forEach((btn)=>{
-        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activeGameType = btn.getAttribute("data-game-history")||btn.getAttribute("data-stats")||btn.getAttribute("data-game")||btn.getAttribute("data-gametype")||""; window.screen="game_history"; __goRender(); };
-      });
-    }catch(e){ console.warn("bindAllKnownButtons failed", e); }
-  }
-
-  // Delegated catch-all click (if overlays swallow clicks, this won't fire either)
-  document.addEventListener("click", function(ev){
-    try{ if(typeof unlockAudio==="function") unlockAudio(); }catch(e){}
-    const b = ev.target && ev.target.closest ? ev.target.closest("button") : null;
-    if(!b) return;
-    // If button has no onclick, attempt to bind and re-run
-    if(!b.onclick) bindAllKnownButtons();
-  }, true);
-
-  // Wrap render to always rebind after DOM updates
-  if(typeof window.render === "function" && !window.render.__gn_wrapped){
-    const _r = window.render;
-    window.render = function(){
-      const out = _r.apply(this, arguments);
-      window.__GN_LAST_RENDER_TS = Date.now();
-      try{ bindAllKnownButtons(); }catch(e){}
-      return out;
-    };
-    window.render.__gn_wrapped = true;
-  }
-
-  // Boot: if login works, ensure home renders within 2s
-  setTimeout(()=>{
-    try{
-      if(typeof __landingLocalSignIn==="function"){
-        // no-op, just ensures function exists
-      }
-      if(!window.screen) window.screen="landing";
-      // If stuck in loading text, force render
-      const app = document.getElementById("app");
-      if(app && /loading/i.test(app.textContent||"")){
-        try{ window.screen = window.screen || "landing"; }catch(e){}
-        try{ __goRender(); }catch(e){ try{ render(); }catch(_){} }
-      }
-      bindAllKnownButtons();
-    }catch(e){}
-  }, 1200);
-})();
-
-/* ===== v165 BOOT FAILSAFE ===== */
-(function(){
-  function showBootError(msg){
-    try{
-      const app = document.getElementById("app");
-      if(!app) return;
-      app.innerHTML = `<div class="card"><div class="h1">Startup Error</div><div class="sub">${String(msg||"Unknown error")}</div></div>`;
-    }catch(e){}
-  }
-  window.addEventListener("error", (e)=>{
-    try{ showBootError(e.message || e.error || e); }catch(_){};
-  });
-  window.addEventListener("unhandledrejection", (e)=>{
-    try{ showBootError(e.reason || e); }catch(_){};
-  });
-
-  // If nothing renders within 1500ms, force a render attempt (prevents infinite "Loading…")
-  setTimeout(()=>{
-    try{
-      if(typeof renderHome==="function"){
-        // If we're still showing Loading, force home screen
-        const app = document.getElementById("app");
-        if(app && app.textContent && app.textContent.includes("Loading")){
-          window.screen = window.screen || "home";
-          if(typeof __goRender==="function") __goRender();
-          else if(typeof render==="function") render();
-          else renderHome();
-        }
-      }
-    }catch(e){ showBootError(e.message||e); }
-  }, 1500);
-})();
-
-/* ===== Cloud Sync Core (Firestore) — v156 =====
-   UI/graphics/layout unchanged. This only adds durable data sync.
-   Identity: email (entered by user). Under the hood: anonymous auth (no UI).
-*/
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-  projectId: "gamenightdarts-e7601",
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-  messagingSenderId: "270045452251",
-  appId: "1:270045452251:web:393956ce18b43316e939fe",
-  measurementId: "G-LQEHF02ZVR"
-};
-
-let __fb = { app:null, auth:null, db:null, ready:false, anonOk:false };
-
-function fbInit(){
-  try{
-    if(__fb.ready) return true;
-    if(typeof firebase === "undefined") return false;
-    __fb.app = firebase.initializeApp(FIREBASE_CONFIG);
-    __fb.auth = firebase.auth();
-    __fb.db = firebase.firestore();
-    __fb.ready = true;
-    return true;
-  }catch(e){
-    console.warn("Firebase init failed", e);
-    return false;
-  }
-}
-
-function playerKey(email){
-  // stable key for docs (email UX stays same)
-  return String(email||"").trim().toLowerCase().replaceAll(".", "_");
-}
-
-async function fbEnsureAnon(){
-  if(!fbInit()) return false;
-  try{
-    if(__fb.auth.currentUser){ __fb.anonOk=true; return true; }
-    await __fb.auth.signInAnonymously();
-    __fb.anonOk=true;
-    return true;
-  }catch(e){
-    // If anonymous auth is off, we keep app functional locally and log the reason.
-    console.warn("Anonymous auth failed (enable Anonymous provider in Firebase Auth)", e);
-    __fb.anonOk=false;
-    return false;
-  }
-}
-
-function cacheSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
-function cacheGet(k, dflt){
-  try{
-    const raw = localStorage.getItem(k);
-    if(!raw) return dflt;
-    const v = JSON.parse(raw);
-    return (v===undefined || v===null) ? dflt : v;
-  }catch(e){ return dflt; }
-}
-
-async function syncDown(email){
-  if(!email) return;
-  const pk = playerKey(email);
-  // Always keep local cache; cloud is additive.
-  cacheSet("gn_email_last", email);
-  const ok = await fbEnsureAnon();
-  if(!ok) return;
-
-  try{
-    const pRef = __fb.db.collection("players").doc(pk);
-    const pSnap = await pRef.get();
-    if(pSnap.exists){
-      cacheSet("gn_player_"+pk, pSnap.data() || {});
-    }
-
-    const histQ = await pRef.collection("history").orderBy("tsEnd","desc").limit(100).get();
-    const hist = [];
-    histQ.forEach(d=>hist.push(d.data()));
-    cacheSet("gn_hist_"+pk, hist);
-  }catch(e){
-    console.warn("syncDown failed", e);
-  }
-}
-
-async function writeMatchAndIndexes(match){
-  // match: {id, tsStart, tsEnd, status, gameType, players:[emails], scores, winner, notes}
-  if(!match || !Array.isArray(match.players) || match.players.length===0) return;
-  const ok = await fbEnsureAnon();
-  if(!ok) return;
-
-  const gameId = match.id || ("g_"+Date.now()+"_"+Math.floor(Math.random()*1e6));
-  const tsEnd = match.tsEnd || Date.now();
-  const payload = Object.assign({}, match, { id: gameId, tsEnd });
-
-  try{
-    // 1) global match
-    await __fb.db.collection("games").doc(gameId).set(payload, {merge:true});
-
-    // 2) per-player index row + update player doc updatedAt
-    await Promise.all(match.players.map(async (email)=>{
-      const pk = playerKey(email);
-      const pRef = __fb.db.collection("players").doc(pk);
-      await pRef.set({ email: String(email).toLowerCase(), updatedAt: Date.now() }, {merge:true});
-
-      // build lightweight history row
-      const opp = match.players.filter(x=>String(x).toLowerCase()!==String(email).toLowerCase());
-      const row = {
-        id: gameId,
-        gameId,
-        tsEnd,
-        tsStart: match.tsStart || tsEnd,
-        status: match.status || "completed",
-        gameType: match.gameType || "",
-        opponents: opp,
-        scoreLine: match.scoreLine || "",
-        result: match.resultByPlayer && match.resultByPlayer[email] ? match.resultByPlayer[email] : (match.status==="completed" ? "" : "INCOMPLETE"),
-        notes: match.notes || ""
-      };
-
-      await pRef.collection("history").doc(gameId).set(row, {merge:true});
-
-      // keep local cache in sync immediately
-      const histKey = "gn_hist_"+pk;
-      const list = cacheGet(histKey, []);
-      const next = [row].concat(list.filter(x=>String(x.id)!==String(gameId))).slice(0,100);
-      cacheSet(histKey, next);
-    }));
-  }catch(e){
-    console.warn("writeMatchAndIndexes failed", e);
-  }
-}
-
-// Durable hook: call this at game end.
-// IMPORTANT: This does not change gameplay UI; it only stores data.
-function GN_SAVE_GAME_RESULT(match){
-  try{
-    // local-first: always cache
-    if(match && Array.isArray(match.players)){
-      match.players.forEach((email)=>{
-        const pk = playerKey(email);
-        const histKey = "gn_hist_"+pk;
-        const list = cacheGet(histKey, []);
-        const row = Object.assign({}, match, { id: match.id || ("g_"+Date.now()+"_"+Math.floor(Math.random()*1e6)), tsEnd: match.tsEnd || Date.now() });
-        const next = [row].concat(list).slice(0,100);
-        cacheSet(histKey, next);
-      });
-    }
-  }catch(e){}
-  // then cloud write (best-effort)
-  writeMatchAndIndexes(match);
-}
-
-
+<script type="module">
+const BUILD_ID="v153";
 try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 
 (function buildStamp(){
@@ -2548,8 +1940,38 @@ try{document.title=`Game Night • ${BUILD_ID}`;}catch{}
 })();
 
 
-/* ========= Firebase (CDN modules) REMOVED in v163 (was breaking runtime) ========= */
-/* v172: removed duplicate modular Firebase block (was breaking startup) */
+/* ========= Firebase (CDN modules) ========= */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics.js";
+import {
+  getFirestore, collection, doc, setDoc, getDoc, getDocs, onSnapshot, updateDoc,
+  query, where, orderBy, limit, serverTimestamp, deleteDoc, writeBatch
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+
+/* ========= CONFIG (yours) ========= */
+const firebaseConfig = {
+  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
+  authDomain: "gamenightdarts-e7601.firebaseapp.com",
+  projectId: "gamenightdarts-e7601",
+  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
+  messagingSenderId: "270045452251",
+  appId: "1:270045452251:web:5a4a661140a60780e939fe",
+  measurementId: "G-M60TDFYBW0"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const fbAuth = getAuth(fbApp);
+let __authReadyResolve;
+const authReady = new Promise(res=>__authReadyResolve=res);
+onAuthStateChanged(fbAuth,(u)=>{ if(u) __authReadyResolve(u); });
+signInAnonymously(fbAuth).catch(()=>{ /* ignore */ });
+
+
+try { getAnalytics(fbApp); } catch {}
+const db = getFirestore(fbApp);
+
 /* ========= Helpers ========= */
 const appEl = document.getElementById("app");
 const homeBtn = document.getElementById("homeBtn");
@@ -2572,7 +1994,7 @@ try{
 }catch{}
 
 let __audioCtx = null;
-const MASTER_GAIN = 10.0; // MAX // MAX (may clip) // phone-friendly
+const MASTER_GAIN = 3.5; // MAX LOUD (v153) // boosted (v152)
 
 function ensureAudio(){
   if(__audioCtx) return __audioCtx;
@@ -2599,6 +2021,7 @@ function unlockAudio(){
 }
 window.addEventListener("pointerdown", unlockAudio, {passive:true});
 window.addEventListener("touchstart", unlockAudio, {passive:true});
+window.addEventListener("click", unlockAudio, {passive:true, once:true});
 
 
 /* v137 landing page harden */
@@ -2682,7 +2105,7 @@ function playBeep(kind){
   o.frequency.setValueAtTime(preset.f, t0);
 
   g.gain.setValueAtTime(0.0001, t0);
-  const g1 = Math.min(0.95, preset.gain * MASTER_GAIN);
+  const g1 = Math.min(4.0, preset.gain * MASTER_GAIN); // allow >1 for louder (may clip)
   g.gain.exponentialRampToValueAtTime(g1, t0 + 0.015);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + preset.dur);
 
@@ -2888,6 +2311,8 @@ function listenMatchState(roomId, cb){
 /* ========= History & Stats (stored online) ========= */
 async function saveHistoryEntry(entry){
   const id = uuid();
+  entry = entry || {};
+  if(!entry.id) entry.id = id;
   await setDoc(doc(db, C_HISTORY, id), entry);
 }
 async function getHistory(email){
@@ -2896,7 +2321,7 @@ async function getHistory(email){
     collection(db, C_HISTORY),
     where("players","array-contains",e),
     orderBy("endedAt","desc"),
-    limit(50)
+    limit(100)
   ));
   return snap.docs.map(d=>d.data());
 }
@@ -2946,23 +2371,16 @@ function wireDelegatedClicks(){
   document.addEventListener("click",(e)=>{
     const t = e.target && e.target.closest ? e.target.closest("#statsBtn,#historyBtn,button[data-player-stats],button[data-player-history],button[data-player-remove]") : null;
     if(!t) return;
-
-    const act = t.getAttribute && t.getAttribute("data-action");
-    if(act==="player_stats"){ e.preventDefault(); activePlayerEmail = t.getAttribute("data-email")||t.getAttribute("data-player")||t.getAttribute("data-player-stats")||meUser?.email||activePlayerEmail; screen="stats"; __goRender(); return; }
-    if(act==="player_history"){ e.preventDefault(); activePlayerEmail = t.getAttribute("data-email")||t.getAttribute("data-player")||t.getAttribute("data-player-history")||meUser?.email||activePlayerEmail; screen="history"; __goRender(); return; }
-    if(act==="stats" || act==="stats.game"){ e.preventDefault(); screen=act; __goRender(); return; }
-    if(act==="history"){ e.preventDefault(); screen="history"; __goRender(); return; }
-
     // Let explicit onclicks (set during render) run if present; delegation is fallback safety.
-    if(t.id==="statsBtn"){ e.preventDefault(); activePlayerEmail = meUser?.email || activePlayerEmail; screen="stats"; __goRender(); }
-    else if(t.id==="historyBtn"){ e.preventDefault(); activePlayerEmail = meUser?.email || activePlayerEmail; screen="history"; __goRender(); }
-    else if(t.hasAttribute("data-player-stats")){ e.preventDefault(); activePlayerEmail = t.getAttribute("data-player-stats"); screen="stats"; __goRender(); }
-    else if(t.hasAttribute("data-player-history")){ e.preventDefault(); activePlayerEmail = t.getAttribute("data-player-history"); screen="history"; __goRender(); }
+    if(t.id==="statsBtn"){ e.preventDefault(); activePlayerEmail = meUser?.email || activePlayerEmail; screen="stats"; scheduleRender(); }
+    else if(t.id==="historyBtn"){ e.preventDefault(); activePlayerEmail = meUser?.email || activePlayerEmail; screen="history"; scheduleRender(); }
+    else if(t.hasAttribute("data-player-stats")){ e.preventDefault(); activePlayerEmail = t.getAttribute("data-player-stats"); screen="stats"; scheduleRender(); }
+    else if(t.hasAttribute("data-player-history")){ e.preventDefault(); activePlayerEmail = t.getAttribute("data-player-history"); screen="history"; scheduleRender(); }
     else if(t.hasAttribute("data-player-remove")){
       e.preventDefault();
       const em = t.getAttribute("data-player-remove");
       if(!em || em===meUser?.email) return;
-      deletePlayerAndData(em).then(()=>__goRender()).catch(err=>alert(err?.message||String(err)));
+      deletePlayerAndData(em).then(()=>scheduleRender()).catch(err=>alert(err?.message||String(err)));
     }
   }, {passive:false});
 }
@@ -2982,17 +2400,10 @@ function scheduleRender(){
     try{ render(); }catch(e){ try{ console.error(e); }catch(_){ } }
   });
 }
-function __goRender(){
-  try{ if(typeof scheduleRender==="function") return scheduleRender(); }catch(e){}
-  try{ if(typeof render==="function") return render(); }catch(e){}
-}
-
 
 
 let screen = "auth";
 let meUser = null;
-  let activePlayerEmail = null; // selected player for Stats/History
-
 
 let activeGameId = null;
 let match = null;
@@ -3379,7 +2790,7 @@ const ShanghaiGame=(()=>{
       match=initMatch(pls); render(); if(roomId) saveMatchState(roomId, match).catch(()=>{});
     };
     document.getElementById("backToSetup").onclick=()=>{
-      match=null; roomId=null; screen="game.setup"; __goRender();
+      match=null; roomId=null; screen="game.setup"; scheduleRender();
       if(roomUnsub) try{ roomUnsub(); }catch{}
     };
   }
@@ -3545,7 +2956,7 @@ const KillerGame = (() => {
     const m=ctx.match;
     try{ if(m.phase==="play" && !m.finished) animateTurnName("killer", m.players[m.turnIndex].name); }catch{}
 
-    document.getElementById("backToSetup").onclick=()=>{ match=null; roomId=null; screen="game.setup"; __goRender(); if(roomUnsub) try{roomUnsub();}catch{} };
+    document.getElementById("backToSetup").onclick=()=>{ match=null; roomId=null; screen="game.setup"; scheduleRender(); if(roomUnsub) try{roomUnsub();}catch{} };
     document.getElementById("resetBtn").onclick=()=>{
       const pls=m.players.map(p=>({name:p.name,email:p.email}));
       match=KillerGame.initMatch(pls); render(); if(roomId) saveMatchState(roomId, match).catch(()=>{});
@@ -3771,7 +3182,7 @@ const AroundGame = (()=>{
     try{ animateTurnName("around", ctx.match.players[ctx.match.turnIndex].name); }catch{}
     const m=ctx.match;
 
-    document.getElementById("backToSetup").onclick=()=>{ match=null; roomId=null; screen="game.setup"; __goRender(); if(roomUnsub) try{roomUnsub();}catch{} };
+    document.getElementById("backToSetup").onclick=()=>{ match=null; roomId=null; screen="game.setup"; scheduleRender(); if(roomUnsub) try{roomUnsub();}catch{} };
     document.getElementById("resetBtn").onclick=()=>{
       const pls=m.players.map(p=>({name:p.name,email:p.email}));
       match=AroundGame.initMatch(pls, m.mode); render(); if(roomId) saveMatchState(roomId, match).catch(()=>{});
@@ -3824,7 +3235,7 @@ homeBtn.onclick = ()=>{ screen = meUser ? "home" : "auth"; render(); };
 function doSignOut(){
   stopPresence();
   meUser=null; match=null; activeGameId=null; roomId=null;
-  screen="auth"; __goRender();
+  screen="auth"; scheduleRender();
 }
 signOutBtn.onclick = doSignOut;
 
@@ -3892,7 +3303,7 @@ document.getElementById("goBtn").onclick = async()=>{
     const e = normEmail(document.getElementById("inEmail").value);
     if(!e){ toastMsg="Enter a valid email."; return render(); }
     // ensure Firebase Auth exists so Firestore rules (request.auth != null) pass
-    try { await Promise.race([fbEnsureAnon(), new Promise((_,rej)=>setTimeout(()=>rej(new Error("Auth timeout")), 8000))]); } catch(err){ toastMsg = "Auth not ready. Refresh and try again."; return render(); }
+    try { await Promise.race([authReady, new Promise((_,rej)=>setTimeout(()=>rej(new Error("Auth timeout")), 8000))]); } catch(err){ toastMsg = "Auth not ready. Refresh and try again."; return render(); }
     toastMsg = "Signing in…"; render();
     let player = null;
     try { player = await signInEmail(e); } catch(err){ toastMsg = "Sign-in failed. Check Firestore rules and reload."; return render(); }
@@ -3906,7 +3317,7 @@ document.getElementById("goBtn").onclick = async()=>{
   document.getElementById("inEmail").addEventListener("keydown",(ev)=>{ if(ev.key==="Enter"){ ev.preventDefault(); document.getElementById("goBtn").click(); }});
 
     screen="signup";
-    __goRender();
+    scheduleRender();
   };
 }
 
@@ -3936,14 +3347,14 @@ async function renderSignup(){
     </div>
   `);
 
-  document.getElementById("backBtn").onclick=()=>{ meUser=null; screen="auth"; __goRender(); };
+  document.getElementById("backBtn").onclick=()=>{ meUser=null; screen="auth"; scheduleRender(); };
   document.getElementById("createBtn").onclick=async()=>{
     const n=String(document.getElementById("upName").value).trim();
     if(!n){ toastMsg="Enter your name."; return render(); }
     meUser = await signUpEmail(n, meUser.email);
     startPresence(meUser.email, meUser.name);
     screen="home";
-    __goRender();
+    scheduleRender();
   };
 }
 
@@ -3982,7 +3393,7 @@ async function renderHome(){
         </div>
         <div class="gameActions">
           <button class="btn ok" data-play="${esc(g.id)}" ${soon?"disabled":""}>Play</button>
-          <button class="btn ghost" data-action="game_history" data-game-history="${esc(g.id)}">History</button>
+          <button class="btn ghost" data-stats="${esc(g.id)}">Stats</button>
         </div>
       </div>
     `;
@@ -3999,10 +3410,10 @@ async function renderHome(){
         <div class="rosterSub">${esc(p.email)}</div>
       </div>
       <div class="playerActionsRow rosterActions">
-        <button class="btn action statsBtn" data-player-stats="${esc(p.email)}" data-action="player_stats" type="button"
-          onclick="try{activePlayerEmail='${esc(p.email)}';screen='stats';__goRender();}catch(e){}">Stats</button>
-        <button class="btn action hist historyBtn" data-player-history="${esc(p.email)}" data-action="player_history" type="button"
-          onclick="try{activePlayerEmail='${esc(p.email)}';screen='history';__goRender();}catch(e){}">History</button>
+        <button class="btn action statsBtn" data-player-stats="${esc(p.email)}" type="button"
+          onclick="try{activePlayerEmail='${esc(p.email)}';screen='stats';scheduleRender();}catch(e){}">Stats</button>
+        <button class="btn action hist historyBtn" data-player-history="${esc(p.email)}" type="button"
+          onclick="try{activePlayerEmail='${esc(p.email)}';screen='history';scheduleRender();}catch(e){}">History</button>
         <button class="btn danger removeBtn" data-player-remove="${esc(p.email)}" type="button" ${p.email===meUser.email?`disabled`:``}>Remove</button>
       </div>
     </div>
@@ -4021,8 +3432,8 @@ async function renderHome(){
       <div class="divider"></div>
 
     <div class="row">
-      <button class="btn ghost" id="statsBtn" type="button" onclick="try{activePlayerEmail=meUser.email;screen='stats';__goRender();}catch(e){}">Stats</button>
-      <button class="btn ghost" id="historyBtn" type="button" onclick="try{activePlayerEmail=meUser.email;screen='history';__goRender();}catch(e){}">History</button>
+      <button class="btn ghost" id="statsBtn" type="button" onclick="try{activePlayerEmail=meUser.email;screen='stats';scheduleRender();}catch(e){}">Stats</button>
+      <button class="btn ghost" id="historyBtn" type="button" onclick="try{activePlayerEmail=meUser.email;screen='history';scheduleRender();}catch(e){}">History</button>
     </div>
 
     <div class="divider"></div>
@@ -4041,23 +3452,23 @@ async function renderHome(){
   `);
    // ===== Home avatar (only for signed-in user) =====
   const _s=document.getElementById("statsBtn");
-  if(_s) _s.onclick = (e)=>{ if(e) e.preventDefault(); activePlayerEmail = meUser.email; screen="stats"; __goRender(); };
+  if(_s) _s.onclick = (e)=>{ if(e) e.preventDefault(); activePlayerEmail = meUser.email; screen="stats"; scheduleRender(); };
   const _h=document.getElementById("historyBtn");
-  if(_h) _h.onclick = (e)=>{ if(e) e.preventDefault(); activePlayerEmail = meUser.email; screen="history"; __goRender(); };
+  if(_h) _h.onclick = (e)=>{ if(e) e.preventDefault(); activePlayerEmail = meUser.email; screen="history"; scheduleRender(); };
 
   appEl.querySelectorAll("button[data-play]").forEach(btn=>{
     btn.onclick = ()=>{
       activeGameId = btn.getAttribute("data-play");
       match=null;
       screen="game.setup";
-      __goRender();
+      scheduleRender();
     };
   });
   appEl.querySelectorAll("button[data-stats]").forEach(btn=>{
     btn.onclick = ()=>{
       activeGameId = btn.getAttribute("data-stats");
       screen="stats.game";
-      __goRender();
+      scheduleRender();
     };
   });
   // Player card actions
@@ -4065,14 +3476,14 @@ async function renderHome(){
     btn.onclick = ()=>{
       activePlayerEmail = btn.getAttribute("data-player-stats");
       screen = "stats";
-      __goRender();
+      scheduleRender();
     };
   });
   appEl.querySelectorAll("button[data-player-history]").forEach(btn=>{
     btn.onclick = ()=>{
       activePlayerEmail = btn.getAttribute("data-player-history");
       screen = "history";
-      __goRender();
+      scheduleRender();
     };
   });
 
@@ -4101,7 +3512,7 @@ async function renderGameSetup(){
 
   signOutBtn.style.display="inline-block";
   signOutBtn.textContent="Back";
-  signOutBtn.onclick = ()=>{ roomId=null; match=null; screen="home"; __goRender(); };
+  signOutBtn.onclick = ()=>{ roomId=null; match=null; screen="home"; scheduleRender(); };
   brandTitle.textContent=g.name;
 
   setupPlayersAll = await getPlayers();
@@ -4319,7 +3730,7 @@ async function renderGameSetup(){
     // Initial sync
     try{ await saveMatchState(roomId, match); }catch{}
     screen="game.play";
-    __goRender();
+    scheduleRender();
   };
 }
 
@@ -4329,7 +3740,7 @@ async function renderGamePlay(){
 
   signOutBtn.style.display="inline-block";
   signOutBtn.textContent="Back";
-  signOutBtn.onclick = ()=>{ roomId=null; match=null; screen="home"; __goRender(); };
+  signOutBtn.onclick = ()=>{ roomId=null; match=null; screen="home"; scheduleRender(); };
   brandTitle.textContent=g.name;
 
   // Multiplayer: subscribe to room state and matchData
@@ -4385,7 +3796,7 @@ async function renderGamePlay(){
     AroundGame.bindPlay(ctx);
     return;
   }
-  screen="home"; __goRender();
+  screen="home"; scheduleRender();
 }
 
 async function renderStats(){
@@ -4443,7 +3854,7 @@ async function renderStats(){
     statsSel.onchange = ()=>{
       activePlayerEmail = statsSel.value || meUser.email;
       screen = "stats";
-      __goRender();
+      scheduleRender();
     };
   }
 return `
@@ -4463,7 +3874,7 @@ return `
     }).join("")}
   `);
 
-  document.getElementById("statsBack").onclick=()=>{ screen="home"; __goRender(); };
+  document.getElementById("statsBack").onclick=()=>{ screen="home"; scheduleRender(); };
   document.getElementById("resetAllStatsBtn").onclick=async()=>{
     if(!confirm("Reset ALL your stats?")) return;
     await resetStatsAll(meUser.email);
@@ -4472,7 +3883,7 @@ return `
   };
 
   appEl.querySelectorAll("button[data-open]").forEach(btn=>{
-    btn.onclick=()=>{ activeGameId=btn.getAttribute("data-open"); screen="stats.game"; __goRender(); };
+    btn.onclick=()=>{ activeGameId=btn.getAttribute("data-open"); screen="stats.game"; scheduleRender(); };
   });
 }
 
@@ -4530,7 +3941,7 @@ async function renderStatsGame(){
     </div>
   `);
 
-  document.getElementById("statsGameBack").onclick=()=>{ screen="stats"; __goRender(); };
+  document.getElementById("statsGameBack").onclick=()=>{ screen="stats"; scheduleRender(); };
   document.getElementById("resetGameStatsBtn").onclick=async()=>{
     if(!confirm(`Reset ${g.name} stats?`)) return;
     await resetStatsGame(meUser.email, g.id);
@@ -4544,18 +3955,48 @@ async function renderHistory(){
   signOutBtn.textContent="Sign out";
   signOutBtn.onclick = doSignOut;
   brandTitle.textContent="History";
-  signOutBtn.textContent="Sign out";
-  signOutBtn.onclick = doSignOut;
 
   const viewerEmail = activePlayerEmail || meUser.email;
-  const history=await getHistory(viewerEmail);
-  let items=history.map(h=>`
-    <div class="card">
-      <div class="h1" style="font-size:16px;margin:0">${esc(h.summary||"(no summary)")}</div>
-      <div class="sub">${esc(h.gameName||h.gameId||"Game")} • ${esc(h.endedAt?fmt(h.endedAt):"")}</div>
-    </div>
-  `).join("");
-  if(!items) items=`<div class="card"><div class="sub">No matches yet.</div></div>`;
+  const viewer = normEmail(viewerEmail);
+
+  const history = await getHistory(viewerEmail);
+  window.__historyCache = history || [];
+
+  function whoLine(h){
+    const ps = (h.players || []).map(p=>{
+      if(typeof p === "string") return {email:p, name:p};
+      return p||{};
+    });
+    const others = ps.filter(p=>normEmail(p.email||p) !== viewer).map(p=>p.name||p.email||"Player");
+    if(others.length===0) return "Solo";
+    if(others.length===1) return `vs ${others[0]}`;
+    return `vs ${others.length} players`;
+  }
+
+  function statusLine(h){
+    const st = (h.status||"completed").toLowerCase();
+    if(st==="completed") return "";
+    return st.charAt(0).toUpperCase()+st.slice(1);
+  }
+
+  let items = window.__historyCache.map((h,idx)=>{
+    const dt = h.endedAt ? fmt(h.endedAt) : (h.startedAt?fmt(h.startedAt):"");
+    const game = esc(h.gameName||h.gameId||"Game");
+    const who = esc(whoLine(h));
+    const st = statusLine(h);
+    const top = esc(h.summary || `${game} • ${who}`);
+    const subBits = [game, who, dt].filter(Boolean);
+    if(st) subBits.unshift(st);
+    const sub = esc(subBits.join(" • "));
+    return `
+      <button class="card btnLike" data-hidx="${idx}" style="text-align:left;width:100%;border:none;cursor:pointer">
+        <div class="h1" style="font-size:16px;margin:0">${top}</div>
+        <div class="sub">${sub}</div>
+      </button>
+    `;
+  }).join("");
+
+  if(!items) items = `<div class="card"><div class="sub">No games yet.</div></div>`;
 
   setHTML(`
     <div class="row">
@@ -4565,11 +4006,25 @@ async function renderHistory(){
     ${items}
   `);
 
-  document.getElementById("historyBack").onclick=()=>{ screen="home"; __goRender(); };
+  document.getElementById("historyBack").onclick=()=>{ screen="home"; scheduleRender(); };
+
+  // click -> detail modal
+  document.querySelectorAll("[data-hidx]").forEach(el=>{
+    el.onclick = ()=>{
+      const idx = Number(el.getAttribute("data-hidx"));
+      window.__historySelIdx = idx;
+      screen = "history.detail";
+      scheduleRender();
+      playBeep("nav");
+    };
+  });
 }
 
+
 async function render(){
-  if(window.screen==="game_history") return renderGameHistory();
+  try{ if(typeof screen==="undefined") screen="auth"; }catch(e){}
+  if(screen==="history") return renderHistory();
+  if(screen==="history_detail") return renderHistoryDetail();
 wireDelegatedClicks();
 
   if(window.__rendering){ window.__renderAgain=true; return; }
@@ -4591,18 +4046,19 @@ wireDelegatedClicks();
     if(screen==="stats") return renderStats();
     if(screen==="stats.game") return renderStatsGame();
     if(screen==="history") return renderHistory();
+    if(screen==="history.detail") return renderHistoryDetail();
 
     screen="home"; return renderHome();
   }catch(e){
     setHTML(`<div class="card"><div class="h1">App error</div><div class="sub">${esc(e?.message||String(e))}</div></div>`);
   }finally{
     window.__rendering=false;
-    if(window.__renderAgain){ window.__renderAgain=false; __goRender(); }
+    if(window.__renderAgain){ window.__renderAgain=false; scheduleRender(); }
   }
 }
 
-try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
-try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
+bindDelegatedButtons();
+render();
 </script>
 
 
@@ -4726,69 +4182,6 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 /* Make sure action buttons are clickable */
 .rosterActions, .rosterActions *{ pointer-events:auto !important; }
-</style>
-
-
-
-
-
-<style id="v161_topbar_safe_center">
-/* v161: center title/subtitle in the middle gap without overlap, allow 2-3 lines, no truncation */
-.topbar{
-  display:grid !important;
-  grid-template-columns: auto 1fr auto !important;
-  align-items:center !important;
-  gap:10px !important;
-}
-.topbar .topActions.left{justify-content:flex-start !important;}
-.topbar .topActions.right{justify-content:flex-end !important;}
-.topbar .brand{
-  grid-column:2 !important;
-  justify-self:center !important;
-  text-align:center !important;
-  min-width:0 !important;
-  max-width:100% !important;
-  padding:0 12px !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-}
-.topbar .brand .t{white-space:nowrap !important; overflow:visible !important;}
-.topbar .brand .s{
-  white-space:normal !important; /* allow wrap */
-  overflow:visible !important;
-  text-overflow:clip !important;
-  display:block !important;
-  line-height:1.15 !important;
-  font-size:12px !important;
-  max-width:100% !important;
-}
-</style>
-
-
-<style id="v162_footer_no_overlap">
-/* v162: keep the tiny dev credit from overflowing into buttons */
-#devTag, .devTag, .devCredit, .creditLine{
-  max-width: 92vw !important;
-  white-space: normal !important;
-  overflow-wrap: anywhere !important;
-}
-</style>
-
-
-<style id="v163_click_layer_fix">
-/* v163: ensure interactive layers are on top and taps reach buttons */
-#app, .playerPage, .gameGrid, .rosterCard, .playerActionsRow, .rosterActions{
-  position: relative !important;
-  z-index: 50 !important;
-  pointer-events: auto !important;
-}
-/* v163: decorative layers should never steal taps */
-#loginIntroVideo, video, canvas, .loginArtSvg, .heroVideo, .bgLayer, .scanlines{
-  pointer-events: none !important;
-}
-/* v163: games list not hidden under dark panel */
-.gameGrid{ z-index: 60 !important; }
 </style>
 
 </body>
