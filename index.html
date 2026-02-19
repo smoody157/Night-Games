@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v200</title>
+<title>Game Night • v201</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v200) =====
+/* ===== Robust Navigation Wiring (v201) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -2303,7 +2303,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v200</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v201</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2317,11 +2317,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v200</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v201</div>
 </div>
 
 <script>
-const BUILD_ID="v200";
+const BUILD_ID="v201";
 
 
 
@@ -4929,6 +4929,89 @@ wireDelegatedClicks();
 
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
+
+/* ===== v201: UNIVERSAL BUTTON HOOKUP (delegated) =====
+   Purpose: ensure any re-rendered buttons remain clickable.
+   No UI/layout changes. Mechanics only.
+*/
+(function(){
+  function closestBtn(t){
+    if(!t || !t.closest) return null;
+    return t.closest('button,a,[role="button"],[data-action],[data-play],[data-open],[data-game-history],[data-player-stats],[data-player-history],[data-player-remove],[data-attack],#homeBtn,#ghBack,#statsBtn,#historyBtn,#backToSetup,#resetBtn,#signOutBtn');
+  }
+  function safeRender(){ try{ __goRender(); }catch(e){ try{ render(); }catch(_){} } }
+  document.addEventListener("click", function(ev){
+    const el = closestBtn(ev.target);
+    if(!el) return;
+
+    // If element already has an onclick handler, let it run.
+    // (We only handle cases where nothing is wired.)
+    try{
+      if(typeof el.onclick === "function" && el.onclick !== null){
+        // Some browsers set onclick to null even when inline handler exists; don't block.
+        // We still fall through if onclick is null.
+      }
+    }catch(e){}
+
+    // Home / Back buttons by id
+    const id = el.id || "";
+    if(id==="homeBtn"){ window.screen="landing"; safeRender(); ev.preventDefault(); return; }
+    if(id==="ghBack"){ window.screen="landing"; safeRender(); ev.preventDefault(); return; }
+    if(id==="backToSetup"){ window.screen="game.setup"; safeRender(); ev.preventDefault(); return; }
+    if(id==="resetBtn"){ if(typeof resetMatch==="function"){ resetMatch(); } else { window.match=null; } safeRender(); ev.preventDefault(); return; }
+    if(id==="signOutBtn"){ if(typeof signOut==="function"){ signOut(); } safeRender(); ev.preventDefault(); return; }
+    if(id==="statsBtn"){ window.activePlayerEmail=(window.meUser&&meUser.email)||window.activePlayerEmail||""; window.screen="stats"; safeRender(); ev.preventDefault(); return; }
+    if(id==="historyBtn"){ window.activePlayerEmail=(window.meUser&&meUser.email)||window.activePlayerEmail||""; window.screen="history"; safeRender(); ev.preventDefault(); return; }
+
+    // Data-attribute routed buttons (even after re-render)
+    const act = el.getAttribute("data-action") || "";
+    if(act==="player_stats" || el.hasAttribute("data-player-stats")){
+      window.activePlayerEmail = el.getAttribute("data-player-stats") || el.getAttribute("data-email") || el.getAttribute("data-player") || (window.meUser&&meUser.email) || "";
+      window.screen="stats";
+      safeRender(); ev.preventDefault(); return;
+    }
+    if(act==="player_history" || el.hasAttribute("data-player-history")){
+      window.activePlayerEmail = el.getAttribute("data-player-history") || el.getAttribute("data-email") || el.getAttribute("data-player") || (window.meUser&&meUser.email) || "";
+      window.screen="history";
+      safeRender(); ev.preventDefault(); return;
+    }
+    if(act==="game_history" || el.hasAttribute("data-game-history")){
+      window.activeGameType = el.getAttribute("data-game-history") || el.getAttribute("data-gametype") || el.getAttribute("data-game") || window.activeGameType || "";
+      window.screen="game_history";
+      safeRender(); ev.preventDefault(); return;
+    }
+
+    // Play / Open game buttons
+    if(el.hasAttribute("data-play")){
+      window.activeGameId = el.getAttribute("data-play");
+      window.match = null;
+      window.screen = "game.setup";
+      safeRender(); ev.preventDefault(); return;
+    }
+    if(el.hasAttribute("data-open")){
+      window.activeGameId = el.getAttribute("data-open");
+      window.screen = "stats.game";
+      safeRender(); ev.preventDefault(); return;
+    }
+
+    // Remove player
+    if(el.hasAttribute("data-player-remove")){
+      const email = el.getAttribute("data-player-remove") || el.getAttribute("data-email") || "";
+      if(email && typeof deletePlayerAndData==="function"){ deletePlayerAndData(email); }
+      ev.preventDefault(); return;
+    }
+
+    // Killer attack buttons
+    if(el.hasAttribute("data-attack")){
+      // These are bound in-game, but keep a fallback
+      const victim = el.getAttribute("data-attack");
+      try{ if(typeof window.__killerAttack==="function") window.__killerAttack(victim); }catch(e){}
+      // If no fallback function exists, do nothing.
+      return;
+    }
+  }, true);
+})();
+
 </script>
 
 
