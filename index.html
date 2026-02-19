@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v202</title>
+<title>Game Night • v203</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,14 +1911,14 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v202) =====
+/* ===== Robust Navigation Wiring (v203) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
 (function(){
   function closestActionEl(target){
     if(!target || !target.closest) return null;
-    return target.closest('[data-action],button[data-game-history],button[data-stats],button[data-player-history],button[data-player-stats]');
+    return target.closest('[data-action],button[data-game-history],button[data-stats],button[data-player-history],button[data-player-stats],button#ghBack,button#statsBack,button#historyBack,button#statsGameBack,button#backBtn,button#homeBtn,button#backToSetup');
   }
   function getFirstAttr(el, names){
     for(const n of names){
@@ -1933,7 +1933,31 @@ try{
       else if(typeof render==="function") render();
     }catch(e){}
   }
-  document.addEventListener("click", function(ev){
+  
+  // ===== v203: tiny navigation stack so Back works on every page =====
+  if(!window.__navStack) window.__navStack = [];
+  function pushScreen(next){
+    try{
+      const cur = window.screen || "home";
+      // avoid stacking same screen repeatedly
+      if(next && cur !== next){
+        window.__navStack.push(cur);
+        // cap stack to prevent runaway growth
+        if(window.__navStack.length > 40) window.__navStack.shift();
+      }
+    }catch(e){}
+  }
+  function popScreen(){
+    try{
+      return (window.__navStack && window.__navStack.length) ? window.__navStack.pop() : "";
+    }catch(e){ return ""; }
+  }
+  function goBack(){
+    const prev = popScreen();
+    window.screen = prev || "home";
+    try{ goRenderSafe(); }catch(e){ try{ if(typeof render==="function") render(); }catch(_){ } }
+  }
+document.addEventListener("click", function(ev){
     const el = closestActionEl(ev.target);
     if(!el) return;
 
@@ -1947,12 +1971,45 @@ try{
     // normalize aliases
     if(act==="stats") act = "player_stats";
 
+    // id-based actions (some pages use ids instead of data-action)
+    try{
+      const id = (el && el.id) ? el.id : "";
+      if(!act){
+        if(id==="ghBack" || id==="statsBack" || id==="historyBack" || id==="statsGameBack" || id==="backBtn") act="back";
+        if(id==="homeBtn") act="home";
+        if(id==="backToSetup") act="back_to_setup";
+      }else{
+        // map common back aliases
+        if(act==="back") act="back";
+      }
+    }catch(e){}
+
     try{ if(typeof playBeep==="function") playBeep("nav"); }catch(e){}
 
     try{
+
+      if(act==="back"){
+        goBack();
+        ev.preventDefault(); ev.stopPropagation();
+        return;
+      }
+      if(act==="home"){
+        pushScreen("home"); // no-op stack safety
+        window.screen = "home";
+        goRenderSafe();
+        ev.preventDefault(); ev.stopPropagation();
+        return;
+      }
+      if(act==="back_to_setup"){
+        window.screen = "game.setup";
+        goRenderSafe();
+        ev.preventDefault(); ev.stopPropagation();
+        return;
+      }
       if(act==="player_history"){
         const email = getFirstAttr(el, ["data-email","data-player","data-player-history"]) || (window.meUser && meUser.email) || "";
         if(email) window.activePlayerEmail = email;
+        pushScreen("history");
         window.screen = "history";
         goRenderSafe();
         ev.preventDefault(); ev.stopPropagation();
@@ -1961,6 +2018,7 @@ try{
       if(act==="player_stats"){
         const email = getFirstAttr(el, ["data-email","data-player","data-player-stats"]) || (window.meUser && meUser.email) || "";
         if(email) window.activePlayerEmail = email;
+        pushScreen("stats");
         window.screen = "stats";
         goRenderSafe();
         ev.preventDefault(); ev.stopPropagation();
@@ -1969,6 +2027,7 @@ try{
       if(act==="game_history"){
         const game = getFirstAttr(el, ["data-game-history","data-game","data-gameid","data-gametype","data-stats"]) || (window.activeGameType||"");
         window.activeGameType = game;
+        pushScreen("game_history");
         window.screen = "game_history";
         goRenderSafe();
         ev.preventDefault(); ev.stopPropagation();
@@ -1976,6 +2035,7 @@ try{
       }
       if(act==="history_detail"){
         const gid = getFirstAttr(el, ["data-gameid"]);
+        pushScreen("history_detail");
         window.screen = "history_detail";
         window.__activeGameId = gid;
         if(typeof renderHistoryDetail==="function") renderHistoryDetail(gid);
@@ -1984,6 +2044,7 @@ try{
         return;
       }
       if(act==="back_players"){
+        pushScreen("players");
         window.screen = "players";
         goRenderSafe();
         ev.preventDefault(); ev.stopPropagation();
@@ -2011,7 +2072,8 @@ document.addEventListener("click", function(ev){
   const act = el.getAttribute("data-action");
   if(act==="history_detail"){
     const gid = el.getAttribute("data-gameid");
-    window.screen = "history_detail";
+    pushScreen("history_detail");
+        window.screen = "history_detail";
     window.__activeGameId = gid;
     if(typeof renderHistoryDetail==="function") renderHistoryDetail(gid);
     ev.preventDefault();
@@ -2140,7 +2202,8 @@ function bindPlayerActionButtons(){
         try{
           const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-stats") || window.activePlayerEmail || (window.meUser && meUser.email) || "";
           window.activePlayerEmail = email;
-          window.screen = "stats";
+          pushScreen("stats");
+        window.screen = "stats";
           __goRender();
         }catch(e){ console.warn(e); }
       };
@@ -2151,7 +2214,8 @@ function bindPlayerActionButtons(){
         try{
           const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-history") || window.activePlayerEmail || (window.meUser && meUser.email) || "";
           window.activePlayerEmail = email;
-          window.screen = "history";
+          pushScreen("history");
+        window.screen = "history";
           __goRender();
         }catch(e){ console.warn(e); }
       };
@@ -2170,7 +2234,8 @@ function bindHomeActionButtons(){
         try{
           const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-stats") || (window.meUser && meUser.email) || "";
           window.activePlayerEmail = email;
-          window.screen = "stats";
+          pushScreen("stats");
+        window.screen = "stats";
           __goRender();
         }catch(e){ console.warn("player_stats click failed", e); }
       };
@@ -2181,7 +2246,8 @@ function bindHomeActionButtons(){
         try{
           const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-history") || (window.meUser && meUser.email) || "";
           window.activePlayerEmail = email;
-          window.screen = "history";
+          pushScreen("history");
+        window.screen = "history";
           __goRender();
         }catch(e){ console.warn("player_history click failed", e); }
       };
@@ -2192,7 +2258,8 @@ function bindHomeActionButtons(){
         try{
           const game = btn.getAttribute("data-game-history") || btn.getAttribute("data-game") || btn.getAttribute("data-gameid") || btn.getAttribute("data-gametype") || btn.getAttribute("data-stats") || "";
           window.activeGameType = game;
-          window.screen = "game_history";
+          pushScreen("game_history");
+        window.screen = "game_history";
           __goRender();
         }catch(e){ console.warn("game_history click failed", e); }
       };
@@ -2303,7 +2370,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v202</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v203</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2317,11 +2384,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v202</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v203</div>
 </div>
 
 <script>
-const BUILD_ID="v202";
+const BUILD_ID="v203";
 
 
 
@@ -4931,7 +4998,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v202: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v203: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
