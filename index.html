@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v182</title>
+<title>Game Night • v173</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1900,11 +1900,7 @@ header, .header {
 
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-<script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
 /* v156 startup cloud sync */
 try{
   const last = (function(){ try{return localStorage.getItem('gn_email_last');}catch(e){return null;} })();
@@ -1927,12 +1923,12 @@ try{
     try{
       if(act==="player_history"){
         if(email) window.activePlayerEmail = email;
-        screen = "history";
+        window.screen = "history";
         if(typeof scheduleRender==="function") __goRender(); else if(typeof render==="function") render();
       }
       if(act==="player_stats"){
         if(email) window.activePlayerEmail = email;
-        screen = "stats";
+        window.screen = "stats";
         if(typeof scheduleRender==="function") __goRender(); else if(typeof render==="function") render();
       }
     }catch(e){ console.warn("nav wiring failed", e); }
@@ -1947,13 +1943,13 @@ document.addEventListener("click", function(ev){
   const act = el.getAttribute("data-action");
   if(act==="history_detail"){
     const gid = el.getAttribute("data-gameid");
-    screen = "history_detail";
+    window.screen = "history_detail";
     window.__activeGameId = gid;
     if(typeof renderHistoryDetail==="function") renderHistoryDetail(gid);
     ev.preventDefault();
   }
   if(act==="back_players"){
-    screen ="players";
+    window.screen="players";
     if(typeof scheduleRender==="function") __goRender(); else if(typeof render==="function") render();
     ev.preventDefault();
   }
@@ -2076,7 +2072,7 @@ function bindPlayerActionButtons(){
         try{
           const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-stats") || window.activePlayerEmail || (window.meUser && meUser.email) || "";
           window.activePlayerEmail = email;
-          screen = "stats";
+          window.screen = "stats";
           __goRender();
         }catch(e){ console.warn(e); }
       };
@@ -2087,7 +2083,7 @@ function bindPlayerActionButtons(){
         try{
           const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-history") || window.activePlayerEmail || (window.meUser && meUser.email) || "";
           window.activePlayerEmail = email;
-          screen = "history";
+          window.screen = "history";
           __goRender();
         }catch(e){ console.warn(e); }
       };
@@ -2106,7 +2102,7 @@ function bindHomeActionButtons(){
         try{
           const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-stats") || (window.meUser && meUser.email) || "";
           window.activePlayerEmail = email;
-          screen = "stats";
+          window.screen = "stats";
           __goRender();
         }catch(e){ console.warn("player_stats click failed", e); }
       };
@@ -2117,7 +2113,7 @@ function bindHomeActionButtons(){
         try{
           const email = btn.getAttribute("data-email") || btn.getAttribute("data-player") || btn.getAttribute("data-player-history") || (window.meUser && meUser.email) || "";
           window.activePlayerEmail = email;
-          screen = "history";
+          window.screen = "history";
           __goRender();
         }catch(e){ console.warn("player_history click failed", e); }
       };
@@ -2128,7 +2124,7 @@ function bindHomeActionButtons(){
         try{
           const game = btn.getAttribute("data-game-history") || btn.getAttribute("data-game") || btn.getAttribute("data-gameid") || btn.getAttribute("data-gametype") || btn.getAttribute("data-stats") || "";
           window.activeGameType = game;
-          screen = "game_history";
+          window.screen = "game_history";
           __goRender();
         }catch(e){ console.warn("game_history click failed", e); }
       };
@@ -2155,7 +2151,7 @@ document.addEventListener("click", function(ev){
     ev.preventDefault();
     const email = b.getAttribute("data-email") || b.getAttribute("data-player") || b.getAttribute("data-player-stats") || (window.meUser && meUser.email) || "";
     window.activePlayerEmail = email;
-    screen ="stats";
+    window.screen="stats";
     __goRender();
     return;
   }
@@ -2165,7 +2161,7 @@ document.addEventListener("click", function(ev){
     ev.preventDefault();
     const email = b.getAttribute("data-email") || b.getAttribute("data-player") || b.getAttribute("data-player-history") || (window.meUser && meUser.email) || "";
     window.activePlayerEmail = email;
-    screen ="history";
+    window.screen="history";
     __goRender();
     return;
   }
@@ -2175,7 +2171,7 @@ document.addEventListener("click", function(ev){
     ev.preventDefault();
     const game = b.getAttribute("data-game-history") || b.getAttribute("data-game") || b.getAttribute("data-gameid") || b.getAttribute("data-gametype") || b.getAttribute("data-stats") || "";
     window.activeGameType = game;
-    screen ="game_history";
+    window.screen="game_history";
     __goRender();
     return;
   }
@@ -2197,7 +2193,7 @@ async function renderGameHistory(){
   try{
     const ok = await fbEnsureAnon();
     if(ok){
-      let q = col("Games").orderBy("tsEnd","desc").limit(100);
+      let q = __fb.db.collection("games").orderBy("tsEnd","desc").limit(100);
       if(game) q = q.where("gameType","==", game);
       const snap = await q.get();
       snap.forEach(d=>rows.push(d.data()));
@@ -2224,10 +2220,12 @@ async function renderGameHistory(){
 
   setHTML(html);
   const back=document.getElementById("ghBack");
-  if(back) back.onclick=()=>{ screen ="home"; __goRender(); };
+  if(back) back.onclick=()=>{ window.screen="home"; __goRender(); };
 }
 
 </script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 </head>
 
@@ -2239,7 +2237,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v182</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v173</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2253,31 +2251,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v182</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v173</div>
 </div>
 
 <script>
-const BUILD_ID="v182";
-
-// ===== v182: ALWAYS-SHOW STARTUP ERRORS (iPhone-safe) =====
-(function(){
-  function esc0(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-  function show(msg){
-    try{
-      var el = document.getElementById("app");
-      if(!el) return;
-      el.innerHTML = '<div class="card"><div class="h1">Startup error</div><div class="sub" style="white-space:pre-wrap;opacity:.95">'+esc0(msg)+'</div></div>';
-    }catch(_){}
-  }
-  window.addEventListener("error", function(e){
-    show((e && (e.error && e.error.stack)) || (e && e.message) || e);
-  });
-  window.addEventListener("unhandledrejection", function(e){
-    var r = e && e.reason;
-    show((r && r.stack) || (r && r.message) || r || e);
-  });
-})();
-
+const BUILD_ID="v173";
 
 
 
@@ -2319,14 +2297,14 @@ const BUILD_ID="v182";
     try{
       // Player buttons
       document.querySelectorAll('button[data-player-stats],button[data-action="player_stats"]').forEach((btn)=>{
-        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activePlayerEmail = btn.getAttribute("data-player-stats")||btn.getAttribute("data-email")||btn.getAttribute("data-player")||""; screen ="stats"; __goRender(); };
+        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activePlayerEmail = btn.getAttribute("data-player-stats")||btn.getAttribute("data-email")||btn.getAttribute("data-player")||""; window.screen="stats"; __goRender(); };
       });
       document.querySelectorAll('button[data-player-history],button[data-action="player_history"]').forEach((btn)=>{
-        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activePlayerEmail = btn.getAttribute("data-player-history")||btn.getAttribute("data-email")||btn.getAttribute("data-player")||""; screen ="history"; __goRender(); };
+        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activePlayerEmail = btn.getAttribute("data-player-history")||btn.getAttribute("data-email")||btn.getAttribute("data-player")||""; window.screen="history"; __goRender(); };
       });
       // Game history (new or legacy)
       document.querySelectorAll('button[data-game-history],button[data-action="game_history"],button[data-stats]').forEach((btn)=>{
-        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activeGameType = btn.getAttribute("data-game-history")||btn.getAttribute("data-stats")||btn.getAttribute("data-game")||btn.getAttribute("data-gametype")||""; screen ="game_history"; __goRender(); };
+        btn.onclick = ()=>{ try{ playBeep("nav"); }catch(e){}; window.activeGameType = btn.getAttribute("data-game-history")||btn.getAttribute("data-stats")||btn.getAttribute("data-game")||btn.getAttribute("data-gametype")||""; window.screen="game_history"; __goRender(); };
       });
     }catch(e){ console.warn("bindAllKnownButtons failed", e); }
   }
@@ -2358,11 +2336,11 @@ const BUILD_ID="v182";
       if(typeof __landingLocalSignIn==="function"){
         // no-op, just ensures function exists
       }
-      if(!screen) screen ="landing";
+      if(!window.screen) window.screen="landing";
       // If stuck in loading text, force render
       const app = document.getElementById("app");
       if(app && /loading/i.test(app.textContent||"")){
-        try{ screen = screen || "landing"; }catch(e){}
+        try{ window.screen = window.screen || "landing"; }catch(e){}
         try{ __goRender(); }catch(e){ try{ render(); }catch(_){} }
       }
       bindAllKnownButtons();
@@ -2393,7 +2371,7 @@ const BUILD_ID="v182";
         // If we're still showing Loading, force home screen
         const app = document.getElementById("app");
         if(app && app.textContent && app.textContent.includes("Loading")){
-          screen = screen || "home";
+          window.screen = window.screen || "home";
           if(typeof __goRender==="function") __goRender();
           else if(typeof render==="function") render();
           else renderHome();
@@ -2419,25 +2397,13 @@ const FIREBASE_CONFIG = {
 
 let __fb = { app:null, auth:null, db:null, ready:false, anonOk:false };
 
-// Firestore root doc: all app data lives under /Test/Test/...
-let ROOT_DOC = null;
-function col(name){
-  if(!ROOT_DOC) throw new Error("Firestore ROOT_DOC not initialized yet");
-  return ROOT_DOC.collection(name);
-}
-
-
 function fbInit(){
   try{
     if(__fb.ready) return true;
     if(typeof firebase === "undefined") return false;
-    // Avoid "Firebase App named '[DEFAULT]' already exists" on reload/hot swaps.
-    __fb.app = (firebase.apps && firebase.apps.length) ? firebase.app() : firebase.initializeApp(FIREBASE_CONFIG);
+    __fb.app = firebase.initializeApp(FIREBASE_CONFIG);
     __fb.auth = firebase.auth();
     __fb.db = firebase.firestore();
-        db = __fb.db;
-    ROOT_DOC = __fb.db.collection("Test").doc("Test");
-
     __fb.ready = true;
     return true;
   }catch(e){
@@ -2446,69 +2412,9 @@ function fbInit(){
   }
 }
 
-//
-// Firestore "modular" compatibility layer (we are using firebase-*-compat.js)
-// This keeps the rest of the app code unchanged (getDocs/query/where/etc.)
-//
-function _fv(){ return firebase.firestore.FieldValue; }
-function serverTimestamp(){ return _fv().serverTimestamp(); }
-function increment(n){ return _fv().increment(n); }
-function arrayUnion(){ return _fv().arrayUnion.apply(null, arguments); }
-function arrayRemove(){ return _fv().arrayRemove.apply(null, arguments); }
-
-function collection(ref, name){
-  // ref can be __fb.db (Firestore) or a DocumentReference (has collection)
-  if(ref && typeof ref.collection === "function") return ref.collection(name);
-  // fallback to main db
-  return __fb.db.collection(ref);
-}
-
-function doc(ref){
-  // doc(db, "Players", "id") OR doc(collectionRef, "id")
-  var args = Array.prototype.slice.call(arguments, 1);
-  if(ref && typeof ref.collection === "function" && typeof ref.doc !== "function"){
-    // db
-    if(args.length >= 2) return ref.collection(args[0]).doc(args[1]);
-  }
-  if(ref && typeof ref.doc === "function"){
-    return ref.doc(args[0]);
-  }
-  // doc("Players","id") fallback
-  if(typeof ref === "string" && args.length >= 1){
-    return __fb.db.collection(ref).doc(args[0]);
-  }
-  throw new Error("doc(): bad arguments");
-}
-
-function where(field, op, value){
-  return function(q){ return q.where(field, op, value); };
-}
-function orderBy(field, dir){
-  return function(q){ return q.orderBy(field, dir); };
-}
-function limit(n){
-  return function(q){ return q.limit(n); };
-}
-function query(base){
-  var q = base;
-  for(var i=1;i<arguments.length;i++){
-    q = arguments[i](q);
-  }
-  return q;
-}
-
-function getDocs(q){ return q.get(); }
-function getDoc(d){ return d.get(); }
-function setDoc(d, data, opts){ return d.set(data, opts || {}); }
-function updateDoc(d, data){ return d.update(data); }
-function onSnapshot(q, cb){ return q.onSnapshot(cb); }
-function runTransaction(db, fn){ return db.runTransaction(fn); }
-
-function getFirestore(){ return __fb.db; }
-
 function playerKey(email){
   // stable key for docs (email UX stays same)
-  return String(email||"").trim().toLowerCase().replace(/\./g, "_");
+  return String(email||"").trim().toLowerCase().replaceAll(".", "_");
 }
 
 async function fbEnsureAnon(){
@@ -2525,46 +2431,6 @@ async function fbEnsureAnon(){
     return false;
   }
 }
-
-
-// ===== Auth readiness (v182) =====
-let __authReadyP = null;
-function __kickAuthReady(){
-  if(__authReadyP) return __authReadyP;
-  __authReadyP = (async()=>{
-    try{
-      // Try quickly; if it fails we return false and allow retry.
-      const ok = await fbEnsureAnon();
-      return !!ok;
-    }catch(e){
-      console.warn("Auth readiness kick failed", e);
-      return false;
-    }
-  })();
-  return __authReadyP;
-}
-
-async function ensureAuthReady({timeoutMs=12000, retries=2} = {}){
-  for(let i=0;i<=retries;i++){
-    const p = __kickAuthReady();
-    try{
-      const ok = await Promise.race([
-        p,
-        new Promise((_,rej)=>setTimeout(()=>rej(new Error("Auth timeout")), timeoutMs))
-      ]);
-      if(ok) return true;
-    }catch(e){
-      console.warn("Auth wait failed", e);
-    }
-    // Reset and retry
-    __authReadyP = null;
-  }
-  return false;
-}
-
-// Kick auth as early as possible so the landing button doesn't race it.
-__kickAuthReady();
-
 
 function cacheSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
 function cacheGet(k, dflt){
@@ -2585,7 +2451,7 @@ async function syncDown(email){
   if(!ok) return;
 
   try{
-    const pRef = col("Players").doc(pk);
+    const pRef = __fb.db.collection("players").doc(pk);
     const pSnap = await pRef.get();
     if(pSnap.exists){
       cacheSet("gn_player_"+pk, pSnap.data() || {});
@@ -2612,12 +2478,12 @@ async function writeMatchAndIndexes(match){
 
   try{
     // 1) global match
-    await col("Games").doc(gameId).set(payload, {merge:true});
+    await __fb.db.collection("games").doc(gameId).set(payload, {merge:true});
 
     // 2) per-player index row + update player doc updatedAt
     await Promise.all(match.players.map(async (email)=>{
       const pk = playerKey(email);
-      const pRef = col("Players").doc(pk);
+      const pRef = __fb.db.collection("players").doc(pk);
       await pRef.set({ email: String(email).toLowerCase(), updatedAt: Date.now() }, {merge:true});
 
       // build lightweight history row
@@ -2868,9 +2734,9 @@ function setHTML(html){
 }
 
 /* ========= Firestore collections ========= */
-const C_PLAYERS = "Players";
+const C_PLAYERS = "players";
 const C_STATS   = "stats";
-const C_HISTORY = "History";
+const C_HISTORY = "history";
 const C_ROOMS   = "rooms";
 const C_PRES    = "presence";
 
@@ -3125,7 +2991,6 @@ function __goRender(){
 
 let screen = "auth";
 let meUser = null;
-let db = null; // Firestore alias (compat) for modular-style helpers
   let activePlayerEmail = null; // selected player for Stats/History
 
 
@@ -4027,37 +3892,16 @@ document.getElementById("goBtn").onclick = async()=>{
     const e = normEmail(document.getElementById("inEmail").value);
     if(!e){ toastMsg="Enter a valid email."; return render(); }
     // ensure Firebase Auth exists so Firestore rules (request.auth != null) pass
-    const __okAuth = await ensureAuthReady({timeoutMs:12000,retries:2});
-    if(!__okAuth){
-      // Don't brick the app. Enter offline/local mode and let the user in.
-      toastMsg = "Online sync unavailable (auth). Entering offline mode…";
-      meUser = { email:e, name:"" };
-      screen = "home";
-      render();
-      return;
-    }
-
+    try { await Promise.race([fbEnsureAnon(), new Promise((_,rej)=>setTimeout(()=>rej(new Error("Auth timeout")), 8000))]); } catch(err){ toastMsg = "Auth not ready. Refresh and try again."; return render(); }
     toastMsg = "Signing in…"; render();
     let player = null;
-    try {
-      player = await signInEmail(e);
-    } catch(err){
-      console.warn("Sign-in/read failed; entering offline mode", err);
-      toastMsg = "Online sync unavailable (db). Entering offline mode…";
-      meUser = { email:e, name:"" };
-      screen = "home";
-      render();
-      return;
-    }
-
+    try { player = await signInEmail(e); } catch(err){ toastMsg = "Sign-in failed. Check Firestore rules and reload."; return render(); }
     if(player){
       meUser=player;
       startPresence(meUser.email, meUser.name);
       screen="home";
       return render();
     }
-
-    // If no player doc yet, continue to signup (online) but don't block navigation.
     meUser={email:e};
   document.getElementById("inEmail").addEventListener("keydown",(ev)=>{ if(ev.key==="Enter"){ ev.preventDefault(); document.getElementById("goBtn").click(); }});
 
@@ -4725,7 +4569,7 @@ async function renderHistory(){
 }
 
 async function render(){
-  if(screen ==="game_history") return renderGameHistory();
+  if(window.screen==="game_history") return renderGameHistory();
 wireDelegatedClicks();
 
   if(window.__rendering){ window.__renderAgain=true; return; }
