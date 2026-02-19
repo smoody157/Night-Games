@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v194</title>
+<title>Game Night • v195</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2239,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v194</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v195</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2253,11 +2253,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v194</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v195</div>
 </div>
 
 <script>
-const BUILD_ID="v194";
+const BUILD_ID="v195";
 
 
 
@@ -2857,17 +2857,50 @@ const C_ROOMS   = "rooms";
 const C_PRES    = "presence";
 
 /* ========= Players ========= */
+// ===== Data root resolver (mechanics only) =====
+// Older builds stored collections at top-level (/Players), while newer builds store under ROOT_DOC (/Test/Test/Players).
+// To avoid "No players yet" when data exists in the other location, we auto-detect which base has data once per load.
+let DATA_BASE = null; // either Firestore db (top-level) or ROOT_DOC (document ref)
+
+async function resolveDataBase(){
+  if(DATA_BASE) return DATA_BASE;
+  // Ensure Firebase is initialized
+  if(!fbInit()) return (DATA_BASE = ROOT_DOC || getFirestore());
+  const db = getFirestore();
+
+  // Candidate A: ROOT_DOC (default path)
+  try{
+    if(ROOT_DOC){
+      const a = await ROOT_DOC.collection(C_PLAYERS).limit(1).get();
+      if(a && a.size > 0){ DATA_BASE = ROOT_DOC; return DATA_BASE; }
+    }
+  }catch(e){ /* ignore */ }
+
+  // Candidate B: top-level collections
+  try{
+    const b = await db.collection(C_PLAYERS).limit(1).get();
+    if(b && b.size > 0){ DATA_BASE = db; return DATA_BASE; }
+  }catch(e){ /* ignore */ }
+
+  // Default to ROOT_DOC (will create fresh data there if nothing exists anywhere)
+  DATA_BASE = ROOT_DOC || db;
+  return DATA_BASE;
+}
+
 async function getPlayers(){
-  const snap = await getDocs(query(collection(ROOT_DOC, C_PLAYERS), orderBy("name")));
+  const base = await resolveDataBase();
+  const snap = await getDocs(query(collection(base, C_PLAYERS), orderBy("name")));
   return snap.docs.map(d=>d.data());
 }
 async function upsertPlayer(name,email){
+  const base = await resolveDataBase();
   const e = normEmail(email);
-  await setDoc(doc(ROOT_DOC, C_PLAYERS,e), { name, email:e, updatedAt:serverTimestamp() }, {merge:true});
+  await setDoc(doc(base, C_PLAYERS, e), { name, email:e, updatedAt:serverTimestamp() }, {merge:true});
 }
 async function signInEmail(email){
+  const base = await resolveDataBase();
   const e = normEmail(email);
-  const ref = doc(ROOT_DOC, C_PLAYERS,e);
+  const ref = doc(base, C_PLAYERS, e);
   const snap = await getDoc(ref);
   if(!snap.exists()) return null;
   return snap.data();
