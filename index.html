@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v190</title>
+<title>Game Night • v191</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2239,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v190</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v191</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2249,15 +2249,15 @@ async function renderGameHistory(){
 </div>
 
 <div class="wrap" id="app">
-  <div class="card"><div class="h1">Loading…</div><div class="sub">Starting up…</div></div>
+  <div class="card"><div class="h1">Hang on one second…</div><div class="sub">Starting up…</div></div>
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v190</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v191</div>
 </div>
 
 <script>
-const BUILD_ID="v190";
+const BUILD_ID="v191";
 
 
 
@@ -2279,8 +2279,7 @@ const BUILD_ID="v190";
       if(window.firebase && typeof window.firebase.initializeApp === "function"){
         return window.firebase.initializeApp(cfg);
       }
-      console.warn("Firebase SDK not loaded yet");
-      return null;
+      throw new Error("Firebase SDK not loaded");
     };
   }
   if(typeof window.getAnalytics !== "function"){
@@ -2399,6 +2398,8 @@ const FIREBASE_CONFIG = {
 };
 
 let __fb = { app:null, auth:null, db:null, ready:false, anonOk:false };
+let db = null; // Firestore handle used by the compat wrapper
+
 
 // Firestore root doc: all app data lives under /Test/Test/...
 let ROOT_DOC = null;
@@ -2416,6 +2417,8 @@ function fbInit(){
     __fb.app = (firebase.apps && firebase.apps.length) ? firebase.app() : firebase.initializeApp(FIREBASE_CONFIG);
     __fb.auth = firebase.auth();
     __fb.db = firebase.firestore();
+    db = __fb.db;
+
     ROOT_DOC = __fb.db.collection("Test").doc("Test");
 
     __fb.ready = true;
@@ -2488,11 +2491,8 @@ function getFirestore(){ return __fb.db; }
 
 function playerKey(email){
   // stable key for docs (email UX stays same)
-  const e = String(email||"").trim().toLowerCase();
-  // Safari-safe: avoid replaceAll
-  return e.split(".").join("_");
+  return String(email||"").trim().toLowerCase().replaceAll(".", "_");
 }
-
 async function fbEnsureAnon(){
   if(!fbInit()) return false;
   try{
@@ -2509,7 +2509,7 @@ async function fbEnsureAnon(){
 }
 
 
-// ===== Auth readiness (v190) =====
+// ===== Auth readiness (v191) =====
 let __authReadyP = null;
 function __kickAuthReady(){
   if(__authReadyP) return __authReadyP;
