@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v196</title>
+<title>Game Night • v197</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2239,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v196</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v197</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2253,11 +2253,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v196</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v197</div>
 </div>
 
 <script>
-const BUILD_ID="v196";
+const BUILD_ID="v197";
 
 
 
@@ -2677,8 +2677,32 @@ function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
 function normalizePlayerData(d, fallbackEmail){
   d = d || {};
+  // email may be stored with different casing
   const email = normEmail(d.email || d.Email || fallbackEmail || "");
-  const name  = (d.name || d.Name || d.displayName || d.DisplayName || "").toString().trim();
+  // name field compatibility: accept many historical variants
+  let name = (d.name || d.Name || d.displayName || d.DisplayName || d.playerName || d.PlayerName || d.fullName || d.FullName || "").toString().trim();
+
+  // ultra-compat: if name is still blank, look for any key that is case-insensitive "name"
+  if(!name){
+    try{
+      for(const k of Object.keys(d)){
+        const kk = String(k).trim().toLowerCase();
+        if(kk === "name" || kk === "displayname" || kk === "playername" || kk === "fullname"){
+          const v = d[k];
+          if(v != null && String(v).trim()){ name = String(v).trim(); break; }
+        }
+      }
+    }catch(e){}
+  }
+
+  // final fallback: derive a readable name from email prefix
+  if(!name && email){
+    const prefix = email.split("@")[0] || email;
+    // turn steve.moody_157 into "Steve Moody 157"
+    name = prefix.replace(/[._-]+/g," ").replace(/\s+/g," ").trim();
+    name = name.split(" ").map(w=>w ? (w[0].toUpperCase()+w.slice(1)) : w).join(" ");
+  }
+
   return { ...d, email, name };
 }
 
@@ -2908,10 +2932,35 @@ async function upsertPlayer(name,email){
 async function signInEmail(email){
   const base = await resolveDataBase();
   const e = normEmail(email);
-  const ref = doc(base, C_PLAYERS, e);
-  const snap = await getDoc(ref);
-  if(!snap.exists()) return null;
-  return normalizePlayerData(snap.data(), e);
+
+  // Try doc id = email (newer builds)
+  let snap = null;
+  try{
+    const ref = doc(base, C_PLAYERS, e);
+    snap = await getDoc(ref);
+    if(snap.exists()){
+      const data = normalizePlayerData(snap.data(), e);
+      // If name is missing, still return (normalize will derive a readable fallback)
+      return data;
+    }
+  }catch(err){ /* ignore, will try legacy id */ }
+
+  // Legacy: some older builds used a "playerKey" id (email with punctuation replaced)
+  try{
+    const legacyId = playerKey(e);
+    const ref2 = doc(base, C_PLAYERS, legacyId);
+    const snap2 = await getDoc(ref2);
+    if(snap2.exists()){
+      const data2 = normalizePlayerData(snap2.data(), e);
+      // also self-heal: write back a canonical email-id doc so future logins are consistent
+      try{
+        await setDoc(doc(base, C_PLAYERS, e), { name:data2.name, Name:data2.name, email:e, Email:e, migratedFrom: legacyId, updatedAt:serverTimestamp() }, {merge:true});
+      }catch(_e){}
+      return data2;
+    }
+  }catch(err){ /* ignore */ }
+
+  return null;
 }
 async function signUpEmail(name,email){
   const e = normEmail(email);
