@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v193</title>
+<title>Game Night • v194</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2239,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v193</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v194</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2253,11 +2253,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v193</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v194</div>
 </div>
 
 <script>
-const BUILD_ID="v193";
+const BUILD_ID="v194";
 
 
 
@@ -2509,7 +2509,7 @@ async function fbEnsureAnon(){
 }
 
 
-// ===== Auth readiness (v193) =====
+// ===== Auth readiness (v194) =====
 let __authReadyP = null;
 function __kickAuthReady(){
   if(__authReadyP) return __authReadyP;
@@ -2858,23 +2858,23 @@ const C_PRES    = "presence";
 
 /* ========= Players ========= */
 async function getPlayers(){
-  const snap = await getDocs(query(col(C_PLAYERS), orderBy("name")));
+  const snap = await getDocs(query(collection(ROOT_DOC, C_PLAYERS), orderBy("name")));
   return snap.docs.map(d=>d.data());
 }
 async function upsertPlayer(name,email){
   const e = normEmail(email);
-  await setDoc(doc(col(C_PLAYERS), e), { name, email:e, updatedAt:serverTimestamp() }, {merge:true});
+  await setDoc(doc(ROOT_DOC, C_PLAYERS,e), { name, email:e, updatedAt:serverTimestamp() }, {merge:true});
 }
 async function signInEmail(email){
   const e = normEmail(email);
-  const ref = doc(col(C_PLAYERS), e);
+  const ref = doc(ROOT_DOC, C_PLAYERS,e);
   const snap = await getDoc(ref);
   if(!snap.exists()) return null;
   return snap.data();
 }
 async function signUpEmail(name,email){
   const e = normEmail(email);
-  await setDoc(doc(col(C_PLAYERS), e), { name, email:e, createdAt:serverTimestamp() });
+  await setDoc(doc(ROOT_DOC, C_PLAYERS,e), { name, email:e, createdAt:serverTimestamp() });
   return {name,email:e};
 }
 
@@ -2895,7 +2895,7 @@ function isOnline(email){
 function startPresence(email, name){
   const e = normEmail(email);
   stopPresence();
-  const ref = doc(col(C_PRES), e);
+  const ref = doc(ROOT_DOC, C_PRES, e);
 
   const ping = async()=>{
     try{
@@ -2907,7 +2907,7 @@ function startPresence(email, name){
   presTick = setInterval(ping, 25_000);
 
   // Subscribe to all presence docs (cheap at small scale)
-  presUnsub = onSnapshot(col(C_PRES), (snap)=>{
+  presUnsub = onSnapshot(collection(ROOT_DOC, C_PRES), (snap)=>{
     const out = {};
     snap.forEach(d=>{
       const data = d.data() || {};
@@ -2943,7 +2943,7 @@ function stopPresence(){
 */
 async function createRoom(gameId, playersEmails){
   const id = uuid();
-  await setDoc(doc(col(C_ROOMS), id), {
+  await setDoc(doc(ROOT_DOC, C_ROOMS, id), {
     gameId,
     players: playersEmails.map(normEmail),
     state: "waiting",
@@ -2959,7 +2959,7 @@ async function createRoom(gameId, playersEmails){
 async function findWaitingRoomForPlayer(gameId, email){
   const e = normEmail(email);
   const snap = await getDocs(query(
-    col(C_ROOMS),
+    collection(ROOT_DOC, C_ROOMS),
     where("gameId","==",gameId),
     where("state","in",["waiting","active"]),
     where("players","array-contains",e),
@@ -2971,7 +2971,7 @@ async function findWaitingRoomForPlayer(gameId, email){
 }
 
 async function joinRoom(roomId){
-  const ref = doc(col(C_ROOMS), roomId);
+  const ref = doc(ROOT_DOC, C_ROOMS, roomId);
   const snap = await getDoc(ref);
   if(!snap.exists()) throw new Error("Room not found.");
   const data = snap.data();
@@ -2984,14 +2984,14 @@ async function joinRoom(roomId){
 
 let roomUnsub = null;
 async function saveMatchState(roomId, match){
-  const ref = doc(col(C_ROOMS), roomId);
+  const ref = doc(ROOT_DOC, C_ROOMS, roomId);
   const payload = structuredClone(match);
   const nextRev = (match._rev||0) + 1;
   match._rev = nextRev;
   await updateDoc(ref, { matchData: payload, rev: nextRev, updatedBy: normEmail(meUser.email) });
 }
 function listenMatchState(roomId, cb){
-  const ref = doc(col(C_ROOMS), roomId);
+  const ref = doc(ROOT_DOC, C_ROOMS, roomId);
   if(roomUnsub) try{ roomUnsub(); }catch{}
   roomUnsub = onSnapshot(ref, (snap)=>{
     if(!snap.exists()) return;
@@ -3004,12 +3004,12 @@ function listenMatchState(roomId, cb){
 /* ========= History & Stats (stored online) ========= */
 async function saveHistoryEntry(entry){
   const id = uuid();
-  await setDoc(doc(col(C_HISTORY), id), entry);
+  await setDoc(doc(ROOT_DOC, C_HISTORY, id), entry);
 }
 async function getHistory(email){
   const e = normEmail(email);
   const snap = await getDocs(query(
-    col(C_HISTORY),
+    collection(ROOT_DOC, C_HISTORY),
     where("players","array-contains",e),
     orderBy("endedAt","desc"),
     limit(50)
@@ -3018,17 +3018,17 @@ async function getHistory(email){
 }
 
 async function getStatsDoc(email){
-  const ref = doc(col(C_STATS), normEmail(email));
+  const ref = doc(ROOT_DOC, C_STATS, normEmail(email));
   const snap = await getDoc(ref);
   return snap.exists()?snap.data():{};
 }
 async function saveStatsDoc(email,data){
-  await setDoc(doc(col(C_STATS), normEmail(email)), data, {merge:true});
+  await setDoc(doc(ROOT_DOC, C_STATS, normEmail(email)), data, {merge:true});
 }
 
 /* ========= Dangerous ops (optional UI uses them) ========= */
 async function resetStatsAll(email){
-  await setDoc(doc(col(C_STATS), normEmail(email)), {games:{}, updatedAt:now()}, {merge:true});
+  await setDoc(doc(ROOT_DOC, C_STATS, normEmail(email)), {games:{}, updatedAt:now()}, {merge:true});
 }
 async function resetStatsGame(email, gameId){
   const stats = await getStatsDoc(email);
@@ -3044,9 +3044,9 @@ async function deleteHistoryForPlayer(email){
 async function deletePlayerAndData(email){
   const e = normEmail(email);
   const batch = writeBatch(db);
-  batch.delete(doc(col(C_PLAYERS), e));
-  batch.delete(doc(col(C_STATS), e));
-  batch.delete(doc(col(C_PRES), e));
+  batch.delete(doc(ROOT_DOC, C_PLAYERS, e));
+  batch.delete(doc(ROOT_DOC, C_STATS, e));
+  batch.delete(doc(ROOT_DOC, C_PRES, e));
   await batch.commit();
   alert("Player deleted. (History entries remain.)");
 }
