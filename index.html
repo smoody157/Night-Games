@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v209</title>
+<title>Game Night • v210</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v209) =====
+/* ===== Robust Navigation Wiring (v210) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v209: tiny navigation stack so Back works on every page =====
+  // ===== v210: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -2370,7 +2370,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v209</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v210</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2384,11 +2384,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v209</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v210</div>
 </div>
 
 <script>
-const BUILD_ID="v209";
+const BUILD_ID="v210";
 
 
 
@@ -2804,6 +2804,17 @@ const signOutBtn = document.getElementById("signOutBtn");
 const brandTitle = document.getElementById("brandTitle");
 
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function docExists(snap){
+  if(!snap) return false;
+  try{
+    const ex = snap.exists;
+    if(typeof ex === 'function') return !!ex.call(snap);
+    return !!ex;
+  }catch(_e){
+    return false;
+  }
+}
+
 function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
 function normalizePlayerData(d, fallbackEmail){
@@ -3069,7 +3080,7 @@ async function signInEmail(email){
   try{
     const ref = doc(base, C_PLAYERS, e);
     snap = await getDoc(ref);
-    if(snap.exists()){
+    if(docExists(snap)){
       const data = normalizePlayerData(snap.data(), e);
       // If name is missing, still return (normalize will derive a readable fallback)
       return data;
@@ -3081,7 +3092,7 @@ async function signInEmail(email){
     const legacyId = playerKey(e);
     const ref2 = doc(base, C_PLAYERS, legacyId);
     const snap2 = await getDoc(ref2);
-    if(snap2.exists()){
+    if(docExists(snap2)){
       const data2 = normalizePlayerData(snap2.data(), e);
       // also self-heal: write back a canonical email-id doc so future logins are consistent
       try{
@@ -3242,7 +3253,7 @@ async function joinRoom(roomId){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
   const snap = await getDoc(ref);
-  if(!snap.exists()) throw new Error("Room not found.");
+  if(!docExists(snap)) throw new Error("Room not found.");
   const data = snap.data() || {};
   const e = normEmail(meUser.email);
   if(!Array.isArray(data.players) || !data.players.includes(e)) throw new Error("Not allowed in this room.");
@@ -3313,7 +3324,7 @@ function listenMatchState(roomId, cb){
   const ref = doc(base, C_ROOMS, roomId);
   if(roomUnsub) try{ roomUnsub(); }catch{}
   roomUnsub = onSnapshot(ref, (snap)=>{
-    if(!snap.exists()) return;
+    if(!docExists(snap)) return;
     const data = snap.data() || {};
     cb(data);
   });
@@ -3339,7 +3350,7 @@ async function getHistory(email){
 async function getStatsDoc(email){
   const ref = doc(ROOT_DOC, C_STATS, normEmail(email));
   const snap = await getDoc(ref);
-  return snap.exists()?snap.data():{};
+  return docExists(snap)?snap.data():{};
 }
 async function saveStatsDoc(email,data){
   await setDoc(doc(ROOT_DOC, C_STATS, normEmail(email)), data, {merge:true});
@@ -4628,7 +4639,7 @@ roomSynced = false;
 try{
   const base = await resolveDataBase();
   const rs = await getDoc(doc(base, C_ROOMS, roomId));
-  const rd = rs.exists()? (rs.data()||{}) : {};
+  const rd = docExists(rs)? (rs.data()||{}) : {};
   roomHost = normEmail(rd.hostEmail||"") === normEmail(meUser.email);
   if(rd.matchData){
     match = rd.matchData;
@@ -4962,7 +4973,7 @@ async function renderRoomWait(){
 
   // Live updates
   onSnapshot(ref, (snap)=>{
-    if(!snap.exists()) { toastMsg="Room ended."; roomId=null; screen="home"; return __goRender(); }
+    if(!docExists(snap)) { toastMsg="Room ended."; roomId=null; screen="home"; return __goRender(); }
     renderRoomDoc(snap.data()||{});
   });
 }
@@ -5251,7 +5262,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v209: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v210: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
