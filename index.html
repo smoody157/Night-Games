@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v197</title>
+<title>Game Night • v198</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2239,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v197</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v198</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2253,11 +2253,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v197</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v198</div>
 </div>
 
 <script>
-const BUILD_ID="v197";
+const BUILD_ID="v198";
 
 
 
@@ -2960,11 +2960,46 @@ async function signInEmail(email){
     }
   }catch(err){ /* ignore */ }
 
+  // Legacy: some older builds used auto IDs and stored the email in a field.
+  // Try to find by email field and migrate to canonical doc id.
+  try{
+    const q1 = query(collection(base, C_PLAYERS), where("email","==",e), limit(1));
+    const s1 = await getDocs(q1);
+    if(s1 && s1.docs && s1.docs.length){
+      const d = s1.docs[0];
+      const data = normalizePlayerData(d.data(), e);
+      try{
+        await setDoc(doc(base, C_PLAYERS, e), { ...d.data(), name:data.name, Name:data.name, email:e, Email:e, migratedFrom:d.id, updatedAt:serverTimestamp() }, {merge:true});
+      }catch(_e){}
+      return data;
+    }
+  }catch(_e){}
+  try{
+    const q2 = query(collection(base, C_PLAYERS), where("Email","==",e), limit(1));
+    const s2 = await getDocs(q2);
+    if(s2 && s2.docs && s2.docs.length){
+      const d = s2.docs[0];
+      const data = normalizePlayerData(d.data(), e);
+      try{
+        await setDoc(doc(base, C_PLAYERS, e), { ...d.data(), name:data.name, Name:data.name, email:e, Email:e, migratedFrom:d.id, updatedAt:serverTimestamp() }, {merge:true});
+      }catch(_e){}
+      return data;
+    }
+  }catch(_e){}
+
   return null;
 }
 async function signUpEmail(name,email){
+  const base = await resolveDataBase();
   const e = normEmail(email);
-  await setDoc(doc(ROOT_DOC, C_PLAYERS,e), { name, Name:name, email:e, Email:e, createdAt:serverTimestamp() });
+  // Don't create duplicates; if the player exists under any legacy scheme, reuse it.
+  const existing = await signInEmail(e);
+  if(existing){
+    const nm = existing.name || existing.Name || name || "";
+    try{ await setDoc(doc(base, C_PLAYERS, e), { name:nm, Name:nm, email:e, Email:e, updatedAt:serverTimestamp() }, {merge:true}); }catch(_e){}
+    return {name:nm, email:e};
+  }
+  await setDoc(doc(base, C_PLAYERS, e), { name, Name:name, email:e, Email:e, createdAt:serverTimestamp() });
   return {name,email:e};
 }
 
