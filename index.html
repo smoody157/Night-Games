@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v198</title>
+<title>Game Night • v199</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,33 +1911,97 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v156) =====
-   Prevent dead buttons by routing via data-action attributes (delegated).
+/* ===== Robust Navigation Wiring (v199) =====
+   Prevent dead buttons by routing via common data-* attributes (delegated).
+   This avoids relying on per-render .onclick binding.
 */
 (function(){
-  function closestBtn(el){ return el && (el.closest ? el.closest("[data-action]") : null); }
-  document.addEventListener("click", function(ev){
-    const b = closestBtn(ev.target);
-    if(!b) return;
-    const act = b.getAttribute("data-action");
-    const email = b.getAttribute("data-email") || b.getAttribute("data-player");
+  function closestActionEl(target){
+    if(!target || !target.closest) return null;
+    return target.closest('[data-action],button[data-game-history],button[data-stats],button[data-player-history],button[data-player-stats]');
+  }
+  function getFirstAttr(el, names){
+    for(const n of names){
+      const v = el.getAttribute(n);
+      if(v!==null && v!==undefined && String(v).trim()!=="") return v;
+    }
+    return "";
+  }
+  function goRenderSafe(){
     try{
-      if(typeof playBeep==="function") playBeep("nav");
+      if(typeof scheduleRender==="function") __goRender();
+      else if(typeof render==="function") render();
     }catch(e){}
+  }
+  document.addEventListener("click", function(ev){
+    const el = closestActionEl(ev.target);
+    if(!el) return;
+
+    // infer action
+    let act = el.getAttribute("data-action") || "";
+    if(!act){
+      if(el.hasAttribute("data-game-history") || el.hasAttribute("data-stats")) act = "game_history";
+      else if(el.hasAttribute("data-player-history")) act = "player_history";
+      else if(el.hasAttribute("data-player-stats")) act = "player_stats";
+    }
+    // normalize aliases
+    if(act==="stats") act = "player_stats";
+
+    try{ if(typeof playBeep==="function") playBeep("nav"); }catch(e){}
+
     try{
       if(act==="player_history"){
+        const email = getFirstAttr(el, ["data-email","data-player","data-player-history"]) || (window.meUser && meUser.email) || "";
         if(email) window.activePlayerEmail = email;
         window.screen = "history";
-        if(typeof scheduleRender==="function") __goRender(); else if(typeof render==="function") render();
+        goRenderSafe();
+        ev.preventDefault(); ev.stopPropagation();
+        return;
       }
       if(act==="player_stats"){
+        const email = getFirstAttr(el, ["data-email","data-player","data-player-stats"]) || (window.meUser && meUser.email) || "";
         if(email) window.activePlayerEmail = email;
         window.screen = "stats";
-        if(typeof scheduleRender==="function") __goRender(); else if(typeof render==="function") render();
+        goRenderSafe();
+        ev.preventDefault(); ev.stopPropagation();
+        return;
       }
-    }catch(e){ console.warn("nav wiring failed", e); }
+      if(act==="game_history"){
+        const game = getFirstAttr(el, ["data-game-history","data-game","data-gameid","data-gametype","data-stats"]) || (window.activeGameType||"");
+        window.activeGameType = game;
+        window.screen = "game_history";
+        goRenderSafe();
+        ev.preventDefault(); ev.stopPropagation();
+        return;
+      }
+      if(act==="history_detail"){
+        const gid = getFirstAttr(el, ["data-gameid"]);
+        window.screen = "history_detail";
+        window.__activeGameId = gid;
+        if(typeof renderHistoryDetail==="function") renderHistoryDetail(gid);
+        else goRenderSafe();
+        ev.preventDefault(); ev.stopPropagation();
+        return;
+      }
+      if(act==="back_players"){
+        window.screen = "players";
+        goRenderSafe();
+        ev.preventDefault(); ev.stopPropagation();
+        return;
+      }
+      if(act==="remove"){
+        const email = getFirstAttr(el, ["data-email","data-player"]) || (window.activePlayerEmail||"");
+        if(email && typeof deletePlayerAndData==="function"){
+          deletePlayerAndData(email);
+          ev.preventDefault(); ev.stopPropagation();
+          return;
+        }
+      }
+    }catch(e){
+      console.warn("nav wiring failed", e);
+    }
   }, true);
-})();
+})();;
 
 
 /* v156 detail routing */
