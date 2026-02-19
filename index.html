@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v191</title>
+<title>Game Night • v192</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2239,7 +2239,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v191</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v192</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2253,11 +2253,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v191</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v192</div>
 </div>
 
 <script>
-const BUILD_ID="v191";
+const BUILD_ID="v192";
 
 
 
@@ -2509,7 +2509,7 @@ async function fbEnsureAnon(){
 }
 
 
-// ===== Auth readiness (v191) =====
+// ===== Auth readiness (v192) =====
 let __authReadyP = null;
 function __kickAuthReady(){
   if(__authReadyP) return __authReadyP;
@@ -2861,22 +2861,40 @@ async function getPlayers(){
   const snap = await getDocs(query(collection(db,C_PLAYERS), orderBy("name")));
   return snap.docs.map(d=>d.data());
 }
+
+// Players are keyed by a stable doc id derived from the email.
+// This must match history storage (Players/<playerKey>/history/...) to keep Stats/History consistent.
+function playerDocId(email){
+  return playerKey(normEmail(email));
+}
+
 async function upsertPlayer(name,email){
   const e = normEmail(email);
-  await setDoc(doc(db,C_PLAYERS,e), { name, email:e, updatedAt:serverTimestamp() }, {merge:true});
+  const id = playerDocId(e);
+  await setDoc(doc(db,C_PLAYERS,id), { name, email:e, updatedAt:serverTimestamp() }, {merge:true});
 }
+
 async function signInEmail(email){
   const e = normEmail(email);
-  const ref = doc(db,C_PLAYERS,e);
-  const snap = await getDoc(ref);
+  const id = playerDocId(e);
+
+  // Primary (v192+): keyed by playerDocId(email)
+  let snap = await getDoc(doc(db,C_PLAYERS,id));
+  if(snap.exists()) return snap.data();
+
+  // Back-compat: older builds may have keyed Players docs by raw normalized email
+  snap = await getDoc(doc(db,C_PLAYERS,e));
   if(!snap.exists()) return null;
   return snap.data();
 }
+
 async function signUpEmail(name,email){
   const e = normEmail(email);
-  await setDoc(doc(db,C_PLAYERS,e), { name, email:e, createdAt:serverTimestamp() });
+  const id = playerDocId(e);
+  await setDoc(doc(db,C_PLAYERS,id), { name, email:e, createdAt:serverTimestamp() });
   return {name,email:e};
 }
+
 
 /* ========= Presence (online dots) =========
    Simple, reliable Firestore heartbeat:
@@ -3044,7 +3062,8 @@ async function deleteHistoryForPlayer(email){
 async function deletePlayerAndData(email){
   const e = normEmail(email);
   const batch = writeBatch(db);
-  batch.delete(doc(db, C_PLAYERS, e));
+    const id = playerDocId(e);
+  batch.delete(doc(db, C_PLAYERS, id));
   batch.delete(doc(db, C_STATS, e));
   batch.delete(doc(db, C_PRES, e));
   await batch.commit();
