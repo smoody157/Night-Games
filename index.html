@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v207</title>
+<title>Game Night • v209</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v207) =====
+/* ===== Robust Navigation Wiring (v209) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v207: tiny navigation stack so Back works on every page =====
+  // ===== v209: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -2370,7 +2370,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v207</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v209</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2384,11 +2384,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v207</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v209</div>
 </div>
 
 <script>
-const BUILD_ID="v207";
+const BUILD_ID="v209";
 
 
 
@@ -3198,13 +3198,20 @@ function stopPresence(){
    - Match state is synced to room.matchData (per action).
 */
 async function createRoom(gameId, playersEmails){
+  const base = await resolveDataBase();
   const id = uuid();
-  await setDoc(doc(ROOT_DOC, C_ROOMS, id), {
+  const host = normEmail(meUser.email);
+  const invited = playersEmails.map(normEmail);
+  // Host is always considered joined immediately.
+  await setDoc(doc(base, C_ROOMS, id), {
     gameId,
-    players: playersEmails.map(normEmail),
-    state: "waiting",
+    players: invited,
+    joined: [host],
+    declined: [],
+    state: "waiting",           // waiting -> playing when host starts
     createdAt: serverTimestamp(),
-    hostEmail: normEmail(meUser.email),
+    updatedAt: serverTimestamp(),
+    hostEmail: host,
     matchData: null,
     rev: 0,
     updatedBy: null
@@ -3213,41 +3220,97 @@ async function createRoom(gameId, playersEmails){
 }
 
 async function findWaitingRoomForPlayer(gameId, email){
+  const base = await resolveDataBase();
   const e = normEmail(email);
+  // Lightweight query (avoids composite index): rooms for this game that include me and are not finished.
   const snap = await getDocs(query(
-    collection(ROOT_DOC, C_ROOMS),
-    where("gameId","==",gameId),
-    where("state","in",["waiting","active"]),
+    collection(base, C_ROOMS),
     where("players","array-contains",e),
-    orderBy("createdAt","desc"),
-    limit(1)
+    where("gameId","==",gameId),
+    limit(5)
   ));
   if(snap.empty) return null;
-  return snap.docs[0].id;
+  // Prefer waiting rooms first, then playing.
+  const docs = snap.docs.map(d=>({id:d.id, data:d.data()||{}}));
+  const waiting = docs.find(x=>x.data.state==="waiting");
+  if(waiting) return waiting.id;
+  const playing = docs.find(x=>x.data.state==="playing" || x.data.state==="active");
+  return playing ? playing.id : docs[0].id;
 }
 
 async function joinRoom(roomId){
-  const ref = doc(ROOT_DOC, C_ROOMS, roomId);
+  const base = await resolveDataBase();
+  const ref = doc(base, C_ROOMS, roomId);
   const snap = await getDoc(ref);
   if(!snap.exists()) throw new Error("Room not found.");
-  const data = snap.data();
+  const data = snap.data() || {};
   const e = normEmail(meUser.email);
   if(!Array.isArray(data.players) || !data.players.includes(e)) throw new Error("Not allowed in this room.");
-  if(data.state==="waiting"){
-    await updateDoc(ref, { state:"active" });
-  }
+
+  // Mark this player as joined (in-app presence for waiting room).
+  await updateDoc(ref, {
+    joined: arrayUnion(e),
+    declined: arrayRemove(e),
+    updatedAt: serverTimestamp()
+  });
+}
+
+async function declineRoom(roomId){
+  const base = await resolveDataBase();
+  const ref = doc(base, C_ROOMS, roomId);
+  const e = normEmail(meUser.email);
+  await updateDoc(ref, {
+    declined: arrayUnion(e),
+    joined: arrayRemove(e),
+    updatedAt: serverTimestamp()
+  });
+}
+
+let inviteUnsub = null;
+let pendingInvite = null; // {roomId, gameId, hostEmail}
+
+async function ensureInviteListener(){
+  if(inviteUnsub || !meUser || !meUser.email) return;
+  const base = await resolveDataBase();
+  const e = normEmail(meUser.email);
+  const q = query(
+    collection(base, C_ROOMS),
+    where("players","array-contains",e),
+    where("state","==","waiting")
+  );
+  inviteUnsub = onSnapshot(q, (snap)=>{
+    let best = null;
+    snap.forEach(d=>{
+      const data = d.data() || {};
+      const host = normEmail(data.hostEmail||"");
+      const joined = Array.isArray(data.joined)?data.joined:[];
+      const declined = Array.isArray(data.declined)?data.declined:[];
+      // Only show invites where I'm not host, not joined, not declined
+      if(host && host !== e && !joined.includes(e) && !declined.includes(e)){
+        best = { roomId:d.id, gameId:data.gameId||"", hostEmail:host };
+      }
+    });
+    const changed = JSON.stringify(best) !== JSON.stringify(pendingInvite);
+    pendingInvite = best;
+    if(changed && screen==="home") __goRender();
+  }, (err)=>{
+    // ignore listener errors
+    console.warn("invite listener", err);
+  });
 }
 
 let roomUnsub = null;
 async function saveMatchState(roomId, match){
-  const ref = doc(ROOT_DOC, C_ROOMS, roomId);
+  const base = await resolveDataBase();
+  const ref = doc(base, C_ROOMS, roomId);
   const payload = structuredClone(match);
   const nextRev = (match._rev||0) + 1;
   match._rev = nextRev;
   await updateDoc(ref, { matchData: payload, rev: nextRev, updatedBy: normEmail(meUser.email) });
 }
 function listenMatchState(roomId, cb){
-  const ref = doc(ROOT_DOC, C_ROOMS, roomId);
+  const base = DATA_BASE || ROOT_DOC || getFirestore();
+  const ref = doc(base, C_ROOMS, roomId);
   if(roomUnsub) try{ roomUnsub(); }catch{}
   roomUnsub = onSnapshot(ref, (snap)=>{
     if(!snap.exists()) return;
@@ -4360,6 +4423,22 @@ async function renderHome(){
 
   const players = await getPlayers();
 
+  // In-app invite banner (online-only)
+  let inviteHTML = "";
+  if(pendingInvite && pendingInvite.roomId){
+    const ig = getGame(pendingInvite.gameId);
+    const hostName = players.find(p=>normEmail(p.email)===normEmail(pendingInvite.hostEmail))?.name || pendingInvite.hostEmail;
+    inviteHTML = `
+      <div class="card" style="border:1px solid rgba(255,255,255,.10); margin-bottom:12px;">
+        <div class="h1" style="font-size:16px;margin:0;">${esc(hostName)} challenged you</div>
+        <div class="sub">${esc(ig?ig.name:pendingInvite.gameId||"a game")}</div>
+        <div class="row" style="gap:10px;margin-top:10px;">
+          <button class="btn ok" id="inviteJoinBtn">Join</button>
+          <button class="btn" id="inviteDeclineBtn">No thanks</button>
+        </div>
+      </div>`;
+  }
+
   const gameCards = Games.map(g=>{
     const soon=!g.active;
     return `
@@ -4404,6 +4483,7 @@ async function renderHome(){
 
   setHTML(`
   <div class="playerPage">
+    ${inviteHTML}
     <div class="card">
       <div class="row" style="align-items:center;gap:12px">
         
@@ -4455,6 +4535,37 @@ async function renderHome(){
     };
   });
   // Player card actions
+
+// Bind invite actions (if any)
+const joinBtn = document.getElementById("inviteJoinBtn");
+const decBtn = document.getElementById("inviteDeclineBtn");
+if(joinBtn && pendingInvite){
+  joinBtn.onclick = async()=>{
+    try{
+      activeGameId = pendingInvite.gameId;
+      roomId = pendingInvite.roomId;
+      roomHost = false;
+      match = null;
+      await joinRoom(roomId);
+      pendingInvite = null;
+      screen = "room.wait";
+      __goRender();
+    }catch(e){
+      toastMsg = e?.message || String(e);
+      __goRender();
+    }
+  };
+}
+if(decBtn && pendingInvite){
+  decBtn.onclick = async()=>{
+    try{
+      await declineRoom(pendingInvite.roomId);
+    }catch(_e){}
+    pendingInvite = null;
+    __goRender();
+  };
+}
+
   appEl.querySelectorAll("button[data-player-stats]").forEach(btn=>{
     btn.onclick = ()=>{
       activePlayerEmail = btn.getAttribute("data-player-stats");
@@ -4510,12 +4621,28 @@ async function renderGameSetup(){
   try{
     const existing = await findWaitingRoomForPlayer(activeGameId, meUser.email);
     if(existing){
-      roomId = existing;
-      await joinRoom(roomId);
-      roomHost = false;
-      roomSynced = false;
-      screen="game.play";
-      return render();
+roomId = existing;
+await joinRoom(roomId);
+roomSynced = false;
+// Determine host + whether match already started
+try{
+  const base = await resolveDataBase();
+  const rs = await getDoc(doc(base, C_ROOMS, roomId));
+  const rd = rs.exists()? (rs.data()||{}) : {};
+  roomHost = normEmail(rd.hostEmail||"") === normEmail(meUser.email);
+  if(rd.matchData){
+    match = rd.matchData;
+    screen="game.play";
+  }else{
+    match = null;
+    screen="room.wait";
+  }
+}catch(_e){
+  roomHost = false;
+  match = null;
+  screen="room.wait";
+}
+return render();
     }
   }catch(e){ /* ignore */ }
 
@@ -4694,27 +4821,150 @@ async function renderGameSetup(){
       .map(e=>setupPlayersAll.find(p=>normEmail(p.email)===normEmail(e)))
       .filter(Boolean);
 
-    // Create multiplayer room + lock
-    roomHost = true;
-    roomId = await createRoom(activeGameId, selectedPlayers.map(p=>p.email));
-    await joinRoom(roomId); // puts state active if needed
+// SOLO: local-only (no waiting room / no invites)
+if(setupWantedCount === 1){
+  roomHost = false;
+  roomId = null;
+  if(activeGameId==="shanghai") match = ShanghaiGame.initMatch(selectedPlayers);
+  else if(activeGameId==="killer") match = KillerGame.initMatch(selectedPlayers);
+  else if(activeGameId==="around"){
+    const modeEl = document.getElementById("aroundMode");
+    const mode = modeEl ? modeEl.value : "S";
+    match = AroundGame.initMatch(selectedPlayers, mode);
+  }else{
+    toastMsg="Coming soon."; return render();
+  }
+  screen="game.play";
+  __goRender();
+  return;
+}
 
-    // Start local match + write initial matchData (host)
-    if(activeGameId==="shanghai") match = ShanghaiGame.initMatch(selectedPlayers);
-    else if(activeGameId==="killer") match = KillerGame.initMatch(selectedPlayers);
-    else if(activeGameId==="around"){
-      const modeEl = document.getElementById("aroundMode");
-      const mode = modeEl ? modeEl.value : "S";
-      match = AroundGame.initMatch(selectedPlayers, mode);
-    }else{
-      toastMsg="Coming soon."; return render();
+// MULTI (2+): create a room + go to waiting room (in-app invites)
+roomHost = true;
+match = null;
+roomId = await createRoom(activeGameId, selectedPlayers.map(p=>p.email));
+// store around format if relevant
+try{
+  if(activeGameId==="around"){
+    const modeEl = document.getElementById("aroundMode");
+    const mode = modeEl ? modeEl.value : "S";
+    const base = await resolveDataBase();
+    await updateDoc(doc(base, C_ROOMS, roomId), { aroundMode: mode, updatedAt: serverTimestamp() });
+  }
+}catch(_e){}
+screen="room.wait";
+__goRender();
+  };
+}
+
+async function renderRoomWait(){
+  const g = getGame(activeGameId);
+  if(!g || !roomId){ screen="home"; return render(); }
+
+  signOutBtn.style.display="inline-block";
+  signOutBtn.textContent="Back";
+  signOutBtn.onclick = ()=>{ roomId=null; match=null; screen="home"; __goRender(); };
+  brandTitle.textContent="Waiting Room";
+
+  const base = await resolveDataBase();
+  const ref = doc(base, C_ROOMS, roomId);
+
+  // Ensure I'm marked joined if I accepted.
+  try{ await joinRoom(roomId); }catch(_e){}
+
+  setHTML(`<div class="card">
+    <div class="h1">${esc(g.name)}</div>
+    <div class="sub" id="wrCounts">Connecting…</div>
+    <div class="divider"></div>
+    <div id="wrList"></div>
+    <div class="divider"></div>
+    <div class="row">
+      ${roomHost ? `<button class="btn ok" id="wrStartBtn">Start Game</button>` : `<button class="btn" id="wrLeaveBtn">Leave</button>`}
+    </div>
+    <div class="sub" id="wrHint"></div>
+  </div>`);
+
+  const playersAll = await getPlayers();
+  const emailToName = (e)=> playersAll.find(p=>normEmail(p.email)===normEmail(e))?.name || e;
+
+  function renderRoomDoc(data){
+    const invited = Array.isArray(data.players)?data.players:[];
+    const joined = Array.isArray(data.joined)?data.joined:[];
+    const declined = Array.isArray(data.declined)?data.declined:[];
+    const joinedCount = joined.length;
+    document.getElementById("wrCounts").textContent = `${joinedCount} / ${invited.length} in room`;
+
+    const host = normEmail(data.hostEmail||"");
+    const rows = invited.map(e=>{
+      const isHost = normEmail(e)===host;
+      const isJoined = joined.includes(normEmail(e));
+      const isDeclined = declined.includes(normEmail(e));
+      const icon = isJoined ? "✅" : (isDeclined ? "❌" : "⏳");
+      const label = `${icon} ${esc(emailToName(e))}${isHost ? " (Host)" : ""}`;
+      return `<div class="row" style="justify-content:flex-start;gap:10px;padding:6px 0"><div>${label}</div></div>`;
+    }).join("");
+    document.getElementById("wrList").innerHTML = rows || `<div class="sub">No players.</div>`;
+
+    // Auto-transition when matchData exists
+    if(data.matchData){
+      match = data.matchData;
+      roomSynced = true;
+      screen = "game.play";
+      __goRender();
+      return;
     }
 
-    // Initial sync
-    try{ await saveMatchState(roomId, match); }catch{}
-    screen="game.play";
-    __goRender();
-  };
+    if(roomHost){
+      const btn = document.getElementById("wrStartBtn");
+      if(btn){
+        const canStart = joinedCount >= 2; // host decides, minimum 2
+        btn.disabled = !canStart;
+        document.getElementById("wrHint").textContent = canStart ? "" : "Waiting for at least one opponent to join…";
+        btn.onclick = async ()=>{
+          if(!canStart) return;
+          const finalEmails = invited.filter(e=> joined.includes(normEmail(e)) && !declined.includes(normEmail(e)));
+          const finalPlayers = finalEmails
+            .map(em=>playersAll.find(p=>normEmail(p.email)===normEmail(em)))
+            .filter(Boolean);
+
+          if(finalPlayers.length < 2){ toastMsg="Need at least 2 players."; return __goRender(); }
+
+          // Initialize match now (host)
+          if(activeGameId==="shanghai") match = ShanghaiGame.initMatch(finalPlayers);
+          else if(activeGameId==="killer") match = KillerGame.initMatch(finalPlayers);
+          else if(activeGameId==="around"){
+            // Default to Singles unless set earlier
+            match = AroundGame.initMatch(finalPlayers, "S");
+          }else{ toastMsg="Coming soon."; return __goRender(); }
+
+          roomHost = true;
+          try{
+            await updateDoc(ref, { state:"playing", updatedAt:serverTimestamp() });
+            await saveMatchState(roomId, match);
+          }catch(e){
+            toastMsg = e?.message || String(e);
+            return __goRender();
+          }
+          screen="game.play";
+          __goRender();
+        };
+      }
+    }else{
+      const leaveBtn = document.getElementById("wrLeaveBtn");
+      if(leaveBtn){
+        leaveBtn.onclick = async()=>{
+          try{ await declineRoom(roomId); }catch(_e){}
+          roomId=null; match=null; screen="home"; __goRender();
+        };
+      }
+    }
+  }
+
+  // Live updates
+  onSnapshot(ref, (snap)=>{
+    if(!snap.exists()) { toastMsg="Room ended."; roomId=null; screen="home"; return __goRender(); }
+    renderRoomDoc(snap.data()||{});
+  });
 }
 
 async function renderGamePlay(){
@@ -4978,10 +5228,13 @@ wireDelegatedClicks();
 
     // keep player profile fresh
     if(meUser.email && meUser.name) upsertPlayer(meUser.name, meUser.email).catch(()=>{});
+    // in-app invites (online-only notifications)
+    ensureInviteListener().catch(()=>{});
 
     if(screen==="home") return renderHome();
     if(screen==="game.setup") return renderGameSetup();
     if(screen==="game.play") return renderGamePlay();
+    if(screen==="room.wait") return renderRoomWait();
     if(screen==="stats") return renderStats();
     if(screen==="stats.game") return renderStatsGame();
     if(screen==="history") return renderHistory();
@@ -4998,7 +5251,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v207: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v209: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
