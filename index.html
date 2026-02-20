@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v218</title>
+<title>Game Night • v219</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2392,7 +2392,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v218</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v219</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2406,11 +2406,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v218</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v219</div>
 </div>
 
 <script>
-const BUILD_ID="v218";
+const BUILD_ID="v219";
 
 
 
@@ -4332,7 +4332,7 @@ function placeTopbarForAuth(){
 
 
 
-/* ===== v218: Intro announcer (female voice, boom + clear English; fires on email submit) ===== */
+/* ===== v219: Intro announcer (female voice, boom + clear English; fires on email submit) ===== */
 function playIntroAnnouncer(){
   try{
     if(sessionStorage.getItem("gn_intro_played")==="1") return;
@@ -5219,6 +5219,117 @@ async function renderHistory(){
   `);
 
   document.getElementById("historyBack").onclick=()=>{ screen="home"; __goRender(); };
+}
+
+
+/* ===== v219: restore Auth/Signup screens (renderAuth/renderSignup) ===== */
+let __pendingSignupEmail = null;
+
+function renderAuth(){
+  __landingSetMode(true);
+  signOutBtn.style.display="none";
+  brandTitle.textContent="Game Night";
+  verInline.textContent="v219";
+
+  app.innerHTML = `
+    <div class="card auth">
+      <div class="h1">Sign in</div>
+      <div class="sub">Enter your email to continue.</div>
+      <div style="height:12px"></div>
+      <input id="emailInput" class="emailInput" type="email" inputmode="email" autocomplete="email"
+             placeholder="you@example.com" style="width:100%; padding:14px; border-radius:14px; font-size:16px;">
+      <div style="height:14px"></div>
+      <button id="emailGoBtn" class="btn big" type="button" style="width:100%;">Continue</button>
+      <div style="height:10px"></div>
+      <div class="tiny" style="opacity:.8;">Tip: press Enter on your keyboard after typing.</div>
+    </div>
+  `;
+
+  const inp = document.getElementById("emailInput");
+  const btn = document.getElementById("emailGoBtn");
+
+  const go = async ()=>{
+    try{
+      const email = normEmail(inp.value||"");
+      if(!email){ shake(inp); return; }
+
+      // Play intro on sign-in gesture (reliable on iOS because it's user-initiated).
+      try{ playIntroAnnouncer(); }catch(e){}
+
+      // Persist last email
+      try{ cacheSet("gn_email_last", email); }catch(e){}
+
+      // Look up player
+      const data = await signInEmail(email);
+      if(data && data.name){
+        meUser = { email, name: data.name };
+        screen="home"; __goRender();
+      }else{
+        __pendingSignupEmail = email;
+        screen="signup"; __goRender();
+      }
+    }catch(err){
+      showError(err);
+    }
+  };
+
+  btn.onclick = go;
+  inp.addEventListener("keydown",(e)=>{ if(e.key==="Enter") go(); });
+  setTimeout(()=>{ try{ inp.focus(); }catch(e){} }, 50);
+}
+
+function renderSignup(){
+  __landingSetMode(true);
+  signOutBtn.style.display="none";
+  brandTitle.textContent="Game Night";
+  verInline.textContent="v219";
+
+  const email = __pendingSignupEmail || cacheGet("gn_email_last","");
+  app.innerHTML = `
+    <div class="card auth">
+      <div class="h1">Create your player</div>
+      <div class="sub">${escapeHtml(email||"")}</div>
+      <div style="height:12px"></div>
+      <input id="nameInput" type="text" autocomplete="name" placeholder="Your name"
+             style="width:100%; padding:14px; border-radius:14px; font-size:16px;">
+      <div style="height:14px"></div>
+      <button id="nameGoBtn" class="btn big" type="button" style="width:100%;">Create</button>
+      <div style="height:10px"></div>
+      <div class="tiny" style="opacity:.8;">Tip: press Enter after typing your name.</div>
+    </div>
+  `;
+
+  const inp = document.getElementById("nameInput");
+  const btn = document.getElementById("nameGoBtn");
+
+  const go = async ()=>{
+    try{
+      const name = String(inp.value||"").trim();
+      if(!name){ shake(inp); return; }
+      const e = normEmail(email);
+      await upsertPlayer(name, e);
+      meUser = { email: e, name };
+      __pendingSignupEmail = null;
+      screen="home"; __goRender();
+    }catch(err){
+      showError(err);
+    }
+  };
+
+  btn.onclick = go;
+  inp.addEventListener("keydown",(e)=>{ if(e.key==="Enter") go(); });
+  setTimeout(()=>{ try{ inp.focus(); }catch(e){} }, 50);
+}
+
+function escapeHtml(s){
+  return String(s||"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+}
+function shake(el){
+  try{
+    el.style.transform="translateX(-6px)";
+    setTimeout(()=>{ el.style.transform="translateX(6px)"; },80);
+    setTimeout(()=>{ el.style.transform="translateX(0px)"; },160);
+  }catch(e){}
 }
 
 async function render(){
