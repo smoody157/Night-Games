@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v214</title>
+<title>Game Night • v215</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v214) =====
+/* ===== Robust Navigation Wiring (v215) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v214: tiny navigation stack so Back works on every page =====
+  // ===== v215: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -2345,18 +2345,15 @@ async function renderGameHistory(){
   // Pull from cloud (best-effort) then show
   let rows = [];
   try{
-    const base = await resolveDataBase();
-    if(base){
-      const gamesRef = collection(base, "Games");
-      const q = game ? query(gamesRef, where("gameType","==", game), limit(200))
-                     : query(gamesRef, limit(200));
-      const snap = await getDocs(q);
-      snap.docs.forEach(d=>{
-        const data = d.data()||{};
-        if(!data.id) data.id = d.id;
-        rows.push(data);
-      });
-      rows.sort((a,b)=>((b.tsEnd||b.ts||0)-(a.tsEnd||a.ts||0)));
+    const ok = await fbEnsureAnon();
+    if(ok){
+      let q = col("Games");
+      if(game) q = q.where("gameType","==", game);
+      q = q.limit(200);
+      const snap = await q.get();
+      snap.forEach(d=>rows.push(d.data()));
+      rows.sort((a,b)=>((b.tsEnd||0)-(a.tsEnd||0)));
+
     }
   }catch(e){ console.warn("renderGameHistory query failed", e); }
 
@@ -2395,7 +2392,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v214</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v215</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2409,11 +2406,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v214</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v215</div>
 </div>
 
 <script>
-const BUILD_ID="v214";
+const BUILD_ID="v215";
 
 
 
@@ -2831,7 +2828,7 @@ const brandTitle = document.getElementById("brandTitle");
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
-// --- Snapshot compatibility helpers (v214 stability) ---
+// --- Snapshot compatibility helpers (v215 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -2903,21 +2900,6 @@ function ensureAudio(){
   return __audioCtx;
 }
 
-function maybePlayIntroAnnouncer(){
-  try{
-    if(!soundEnabled) return;
-    if(sessionStorage.getItem("gn_intro_done")==="1") return;
-    sessionStorage.setItem("gn_intro_done","1");
-    if(!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance!=="function") return;
-    const msg = new SpeechSynthesisUtterance("Welcome to Bill Moody's Limited Edition Game Night! Let's play some darts!");
-    msg.rate = 1.05;
-    msg.pitch = 1.0;
-    msg.volume = 1.0;
-    try{ window.speechSynthesis.cancel(); }catch{}
-    window.speechSynthesis.speak(msg);
-  }catch(e){ console.warn("intro voice failed", e); }
-}
-
 let __audioUnlocked = false;
 function unlockAudio(){
   if(__audioUnlocked) return;
@@ -2934,8 +2916,6 @@ function unlockAudio(){
     o.start(); o.stop(ctx.currentTime + 0.02);
   }catch{}
   __audioUnlocked = true;
-  // Intro voice (in-app) - plays once per session after first user gesture
-  maybePlayIntroAnnouncer();
 }
 window.addEventListener("pointerdown", unlockAudio, {passive:true});
 window.addEventListener("touchstart", unlockAudio, {passive:true});
@@ -4352,6 +4332,24 @@ function placeTopbarForAuth(){
 
 
 
+/* ===== v215: Intro announcer (plays on email submit) ===== */
+function playIntroAnnouncer(){
+  try{
+    if(sessionStorage.getItem("gn_intro_played")==="1") return;
+    sessionStorage.setItem("gn_intro_played","1");
+    if(!("speechSynthesis" in window)) return;
+    const line = "Welcome to Bill Moody's Limited Edition Game Night! Let's play some darts!";
+    const u = new SpeechSynthesisUtterance(line);
+    u.rate = 1.05;
+    u.pitch = 1.0;
+    u.volume = 1.0;
+    try{ window.speechSynthesis.cancel(); }catch(_){}
+    window.speechSynthesis.speak(u);
+  }catch(_){}
+}
+
+
+
 
 
 async function renderAuth(){
@@ -4400,6 +4398,7 @@ setHTML(html);
   document.getElementById("goBtn").onclick = async()=>{
     const e = normEmail(document.getElementById("inEmail").value);
     if(!e){ toastMsg="Enter a valid email."; return render(); }
+    playIntroAnnouncer();
     // ensure Firebase Auth exists so Firestore rules (request.auth != null) pass
     const __okAuth = await ensureAuthReady({timeoutMs:12000,retries:2});
     if(!__okAuth){
@@ -4687,7 +4686,7 @@ async function renderGameSetup(){
   setupSelectedEmails = [normEmail(meUser.email)];
   const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
   if(alt) setupSelectedEmails.push(normEmail(alt.email));
-  // NOTE(v214): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
+  // NOTE(v215): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
 
 
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
@@ -5295,7 +5294,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v214: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v215: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
