@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v252</title>
+<title>Game Night • v253</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -83,7 +83,7 @@ body{
   display:flex;justify-content:center;
   padding:10px 12px calc(10px + env(safe-area-inset-bottom));
   pointer-events:none;
-  background:linear-gradient(180deg, rgba(0,120,255,0), rgba(6,8,20,.65));
+  background:linear-gradient(180deg, rgba(0,80,255,0), rgba(6,8,20,.65));
 }
 .footerLegal .txt{
   font-size:10px;letter-spacing:.2px;color:rgba(159,176,208,.85);
@@ -192,7 +192,7 @@ input,select{
 .kbd::after{
   content:"";position:absolute;left:10px;right:10px;top:7px;height:38%;
   border-radius:12px;
-  background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(0,120,255,0));
+  background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(0,80,255,0));
   pointer-events:none;opacity:.85;
 }
 
@@ -248,7 +248,7 @@ input,select{
   width:38px;height:38px;border-radius:14px;
   border:1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(60% 60% at 30% 20%, rgba(0,120,255,0), rgba(34,211,238,.10)),
+    radial-gradient(60% 60% at 30% 20%, rgba(0,80,255,0), rgba(34,211,238,.10)),
     rgba(255,255,255,.04);
   display:flex;align-items:center;justify-content:center;
   font-size:18px;
@@ -283,7 +283,7 @@ input,select{
 }
 .avatar.online{
   border-color:rgba(34,197,94,.55);
-  box-shadow:0 0 0 rgba(0,120,255,0), 0 0 23.4px rgba(34,197,94,.28);
+  box-shadow:0 0 0 rgba(0,80,255,0), 0 0 23.4px rgba(34,197,94,.28);
   color:#bfffd1;
 }
 .avatar.online::after{
@@ -360,7 +360,7 @@ input,select{
 .loginArtSvg::after{
  content:"";
  position:absolute; inset:0;
- background:radial-gradient(70% 60% at 50% 45%, rgba(0,120,255,0) 0%, rgba(0,120,255,0) 55%, rgba(6,8,20,.68) 100%);
+ background:radial-gradient(70% 60% at 50% 45%, rgba(0,80,255,0) 0%, rgba(0,80,255,0) 55%, rgba(6,8,20,.68) 100%);
  pointer-events:none;
 }
 @media(max-width:520px){
@@ -708,9 +708,9 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle{
 /* Optional: subtle background “shine” without changing layout */
 body{
   background-image:
-    radial-gradient(900px 520px at 50% -10%, rgba(255,0,64,.16), rgba(0,120,255,0) 60%),
-    radial-gradient(700px 420px at 20% 0%, rgba(106,234,255,.10), rgba(0,120,255,0) 62%),
-    radial-gradient(800px 480px at 80% 0%, rgba(34,197,94,.08), rgba(0,120,255,0) 62%) !important;
+    radial-gradient(900px 520px at 50% -10%, rgba(255,0,64,.16), rgba(0,80,255,0) 60%),
+    radial-gradient(700px 420px at 20% 0%, rgba(106,234,255,.10), rgba(0,80,255,0) 62%),
+    radial-gradient(800px 480px at 80% 0%, rgba(34,197,94,.08), rgba(0,80,255,0) 62%) !important;
 }
 </style>
 
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v252) =====
+/* ===== Robust Navigation Wiring (v253) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v252: tiny navigation stack so Back works on every page =====
+  // ===== v253: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -2425,7 +2425,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v252</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v253</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2439,11 +2439,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v252</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v253</div>
 </div>
 
 <script>
-const BUILD_ID="v252";
+const BUILD_ID="v253";
 
 
 
@@ -2861,7 +2861,7 @@ const brandTitle = document.getElementById("brandTitle");
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
-// --- Snapshot compatibility helpers (v252 stability) ---
+// --- Snapshot compatibility helpers (v253 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -4360,10 +4360,10 @@ function placeTopbarForAuth(){
 
 
 
-/* ===== v252: Intro announcer (plays on email submit) ===== */
+/* ===== v253: Intro announcer (plays on email submit) ===== */
 function playIntroAnnouncer(){
   try{
-    // v252: intro voice disabled (no announcer audio)
+    // v253: intro voice disabled (no announcer audio)
     return;
     // Don't mark as played until audio actually starts.
     if(sessionStorage.getItem("gn_intro_played")==="1") return;
@@ -4755,7 +4755,7 @@ async function renderGameSetup(){
   setupSelectedEmails = [normEmail(meUser.email)];
   const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
   if(alt) setupSelectedEmails.push(normEmail(alt.email));
-  // NOTE(v252): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
+  // NOTE(v253): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
 
 
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
@@ -5363,7 +5363,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v252: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v253: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
