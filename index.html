@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v212</title>
+<title>Game Night • v213</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v212) =====
+/* ===== Robust Navigation Wiring (v213) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v212: tiny navigation stack so Back works on every page =====
+  // ===== v213: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -2347,10 +2347,13 @@ async function renderGameHistory(){
   try{
     const ok = await fbEnsureAnon();
     if(ok){
-      let q = col("Games").orderBy("tsEnd","desc").limit(100);
+      let q = col("Games");
       if(game) q = q.where("gameType","==", game);
+      q = q.limit(200);
       const snap = await q.get();
       snap.forEach(d=>rows.push(d.data()));
+      rows.sort((a,b)=>((b.tsEnd||0)-(a.tsEnd||0)));
+
     }
   }catch(e){ console.warn("renderGameHistory query failed", e); }
 
@@ -2389,7 +2392,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v212</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v213</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2403,11 +2406,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v212</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v213</div>
 </div>
 
 <script>
-const BUILD_ID="v212";
+const BUILD_ID="v213";
 
 
 
@@ -2825,7 +2828,7 @@ const brandTitle = document.getElementById("brandTitle");
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
-// --- Snapshot compatibility helpers (v212 stability) ---
+// --- Snapshot compatibility helpers (v213 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3360,19 +3363,29 @@ function listenMatchState(roomId, cb){
 
 /* ========= History & Stats (stored online) ========= */
 async function saveHistoryEntry(entry){
+  const base = await resolveDataBase();
   const id = uuid();
-  await setDoc(doc(ROOT_DOC, C_HISTORY, id), entry);
+  await setDoc(doc(base, C_HISTORY, id), entry);
 }
+
 async function getHistory(email){
+  const base = await resolveDataBase();
   const e = normEmail(email);
+  // Avoid composite index requirements: fetch recent items then sort client-side.
   const snap = await getDocs(query(
-    collection(ROOT_DOC, C_HISTORY),
-    where("players","array-contains",e),
-    orderBy("endedAt","desc"),
-    limit(50)
+    collection(base, C_HISTORY),
+    where("players","array-contains", e),
+    limit(200)
   ));
-  return snap.docs.map(d=>d.data());
+  const rows = snap.docs.map(d=>d.data()||{});
+  rows.sort((a,b)=>{
+    const ta = (a.endedAt && (a.endedAt.seconds||a.endedAt._seconds)) ? (a.endedAt.seconds||a.endedAt._seconds) : (a.endedAt||0);
+    const tb = (b.endedAt && (b.endedAt.seconds||b.endedAt._seconds)) ? (b.endedAt.seconds||b.endedAt._seconds) : (b.endedAt||0);
+    return (tb||0)-(ta||0);
+  });
+  return rows.slice(0,50);
 }
+
 
 async function getStatsDoc(email){
   const ref = doc(ROOT_DOC, C_STATS, normEmail(email));
@@ -4654,36 +4667,7 @@ async function renderGameSetup(){
   setupSelectedEmails = [normEmail(meUser.email)];
   const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
   if(alt) setupSelectedEmails.push(normEmail(alt.email));
-
-  // Auto-join ONLY when you have an active in-app invite (prevents stale rooms hijacking setup)
-  try{
-    if(pendingInvite && pendingInvite.roomId && pendingInvite.gameId === activeGameId){
-      roomId = pendingInvite.roomId;
-      await joinRoom(roomId);
-      roomSynced = false;
-      // Determine host + whether match already started
-      try{
-        const base = await resolveDataBase();
-        const rs = await getDoc(doc(base, C_ROOMS, roomId));
-        const rd = docExists(rs)? (rs.data()||{}) : {};
-        roomHost = normEmail(rd.hostEmail||"") === normEmail(meUser.email);
-        if(rd.matchData){
-          match = rd.matchData;
-          screen="game.play";
-        }else{
-          match = null;
-          screen="room.wait";
-        }
-      }catch(_e){
-        roomHost = false;
-        match = null;
-        screen="room.wait";
-      }
-      // consume invite so we don't loop
-      pendingInvite = null;
-      return render();
-    }
-  }catch(e){ /* ignore */ }
+  // NOTE(v213): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
 
 
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
@@ -5291,7 +5275,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v212: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v213: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
