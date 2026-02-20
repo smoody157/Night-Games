@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v278</title>
+<title>Game Night • v280</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -499,7 +499,7 @@ body.authMode .footerLegal *{display:none !important;}
 </style>
 
 <style id="cosmetics_v76.90">
-#loginLogo{display:block!important;margin:14px auto 10px auto!important;width:min(380px,84vw)!important;height:auto!important;transform:none;
+#loginLogo{display:block!important;margin:14px auto 10px auto!important;width:min(380px,84vw)!important;height:auto!important;transform:translateX(4px) rotate(0deg)!important;
 filter:brightness(1.12) saturate(1.28) contrast(1.06) drop-shadow(0 0 14px rgba(200,0,0,0.92)) drop-shadow(0 0 30px rgba(200,0,0,0.92)) drop-shadow(0 0 54px rgba(200,0,0,0.92))!important;}
 .playerName,.player-name,.playerHeader .nm,.nm{text-align:center!important;font-size:30px!important;font-weight:1000!important;letter-spacing:.4px!important;}
 .playerEmail,.player-email,.playerHeader .em,.em{text-align:center!important;font-size:13px!important;opacity:.92!important;}
@@ -533,7 +533,7 @@ h1,h2,.title,.screenTitle,.hdrTitle{
   margin: 14px auto 10px auto !important;
   width:min(380px, 84vw) !important;
   height:auto !important;
-  transform: none;
+  transform: translateX(0px) rotate(0deg) !important;
   filter:
     brightness(1.10)
     saturate(1.25)
@@ -690,7 +690,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle{
 
 /* Logo: center, tint to match theme, and make it POP from 10 feet */
 #loginLogo{
-  transform: none;
+  transform: translateX(0px) rotate(0deg) !important;
   filter:
     brightness(1.14)
     saturate(1.35)
@@ -751,7 +751,7 @@ html, body{
 #loginLogo{
   display:block !important;
   margin: 16px auto 14px auto !important;
-  transform: none;
+  transform: translateX(0px) !important;
   filter:
     brightness(1.15)
     saturate(1.3)
@@ -856,7 +856,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle{
 #loginLogo{
   display:block !important;
   margin: 16px auto 14px auto !important;
-  transform: none;
+  transform: translateX(0px) rotate(0deg) !important;
 }
 
 /* Email input bar: remove glow, keep cobalt trim */
@@ -988,7 +988,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
 #loginLogo{
   display:block !important;
   margin: 16px auto 14px auto !important;
-  transform: none;
+  transform: translateX(-6px) rotate(0deg) !important;
 }
 
 /* Players page actions: vertical stack, Stats on top, Remove on bottom */
@@ -1039,7 +1039,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
   display:block !important;
   margin-left:auto !important;
   margin-right:auto !important;
-  transform:none;
+  transform:none !important;
 }
 
 /* PLAYER NAME */
@@ -1109,7 +1109,7 @@ h1, .title, .gameTitle, .screenTitle{
   position: static !important;
   left: auto !important;
   right: auto !important;
-  transform: none;
+  transform: none !important;
   max-width: min(240px, 70vw) !important; /* keep sane on phones */
   height: auto !important;
 }
@@ -1319,7 +1319,7 @@ button.remove,
 #loginLogo, img#loginLogo{
   display:block !important;
   margin: 16px auto 14px auto !important;
-  transform: none;
+  transform: none !important;
 }
 
 /* ===== Players (home) page ===== */
@@ -1442,7 +1442,7 @@ button.remove,
 #loginLogo, img#loginLogo{
   display:block !important;
   margin: 16px auto 14px auto !important;
-  transform:none;
+  transform:none !important;
 }
 
 /* Game pages titles */
@@ -1515,7 +1515,7 @@ body #loginLogo, body img#loginLogo{
   display:block !important;
   margin-left:auto !important;
   margin-right:auto !important;
-  transform: none;
+  transform: none !important;
   left:auto !important;
   right:auto !important;
 }
@@ -1600,7 +1600,7 @@ body #loginLogo, body img#loginLogo{
   display:block !important;
   margin-left:auto !important;
   margin-right:auto !important;
-  transform:none;
+  transform:none !important;
 }
 
 /* Players page: prevent section drift */
@@ -1827,7 +1827,7 @@ header, .header {
   display:block !important;
   margin-left:auto !important;
   margin-right:auto !important;
-  transform:none;
+  transform:none !important;
   left:auto !important;
   right:auto !important;
 }
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v278) =====
+/* ===== Robust Navigation Wiring (v280) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v278: tiny navigation stack so Back works on every page =====
+  // ===== v280: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -2416,34 +2416,45 @@ async function renderGameHistory(){
 }
 </style>
 
-<style id="logo_fix_v277">
-/* v278 LOGO FIX — single source of truth (no nudges, no drift) */
-body #loginLogo, body img#loginLogo{
-  display:block !important;
-  margin:16px auto 14px auto !important;
-  transform:none;
-  position:static !important;
-  left:auto !important;
-  right:auto !important;
-}
-#loginLogoWrap, .brandLogoWrap, .logoWrap, .loginLogoWrap, .logoContainer, .loginLogoContainer{
-  width:100% !important;
-  display:flex !important;
-  justify-content:center !important;
-  align-items:center !important;
-  text-align:center !important;
-}
-</style>
-
-<style id="logo_center_v278">
-/* v278: Canonical logo centering (single source of truth) */
+<style id="v280_logo_and_stats_lock">
+/* v280: LOGO lock — true center, no drift, no transforms */
 #loginLogo, img#loginLogo{
   display:block !important;
   margin-left:auto !important;
   margin-right:auto !important;
   transform:none !important;
+  position:static !important;
   left:auto !important;
   right:auto !important;
+}
+/* Ensure wrapper centers logo if present */
+#loginLogoWrap, .brandLogoWrap, .loginLogoWrap, .logoWrap, .loginLogoContainer, .logoContainer{
+  width:100% !important;
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+}
+
+/* v280: Player Stats (games list) — keep long titles from pushing the Open button */
+.statsGames .gameCard .gameHead{
+  align-items:flex-start !important;
+}
+.statsGames .gameCard .gameTitle{
+  flex:1 1 auto !important;
+  min-width:0 !important; /* allow ellipsis */
+}
+.statsGames .gameCard .gameTitle .h1{
+  font-size:12px !important;
+  line-height:1.1 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  max-width:100% !important;
+}
+.statsGames .gameCard button[data-open]{
+  flex:0 0 auto !important;
+  min-width:72px !important;
+  align-self:flex-start !important;
 }
 </style>
 
@@ -2457,7 +2468,7 @@ body #loginLogo, body img#loginLogo{
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v278</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v280</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2471,11 +2482,11 @@ body #loginLogo, body img#loginLogo{
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v278</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v280</div>
 </div>
 
 <script>
-const BUILD_ID="v278";
+const BUILD_ID="v280";
 
 
 
@@ -2570,7 +2581,6 @@ const BUILD_ID="v278";
 
 /* ===== v165 BOOT FAILSAFE ===== */
 (function(){
-  window.__GN_BOOTING = true;
   function showBootError(msg){
     try{
       const app = document.getElementById("app");
@@ -2579,18 +2589,10 @@ const BUILD_ID="v278";
     }catch(e){}
   }
   window.addEventListener("error", (e)=>{
-    try{
-      const msg = e?.message || e?.error || e;
-      if(window.__GN_BOOTING){ showBootError(msg); }
-      else { console.error("Runtime error:", msg); window.__GN_LAST_ERROR = String(msg||""); }
-    }catch(_){};
+    try{ showBootError(e.message || e.error || e); }catch(_){};
   });
   window.addEventListener("unhandledrejection", (e)=>{
-    try{
-      const msg = e?.reason || e;
-      if(window.__GN_BOOTING){ showBootError(msg); }
-      else { console.error("Runtime rejection:", msg); window.__GN_LAST_ERROR = String(msg||""); }
-    }catch(_){};
+    try{ showBootError(e.reason || e); }catch(_){};
   });
 
   // If nothing renders within 1500ms, force a render attempt (prevents infinite "Loading…")
@@ -2902,7 +2904,7 @@ const brandTitle = document.getElementById("brandTitle");
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
-// --- Snapshot compatibility helpers (v278 stability) ---
+// --- Snapshot compatibility helpers (v280 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -4401,10 +4403,10 @@ function placeTopbarForAuth(){
 
 
 
-/* ===== v278: Intro announcer (plays on email submit) ===== */
+/* ===== v280: Intro announcer (plays on email submit) ===== */
 function playIntroAnnouncer(){
   try{
-    // v278: intro voice disabled (no announcer audio)
+    // v280: intro voice disabled (no announcer audio)
     return;
     // Don't mark as played until audio actually starts.
     if(sessionStorage.getItem("gn_intro_played")==="1") return;
@@ -4796,7 +4798,7 @@ async function renderGameSetup(){
   setupSelectedEmails = [normEmail(meUser.email)];
   const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
   if(alt) setupSelectedEmails.push(normEmail(alt.email));
-  // NOTE(v278): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
+  // NOTE(v280): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
 
 
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
@@ -5225,6 +5227,7 @@ async function renderStats(){
       </div>
     </div>
 
+    <div class="statsGames">
     ${Games.map(g=>{
       const gs=games[g.id]||{};
       const played=gs.played||0;
@@ -5258,6 +5261,7 @@ return `
         </div>
       `;
     }).join("")}
+    </div>
   `);
 
   document.getElementById("statsBack").onclick=()=>{ screen="home"; __goRender(); };
@@ -5372,7 +5376,6 @@ wireDelegatedClicks();
   if(window.__rendering){ window.__renderAgain=true; return; }
   window.__rendering=true;
   try{
-    try{ window.__GN_BOOTING = false; }catch(_){}
     // auth-only topbar positioning
     if(screen!=="auth"){ document.body.classList.remove("authMode"); }
 
@@ -5405,7 +5408,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v278: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v280: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
