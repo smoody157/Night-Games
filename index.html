@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v231</title>
+<title>Game Night • v232</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v231) =====
+/* ===== Robust Navigation Wiring (v232) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v231: tiny navigation stack so Back works on every page =====
+  // ===== v232: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -1980,7 +1980,8 @@ document.addEventListener("click", function(ev){
     try{
       const id = (el && el.id) ? el.id : "";
       if(!act){
-        if(id==="ghBack" || id==="statsBack" || id==="historyBack" || id==="statsGameBack" || id==="backBtn") act="back";
+        if(id==="statsGameBack") act="back_to_stats";
+        else if(id==="statsBack" || id==="historyBack" || id==="ghBack" || id==="backBtn") act="back";
         if(id==="homeBtn") act="home";
         if(id==="backToSetup") act="back_to_setup";
       }else{
@@ -2035,7 +2036,7 @@ document.addEventListener("click", function(ev){
         return;
       }
       if(act==="player_stats"){
-        const email = getFirstAttr(el, ["data-email","data-player","data-player-stats"]) || (window.meUser && meUser.email) || "";
+        const email = getFirstAttr(el, ["data-email","data-player","data-player-stats"]) || (el.closest && el.closest("[data-email]") ? el.closest("[data-email]").getAttribute("data-email") : "") || (window.meUser && meUser.email) || "";
         if(email) window.activePlayerEmail = email;
         pushScreen("stats");
         window.screen = "stats";
@@ -2392,7 +2393,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v231</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v232</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2406,11 +2407,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v231</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v232</div>
 </div>
 
 <script>
-const BUILD_ID="v231";
+const BUILD_ID="v232";
 
 
 
@@ -2828,7 +2829,7 @@ const brandTitle = document.getElementById("brandTitle");
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
-// --- Snapshot compatibility helpers (v231 stability) ---
+// --- Snapshot compatibility helpers (v232 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -4332,10 +4333,10 @@ function placeTopbarForAuth(){
 
 
 
-/* ===== v231: Intro announcer (plays on email submit) ===== */
+/* ===== v232: Intro announcer (plays on email submit) ===== */
 function playIntroAnnouncer(){
   try{
-    // v231: intro voice disabled (no announcer audio)
+    // v232: intro voice disabled (no announcer audio)
     return;
     // Don't mark as played until audio actually starts.
     if(sessionStorage.getItem("gn_intro_played")==="1") return;
@@ -4727,7 +4728,7 @@ async function renderGameSetup(){
   setupSelectedEmails = [normEmail(meUser.email)];
   const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
   if(alt) setupSelectedEmails.push(normEmail(alt.email));
-  // NOTE(v231): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
+  // NOTE(v232): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
 
 
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
@@ -5335,7 +5336,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v231: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v232: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
