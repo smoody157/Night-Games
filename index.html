@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v238</title>
+<title>Game Night • v239</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v238) =====
+/* ===== Robust Navigation Wiring (v239) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v238: tiny navigation stack so Back works on every page =====
+  // ===== v239: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -2402,7 +2402,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v238</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v239</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2416,11 +2416,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v238</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v239</div>
 </div>
 
 <script>
-const BUILD_ID="v238";
+const BUILD_ID="v239";
 
 
 
@@ -2838,7 +2838,7 @@ const brandTitle = document.getElementById("brandTitle");
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
-// --- Snapshot compatibility helpers (v238 stability) ---
+// --- Snapshot compatibility helpers (v239 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -4342,10 +4342,10 @@ function placeTopbarForAuth(){
 
 
 
-/* ===== v238: Intro announcer (plays on email submit) ===== */
+/* ===== v239: Intro announcer (plays on email submit) ===== */
 function playIntroAnnouncer(){
   try{
-    // v238: intro voice disabled (no announcer audio)
+    // v239: intro voice disabled (no announcer audio)
     return;
     // Don't mark as played until audio actually starts.
     if(sessionStorage.getItem("gn_intro_played")==="1") return;
@@ -4737,7 +4737,7 @@ async function renderGameSetup(){
   setupSelectedEmails = [normEmail(meUser.email)];
   const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
   if(alt) setupSelectedEmails.push(normEmail(alt.email));
-  // NOTE(v238): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
+  // NOTE(v239): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
 
 
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
@@ -5345,7 +5345,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v238: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v239: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
