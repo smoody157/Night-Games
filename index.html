@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v274</title>
+<title>Game Night • v276</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2439,11 +2439,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v274</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v276</div>
 </div>
 
 <script>
-const BUILD_ID="v274";
+const BUILD_ID="v276";
 
 
 
@@ -3399,7 +3399,7 @@ async function saveMatchState(roomId, match){
   const nextRev = (match._rev||0) + 1;
   match._rev = nextRev;
   await updateDoc(ref, { matchData: payload, rev: nextRev, updatedBy: normEmail((meUser&&meUser.email)||cacheGet('gn_email_last','')||'') });
-}}
+}
 
 function normalizeMatchState(m){
   try{
@@ -5381,6 +5381,8 @@ async function renderHistory(){
 async function render(){
   if(screen==="game_history") return renderGameHistory();
   try{ wireDelegatedClicks(); }catch(e){ console.error("wireDelegatedClicks", e); }
+
+  try{ window.__gnBooting = false; }catch(_){ }
 
   if(window.__rendering){ window.__renderAgain=true; return; }
   window.__rendering=true;
