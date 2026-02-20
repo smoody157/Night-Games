@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v265</title>
+<title>Game Night • v266</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -62,7 +62,7 @@
     rgba(0,0,255,1) 22%,
     rgba(255,0,0,1) 46%,
     rgba(255,0,0,1) 70%,
-    rgba(34,197,94,1) 100%
+    rgba(0,255,0,1) 100%
   );
 }
 
@@ -160,13 +160,13 @@ input,select{
 .btn:active{transform:translateY(1px)}
 .btn.ghost{background:transparent;box-shadow:none;color:var(--muted)}
 .btn.ok{
-  background:linear-gradient(135deg, rgba(34,197,94,.22), rgba(34,211,238,.12)) !important;
-  border-color:rgba(34,197,94,.40) !important;
+  background:linear-gradient(135deg, rgba(0,128,0,0.4), rgba(34,211,238,.12)) !important;
+  border-color:rgba(0,128,0,0.4) !important;
   box-shadow:
     0 13.0px 28.6px rgba(0,0,0,.32),
-    0 0 44.2px rgba(34,197,94,.55),
-    0 0 91.0px rgba(34,197,94,.28),
-    inset 0 0 33.8px rgba(34,197,94,.22),
+    0 0 44.2px rgba(0,255,0,1),
+    0 0 91.0px rgba(0,128,0,0.4),
+    inset 0 0 33.8px rgba(0,128,0,0.4),
     inset 0 1.3px 0 rgba(255,255,255,.20),
     inset 0 -15.6px 23.4px rgba(0,0,0,.38);
 }
@@ -275,30 +275,30 @@ input,select{
   width:34px;height:34px;border-radius:14px;
   border:1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(60% 60% at 30% 20%, rgba(34,197,94,.18), rgba(0,0,255,1)),
+    radial-gradient(60% 60% at 30% 20%, rgba(0,128,0,0.4), rgba(0,0,255,1)),
     rgba(255,255,255,.04);
   display:flex;align-items:center;justify-content:center;
   font-weight:1000;color:var(--c-cyan);
   position:relative;
 }
 .avatar.online{
-  border-color:rgba(34,197,94,.55);
-  box-shadow:0 0 0 rgba(0,0,0,0), 0 0 23.4px rgba(34,197,94,.28);
+  border-color:rgba(0,255,0,1);
+  box-shadow:0 0 0 rgba(0,0,0,0), 0 0 23.4px rgba(0,128,0,0.4);
   color:#bfffd1;
 }
 .avatar.online::after{
   content:"";
   position:absolute;right:-2px;bottom:-2px;
   width:9px;height:9px;border-radius:999px;
-  background:rgba(34,197,94,.95);
+  background:rgba(0,255,0,1);
   border:1px solid rgba(6,8,20,.9);
-  box-shadow:0 0 13.0px rgba(34,197,94,.55);
+  box-shadow:0 0 13.0px rgba(0,255,0,1);
   animation:onlineDotPulse 1.6s ease-in-out infinite;
 }
 @keyframes onlineDotPulse{
-  0%{ transform:scale(1); filter:brightness(1); box-shadow:0 0 13.0px rgba(34,197,94,.45); }
-  50%{transform:scale(1.35);filter:brightness(1.25);box-shadow:0 0 23.4px rgba(34,197,94,.75); }
-  100%{transform:scale(1);  filter:brightness(1);   box-shadow:0 0 13.0px rgba(34,197,94,.45); }
+  0%{ transform:scale(1); filter:brightness(1); box-shadow:0 0 13.0px rgba(0,128,0,0.4); }
+  50%{transform:scale(1.35);filter:brightness(1.25);box-shadow:0 0 23.4px rgba(0,255,0,1); }
+  100%{transform:scale(1);  filter:brightness(1);   box-shadow:0 0 13.0px rgba(0,128,0,0.4); }
 
 
 
@@ -540,7 +540,7 @@ h1,h2,.title,.screenTitle,.hdrTitle{
     contrast(1.06)
     drop-shadow(0 0 16px rgba(255,0,0,1))
     drop-shadow(0 0 30px rgba(255,0,0,1))
-    drop-shadow(0 0 46px rgba(34,197,94,.18))
+    drop-shadow(0 0 46px rgba(0,128,0,0.4))
     !important;
 }
 
@@ -554,8 +554,8 @@ h1,h2,.title,.screenTitle,.hdrTitle{
   box-shadow:
     inset 0 1.3px 0 rgba(255,255,255,.10),
     inset 0 0 0 1.3px rgba(255,255,255,.06),
-    0 0 20.8px rgba(34,197,94,.55),
-    0 0 44.2px rgba(34,197,94,.28) !important;
+    0 0 20.8px rgba(0,255,0,1),
+    0 0 44.2px rgba(0,128,0,0.4) !important;
 }
 
 /* Players page: name bigger + centered (more readable but not crazy) */
@@ -575,8 +575,8 @@ h1,h2,.title,.screenTitle,.hdrTitle{
   box-shadow:
     inset 0 1.3px 0 rgba(255,255,255,.10),
     inset 0 0 0 1.3px rgba(255,255,255,.06),
-    0 0 20.8px rgba(34,197,94,.50),
-    0 0 39.0px rgba(34,197,94,.24) !important;
+    0 0 20.8px rgba(0,128,0,0.4),
+    0 0 39.0px rgba(0,128,0,0.4) !important;
 }
 .playerActionsRow button[data-action="remove"], .playerActionsRow .removeBtn, .btn.danger, button.danger{
   opacity:.92 !important;
@@ -636,7 +636,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle{
   font-size: clamp(26px, 4.4vw, 34px) !important;
   text-shadow:
     0 0 10px rgba(255,0,0,1),
-    0 0 18px rgba(34,197,94,.16),
+    0 0 18px rgba(0,128,0,0.4),
     0 0 16px rgba(0,0,255,1) !important;
 }
 
@@ -674,8 +674,8 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle{
   box-shadow:
     inset 0 1.3px 0 rgba(255,255,255,.12),
     inset 0 0 0 1.3px rgba(255,255,255,.07),
-    0 0 23.4px rgba(34,197,94,.62),
-    0 0 52.0px rgba(34,197,94,.30),
+    0 0 23.4px rgba(0,255,0,1),
+    0 0 52.0px rgba(0,128,0,0.4),
     0 0 26.0px rgba(0,0,255,1) !important;
 }
 
@@ -684,8 +684,8 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle{
   box-shadow:
     inset 0 1.3px 0 rgba(255,255,255,.12),
     inset 0 0 0 1.3px rgba(255,255,255,.07),
-    0 0 23.4px rgba(34,197,94,.58),
-    0 0 44.2px rgba(34,197,94,.26) !important;
+    0 0 23.4px rgba(0,255,0,1),
+    0 0 44.2px rgba(0,128,0,0.4) !important;
 }
 
 /* Logo: center, tint to match theme, and make it POP from 10 feet */
@@ -701,7 +701,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle{
     /* subtle blue edge for “wow” */
     drop-shadow(0 0 26px rgba(0,0,255,1))
     /* tiny green tie-in to primary */
-    drop-shadow(0 0 22px rgba(34,197,94,.18))
+    drop-shadow(0 0 22px rgba(0,128,0,0.4))
     !important;
 }
 
@@ -710,7 +710,7 @@ body{
   background-image:
     radial-gradient(900px 520px at 50% -10%, rgba(255,0,0,1), rgba(0,0,0,0) 60%),
     radial-gradient(700px 420px at 20% 0%, rgba(0,0,255,1), rgba(0,0,0,0) 62%),
-    radial-gradient(800px 480px at 80% 0%, rgba(34,197,94,.08), rgba(0,0,0,0) 62%) !important;
+    radial-gradient(800px 480px at 80% 0%, rgba(0,128,0,0.4), rgba(0,0,0,0) 62%) !important;
 }
 </style>
 
@@ -743,8 +743,8 @@ html, body{
   --cobaltSoft: rgba(70,130,255,.28);
   --brandRed: rgba(255,0,0,1);
   --brandRedSoft: rgba(255,0,0,1);
-  --ctaGreen: rgba(34,197,94,.72);
-  --ctaGreenSoft: rgba(34,197,94,.34);
+  --ctaGreen: rgba(0,255,0,1);
+  --ctaGreenSoft: rgba(0,128,0,0.4);
 }
 
 /* LOGO — CENTERED + SHADED + INTEGRATED */
@@ -821,7 +821,7 @@ body::before{
   background:
     radial-gradient(900px 520px at 50% -10%, rgba(70,130,255,.16), transparent 60%),
     radial-gradient(700px 420px at 10% 0%, rgba(255,0,0,1), transparent 62%),
-    radial-gradient(800px 480px at 90% 0%, rgba(34,197,94,.10), transparent 62%);
+    radial-gradient(800px 480px at 90% 0%, rgba(0,128,0,0.4), transparent 62%);
   z-index:0;
 }
 </style>
@@ -902,8 +902,8 @@ input[type="email"], input.email, #email, #emailInput, .emailInput, .login input
   box-shadow:
     inset 0 1.3px 0 rgba(255,255,255,.12),
     inset 0 0 0 1.3px rgba(255,255,255,.08),
-    0 0 26.0px rgba(34,197,94,.70),
-    0 0 49.4px rgba(34,197,94,.34) !important;
+    0 0 26.0px rgba(0,255,0,1),
+    0 0 49.4px rgba(0,128,0,0.4) !important;
 }
 .playerActionsRow button[data-action="remove"], .playerActionsRow .removeBtn, .btn.danger{
   order: 2 !important;
@@ -918,7 +918,7 @@ input[type="email"], input.email, #email, #emailInput, .emailInput, .login input
 /* “Go / Commit” button stays GREEN (already in theme) */
 .btn.ok, .btn.primary, button.ok, button.primary, #startMatch, #startGame{
   /* keep as-is from console theme; just ensure it wins */
-  border-color: rgba(34,197,94,.55) !important;
+  border-color: rgba(0,255,0,1) !important;
 }
 
 /* If there is a small nav/back button you wanted top-left, only affect known ids/classes */
@@ -1015,8 +1015,8 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
   box-shadow:
     inset 0 1.3px 0 rgba(255,255,255,.12),
     inset 0 0 0 1.3px rgba(255,255,255,.08),
-    0 0 26.0px rgba(34,197,94,.70),
-    0 0 49.4px rgba(34,197,94,.34) !important;
+    0 0 26.0px rgba(0,255,0,1),
+    0 0 49.4px rgba(0,128,0,0.4) !important;
 }
 
 /* Tone down Remove (still danger) */
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v265) =====
+/* ===== Robust Navigation Wiring (v266) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v265: tiny navigation stack so Back works on every page =====
+  // ===== v266: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -2397,9 +2397,9 @@ async function renderGameHistory(){
 
 /* 1) Gentle pulsating green glow (cosmetic only) */
 @keyframes greenPulse {
-  0%   { box-shadow: 0 0 6px rgba(0,255,0,0.45); }
-  50%  { box-shadow: 0 0 12px rgba(0,255,0,0.75); }
-  100% { box-shadow: 0 0 6px rgba(0,255,0,0.45); }
+  0%   { box-shadow: 0 0 6px rgba(0,128,0,0.4); }
+  50%  { box-shadow: 0 0 12px rgba(0,255,0,1); }
+  100% { box-shadow: 0 0 6px rgba(0,128,0,0.4); }
 }
 
 /* Target likely green indicator elements without touching logic */
@@ -2425,7 +2425,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v265</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v266</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2439,11 +2439,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v265</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v266</div>
 </div>
 
 <script>
-const BUILD_ID="v265";
+const BUILD_ID="v266";
 
 
 
@@ -2861,7 +2861,7 @@ const brandTitle = document.getElementById("brandTitle");
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
-// --- Snapshot compatibility helpers (v265 stability) ---
+// --- Snapshot compatibility helpers (v266 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3636,7 +3636,7 @@ function dartboardSVG(activeTarget){
   }else if(activeTarget === "B"){
     activeOverlay += `
       <circle cx="100" cy="100" r="14.5" fill="rgba(34,211,238,.22)" stroke="rgba(34,211,238,.98)" stroke-width="3.0" filter="url(#glow)"/>
-      <circle cx="100" cy="100" r="7.6"  fill="rgba(34,197,94,.16)" stroke="rgba(255,255,255,.92)" stroke-width="2.6" filter="url(#glow)"/>
+      <circle cx="100" cy="100" r="7.6"  fill="rgba(0,128,0,0.4)" stroke="rgba(255,255,255,.92)" stroke-width="2.6" filter="url(#glow)"/>
     `;
   }
 
@@ -3715,7 +3715,7 @@ function playerStripHTML(players, activeIndex, extraLineFn){
       (players||[]).map((p,i)=>{
         const act=(i===activeIndex);
         const extra=extraLineFn?(extraLineFn(p,i)||""):"";
-        return `<div style="min-width:140px;max-width:min(320px,90vw);flex:1;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);padding:10px 12px;text-align:center;${act?'border-color:rgba(34,197,94,.55);box-shadow:0 0 36.4px rgba(34,197,94,.22);':''}">
+        return `<div style="min-width:140px;max-width:min(320px,90vw);flex:1;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);padding:10px 12px;text-align:center;${act?'border-color:rgba(0,255,0,1);box-shadow:0 0 36.4px rgba(0,128,0,0.4);':''}">
           <div style="font-weight:1000;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.name||"")}</div>
           <div class="sub" style="margin-top:2px">${act?"NOW THROWING":"&nbsp;"}</div>
           ${extra?`<div class="small" style="margin-top:4px">${extra}</div>`:""}
@@ -4360,10 +4360,10 @@ function placeTopbarForAuth(){
 
 
 
-/* ===== v265: Intro announcer (plays on email submit) ===== */
+/* ===== v266: Intro announcer (plays on email submit) ===== */
 function playIntroAnnouncer(){
   try{
-    // v265: intro voice disabled (no announcer audio)
+    // v266: intro voice disabled (no announcer audio)
     return;
     // Don't mark as played until audio actually starts.
     if(sessionStorage.getItem("gn_intro_played")==="1") return;
@@ -4755,7 +4755,7 @@ async function renderGameSetup(){
   setupSelectedEmails = [normEmail(meUser.email)];
   const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
   if(alt) setupSelectedEmails.push(normEmail(alt.email));
-  // NOTE(v265): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
+  // NOTE(v266): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
 
 
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
@@ -5363,7 +5363,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v265: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v266: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
@@ -5703,8 +5703,8 @@ button.statsBtn, .statsBtn{
   box-shadow:
     inset 0 1.3px 0 rgba(255,255,255,.10),
     inset 0 0 0 1.3px rgba(255,255,255,.06),
-    0 0 20.8px rgba(34,197,94,.55),
-    0 0 41.6px rgba(34,197,94,.26) !important;
+    0 0 20.8px rgba(0,255,0,1),
+    0 0 41.6px rgba(0,128,0,0.4) !important;
 }
 
 /* Make top player Stats/History glow blue as requested */
