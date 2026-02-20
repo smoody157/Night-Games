@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v254</title>
+<title>Game Night • v256</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -30,15 +30,15 @@
 
   --glass: rgba(255,255,255,.06);
   --glass2: rgba(255,255,255,.025);
-  --shadow: rgba(0,0,0,.45);
+  --shadow: rgba(0,0,205,.45);
 
   --chrome-border: rgba(255,255,255,.18);
   --chrome-fill: linear-gradient(180deg,
     rgba(255,255,255,.18) 0%,
     rgba(255,255,255,.07) 14%,
-    rgba(0,0,0,.22) 36%,
+    rgba(0,0,205,.22) 36%,
     rgba(255,255,255,.10) 52%,
-    rgba(0,0,0,.34) 72%,
+    rgba(0,0,205,.34) 72%,
     rgba(255,255,255,.14) 100%
   );
 
@@ -83,11 +83,11 @@ body{
   display:flex;justify-content:center;
   padding:10px 12px calc(10px + env(safe-area-inset-bottom));
   pointer-events:none;
-  background:linear-gradient(180deg, rgba(0,0,139,0), rgba(6,8,20,.65));
+  background:linear-gradient(180deg, rgba(0,0,205,0), rgba(6,8,20,.65));
 }
 .footerLegal .txt{
   font-size:10px;letter-spacing:.2px;color:rgba(159,176,208,.85);
-  text-align:center;text-shadow:0 2px 10px rgba(0,0,0,.45);
+  text-align:center;text-shadow:0 2px 10px rgba(0,0,205,.45);
   max-width:980px;
 }
 
@@ -111,7 +111,7 @@ body{
 }
 .brand .t{
   font-weight:1000;font-size:20px;letter-spacing:.4px;
-  text-shadow:0 2px 14px rgba(0,0,0,.55), 0 0 18px rgba(34,211,238,.10);
+  text-shadow:0 2px 14px rgba(0,0,205,.55), 0 0 18px rgba(34,211,238,.10);
 }
 .brand .s{font-size:12px;color:var(--muted);white-space:normal;overflow-wrap:anywhere;}
 
@@ -121,10 +121,10 @@ body{
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;padding:14px;position:relative;
   overflow:hidden;
-  box-shadow:0 20.8px 44.2px rgba(0,0,0,.42), 0 10.4px 78.0px rgba(0,0,0,.28);
+  box-shadow:0 20.8px 44.2px rgba(0,0,205,.42), 0 10.4px 78.0px rgba(0,0,205,.28);
   margin-bottom:12px;
 }
-.h1{font-size:26px;font-weight:1000;letter-spacing:.4px;margin:2px 0 6px;text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.h1{font-size:26px;font-weight:1000;letter-spacing:.4px;margin:2px 0 6px;text-shadow:0 2px 14px rgba(0,0,205,.55)}
 .sub{color:var(--muted);font-size:13px}
 label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
 
@@ -138,7 +138,7 @@ input,select{
 .row{display:flex;gap:10px;flex-wrap:wrap;}
 
 #statsBtn,#historyBtn{flex:1;justify-content:center;min-height:44px;opacity:1;}
-#statsBtn.btn.ghost,#historyBtn.btn.ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);box-shadow:0 13.0px 28.6px rgba(0,0,0,.30),0 0 23.4px rgba(34,211,238,.18);}
+#statsBtn.btn.ghost,#historyBtn.btn.ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);box-shadow:0 13.0px 28.6px rgba(0,0,205,.30),0 0 23.4px rgba(34,211,238,.18);}
 .row>*{flex:1;min-width:140px}
 .stack{display:flex;flex-direction:column;gap:10px}
 .divider{height:1px;background:rgba(255,255,255,.10);margin:12px 0}
@@ -163,12 +163,12 @@ input,select{
   background:linear-gradient(135deg, rgba(34,197,94,.22), rgba(34,211,238,.12)) !important;
   border-color:rgba(34,197,94,.40) !important;
   box-shadow:
-    0 13.0px 28.6px rgba(0,0,0,.32),
+    0 13.0px 28.6px rgba(0,0,205,.32),
     0 0 44.2px rgba(34,197,94,.55),
     0 0 91.0px rgba(34,197,94,.28),
     inset 0 0 33.8px rgba(34,197,94,.22),
     inset 0 1.3px 0 rgba(255,255,255,.20),
-    inset 0 -15.6px 23.4px rgba(0,0,0,.38);
+    inset 0 -15.6px 23.4px rgba(0,0,205,.38);
 }
 .btn.danger{
   background:linear-gradient(135deg, rgba(239,68,68,.22), rgba(249,115,22,.12)) !important;
@@ -181,9 +181,9 @@ input,select{
   background:var(--chrome-fill);
   border:1px solid var(--chrome-border);
   box-shadow:
-    0 13.0px 28.6px rgba(0,0,0,.32),
+    0 13.0px 28.6px rgba(0,0,205,.32),
     inset 0 1.3px 0 rgba(255,255,255,.20),
-    inset 0 -15.6px 23.4px rgba(0,0,0,.38);
+    inset 0 -15.6px 23.4px rgba(0,0,205,.38);
   white-space:nowrap;
 }
 .btn:not(.ghost)::after,
@@ -192,7 +192,7 @@ input,select{
 .kbd::after{
   content:"";position:absolute;left:10px;right:10px;top:7px;height:38%;
   border-radius:12px;
-  background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(0,0,139,0));
+  background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(0,0,205,0));
   pointer-events:none;opacity:.85;
 }
 
@@ -224,7 +224,7 @@ input,select{
     rgba(255,255,255,.05);
   border:1px solid rgba(255,255,255,.12);
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 13.0px 31.2px rgba(0,0,0,.25);
+  box-shadow:0 13.0px 31.2px rgba(0,0,205,.25);
   flex:0 0 auto;
 }
 .logoMark span{font-size:20px}
@@ -240,7 +240,7 @@ input,select{
   background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;padding:14px;
-  box-shadow:0 13.0px 33.8px rgba(0,0,0,.28);
+  box-shadow:0 13.0px 33.8px rgba(0,0,205,.28);
 }
 .gameHead{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .gameTitle{display:flex;align-items:center;gap:10px}
@@ -248,7 +248,7 @@ input,select{
   width:38px;height:38px;border-radius:14px;
   border:1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(60% 60% at 30% 20%, rgba(0,0,139,0), rgba(34,211,238,.10)),
+    radial-gradient(60% 60% at 30% 20%, rgba(0,0,205,0), rgba(34,211,238,.10)),
     rgba(255,255,255,.04);
   display:flex;align-items:center;justify-content:center;
   font-size:18px;
@@ -283,7 +283,7 @@ input,select{
 }
 .avatar.online{
   border-color:rgba(34,197,94,.55);
-  box-shadow:0 0 0 rgba(0,0,139,0), 0 0 23.4px rgba(34,197,94,.28);
+  box-shadow:0 0 0 rgba(0,0,205,0), 0 0 23.4px rgba(34,197,94,.28);
   color:#bfffd1;
 }
 .avatar.online::after{
@@ -310,7 +310,7 @@ input,select{
   position:fixed;inset:0;z-index:9990;
   display:none;align-items:center;justify-content:center;
   padding:18px;
-  background:rgba(0,0,0,.65);
+  background:rgba(0,0,205,.65);
   backdrop-filter: blur(6px);
 }
 .modal.show{display:flex;}
@@ -360,7 +360,7 @@ input,select{
 .loginArtSvg::after{
  content:"";
  position:absolute; inset:0;
- background:radial-gradient(70% 60% at 50% 45%, rgba(0,0,139,0) 0%, rgba(0,0,139,0) 55%, rgba(6,8,20,.68) 100%);
+ background:radial-gradient(70% 60% at 50% 45%, rgba(0,0,205,0) 0%, rgba(0,0,205,0) 55%, rgba(6,8,20,.68) 100%);
  pointer-events:none;
 }
 @media(max-width:520px){
@@ -708,9 +708,9 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle{
 /* Optional: subtle background “shine” without changing layout */
 body{
   background-image:
-    radial-gradient(900px 520px at 50% -10%, rgba(255,0,64,.16), rgba(0,0,139,0) 60%),
-    radial-gradient(700px 420px at 20% 0%, rgba(106,234,255,.10), rgba(0,0,139,0) 62%),
-    radial-gradient(800px 480px at 80% 0%, rgba(34,197,94,.08), rgba(0,0,139,0) 62%) !important;
+    radial-gradient(900px 520px at 50% -10%, rgba(255,0,64,.16), rgba(0,0,205,0) 60%),
+    radial-gradient(700px 420px at 20% 0%, rgba(106,234,255,.10), rgba(0,0,205,0) 62%),
+    radial-gradient(800px 480px at 80% 0%, rgba(34,197,94,.08), rgba(0,0,205,0) 62%) !important;
 }
 </style>
 
@@ -1194,7 +1194,7 @@ h1, .title, .gameTitle, .screenTitle{
   background:#000 !important;
   color:#fff !important;
   border-radius:14px !important;
-  box-shadow:0 0 15.6px rgba(0,0,0,.35) !important;
+  box-shadow:0 0 15.6px rgba(0,0,205,.35) !important;
 }
 
 /* --- FIX: Top corner buttons piggybacking (restore normal flow) --- */
@@ -1263,17 +1263,17 @@ button.stats,
   background: linear-gradient(180deg,
     rgba(255,255,255,.22) 0%,
     rgba(255,255,255,.08) 14%,
-    rgba(0,0,0,.18) 36%,
+    rgba(0,0,205,.18) 36%,
     rgba(255,255,255,.10) 52%,
-    rgba(0,0,0,.30) 72%,
+    rgba(0,0,205,.30) 72%,
     rgba(255,255,255,.16) 100%
   ), linear-gradient(135deg, rgba(239,68,68,.55), rgba(249,115,22,.18)) !important;
   box-shadow:
-    0 13.0px 28.6px rgba(0,0,0,.32),
+    0 13.0px 28.6px rgba(0,0,205,.32),
     0 0 23.4px rgba(255,23,68,.55),
     0 0 44.2px rgba(255,0,64,.30),
     inset 0 1.3px 0 rgba(255,255,255,.22),
-    inset 0 -15.6px 23.4px rgba(0,0,0,.38) !important;
+    inset 0 -15.6px 23.4px rgba(0,0,205,.38) !important;
 }
 
 /* Remove stays on BOTTOM and becomes the FLAT button */
@@ -1284,7 +1284,7 @@ button.remove,
   order:2 !important;              /* bottom */
   background: rgba(255,255,255,.06) !important; /* flat */
   border:1px solid rgba(255,255,255,.14) !important;
-  box-shadow: 0 7.8px 20.8px rgba(0,0,0,.30) !important;
+  box-shadow: 0 7.8px 20.8px rgba(0,0,205,.30) !important;
 }
 
 
@@ -1397,24 +1397,24 @@ button.remove,
     linear-gradient(180deg,
       rgba(255,255,255,.24) 0%,
       rgba(255,255,255,.10) 16%,
-      rgba(0,0,0,.16) 40%,
+      rgba(0,0,205,.16) 40%,
       rgba(255,255,255,.10) 56%,
-      rgba(0,0,0,.30) 78%,
+      rgba(0,0,205,.30) 78%,
       rgba(255,255,255,.18) 100%
     ),
     linear-gradient(135deg, rgba(239,68,68,.70), rgba(255,0,64,.22)) !important;
   box-shadow:
-    0 13.0px 28.6px rgba(0,0,0,.34),
+    0 13.0px 28.6px rgba(0,0,205,.34),
     0 0 20.8px rgba(255,23,68,.70),
     0 0 46.8px rgba(255,0,64,.36),
     inset 0 1.3px 0 rgba(255,255,255,.22),
-    inset 0 -15.6px 23.4px rgba(0,0,0,.38) !important;
+    inset 0 -15.6px 23.4px rgba(0,0,205,.38) !important;
 }
 .playerPage .playerActionsRow .removeBtn{
   order: 2 !important;
   background: rgba(255,255,255,.06) !important;
   border: 1px solid rgba(255,255,255,.14) !important;
-  box-shadow: 0 7.8px 20.8px rgba(0,0,0,.30) !important;
+  box-shadow: 0 7.8px 20.8px rgba(0,0,205,.30) !important;
 }
 </style>
 
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v254) =====
+/* ===== Robust Navigation Wiring (v256) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v254: tiny navigation stack so Back works on every page =====
+  // ===== v256: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -2425,7 +2425,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v254</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v256</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2439,11 +2439,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v254</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v256</div>
 </div>
 
 <script>
-const BUILD_ID="v254";
+const BUILD_ID="v256";
 
 
 
@@ -2861,7 +2861,7 @@ const brandTitle = document.getElementById("brandTitle");
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
-// --- Snapshot compatibility helpers (v254 stability) ---
+// --- Snapshot compatibility helpers (v256 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -4360,10 +4360,10 @@ function placeTopbarForAuth(){
 
 
 
-/* ===== v254: Intro announcer (plays on email submit) ===== */
+/* ===== v256: Intro announcer (plays on email submit) ===== */
 function playIntroAnnouncer(){
   try{
-    // v254: intro voice disabled (no announcer audio)
+    // v256: intro voice disabled (no announcer audio)
     return;
     // Don't mark as played until audio actually starts.
     if(sessionStorage.getItem("gn_intro_played")==="1") return;
@@ -4450,10 +4450,10 @@ async function renderAuth(){
 
     <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:hidden;">
       <video id="loginIntroVideo" playsinline muted autoplay loop
-        style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:translateY(-58px) scale(1.10);transform-origin:center top;">
+        style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,205,.25);object-fit:contain;object-position:center top;transform:translateY(-58px) scale(1.10);transform-origin:center top;">
       </video>
       <img id="landingLogoOverlay" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo"
-        style="position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55));" />
+        style="position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 8px 18px rgba(0,0,205,.55));" />
 
     </div>
 `;
@@ -4755,7 +4755,7 @@ async function renderGameSetup(){
   setupSelectedEmails = [normEmail(meUser.email)];
   const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
   if(alt) setupSelectedEmails.push(normEmail(alt.email));
-  // NOTE(v254): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
+  // NOTE(v256): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
 
 
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
@@ -5363,7 +5363,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v254: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v256: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
