@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v221</title>
+<title>Game Night • v222</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2392,7 +2392,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v221</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v222</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2402,15 +2402,15 @@ async function renderGameHistory(){
 </div>
 
 <div class="wrap" id="app">
-  <div class="card" style="display:none"></div>
+  <div class="card"><div class="h1">Hang on one second…</div><div class="sub">Starting up…</div></div>
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v221</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v222</div>
 </div>
 
 <script>
-const BUILD_ID="v221";
+const BUILD_ID="v222";
 
 
 
@@ -4332,7 +4332,7 @@ function placeTopbarForAuth(){
 
 
 
-/* ===== v221: Intro announcer (female voice, boom + clear English; fires on email submit) ===== */
+/* ===== v222: Intro announcer (female voice, boom + clear English; fires on email submit) ===== */
 function playIntroAnnouncer(){
   try{
     if(sessionStorage.getItem("gn_intro_played")==="1") return;
@@ -4449,10 +4449,7 @@ function initials(name){
   return (a+(b||"")).slice(0,2) || a || "?";
 }
 
-async 
-
-// ===== RESTORED AUTH + SIGNUP RENDERERS (v221) =====
-function renderAuth(){
+async function renderAuth(){
   document.body.classList.add("authMode");
   signOutBtn.style.display="none";
 
@@ -4537,6 +4534,7 @@ setHTML(html);
   };
 }
 
+async 
 function renderSignup(){
   signOutBtn.style.display="none";
   brandTitle.textContent="Game Night";
