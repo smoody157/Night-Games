@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v210</title>
+<title>Game Night • v212</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v210) =====
+/* ===== Robust Navigation Wiring (v212) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v210: tiny navigation stack so Back works on every page =====
+  // ===== v212: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -1971,6 +1971,11 @@ document.addEventListener("click", function(ev){
     // normalize aliases
     if(act==="stats") act = "player_stats";
 
+    // Play buttons
+    if(!act){
+      if(el.hasAttribute("data-play") || el.hasAttribute("data-open")) act = "play";
+    }
+
     // id-based actions (some pages use ids instead of data-action)
     try{
       const id = (el && el.id) ? el.id : "";
@@ -1988,7 +1993,21 @@ document.addEventListener("click", function(ev){
 
     try{
 
+      if(act==="play"){
+        const gid = el.getAttribute("data-play") || el.getAttribute("data-open") || "";
+        if(gid){
+          window.activeGameId = gid;
+          window.match = null;
+          pushScreen("game.setup");
+          window.screen = "game.setup";
+          goRenderSafe();
+        }
+        ev.preventDefault(); ev.stopPropagation();
+        return;
+      }
+
       if(act==="back"){
+{
         goBack();
         ev.preventDefault(); ev.stopPropagation();
         return;
@@ -2370,7 +2389,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v210</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v212</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2384,11 +2403,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v210</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v212</div>
 </div>
 
 <script>
-const BUILD_ID="v210";
+const BUILD_ID="v212";
 
 
 
@@ -2804,18 +2823,26 @@ const signOutBtn = document.getElementById("signOutBtn");
 const brandTitle = document.getElementById("brandTitle");
 
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
+
+// --- Snapshot compatibility helpers (v212 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
-    const ex = snap.exists;
-    if(typeof ex === 'function') return !!ex.call(snap);
-    return !!ex;
-  }catch(_e){
-    return false;
-  }
+    if(typeof snap.exists === "function") return !!docExists(snap);
+    if(typeof snap.exists === "boolean") return snap.exists;
+  }catch(e){}
+  return false;
+}
+function snapData(snap){
+  try{
+    if(!snap) return null;
+    if(typeof snap.data === "function") return snap.data() || null;
+    if(snap.data && typeof snap.data === "object") return snap.data;
+  }catch(e){}
+  return null;
 }
 
-function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
 function normalizePlayerData(d, fallbackEmail){
   d = d || {};
@@ -4628,34 +4655,36 @@ async function renderGameSetup(){
   const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
   if(alt) setupSelectedEmails.push(normEmail(alt.email));
 
-  // Auto-join if I'm already in a waiting/active room for this game
+  // Auto-join ONLY when you have an active in-app invite (prevents stale rooms hijacking setup)
   try{
-    const existing = await findWaitingRoomForPlayer(activeGameId, meUser.email);
-    if(existing){
-roomId = existing;
-await joinRoom(roomId);
-roomSynced = false;
-// Determine host + whether match already started
-try{
-  const base = await resolveDataBase();
-  const rs = await getDoc(doc(base, C_ROOMS, roomId));
-  const rd = docExists(rs)? (rs.data()||{}) : {};
-  roomHost = normEmail(rd.hostEmail||"") === normEmail(meUser.email);
-  if(rd.matchData){
-    match = rd.matchData;
-    screen="game.play";
-  }else{
-    match = null;
-    screen="room.wait";
-  }
-}catch(_e){
-  roomHost = false;
-  match = null;
-  screen="room.wait";
-}
-return render();
+    if(pendingInvite && pendingInvite.roomId && pendingInvite.gameId === activeGameId){
+      roomId = pendingInvite.roomId;
+      await joinRoom(roomId);
+      roomSynced = false;
+      // Determine host + whether match already started
+      try{
+        const base = await resolveDataBase();
+        const rs = await getDoc(doc(base, C_ROOMS, roomId));
+        const rd = docExists(rs)? (rs.data()||{}) : {};
+        roomHost = normEmail(rd.hostEmail||"") === normEmail(meUser.email);
+        if(rd.matchData){
+          match = rd.matchData;
+          screen="game.play";
+        }else{
+          match = null;
+          screen="room.wait";
+        }
+      }catch(_e){
+        roomHost = false;
+        match = null;
+        screen="room.wait";
+      }
+      // consume invite so we don't loop
+      pendingInvite = null;
+      return render();
     }
   }catch(e){ /* ignore */ }
+
 
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
     <div class="divider"></div>
@@ -5262,7 +5291,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v210: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v212: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
