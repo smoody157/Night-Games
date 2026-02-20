@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v240</title>
+<title>Game Night • v241</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v240) =====
+/* ===== Robust Navigation Wiring (v241) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v240: tiny navigation stack so Back works on every page =====
+  // ===== v241: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -2384,7 +2384,7 @@ async function renderGameHistory(){
 </script>
 
 <style>
-/* Build 240 cosmetic fixes */
+/* Build 241 cosmetic fixes */
 .logo, img[id*="logo"], img[class*="logo"] {
   object-fit: contain !important;
   padding-bottom: 14px !important;
@@ -2393,7 +2393,7 @@ async function renderGameHistory(){
 }
 </style>
 <style>
-/* BUILD 240 COSMETIC ONLY */
+/* BUILD 241 COSMETIC ONLY */
 
 /* 1) Gentle pulsating green glow (cosmetic only) */
 @keyframes greenPulse {
@@ -2425,7 +2425,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v240</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v241</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2439,11 +2439,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v240</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v241</div>
 </div>
 
 <script>
-const BUILD_ID="v240";
+const BUILD_ID="v241";
 
 
 
@@ -2861,7 +2861,7 @@ const brandTitle = document.getElementById("brandTitle");
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
-// --- Snapshot compatibility helpers (v240 stability) ---
+// --- Snapshot compatibility helpers (v241 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -2918,12 +2918,7 @@ function now(){ return Date.now(); }
 function fmt(ts){ try{ return new Date(ts).toLocaleString(); }catch{ return ""; } }
 
 // ===== Sound system (tiny synth; no external files) =====
-let soundEnabled = true;
-try{
-  const v = localStorage.getItem("gn_sound");
-  if(v === "0") soundEnabled = false;
-}catch{}
-
+let soundEnabled = true; try{ localStorage.setItem("gn_sound","1"); }catch{}
 let __audioCtx = null;
 const MASTER_GAIN = 10.0; // MAX // MAX (may clip) // phone-friendly
 
@@ -3018,14 +3013,14 @@ function playBeep(kind){
 
   const preset = (()=>{
     switch(kind){
-      case "ok":     return {type:"triangle", f:523.25, dur:0.14, gain:0.85}; // C5
-      case "danger": return {type:"sawtooth", f:220.00, dur:0.16, gain:0.85}; // A3
-      case "hit":    return {type:"sine",     f:659.25, dur:0.13, gain:0.84}; // E5
-      case "miss":   return {type:"sine",     f:196.00, dur:0.16, gain:0.85}; // G3
-      case "back":   return {type:"triangle", f:329.63, dur:0.10, gain:0.85}; // E4
-      case "nav":    return {type:"triangle", f:392.00, dur:0.10, gain:0.85}; // G4
-      case "toggle": return {type:"square",   f:784.00, dur:0.09, gain:0.85}; // G5
-      default:       return {type:"triangle", f:440.00, dur:0.10, gain:0.85}; // A4
+      case "ok":     return {type:"triangle", f:523.25, dur:0.14, gain:1.0}; // C5
+      case "danger": return {type:"sawtooth", f:220.00, dur:0.16, gain:1.0}; // A3
+      case "hit":    return {type:"sine",     f:659.25, dur:0.13, gain:1.0}; // E5
+      case "miss":   return {type:"sine",     f:196.00, dur:0.16, gain:1.0}; // G3
+      case "back":   return {type:"triangle", f:329.63, dur:0.10, gain:1.0}; // E4
+      case "nav":    return {type:"triangle", f:392.00, dur:0.10, gain:1.0}; // G4
+      case "toggle": return {type:"square",   f:784.00, dur:0.09, gain:1.0}; // G5
+      default:       return {type:"triangle", f:440.00, dur:0.10, gain:1.0}; // A4
     }
   })();
 
@@ -3035,7 +3030,7 @@ function playBeep(kind){
   o.frequency.setValueAtTime(preset.f, t0);
 
   g.gain.setValueAtTime(0.0001, t0);
-  const g1 = Math.min(0.95, preset.gain * MASTER_GAIN);
+  const g1 = Math.min(1.0, preset.gain * MASTER_GAIN);
   g.gain.exponentialRampToValueAtTime(g1, t0 + 0.015);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + preset.dur);
 
@@ -4365,10 +4360,10 @@ function placeTopbarForAuth(){
 
 
 
-/* ===== v240: Intro announcer (plays on email submit) ===== */
+/* ===== v241: Intro announcer (plays on email submit) ===== */
 function playIntroAnnouncer(){
   try{
-    // v240: intro voice disabled (no announcer audio)
+    // v241: intro voice disabled (no announcer audio)
     return;
     // Don't mark as played until audio actually starts.
     if(sessionStorage.getItem("gn_intro_played")==="1") return;
@@ -4760,7 +4755,7 @@ async function renderGameSetup(){
   setupSelectedEmails = [normEmail(meUser.email)];
   const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
   if(alt) setupSelectedEmails.push(normEmail(alt.email));
-  // NOTE(v240): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
+  // NOTE(v241): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
 
 
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
@@ -5368,7 +5363,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v240: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v241: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
