@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v298</title>
+<title>Game Night • v299</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2085,6 +2085,46 @@ document.addEventListener("click", function(ev){
 })();;
 
 
+
+/* ===== v299 ONLINE STABILITY GUARD =====
+   Prevent crashes when players press HIT before match state has synced in multiplayer.
+   If we're in a room and match is null/undefined, block hit/miss style buttons and show a toast.
+*/
+(function(){
+  try{
+    document.addEventListener("click", function(ev){
+      try{
+        const t = ev.target;
+        if(!t || !t.closest) return;
+        const btn = t.closest("button");
+        if(!btn) return;
+        const id = String(btn.id||"").toLowerCase();
+        if(!id) return;
+
+        const looksLikeDartBtn =
+          id === "hit" || id === "hitbtn" || id === "miss" ||
+          id.startsWith("hit") || id.startsWith("dart") ||
+          id === "single" || id === "double" || id === "triple" ||
+          id === "bull" || id === "bullseye";
+
+        if(!looksLikeDartBtn) return;
+
+        // Only guard when in multiplayer room context
+        const inRoom = !!(window.roomId || window.pendingInvite || window.roomHost === true || window.roomHost === false);
+        if(!inRoom) return;
+
+        const m = (typeof window.match !== "undefined") ? window.match : null;
+        if(!m){
+          toastMsg = "Connecting… please wait for sync.";
+          try{ __goRender(); }catch(_){}
+          ev.preventDefault();
+          ev.stopPropagation();
+        }
+      }catch(_){}
+    }, true);
+  }catch(_){}
+})();
+
 /* v156 detail routing */
 document.addEventListener("click", function(ev){
   const el = ev.target && ev.target.closest ? ev.target.closest("[data-action]") : null;
@@ -2468,7 +2508,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v298</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v299</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2482,11 +2522,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v298</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v299</div>
 </div>
 
 <script>
-const BUILD_ID="v298";
+const BUILD_ID="v299";
 
 
 
@@ -5046,7 +5086,13 @@ if(setupWantedCount === 1){
 // MULTI (2+): create a room + go to waiting room (in-app invites)
 roomHost = true;
 match = null;
-roomId = await createRoom(activeGameId, selectedPlayers.map(p=>p.email));
+try{
+  roomId = await createRoom(activeGameId, selectedPlayers.map(p=>p.email));
+}catch(e){
+  toastMsg = (e && e.message) ? e.message : String(e);
+  __goRender();
+  return;
+}
 // store around format if relevant
 try{
   if(activeGameId==="around"){
