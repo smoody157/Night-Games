@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v282</title>
+<title>Game Night • v280</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2458,36 +2458,6 @@ async function renderGameHistory(){
 }
 </style>
 
-
-<style id="v281_logo_center_lock">
-/* v282: LOGO CENTER LOCK (single source of truth)
-   - defeats any earlier translateX nudges
-   - centers logo consistently on all screens
-*/
-body #loginLogo, body img#loginLogo{
-  display:block !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
-  transform:none !important;
-}
-</style>
-
-
-<style id="v282_logo_center_lock">
-/* v282 LOGO CENTER LOCK (single source of truth)
-   Wins over all earlier #loginLogo rules, including translateX nudges. */
-body #loginLogo,
-body img#loginLogo{
-  display:block !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
-  left:auto !important;
-  right:auto !important;
-  position:static !important;
-  transform:none !important;
-}
-</style>
-
 </head>
 
 <body>
@@ -2619,10 +2589,10 @@ const BUILD_ID="v280";
     }catch(e){}
   }
   window.addEventListener("error", (e)=>{
-    try{ if(!window.__bootComplete){ showBootError(e.message || e.error || e); } }catch(_){};
+    try{ showBootError(e.message || e.error || e); }catch(_){};
   });
   window.addEventListener("unhandledrejection", (e)=>{
-    try{ if(!window.__bootComplete){ showBootError(e.reason || e); } }catch(_){};
+    try{ showBootError(e.reason || e); }catch(_){};
   });
 
   // If nothing renders within 1500ms, force a render attempt (prevents infinite "Loading…")
@@ -5431,13 +5401,12 @@ wireDelegatedClicks();
     setHTML(`<div class="card"><div class="h1">App error</div><div class="sub">${esc(e?.message||String(e))}</div></div>`);
   }finally{
     window.__rendering=false;
-    window.__bootComplete=true;
-if(window.__renderAgain){ window.__renderAgain=false; __goRender(); }
+    if(window.__renderAgain){ window.__renderAgain=false; __goRender(); }
   }
 }
 
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
-try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(!window.__bootComplete){ if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; } else { console.error('runtime error (no UI takeover)', e); } }catch(_){ } }
+try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
 /* ===== v280: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
