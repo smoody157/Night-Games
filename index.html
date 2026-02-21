@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v291</title>
+<title>Game Night • v292</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -281,28 +281,6 @@ input,select{
   font-weight:1000;color:var(--c-cyan);
   position:relative;
 }
-
-
-/* Real PNG avatars (only when data-avatar is set) */
-.avatar[data-avatar="steve"],
-.avatar[data-avatar="william"]{
-  width:24px;
-  height:24px;
-  border-radius:6px;
-  background-size:contain;
-  background-repeat:no-repeat;
-  background-position:center;
-  background-color:transparent;
-  /* keep border consistent with others */
-  border:1px solid rgba(255,255,255,.14);
-  /* subtle badge glow */
-  box-shadow:0 0 14px rgba(34,211,238,.18);
-  /* hide initials for PNG players only */
-  color:transparent;
-  text-shadow:none;
-}
-.avatar[data-avatar="steve"]{ background-image:url("/gethome/Steve.png"); }
-.avatar[data-avatar="william"]{ background-image:url("/gethome/William.png"); }
 .avatar.online{
   border-color:rgba(0,255,0,1);
   box-shadow:0 0 0 rgba(0,0,0,0), 0 0 23.4px rgba(0,128,0,0.4);
@@ -382,7 +360,6 @@ input,select{
 .loginArtSvg::after{
  content:"";
  position:absolute; inset:0;
- z-index:0;
  background:radial-gradient(70% 60% at 50% 45%, rgba(6,8,20,0) 0%, rgba(6,8,20,0) 55%, rgba(6,8,20,.68) 100%);
  pointer-events:none;
 }
@@ -409,9 +386,6 @@ input,select{
     drop-shadow(0 0 30px rgba(200,0,0,0.92))
     drop-shadow(0 0 52px rgba(200,0,0,0.92));
   opacity:.99;
-
-  position:relative;
-  z-index:2;
 }
 
 
@@ -1805,8 +1779,6 @@ header, .header {
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
-
-  text-shadow: 0 0 12px rgba(34,211,238,.22), 0 0 26px rgba(34,211,238,.12);
 }
 .rosterCenter .rosterSub{
   margin-top:6px;
@@ -2496,7 +2468,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v291</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v292</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2510,11 +2482,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v291</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v292</div>
 </div>
 
 <script>
-const BUILD_ID="v291";
+const BUILD_ID="v292";
 
 
 
@@ -4621,14 +4593,6 @@ function initials(name){
   const a=((parts[0] && parts[0][0]) || "").toUpperCase();
   const b=((parts[1] && parts[1][0]) || "").toUpperCase();
   return (a+(b||"")).slice(0,2) || a || "?";
-
-
-function avatarKey(name){
-  const n = String(name||"").trim().toLowerCase();
-  if(n === "steve moody") return "steve";
-  if(n === "bill moody") return "william";
-  return "";
-}
 }
 
 async function renderHome(){
@@ -4682,7 +4646,7 @@ async function renderHome(){
   const roster = players.map(p=>`
     <div class="rosterCard">
       <div class="rosterLeft">
-        <div class="avatar ${isOnline(p.email)?`online`:``} rosterAvatar" data-avatar="${esc(avatarKey(p.name))}">${esc(initials(p.name))}</div>
+        <div class="avatar ${isOnline(p.email)?`online`:``} rosterAvatar">${esc(initials(p.name))}</div>
         ${p.email===meUser.email?`<span class="badge rosterYou">YOU</span>`:""}
       </div>
       <div class="rosterCenter">
