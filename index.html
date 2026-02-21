@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v299</title>
+<title>Game Night • v300</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2086,7 +2086,7 @@ document.addEventListener("click", function(ev){
 
 
 
-/* ===== v299 ONLINE STABILITY GUARD =====
+/* ===== v300 ONLINE STABILITY GUARD =====
    Prevent crashes when players press HIT before match state has synced in multiplayer.
    If we're in a room and match is null/undefined, block hit/miss style buttons and show a toast.
 */
@@ -2508,7 +2508,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v299</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v300</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2522,11 +2522,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v299</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v300</div>
 </div>
 
 <script>
-const BUILD_ID="v299";
+const BUILD_ID="v300";
 
 
 
@@ -5142,7 +5142,7 @@ async function renderRoomWait(){
     const joined = Array.isArray(data.joined)?data.joined:[];
     const declined = Array.isArray(data.declined)?data.declined:[];
     const joinedCount = joined.length;
-    document.getElementById("wrCounts").textContent = `${joinedCount} / ${invited.length} in room`;
+    { const __wr=document.getElementById("wrCounts"); if(__wr) __wr.textContent = `${joinedCount} / ${invited.length} in room`; }
 
     const host = normEmail(data.hostEmail||"");
     const rows = invited.map(e=>{
