@@ -4643,21 +4643,17 @@ async function renderHome(){
     `;
   }).join("");
 
-
-  // === Avatar mapping (v286) ===
-  // Only Steve Moody and Bill Moody get custom PNG avatars right now.
-  // Everyone else keeps initials until you add more PNGs.
-  const __avatarKey = (name)=>{
-    const n = String(name||"").trim().toLowerCase();
-    if(n==="steve moody") return "steve";
-    if(n==="bill moody") return "william"; // William PNG goes beside Bill Moody
-    return "";
-  };
-
-  const roster = players.map(p=>`
+  const roster = players.map(p=>{
+    const n = String(p.name||"").toLowerCase().trim();
+    const avatarKey =
+      (n === "steve moody" || n.includes("steve moody")) ? "steve" :
+      (n === "bill moody" || n.includes("bill moody") || n === "william moody" || n.includes("william moody")) ? "william" :
+      "";
+    const avatarAttr = avatarKey ? ` data-avatar="${avatarKey}"` : "";
+    return `
     <div class="rosterCard">
       <div class="rosterLeft">
-        <div class="avatar ${isOnline(p.email)?`online`:``} rosterAvatar" data-avatar="${esc(__avatarKey(p.name))}">${esc(initials(p.name))}</div>
+        <div class="avatar ${isOnline(p.email)?`online`:``} rosterAvatar"${avatarAttr}><span class="avatarTxt">${esc(initials(p.name))}</span></div>
         ${p.email===meUser.email?`<span class="badge rosterYou">YOU</span>`:""}
       </div>
       <div class="rosterCenter">
@@ -4672,7 +4668,8 @@ async function renderHome(){
         <button class="btn danger removeBtn" data-player-remove="${esc(p.email)}" type="button" ${p.email===meUser.email?`disabled`:``}>Remove</button>
       </div>
     </div>
-  `).join("");
+  `;
+  }).join("");
 
   setHTML(`
   <div class="playerPage">
@@ -5792,69 +5789,58 @@ button.statsBtn, .statsBtn{
 
 
 
-
 <style id="v286_avatar_and_name_glow">
-/* =========================================
-   v286 Avatars + Name Glow (PRO PASS)
-   - Subtle badge-like avatar glow
-   - Player names glow uniformly
-   - PNG avatars only for Steve Moody + Bill Moody (William)
-   ========================================= */
+/* ===============================
+   v286: Avatar PNGs + name glow
+   - Steve avatar next to Steve Moody
+   - William avatar next to Bill Moody
+   - Everyone else keeps initials
+   =============================== */
 
-/* Avatar size tuned to sit next to the name (not huge) */
+/* Subtle, consistent name glow everywhere */
+.nm, .playerName, .player-name, .playerHeader .nm, .rosterCenter .nm{
+  text-shadow:
+    0 0 10px rgba(34,211,238,.26),
+    0 0 18px rgba(236,72,153,.14);
+}
+
+/* Home roster avatar sizing (do NOT change all .avatar usage) */
 .rosterAvatar{
   width:24px !important;
   height:24px !important;
   border-radius:8px !important;
-  font-size:13px !important;
-  line-height:24px !important;
   display:flex !important;
   align-items:center !important;
   justify-content:center !important;
+  overflow:hidden !important;
+}
 
-  /* Subtle badge edge + glow */
-  border:1px solid rgba(255,255,255,.14) !important;
-  box-shadow:
-    0 0 10px rgba(34,211,238,.22),
-    0 0 18px rgba(236,72,153,.10) !important;
-
-  /* Image support */
-  background-size:contain !important;
+/* When a PNG avatar is present, use it and hide initials */
+.rosterAvatar[data-avatar]{
+  background-color: transparent !important;
   background-repeat:no-repeat !important;
   background-position:center !important;
-}
+  background-size:contain !important;
 
-/* When a PNG avatar is present, show the image and hide the initials */
-.rosterAvatar[data-avatar="steve"],
-.rosterAvatar[data-avatar="william"]{
-  color:transparent !important;
-  text-shadow:none !important;
-  background-color:transparent !important;
-  border-color: rgba(255,255,255,.18) !important;
+  /* light badge edge + tiny glow */
+  border:1px solid rgba(255,255,255,.14) !important;
   box-shadow:
-    0 0 12px rgba(34,211,238,.26),
-    0 0 22px rgba(236,72,153,.14) !important;
+    0 0 10px rgba(34,211,238,.18),
+    0 0 16px rgba(236,72,153,.10) !important;
+  filter: drop-shadow(0 0 10px rgba(34,211,238,.12));
 }
+.rosterAvatar[data-avatar] .avatarTxt{ display:none !important; }
 
-/* ✅ Update these paths to match your repo if needed */
-.rosterAvatar[data-avatar="steve"]{
-  background-image:url("/gethome/steve.png") !important;
-}
-.rosterAvatar[data-avatar="william"]{
-  background-image:url("/gethome/william.png") !important;
-}
+/* Update these paths if your repo uses different filenames/casing */
+.rosterAvatar[data-avatar="steve"]{ background-image:url("/gethome/Steve.png") !important; }
+.rosterAvatar[data-avatar="william"]{ background-image:url("/gethome/William.png") !important; }
 
-/* Uniform name glow everywhere player names appear */
-.nm,
-.playerName, .player-name,
-.playerHeader .nm{
-  text-shadow:
-    0 0 10px rgba(34,211,238,.24),
-    0 0 16px rgba(236,72,153,.12) !important;
-}
-
-/* Slightly reduce the default avatar blockiness (keep your existing online dot) */
-.avatar.rosterAvatar{
-  border-radius:8px !important;
+/* Login logo: keep centered & prevent drift (no style stripping) */
+body #loginLogo, body img#loginLogo{
+  display:block !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  transform:none !important;
+  object-fit:contain !important;
 }
 </style>
