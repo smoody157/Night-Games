@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v300</title>
+<title>Game Night • v301</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2086,7 +2086,7 @@ document.addEventListener("click", function(ev){
 
 
 
-/* ===== v300 ONLINE STABILITY GUARD =====
+/* ===== v301 ONLINE STABILITY GUARD =====
    Prevent crashes when players press HIT before match state has synced in multiplayer.
    If we're in a room and match is null/undefined, block hit/miss style buttons and show a toast.
 */
@@ -2508,7 +2508,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v300</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v301</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2522,11 +2522,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v300</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v301</div>
 </div>
 
 <script>
-const BUILD_ID="v300";
+const BUILD_ID="v301";
 
 
 
@@ -3231,8 +3231,22 @@ async function resolveDataBase(){
 async function getPlayers(){
   const base = await resolveDataBase();
   const snap = await getDocs(query(collection(base, C_PLAYERS), orderBy("name")));
-  return snap.docs.map(d=>d.data());
+  const byEmail = new Map();
+  for(const d of (snap.docs||[])){
+    const raw = d.data()||{};
+    const em = normEmail(raw.email||raw.Email||"");
+    if(!em) continue;
+    const normalized = normalizePlayerData(raw, em);
+    // prefer canonical doc id == email, otherwise keep first
+    const existing = byEmail.get(em);
+    const isCanonical = (String(d.id||"") === em);
+    if(!existing){ byEmail.set(em, { ...normalized, __id:d.id, __canonical:isCanonical }); continue; }
+    if(isCanonical && !existing.__canonical){ byEmail.set(em, { ...normalized, __id:d.id, __canonical:true }); }
+  }
+  // return clean list (strip internals)
+  return Array.from(byEmail.values()).map(p=>({ name:p.name, Name:p.Name, email:p.email, Email:p.Email }));
 }
+
 async function upsertPlayer(name,email){
   const base = await resolveDataBase();
   const e = normEmail(email);
@@ -3264,6 +3278,7 @@ async function signInEmail(email){
       // also self-heal: write back a canonical email-id doc so future logins are consistent
       try{
         await setDoc(doc(base, C_PLAYERS, e), { name:data2.name, Name:data2.name, email:e, Email:e, migratedFrom: legacyId, updatedAt:serverTimestamp() }, {merge:true});
+        try{ if(legacyId && legacyId!==e){ await deleteDoc(doc(base, C_PLAYERS, legacyId)); } }catch(_e){}
       }catch(_e){}
       return data2;
     }
@@ -3279,6 +3294,7 @@ async function signInEmail(email){
       const data = normalizePlayerData(d.data(), e);
       try{
         await setDoc(doc(base, C_PLAYERS, e), { ...d.data(), name:data.name, Name:data.name, email:e, Email:e, migratedFrom:d.id, updatedAt:serverTimestamp() }, {merge:true});
+        try{ if(d.id && d.id!==e){ await deleteDoc(doc(base, C_PLAYERS, d.id)); } }catch(_e){}
       }catch(_e){}
       return data;
     }
@@ -3291,6 +3307,7 @@ async function signInEmail(email){
       const data = normalizePlayerData(d.data(), e);
       try{
         await setDoc(doc(base, C_PLAYERS, e), { ...d.data(), name:data.name, Name:data.name, email:e, Email:e, migratedFrom:d.id, updatedAt:serverTimestamp() }, {merge:true});
+      try{ if(d.id && d.id!==e){ await deleteDoc(doc(base, C_PLAYERS, d.id)); } }catch(_e){}
       }catch(_e){}
       return data;
     }
@@ -3549,14 +3566,37 @@ async function deleteHistoryForPlayer(email){
   alert("History delete is disabled in this build to prevent accidental data loss.");
 }
 async function deletePlayerAndData(email){
+  const base = await resolveDataBase();
   const e = normEmail(email);
-  const batch = writeBatch(db);
-  batch.delete(doc(ROOT_DOC, C_PLAYERS, e));
-  batch.delete(doc(ROOT_DOC, C_STATS, e));
-  batch.delete(doc(ROOT_DOC, C_PRES, e));
+  if(!e) return;
+  // delete canonical docs
+  const batch = writeBatch(base);
+  batch.delete(doc(base, C_PLAYERS, e));
+  batch.delete(doc(base, C_STATS, e));
+  batch.delete(doc(base, C_PRES, e));
   await batch.commit();
-  alert("Player deleted. (History entries remain.)");
+  // also remove any legacy/duplicate player docs that store the same email in fields
+  try{
+    const q1 = query(collection(base, C_PLAYERS), where("email","==",e));
+    const s1 = await getDocs(q1);
+    for(const d of (s1.docs||[])){
+      if(String(d.id||"")!==e){
+        try{ const b=writeBatch(base); b.delete(doc(base, C_PLAYERS, d.id)); await b.commit(); }catch(_e){}
+      }
+    }
+  }catch(_e){}
+  try{
+    const q2 = query(collection(base, C_PLAYERS), where("Email","==",e));
+    const s2 = await getDocs(q2);
+    for(const d of (s2.docs||[])){
+      if(String(d.id||"")!==e){
+        try{ const b=writeBatch(base); b.delete(doc(base, C_PLAYERS, d.id)); await b.commit(); }catch(_e){}
+      }
+    }
+  }catch(_e){}
+  alert("Player deleted.");
 }
+
 
 /* ========= UI State ========= */
 let toastMsg = "";
