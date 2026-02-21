@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v303</title>
+<title>Game Night • v304</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2086,9 +2086,8 @@ document.addEventListener("click", function(ev){
 
 
 
-/* ===== v303 ONLINE STABILITY GUARD =====
-   Prevent crashes when players press HIT before match state has synced in multiplayer.
-   If we're in a room and match is null/undefined, block hit/miss style buttons and show a toast.
+/* ===== v304 ONLINE STABILITY GUARD =====
+   Only block HIT/MISS buttons BEFORE match sync (lobby/waiting room). Do NOT block during active gameplay.
 */
 (function(){
   try{
@@ -2109,14 +2108,17 @@ document.addEventListener("click", function(ev){
 
         if(!looksLikeDartBtn) return;
 
-        // Only guard when in multiplayer room context
         const inRoom = !!(window.roomId || window.pendingInvite || window.roomHost === true || window.roomHost === false);
         if(!inRoom) return;
+
+        // Only guard pre-game screens
+        const scr = String(window.screen||"").toLowerCase();
+        if(scr && scr !== "waiting" && scr !== "wait" && scr !== "room" && scr !== "lobby" && scr !== "waitingroom") return;
 
         const m = (typeof window.match !== "undefined") ? window.match : null;
         if(!m){
           toastMsg = "Connecting… please wait for sync.";
-          try{ __goRender(); }catch(_){}
+          try{ __goRender(); }catch(_){ try{ render(); }catch(__){} }
           ev.preventDefault();
           ev.stopPropagation();
         }
@@ -2124,7 +2126,6 @@ document.addEventListener("click", function(ev){
     }, true);
   }catch(_){}
 })();
-
 /* v156 detail routing */
 document.addEventListener("click", function(ev){
   const el = ev.target && ev.target.closest ? ev.target.closest("[data-action]") : null;
@@ -2508,7 +2509,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v303</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v304</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2522,11 +2523,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v303</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v304</div>
 </div>
 
 <script>
-const BUILD_ID="v303";
+const BUILD_ID="v304";
 
 
 
@@ -3287,7 +3288,7 @@ async function signInEmail(email){
   // Legacy: some older builds used auto IDs and stored the email in a field.
   // Try to find by email field and migrate to canonical doc id.
   try{
-    const q1 = query(collection(base, C_PLAYERS), where("email","==",e), limit(1));
+    const q1 = query(collection(base, C_PLAYERS), where("email","==",e), limit(10));
     const s1 = await getDocs(q1);
     if(s1 && s1.docs && s1.docs.length){
       const d = s1.docs[0];
@@ -3300,7 +3301,7 @@ async function signInEmail(email){
     }
   }catch(_e){}
   try{
-    const q2 = query(collection(base, C_PLAYERS), where("Email","==",e), limit(1));
+    const q2 = query(collection(base, C_PLAYERS), where("Email","==",e), limit(10));
     const s2 = await getDocs(q2);
     if(s2 && s2.docs && s2.docs.length){
       const d = s2.docs[0];
@@ -3318,6 +3319,13 @@ async function signInEmail(email){
 async function signUpEmail(name,email){
   const base = await resolveDataBase();
   const e = normEmail(email);
+  try{
+    const __snap = await getDoc(doc(base, C_PLAYERS, e));
+    if(docExists(__snap)){
+      const __d = normalizePlayerData(__snap.data(), e);
+      return { name: (__d.name||__d.Name||name||""), email:e };
+    }
+  }catch(_e){}
   // Don't create duplicates; if the player exists under any legacy scheme, reuse it.
   const existing = await signInEmail(e);
   if(existing){
@@ -3569,8 +3577,10 @@ async function deletePlayerAndData(email){
   const base = await resolveDataBase();
   const e = normEmail(email);
   if(!e) return false;
+
+  try{ await ensureAuthReady({timeoutMs:12000,retries:2}); }catch(_e){}
+
   try{
-    // delete canonical docs
     const batch = writeBatch(base);
     batch.delete(doc(base, C_PLAYERS, e));
     batch.delete(doc(base, C_STATS, e));
@@ -3580,32 +3590,22 @@ async function deletePlayerAndData(email){
     alert((err && err.message) ? err.message : String(err));
     return false;
   }
-  // delete canonical docs
-  const batch = writeBatch(base);
-  batch.delete(doc(base, C_PLAYERS, e));
-  batch.delete(doc(base, C_STATS, e));
-  batch.delete(doc(base, C_PRES, e));
-  await batch.commit();
-  // also remove any legacy/duplicate player docs that store the same email in fields
-  try{
-    const q1 = query(collection(base, C_PLAYERS), where("email","==",e));
-    const s1 = await getDocs(q1);
-    for(const d of (s1.docs||[])){
-      if(String(d.id||"")!==e){
+
+  async function __deleteDupDocs(whereField){
+    try{
+      const q = query(collection(base, C_PLAYERS), where(whereField,"==",e), limit(25));
+      const s = await getDocs(q);
+      for(const d of (s.docs||[])){
+        if(!d || !d.id) continue;
+        if(String(d.id)===e) continue;
         try{ const b=writeBatch(base); b.delete(doc(base, C_PLAYERS, d.id)); await b.commit(); }catch(_e){}
       }
-    }
-  }catch(_e){}
-  try{
-    const q2 = query(collection(base, C_PLAYERS), where("Email","==",e));
-    const s2 = await getDocs(q2);
-    for(const d of (s2.docs||[])){
-      if(String(d.id||"")!==e){
-        try{ const b=writeBatch(base); b.delete(doc(base, C_PLAYERS, d.id)); await b.commit(); }catch(_e){}
-      }
-    }
-  }catch(_e){}
-  toastMsg = "Player deleted."; 
+    }catch(_e){}
+  }
+  await __deleteDupDocs("email");
+  await __deleteDupDocs("Email");
+
+  toastMsg = "Player deleted.";
   try{ __goRender(); }catch(_){ try{ render(); }catch(__){} }
   return true;
 }
