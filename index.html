@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v286</title>
+<title>Game Night • v287</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2458,6 +2458,57 @@ async function renderGameHistory(){
 }
 </style>
 
+
+<style id="v287_avatar_name_glow">
+/* ===== v287: Player name glow + roster PNG avatars ===== */
+
+/* Subtle, consistent glow on player names everywhere */
+.nm, .playerName, .player-name, .playerHeader .nm{
+  text-shadow:
+    0 0 10px rgba(34,211,238,.22),
+    0 0 18px rgba(236,72,153,.14),
+    0 0 26px rgba(0,0,0,.45);
+}
+
+/* Roster avatar: small badge size */
+.rosterAvatar{
+  width:24px !important;
+  height:24px !important;
+  border-radius:6px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  box-shadow:
+    0 0 14px rgba(34,211,238,.16),
+    0 0 18px rgba(236,72,153,.10);
+}
+
+/* When PNG is present, use it and hide initials */
+.rosterAvatar.hasPng{
+  background: transparent !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  color: transparent !important;
+  text-shadow:none !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  box-shadow:
+    0 0 16px rgba(34,211,238,.22),
+    0 0 22px rgba(236,72,153,.14),
+    inset 0 0 0 1px rgba(255,255,255,.06) !important;
+}
+
+/* Bind the two known avatars (paths can be adjusted to your repo) */
+.rosterAvatar.hasPng[data-avatar="steve"]{
+  background-image:url("/gethome/Steve.png") !important;
+}
+.rosterAvatar.hasPng[data-avatar="william"]{
+  background-image:url("/gethome/William.png") !important;
+}
+</style>
+
 </head>
 
 <body>
@@ -2468,7 +2519,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v286</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v287</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2482,11 +2533,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v286</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v287</div>
 </div>
 
 <script>
-const BUILD_ID="v286";
+const BUILD_ID="v287";
 
 
 
@@ -4491,12 +4542,12 @@ async function renderAuth(){
       </div>
     </div>
 
-    <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:hidden;">
+    <div class="card" style="padding:10px 10px 18px 10px; position:relative; overflow:visible;">
       <video id="loginIntroVideo" playsinline muted autoplay loop
         style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:translateY(-58px) scale(1.10);transform-origin:center top;">
       </video>
       <img id="landingLogoOverlay" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo"
-        style="position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55));background:rgba(6,8,20,.92);padding:10px 12px;border-radius:18px;" />
+        style="position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 10px 22px rgba(0,0,0,.55));background:rgba(6,8,20,.88);padding:10px 12px;border-radius:18px;" />
 
     </div>
 `;
@@ -4595,6 +4646,28 @@ function initials(name){
   return (a+(b||"")).slice(0,2) || a || "?";
 }
 
+function avatarKeyForName(name){
+  const n=String(name||"").trim().toLowerCase();
+  if(n==="steve moody") return "steve";
+  if(n==="bill moody")  return "william";
+  return "";
+}
+function applyRosterAvatars(){
+  try{
+    document.querySelectorAll(".rosterCard").forEach(card=>{
+      const nm=card.querySelector(".nm");
+      const av=card.querySelector(".rosterAvatar");
+      if(!nm || !av) return;
+      const key=avatarKeyForName(nm.textContent);
+      if(key){
+        av.dataset.avatar = key;
+        av.classList.add("hasPng");
+        av.textContent = "";
+      }
+    });
+  }catch(e){}
+}
+
 async function renderHome(){
   __landingSetMode(false);
 
@@ -4643,17 +4716,10 @@ async function renderHome(){
     `;
   }).join("");
 
-  const roster = players.map(p=>{
-    const n = String(p.name||"").toLowerCase().trim();
-    const avatarKey =
-      (n === "steve moody" || n.includes("steve moody")) ? "steve" :
-      (n === "bill moody" || n.includes("bill moody") || n === "william moody" || n.includes("william moody")) ? "william" :
-      "";
-    const avatarAttr = avatarKey ? ` data-avatar="${avatarKey}"` : "";
-    return `
+  const roster = players.map(p=>`
     <div class="rosterCard">
       <div class="rosterLeft">
-        <div class="avatar ${isOnline(p.email)?`online`:``} rosterAvatar"${avatarAttr}><span class="avatarTxt">${esc(initials(p.name))}</span></div>
+        <div class="avatar ${isOnline(p.email)?`online`:``} rosterAvatar">${esc(initials(p.name))}</div>
         ${p.email===meUser.email?`<span class="badge rosterYou">YOU</span>`:""}
       </div>
       <div class="rosterCenter">
@@ -4668,8 +4734,7 @@ async function renderHome(){
         <button class="btn danger removeBtn" data-player-remove="${esc(p.email)}" type="button" ${p.email===meUser.email?`disabled`:``}>Remove</button>
       </div>
     </div>
-  `;
-  }).join("");
+  `).join("");
 
   setHTML(`
   <div class="playerPage">
@@ -4703,6 +4768,8 @@ async function renderHome(){
     </div>
 
   `);
+  applyRosterAvatars();
+
    // ===== Home avatar (only for signed-in user) =====
   const _s=document.getElementById("statsBtn");
   if(_s) _s.onclick = (e)=>{ if(e) e.preventDefault(); activePlayerEmail = meUser.email; screen="stats"; __goRender(); };
@@ -5787,60 +5854,3 @@ button.statsBtn, .statsBtn{
 </style>
 
 
-
-
-<style id="v286_avatar_and_name_glow">
-/* ===============================
-   v286: Avatar PNGs + name glow
-   - Steve avatar next to Steve Moody
-   - William avatar next to Bill Moody
-   - Everyone else keeps initials
-   =============================== */
-
-/* Subtle, consistent name glow everywhere */
-.nm, .playerName, .player-name, .playerHeader .nm, .rosterCenter .nm{
-  text-shadow:
-    0 0 10px rgba(34,211,238,.26),
-    0 0 18px rgba(236,72,153,.14);
-}
-
-/* Home roster avatar sizing (do NOT change all .avatar usage) */
-.rosterAvatar{
-  width:24px !important;
-  height:24px !important;
-  border-radius:8px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  overflow:hidden !important;
-}
-
-/* When a PNG avatar is present, use it and hide initials */
-.rosterAvatar[data-avatar]{
-  background-color: transparent !important;
-  background-repeat:no-repeat !important;
-  background-position:center !important;
-  background-size:contain !important;
-
-  /* light badge edge + tiny glow */
-  border:1px solid rgba(255,255,255,.14) !important;
-  box-shadow:
-    0 0 10px rgba(34,211,238,.18),
-    0 0 16px rgba(236,72,153,.10) !important;
-  filter: drop-shadow(0 0 10px rgba(34,211,238,.12));
-}
-.rosterAvatar[data-avatar] .avatarTxt{ display:none !important; }
-
-/* Update these paths if your repo uses different filenames/casing */
-.rosterAvatar[data-avatar="steve"]{ background-image:url("/gethome/Steve.png") !important; }
-.rosterAvatar[data-avatar="william"]{ background-image:url("/gethome/William.png") !important; }
-
-/* Login logo: keep centered & prevent drift (no style stripping) */
-body #loginLogo, body img#loginLogo{
-  display:block !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
-  transform:none !important;
-  object-fit:contain !important;
-}
-</style>
