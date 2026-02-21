@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v287</title>
+<title>Game Night • v285</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2459,53 +2459,54 @@ async function renderGameHistory(){
 </style>
 
 
-<style id="v287_avatar_name_glow">
-/* ===== v287: Player name glow + roster PNG avatars ===== */
+<style id="patch_v285_logo_avatars_names">
+/* ===== PATCH v285 (surgical) ===== */
 
-/* Subtle, consistent glow on player names everywhere */
-.nm, .playerName, .player-name, .playerHeader .nm{
-  text-shadow:
-    0 0 10px rgba(34,211,238,.22),
-    0 0 18px rgba(236,72,153,.14),
-    0 0 26px rgba(0,0,0,.45);
+/* Landing logo overlay was getting "melted" by the loginArtSvg ::after mask (it sits on top of content).
+   Put the art mask behind the video/logo, and bring the logo above it. */
+.loginArtSvg::after{ z-index: 1 !important; }
+.loginArtSvg > video,
+.loginArtSvg > img{
+  position: relative !important;
+  z-index: 2 !important;
 }
 
-/* Roster avatar: small badge size */
+/* Make sure the overlay logo never gets clipped by glow/masks */
+#landingLogoOverlay{
+  z-index: 3 !important;
+  image-rendering: auto;
+}
+
+/* Roster avatars: keep initials by default; only swap to PNG for players that have a data-avatar key */
 .rosterAvatar{
   width:24px !important;
   height:24px !important;
-  border-radius:6px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  font-weight:1000 !important;
-  line-height:1 !important;
-  box-shadow:
-    0 0 14px rgba(34,211,238,.16),
-    0 0 18px rgba(236,72,153,.10);
+  border-radius:8px !important;
+  background-position:center !important;
+  background-repeat:no-repeat !important;
+  background-size:contain !important;
 }
 
-/* When PNG is present, use it and hide initials */
-.rosterAvatar.hasPng{
-  background: transparent !important;
-  border: 1px solid rgba(255,255,255,.10) !important;
+/* Subtle badge glow (not too much) */
+.rosterAvatar[data-avatar]{
+  box-shadow: 0 0 10px rgba(34,211,238,.22), 0 0 16px rgba(236,72,153,.16) !important;
   color: transparent !important;
-  text-shadow:none !important;
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-  box-shadow:
-    0 0 16px rgba(34,211,238,.22),
-    0 0 22px rgba(236,72,153,.14),
-    inset 0 0 0 1px rgba(255,255,255,.06) !important;
+  text-shadow: none !important;
 }
 
-/* Bind the two known avatars (paths can be adjusted to your repo) */
-.rosterAvatar.hasPng[data-avatar="steve"]{
-  background-image:url("/gethome/Steve.png") !important;
+/* Map avatar keys to your repo images (update filenames if yours differ) */
+.rosterAvatar[data-avatar="steve"]{
+  background-image: url("/gethome/Steve.png") !important;
 }
-.rosterAvatar.hasPng[data-avatar="william"]{
-  background-image:url("/gethome/William.png") !important;
+.rosterAvatar[data-avatar="william"]{
+  background-image: url("/gethome/William.png") !important;
+}
+
+/* Player names: subtle uniform glow everywhere they appear */
+.nm, .playerName, .player-name, .playerHeader .nm{
+  text-shadow:
+    0 0 10px rgba(34,211,238,.18),
+    0 0 14px rgba(236,72,153,.14) !important;
 }
 </style>
 
@@ -2519,7 +2520,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v287</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v285</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2533,11 +2534,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v287</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v285</div>
 </div>
 
 <script>
-const BUILD_ID="v287";
+const BUILD_ID="v285";
 
 
 
@@ -4542,12 +4543,12 @@ async function renderAuth(){
       </div>
     </div>
 
-    <div class="card" style="padding:10px 10px 18px 10px; position:relative; overflow:visible;">
+    <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:hidden;">
       <video id="loginIntroVideo" playsinline muted autoplay loop
         style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:translateY(-58px) scale(1.10);transform-origin:center top;">
       </video>
       <img id="landingLogoOverlay" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo"
-        style="position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 10px 22px rgba(0,0,0,.55));background:rgba(6,8,20,.88);padding:10px 12px;border-radius:18px;" />
+        style="position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55));background:rgba(6,8,20,.92);padding:10px 12px;border-radius:18px;" />
 
     </div>
 `;
@@ -4646,27 +4647,16 @@ function initials(name){
   return (a+(b||"")).slice(0,2) || a || "?";
 }
 
-function avatarKeyForName(name){
-  const n=String(name||"").trim().toLowerCase();
-  if(n==="steve moody") return "steve";
-  if(n==="bill moody")  return "william";
+function avatarKey(name){
+  const n = String(name||"").trim().toLowerCase();
+  // Requested mapping:
+  // Steve PNG next to "Steve Moody"
+  // William PNG next to "Bill Moody"
+  if(n === "steve moody") return "steve";
+  if(n === "bill moody") return "william";
   return "";
 }
-function applyRosterAvatars(){
-  try{
-    document.querySelectorAll(".rosterCard").forEach(card=>{
-      const nm=card.querySelector(".nm");
-      const av=card.querySelector(".rosterAvatar");
-      if(!nm || !av) return;
-      const key=avatarKeyForName(nm.textContent);
-      if(key){
-        av.dataset.avatar = key;
-        av.classList.add("hasPng");
-        av.textContent = "";
-      }
-    });
-  }catch(e){}
-}
+
 
 async function renderHome(){
   __landingSetMode(false);
@@ -4719,7 +4709,7 @@ async function renderHome(){
   const roster = players.map(p=>`
     <div class="rosterCard">
       <div class="rosterLeft">
-        <div class="avatar ${isOnline(p.email)?`online`:``} rosterAvatar">${esc(initials(p.name))}</div>
+        <div class="avatar ${isOnline(p.email)?`online`:``} rosterAvatar" ${avatarKey(p.name)?`data-avatar="${avatarKey(p.name)}"`:""}>${esc(initials(p.name))}</div>
         ${p.email===meUser.email?`<span class="badge rosterYou">YOU</span>`:""}
       </div>
       <div class="rosterCenter">
@@ -4768,8 +4758,6 @@ async function renderHome(){
     </div>
 
   `);
-  applyRosterAvatars();
-
    // ===== Home avatar (only for signed-in user) =====
   const _s=document.getElementById("statsBtn");
   if(_s) _s.onclick = (e)=>{ if(e) e.preventDefault(); activePlayerEmail = meUser.email; screen="stats"; __goRender(); };
