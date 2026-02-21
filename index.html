@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v294</title>
+<title>Game Night • v295</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2468,7 +2468,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v294</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v295</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2482,11 +2482,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v294</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v295</div>
 </div>
 
 <script>
-const BUILD_ID="v294";
+const BUILD_ID="v295";
 
 
 
@@ -3915,14 +3915,37 @@ const ShanghaiGame=(()=>{
     try{ animateTurnName("shanghai", ctx.match.players[ctx.match.turnIndex].name); }catch{}
     function onHit(h){
       const m=ctx.match;
-      if(m.finished) return;
-      pushSnap(m);
-      addThrow(m,h);
-      render();
-      // sync multiplayer
-      if(roomId) saveMatchState(roomId, m).catch(()=>{});
-      if(m.finished){
-        saveFinish(ctx).catch(()=>{});
+      try{
+        if(!m || m.finished) return;
+
+        // Multiplayer safety: sometimes matchData arrives without the full grid object.
+        // Rebuild missing grid cells on-demand so the first throw never hard-crashes the app.
+        m.snaps = m.snaps || [];
+        m.grid = m.grid || {};
+        try{
+          (m.players||[]).forEach(p=>{
+            if(!p || !p.email) return;
+            if(!m.grid[p.email]) m.grid[p.email] = {};
+            TARGETS.forEach(t=>{
+              const k = String(t);
+              if(!m.grid[p.email][k]) m.grid[p.email][k] = {throws:[], points:0};
+            });
+          });
+        }catch(_e){}
+
+        pushSnap(m);
+        addThrow(m,h);
+        render();
+
+        // sync multiplayer (best-effort; never crash UI)
+        if(roomId) saveMatchState(roomId, m).catch(()=>{});
+        if(m.finished){
+          saveFinish(ctx).catch(()=>{});
+        }
+      }catch(e){
+        console.error("onHit failed", e);
+        try{ toastMsg = "Startup error: " + (e?.message || String(e)); }catch(_){}
+        try{ render(); }catch(_){}
       }
     }
     document.getElementById("hitT").onclick=()=>onHit("T");
@@ -4491,12 +4514,12 @@ async function renderAuth(){
       </div>
     </div>
 
-    <div class="card" style="padding:10px 10px 26px 10px; position:relative; overflow:visible;">
+    <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:hidden;">
       <video id="loginIntroVideo" playsinline muted autoplay loop
         style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:translateY(-58px) scale(1.10);transform-origin:center top;">
       </video>
       <img id="landingLogoOverlay" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo"
-        style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55));background:rgba(6,8,20,.92);padding:10px 12px;border-radius:18px;" />
+        style="position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55));background:rgba(6,8,20,.92);padding:10px 12px;border-radius:18px;" />
 
     </div>
 `;
