@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v280</title>
+<title>Game Night • v283</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1911,7 +1911,7 @@ try{
   if(last) syncDown(last);
 }catch(e){}
 
-/* ===== Robust Navigation Wiring (v280) =====
+/* ===== Robust Navigation Wiring (v283) =====
    Prevent dead buttons by routing via common data-* attributes (delegated).
    This avoids relying on per-render .onclick binding.
 */
@@ -1934,7 +1934,7 @@ try{
     }catch(e){}
   }
   
-  // ===== v280: tiny navigation stack so Back works on every page =====
+  // ===== v283: tiny navigation stack so Back works on every page =====
   if(!window.__navStack) window.__navStack = [];
   function pushScreen(next){
     try{
@@ -2416,8 +2416,8 @@ async function renderGameHistory(){
 }
 </style>
 
-<style id="v280_logo_and_stats_lock">
-/* v280: LOGO lock — true center, no drift, no transforms */
+<style id="v283_logo_and_stats_lock">
+/* v283: LOGO lock — true center, no drift, no transforms */
 #loginLogo, img#loginLogo{
   display:block !important;
   margin-left:auto !important;
@@ -2435,7 +2435,7 @@ async function renderGameHistory(){
   align-items:center !important;
 }
 
-/* v280: Player Stats (games list) — keep long titles from pushing the Open button */
+/* v283: Player Stats (games list) — keep long titles from pushing the Open button */
 .statsGames .gameCard .gameHead{
   align-items:flex-start !important;
 }
@@ -2457,6 +2457,27 @@ async function renderGameHistory(){
   align-self:flex-start !important;
 }
 </style>
+<style id="v283_login_logo_blend_fix">
+/* v283 login-only logo blend fix: remove any “canvas/box” behind transparent PNG */
+body.authMode #loginLogoWrap,
+body.authMode .brandLogoWrap,
+body.authMode .loginLogoWrap,
+body.authMode .logoWrap,
+body.authMode .logoContainer,
+body.authMode .loginLogoContainer{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: visible !important;
+}
+body.authMode #loginLogo,
+body.authMode img#loginLogo{
+  background: transparent !important;
+}
+</style>
+
 
 </head>
 
@@ -2468,7 +2489,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v280</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v283</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2482,11 +2503,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v280</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v283</div>
 </div>
 
 <script>
-const BUILD_ID="v280";
+const BUILD_ID="v283";
 
 
 
@@ -2904,7 +2925,7 @@ const brandTitle = document.getElementById("brandTitle");
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function normEmail(e){ return String(e==null?"":e).trim().toLowerCase(); }
 
-// --- Snapshot compatibility helpers (v280 stability) ---
+// --- Snapshot compatibility helpers (v283 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -4403,10 +4424,10 @@ function placeTopbarForAuth(){
 
 
 
-/* ===== v280: Intro announcer (plays on email submit) ===== */
+/* ===== v283: Intro announcer (plays on email submit) ===== */
 function playIntroAnnouncer(){
   try{
-    // v280: intro voice disabled (no announcer audio)
+    // v283: intro voice disabled (no announcer audio)
     return;
     // Don't mark as played until audio actually starts.
     if(sessionStorage.getItem("gn_intro_played")==="1") return;
@@ -4798,7 +4819,7 @@ async function renderGameSetup(){
   setupSelectedEmails = [normEmail(meUser.email)];
   const alt = setupPlayersAll.find(p=>normEmail(p.email)!==normEmail(meUser.email));
   if(alt) setupSelectedEmails.push(normEmail(alt.email));
-  // NOTE(v280): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
+  // NOTE(v283): Removed auto-join from game setup. Invites must be accepted via Join button on Home.
 
 
   const aroundModeUI = (activeGameId==="around" && g.active) ? `
@@ -5408,7 +5429,7 @@ wireDelegatedClicks();
 try{ bindDelegatedButtons(); }catch(e){ console.error(e); }
 try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementById("app"); if(el) el.innerHTML=`<div class="card"><div class="h1">Startup error</div><div class="sub">${e?.message||String(e)}</div></div>`; }catch(_){ } }
 
-/* ===== v280: UNIVERSAL BUTTON HOOKUP (delegated) =====
+/* ===== v283: UNIVERSAL BUTTON HOOKUP (delegated) =====
    Purpose: ensure any re-rendered buttons remain clickable.
    No UI/layout changes. Mechanics only.
 */
