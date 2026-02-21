@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v301</title>
+<title>Game Night • v303</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2086,7 +2086,7 @@ document.addEventListener("click", function(ev){
 
 
 
-/* ===== v301 ONLINE STABILITY GUARD =====
+/* ===== v303 ONLINE STABILITY GUARD =====
    Prevent crashes when players press HIT before match state has synced in multiplayer.
    If we're in a room and match is null/undefined, block hit/miss style buttons and show a toast.
 */
@@ -2508,7 +2508,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v301</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v303</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2522,11 +2522,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v301</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v303</div>
 </div>
 
 <script>
-const BUILD_ID="v301";
+const BUILD_ID="v303";
 
 
 
@@ -3396,7 +3396,7 @@ async function createRoom(gameId, playersEmails){
   const base = await resolveDataBase();
   const id = uuid();
   const host = normEmail(meUser.email);
-  const invited = playersEmails.map(normEmail);
+  const invited = Array.from(new Set((playersEmails||[]).map(normEmail).filter(Boolean)));
   // Host is always considered joined immediately.
   await setDoc(doc(base, C_ROOMS, id), {
     gameId,
@@ -3568,7 +3568,18 @@ async function deleteHistoryForPlayer(email){
 async function deletePlayerAndData(email){
   const base = await resolveDataBase();
   const e = normEmail(email);
-  if(!e) return;
+  if(!e) return false;
+  try{
+    // delete canonical docs
+    const batch = writeBatch(base);
+    batch.delete(doc(base, C_PLAYERS, e));
+    batch.delete(doc(base, C_STATS, e));
+    batch.delete(doc(base, C_PRES, e));
+    await batch.commit();
+  }catch(err){
+    alert((err && err.message) ? err.message : String(err));
+    return false;
+  }
   // delete canonical docs
   const batch = writeBatch(base);
   batch.delete(doc(base, C_PLAYERS, e));
@@ -3594,7 +3605,9 @@ async function deletePlayerAndData(email){
       }
     }
   }catch(_e){}
-  alert("Player deleted.");
+  toastMsg = "Player deleted."; 
+  try{ __goRender(); }catch(_){ try{ render(); }catch(__){} }
+  return true;
 }
 
 
@@ -4640,6 +4653,24 @@ setHTML(html);
     const e = normEmail(document.getElementById("inEmail").value);
     if(!e){ toastMsg="Enter a valid email."; return render(); }
     playIntroAnnouncer();
+  function __cacheProfile(email,name){
+    try{
+      const e2 = normEmail(email);
+      if(!e2) return;
+      localStorage.setItem("__profile_email", e2);
+      if(name) localStorage.setItem("__profile_name_"+e2, String(name));
+    }catch(_){ }
+  }
+  function __getCachedProfile(email){
+    try{
+      const e2 = normEmail(email);
+      if(!e2) return null;
+      const nm = localStorage.getItem("__profile_name_"+e2) || "";
+      if(nm) return { email:e2, name:nm };
+    }catch(_){ }
+    return null;
+  }
+
     // ensure Firebase Auth exists so Firestore rules (request.auth != null) pass
     const __okAuth = await ensureAuthReady({timeoutMs:12000,retries:2});
     if(!__okAuth){
@@ -4666,6 +4697,7 @@ setHTML(html);
 
     if(player){
       meUser=player;
+      __cacheProfile(meUser.email, meUser.name);
       startPresence(meUser.email, meUser.name);
       screen="home";
       return render();
@@ -4709,6 +4741,7 @@ async function renderSignup(){
     const n=String(document.getElementById("upName").value).trim();
     if(!n){ toastMsg="Enter your name."; return render(); }
     meUser = await signUpEmail(n, meUser.email);
+    try{ localStorage.setItem("__profile_name_"+normEmail(meUser.email), String(meUser.name||n)); }catch(_e){}
     startPresence(meUser.email, meUser.name);
     screen="home";
     __goRender();
@@ -4893,7 +4926,18 @@ if(decBtn && pendingInvite){
   });
 
   appEl.querySelectorAll("button[data-player-remove]").forEach(btn=>{
-    
+    btn.onclick = async()=>{
+      const em = btn.getAttribute("data-player-remove");
+      if(!em || em===meUser?.email) return;
+      const ok = confirm(`Remove ${em}? This deletes their player record.`);
+      if(!ok) return;
+      try{
+        // Ensure auth is ready for Firestore rules
+        try{ await ensureAuthReady({timeoutMs:12000,retries:2}); }catch(_e){}
+        await deletePlayerAndData(em);
+      }catch(err){ alert((err && err.message) ? err.message : String(err)); }
+      try{ __goRender(); }catch(_){ try{ render(); }catch(__){} }
+    };
   });
 
 }
@@ -5028,6 +5072,25 @@ async function renderGameSetup(){
       setupSelectedEmails = [me, ...setupSelectedEmails.filter(e=>normEmail(e)!==me)];
     }
     setupSelectedEmails = setupSelectedEmails.slice(0, setupWantedCount);
+    // Enforce uniqueness (no same email in multiple slots)
+    (function(){
+      const seen = new Set();
+      const uniq = [];
+      for(const em of setupSelectedEmails){
+        const ne = normEmail(em);
+        if(!ne || seen.has(ne)) continue;
+        seen.add(ne);
+        uniq.push(ne);
+      }
+      setupSelectedEmails = uniq;
+      // Fill remaining slots with first available players not already selected
+      for(const p of (setupPlayersAll||[])){
+        if(setupSelectedEmails.length>=setupWantedCount) break;
+        const ne = normEmail(p.email);
+        if(ne && !seen.has(ne)) { seen.add(ne); setupSelectedEmails.push(ne); }
+      }
+    })();
+
 
     // Capture current dropdown values FIRST so user changes don't get overwritten on re-render
     for(let i=2;i<=setupWantedCount;i++){
@@ -5178,9 +5241,9 @@ async function renderRoomWait(){
   const emailToName = (e)=> playersAll.find(p=>normEmail(p.email)===normEmail(e))?.name || e;
 
   function renderRoomDoc(data){
-    const invited = Array.isArray(data.players)?data.players:[];
-    const joined = Array.isArray(data.joined)?data.joined:[];
-    const declined = Array.isArray(data.declined)?data.declined:[];
+    const invited = Array.from(new Set((Array.isArray(data.players)?data.players:[]).map(normEmail).filter(Boolean)));
+    const joined = Array.from(new Set((Array.isArray(data.joined)?data.joined:[]).map(normEmail).filter(Boolean)));
+    const declined = Array.from(new Set((Array.isArray(data.declined)?data.declined:[]).map(normEmail).filter(Boolean)));
     const joinedCount = joined.length;
     { const __wr=document.getElementById("wrCounts"); if(__wr) __wr.textContent = `${joinedCount} / ${invited.length} in room`; }
 
@@ -5193,7 +5256,7 @@ async function renderRoomWait(){
       const label = `${icon} ${esc(emailToName(e))}${isHost ? " (Host)" : ""}`;
       return `<div class="row" style="justify-content:flex-start;gap:10px;padding:6px 0"><div>${label}</div></div>`;
     }).join("");
-    document.getElementById("wrList").innerHTML = rows || `<div class="sub">No players.</div>`;
+    { const __wl=document.getElementById("wrList"); if(__wl) __wl.innerHTML = rows || `<div class="sub">No players.</div>`; }
 
     // Auto-transition when matchData exists
     if(data.matchData){
