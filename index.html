@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v295</title>
+<title>Game Night • v298</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2468,7 +2468,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v295</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v298</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2482,11 +2482,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v295</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v298</div>
 </div>
 
 <script>
-const BUILD_ID="v295";
+const BUILD_ID="v298";
 
 
 
@@ -2581,19 +2581,45 @@ const BUILD_ID="v295";
 
 /* ===== v165 BOOT FAILSAFE ===== */
 (function(){
-  function showBootError(msg){
+  function normalizeErr(e){
+    try{
+      if(!e) return { msg:"Unknown error", stack:"" };
+      if(typeof e === "string") return { msg:e, stack:"" };
+      const err = (e.error && e.error.stack) ? e.error : e;
+      const msg = (err && (err.message || err.toString && err.toString())) || "Unknown error";
+      const stack = (err && err.stack) ? String(err.stack) : "";
+      return { msg:String(msg), stack:String(stack) };
+    }catch(_){
+      return { msg:"Unknown error", stack:"" };
+    }
+  }
+
+  function showBootError(e){
     try{
       const app = document.getElementById("app");
       if(!app) return;
-      app.innerHTML = `<div class="card"><div class="h1">Startup Error</div><div class="sub">${String(msg||"Unknown error")}</div></div>`;
-    }catch(e){}
+      const info = normalizeErr(e);
+      // persist for debugging
+      try{
+        localStorage.setItem("__last_startup_error_msg", info.msg);
+        if(info.stack) localStorage.setItem("__last_startup_error_stack", info.stack);
+      }catch(_){}
+      console.error("[Startup Error]", info.msg, info.stack);
+
+      app.innerHTML = `
+        <div class="card">
+          <div class="h1">Startup Error</div>
+          <div class="sub">${info.msg}</div>
+          ${info.stack ? `<pre class="sub" style="white-space:pre-wrap;opacity:.85;margin-top:10px">${info.stack}</pre>` : ``}
+          <div class="sub" style="opacity:.7;margin-top:12px">
+            Tip: screenshot this message + stack and send it to Steve.
+          </div>
+        </div>`;
+    }catch(_){}
   }
-  window.addEventListener("error", (e)=>{
-    try{ showBootError(e.message || e.error || e); }catch(_){};
-  });
-  window.addEventListener("unhandledrejection", (e)=>{
-    try{ showBootError(e.reason || e); }catch(_){};
-  });
+
+  window.addEventListener("error", (e)=>{ try{ showBootError(e); }catch(_){}; });
+  window.addEventListener("unhandledrejection", (e)=>{ try{ showBootError(e); }catch(_){}; });
 
   // If nothing renders within 1500ms, force a render attempt (prevents infinite "Loading…")
   setTimeout(()=>{
@@ -4178,7 +4204,7 @@ const KillerGame = (() => {
     }
 
     document.getElementById("undoBtn").onclick=()=>{ match=popK(ctx.match); render(); if(roomId) saveMatchState(roomId, match).catch(()=>{}); };
-    document.getElementById("miss").onclick=()=>{ pushK(m); endDart(); };
+    document.getElementById("miss").onclick=()=>{ pushK(m); endDart(m); };
     document.getElementById("myDouble").onclick=()=>{
       pushK(m);
       const me=m.players[m.turnIndex];
