@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v427</title>
+<title>Game Night • v428</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v427 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v428 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v427 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v428 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2081,7 +2081,7 @@ header, .header {
 
 <body>
 
-<!-- ================= v427 EARLY BOOT GUARD (runs before app scripts) ================= -->
+<!-- ================= v428 EARLY BOOT GUARD (runs before app scripts) ================= -->
 <script>
 (function(){
   // Capture any boot-time errors even if app init never reaches render()
@@ -2098,7 +2098,7 @@ header, .header {
           ${d}
           <div class="divider"></div>
           <button class="btn ok" onclick="location.reload()">Reload</button>
-          <div class="small" style="margin-top:10px;opacity:.8">v427 boot guard</div>
+          <div class="small" style="margin-top:10px;opacity:.8">v428 boot guard</div>
         </div>`;
     }catch(_){}
   }
@@ -2153,7 +2153,7 @@ header, .header {
   }, 2500);
 })();
 </script>
-<!-- ================= END v427 EARLY BOOT GUARD ================= -->
+<!-- ================= END v428 EARLY BOOT GUARD ================= -->
 
 
 <div class="topbar">
@@ -2163,7 +2163,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v427</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v428</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2177,11 +2177,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v427</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v428</div>
 </div>
 
 <script>
-const BUILD_ID="v427";
+const BUILD_ID="v428";
 
 
 
@@ -2211,7 +2211,7 @@ const BUILD_ID="v427";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v427) =====
+/* ===== v166 CLEAN BOOT (v428) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2291,7 +2291,7 @@ const BUILD_ID="v427";
       }
     }catch(e){ showBootError(e.message||e); }
   
-  // v427: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
+  // v428: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
   setTimeout(()=>{
     try{
       const app = document.getElementById("app");
@@ -2634,7 +2634,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v427 stability) ---
+// --- Snapshot compatibility helpers (v428 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3019,19 +3019,30 @@ let presCache = {}; // email -> lastSeenMs
 function isOnline(email){
   const ms = presCache[normEmail(email)];
   if(!ms) return false;
-  // v427: less flicker; allow slower snapshot/clock drift
-  return (Date.now() - ms) < 180_000;
+  // v428: less flicker; allow slower snapshot/clock drift
+  return (Date.now() - ms) < 240_000;
 }
 
 function startPresence(email, name){
+  // v428: presence doc id = email for stable lookup across devices/browsers.
   const e = normEmail(email);
   stopPresence();
+  if(!e) return;
+
   const ref = doc(ROOT_DOC, C_PRES, e);
 
   const ping = async()=>{
     try{
-      await setDoc(ref, { email:e, name:name||"", lastSeen: serverTimestamp() }, {merge:true});
-    }catch(e){ /* ignore */ }
+      await setDoc(ref, {
+        email: e,
+        uid: String(meUser?.uid || ""),
+        name: name||"",
+        lastSeen: serverTimestamp()
+      }, {merge:true});
+    }catch(err){
+      // Surface errors for debugging (often rules-related)
+      try{ localStorage.setItem('__last_presence_error', String(err && (err.message||err)||err)); }catch{}
+    }
   };
 
   ping();
@@ -3039,11 +3050,14 @@ function startPresence(email, name){
 
   // Subscribe to all presence docs (cheap at small scale)
   presUnsub = onSnapshot(collection(ROOT_DOC, C_PRES), (snap)=>{
-    // v427: merge cache + robust timestamp parsing to reduce flicker
     const out = Object.assign({}, presCache||{});
+    const map = Object.assign({}, window.__emailToUid||{});
     snap.forEach(d=>{
       const data = d.data() || {};
-      const em = normEmail(data.email || d.id);
+      const docId = d.id || "";
+      const em = normEmail(data.email || (docId.includes('@') ? docId : ""));
+      const uid = String(data.uid || (docId && !docId.includes('@') ? docId : ""));
+
       const ls = data.lastSeen;
       let ms = null;
       try{
@@ -3052,21 +3066,22 @@ function startPresence(email, name){
         else if(ls && typeof ls.seconds === "number") ms = (ls.seconds*1000) + Math.floor((ls.nanoseconds||0)/1e6);
         else if(ls instanceof Date) ms = ls.getTime();
       }catch{}
-      if(ms){ out[em] = ms; }
+
+      if(ms){
+        if(em){ out[em] = ms; if(uid) map[em] = uid; }
+        if(uid){ out[uid] = ms; }
+      }
     });
     presCache = out;
-    // Only re-render on screens that show roster
+    window.__emailToUid = map;
     if(screen==="home" || screen==="stats" || screen==="game.setup") requestRender("presence");
   });
-
-  // Attempt best-effort final ping
-  window.addEventListener("beforeunload", ()=>{ try{ clearInterval(presTick); }catch{} });
 }
 function stopPresence(){
+  try{ if(presTick) clearInterval(presTick); }catch{}
+  presTick = null;
   try{ if(presUnsub) presUnsub(); }catch{}
   presUnsub = null;
-  if(presTick) clearInterval(presTick);
-  presTick = null;
 }
 
 /* ========= Rooms (multiplayer lock + auto-join) =========
@@ -3340,7 +3355,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v427 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v428 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -5592,7 +5607,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 
 <style id="v421_player_carousel_ui">
-/* v427 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
+/* v428 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
 .playerCarouselWrap{ margin:8px 0 2px; }
 .playerCarousel{
   display:flex;
