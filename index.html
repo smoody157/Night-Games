@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v404</title>
+<title>Game Night • v405</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v404 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v405 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v404 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v405 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2087,7 +2087,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v404</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v405</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2101,11 +2101,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v404</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v405</div>
 </div>
 
 <script>
-const BUILD_ID="v404";
+const BUILD_ID="v405";
 
 
 
@@ -2135,7 +2135,7 @@ const BUILD_ID="v404";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v404) =====
+/* ===== v166 CLEAN BOOT (v405) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2544,7 +2544,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v404 stability) ---
+// --- Snapshot compatibility helpers (v405 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3241,7 +3241,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v404 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v405 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -5566,19 +5566,24 @@ button.statsBtn, .statsBtn{
 
 
 
-<!-- ================= STABLE MULTIPLAYER CORE v404 ================= -->
+
+
+
+
+
+<!-- ================= STABLE MULTIPLAYER CORE v405 (R2 TURN HANDOFF) ================= -->
 <script>
 (function(){
-
   function normEmail(e){ return (e||"").toLowerCase().trim(); }
 
+  // Killer nuance: claimIndex phase should override turnIndex
   function activeActorEmail(m){
     if(!m) return "";
-    if(Number.isFinite(m.turnIndex)){
-      return normEmail(m.players?.[m.turnIndex]?.email || "");
-    }
     if(m.gameId==="killer" && m.phase==="claim" && Number.isFinite(m.claimIndex)){
       return normEmail(m.players?.[m.claimIndex]?.email || "");
+    }
+    if(Number.isFinite(m.turnIndex)){
+      return normEmail(m.players?.[m.turnIndex]?.email || "");
     }
     return "";
   }
@@ -5589,43 +5594,86 @@ button.statsBtn, .statsBtn{
     return !!me && !!actor && me === actor;
   }
 
-  // ---- Safe save wrapper (rev bump only) ----
-  const __origSave = window.saveMatchState;
-  window.saveMatchState = async function(roomId, m){
-    if(!roomId || !m) return __origSave?.(roomId, m);
-    m._rev = Number(m._rev || 0) + 1;
-    return __origSave?.(roomId, m);
-  };
+  // ---- Convergence: adopt when rev is newer OR equal-but-different-author ----
+  // This reduces "stuck turn" when local rev drift/echo causes equality.
+  const __origListen = window.listenMatchState;
+  if(typeof __origListen === "function"){
+    window.listenMatchState = function(roomId, cb){
+      return __origListen(roomId, function(roomDoc){
+        try{
+          if(roomDoc && roomDoc.matchData){
+            const incoming = roomDoc.matchData;
+            const inRev = Number(roomDoc.rev || 0);
+            const myRev = Number(window.match ? (window.match._rev || 0) : 0);
+            const updatedBy = normEmail(roomDoc.updatedBy || "");
+            const me = normEmail(window.meUser?.email || "");
 
-  // ---- Safe UI turn lock (no hard blocking) ----
+            // Adopt if newer, or if equal rev but not our echo (prevents "stuck until next write")
+            if(!window.match || (inRev > myRev) || (inRev === myRev && updatedBy && updatedBy !== me)){
+              window.match = incoming;
+              window.roomSynced = true;
+              if(typeof window.requestRender === "function") window.requestRender("roomSyncR2");
+            }
+          }
+        }catch(e){}
+        if(typeof cb === "function") cb(roomDoc);
+      });
+    };
+  }
+
+  // ---- UI Turn Lock: only disable obvious in-game action buttons ----
+  // Avoid disabling navigation / setup controls; prevents "buttons don't work" regressions.
+  function shouldLockButton(btn){
+    const id = (btn.id||"").toLowerCase();
+    if(id.includes("signout") || id.includes("back")) return false;
+
+    // Allow waiting room / setup interactions to remain usable
+    if(id.startsWith("wr") || id.includes("start") && id.includes("room")) return false;
+
+    // In-game actions are mostly marked by data-* attributes
+    if(btn.hasAttribute("data-attack")) return true;
+    if(btn.hasAttribute("data-action")) return true;
+    if(btn.hasAttribute("data-dart")) return true;
+    if(btn.hasAttribute("data-score")) return true;
+    if(btn.hasAttribute("data-pick")) return true;
+
+    // Fallback: lock buttons inside .gameScreen/.matchScreen if present
+    const inGame = !!btn.closest(".gameScreen,.matchScreen,.gamePlay,.board,.gameBoard");
+    return inGame;
+  }
+
   window.enforceTurnLockUI = function(){
     if(!window.roomId || !window.match) return;
 
-    if(typeof window.match.turnIndex !== "number" &&
-       typeof window.match.claimIndex !== "number"){
-      return; // don't lock if game not ready
-    }
+    // Don't lock until the match has some notion of turn/phase.
+    const ready = (typeof window.match.turnIndex === "number") ||
+                  (window.match.gameId==="killer" && window.match.phase==="claim" && typeof window.match.claimIndex==="number");
+    if(!ready) return;
 
     const allow = isMyTurn(window.match);
 
     document.querySelectorAll("button").forEach(btn=>{
-      const id = btn.id || "";
-      if(id==="signOutBtn" || id==="backToSetup") return;
+      if(!shouldLockButton(btn)) return;
       btn.disabled = !allow;
     });
+
+    // Optional hint (only if element exists)
+    const hint = document.getElementById("turnLockHint");
+    if(hint) hint.style.display = allow ? "none" : "block";
   };
 
-  // Hook AFTER renders settle
+  // Run after renders settle (and after roomSyncR2 adoption render)
   const __origRequestRender = window.requestRender;
-  window.requestRender = function(reason){
-    const r = __origRequestRender?.(reason);
-    setTimeout(()=>{
-      try{ window.enforceTurnLockUI(); }catch(e){}
-    }, 0);
-    return r;
-  };
-
+  if(typeof __origRequestRender === "function"){
+    window.requestRender = function(reason){
+      const r = __origRequestRender(reason);
+      setTimeout(()=>{ try{ window.enforceTurnLockUI(); }catch(e){} }, 0);
+      return r;
+    };
+  }else{
+    // If requestRender isn't present, still try to enforce after load
+    window.addEventListener("load", ()=>{ setTimeout(()=>{ try{ window.enforceTurnLockUI(); }catch(e){} }, 0); });
+  }
 })();
 </script>
-<!-- ================= END STABLE MULTIPLAYER CORE ================= -->
-
+<!-- ================= END STABLE MULTIPLAYER CORE v405 (R2 TURN HANDOFF) ================= -->
