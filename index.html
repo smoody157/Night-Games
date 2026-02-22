@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v436</title>
+<title>Game Night • v439</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,12 +1901,92 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v436 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v439 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
 (function(){
-  function closestActionEl(t){
+  
+  async function startMatchFromSetup(){
+    try{
+      const g = (Array.isArray(GAMES) ? GAMES.find(x=>x.id===activeGameId) : null);
+      if(!g || !g.active){ toastMsg="Coming soon."; return (typeof render==="function") ? render() : __goRender(); }
+
+      if(setupSelectedEmails.length !== setupWantedCount){
+        toastMsg = `Select exactly ${setupWantedCount} players.`;
+        return (typeof render==="function") ? render() : __goRender();
+      }
+
+      const selectedPlayers = setupSelectedEmails
+        .map(e=>setupPlayersAll.find(p=>normEmail(p.email)===normEmail(e)))
+        .filter(Boolean);
+
+      if(selectedPlayers.length !== setupWantedCount){
+        toastMsg = `Player selection incomplete (${selectedPlayers.length}/${setupWantedCount}).`;
+        return (typeof render==="function") ? render() : __goRender();
+      }
+
+      // SOLO (1): local-only
+      if(setupWantedCount === 1){
+        roomHost = false;
+        roomId = null;
+        if(activeGameId==="shanghai") match = ShanghaiGame.initMatch(selectedPlayers);
+        else if(activeGameId==="killer") match = KillerGame.initMatch(selectedPlayers);
+        else if(activeGameId==="around"){
+          const modeEl = document.getElementById("aroundMode");
+          const mode = modeEl ? modeEl.value : "S";
+          match = AroundGame.initMatch(selectedPlayers, mode);
+        }else{
+          toastMsg="Coming soon."; return (typeof render==="function") ? render() : __goRender();
+        }
+        screen="game.play";
+        if(typeof __goRender==="function") __goRender(); else if(typeof render==="function") render();
+        return;
+      }
+
+      // MULTI (2+): create a room + go to waiting room
+      roomHost = true;
+      match = null;
+
+      // immediate UI feedback
+      try{
+        const b = document.getElementById("startMatchBtn");
+        if(b) b.disabled = true;
+        const h = document.getElementById("hintLine");
+        if(h) h.textContent = "Creating room…";
+      }catch(_){}
+
+      const emails = selectedPlayers.map(p=>p.email);
+      const withTimeout = (p, ms)=>Promise.race([
+        p,
+        new Promise((_,rej)=>setTimeout(()=>rej(new Error("Room creation timed out. Check connection and try again.")), ms))
+      ]);
+
+      roomId = await withTimeout(createRoom(activeGameId, emails), 12000);
+
+      // store around mode if relevant
+      try{
+        if(activeGameId==="around"){
+          const modeEl = document.getElementById("aroundMode");
+          const mode = modeEl ? modeEl.value : "S";
+          const base = await resolveDataBase();
+          await updateDoc(doc(base, C_ROOMS, roomId), { aroundMode: mode, updatedAt: serverTimestamp() });
+        }
+      }catch(_e){}
+
+      screen="room.wait";
+      if(typeof __goRender==="function") __goRender(); else if(typeof render==="function") render();
+    }catch(e){
+      toastMsg = (e && e.message) ? e.message : String(e);
+      try{
+        const b = document.getElementById("startMatchBtn");
+        if(b) b.disabled = false;
+      }catch(_){}
+      if(typeof __goRender==="function") __goRender(); else if(typeof render==="function") render();
+    }
+  }
+
+function closestActionEl(t){
     return (t && t.closest) ? (t.closest("[data-action],button[data-player-stats],button[data-player-history],button[data-game-history],button[data-stats],button[data-player-remove],.removeBtn")) : null;
   }
 
@@ -1930,6 +2010,11 @@ header, .header {
     if(!el) return;
 
     const act = el.getAttribute("data-action") || "";
+    if(act==="start_match"){
+      ev.preventDefault();
+      try{ if(typeof playBeep==='function') playBeep('confirm'); }catch(_){ }
+      return startMatchFromSetup();
+    }
     // Handle remove (players page)
     if(act==="remove" || el.hasAttribute("data-player-remove") || (el.classList && el.classList.contains("removeBtn"))){
       ev.preventDefault();
@@ -1997,7 +2082,7 @@ header, .header {
 })();
 
 
-/* ===== v436 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v439 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2081,7 +2166,7 @@ header, .header {
 
 <body>
 
-<!-- ================= v436 EARLY BOOT GUARD (runs before app scripts) ================= -->
+<!-- ================= v439 EARLY BOOT GUARD (runs before app scripts) ================= -->
 <script>
 (function(){
   // Capture any boot-time errors even if app init never reaches render()
@@ -2098,7 +2183,7 @@ header, .header {
           ${d}
           <div class="divider"></div>
           <button class="btn ok" onclick="location.reload()">Reload</button>
-          <div class="small" style="margin-top:10px;opacity:.8">v436 boot guard</div>
+          <div class="small" style="margin-top:10px;opacity:.8">v439 boot guard</div>
         </div>`;
     }catch(_){}
   }
@@ -2153,7 +2238,7 @@ header, .header {
   }, 2500);
 })();
 </script>
-<!-- ================= END v436 EARLY BOOT GUARD ================= -->
+<!-- ================= END v439 EARLY BOOT GUARD ================= -->
 
 
 <div class="topbar">
@@ -2163,7 +2248,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v436</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v439</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2177,11 +2262,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v436</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v439</div>
 </div>
 
 <script>
-const BUILD_ID="v436";
+const BUILD_ID="v439";
 
 
 
@@ -2211,7 +2296,7 @@ const BUILD_ID="v436";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v436) =====
+/* ===== v166 CLEAN BOOT (v439) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2291,7 +2376,7 @@ const BUILD_ID="v436";
       }
     }catch(e){ showBootError(e.message||e); }
   
-  // v436: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
+  // v439: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
   setTimeout(()=>{
     try{
       const app = document.getElementById("app");
@@ -2634,7 +2719,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v436 stability) ---
+// --- Snapshot compatibility helpers (v439 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3019,7 +3104,7 @@ function isOnline(email){
   try{
     const me = normEmail(meUser?.email||"");
     const em = normEmail(email||"");
-    // v436: always show self as online once signed in
+    // v439: always show self as online once signed in
     if(me && em && me===em) return true;
 
     let ms = presCache[em] || null;
@@ -3037,7 +3122,7 @@ function isOnline(email){
 }
 
 function startPresence(email, name){
-  // v436: restore stable behavior + compatibility across older presence doc ids.
+  // v439: restore stable behavior + compatibility across older presence doc ids.
   const em = normEmail(email||"");
   stopPresence();
   if(!em) return;
@@ -3209,7 +3294,7 @@ async function saveMatchState(roomId, match){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
 
-  // v436 MP core: authoritative turn guard (prevents controlling opponent)
+  // v439 MP core: authoritative turn guard (prevents controlling opponent)
   try{
     const me = normEmail(meUser?.email || "");
     const players = Array.isArray(match?.players) ? match.players : [];
@@ -3232,7 +3317,7 @@ async function saveMatchState(roomId, match){
     // If guard can't run, do not break gameplay.
   }
 
-  // v436 MP core: rev consistency (matchData._rev always matches room.rev)
+  // v439 MP core: rev consistency (matchData._rev always matches room.rev)
   const nextRev = Number(match?match._rev||0:0) + 1;
   match._rev = nextRev;
 
@@ -3408,7 +3493,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v436 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v439 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4808,7 +4893,7 @@ async function renderGameSetup(){
 
         ${aroundModeUI}
 
-        <button class="btn ok" id="startMatchBtn">Start Match</button>
+        <button class="btn ok" id="startMatchBtn" data-action="start_match">Start Match</button>
         <div class="sub" id="hintLine"></div>
       </div>
     </div>
@@ -4941,66 +5026,6 @@ async function renderGameSetup(){
   syncSelectUI();
 
   updateSetupUI();
-
-  document.getElementById("startMatchBtn").onclick = async()=>{
-    try{
-          if(!g.active){ toastMsg="Coming soon."; return render(); }
-          if(setupSelectedEmails.length !== setupWantedCount){
-            toastMsg = `Select exactly ${setupWantedCount} players.`;
-            return render();
-          }
-      
-          const selectedPlayers = setupSelectedEmails
-            .map(e=>setupPlayersAll.find(p=>normEmail(p.email)===normEmail(e)))
-            .filter(Boolean);
-      
-      // SOLO: local-only (no waiting room / no invites)
-      if(setupWantedCount === 1){
-        roomHost = false;
-        roomId = null;
-        if(activeGameId==="shanghai") match = ShanghaiGame.initMatch(selectedPlayers);
-        else if(activeGameId==="killer") match = KillerGame.initMatch(selectedPlayers);
-        else if(activeGameId==="around"){
-          const modeEl = document.getElementById("aroundMode");
-          const mode = modeEl ? modeEl.value : "S";
-          match = AroundGame.initMatch(selectedPlayers, mode);
-        }else{
-          toastMsg="Coming soon."; return render();
-        }
-        screen="game.play";
-        __goRender();
-        return;
-      }
-      
-      // MULTI (2+): create a room + go to waiting room (in-app invites)
-      roomHost = true;
-      match = null;
-      try{
-        roomId = await createRoom(activeGameId, selectedPlayers.map(p=>p.email));
-      }catch(e){
-        toastMsg = (e && e.message) ? e.message : String(e);
-        __goRender();
-        return;
-      }
-      // store around format if relevant
-      try{
-        if(activeGameId==="around"){
-          const modeEl = document.getElementById("aroundMode");
-          const mode = modeEl ? modeEl.value : "S";
-          const base = await resolveDataBase();
-          await updateDoc(doc(base, C_ROOMS, roomId), { aroundMode: mode, updatedAt: serverTimestamp() });
-        }
-      }catch(_e){}
-      screen="room.wait";
-      __goRender();
-    }catch(e){
-      // v436: never fail silently on Start Match
-      toastMsg = "Start failed: " + ((e && e.message) ? e.message : String(e));
-      try{ localStorage.setItem("__last_start_error", toastMsg); }catch(_){}
-      if(typeof render==="function") render();
-      else if(typeof __goRender==="function") __goRender();
-    }
-  };
 }
 
 async function renderRoomWait(){
@@ -5137,7 +5162,7 @@ async function renderGamePlay(){
         const updatedBy = normEmail(roomDoc.updatedBy || "");
         const me = normEmail(meUser.email);
 
-        // v436 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
+        // v439 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
         if(!match || (inRev > myRev && updatedBy !== me)){
           match = incoming;
           roomSynced = true;
@@ -5668,7 +5693,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 
 <style id="v421_player_carousel_ui">
-/* v436 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
+/* v439 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
 .playerCarouselWrap{ margin:8px 0 2px; }
 .playerCarousel{
   display:flex;
