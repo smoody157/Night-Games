@@ -2385,11 +2385,18 @@ async function renderGameHistory(){
 
 <style>
 /* Build 241 cosmetic fixes */
-.logo, img[id*="logo"], img[class*="logo"] {
+.logo, img[class*="logo"], img[id*="logo"]:not(#landingLogoOverlay) {
   object-fit: contain !important;
   padding-bottom: 14px !important;
   overflow: visible !important;
   max-height: 100% !important;
+}
+/* Do not add padding to the absolutely-positioned landing/logo overlay,
+   otherwise it can get clipped at the bottom inside an overflow-hidden wrapper. */
+#landingLogoOverlay{
+  padding-bottom: 0 !important;
+  height: auto !important;
+  object-fit: contain !important;
 }
 </style>
 <style>
