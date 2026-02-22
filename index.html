@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v337</title>
+<title>Game Night • v338</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -390,7 +390,7 @@ input,select{
 
 
 
-/* v337 landing logo placement harden (prevents bottom clipping in rounded container) */
+/* v338 landing logo placement harden (prevents bottom clipping in rounded container) */
 #landingLogoOverlay{ max-height:140px; }
 /* --- Polish: roster/player readability --- */
 .rosterCard .playerHeader .nm{ text-align:center; font-size:28px !important; }
@@ -500,24 +500,25 @@ button.btn{ position:relative; z-index:3; }
 body.authMode .footerLegal{display:none !important;}
 body.authMode .footerLegal *{display:none !important;}
 
-/* v337 landing logo: no distortion + keep MP4 visible */
+/* v338 landing logo: render via canvas to avoid iOS PNG bottom distortion */
 .landingLogoHolder{
   display:flex;
   justify-content:center;
   align-items:center;
-  margin: 10px auto 0;
+  margin: 6px auto 0;
   max-width: 560px;
+  padding: 0 10px 10px;
 }
-.landingLogoHolder img{
+.landingLogoHolder img,
+.landingLogoHolder canvas{
   width: min(360px, 86vw);
+  max-height: 260px;
   height: auto;
   display:block;
   object-fit: contain;
+  object-position: center top;
   image-rendering: auto;
   filter: none !important;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  will-change: transform;
 }
 
 </style>
@@ -2492,7 +2493,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v337</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v338</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2506,11 +2507,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v337</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v338</div>
 </div>
 
 <script>
-const BUILD_ID="v337";
+const BUILD_ID="v338";
 
 
 
@@ -3023,6 +3024,54 @@ function __landingSetMode(on){
   try{
     if(on) document.body.classList.add("authMode");
     else document.body.classList.remove("authMode");
+  }catch(e){}
+}
+
+
+// v338: draw login logo onto a canvas to avoid iOS Safari PNG bottom distortion artifacts
+function __landingLogoToCanvas(){
+  try{
+    const img = document.getElementById("landingLogoOverlay");
+    if(!img || img.__canvasDone) return;
+    const src = img.getAttribute("src") || "";
+    if(!src) return;
+
+    const canvas = document.createElement("canvas");
+    const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+    const maxW = 360;
+    const maxH = 260;
+
+    const tmp = new Image();
+    tmp.crossOrigin = "anonymous";
+    tmp.onload = ()=>{
+      try{
+        const iw = tmp.naturalWidth || tmp.width || maxW;
+        const ih = tmp.naturalHeight || tmp.height || maxH;
+        const scale = Math.min(maxW/iw, maxH/ih, 1);
+        const w = Math.max(1, Math.round(iw*scale));
+        const h = Math.max(1, Math.round(ih*scale));
+
+        canvas.width = Math.round(w*dpr);
+        canvas.height = Math.round(h*dpr);
+        canvas.style.width = w+"px";
+        canvas.style.height = h+"px";
+        canvas.style.display = "block";
+
+        const ctx = canvas.getContext("2d", {alpha:true});
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+        ctx.imageSmoothingEnabled = true;
+
+        // Clear and draw
+        ctx.clearRect(0,0,w,h);
+        ctx.drawImage(tmp, 0, 0, w, h);
+
+        // Replace
+        img.__canvasDone = true;
+        img.style.display = "none";
+        if(img.parentNode) img.parentNode.appendChild(canvas);
+      }catch(e){}
+    };
+    tmp.src = src;
   }catch(e){}
 }
 
@@ -4544,6 +4593,8 @@ setHTML(html);
 
   __landingSetMode(true);
   __landingWireVideo();
+  __landingLogoToCanvas();
+
   const __emailEl = document.getElementById("inEmail");
   const __goEl = document.getElementById("goBtn");
   if(__emailEl && __goEl){ __emailEl.addEventListener("keydown",(ev)=>{ if(ev.key==="Enter"){ ev.preventDefault(); __goEl.click(); }}); }
