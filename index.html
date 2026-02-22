@@ -5652,11 +5652,37 @@ button.statsBtn, .statsBtn{
 
 
 <style id="login_logo_clean_fix">
-/* LOGIN LOGO – zero styling, no distortion */
-#loginLogo {
-  display:block;
-  margin:16px auto;
-  max-width:80vw;
-  height:auto;
+/* FINAL logo lock – center, no drift, sane glow */
+body loginLogo,
+body imgloginLogo,
+body .loginLogo,
+body .logo img,
+body img.logo,
+body .appLogo,
+body imglogo {
+  display: block !important;
+  margin: 16px auto 14px auto !important;
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+  max-width: min(380px, 84vw) !important;
+  height: auto !important;
+
+  /* Keep some neon but not overpowering */
+  filter: brightness(1.10) saturate(1.25) contrast(1.06) !important;
+  box-shadow: 0 0 22px rgba(200, 0, 0, 0.9) !important;
 }
+
+/* Optional: guarantee logo isn’t cropped */
+.logo,
+img#logo,
+img.logo {
+  object-fit: contain !important;
+  padding-bottom: 16px !important;
+  overflow: visible !important;
+  max-height: 100% !important;
+}
+
 </style>
+
