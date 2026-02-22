@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v450</title>
+<title>Game Night • v451</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -93,7 +93,7 @@ body{
 
 .topbar{
   position:sticky;top:0;z-index:10;
-  display:grid;grid-template-columns: auto 1fr auto;
+  display:grid;grid-template-columns: 1fr auto 1fr;
   align-items:center;gap:10px;
   padding:10px 12px;
   padding-top:calc(10px + env(safe-area-inset-top));
@@ -104,23 +104,14 @@ body{
 .topActions.left{justify-content:flex-start}
 .topActions.right{justify-content:flex-end}
 
-/* v450: brand/title must never be masked by left/right actions */
 .brand{
-  grid-column:2;
-  display:flex;flex-direction:column;line-height:1.05;
+  grid-column:2;display:flex;flex-direction:column;line-height:1.05;
   align-items:center;text-align:center;
-  max-width:100%;
-  padding:0 96px; /* reserve space for action buttons */
-  overflow:visible;
+  max-width:min(540px, 66vw);
 }
-#brandTitle, .brand .t{
-  font-weight:1000;
-  font-size:20px;
-  letter-spacing:.4px;
+.brand .t{
+  font-weight:1000;font-size:20px;letter-spacing:.4px;
   text-shadow:0 2px 14px rgba(0,0,0,.55), 0 0 18px rgba(34,211,238,.10);
-  white-space:nowrap;
-  overflow:visible;
-  text-overflow:clip;
 }
 .brand .s{font-size:12px;color:var(--muted);white-space:normal;overflow-wrap:anywhere;}
 
@@ -1909,8 +1900,25 @@ header, .header {
 
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v450 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+  
+<script>
+// v451: global runtime guards (prevents 'Startup Error [object PromiseRejectionEvent]')
+window.addEventListener('error', (e)=>{
+  try{
+    window.__lastRuntimeError = (e && (e.message||e.error&&e.error.message)) ? (e.message||e.error.message) : String(e);
+  }catch(_){}
+});
+window.addEventListener('unhandledrejection', (e)=>{
+  try{
+    const r = e && e.reason;
+    window.__lastRuntimeRejection = (r && (r.message||r)) ? (r.message||r) : String(r||e);
+    // prevent hard overlay crash patterns
+    if(e && typeof e.preventDefault==='function') e.preventDefault();
+  }catch(_){}
+});
+</script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
+/* ===== v451 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -2006,7 +2014,7 @@ header, .header {
 })();
 
 
-/* ===== v450 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v451 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2090,7 +2098,7 @@ header, .header {
 
 <body>
 
-<!-- ================= v450 EARLY BOOT GUARD (runs before app scripts) ================= -->
+<!-- ================= v451 EARLY BOOT GUARD (runs before app scripts) ================= -->
 <script>
 (function(){
   // Capture any boot-time errors even if app init never reaches render()
@@ -2107,7 +2115,7 @@ header, .header {
           ${d}
           <div class="divider"></div>
           <button class="btn ok" onclick="location.reload()">Reload</button>
-          <div class="small" style="margin-top:10px;opacity:.8">v450 boot guard</div>
+          <div class="small" style="margin-top:10px;opacity:.8">v451 boot guard</div>
         </div>`;
     }catch(_){}
   }
@@ -2162,7 +2170,7 @@ header, .header {
   }, 2500);
 })();
 </script>
-<!-- ================= END v450 EARLY BOOT GUARD ================= -->
+<!-- ================= END v451 EARLY BOOT GUARD ================= -->
 
 
 <div class="topbar">
@@ -2172,7 +2180,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v450</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v451</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2186,11 +2194,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v450</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v451</div>
 </div>
 
 <script>
-const BUILD_ID="v450";
+const BUILD_ID="v451";
 
 
 
@@ -2220,7 +2228,7 @@ const BUILD_ID="v450";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v450) =====
+/* ===== v166 CLEAN BOOT (v451) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2300,7 +2308,7 @@ const BUILD_ID="v450";
       }
     }catch(e){ showBootError(e.message||e); }
   
-  // v450: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
+  // v451: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
   setTimeout(()=>{
     try{
       const app = document.getElementById("app");
@@ -2643,7 +2651,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v450 stability) ---
+// --- Snapshot compatibility helpers (v451 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -2715,7 +2723,8 @@ function unlockAudio(){
   if(__audioUnlocked) return;
   const ctx = ensureAudio();
   if(!ctx) return;
-  try{ if(ctx.state === "suspended"){ const _p = ctx.resume()?.catch?.(()=>{}); if(_p && _p.catch) _p.catch(()=>{}); } }catch{}
+  try{ if(ctx.state === "suspended") const __r = ctx.resume();
+try{ if(__r && typeof __r.catch==="function") __r.catch(()=>{}); }catch(_e){} }catch{}
   // silent tick to fully unlock (iOS/Safari)
   try{
     const o = ctx.createOscillator();
@@ -2753,7 +2762,8 @@ function __landingWireVideo(){
     // Use embedded data URL so GitHub paths can't break it
     if(!v.src || v.src === window.location.href) v.src = __LANDING_MP4_DATA_URL;
     try{ v.load(); }catch(e){}
-    const p = v.play();
+    const p = const __p = v.play();
+try{ if(__p && typeof __p.catch==="function") __p.catch(()=>{}); }catch(_e){}
     if(p && typeof p.catch === "function") p.catch(()=>{});
     // one-time retry on first gesture (mobile)
     if(!window.__landingKick){
@@ -2784,7 +2794,8 @@ function playBeep(kind){
   if(!soundEnabled) return;
   const ctx = ensureAudio();
   if(!ctx) return;
-  try{ if(ctx.state === "suspended"){ const _p = ctx.resume()?.catch?.(()=>{}); if(_p && _p.catch) _p.catch(()=>{}); } }catch{}
+  try{ if(ctx.state === "suspended") const __r = ctx.resume();
+try{ if(__r && typeof __r.catch==="function") __r.catch(()=>{}); }catch(_e){} }catch{}
 
   const _nowMs = Date.now();
   window.__lastBeepAt = window.__lastBeepAt || 0;
@@ -3028,7 +3039,7 @@ function isOnline(email){
   try{
     const me = normEmail(meUser?.email||"");
     const em = normEmail(email||"");
-    // v450: always show self as online once signed in
+    // v451: always show self as online once signed in
     if(me && em && me===em) return true;
 
     let ms = presCache[em] || null;
@@ -3046,7 +3057,7 @@ function isOnline(email){
 }
 
 function startPresence(email, name){
-  // v450: restore stable behavior + compatibility across older presence doc ids.
+  // v451: restore stable behavior + compatibility across older presence doc ids.
   const em = normEmail(email||"");
   stopPresence();
   if(!em) return;
@@ -3218,7 +3229,7 @@ async function saveMatchState(roomId, match){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
 
-  // v450: authoritative turn guard at the write boundary (applies to all games)
+  // v451: authoritative turn guard at the write boundary (applies to all games)
   try{
     const me = normEmail(meUser?.email || "");
     const players = Array.isArray(match?.players) ? match.players : [];
@@ -3237,7 +3248,7 @@ async function saveMatchState(roomId, match){
     }
   }catch(e){ /* do not block on guard errors */ }
 
-  // v450: rev consistency (matchData._rev always matches room.rev)
+  // v451: rev consistency (matchData._rev always matches room.rev)
   const nextRev = Number(match?match._rev||0:0) + 1;
   match._rev = nextRev;
 
@@ -3412,7 +3423,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v450 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v451 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4422,10 +4433,10 @@ async function renderAuth(){
 
     <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:hidden;">
       <video id="loginIntroVideo" playsinline muted autoplay loop
-        style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:none;object-position:center;">
+        style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:translateY(-58px) scale(1.10);transform-origin:center top;">
       </video>
       <img id="landingLogoOverlay" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo"
-        style="position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:min(240px,72vw);height:auto;opacity:1;pointer-events:none;z-index:999;mix-blend-mode:normal;background:transparent;padding:0;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));" />
+        style="position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55));background:rgba(6,8,20,.92);padding:10px 12px;border-radius:18px;" />
 
     </div>
 `;
@@ -4947,7 +4958,7 @@ async function renderGameSetup(){
   updateSetupUI();
 
   document.getElementById("startMatchBtn").onclick = async()=>{
-    // v450: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
+    // v451: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
     if(!g.active){ toastMsg="Coming soon."; return render(); }
 
     const startBtn = document.getElementById("startMatchBtn");
@@ -5189,7 +5200,7 @@ async function renderGamePlay(){
         const updatedBy = normEmail(roomDoc.updatedBy || "");
         const me = normEmail(meUser.email);
 
-        // v450 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
+        // v451 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
         if(!match || (inRev > myRev && updatedBy !== me)){
           match = incoming;
           roomSynced = true;
@@ -5720,7 +5731,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 
 <style id="v421_player_carousel_ui">
-/* v450 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
+/* v451 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
 .playerCarouselWrap{ margin:8px 0 2px; }
 .playerCarousel{
   display:flex;
@@ -5856,51 +5867,50 @@ button.statsBtn, .statsBtn{
   z-index:5;
 }
 
-/* v450: UI shell fix — prevent header/title clipping on iOS (safe-area + overflow + line-height) */
-:root{
-  --safeTop: env(safe-area-inset-top, 0px);
-}
-.topBar, #topBar, .appTopBar{
-  padding-top: calc(var(--safeTop) + 10px) !important;
-  min-height: calc(var(--safeTop) + 52px) !important;
+/* v451: LANDING LAYER FIX — MP4 up, logo fully visible */
+#landingCard, .landingCard, #landingWrap, .landingWrap{
   overflow: visible !important;
 }
+#landingVideo, #introVideo{
+  object-fit: cover !important;
+  transform: none !important;
+}
+#landingLogoOverlay{
+  z-index: 1000 !important;
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
+  background: transparent !important;
+}
+
+
+/* v451: TOP BAR FIX — no clipping, no overlap */
+:root{ --safeTop: env(safe-area-inset-top, 0px); }
+.topBar, #topBar, .appTopBar{
+  padding-top: calc(var(--safeTop) + 10px) !important;
+  height: auto !important;
+  min-height: calc(var(--safeTop) + 56px) !important;
+  overflow: visible !important;
+}
+/* reserve spaces */
+.topBar .left, #topBar .left, .appTopBar .left{ flex:0 0 72px !important; }
+.topBar .right, #topBar .right, .appTopBar .right{ flex:0 0 72px !important; display:flex !important; justify-content:flex-end !important; }
+.topBar .center, #topBar .center, .appTopBar .center{ flex:1 1 auto !important; min-width:0 !important; display:flex !important; justify-content:center !important; }
 .topBar .title, #topBar .title, .appTopBar .title, .topTitle, #topTitle{
+  font-size: 22px !important;
   line-height: 1.1 !important;
-  padding-top: 2px !important;
   white-space: nowrap !important;
   overflow: visible !important;
   text-overflow: clip !important;
+  padding: 0 6px !important;
 }
-/* Ensure right-side buttons don't overlap the title */
-.topBar .right, #topBar .right, .appTopBar .right{
-  flex: 0 0 auto !important;
+/* sound button hitbox crop */
+#soundBtn, .soundBtn{
+  padding: 6px 6px !important;
+  margin: 0 !important;
+  background: transparent !important;
 }
-.topBar .left, #topBar .left, .appTopBar .left{
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-}
-
-
-/* v450: crop the "canvas" around the sound button so header title has room */
-#soundBtn{
-  padding:6px 8px;
-  width:44px;height:44px;
-  border-radius:14px;
-  font-size:22px; /* slightly bigger icon */
-  line-height:1;
-}
-
-.topActions.right, .topActions .verStack{
-  padding:0 !important;
-  margin:0 !important;
-}
-.topActions.right{
-  width:auto !important;
-  flex:0 0 auto !important;
-}
-.topBar .title, #topBar .title, .appTopBar .title, .topTitle, #topTitle{
-  padding-right:56px !important; /* guarantees title never sits under the sound button */
+#soundBtn canvas, .soundBtn canvas{
+  display:block !important;
 }
 
 </style>
