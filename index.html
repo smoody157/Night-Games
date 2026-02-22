@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v412</title>
+<title>Game Night • v413</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v412 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v413 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v412 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v413 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2087,7 +2087,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v412</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v413</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2101,11 +2101,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v412</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v413</div>
 </div>
 
 <script>
-const BUILD_ID="v412";
+const BUILD_ID="v413";
 
 
 
@@ -2135,7 +2135,7 @@ const BUILD_ID="v412";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v412) =====
+/* ===== v166 CLEAN BOOT (v413) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2544,7 +2544,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v412 stability) ---
+// --- Snapshot compatibility helpers (v413 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3082,10 +3082,24 @@ let roomUnsub = null;
 async function saveMatchState(roomId, match){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
+
+  // Next revision (monotonic)
+  const nextRev = Number(match?match._rev||0:0) + 1;
+
+  // Prepare payload with the NEW rev so all clients stay consistent
   const payload = structuredClone(match);
-  const nextRev = (match._rev||0) + 1;
+  payload._rev = nextRev;
+
+  // Write first; only then advance local rev (prevents local rev drifting ahead on errors)
+  await updateDoc(ref, {
+    matchData: payload,
+    rev: nextRev,
+    updatedBy: normEmail(meUser.email),
+    updatedAt: serverTimestamp()
+  });
+
+  // Local rev updates after a confirmed write
   match._rev = nextRev;
-  await updateDoc(ref, { matchData: payload, rev: nextRev, updatedBy: normEmail(meUser.email) });
 }
 function listenMatchState(roomId, cb){
   // IMPORTANT: use the same resolved base as writes (prevents host/join reading different paths)
@@ -3246,7 +3260,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v412 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v413 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4938,7 +4952,7 @@ async function renderGamePlay(){
         const me = normEmail(meUser.email);
 
         // Accept if: we have no match yet, or it's newer and not just our echo
-        if(!match || inRev > myRev || (inRev === myRev && updatedBy && updatedBy !== me)){
+        if(!match || inRev > myRev || (updatedBy && updatedBy !== me && inRev >= myRev)){
           match = incoming;
           roomSynced = true;
           requestRender("roomSync");
@@ -5461,7 +5475,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 </style>
 
 
-<!-- ================= v412 BUTTON LIVENESS + MULTIPLAYER SAFETY (NO LISTENER OVERRIDES) ================= -->
+<!-- ================= v413 BUTTON LIVENESS + MULTIPLAYER SAFETY (NO LISTENER OVERRIDES) ================= -->
 <script>
 (function(){
   // This patch ONLY ensures board buttons remain clickable after rapid re-renders.
@@ -5503,10 +5517,10 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
   }catch(e){}
 })();
 </script>
-<!-- ================= END v412 BUTTON LIVENESS + MULTIPLAYER SAFETY ================= -->
+<!-- ================= END v413 BUTTON LIVENESS + MULTIPLAYER SAFETY ================= -->
 
 
-<!-- ================= MULTIPLAYER STABILITY PATCH v412 (FUNCTIONAL TURN ACCESS) ================= -->
+<!-- ================= MULTIPLAYER STABILITY PATCH v413 (FUNCTIONAL TURN ACCESS) ================= -->
 <script>
 (function(){
   function normEmail(e){ return (e||"").toLowerCase().trim(); }
@@ -5600,7 +5614,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 })();
 </script>
-<!-- ================= END MULTIPLAYER STABILITY PATCH v412 ================= -->
+<!-- ================= END MULTIPLAYER STABILITY PATCH v413 ================= -->
 
 </body>
 </html>
