@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v418</title>
+<title>Game Night • v420</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v418 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v420 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v418 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v420 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2087,7 +2087,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v418</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v420</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2101,11 +2101,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v418</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v420</div>
 </div>
 
 <script>
-const BUILD_ID="v418";
+const BUILD_ID="v420";
 
 
 
@@ -2135,7 +2135,7 @@ const BUILD_ID="v418";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v418) =====
+/* ===== v166 CLEAN BOOT (v420) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2544,7 +2544,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v418 stability) ---
+// --- Snapshot compatibility helpers (v420 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3027,7 +3027,6 @@ async function joinRoom(roomId){
   if(!Array.isArray(data.players) || !data.players.includes(e)) throw new Error("Not allowed in this room.");
 
   // Mark this player as joined (in-app presence for waiting room).
-  try{
   await updateDoc(ref, {
     joined: arrayUnion(e),
     declined: arrayRemove(e),
@@ -3084,37 +3083,14 @@ async function saveMatchState(roomId, match){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
 
-  // -------- TURN GUARD (local, safe) --------
-  // Prevent a client from writing moves when it's not their turn.
-  // This fixes "I can play for my opponent" without breaking room joining.
-  try{
-    const me = normEmail(meUser?.email || "");
-    const players = Array.isArray(match?.players) ? match.players : [];
-    let actorIdx = -1;
-
-    // Killer claim step uses claimIndex while phase=claim
-    if(match?.gameId==="killer" && match?.phase==="claim" && Number.isFinite(match?.claimIndex)) actorIdx = Number(match.claimIndex);
-    else if(Number.isFinite(match?.turnIndex)) actorIdx = Number(match.turnIndex);
-
-    const actorEmail = (actorIdx>=0 && actorIdx<players.length)
-      ? normEmail((players[actorIdx]||{}).email || (players[actorIdx]||{}).playerEmail || "")
-      : "";
-
-    // If we can confidently identify the actor and it's not me, block the write.
-    if(me && actorEmail && actorEmail !== me){
-      toastMsg = "Waiting for opponent…";
-      if(typeof requestRender==="function") requestRender("turnGuard");
-      return;
-    }
-  }catch(_e){ /* If guard can't run, don't break gameplay. */ }
-
-  // -------- REVISION (monotonic) --------
-  // Increment based on local match._rev; matchData._rev is aligned to room.rev by listenMatchState.
+  // Next revision (monotonic)
   const nextRev = Number(match?match._rev||0:0) + 1;
 
-  const payload = (typeof structuredClone==='function') ? structuredClone(match) : JSON.parse(JSON.stringify(match));
+  // Prepare payload with the NEW rev so all clients stay consistent
+  const payload = structuredClone(match);
   payload._rev = nextRev;
 
+  // Write first; only then advance local rev (prevents local rev drifting ahead on errors)
   await updateDoc(ref, {
     matchData: payload,
     rev: nextRev,
@@ -3122,13 +3098,7 @@ async function saveMatchState(roomId, match){
     updatedAt: serverTimestamp()
   });
 
-  });
-}catch(e){
-  toastMsg = e?.message || String(e);
-  if(typeof requestRender==='function') requestRender('saveMatchError');
-  throw e;
-}
-
+  // Local rev updates after a confirmed write
   match._rev = nextRev;
 }
 function listenMatchState(roomId, cb){
@@ -3290,7 +3260,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v418 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v420 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4981,7 +4951,7 @@ async function renderGamePlay(){
         const updatedBy = normEmail(roomDoc.updatedBy || "");
         const me = normEmail(meUser.email);
 
-        // Accept if: we have no match yet, or it's newer and not just our echo
+        // Accept if: we have no match yet, or room rev is newer; also accept opponent updates even if equal (prevents one-sided turn stuck)
         if(!match || inRev > myRev || (updatedBy && updatedBy !== me && inRev >= myRev)){
           match = incoming;
           roomSynced = true;
@@ -5505,7 +5475,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 </style>
 
 
-<!-- ================= v418 BUTTON LIVENESS + MULTIPLAYER SAFETY (NO LISTENER OVERRIDES) ================= -->
+<!-- ================= v420 BUTTON LIVENESS + MULTIPLAYER SAFETY (NO LISTENER OVERRIDES) ================= -->
 <script>
 (function(){
   // This patch ONLY ensures board buttons remain clickable after rapid re-renders.
@@ -5547,7 +5517,105 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
   }catch(e){}
 })();
 </script>
-<!-- ================= END v418 BUTTON LIVENESS + MULTIPLAYER SAFETY ================= -->
+<!-- ================= END v420 BUTTON LIVENESS + MULTIPLAYER SAFETY ================= -->
+
+
+<!-- ================= MULTIPLAYER STABILITY PATCH v420 (FUNCTIONAL TURN ACCESS) ================= -->
+<script>
+(function(){
+  function normEmail(e){ return (e||"").toLowerCase().trim(); }
+
+  // Find my index in match.players (most reliable across games)
+  function myIndex(m){
+    const me = normEmail(window.meUser?.email || "");
+    if(!me || !m || !Array.isArray(m.players)) return -1;
+    return m.players.findIndex(p => normEmail(p?.email || "") === me);
+  }
+
+  // Determine actor index (supports Killer claim step)
+  function actorIndex(m){
+    if(!m) return -1;
+    if(m.gameId==="killer" && m.phase==="claim" && Number.isFinite(m.claimIndex)) return Number(m.claimIndex);
+    if(Number.isFinite(m.turnIndex)) return Number(m.turnIndex);
+    return -1;
+  }
+
+  // Only lock "in-game action" buttons, never lobby/setup/navigation
+  function shouldLockButton(btn){
+    const id = (btn.id||"").toLowerCase();
+    if(id.includes("signout") || id.includes("back")) return false;
+    if(id.startsWith("wr")) return false;
+
+    // In-game actions usually have data-* markers
+    if(btn.hasAttribute("data-attack") || btn.hasAttribute("data-action") ||
+       btn.hasAttribute("data-dart")   || btn.hasAttribute("data-score")  ||
+       btn.hasAttribute("data-pick")) return true;
+
+    // Also lock buttons that live inside typical game containers
+    return !!btn.closest(".gameScreen,.matchScreen,.gamePlay,.board,.gameBoard");
+  }
+
+  function enforce(){
+    if(!window.roomId) return;           // single-player: never lock
+    const m = window.match;
+    if(!m) return;                       // no match yet: don't lock
+
+    const mi = myIndex(m);
+    const ai = actorIndex(m);
+
+    // CRITICAL: if we can't identify both indices, do NOT disable anything.
+    // This prevents the "nobody can press buttons" deadlock.
+    if(mi < 0 || ai < 0 || !Array.isArray(m.players) || ai >= m.players.length) {
+      // Ensure any previously-locked buttons get re-enabled
+      document.querySelectorAll("button").forEach(btn=>{
+        if(shouldLockButton(btn)) btn.disabled = false;
+      });
+      return;
+    }
+
+    const allow = (mi === ai);
+
+    document.querySelectorAll("button").forEach(btn=>{
+      if(!shouldLockButton(btn)) return;
+      btn.disabled = !allow;
+    });
+  }
+
+  // Run after renders settle (don’t override listeners; only hook render)
+  const origReq = window.requestRender;
+  if(typeof origReq === "function"){
+    window.requestRender = function(reason){
+      const r = origReq(reason);
+      setTimeout(enforce, 0);
+      setTimeout(enforce, 60); // second pass for slow DOM + mobile
+      return r;
+    };
+  } else {
+    window.addEventListener("load", ()=>{ setTimeout(enforce, 80); });
+  }
+
+  // Also enforce after room snapshots cause UI changes
+  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) setTimeout(enforce, 80); });
+
+  // Safety: if something locked too early, auto-unlock after 2s unless a valid turn is known
+  setInterval(()=>{
+    try{
+      if(!window.roomId) return;
+      const m = window.match;
+      const mi = myIndex(m);
+      const ai = actorIndex(m);
+      if(mi < 0 || ai < 0) {
+        document.querySelectorAll("button").forEach(btn=>{
+          if(shouldLockButton(btn)) btn.disabled = false;
+        });
+      }
+    }catch(e){}
+  }, 2000);
+
+})();
+</script>
+<!-- ================= END MULTIPLAYER STABILITY PATCH v420 ================= -->
+
 </body>
 </html>
 
