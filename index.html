@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v338</title>
+<title>Game Night • v339</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -390,8 +390,8 @@ input,select{
 
 
 
-/* v338 landing logo placement harden (prevents bottom clipping in rounded container) */
-#landingLogoOverlay{ max-height:140px; }
+/* v339 landing logo placement harden (prevents bottom clipping in rounded container) */
+#landingLogoOverlay{ width:auto; max-width:92%; max-height:120px; height:auto; display:block; image-rendering:auto; -webkit-backface-visibility:hidden; backface-visibility:hidden; transform:translate3d(0,0,0); }
 /* --- Polish: roster/player readability --- */
 .rosterCard .playerHeader .nm{ text-align:center; font-size:28px !important; }
 .rosterCard .playerHeader .rosterSub{ text-align:center; opacity:.9; }
@@ -500,15 +500,16 @@ button.btn{ position:relative; z-index:3; }
 body.authMode .footerLegal{display:none !important;}
 body.authMode .footerLegal *{display:none !important;}
 
-/* v338 landing logo: render via canvas to avoid iOS PNG bottom distortion */
+/* v339 landing logo: render via canvas to avoid iOS PNG bottom distortion */
 .landingLogoHolder{
   display:flex;
   justify-content:center;
   align-items:center;
-  margin: 6px auto 0;
+  margin: -6px auto 0;
   max-width: 560px;
-  padding: 0 10px 10px;
+  padding: 0 10px 6px;
 }
+
 .landingLogoHolder img,
 .landingLogoHolder canvas{
   width: min(360px, 86vw);
@@ -2493,7 +2494,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v338</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v339</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2507,11 +2508,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v338</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v339</div>
 </div>
 
 <script>
-const BUILD_ID="v338";
+const BUILD_ID="v339";
 
 
 
@@ -3028,7 +3029,7 @@ function __landingSetMode(on){
 }
 
 
-// v338: draw login logo onto a canvas to avoid iOS Safari PNG bottom distortion artifacts
+// v339: draw login logo onto a canvas to avoid iOS Safari PNG bottom distortion artifacts
 function __landingLogoToCanvas(){
   try{
     const img = document.getElementById("landingLogoOverlay");
@@ -3072,6 +3073,46 @@ function __landingLogoToCanvas(){
       }catch(e){}
     };
     tmp.src = src;
+  }catch(e){}
+}
+
+
+function __landingSetLogoSrc(){
+  try{
+    const img = document.getElementById("landingLogoOverlay");
+    if(!img) return;
+    const fallback = img.getAttribute("data-fallback") || "";
+    // Try common repo paths (user said logo is in gethome/)
+    const candidates = [
+      "gethome/logo.png",
+      "gethome/logo.PNG",
+      "gethome/Logo.png",
+      "gethome/Logo.PNG",
+      "gethome/dartroom_logo.png",
+      "gethome/dartroom_logo.PNG",
+      "gethome/DartRoomLogo.png",
+      "gethome/DartRoomLogo.PNG",
+      "gethome/bill.png",
+      "gethome/bill.PNG",
+      "gethome/bill_logo.png",
+      "gethome/BillLogo.png",
+      "gethome/BILL_LOGO.png",
+      "gethome/BILL_MOODY.png",
+      "gethome/BILL_MOODY_LOGO.png"
+    ];
+    let i = 0;
+    const probe = new Image();
+    probe.onload = ()=>{ img.src = candidates[i]; };
+    probe.onerror = ()=>{
+      i++;
+      if(i >= candidates.length){
+        // fall back to embedded data if file not found
+        if(fallback) img.src = fallback;
+        return;
+      }
+      probe.src = candidates[i] + "?v=" + Date.now();
+    };
+    probe.src = candidates[i] + "?v=" + Date.now();
   }catch(e){}
 }
 
@@ -4584,17 +4625,16 @@ async function renderAuth(){
 
     <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:hidden;">
       <video id="loginIntroVideo" playsinline muted autoplay loop
-        style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:translateY(-58px) scale(1.10);transform-origin:center top;">
+        style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center center;">
       </video>
-      <div class="landingLogoHolder"><img id="landingLogoOverlay" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo" /></div>
+      <div class="landingLogoHolder"><img id="landingLogoOverlay" src="" data-fallback="${DARTROOM_LOGO_DATA}" alt="Dartroom logo" /></div>
 </div>
 `;
 setHTML(html);
 
   __landingSetMode(true);
   __landingWireVideo();
-  __landingLogoToCanvas();
-
+  __landingSetLogoSrc();
   const __emailEl = document.getElementById("inEmail");
   const __goEl = document.getElementById("goBtn");
   if(__emailEl && __goEl){ __emailEl.addEventListener("keydown",(ev)=>{ if(ev.key==="Enter"){ ev.preventDefault(); __goEl.click(); }}); }
