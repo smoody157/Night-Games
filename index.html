@@ -1,9 +1,3 @@
-window.onunhandledrejection = (ev)=>{
-  try{ ev.preventDefault && ev.preventDefault(); }catch(e){}
-  const r = (ev && ev.reason) ? ev.reason : ev;
-  const msg = (r && (r.stack || r.message)) ? (r.stack || r.message) : String(r);
-  alert("Unhandled rejection: " + msg);
-};
 <!doctype html>
 <html lang="en">
 <head>
@@ -99,7 +93,7 @@ body{
 
 .topbar{
   position:sticky;top:0;z-index:10;
-  display:grid;grid-template-columns: 1fr auto 1fr;
+  display:grid;grid-template-columns: auto 1fr auto;
   align-items:center;gap:10px;
   padding:10px 12px;
   padding-top:calc(10px + env(safe-area-inset-top));
@@ -110,16 +104,23 @@ body{
 .topActions.left{justify-content:flex-start}
 .topActions.right{justify-content:flex-end}
 
+/* v450: brand/title must never be masked by left/right actions */
 .brand{
-  grid-column:2;display:flex;flex-direction:column;line-height:1.05;
+  grid-column:2;
+  display:flex;flex-direction:column;line-height:1.05;
   align-items:center;text-align:center;
-  max-width:min(540px, 66vw);
+  max-width:100%;
+  padding:0 96px; /* reserve space for action buttons */
+  overflow:visible;
 }
-.brand .t{
+#brandTitle, .brand .t{
   font-weight:1000;
-  font-size: clamp(20px, 5.2vw, 32px);
-letter-spacing:.4px;
+  font-size:20px;
+  letter-spacing:.4px;
   text-shadow:0 2px 14px rgba(0,0,0,.55), 0 0 18px rgba(34,211,238,.10);
+  white-space:nowrap;
+  overflow:visible;
+  text-overflow:clip;
 }
 .brand .s{font-size:12px;color:var(--muted);white-space:normal;overflow-wrap:anywhere;}
 
@@ -967,7 +968,7 @@ h1, .title, .screenTitle, .hdrTitle, .pageTitle, .gameTitle, .game-title{
 }
 
 /* "Game Night" heading */
-#loginTitle, .loginTitle, #homeTitle, .homeTitle{
+#loginTitle, .loginTitle, #homeTitle, .homeTitle, .brandTitle{
   text-align:center !important;
   font-size: clamp(34px, 6vw, 46px) !important;
   font-weight: 1000 !important;
@@ -2714,7 +2715,7 @@ function unlockAudio(){
   if(__audioUnlocked) return;
   const ctx = ensureAudio();
   if(!ctx) return;
-  try{ if(ctx.state === "suspended") ctx.resume(); }catch{}
+  try{ if(ctx.state === "suspended"){ const _p = ctx.resume()?.catch?.(()=>{}); if(_p && _p.catch) _p.catch(()=>{}); } }catch{}
   // silent tick to fully unlock (iOS/Safari)
   try{
     const o = ctx.createOscillator();
@@ -2783,7 +2784,7 @@ function playBeep(kind){
   if(!soundEnabled) return;
   const ctx = ensureAudio();
   if(!ctx) return;
-  try{ if(ctx.state === "suspended") ctx.resume(); }catch{}
+  try{ if(ctx.state === "suspended"){ const _p = ctx.resume()?.catch?.(()=>{}); if(_p && _p.catch) _p.catch(()=>{}); } }catch{}
 
   const _nowMs = Date.now();
   window.__lastBeepAt = window.__lastBeepAt || 0;
@@ -4419,12 +4420,12 @@ async function renderAuth(){
       </div>
     </div>
 
-    <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:visible;">
+    <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:hidden;">
       <video id="loginIntroVideo" playsinline muted autoplay loop
-        style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:-18px auto 0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:none;object-position:center top;">
+        style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:none;object-position:center;">
       </video>
       <img id="landingLogoOverlay" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo"
-        style="position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:min(200px,64vw);height:auto;opacity:1;pointer-events:none;z-index:999;mix-blend-mode:normal;background:transparent;padding:0;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));background:transparent;padding:0;" />
+        style="position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:min(240px,72vw);height:auto;opacity:1;pointer-events:none;z-index:999;mix-blend-mode:normal;background:transparent;padding:0;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));" />
 
     </div>
 `;
@@ -5883,12 +5884,13 @@ button.statsBtn, .statsBtn{
 
 /* v450: crop the "canvas" around the sound button so header title has room */
 #soundBtn{
-  padding:6px 10px !important;
-  min-width:44px !important;
-  min-height:44px !important;
-  line-height:1 !important;
-  font-size:22px !important;
+  padding:6px 8px;
+  width:44px;height:44px;
+  border-radius:14px;
+  font-size:22px; /* slightly bigger icon */
+  line-height:1;
 }
+
 .topActions.right, .topActions .verStack{
   padding:0 !important;
   margin:0 !important;
