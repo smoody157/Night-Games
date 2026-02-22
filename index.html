@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v417</title>
+<title>Game Night • v418</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v417 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v418 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v417 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v418 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2087,7 +2087,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v417</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v418</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2101,11 +2101,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v417</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v418</div>
 </div>
 
 <script>
-const BUILD_ID="v417";
+const BUILD_ID="v418";
 
 
 
@@ -2135,7 +2135,7 @@ const BUILD_ID="v417";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v417) =====
+/* ===== v166 CLEAN BOOT (v418) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2544,7 +2544,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v417 stability) ---
+// --- Snapshot compatibility helpers (v418 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3027,6 +3027,7 @@ async function joinRoom(roomId){
   if(!Array.isArray(data.players) || !data.players.includes(e)) throw new Error("Not allowed in this room.");
 
   // Mark this player as joined (in-app presence for waiting room).
+  try{
   await updateDoc(ref, {
     joined: arrayUnion(e),
     declined: arrayRemove(e),
@@ -3111,7 +3112,7 @@ async function saveMatchState(roomId, match){
   // Increment based on local match._rev; matchData._rev is aligned to room.rev by listenMatchState.
   const nextRev = Number(match?match._rev||0:0) + 1;
 
-  const payload = structuredClone(match);
+  const payload = (typeof structuredClone==='function') ? structuredClone(match) : JSON.parse(JSON.stringify(match));
   payload._rev = nextRev;
 
   await updateDoc(ref, {
@@ -3120,6 +3121,13 @@ async function saveMatchState(roomId, match){
     updatedBy: normEmail(meUser.email),
     updatedAt: serverTimestamp()
   });
+
+  });
+}catch(e){
+  toastMsg = e?.message || String(e);
+  if(typeof requestRender==='function') requestRender('saveMatchError');
+  throw e;
+}
 
   match._rev = nextRev;
 }
@@ -3282,7 +3290,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v417 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v418 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -5497,7 +5505,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 </style>
 
 
-<!-- ================= v417 BUTTON LIVENESS + MULTIPLAYER SAFETY (NO LISTENER OVERRIDES) ================= -->
+<!-- ================= v418 BUTTON LIVENESS + MULTIPLAYER SAFETY (NO LISTENER OVERRIDES) ================= -->
 <script>
 (function(){
   // This patch ONLY ensures board buttons remain clickable after rapid re-renders.
@@ -5539,7 +5547,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
   }catch(e){}
 })();
 </script>
-<!-- ================= END v417 BUTTON LIVENESS + MULTIPLAYER SAFETY ================= -->
+<!-- ================= END v418 BUTTON LIVENESS + MULTIPLAYER SAFETY ================= -->
 </body>
 </html>
 
