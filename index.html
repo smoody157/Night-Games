@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v405</title>
+<title>Game Night • v407</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v405 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v407 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v405 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v407 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2087,7 +2087,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v405</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v407</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2101,11 +2101,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v405</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v407</div>
 </div>
 
 <script>
-const BUILD_ID="v405";
+const BUILD_ID="v407";
 
 
 
@@ -2135,7 +2135,7 @@ const BUILD_ID="v405";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v405) =====
+/* ===== v166 CLEAN BOOT (v407) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2544,7 +2544,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v405 stability) ---
+// --- Snapshot compatibility helpers (v407 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3241,7 +3241,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v405 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v407 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4933,7 +4933,7 @@ async function renderGamePlay(){
         const me = normEmail(meUser.email);
 
         // Accept if: we have no match yet, or it's newer and not just our echo
-        if(!match || (inRev > myRev && updatedBy !== me)){
+        if(!match || inRev > myRev || (inRev === myRev && updatedBy && updatedBy !== me)){
           match = incoming;
           roomSynced = true;
           requestRender("roomSync");
@@ -5571,7 +5571,7 @@ button.statsBtn, .statsBtn{
 
 
 
-<!-- ================= STABLE MULTIPLAYER CORE v405 (R2 TURN HANDOFF) ================= -->
+<!-- ================= STABLE MULTIPLAYER CORE v407 (R2 TURN HANDOFF) ================= -->
 <script>
 (function(){
   function normEmail(e){ return (e||"").toLowerCase().trim(); }
@@ -5676,4 +5676,75 @@ button.statsBtn, .statsBtn{
   }
 })();
 </script>
-<!-- ================= END STABLE MULTIPLAYER CORE v405 (R2 TURN HANDOFF) ================= -->
+<!-- ================= END STABLE MULTIPLAYER CORE v407 (R2 TURN HANDOFF) ================= -->
+
+
+
+<!-- ================= MULTIPLAYER STABILITY PATCH v407 (NO LISTENER OVERRIDES) ================= -->
+<script>
+(function(){
+  function normEmail(e){ return (e||"").toLowerCase().trim(); }
+
+  // Determine whose turn across games (Killer claim phase supported)
+  function activeActorEmail(m){
+    if(!m) return "";
+    if(m.gameId==="killer" && m.phase==="claim" && Number.isFinite(m.claimIndex)){
+      return normEmail(m.players?.[m.claimIndex]?.email || "");
+    }
+    if(Number.isFinite(m.turnIndex)){
+      return normEmail(m.players?.[m.turnIndex]?.email || "");
+    }
+    return "";
+  }
+
+  function isMyTurn(){
+    const m = window.match;
+    if(!window.roomId || !m) return true; // single player / no match => allow
+    const me = normEmail(window.meUser?.email || "");
+    const actor = activeActorEmail(m);
+    if(!me || !actor) return true; // don't lock if we can't determine
+    return me === actor;
+  }
+
+  function shouldLockButton(btn){
+    const id=(btn.id||"").toLowerCase();
+    if(id.includes("signout") || id.includes("back") || id.includes("reset")) return false;
+
+    // Common in-game action ids across games
+    if(id==="hitbtn" || id==="missbtn" || id==="undobtn") return true;
+    if(id.includes("dart") || id.includes("score") || id.includes("attack")) return true;
+
+    // Data-marked actions
+    if(btn.hasAttribute("data-attack") || btn.hasAttribute("data-action") ||
+       btn.hasAttribute("data-dart") || btn.hasAttribute("data-score") ||
+       btn.hasAttribute("data-pick")) return true;
+
+    return false;
+  }
+
+  function enforce(){
+    if(!window.roomId) return;
+    const allow = isMyTurn();
+    document.querySelectorAll("button").forEach(btn=>{
+      if(!shouldLockButton(btn)) return;
+      btn.disabled = !allow;
+    });
+  }
+
+  // Run after each render using the existing requestRender, without overriding core logic
+  const origReq = window.requestRender;
+  if(typeof origReq === "function"){
+    window.requestRender = function(reason){
+      const r = origReq(reason);
+      setTimeout(enforce, 0);
+      return r;
+    };
+  }
+  window.addEventListener("load", ()=>setTimeout(enforce, 50));
+
+  // Also enforce on visibility change (mobile wake / resume)
+  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) setTimeout(enforce, 50); });
+
+})();
+</script>
+<!-- ================= END MULTIPLAYER STABILITY PATCH v407 ================= -->
