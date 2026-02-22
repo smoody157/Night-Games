@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v442</title>
+<title>Game Night • v443</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -105,7 +105,7 @@ body{
 .topActions.right{justify-content:flex-end}
 
 .brand{
-  grid-column:2;display:flex;flex-direction:column;line-height:1.05;
+  grid-column:2;display:flex;flex-direction:column;line-height:1.15;
   align-items:center;text-align:center;
   max-width:min(540px, 66vw);
 }
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v442 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v443 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v442 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v443 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2081,7 +2081,7 @@ header, .header {
 
 <body>
 
-<!-- ================= v442 EARLY BOOT GUARD (runs before app scripts) ================= -->
+<!-- ================= v443 EARLY BOOT GUARD (runs before app scripts) ================= -->
 <script>
 (function(){
   // Capture any boot-time errors even if app init never reaches render()
@@ -2098,7 +2098,7 @@ header, .header {
           ${d}
           <div class="divider"></div>
           <button class="btn ok" onclick="location.reload()">Reload</button>
-          <div class="small" style="margin-top:10px;opacity:.8">v442 boot guard</div>
+          <div class="small" style="margin-top:10px;opacity:.8">v443 boot guard</div>
         </div>`;
     }catch(_){}
   }
@@ -2153,7 +2153,7 @@ header, .header {
   }, 2500);
 })();
 </script>
-<!-- ================= END v442 EARLY BOOT GUARD ================= -->
+<!-- ================= END v443 EARLY BOOT GUARD ================= -->
 
 
 <div class="topbar">
@@ -2163,7 +2163,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v442</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v443</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2177,11 +2177,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v442</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v443</div>
 </div>
 
 <script>
-const BUILD_ID="v442";
+const BUILD_ID="v443";
 
 
 
@@ -2211,7 +2211,7 @@ const BUILD_ID="v442";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v442) =====
+/* ===== v166 CLEAN BOOT (v443) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2291,7 +2291,7 @@ const BUILD_ID="v442";
       }
     }catch(e){ showBootError(e.message||e); }
   
-  // v442: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
+  // v443: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
   setTimeout(()=>{
     try{
       const app = document.getElementById("app");
@@ -2634,7 +2634,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v442 stability) ---
+// --- Snapshot compatibility helpers (v443 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3019,7 +3019,7 @@ function isOnline(email){
   try{
     const me = normEmail(meUser?.email||"");
     const em = normEmail(email||"");
-    // v442: always show self as online once signed in
+    // v443: always show self as online once signed in
     if(me && em && me===em) return true;
 
     let ms = presCache[em] || null;
@@ -3037,7 +3037,7 @@ function isOnline(email){
 }
 
 function startPresence(email, name){
-  // v442: restore stable behavior + compatibility across older presence doc ids.
+  // v443: restore stable behavior + compatibility across older presence doc ids.
   const em = normEmail(email||"");
   stopPresence();
   if(!em) return;
@@ -3209,7 +3209,7 @@ async function saveMatchState(roomId, match){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
 
-  // v442: authoritative turn guard at the write boundary (applies to all games)
+  // v443: authoritative turn guard at the write boundary (applies to all games)
   try{
     const me = normEmail(meUser?.email || "");
     const players = Array.isArray(match?.players) ? match.players : [];
@@ -3228,7 +3228,7 @@ async function saveMatchState(roomId, match){
     }
   }catch(e){ /* do not block on guard errors */ }
 
-  // v442: rev consistency (matchData._rev always matches room.rev)
+  // v443: rev consistency (matchData._rev always matches room.rev)
   const nextRev = Number(match?match._rev||0:0) + 1;
   match._rev = nextRev;
 
@@ -3403,7 +3403,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v442 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v443 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4413,7 +4413,7 @@ async function renderAuth(){
 
     <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:hidden;">
       <video id="loginIntroVideo" playsinline muted autoplay loop
-        style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:translateY(-58px) scale(1.10);transform-origin:center top;">
+        style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:cover;object-position:center;transform:none;transform-origin:center;">
       </video>
       <img id="landingLogoOverlay" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo"
         style="position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55));background:rgba(6,8,20,.92);padding:10px 12px;border-radius:18px;" />
@@ -4938,7 +4938,7 @@ async function renderGameSetup(){
   updateSetupUI();
 
   document.getElementById("startMatchBtn").onclick = async()=>{
-    // v442: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
+    // v443: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
     if(!g.active){ toastMsg="Coming soon."; return render(); }
 
     const startBtn = document.getElementById("startMatchBtn");
@@ -5180,7 +5180,7 @@ async function renderGamePlay(){
         const updatedBy = normEmail(roomDoc.updatedBy || "");
         const me = normEmail(meUser.email);
 
-        // v442 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
+        // v443 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
         if(!match || (inRev > myRev && updatedBy !== me)){
           match = incoming;
           roomSynced = true;
@@ -5380,7 +5380,7 @@ async function renderStatsGame(){
   };
 }
 
-async function renderHistory(){
+async async function renderHistory(){
   signOutBtn.style.display="inline-block";
   signOutBtn.textContent="Sign out";
   signOutBtn.onclick = doSignOut;
@@ -5711,7 +5711,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 
 <style id="v421_player_carousel_ui">
-/* v442 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
+/* v443 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
 .playerCarouselWrap{ margin:8px 0 2px; }
 .playerCarousel{
   display:flex;
