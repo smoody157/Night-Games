@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v420</title>
+<title>Game Night • v421</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v420 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v421 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v420 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v421 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2087,7 +2087,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v420</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v421</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2101,11 +2101,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v420</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v421</div>
 </div>
 
 <script>
-const BUILD_ID="v420";
+const BUILD_ID="v421";
 
 
 
@@ -2135,7 +2135,7 @@ const BUILD_ID="v420";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v420) =====
+/* ===== v166 CLEAN BOOT (v421) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2544,7 +2544,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v420 stability) ---
+// --- Snapshot compatibility helpers (v421 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3082,24 +3082,10 @@ let roomUnsub = null;
 async function saveMatchState(roomId, match){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
-
-  // Next revision (monotonic)
-  const nextRev = Number(match?match._rev||0:0) + 1;
-
-  // Prepare payload with the NEW rev so all clients stay consistent
   const payload = structuredClone(match);
-  payload._rev = nextRev;
-
-  // Write first; only then advance local rev (prevents local rev drifting ahead on errors)
-  await updateDoc(ref, {
-    matchData: payload,
-    rev: nextRev,
-    updatedBy: normEmail(meUser.email),
-    updatedAt: serverTimestamp()
-  });
-
-  // Local rev updates after a confirmed write
+  const nextRev = (match._rev||0) + 1;
   match._rev = nextRev;
+  await updateDoc(ref, { matchData: payload, rev: nextRev, updatedBy: normEmail(meUser.email) });
 }
 function listenMatchState(roomId, cb){
   // IMPORTANT: use the same resolved base as writes (prevents host/join reading different paths)
@@ -3109,11 +3095,6 @@ function listenMatchState(roomId, cb){
     roomUnsub = onSnapshot(ref, (snap)=>{
       if(!docExists(snap)) return;
       const data = snap.data() || {};
-      try{
-        if(data && data.matchData && typeof data.rev !== 'undefined'){
-          data.matchData._rev = Number(data.rev||0);
-        }
-      }catch(e){}
       cb(data);
     }, (err)=>{ console.warn("room snapshot", err); });
   }).catch((err)=>{ console.warn("resolve base failed", err); });
@@ -3260,7 +3241,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v420 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v421 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -3478,18 +3459,48 @@ function animateTurnName(gameId, name){
 
 function playerStripHTML(players, activeIndex, extraLineFn){
   try{
-    return `<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:6px 0 2px">` +
-      (players||[]).map((p,i)=>{
-        const act=(i===activeIndex);
-        const extra=extraLineFn?(extraLineFn(p,i)||""):"";
-        return `<div style="min-width:140px;max-width:min(320px,90vw);flex:1;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);padding:10px 12px;text-align:center;${act?'border-color:rgba(0,255,0,1);box-shadow:0 0 36.4px rgba(0,128,0,0.4);':''}">
-          <div style="font-weight:1000;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.name||"")}</div>
-          <div class="sub" style="margin-top:2px">${act?"NOW THROWING":"&nbsp;"}</div>
-          ${extra?`<div class="small" style="margin-top:4px">${extra}</div>`:""}
-        </div>`;
-      }).join("") + `</div>`;
+    const cards = (players||[]).map((p,i)=>{
+      const act = (i===activeIndex);
+      const extra = extraLineFn ? (extraLineFn(p,i)||"") : "";
+      return `<div class="pcard ${act?'active':''}" data-player-index="${i}">
+        <div class="pcName">${esc(p.name||"")}</div>
+        <div class="sub pcNow">${act?"NOW THROWING":"&nbsp;"}</div>
+        ${extra?`<div class="small pcExtra">${extra}</div>`:""}
+      </div>`;
+    }).join("");
+    return `<div class="playerCarouselWrap">
+      <div class="playerCarousel" data-player-strip="1" role="list">${cards}</div>
+    </div>`;
   }catch{ return ""; }
 }
+
+
+function __pcarouselMarkInteracting(el){
+  try{ el.dataset.pLastUserScroll = String(Date.now()); }catch(e){}
+}
+function __pcarouselAutoFocus(activeIndex){
+  try{
+    const strip = document.querySelector('[data-player-strip="1"]');
+    if(!strip) return;
+    const last = Number(strip.dataset.pLastUserScroll||0);
+    if(last && (Date.now()-last) < 1400) return;
+    const card = strip.querySelector(`[data-player-index="${activeIndex}"]`);
+    if(!card) return;
+    card.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"});
+  }catch(e){}
+}
+function __pcarouselWire(){
+  try{
+    const strip = document.querySelector('[data-player-strip="1"]');
+    if(!strip || strip.dataset.pWired==="1") return;
+    strip.dataset.pWired="1";
+    strip.addEventListener("touchstart", ()=>__pcarouselMarkInteracting(strip), {passive:true});
+    strip.addEventListener("mousedown", ()=>__pcarouselMarkInteracting(strip));
+    strip.addEventListener("scroll", ()=>__pcarouselMarkInteracting(strip), {passive:true});
+  }catch(e){}
+}
+
+
 
 /* ========= Snapshot undo ========= */
 function pushSnap(m){ m.snaps=m.snaps||[]; m.snaps.push(JSON.stringify(m)); if(m.snaps.length>80) m.snaps.shift(); }
@@ -4951,8 +4962,8 @@ async function renderGamePlay(){
         const updatedBy = normEmail(roomDoc.updatedBy || "");
         const me = normEmail(meUser.email);
 
-        // Accept if: we have no match yet, or room rev is newer; also accept opponent updates even if equal (prevents one-sided turn stuck)
-        if(!match || inRev > myRev || (updatedBy && updatedBy !== me && inRev >= myRev)){
+        // Accept if: we have no match yet, or it's newer and not just our echo
+        if(!match || (inRev > myRev && updatedBy !== me)){
           match = incoming;
           roomSynced = true;
           requestRender("roomSync");
@@ -4975,19 +4986,22 @@ async function renderGamePlay(){
   const ctx={meUser, match};
 
   if(activeGameId==="shanghai"){
-    setHTML(ShanghaiGame.renderPlay(ctx));
-    ShanghaiGame.bindPlay(ctx);
-    return;
+    \1
+    __pcarouselWire();
+    __pcarouselAutoFocus(Number(match && match.turnIndex || 0));
+return;
   }
   if(activeGameId==="killer"){
-    setHTML(KillerGame.renderPlay(ctx));
-    KillerGame.bindPlay(ctx);
-    return;
+    \1
+    __pcarouselWire();
+    __pcarouselAutoFocus(Number((match && match.phase==='claim') ? (match.claimIndex||0) : (match.turnIndex||0)));
+return;
   }
   if(activeGameId==="around"){
-    setHTML(AroundGame.renderPlay(ctx));
-    AroundGame.bindPlay(ctx);
-    return;
+    \1
+    __pcarouselWire();
+    __pcarouselAutoFocus(Number(match && match.turnIndex || 0));
+return;
   }
   screen="home"; __goRender();
 }
@@ -5475,146 +5489,43 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 </style>
 
 
-<!-- ================= v420 BUTTON LIVENESS + MULTIPLAYER SAFETY (NO LISTENER OVERRIDES) ================= -->
-<script>
-(function(){
-  // This patch ONLY ensures board buttons remain clickable after rapid re-renders.
-  // It does NOT override Firestore listeners or multiplayer state logic.
-
-  function $(id){ return document.getElementById(id); }
-
-  // If a game screen re-rendered and missed binding, we provide a tiny fallback dispatcher.
-  // Existing onclick handlers still run first.
-  document.addEventListener("click", function(ev){
-    const btn = ev.target && ev.target.closest && ev.target.closest("button");
-    if(!btn) return;
-
-    // If the button is disabled, respect that.
-    if(btn.disabled) return;
-
-    // If it already has a handler, let it do its thing.
-    try{ if(typeof btn.onclick === "function") return; }catch(e){}
-
-    const id = btn.id || "";
-
-    // Killer buttons
-    if(id==="myDouble"){ try{ if(typeof window.__killerMyDouble==="function") window.__killerMyDouble(); }catch(e){} return; }
-    if(id==="miss"){ try{ if(typeof window.__killerMiss==="function") window.__killerMiss(); }catch(e){} return; }
-    if(id==="undoBtn"){ try{ if(typeof window.__killerUndo==="function") window.__killerUndo(); }catch(e){} return; }
-
-    // Shanghai / Around typical buttons (if present)
-    if(id==="hitBtn" || id==="hit"){ try{ if(typeof window.__gameHit==="function") window.__gameHit(); }catch(e){} return; }
-    if(id==="missBtn"){ try{ if(typeof window.__gameMiss==="function") window.__gameMiss(); }catch(e){} return; }
-    if(id==="undo"){ try{ if(typeof window.__gameUndo==="function") window.__gameUndo(); }catch(e){} return; }
-
-    // No-op if unknown; we don't want to break normal flow.
-  }, true);
-
-  // Ensure app container is above any accidental overlays
-  try{
-    const app = document.getElementById("app");
-    if(app){ app.style.position="relative"; app.style.zIndex="2"; }
-  }catch(e){}
-})();
-</script>
-<!-- ================= END v420 BUTTON LIVENESS + MULTIPLAYER SAFETY ================= -->
-
-
-<!-- ================= MULTIPLAYER STABILITY PATCH v420 (FUNCTIONAL TURN ACCESS) ================= -->
-<script>
-(function(){
-  function normEmail(e){ return (e||"").toLowerCase().trim(); }
-
-  // Find my index in match.players (most reliable across games)
-  function myIndex(m){
-    const me = normEmail(window.meUser?.email || "");
-    if(!me || !m || !Array.isArray(m.players)) return -1;
-    return m.players.findIndex(p => normEmail(p?.email || "") === me);
-  }
-
-  // Determine actor index (supports Killer claim step)
-  function actorIndex(m){
-    if(!m) return -1;
-    if(m.gameId==="killer" && m.phase==="claim" && Number.isFinite(m.claimIndex)) return Number(m.claimIndex);
-    if(Number.isFinite(m.turnIndex)) return Number(m.turnIndex);
-    return -1;
-  }
-
-  // Only lock "in-game action" buttons, never lobby/setup/navigation
-  function shouldLockButton(btn){
-    const id = (btn.id||"").toLowerCase();
-    if(id.includes("signout") || id.includes("back")) return false;
-    if(id.startsWith("wr")) return false;
-
-    // In-game actions usually have data-* markers
-    if(btn.hasAttribute("data-attack") || btn.hasAttribute("data-action") ||
-       btn.hasAttribute("data-dart")   || btn.hasAttribute("data-score")  ||
-       btn.hasAttribute("data-pick")) return true;
-
-    // Also lock buttons that live inside typical game containers
-    return !!btn.closest(".gameScreen,.matchScreen,.gamePlay,.board,.gameBoard");
-  }
-
-  function enforce(){
-    if(!window.roomId) return;           // single-player: never lock
-    const m = window.match;
-    if(!m) return;                       // no match yet: don't lock
-
-    const mi = myIndex(m);
-    const ai = actorIndex(m);
-
-    // CRITICAL: if we can't identify both indices, do NOT disable anything.
-    // This prevents the "nobody can press buttons" deadlock.
-    if(mi < 0 || ai < 0 || !Array.isArray(m.players) || ai >= m.players.length) {
-      // Ensure any previously-locked buttons get re-enabled
-      document.querySelectorAll("button").forEach(btn=>{
-        if(shouldLockButton(btn)) btn.disabled = false;
-      });
-      return;
-    }
-
-    const allow = (mi === ai);
-
-    document.querySelectorAll("button").forEach(btn=>{
-      if(!shouldLockButton(btn)) return;
-      btn.disabled = !allow;
-    });
-  }
-
-  // Run after renders settle (don’t override listeners; only hook render)
-  const origReq = window.requestRender;
-  if(typeof origReq === "function"){
-    window.requestRender = function(reason){
-      const r = origReq(reason);
-      setTimeout(enforce, 0);
-      setTimeout(enforce, 60); // second pass for slow DOM + mobile
-      return r;
-    };
-  } else {
-    window.addEventListener("load", ()=>{ setTimeout(enforce, 80); });
-  }
-
-  // Also enforce after room snapshots cause UI changes
-  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) setTimeout(enforce, 80); });
-
-  // Safety: if something locked too early, auto-unlock after 2s unless a valid turn is known
-  setInterval(()=>{
-    try{
-      if(!window.roomId) return;
-      const m = window.match;
-      const mi = myIndex(m);
-      const ai = actorIndex(m);
-      if(mi < 0 || ai < 0) {
-        document.querySelectorAll("button").forEach(btn=>{
-          if(shouldLockButton(btn)) btn.disabled = false;
-        });
-      }
-    }catch(e){}
-  }, 2000);
-
-})();
-</script>
-<!-- ================= END MULTIPLAYER STABILITY PATCH v420 ================= -->
+<style id="v421_player_carousel_ui">
+/* v421 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
+.playerCarouselWrap{ margin:8px 0 2px; }
+.playerCarousel{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:6px 6px 10px;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+}
+.playerCarousel::-webkit-scrollbar{ display:none; }
+.pcard{
+  scroll-snap-align:center;
+  flex:0 0 min(78vw, 320px);
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.03);
+  padding:10px 12px;
+  text-align:center;
+}
+.pcard.active{
+  border-color:rgba(0,255,0,1);
+  box-shadow:0 0 36.4px rgba(0,128,0,0.40);
+}
+.pcName{
+  font-weight:1000;
+  font-size:15px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.pcExtra{ margin-top:4px; }
+@media (min-width:900px){
+  .pcard{ flex-basis: 260px; }
+}
+</style>
 
 </body>
 </html>
@@ -5715,3 +5626,5 @@ button.statsBtn, .statsBtn{
   z-index:5;
 }
 </style>
+
+
