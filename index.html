@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v413</title>
+<title>Game Night • v414</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v413 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v414 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v413 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v414 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2087,7 +2087,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v413</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v414</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2101,11 +2101,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v413</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v414</div>
 </div>
 
 <script>
-const BUILD_ID="v413";
+const BUILD_ID="v414";
 
 
 
@@ -2135,7 +2135,7 @@ const BUILD_ID="v413";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v413) =====
+/* ===== v166 CLEAN BOOT (v414) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2544,7 +2544,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v413 stability) ---
+// --- Snapshot compatibility helpers (v414 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3260,7 +3260,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v413 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v414 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4675,11 +4675,23 @@ async function renderGameSetup(){
   function syncSelectUI(){
     // Ensure me is always slot 1
     const me = normEmail(meUser.email);
+
+    // Capture current dropdown values FIRST (before any auto-fill) so user choices never bounce
+    const captured = [me];
+    for(let i=2;i<=setupWantedCount;i++){
+      const sel = document.querySelector(`select.playerSlot[data-slot="${i}"]`);
+      const v = sel ? normEmail(sel.value||"") : "";
+      if(v) captured[i-1] = v;
+    }
+
+    // Start from captured values + prior state (captured wins)
+    setupSelectedEmails = (captured.length ? captured : setupSelectedEmails);
     if(!setupSelectedEmails.length || normEmail(setupSelectedEmails[0])!==me){
       setupSelectedEmails = [me, ...setupSelectedEmails.filter(e=>normEmail(e)!==me)];
     }
     setupSelectedEmails = setupSelectedEmails.slice(0, setupWantedCount);
-    // Enforce uniqueness (no same email in multiple slots)
+
+    // Enforce uniqueness preserving order
     (function(){
       const seen = new Set();
       const uniq = [];
@@ -4690,21 +4702,14 @@ async function renderGameSetup(){
         uniq.push(ne);
       }
       setupSelectedEmails = uniq;
+
       // Fill remaining slots with first available players not already selected
       for(const p of (setupPlayersAll||[])){
         if(setupSelectedEmails.length>=setupWantedCount) break;
         const ne = normEmail(p.email);
-        if(ne && !seen.has(ne)) { seen.add(ne); setupSelectedEmails.push(ne); }
+        if(ne && !seen.has(ne) && ne!==me) { seen.add(ne); setupSelectedEmails.push(ne); }
       }
     })();
-
-
-    // Capture current dropdown values FIRST so user changes don't get overwritten on re-render
-    for(let i=2;i<=setupWantedCount;i++){
-      const sel = document.querySelector(`select.playerSlot[data-slot="${i}"]`);
-      const v = sel ? normEmail(sel.value||"") : "";
-      if(v) setupSelectedEmails[i-1] = v;
-    }
 
     // Show/hide slot rows, populate options
     slotSelects.forEach(sel=>{
@@ -4737,7 +4742,7 @@ async function renderGameSetup(){
       }
     });
 
-    // Update selectedEmails from selects
+    // Update selectedEmails from selects (source of truth = UI)
     const next = [normEmail(meUser.email)];
     for(let i=2;i<=setupWantedCount;i++){
       const sel = document.querySelector(`select.playerSlot[data-slot="${i}"]`);
@@ -5475,7 +5480,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 </style>
 
 
-<!-- ================= v413 BUTTON LIVENESS + MULTIPLAYER SAFETY (NO LISTENER OVERRIDES) ================= -->
+<!-- ================= v414 BUTTON LIVENESS + MULTIPLAYER SAFETY (NO LISTENER OVERRIDES) ================= -->
 <script>
 (function(){
   // This patch ONLY ensures board buttons remain clickable after rapid re-renders.
@@ -5517,22 +5522,33 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
   }catch(e){}
 })();
 </script>
-<!-- ================= END v413 BUTTON LIVENESS + MULTIPLAYER SAFETY ================= -->
+<!-- ================= END v414 BUTTON LIVENESS + MULTIPLAYER SAFETY ================= -->
 
 
-<!-- ================= MULTIPLAYER STABILITY PATCH v413 (FUNCTIONAL TURN ACCESS) ================= -->
+
+
+
+<!-- ================= MULTIPLAYER STABILITY PATCH v414 (TURN LOCK + ADOPTION SAFE) ================= -->
 <script>
 (function(){
   function normEmail(e){ return (e||"").toLowerCase().trim(); }
 
-  // Find my index in match.players (most reliable across games)
-  function myIndex(m){
-    const me = normEmail(window.meUser?.email || "");
-    if(!me || !m || !Array.isArray(m.players)) return -1;
-    return m.players.findIndex(p => normEmail(p?.email || "") === me);
+  function getMyEmail(){
+    return normEmail(window.meUser?.email || "");
   }
 
-  // Determine actor index (supports Killer claim step)
+  // robust: some player objects might not use "email" consistently
+  function playerEmail(p){
+    return normEmail(p?.email || p?.playerEmail || p?.em || "");
+  }
+
+  function myIndex(m){
+    const me = getMyEmail();
+    if(!me || !m || !Array.isArray(m.players)) return -1;
+    let i = m.players.findIndex(p => playerEmail(p) === me);
+    return i;
+  }
+
   function actorIndex(m){
     if(!m) return -1;
     if(m.gameId==="killer" && m.phase==="claim" && Number.isFinite(m.claimIndex)) return Number(m.claimIndex);
@@ -5540,81 +5556,71 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
     return -1;
   }
 
-  // Only lock "in-game action" buttons, never lobby/setup/navigation
   function shouldLockButton(btn){
     const id = (btn.id||"").toLowerCase();
+    // never lock navigation / lobby / setup
     if(id.includes("signout") || id.includes("back")) return false;
     if(id.startsWith("wr")) return false;
+    if(id.includes("startmatch") || id.includes("startgame")) return false;
+    if(btn.closest("#playerSelectWrap")) return false;
 
-    // In-game actions usually have data-* markers
+    // lock obvious in-game actions
     if(btn.hasAttribute("data-attack") || btn.hasAttribute("data-action") ||
        btn.hasAttribute("data-dart")   || btn.hasAttribute("data-score")  ||
        btn.hasAttribute("data-pick")) return true;
 
-    // Also lock buttons that live inside typical game containers
+    // fallback: only lock inside game containers
     return !!btn.closest(".gameScreen,.matchScreen,.gamePlay,.board,.gameBoard");
   }
 
+  function setLocked(lock){
+    document.querySelectorAll("button").forEach(btn=>{
+      if(!shouldLockButton(btn)) return;
+      btn.disabled = !!lock;
+    });
+  }
+
   function enforce(){
-    if(!window.roomId) return;           // single-player: never lock
+    if(!window.roomId) return;   // single-player: never lock
     const m = window.match;
-    if(!m) return;                       // no match yet: don't lock
+    if(!m) return;
 
     const mi = myIndex(m);
     const ai = actorIndex(m);
 
-    // CRITICAL: if we can't identify both indices, do NOT disable anything.
-    // This prevents the "nobody can press buttons" deadlock.
-    if(mi < 0 || ai < 0 || !Array.isArray(m.players) || ai >= m.players.length) {
-      // Ensure any previously-locked buttons get re-enabled
-      document.querySelectorAll("button").forEach(btn=>{
-        if(shouldLockButton(btn)) btn.disabled = false;
-      });
+    // If we can't confidently compute ownership, DO NOT LOCK ANYTHING.
+    if(mi < 0 || ai < 0 || !Array.isArray(m.players) || ai >= m.players.length){
+      setLocked(false);
       return;
     }
 
-    const allow = (mi === ai);
+    const me = getMyEmail();
+    const actorEmail = playerEmail(m.players[ai]);
+    const allow = (mi === ai) || (actorEmail && actorEmail === me);
 
-    document.querySelectorAll("button").forEach(btn=>{
-      if(!shouldLockButton(btn)) return;
-      btn.disabled = !allow;
-    });
+    setLocked(!allow);
   }
 
-  // Run after renders settle (don’t override listeners; only hook render)
+  // Run after render settles (never override listeners)
   const origReq = window.requestRender;
   if(typeof origReq === "function"){
     window.requestRender = function(reason){
       const r = origReq(reason);
       setTimeout(enforce, 0);
-      setTimeout(enforce, 60); // second pass for slow DOM + mobile
+      setTimeout(enforce, 120);
       return r;
     };
   } else {
-    window.addEventListener("load", ()=>{ setTimeout(enforce, 80); });
+    window.addEventListener("load", ()=>{ setTimeout(enforce, 150); });
   }
 
-  // Also enforce after room snapshots cause UI changes
-  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) setTimeout(enforce, 80); });
-
-  // Safety: if something locked too early, auto-unlock after 2s unless a valid turn is known
-  setInterval(()=>{
-    try{
-      if(!window.roomId) return;
-      const m = window.match;
-      const mi = myIndex(m);
-      const ai = actorIndex(m);
-      if(mi < 0 || ai < 0) {
-        document.querySelectorAll("button").forEach(btn=>{
-          if(shouldLockButton(btn)) btn.disabled = false;
-        });
-      }
-    }catch(e){}
-  }, 2000);
+  // Extra: unlock on visibility resume, and periodically enforce (handles delayed room updates)
+  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) setTimeout(enforce, 150); });
+  setInterval(()=>{ try{ enforce(); }catch(e){} }, 800);
 
 })();
 </script>
-<!-- ================= END MULTIPLAYER STABILITY PATCH v413 ================= -->
+<!-- ================= END MULTIPLAYER STABILITY PATCH v414 ================= -->
 
 </body>
 </html>
