@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v361</title>
+<title>Game Night • v368</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -2384,20 +2384,23 @@ async function renderGameHistory(){
 </script>
 
 <style>
-/* Build 241 cosmetic fixes */
-.logo, img[class*="logo"], img[id*="logo"]:not(#landingLogoOverlay) {
-  object-fit: contain !important;
-  padding-bottom: 14px !important;
-  overflow: visible !important;
-  max-height: 100% !important;
-}
-/* Do not add padding to the absolutely-positioned landing/logo overlay,
-   otherwise it can get clipped at the bottom inside an overflow-hidden wrapper. */
+/* Logo sizing fix (scoped to auth logo only) */
+.authLogoImg,
 #landingLogoOverlay{
-  padding-bottom: 0 !important;
-  height: auto !important;
-  object-fit: contain !important;
+  display:block !important;
+  width:auto !important;
+  height:auto !important;
+  max-width:100% !important;
+  object-fit:contain !important;
+  padding-bottom:0 !important;   /* prevent bottom crop from inherited/patched padding */
+  margin:0 !important;
+
+  padding:0 !important;
+  background:transparent !important;
+  border-radius:0 !important;
 }
+
+#landingLogoOverlayWrap{overflow:visible !important;}
 </style>
 <style>
 /* BUILD 241 COSMETIC ONLY */
@@ -2414,13 +2417,6 @@ async function renderGameHistory(){
   animation: greenPulse 2.8s ease-in-out infinite;
 }
 
-/* 2) Fix landing page logo bottom cut-off (visual container only) */
-.logo, img[class*="logo"], img[id*="logo"] {
-  object-fit: contain !important;
-  padding-bottom: 16px !important;
-  overflow: visible !important;
-  max-height: 100% !important;
-}
 </style>
 
 <style id="v280_logo_and_stats_lock">
@@ -2475,7 +2471,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v361</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v368</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2489,11 +2485,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v361</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v368</div>
 </div>
 
 <script>
-const BUILD_ID="v361";
+const BUILD_ID="v368";
 
 
 
@@ -4498,12 +4494,15 @@ async function renderAuth(){
       </div>
     </div>
 
-    <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:hidden;">
+    <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:visible;">
+      <div class="introVideoClip" style="width:100%;max-width:520px;height:320px;border-radius:16px;overflow:hidden;display:block;margin:0 auto;background:rgba(0,0,0,.25);">
       <video id="loginIntroVideo" playsinline muted autoplay loop
-        style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:translateY(-58px) scale(1.10);transform-origin:center top;">
+        style="width:100%;height:100%;display:block;object-fit:contain;object-position:center top;transform:translateY(-58px) scale(1.10);transform-origin:center top;">
       </video>
-      <img id="landingLogoOverlay" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo"
-        style="position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55));background:rgba(6,8,20,.92);padding:10px 12px;border-radius:18px;" />
+      </div>
+      <div id="landingLogoOverlayWrap" style="position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55));background:rgba(6,8,20,.92);padding:10px 12px;border-radius:18px;">
+        <img id="landingLogoOverlay" class="authLogoImg" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo" style="display:block;width:100%;height:auto;object-fit:contain;background:transparent;padding:0;border-radius:0;" />
+      </div>
 
     </div>
 `;
@@ -5384,10 +5383,10 @@ wireDelegatedClicks();
   window.__rendering=true;
   try{
     // auth-only topbar positioning
-    if(screen!=="auth" && screen!=="signup"){ document.body.classList.remove("authMode"); }
+    if(screen!=="auth"){ document.body.classList.remove("authMode"); }
 
     if(screen==="auth") return renderAuth();
-    if(screen==="signup"){ document.body.classList.add("authMode"); return renderSignup(); }
+    if(screen==="signup") return renderSignup();
     if(!meUser){ screen="auth"; return renderAuth(); }
 
     // keep player profile fresh
