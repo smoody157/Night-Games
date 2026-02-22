@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v403</title>
+<title>Game Night • v404</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v403 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v404 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v403 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v404 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2087,7 +2087,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v403</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v404</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2101,11 +2101,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v403</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v404</div>
 </div>
 
 <script>
-const BUILD_ID="v403";
+const BUILD_ID="v404";
 
 
 
@@ -2135,7 +2135,7 @@ const BUILD_ID="v403";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v403) =====
+/* ===== v166 CLEAN BOOT (v404) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2544,7 +2544,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v403 stability) ---
+// --- Snapshot compatibility helpers (v404 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3241,7 +3241,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v403 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v404 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -5560,103 +5560,72 @@ button.statsBtn, .statsBtn{
 
 
 
-<!-- ================= MULTIPLAYER CONVERGENCE PATCH (GLOBAL, ALL GAMES) ================= -->
-<script>
-/*
-GLOBAL FIX GOALS
-1) Single source of truth = room.matchData
-2) Always adopt newer rev (no updatedBy filter)
-3) Universal turn lock (UI + write guard)
-4) Force rev increment on every save
-*/
 
+
+
+
+
+
+<!-- ================= STABLE MULTIPLAYER CORE v404 ================= -->
+<script>
 (function(){
-  // ---------- Helpers ----------
+
   function normEmail(e){ return (e||"").toLowerCase().trim(); }
 
   function activeActorEmail(m){
     if(!m) return "";
-    if(m.gameId==="killer" && m.phase==="claim" && Number.isFinite(m.claimIndex)){
-      return normEmail(m.players?.[m.claimIndex]?.email || "");
-    }
     if(Number.isFinite(m.turnIndex)){
       return normEmail(m.players?.[m.turnIndex]?.email || "");
+    }
+    if(m.gameId==="killer" && m.phase==="claim" && Number.isFinite(m.claimIndex)){
+      return normEmail(m.players?.[m.claimIndex]?.email || "");
     }
     return "";
   }
 
   function isMyTurn(m){
-    try{
-      const me = normEmail(window.meUser?.email || "");
-      const actor = activeActorEmail(m);
-      return !!me && !!actor && me === actor;
-    }catch(e){ return false; }
+    const me = normEmail(window.meUser?.email || "");
+    const actor = activeActorEmail(m);
+    return !!me && !!actor && me === actor;
   }
 
-  // ---------- Patch saveMatchState (rev bump + updatedBy) ----------
+  // ---- Safe save wrapper (rev bump only) ----
   const __origSave = window.saveMatchState;
   window.saveMatchState = async function(roomId, m){
     if(!roomId || !m) return __origSave?.(roomId, m);
-
-    // Turn guard
-    if(window.roomId && !isMyTurn(m)){
-      window.toastMsg = "Not your turn.";
-      if(typeof window.requestRender==="function") requestRender("turnDenied");
-      return;
-    }
-
-    // Force revision bump
     m._rev = Number(m._rev || 0) + 1;
-
-    // Call original if exists
-    if(typeof __origSave === "function"){
-      return __origSave(roomId, m);
-    }
+    return __origSave?.(roomId, m);
   };
 
-  // ---------- Patch match listener adoption rule ----------
-  const __origListenMatchState = window.listenMatchState;
-  if(typeof __origListenMatchState === "function"){
-    window.listenMatchState = function(roomId, cb){
-      return __origListenMatchState(roomId, function(roomDoc){
-        try{
-          const incoming = roomDoc?.matchData;
-          const inRev = Number(roomDoc?.rev || 0);
-          const myRev = Number(window.match?window.match._rev||0:0);
+  // ---- Safe UI turn lock (no hard blocking) ----
+  window.enforceTurnLockUI = function(){
+    if(!window.roomId || !window.match) return;
 
-          // ALWAYS adopt newer rev
-          if(incoming && (!window.match || inRev > myRev)){
-            window.match = incoming;
-            window.roomSynced = true;
-            if(typeof window.requestRender==="function") requestRender("roomSync");
-          }
-        }catch(e){}
-        if(typeof cb==="function") cb(roomDoc);
-      });
-    };
-  }
+    if(typeof window.match.turnIndex !== "number" &&
+       typeof window.match.claimIndex !== "number"){
+      return; // don't lock if game not ready
+    }
 
-  // ---------- UI Turn Lock (all games) ----------
-  window.enforceTurnLockUI = function(m){
-    if(!window.roomId) return;
-    if(!m) return;
-    const allow = isMyTurn(m);
+    const allow = isMyTurn(window.match);
 
     document.querySelectorAll("button").forEach(btn=>{
       const id = btn.id || "";
       if(id==="signOutBtn" || id==="backToSetup") return;
-      if(!allow) btn.disabled = true;
+      btn.disabled = !allow;
     });
   };
 
-  // Hook into render cycles
+  // Hook AFTER renders settle
   const __origRequestRender = window.requestRender;
   window.requestRender = function(reason){
     const r = __origRequestRender?.(reason);
-    try{ window.enforceTurnLockUI(window.match); }catch(e){}
+    setTimeout(()=>{
+      try{ window.enforceTurnLockUI(); }catch(e){}
+    }, 0);
     return r;
   };
+
 })();
 </script>
-<!-- ================= END MULTIPLAYER CONVERGENCE PATCH ================= -->
+<!-- ================= END STABLE MULTIPLAYER CORE ================= -->
 
