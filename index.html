@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v334</title>
+<title>Game Night • v335</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -390,7 +390,7 @@ input,select{
 
 
 
-/* v334 landing logo placement harden (prevents bottom clipping in rounded container) */
+/* v335 landing logo placement harden (prevents bottom clipping in rounded container) */
 #landingLogoOverlay{ max-height:140px; }
 /* --- Polish: roster/player readability --- */
 .rosterCard .playerHeader .nm{ text-align:center; font-size:28px !important; }
@@ -2471,7 +2471,7 @@ async function renderGameHistory(){
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v334</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v335</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2485,11 +2485,11 @@ async function renderGameHistory(){
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v334</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v335</div>
 </div>
 
 <script>
-const BUILD_ID="v334";
+const BUILD_ID="v335";
 
 
 
@@ -3266,39 +3266,57 @@ function isOnline(email){
 function startPresence(email, name){
   const e = normEmail(email);
   stopPresence();
-  const ref = doc(ROOT_DOC, C_PRES, e);
 
-  const ping = async()=>{
+  // Use the same resolved base as the rest of the app (compat Firestore)
+  resolveDataBase().then((base)=>{
     try{
-      await setDoc(ref, { email:e, name:name||"", lastSeen: serverTimestamp() }, {merge:true});
-    }catch(e){ /* ignore */ }
-  };
+      const fs = (typeof firebase!=="undefined" && firebase.firestore) ? firebase.firestore : null;
+      const serverTS = fs && fs.FieldValue && fs.FieldValue.serverTimestamp ? fs.FieldValue.serverTimestamp() : null;
 
-  ping();
-  presTick = setInterval(ping, 25_000);
+      const col = base && typeof base.collection==="function" ? base.collection(C_PRES) : null;
+      if(!col){ return; }
+      const ref = col.doc(e);
 
-  // Subscribe to all presence docs (cheap at small scale)
-  presUnsub = onSnapshot(collection(ROOT_DOC, C_PRES), (snap)=>{
-    const out = {};
-    snap.forEach(d=>{
-      const data = d.data() || {};
-      const em = normEmail(data.email || d.id);
-      const ls = data.lastSeen;
-      let ms = null;
-      try{
-        // Firestore Timestamp -> ms (if available)
-        ms = ls && typeof ls.toMillis === "function" ? ls.toMillis() : null;
-      }catch{}
-      if(ms) out[em] = ms;
-    });
-    presCache = out;
-    // Don't re-render entire app every tick; only when on screens that show roster
-    if(screen==="home" || screen==="stats" || screen==="game.setup") requestRender("presence");
+      const ping = async()=>{
+        try{
+          await ref.set({ email:e, name:name||"", lastSeen: serverTS || new Date() }, {merge:true});
+        }catch(_e){ /* ignore */ }
+      };
+
+      ping();
+      presTick = setInterval(ping, 25_000);
+
+      // Subscribe to all presence docs (cheap at small scale)
+      presUnsub = col.onSnapshot((snap)=>{
+        const out = {};
+        snap.forEach((d)=>{
+          const data = (typeof d.data==="function") ? (d.data()||{}) : (d.data||{});
+          const em = normEmail((data.email)||d.id);
+          const ls = data.lastSeen;
+          let ms = null;
+          try{
+            ms = ls && typeof ls.toMillis==="function" ? ls.toMillis() : (ls instanceof Date ? ls.getTime() : null);
+          }catch(_){ ms = null; }
+          if(ms) out[em]=ms;
+        });
+        presCache = out;
+        // repaint on relevant screens (players roster shows green dot)
+        try{
+          if(["players","home","stats","game.setup","game.wait"].includes(window.screen)){
+            if(typeof requestRender==="function") requestRender("presence");
+            else if(typeof __goRender==="function") __goRender();
+            else if(typeof render==="function") render();
+          }
+        }catch(_){}
+      }, (_err)=>{
+        // ignore subscription errors
+      });
+    }catch(_e){
+      // ignore
+    }
   });
-
-  // Attempt best-effort final ping
-  window.addEventListener("beforeunload", ()=>{ try{ clearInterval(presTick); }catch{} });
 }
+
 function stopPresence(){
   try{ if(presUnsub) presUnsub(); }catch{}
   presUnsub = null;
@@ -4494,12 +4512,12 @@ async function renderAuth(){
       </div>
     </div>
 
-    <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:hidden; padding-bottom:28px;">
+    <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:visible; padding-bottom:56px;">
       <video id="loginIntroVideo" playsinline muted autoplay loop
         style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:translateY(-58px) scale(1.10);transform-origin:center top;">
       </video>
       <img id="landingLogoOverlay" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo"
-        style="position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:190px;max-width:72%;height:auto;display:block;opacity:.98;pointer-events:none;filter:drop-shadow(0 10px 22px rgba(0,0,0,.58));background:rgba(6,8,20,.82);padding:8px 10px;border-radius:16px;object-fit:contain;" />
+        style="position:absolute;left:50%;bottom:28px;transform:translateX(-50%);width:190px;max-width:72%;height:auto;display:block;opacity:.98;pointer-events:none;filter:drop-shadow(0 10px 22px rgba(0,0,0,.58));background:rgba(6,8,20,.82);padding:8px 10px;border-radius:16px;object-fit:contain;" />
 
     </div>
 `;
