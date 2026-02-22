@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v451</title>
+<title>Game Night • v452</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1902,7 +1902,7 @@ header, .header {
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   
 <script>
-// v451: global runtime guards (prevents 'Startup Error [object PromiseRejectionEvent]')
+// v452: global runtime guards (prevents 'Startup Error [object PromiseRejectionEvent]')
 window.addEventListener('error', (e)=>{
   try{
     window.__lastRuntimeError = (e && (e.message||e.error&&e.error.message)) ? (e.message||e.error.message) : String(e);
@@ -1918,7 +1918,7 @@ window.addEventListener('unhandledrejection', (e)=>{
 });
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v451 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v452 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -2014,7 +2014,7 @@ window.addEventListener('unhandledrejection', (e)=>{
 })();
 
 
-/* ===== v451 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v452 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2098,7 +2098,7 @@ window.addEventListener('unhandledrejection', (e)=>{
 
 <body>
 
-<!-- ================= v451 EARLY BOOT GUARD (runs before app scripts) ================= -->
+<!-- ================= v452 EARLY BOOT GUARD (runs before app scripts) ================= -->
 <script>
 (function(){
   // Capture any boot-time errors even if app init never reaches render()
@@ -2115,7 +2115,7 @@ window.addEventListener('unhandledrejection', (e)=>{
           ${d}
           <div class="divider"></div>
           <button class="btn ok" onclick="location.reload()">Reload</button>
-          <div class="small" style="margin-top:10px;opacity:.8">v451 boot guard</div>
+          <div class="small" style="margin-top:10px;opacity:.8">v452 boot guard</div>
         </div>`;
     }catch(_){}
   }
@@ -2170,7 +2170,7 @@ window.addEventListener('unhandledrejection', (e)=>{
   }, 2500);
 })();
 </script>
-<!-- ================= END v451 EARLY BOOT GUARD ================= -->
+<!-- ================= END v452 EARLY BOOT GUARD ================= -->
 
 
 <div class="topbar">
@@ -2180,7 +2180,7 @@ window.addEventListener('unhandledrejection', (e)=>{
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v451</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v452</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2194,11 +2194,11 @@ window.addEventListener('unhandledrejection', (e)=>{
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v451</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v452</div>
 </div>
 
 <script>
-const BUILD_ID="v451";
+const BUILD_ID="v452";
 
 
 
@@ -2228,7 +2228,7 @@ const BUILD_ID="v451";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v451) =====
+/* ===== v166 CLEAN BOOT (v452) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2308,7 +2308,7 @@ const BUILD_ID="v451";
       }
     }catch(e){ showBootError(e.message||e); }
   
-  // v451: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
+  // v452: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
   setTimeout(()=>{
     try{
       const app = document.getElementById("app");
@@ -2651,7 +2651,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v451 stability) ---
+// --- Snapshot compatibility helpers (v452 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -2762,9 +2762,8 @@ function __landingWireVideo(){
     // Use embedded data URL so GitHub paths can't break it
     if(!v.src || v.src === window.location.href) v.src = __LANDING_MP4_DATA_URL;
     try{ v.load(); }catch(e){}
-    const p = const __p = v.play();
-try{ if(__p && typeof __p.catch==="function") __p.catch(()=>{}); }catch(_e){}
-    if(p && typeof p.catch === "function") p.catch(()=>{});
+    const p = v.play();
+    try{ if(p && typeof p.catch==="function") p.catch(()=>{}); }catch(_e){}
     // one-time retry on first gesture (mobile)
     if(!window.__landingKick){
       window.__landingKick = true;
@@ -3039,7 +3038,7 @@ function isOnline(email){
   try{
     const me = normEmail(meUser?.email||"");
     const em = normEmail(email||"");
-    // v451: always show self as online once signed in
+    // v452: always show self as online once signed in
     if(me && em && me===em) return true;
 
     let ms = presCache[em] || null;
@@ -3057,7 +3056,7 @@ function isOnline(email){
 }
 
 function startPresence(email, name){
-  // v451: restore stable behavior + compatibility across older presence doc ids.
+  // v452: restore stable behavior + compatibility across older presence doc ids.
   const em = normEmail(email||"");
   stopPresence();
   if(!em) return;
@@ -3229,7 +3228,7 @@ async function saveMatchState(roomId, match){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
 
-  // v451: authoritative turn guard at the write boundary (applies to all games)
+  // v452: authoritative turn guard at the write boundary (applies to all games)
   try{
     const me = normEmail(meUser?.email || "");
     const players = Array.isArray(match?.players) ? match.players : [];
@@ -3248,7 +3247,7 @@ async function saveMatchState(roomId, match){
     }
   }catch(e){ /* do not block on guard errors */ }
 
-  // v451: rev consistency (matchData._rev always matches room.rev)
+  // v452: rev consistency (matchData._rev always matches room.rev)
   const nextRev = Number(match?match._rev||0:0) + 1;
   match._rev = nextRev;
 
@@ -3423,7 +3422,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v451 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v452 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4958,7 +4957,7 @@ async function renderGameSetup(){
   updateSetupUI();
 
   document.getElementById("startMatchBtn").onclick = async()=>{
-    // v451: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
+    // v452: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
     if(!g.active){ toastMsg="Coming soon."; return render(); }
 
     const startBtn = document.getElementById("startMatchBtn");
@@ -5200,7 +5199,7 @@ async function renderGamePlay(){
         const updatedBy = normEmail(roomDoc.updatedBy || "");
         const me = normEmail(meUser.email);
 
-        // v451 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
+        // v452 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
         if(!match || (inRev > myRev && updatedBy !== me)){
           match = incoming;
           roomSynced = true;
@@ -5731,7 +5730,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 
 <style id="v421_player_carousel_ui">
-/* v451 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
+/* v452 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
 .playerCarouselWrap{ margin:8px 0 2px; }
 .playerCarousel{
   display:flex;
@@ -5867,7 +5866,7 @@ button.statsBtn, .statsBtn{
   z-index:5;
 }
 
-/* v451: LANDING LAYER FIX — MP4 up, logo fully visible */
+/* v452: LANDING LAYER FIX — MP4 up, logo fully visible */
 #landingCard, .landingCard, #landingWrap, .landingWrap{
   overflow: visible !important;
 }
@@ -5883,7 +5882,7 @@ button.statsBtn, .statsBtn{
 }
 
 
-/* v451: TOP BAR FIX — no clipping, no overlap */
+/* v452: TOP BAR FIX — no clipping, no overlap */
 :root{ --safeTop: env(safe-area-inset-top, 0px); }
 .topBar, #topBar, .appTopBar{
   padding-top: calc(var(--safeTop) + 10px) !important;
