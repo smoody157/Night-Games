@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v421</title>
+<title>Game Night • v422</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v421 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v422 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v421 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v422 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2087,7 +2087,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v421</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v422</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2101,11 +2101,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v421</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v422</div>
 </div>
 
 <script>
-const BUILD_ID="v421";
+const BUILD_ID="v422";
 
 
 
@@ -2135,7 +2135,7 @@ const BUILD_ID="v421";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v421) =====
+/* ===== v166 CLEAN BOOT (v422) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2206,7 +2206,7 @@ const BUILD_ID="v421";
       if(typeof renderHome==="function"){
         // If we're still showing Loading, force home screen
         const app = document.getElementById("app");
-        if(app && app.textContent && app.textContent.includes("Loading")){
+        if(app && app.textContent && (app.textContent.includes("Loading") || app.textContent.includes("Starting up") || app.textContent.includes("Hang on"))){
           screen = screen || "home";
           if(typeof __goRender==="function") __goRender();
           else if(typeof render==="function") render();
@@ -2214,7 +2214,21 @@ const BUILD_ID="v421";
         }
       }
     }catch(e){ showBootError(e.message||e); }
-  }, 1500);
+  
+  // v422: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
+  setTimeout(()=>{
+    try{
+      const app = document.getElementById("app");
+      if(app && app.textContent && (app.textContent.includes("Starting up") || app.textContent.includes("Hang on one second"))){
+        screen = screen || "home";
+        if(typeof __goRender==="function") __goRender();
+        else if(typeof render==="function") render();
+        else if(typeof renderHome==="function") renderHome();
+      }
+    }catch(e){ showBootError(e.message||e); }
+  }, 4500);
+
+}, 1500);
 })();
 
 /* ===== Cloud Sync Core (Firestore) — v156 =====
@@ -2544,7 +2558,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v421 stability) ---
+// --- Snapshot compatibility helpers (v422 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3241,7 +3255,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v421 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v422 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -5490,7 +5504,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 
 <style id="v421_player_carousel_ui">
-/* v421 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
+/* v422 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
 .playerCarouselWrap{ margin:8px 0 2px; }
 .playerCarousel{
   display:flex;
