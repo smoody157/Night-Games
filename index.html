@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v458</title>
+<title>Game Night • v459</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -496,6 +496,52 @@ button.btn{ position:relative; z-index:3; }
 /* v137 auth footer hide (landing page only) */
 body.authMode .footerLegal{display:none !important;}
 body.authMode .footerLegal *{display:none !important;}
+
+/* ===== v459 COSMETIC FIXES (TARGETED, NO JS CHANGES) ===== */
+/* 1) Header/title clipping fix */
+.topbar{
+  grid-template-columns: auto 1fr auto !important;
+}
+.topActions{min-width:unset !important; gap:8px !important;}
+#homeBtn,#signOutBtn,#soundBtn{padding:8px 12px !important;}
+#soundBtn{padding:6px 8px !important; min-width:44px !important;}
+.brand{max-width:100% !important;}
+#brandTitle{
+  font-size: clamp(24px, 6.2vw, 34px) !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+.brand .s{font-size: 13px !important;}
+
+/* 2) Make all buttons pill/bubble (keep your theme) */
+.btn, button, input[type="button"], input[type="submit"]{
+  border-radius: 999px !important;
+}
+
+/* 3) Center player selections/list containers (common ones in this build) */
+#setupPlayersGrid, .setupPlayersGrid, #playersGrid, .playersGrid,
+#playersList, .playersList, .playerChips, .chips{
+  justify-content: center !important;
+  text-align:center !important;
+}
+
+/* 4) Landing logo overlay: remove the black slab + stop half-cover effect */
+#landingLogoOverlay{
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.55)) !important;
+}
+
+/* Keep MP4/video positioning untouched; just ensure logo stays above */
+#loginIntroVideo{position:relative !important; z-index:1 !important;}
+#landingLogoOverlay{position:absolute !important; z-index:5 !important;}
+
+/* ===== end v459 ===== */
+
 </style>
 
 <style id="cosmetics_v76.90">
@@ -1901,7 +1947,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v458 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v459 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +2043,7 @@ header, .header {
 })();
 
 
-/* ===== v458 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v459 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2081,7 +2127,7 @@ header, .header {
 
 <body>
 
-<!-- ================= v458 EARLY BOOT GUARD (runs before app scripts) ================= -->
+<!-- ================= v459 EARLY BOOT GUARD (runs before app scripts) ================= -->
 <script>
 (function(){
   // Capture any boot-time errors even if app init never reaches render()
@@ -2098,7 +2144,7 @@ header, .header {
           ${d}
           <div class="divider"></div>
           <button class="btn ok" onclick="location.reload()">Reload</button>
-          <div class="small" style="margin-top:10px;opacity:.8">v458 boot guard</div>
+          <div class="small" style="margin-top:10px;opacity:.8">v459 boot guard</div>
         </div>`;
     }catch(_){}
   }
@@ -2153,7 +2199,7 @@ header, .header {
   }, 2500);
 })();
 </script>
-<!-- ================= END v458 EARLY BOOT GUARD ================= -->
+<!-- ================= END v459 EARLY BOOT GUARD ================= -->
 
 
 <div class="topbar">
@@ -2163,7 +2209,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v458</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v459</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2177,11 +2223,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v458</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v459</div>
 </div>
 
 <script>
-const BUILD_ID="v458";
+const BUILD_ID="v459";
 
 
 
@@ -2211,7 +2257,7 @@ const BUILD_ID="v458";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v458) =====
+/* ===== v166 CLEAN BOOT (v459) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2291,7 +2337,7 @@ const BUILD_ID="v458";
       }
     }catch(e){ showBootError(e.message||e); }
   
-  // v458: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
+  // v459: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
   setTimeout(()=>{
     try{
       const app = document.getElementById("app");
@@ -2634,7 +2680,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v458 stability) ---
+// --- Snapshot compatibility helpers (v459 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3019,7 +3065,7 @@ function isOnline(email){
   try{
     const me = normEmail(meUser?.email||"");
     const em = normEmail(email||"");
-    // v458: always show self as online once signed in
+    // v459: always show self as online once signed in
     if(me && em && me===em) return true;
 
     let ms = presCache[em] || null;
@@ -3037,7 +3083,7 @@ function isOnline(email){
 }
 
 function startPresence(email, name){
-  // v458: restore stable behavior + compatibility across older presence doc ids.
+  // v459: restore stable behavior + compatibility across older presence doc ids.
   const em = normEmail(email||"");
   stopPresence();
   if(!em) return;
@@ -3209,7 +3255,7 @@ async function saveMatchState(roomId, match){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
 
-  // v458: authoritative turn guard at the write boundary (applies to all games)
+  // v459: authoritative turn guard at the write boundary (applies to all games)
   try{
     const me = normEmail(meUser?.email || "");
     const players = Array.isArray(match?.players) ? match.players : [];
@@ -3228,7 +3274,7 @@ async function saveMatchState(roomId, match){
     }
   }catch(e){ /* do not block on guard errors */ }
 
-  // v458: rev consistency (matchData._rev always matches room.rev)
+  // v459: rev consistency (matchData._rev always matches room.rev)
   const nextRev = Number(match?match._rev||0:0) + 1;
   match._rev = nextRev;
 
@@ -3403,7 +3449,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v458 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v459 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4938,7 +4984,7 @@ async function renderGameSetup(){
   updateSetupUI();
 
   document.getElementById("startMatchBtn").onclick = async()=>{
-    // v458: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
+    // v459: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
     if(!g.active){ toastMsg="Coming soon."; return render(); }
 
     const startBtn = document.getElementById("startMatchBtn");
@@ -5180,7 +5226,7 @@ async function renderGamePlay(){
         const updatedBy = normEmail(roomDoc.updatedBy || "");
         const me = normEmail(meUser.email);
 
-        // v458 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
+        // v459 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
         if(!match || (inRev > myRev && updatedBy !== me)){
           match = incoming;
           roomSynced = true;
@@ -5711,7 +5757,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 
 <style id="v421_player_carousel_ui">
-/* v458 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
+/* v459 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
 .playerCarouselWrap{ margin:8px 0 2px; }
 .playerCarousel{
   display:flex;
@@ -5848,108 +5894,4 @@ button.statsBtn, .statsBtn{
 }
 </style>
 
-
-
-
-<!-- BEGIN COSMETIC PACK v458 (append-only, CSS-only) -->
-<style>
-/* v458: COSMETIC PACK ACTIVE — if you see the green strip at top, this pack is loaded */
-body::before{
-  content:"COSMETIC PACK v458 ACTIVE";
-  position:fixed;
-  top:0; left:0; right:0;
-  z-index:999999;
-  padding:6px 10px;
-  font: 900 14px/1.1 system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  letter-spacing:.2px;
-  background: rgba(0,180,0,.85);
-  color:#fff;
-  text-align:center;
-  pointer-events:none;
-}
-/* Push app down slightly so banner doesn't cover UI */
-body{ padding-top: 28px !important; }
-
-/* BIGGER TITLES/HEADERS (aggressive but safe) */
-header *, .topbar *, .topBar *, #topBar *, .appTopBar *, nav *{
-  font-weight: 900 !important;
-}
-h1, .title, .topTitle, #topTitle, .headerTitle, .appTitle{
-  font-size: 30px !important;
-  line-height: 1.1 !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-}
-h2, h3, .pageTitle, .sectionTitle, .panelTitle, .cardTitle{
-  font-size: 22px !important;
-  line-height: 1.15 !important;
-}
-
-/* PILL/BUBBLE BUTTONS EVERYWHERE */
-button,
-input[type="button"],
-input[type="submit"],
-a.button,
-a.btn,
-.btn,
-.button,
-[role="button"]{
-  border-radius: 999px !important;
-  padding: 12px 18px !important;
-  font-weight: 900 !important;
-}
-button:active,
-input[type="button"]:active,
-input[type="submit"]:active,
-a.button:active,
-a.btn:active,
-.btn:active,
-.button:active,
-[role="button"]:active{
-  transform: scale(0.98) !important;
-}
-
-/* CENTER PLAYER LISTS / CHIPS (broad selectors) */
-[id*="player"][id*="list"],
-[class*="player"][class*="list"],
-[id*="players"],
-[class*="players"],
-[id*="setup"][id*="player"],
-[class*="setup"][class*="player"]{
-  display:flex !important;
-  flex-wrap:wrap !important;
-  justify-content:center !important;
-  align-items:center !important;
-  text-align:center !important;
-  gap:10px !important;
-}
-
-/* STOP CLIPPING OVER LOGO/TITLES (common clipping culprit) */
-#app, #appRoot, #root, #main, .app, .appRoot, .root, .main,
-.container, .content, .contentWrap, .screen, .page{
-  overflow: visible !important;
-}
-
-/* LOGO / MP4 LAYER: remove “black slab” by forcing transparency & stacking */
-#landingLogoOverlay, #landingLogo, #logo, .logo, .logoOverlay{
-  background: transparent !important;
-  mix-blend-mode: normal !important;
-  opacity: 1 !important;
-  z-index: 9999 !important;
-  pointer-events: none !important;
-}
-#landingVideo, #introVideo, video{
-  z-index: 1 !important;
-}
-
-/* SOUND BUTTON HITBOX CROP (prevents it from covering title) */
-#soundBtn, .soundBtn, #speakerBtn, .speakerBtn{
-  padding: 6px !important;
-  margin: 0 !important;
-  border-radius: 999px !important;
-  background: transparent !important;
-}
-</style>
-<!-- END COSMETIC PACK v458 -->
 
