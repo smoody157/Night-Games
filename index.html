@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v509</title>
+<title>Night Games • v511</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   Night Games v509 — FULL BUILD (single-file; text-file friendly)
+   Night Games v511 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -61,7 +61,7 @@ html,body{height:100%;margin:0;color:var(--text);
 }
 
 
-/* --- v509 Skin: pull colors from the banner asset (repo) --- */
+/* --- v511 Skin: pull colors from the banner asset (repo) --- */
 body::before{
   content:"";
   position:fixed; inset:-20%;
@@ -104,7 +104,7 @@ body::after{
 }
 
 
-/* --- v509 Landing Color Scheme --- */
+/* --- v511 Landing Color Scheme --- */
 .heroHeader{
   border-bottom:1px solid rgba(120,180,255,.16);
   background:
@@ -142,7 +142,7 @@ body::after{
 }
 
 
-/* --- v509: Night Games neon theme (match logo colors) --- */
+/* --- v511: Night Games neon theme (match logo colors) --- */
 :root{
   --cBlue: rgba(0,215,255,.26);
   --cBlue2: rgba(42,127,255,.20);
@@ -405,7 +405,7 @@ a{color:var(--cyan);text-decoration:none}
 }
 #errBox b{font-family:inherit;}
 
-/* --- v509 LANDING VISUALS (OBVIOUS CHANGES) --- */
+/* --- v511 LANDING VISUALS (OBVIOUS CHANGES) --- */
 body{background:#000 !important;}
 /* Outer screen border (neon, NOT green) */
 .card{
@@ -474,6 +474,63 @@ body{background:#000 !important;}
   70%{opacity:1; transform:translate(0,0) rotate(-45deg) scale(1.0);}
   100%{opacity:0; transform:translate(18vw, -10vw) rotate(-45deg) scale(1.02);}
 }
+
+/* ===== v511: REMOVE GREEN FRAME / SIMPLE BLACK CANVAS ===== */
+html,body{background:#000 !important;}
+/* Outer display: ONE neon border only */
+.card{
+  background:rgba(0,0,0,.88) !important;
+  border:none !important;
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.68),
+    0 0 0 2px rgba(150,110,255,.32),  /* neon border */
+    0 0 26px rgba(0,215,255,.10),
+    0 0 18px rgba(255,120,35,.08) !important;
+}
+/* Top area: pure black canvas (no inner borders) */
+.heroHeader{border:none !important; background:transparent !important; box-shadow:none !important;}
+.heroInner{padding:0 !important;}
+/* Logo BIG */
+.heroLogo{
+  width:100% !important;
+  max-width:980px !important;
+  max-height:560px !important;
+  object-fit:cover !important;
+  margin:0 auto !important;
+  display:block !important;
+  filter:
+    drop-shadow(0 16px 40px rgba(0,0,0,.74))
+    drop-shadow(0 0 22px rgba(0,215,255,.18))
+    drop-shadow(0 0 18px rgba(255,120,35,.10)) !important;
+}
+/* Sign-in segment: its own neon border */
+.heroPanel{
+  border:1px solid rgba(150,110,255,.34) !important;
+  box-shadow:
+    0 14px 40px rgba(0,0,0,.58),
+    0 0 22px rgba(0,215,255,.10),
+    0 0 16px rgba(255,120,35,.07) !important;
+}
+/* Strong neon wash (not green) */
+body::after{
+  content:"";
+  position:fixed; inset:0;
+  background:
+    radial-gradient(140% 140% at 16% 12%, rgba(0,215,255,.18), rgba(0,0,0,0) 58%),
+    radial-gradient(140% 140% at 84% 14%, rgba(255,120,35,.16), rgba(0,0,0,0) 60%),
+    radial-gradient(140% 140% at 82% 86%, rgba(150,110,255,.16), rgba(0,0,0,0) 62%),
+    linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.88));
+  pointer-events:none;
+  z-index:-1;
+}
+/* Reduce green glow on the button to avoid "green frame" vibe */
+.btn.green::after{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.10) inset,
+    0 10px 24px rgba(0,0,0,.42),
+    0 0 14px rgba(0,215,255,.10),
+    0 0 10px rgba(255,120,35,.06) !important;
+}
 </style>
 </head>
 <body>
@@ -494,7 +551,7 @@ body{background:#000 !important;}
       <img class="heroLogo" src="${asset('7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png')}" alt="Night Games"
         onerror="this.onerror=null; this.src='7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png';"/>
       <div class="heroTitle">Night Games</div>
-      <div class="heroSub">Enter your email to continue • v509</div>
+      <div class="heroSub">Enter your email to continue • v511</div>
     </div>
   </div>
   <div class="main">
@@ -518,7 +575,7 @@ body{background:#000 !important;}
 <div id="fatalErr" style="position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;display:none;padding:10px 12px;border-radius:14px;background:rgba(60,0,0,.78);border:1px solid rgba(255,77,77,.55);color:#ffd6d6;font:12px/1.3 system-ui;box-shadow:0 18px 40px rgba(0,0,0,.55);white-space:pre-wrap;"></div>
 
 <script>
-// v509: Global error handlers so we NEVER get a blank page with no clue.
+// v511: Global error handlers so we NEVER get a blank page with no clue.
 (function(){
   function show(msg){
     try{
@@ -535,7 +592,7 @@ body{background:#000 !important;}
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD=509;
+const BUILD=511;
 
 const ASSET_BASE = new URL('.', document.baseURI).toString();
 const asset = (p)=> new URL(p, ASSET_BASE).toString();
@@ -552,7 +609,7 @@ function showError(msg){
   const box=document.getElementById("errBox");
   if(!box) return;
   box.style.display="block";
-  box.innerHTML = "<b>Build v509 error:</b>\n"+String(msg);
+  box.innerHTML = "<b>Build v511 error:</b>\n"+String(msg);
 }
 window.addEventListener("error",(e)=>{
   showError(e?.error?.stack || e?.message || e);
@@ -669,7 +726,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v509";
+  const key="sweepShown_v511";
   if(store.get(key,false)) return;
 
   const ov=$("#sweepOverlay");
@@ -1388,7 +1445,7 @@ function screenHistory(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">History view is wired as a real page in v509. Next pass we populate it from match logs / saved games.</div>
+        <div class="ok">History view is wired as a real page in v511. Next pass we populate it from match logs / saved games.</div>
       </div>
     </div>
     ${footer()}
@@ -1413,7 +1470,7 @@ function screenStats(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">Stats page is a real page in v509. Next pass we show the stat definitions + your notables.</div>
+        <div class="ok">Stats page is a real page in v511. Next pass we show the stat definitions + your notables.</div>
       </div>
     </div>
     ${footer()}
@@ -1624,7 +1681,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v509: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v511: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -1755,7 +1812,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v509: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v511: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
