@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v457</title>
+<title>Game Night • v458</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v457 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v458 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v457 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v458 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2081,7 +2081,7 @@ header, .header {
 
 <body>
 
-<!-- ================= v457 EARLY BOOT GUARD (runs before app scripts) ================= -->
+<!-- ================= v458 EARLY BOOT GUARD (runs before app scripts) ================= -->
 <script>
 (function(){
   // Capture any boot-time errors even if app init never reaches render()
@@ -2098,7 +2098,7 @@ header, .header {
           ${d}
           <div class="divider"></div>
           <button class="btn ok" onclick="location.reload()">Reload</button>
-          <div class="small" style="margin-top:10px;opacity:.8">v457 boot guard</div>
+          <div class="small" style="margin-top:10px;opacity:.8">v458 boot guard</div>
         </div>`;
     }catch(_){}
   }
@@ -2153,7 +2153,7 @@ header, .header {
   }, 2500);
 })();
 </script>
-<!-- ================= END v457 EARLY BOOT GUARD ================= -->
+<!-- ================= END v458 EARLY BOOT GUARD ================= -->
 
 
 <div class="topbar">
@@ -2163,7 +2163,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v457</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v458</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2177,11 +2177,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v457</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v458</div>
 </div>
 
 <script>
-const BUILD_ID="v457";
+const BUILD_ID="v458";
 
 
 
@@ -2211,7 +2211,7 @@ const BUILD_ID="v457";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v457) =====
+/* ===== v166 CLEAN BOOT (v458) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2291,7 +2291,7 @@ const BUILD_ID="v457";
       }
     }catch(e){ showBootError(e.message||e); }
   
-  // v457: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
+  // v458: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
   setTimeout(()=>{
     try{
       const app = document.getElementById("app");
@@ -2634,7 +2634,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v457 stability) ---
+// --- Snapshot compatibility helpers (v458 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3019,7 +3019,7 @@ function isOnline(email){
   try{
     const me = normEmail(meUser?.email||"");
     const em = normEmail(email||"");
-    // v457: always show self as online once signed in
+    // v458: always show self as online once signed in
     if(me && em && me===em) return true;
 
     let ms = presCache[em] || null;
@@ -3037,7 +3037,7 @@ function isOnline(email){
 }
 
 function startPresence(email, name){
-  // v457: restore stable behavior + compatibility across older presence doc ids.
+  // v458: restore stable behavior + compatibility across older presence doc ids.
   const em = normEmail(email||"");
   stopPresence();
   if(!em) return;
@@ -3209,7 +3209,7 @@ async function saveMatchState(roomId, match){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
 
-  // v457: authoritative turn guard at the write boundary (applies to all games)
+  // v458: authoritative turn guard at the write boundary (applies to all games)
   try{
     const me = normEmail(meUser?.email || "");
     const players = Array.isArray(match?.players) ? match.players : [];
@@ -3228,7 +3228,7 @@ async function saveMatchState(roomId, match){
     }
   }catch(e){ /* do not block on guard errors */ }
 
-  // v457: rev consistency (matchData._rev always matches room.rev)
+  // v458: rev consistency (matchData._rev always matches room.rev)
   const nextRev = Number(match?match._rev||0:0) + 1;
   match._rev = nextRev;
 
@@ -3403,7 +3403,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v457 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v458 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4938,7 +4938,7 @@ async function renderGameSetup(){
   updateSetupUI();
 
   document.getElementById("startMatchBtn").onclick = async()=>{
-    // v457: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
+    // v458: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
     if(!g.active){ toastMsg="Coming soon."; return render(); }
 
     const startBtn = document.getElementById("startMatchBtn");
@@ -5180,7 +5180,7 @@ async function renderGamePlay(){
         const updatedBy = normEmail(roomDoc.updatedBy || "");
         const me = normEmail(meUser.email);
 
-        // v457 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
+        // v458 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
         if(!match || (inRev > myRev && updatedBy !== me)){
           match = incoming;
           roomSynced = true;
@@ -5711,7 +5711,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 
 <style id="v421_player_carousel_ui">
-/* v457 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
+/* v458 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
 .playerCarouselWrap{ margin:8px 0 2px; }
 .playerCarousel{
   display:flex;
@@ -5846,81 +5846,110 @@ button.statsBtn, .statsBtn{
   position:relative;
   z-index:5;
 }
+</style>
 
-/* ===== v457 COSMETIC PASS (CSS ONLY) =====
-   - Bigger titles/headers
-   - All buttons pill/bubble (no flat)
-   - Center player name lists/chips
-   - Keep logo/title visible by preventing clipping in common wrappers
-   NOTE: No JS / no Firebase / no multiplayer changes in v457.
-*/
-:root{
-  --gn-title: 30px;
-  --gn-header: 22px;
-  --gn-pill: 999px;
+
+
+
+<!-- BEGIN COSMETIC PACK v458 (append-only, CSS-only) -->
+<style>
+/* v458: COSMETIC PACK ACTIVE — if you see the green strip at top, this pack is loaded */
+body::before{
+  content:"COSMETIC PACK v458 ACTIVE";
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:999999;
+  padding:6px 10px;
+  font: 900 14px/1.1 system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  letter-spacing:.2px;
+  background: rgba(0,180,0,.85);
+  color:#fff;
+  text-align:center;
+  pointer-events:none;
 }
+/* Push app down slightly so banner doesn't cover UI */
+body{ padding-top: 28px !important; }
 
-/* Titles / headers */
-#topTitle, .topTitle, .topbar-title, .headerTitle, header h1, header .title, h1.appTitle{
-  font-size: var(--gn-title) !important;
+/* BIGGER TITLES/HEADERS (aggressive but safe) */
+header *, .topbar *, .topBar *, #topBar *, .appTopBar *, nav *{
   font-weight: 900 !important;
+}
+h1, .title, .topTitle, #topTitle, .headerTitle, .appTitle{
+  font-size: 30px !important;
   line-height: 1.1 !important;
-  letter-spacing: .2px !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
 }
-h2, h3, .sectionTitle, .pageTitle, .cardTitle, .panelTitle{
-  font-size: var(--gn-header) !important;
-  font-weight: 900 !important;
+h2, h3, .pageTitle, .sectionTitle, .panelTitle, .cardTitle{
+  font-size: 22px !important;
   line-height: 1.15 !important;
 }
 
-/* Buttons: pill/bubble everywhere */
-button, input[type="button"], input[type="submit"], .btn, .button, .cta, .chip, .chipBtn, .menuBtn, .navBtn, .primaryBtn, .secondaryBtn{
-  border-radius: var(--gn-pill) !important;
-}
-button, input[type="button"], input[type="submit"]{
+/* PILL/BUBBLE BUTTONS EVERYWHERE */
+button,
+input[type="button"],
+input[type="submit"],
+a.button,
+a.btn,
+.btn,
+.button,
+[role="button"]{
+  border-radius: 999px !important;
+  padding: 12px 18px !important;
   font-weight: 900 !important;
 }
-button:active, input[type="button"]:active, input[type="submit"]:active{
-  transform: scale(0.98);
+button:active,
+input[type="button"]:active,
+input[type="submit"]:active,
+a.button:active,
+a.btn:active,
+.btn:active,
+.button:active,
+[role="button"]:active{
+  transform: scale(0.98) !important;
 }
 
-/* Center players lists / chips */
-#playersList, #playerList, .playersList, .playerList, .players, .playerChips, .chips, .setupPlayersGrid, #setupPlayersGrid, #setupPlayers, .setupPlayers{
-  display: flex !important;
-  flex-wrap: wrap !important;
-  justify-content: center !important;
-  align-items: center !important;
-  text-align: center !important;
-  gap: 10px !important;
+/* CENTER PLAYER LISTS / CHIPS (broad selectors) */
+[id*="player"][id*="list"],
+[class*="player"][class*="list"],
+[id*="players"],
+[class*="players"],
+[id*="setup"][id*="player"],
+[class*="setup"][class*="player"]{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  justify-content:center !important;
+  align-items:center !important;
+  text-align:center !important;
+  gap:10px !important;
 }
 
-/* If list items are blocks, center their text */
-#playersList *, #playerList *, .playersList *, .playerList *{
-  text-align: center !important;
-}
-
-/* Prevent clipping/masking over logo + header text (common wrappers) */
-#app, #appRoot, .app, .appRoot, #root, .root, #main, .main, .screen, .page, .container, .content, .contentWrap{
+/* STOP CLIPPING OVER LOGO/TITLES (common clipping culprit) */
+#app, #appRoot, #root, #main, .app, .appRoot, .root, .main,
+.container, .content, .contentWrap, .screen, .page{
   overflow: visible !important;
 }
 
-/* Landing media stacking: keep logo above video if present */
-#landingLogo, #logo, .logo, #landingLogoOverlay, .landingLogo, .logoOverlay{
-  position: relative !important;
-  z-index: 50 !important;
+/* LOGO / MP4 LAYER: remove “black slab” by forcing transparency & stacking */
+#landingLogoOverlay, #landingLogo, #logo, .logo, .logoOverlay{
+  background: transparent !important;
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
+  z-index: 9999 !important;
+  pointer-events: none !important;
 }
 #landingVideo, #introVideo, video{
   z-index: 1 !important;
 }
 
-/* Speaker / right icon should not cover title: shrink hitbox padding */
+/* SOUND BUTTON HITBOX CROP (prevents it from covering title) */
 #soundBtn, .soundBtn, #speakerBtn, .speakerBtn{
   padding: 6px !important;
   margin: 0 !important;
-  border-radius: var(--gn-pill) !important;
+  border-radius: 999px !important;
   background: transparent !important;
 }
-
 </style>
-
+<!-- END COSMETIC PACK v458 -->
 
