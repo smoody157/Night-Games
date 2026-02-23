@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v456</title>
+<title>Game Night • v457</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v442 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v457 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v442 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v457 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2081,7 +2081,7 @@ header, .header {
 
 <body>
 
-<!-- ================= v442 EARLY BOOT GUARD (runs before app scripts) ================= -->
+<!-- ================= v457 EARLY BOOT GUARD (runs before app scripts) ================= -->
 <script>
 (function(){
   // Capture any boot-time errors even if app init never reaches render()
@@ -2098,7 +2098,7 @@ header, .header {
           ${d}
           <div class="divider"></div>
           <button class="btn ok" onclick="location.reload()">Reload</button>
-          <div class="small" style="margin-top:10px;opacity:.8">v442 boot guard</div>
+          <div class="small" style="margin-top:10px;opacity:.8">v457 boot guard</div>
         </div>`;
     }catch(_){}
   }
@@ -2153,7 +2153,7 @@ header, .header {
   }, 2500);
 })();
 </script>
-<!-- ================= END v442 EARLY BOOT GUARD ================= -->
+<!-- ================= END v457 EARLY BOOT GUARD ================= -->
 
 
 <div class="topbar">
@@ -2163,7 +2163,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v442</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v457</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2177,11 +2177,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v442</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v457</div>
 </div>
 
 <script>
-const BUILD_ID="v442";
+const BUILD_ID="v457";
 
 
 
@@ -2211,7 +2211,7 @@ const BUILD_ID="v442";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v442) =====
+/* ===== v166 CLEAN BOOT (v457) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2291,7 +2291,7 @@ const BUILD_ID="v442";
       }
     }catch(e){ showBootError(e.message||e); }
   
-  // v442: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
+  // v457: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
   setTimeout(()=>{
     try{
       const app = document.getElementById("app");
@@ -2634,7 +2634,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v442 stability) ---
+// --- Snapshot compatibility helpers (v457 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3019,7 +3019,7 @@ function isOnline(email){
   try{
     const me = normEmail(meUser?.email||"");
     const em = normEmail(email||"");
-    // v442: always show self as online once signed in
+    // v457: always show self as online once signed in
     if(me && em && me===em) return true;
 
     let ms = presCache[em] || null;
@@ -3037,7 +3037,7 @@ function isOnline(email){
 }
 
 function startPresence(email, name){
-  // v442: restore stable behavior + compatibility across older presence doc ids.
+  // v457: restore stable behavior + compatibility across older presence doc ids.
   const em = normEmail(email||"");
   stopPresence();
   if(!em) return;
@@ -3209,7 +3209,7 @@ async function saveMatchState(roomId, match){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
 
-  // v442: authoritative turn guard at the write boundary (applies to all games)
+  // v457: authoritative turn guard at the write boundary (applies to all games)
   try{
     const me = normEmail(meUser?.email || "");
     const players = Array.isArray(match?.players) ? match.players : [];
@@ -3228,7 +3228,7 @@ async function saveMatchState(roomId, match){
     }
   }catch(e){ /* do not block on guard errors */ }
 
-  // v442: rev consistency (matchData._rev always matches room.rev)
+  // v457: rev consistency (matchData._rev always matches room.rev)
   const nextRev = Number(match?match._rev||0:0) + 1;
   match._rev = nextRev;
 
@@ -3403,7 +3403,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v442 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v457 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4938,7 +4938,7 @@ async function renderGameSetup(){
   updateSetupUI();
 
   document.getElementById("startMatchBtn").onclick = async()=>{
-    // v442: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
+    // v457: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
     if(!g.active){ toastMsg="Coming soon."; return render(); }
 
     const startBtn = document.getElementById("startMatchBtn");
@@ -5180,7 +5180,7 @@ async function renderGamePlay(){
         const updatedBy = normEmail(roomDoc.updatedBy || "");
         const me = normEmail(meUser.email);
 
-        // v442 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
+        // v457 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
         if(!match || (inRev > myRev && updatedBy !== me)){
           match = incoming;
           roomSynced = true;
@@ -5711,7 +5711,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 
 <style id="v421_player_carousel_ui">
-/* v442 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
+/* v457 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
 .playerCarouselWrap{ margin:8px 0 2px; }
 .playerCarousel{
   display:flex;
@@ -5747,78 +5747,6 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
   .pcard{ flex-basis: 260px; }
 }
 </style>
-
-
-<script>
-/* v456 avatar decoration (UI only, safe, no Firebase changes) */
-(function(){
-  function norm(s){ return (s||"").toString().trim().toLowerCase(); }
-  function avatarSpec(name, email){
-    name = norm(name); email = norm(email);
-    // Steve / Moody (only if explicitly matches)
-    if(email.indexOf("smoody")!==-1 || name==="steve" || name==="steve moody" || name==="moody") {
-      return {t:"img", src:"MY%20DART%20AVATAR.png"};
-    }
-    // Bill / William
-    if(name==="bill" || name==="bill moody" || name==="william" || name==="william moody" || email.indexOf("bill")!==-1) {
-      return {t:"img", src:"WILLIAM%20DART%20AVATAR.png"};
-    }
-    // Jayce placeholder
-    if(name==="jayce" || name.indexOf("jayce")!==-1) return {t:"badge", text:"J"};
-    var ch = (name && name[0]) ? name[0].toUpperCase() : (email && email[0] ? email[0].toUpperCase() : "?");
-    return {t:"badge", text: ch};
-  }
-
-  function decorateNode(node, big){
-    if(!node || node.dataset && node.dataset.avatarDone==="1") return;
-    var txt = node.textContent || "";
-    // Try to parse "Name" and "(email)" patterns
-    var name = txt, email = "";
-    var m = txt.match(/\(([^)@]+@[^)]+)\)/);
-    if(m){ email = m[1]; name = txt.replace(m[0],"").trim(); }
-    var spec = avatarSpec(name, email);
-    // wrap only once
-    var wrap = document.createElement("span");
-    wrap.className = "nameWithAvatar";
-    var badge;
-    if(spec.t==="img"){
-      badge = document.createElement("img");
-      badge.className = "avatarCircle" + (big ? " big" : "");
-      badge.alt = name || "avatar";
-      badge.src = spec.src;
-    } else {
-      badge = document.createElement("span");
-      badge.className = "avatarBadge" + (big ? " big" : "");
-      badge.textContent = spec.text;
-    }
-    var label = document.createElement("span");
-    label.textContent = txt;
-    wrap.appendChild(badge);
-    wrap.appendChild(label);
-    node.textContent = "";
-    node.appendChild(wrap);
-    if(node.dataset) node.dataset.avatarDone="1";
-  }
-
-  function scan(){
-    // Common selectors for player name labels
-    var sels = [".playerName",".player-name",".playerLabel",".player-label",".nameLabel",".name-label"];
-    for(var i=0;i<sels.length;i++){
-      var nodes = document.querySelectorAll(sels[i]);
-      for(var j=0;j<nodes.length;j++) decorateNode(nodes[j], false);
-    }
-    // Active player strip (bigger)
-    var active = document.querySelectorAll(".activePlayerName,.active-player-name,.turnPlayerName,.turn-player-name");
-    for(var k=0;k<active.length;k++) decorateNode(active[k], true);
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    try{ scan(); }catch(e){}
-    // lightweight re-scan, avoids deep coupling
-    setInterval(function(){ try{ scan(); }catch(e){} }, 1200);
-  });
-})();
-</script>
 
 </body>
 </html>
@@ -5919,42 +5847,35 @@ button.statsBtn, .statsBtn{
   z-index:5;
 }
 
-
-/* ===== v456 COSMETIC + RESTORE PASS (UI ONLY) ===== */
+/* ===== v457 COSMETIC PASS (CSS ONLY) =====
+   - Bigger titles/headers
+   - All buttons pill/bubble (no flat)
+   - Center player name lists/chips
+   - Keep logo/title visible by preventing clipping in common wrappers
+   NOTE: No JS / no Firebase / no multiplayer changes in v457.
+*/
 :root{
-  --safeTop: env(safe-area-inset-top, 0px);
-  --titleSize: 28px;
-  --headerSize: 22px;
-  --btnRadius: 999px;
+  --gn-title: 30px;
+  --gn-header: 22px;
+  --gn-pill: 999px;
 }
 
-/* Top bar: reserve space so title never clips under buttons */
-.topBar, #topBar, .appTopBar{
-  padding-top: calc(var(--safeTop) + 10px) !important;
-  min-height: calc(var(--safeTop) + 60px) !important;
-  overflow: visible !important;
-}
-.topBar .left, #topBar .left, .appTopBar .left{ flex:0 0 84px !important; }
-.topBar .right, #topBar .right, .appTopBar .right{ flex:0 0 84px !important; display:flex !important; justify-content:flex-end !important; }
-.topBar .center, #topBar .center, .appTopBar .center{ flex:1 1 auto !important; min-width:0 !important; display:flex !important; justify-content:center !important; }
-.topTitle, #topTitle, .topBar .title, #topBar .title, .appTopBar .title{
-  font-size: var(--titleSize) !important;
+/* Titles / headers */
+#topTitle, .topTitle, .topbar-title, .headerTitle, header h1, header .title, h1.appTitle{
+  font-size: var(--gn-title) !important;
   font-weight: 900 !important;
   line-height: 1.1 !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
+  letter-spacing: .2px !important;
 }
-
-/* Section/page headers */
-.sectionTitle, .pageTitle, h2, h3{
-  font-size: var(--headerSize) !important;
+h2, h3, .sectionTitle, .pageTitle, .cardTitle, .panelTitle{
+  font-size: var(--gn-header) !important;
   font-weight: 900 !important;
+  line-height: 1.15 !important;
 }
 
-/* Pill/bubble buttons everywhere (no flat buttons) */
-button, input[type="button"], input[type="submit"], .btn, .btnPrimary, .btnSecondary, .chipBtn, .pillBtn, a.btn, a.button{
-  border-radius: var(--btnRadius) !important;
+/* Buttons: pill/bubble everywhere */
+button, input[type="button"], input[type="submit"], .btn, .button, .cta, .chip, .chipBtn, .menuBtn, .navBtn, .primaryBtn, .secondaryBtn{
+  border-radius: var(--gn-pill) !important;
 }
 button, input[type="button"], input[type="submit"]{
   font-weight: 900 !important;
@@ -5963,45 +5884,42 @@ button:active, input[type="button"]:active, input[type="submit"]:active{
   transform: scale(0.98);
 }
 
-/* Crop sound button hitbox (keep icon size) */
-#soundBtn, .soundBtn, #speakerBtn{
-  padding: 6px !important;
-  margin: 0 !important;
-  border-radius: 999px !important;
-  background: transparent !important;
+/* Center players lists / chips */
+#playersList, #playerList, .playersList, .playerList, .players, .playerChips, .chips, .setupPlayersGrid, #setupPlayersGrid, #setupPlayers, .setupPlayers{
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  gap: 10px !important;
 }
 
-/* Center player lists (common containers) */
-#playersList, .playersList, #playerList, .playerList, #setupPlayersGrid, .setupPlayersGrid, .playersGrid{
-  justify-content: center !important;
+/* If list items are blocks, center their text */
+#playersList *, #playerList *, .playersList *, .playerList *{
   text-align: center !important;
 }
-#playersList > *, .playersList > *, #playerList > *, .playerList > *{
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
 
-/* Landing: ensure logo/title are never masked/clipped */
-#landingCard, .landingCard, #landingWrap, .landingWrap, #introWrap{
+/* Prevent clipping/masking over logo + header text (common wrappers) */
+#app, #appRoot, .app, .appRoot, #root, .root, #main, .main, .screen, .page, .container, .content, .contentWrap{
   overflow: visible !important;
 }
-#landingVideo, #introVideo{
-  transform: none !important;
+
+/* Landing media stacking: keep logo above video if present */
+#landingLogo, #logo, .logo, #landingLogoOverlay, .landingLogo, .logoOverlay{
+  position: relative !important;
+  z-index: 50 !important;
 }
-#landingLogoOverlay, #logoOverlay, .landingLogo{
-  z-index: 1000 !important;
-  background: transparent !important;
-  mix-blend-mode: normal !important;
-  pointer-events: none !important;
+#landingVideo, #introVideo, video{
+  z-index: 1 !important;
 }
 
-/* Avatars: small in lists, slightly larger in active strips */
-.nameWithAvatar{ display:inline-flex !important; align-items:center !important; gap:10px !important; }
-.avatarCircle{ width:26px !important; height:26px !important; border-radius:50% !important; object-fit: contain !important; object-position:center !important; flex:0 0 auto !important; }
-.avatarCircle.big{ width:36px !important; height:36px !important; }
-.avatarBadge{ width:26px !important; height:26px !important; border-radius:50% !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; font-weight:900 !important; }
-.avatarBadge.big{ width:36px !important; height:36px !important; font-size:18px !important; }
-/* ===== end v456 ===== */
+/* Speaker / right icon should not cover title: shrink hitbox padding */
+#soundBtn, .soundBtn, #speakerBtn, .speakerBtn{
+  padding: 6px !important;
+  margin: 0 !important;
+  border-radius: var(--gn-pill) !important;
+  background: transparent !important;
+}
 
 </style>
 
