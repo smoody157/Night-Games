@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v503</title>
+<title>Night Games • v505</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   Night Games v503 — FULL BUILD (single-file; text-file friendly)
+   Night Games v505 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -22,7 +22,7 @@
        0217.mp4?v=495 (optional sweep overlay; if missing it will skip)
        MY DART AVATAR.png (optional)
        WILLIAM DART AVATAR.png (optional)
-       Jayce.png (optional)
+       MY DART AVATAR.png (optional)
    ------------------------------------------------------------
    What this build includes:
    - Email-only sign-in
@@ -61,7 +61,7 @@ html,body{height:100%;margin:0;color:var(--text);
 }
 
 
-/* --- v503 Skin: pull colors from the banner asset (repo) --- */
+/* --- v505 Skin: pull colors from the banner asset (repo) --- */
 body::before{
   content:"";
   position:fixed; inset:-20%;
@@ -104,7 +104,7 @@ body::after{
 }
 
 
-/* --- v503 Landing Color Scheme --- */
+/* --- v505 Landing Color Scheme --- */
 .heroHeader{
   border-bottom:1px solid rgba(120,180,255,.16);
   background:
@@ -114,10 +114,13 @@ body::after{
 }
 .heroInner{padding:18px 14px 14px 14px;text-align:center;}
 .heroLogo{
-  width:min(860px,100%);
-  max-height:260px;
+  width:100%;
+  max-width:980px;
+  max-height:520px;
   object-fit:contain;
-  filter:drop-shadow(0 26px 46px rgba(0,0,0,.62)) drop-shadow(0 0 18px rgba(0,215,255,.22));
+  filter:drop-shadow(0 26px 46px rgba(0,0,0,.62))
+         drop-shadow(0 0 24px rgba(0,215,255,.24))
+         drop-shadow(0 0 20px rgba(255,173,0,.16));
 }
 .heroTitle{
   margin-top:10px;
@@ -142,7 +145,7 @@ body::after{
 }
 
 
-/* --- v503: Night Games neon theme (match logo colors) --- */
+/* --- v505: Night Games neon theme (match logo colors) --- */
 :root{
   --cBlue: rgba(0,215,255,.26);
   --cBlue2: rgba(42,127,255,.20);
@@ -229,7 +232,7 @@ body::after{
 }
 #sweepOverlay.show{display:flex;}
 #sweepVideo{
-  width:min(560px, 78vw);
+  width:min(520px, 80vw);
   height:auto;
   transform:rotate(-45deg);
   opacity:0;
@@ -248,8 +251,17 @@ body::after{
 *{box-sizing:border-box}
 a{color:var(--cyan);text-decoration:none}
 .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:16px;}
-.card{width:min(980px,100%);background:var(--panel);border:1px solid var(--stroke);
-  border-radius:var(--r);box-shadow:var(--shadow);backdrop-filter:blur(10px);overflow:hidden;
+.card{width:min(980px,100%);background:var(--panel);
+  border-radius:var(--r);overflow:hidden;position:relative;
+  border:1px solid rgba(0,0,0,0);
+  box-shadow:var(--shadow), 0 0 0 1px rgba(0,215,255,.16) inset, 0 0 34px rgba(0,215,255,.10), 0 0 26px rgba(255,173,0,.08);
+}
+.card::before{
+  content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
+  background:linear-gradient(135deg, rgba(0,215,255,.32), rgba(255,173,0,.22), rgba(42,127,255,.22));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
 }
 .main{padding:14px;}
 .grid{display:grid;grid-template-columns:1fr;gap:12px;}
@@ -287,7 +299,7 @@ a{color:var(--cyan);text-decoration:none}
 .input{width:100%;padding:12px;border-radius:14px;border:1px solid rgba(120,180,255,.22);
   background:rgba(0,0,0,.35);color:var(--text);outline:none;
 }
-.input:focus{border-color:rgba(0,215,255,.55);box-shadow:0 0 0 3px rgba(0,215,255,.12);}
+.input:focus{outline:none;}
 
 .btn{width:100%;padding:12px;border-radius:999px;border:1px solid rgba(120,180,255,.22);
   background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.18));
@@ -404,6 +416,16 @@ a{color:var(--cyan);text-decoration:none}
   font-size:12px;white-space:pre-wrap;
 }
 #errBox b{font-family:inherit;}
+
+/* --- v505: stronger global neon wash (blue + orange) --- */
+body::after{
+  background:
+    radial-gradient(140% 140% at 14% 10%, rgba(0,215,255,.28), rgba(0,0,0,0) 58%),
+    radial-gradient(140% 140% at 86% 16%, rgba(255,173,0,.24), rgba(0,0,0,0) 60%),
+    radial-gradient(140% 140% at 86% 86%, rgba(42,127,255,.22), rgba(0,0,0,0) 62%),
+    radial-gradient(140% 140% at 14% 86%, rgba(255,120,35,.16), rgba(0,0,0,0) 64%),
+    linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.82));
+}
 </style>
 </head>
 <body>
@@ -424,7 +446,7 @@ a{color:var(--cyan);text-decoration:none}
       <img class="heroLogo" src="${asset('7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png')}" alt="Night Games"
         onerror="this.onerror=null; this.src='7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png';"/>
       <div class="heroTitle">Night Games</div>
-      <div class="heroSub">Enter your email to continue • v503</div>
+      <div class="heroSub">Enter your email to continue • v505</div>
     </div>
   </div>
   <div class="main">
@@ -448,7 +470,7 @@ a{color:var(--cyan);text-decoration:none}
 <div id="fatalErr" style="position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;display:none;padding:10px 12px;border-radius:14px;background:rgba(60,0,0,.78);border:1px solid rgba(255,77,77,.55);color:#ffd6d6;font:12px/1.3 system-ui;box-shadow:0 18px 40px rgba(0,0,0,.55);white-space:pre-wrap;"></div>
 
 <script>
-// v503: Global error handlers so we NEVER get a blank page with no clue.
+// v505: Global error handlers so we NEVER get a blank page with no clue.
 (function(){
   function show(msg){
     try{
@@ -465,7 +487,7 @@ a{color:var(--cyan);text-decoration:none}
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD=503;
+const BUILD=505;
 
 const ASSET_BASE = new URL('.', document.baseURI).toString();
 const asset = (p)=> new URL(p, ASSET_BASE).toString();
@@ -482,7 +504,7 @@ function showError(msg){
   const box=document.getElementById("errBox");
   if(!box) return;
   box.style.display="block";
-  box.innerHTML = "<b>Build v503 error:</b>\n"+String(msg);
+  box.innerHTML = "<b>Build v505 error:</b>\n"+String(msg);
 }
 window.addEventListener("error",(e)=>{
   showError(e?.error?.stack || e?.message || e);
@@ -497,6 +519,20 @@ const store={
 };
 function normEmail(e){return String(e||"").trim().toLowerCase();}
 function normName(n,email){const v=String(n||"").trim(); return v?v:normEmail(email);}
+function getAvatarFor(p){
+  const name=(p?.name||"").toLowerCase();
+  const email=(p?.email||"").toLowerCase();
+
+  // Repo-confirmed filenames:
+  // - MY DART AVATAR.png (Steve)
+  // - WILLIAM DART AVATAR.png (Bill/William)
+  if(name.includes("steve") || email.includes("stevewmoody")) return "MY DART AVATAR.png";
+  if(name.includes("william") || name.includes("bill")) return "WILLIAM DART AVATAR.png";
+
+  // Default for anyone else until their avatar file is added to repo
+  return "MY DART AVATAR.png";
+}
+
 function nowMs(){return Date.now();}
 
 function setHtml(h){ $("#app").innerHTML=h; }
@@ -534,7 +570,7 @@ function avatarFor(email,name){
   const n=String(name||"").toLowerCase();
   if(e===normEmail(OWNER_EMAIL)) return "MY DART AVATAR.png";
   if(n.includes("bill moody")||n.includes("william moody")||n.includes("william")) return "WILLIAM DART AVATAR.png";
-  if(n.includes("jace")||n.includes("jayce")) return "Jayce.png";
+  if(n.includes("jace")||n.includes("jayce")) return "MY DART AVATAR.png";
   return null;
 }
 
@@ -585,7 +621,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v503";
+  const key="sweepShown_v505";
   if(store.get(key,false)) return;
 
   const ov=$("#sweepOverlay");
@@ -1036,7 +1072,9 @@ async function submitCricket(matchId, marksThisTurn){
 
 async function onStart(){
   try{
-    const email = normEmail($("#inEmail")?.value || "");
+    const inEl=$("#inEmail");
+    const email = normEmail((inEl?.value || ""));
+    if(inEl) inEl.value=""; // auto-clear so next person never sees the previous email
     if(!email){
       alert("Enter your email.");
       return;
@@ -1099,9 +1137,7 @@ function screenAuth(){
   $("#inEmail").addEventListener("keydown", (e)=>{ if(e.key==="Enter") onStart(); });
   $("#btnClearRemember").onclick=()=>{ store.del("me"); $("#inEmail").value=""; alert("Saved login cleared."); };
 
-  const remembered=store.get("me", null);
-  if(remembered?.email) $("#inEmail").value=remembered.email;
-
+  
   // Diagonal sweep once on landing (autoplay may be blocked; first tap will trigger it)
   setTimeout(()=>runSweepOnce(), 350);
 }
@@ -1312,7 +1348,7 @@ function screenHistory(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">History view is wired as a real page in v503. Next pass we populate it from match logs / saved games.</div>
+        <div class="ok">History view is wired as a real page in v505. Next pass we populate it from match logs / saved games.</div>
       </div>
     </div>
     ${footer()}
@@ -1337,7 +1373,7 @@ function screenStats(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">Stats page is a real page in v503. Next pass we show the stat definitions + your notables.</div>
+        <div class="ok">Stats page is a real page in v505. Next pass we show the stat definitions + your notables.</div>
       </div>
     </div>
     ${footer()}
@@ -1548,7 +1584,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v503: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v505: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -1679,7 +1715,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v503: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v505: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
