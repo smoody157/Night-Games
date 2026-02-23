@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v496</title>
+<title>Night Games • v497</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   Night Games v496 — FULL BUILD (single-file; text-file friendly)
+   Night Games v497 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -61,7 +61,7 @@ html,body{height:100%;margin:0;color:var(--text);
 }
 
 
-/* --- v496 Skin: pull colors from the banner asset (repo) --- */
+/* --- v497 Skin: pull colors from the banner asset (repo) --- */
 body::before{
   content:"";
   position:fixed; inset:-20%;
@@ -253,6 +253,15 @@ a{color:var(--cyan);text-decoration:none}
   100%{transform:translateX(120%) translateY(-18%) rotate(-18deg);opacity:0;}
 }
 
+
+#errBox{position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;
+  background:rgba(20,0,0,.92);border:1px solid rgba(255,80,80,.5);
+  border-radius:14px;padding:12px;display:none;color:#ffd7d7;
+  box-shadow:0 16px 40px rgba(0,0,0,.55), 0 0 22px rgba(255,80,80,.18);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;
+  font-size:12px;white-space:pre-wrap;
+}
+#errBox b{font-family:inherit;}
 </style>
 </head>
 <body>
@@ -272,7 +281,7 @@ a{color:var(--cyan);text-decoration:none}
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD=496;
+const BUILD=497;
 const BANNER_PRIMARY="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png?v=496";
 const BANNER_FALLBACK="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png?v=496";
 const OWNER_EMAIL="stevewmoody@yahoo.com";
@@ -280,6 +289,19 @@ const OWNER_NAME="Steve Moody";
 const firebaseConfig = {"apiKey": "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo", "authDomain": "gamenightdarts-e7601.firebaseapp.com", "projectId": "gamenightdarts-e7601", "storageBucket": "gamenightdarts-e7601.firebasestorage.app", "messagingSenderId": "270045452251", "appId": "1:270045452251:web:5a4a661140a60780e939fe", "measurementId": "G-M60TDFYBW0"};
 
 const $=(s,r=document)=>r.querySelector(s);
+
+function showError(msg){
+  const box=document.getElementById("errBox");
+  if(!box) return;
+  box.style.display="block";
+  box.innerHTML = "<b>Build v497 error:</b>\n"+String(msg);
+}
+window.addEventListener("error",(e)=>{
+  showError(e?.error?.stack || e?.message || e);
+});
+window.addEventListener("unhandledrejection",(e)=>{
+  showError(e?.reason?.stack || e?.reason || e);
+});
 const store={
   get(k,f=null){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f;}catch{return f;}},
   set(k,v){localStorage.setItem(k,JSON.stringify(v));},
@@ -375,7 +397,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v496";
+  const key="sweepShown_v497";
   if(store.get(key,false)) return;
 
   const ov=$("#sweepOverlay");
@@ -836,7 +858,7 @@ function screenAuth(){
         <div style="height:10px"></div>
         <input id="inEmail" class="input" placeholder="you@example.com" autocomplete="email" inputmode="email"/>
         <div style="height:10px"></div>
-        <button id="btnStart" class="btn green pulse">Start</button>
+        <button id="btnStart" class="btn green pulse">Enter</button>
         <div style="height:8px"></div>
         <button id="btnClearRemember" class="btn">Clear saved login</button>
       </div>
@@ -1116,7 +1138,7 @@ function screenHistory(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">History view is wired as a real page in v496. Next pass we populate it from match logs / saved games.</div>
+        <div class="ok">History view is wired as a real page in v497. Next pass we populate it from match logs / saved games.</div>
       </div>
     </div>
     ${footer()}
@@ -1141,7 +1163,7 @@ function screenStats(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">Stats page is a real page in v496. Next pass we show the stat definitions + your notables.</div>
+        <div class="ok">Stats page is a real page in v497. Next pass we show the stat definitions + your notables.</div>
       </div>
     </div>
     ${footer()}
@@ -1352,7 +1374,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v496: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v497: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -1483,7 +1505,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v496: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v497: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
