@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v455</title>
+<title>Game Night • v456</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -1901,7 +1901,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v455 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v442 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -1997,7 +1997,7 @@ header, .header {
 })();
 
 
-/* ===== v455 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v442 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2081,7 +2081,7 @@ header, .header {
 
 <body>
 
-<!-- ================= v455 EARLY BOOT GUARD (runs before app scripts) ================= -->
+<!-- ================= v442 EARLY BOOT GUARD (runs before app scripts) ================= -->
 <script>
 (function(){
   // Capture any boot-time errors even if app init never reaches render()
@@ -2098,7 +2098,7 @@ header, .header {
           ${d}
           <div class="divider"></div>
           <button class="btn ok" onclick="location.reload()">Reload</button>
-          <div class="small" style="margin-top:10px;opacity:.8">v455 boot guard</div>
+          <div class="small" style="margin-top:10px;opacity:.8">v442 boot guard</div>
         </div>`;
     }catch(_){}
   }
@@ -2153,7 +2153,7 @@ header, .header {
   }, 2500);
 })();
 </script>
-<!-- ================= END v455 EARLY BOOT GUARD ================= -->
+<!-- ================= END v442 EARLY BOOT GUARD ================= -->
 
 
 <div class="topbar">
@@ -2163,7 +2163,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v455</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v442</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2177,11 +2177,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v455</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v442</div>
 </div>
 
 <script>
-const BUILD_ID="v455";
+const BUILD_ID="v442";
 
 
 
@@ -2211,7 +2211,7 @@ const BUILD_ID="v455";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v455) =====
+/* ===== v166 CLEAN BOOT (v442) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2291,7 +2291,7 @@ const BUILD_ID="v455";
       }
     }catch(e){ showBootError(e.message||e); }
   
-  // v455: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
+  // v442: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
   setTimeout(()=>{
     try{
       const app = document.getElementById("app");
@@ -2634,7 +2634,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v455 stability) ---
+// --- Snapshot compatibility helpers (v442 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3019,7 +3019,7 @@ function isOnline(email){
   try{
     const me = normEmail(meUser?.email||"");
     const em = normEmail(email||"");
-    // v455: always show self as online once signed in
+    // v442: always show self as online once signed in
     if(me && em && me===em) return true;
 
     let ms = presCache[em] || null;
@@ -3037,7 +3037,7 @@ function isOnline(email){
 }
 
 function startPresence(email, name){
-  // v455: restore stable behavior + compatibility across older presence doc ids.
+  // v442: restore stable behavior + compatibility across older presence doc ids.
   const em = normEmail(email||"");
   stopPresence();
   if(!em) return;
@@ -3209,7 +3209,7 @@ async function saveMatchState(roomId, match){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
 
-  // v455: authoritative turn guard at the write boundary (applies to all games)
+  // v442: authoritative turn guard at the write boundary (applies to all games)
   try{
     const me = normEmail(meUser?.email || "");
     const players = Array.isArray(match?.players) ? match.players : [];
@@ -3228,7 +3228,7 @@ async function saveMatchState(roomId, match){
     }
   }catch(e){ /* do not block on guard errors */ }
 
-  // v455: rev consistency (matchData._rev always matches room.rev)
+  // v442: rev consistency (matchData._rev always matches room.rev)
   const nextRev = Number(match?match._rev||0:0) + 1;
   match._rev = nextRev;
 
@@ -3403,7 +3403,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v455 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v442 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4535,32 +4535,6 @@ function initials(name){
   return (a+(b||"")).slice(0,2) || a || "?";
 }
 
-/* v455: avatar rendering helper (cosmetic only) */
-function avatarHTML(p, big=false){
-  try{
-    const name = String(p && p.name || "").toLowerCase();
-    const email = String(p && p.email || "").toLowerCase();
-    // Steve / Moody
-    if(name.includes("steve") || name.includes("moody") || email.includes("smoody")){
-      const src = "MY%20DART%20AVATAR.png";
-      return `<img alt="avatar" src="${src}" class="${big?'big':''}">`;
-    }
-    // Bill / William
-    if(name.includes("bill") || name.includes("william") || email.includes("bill")){
-      const src = "WILLIAM%20DART%20AVATAR.png";
-      return `<img alt="avatar" src="${src}" class="${big?'big':''}">`;
-    }
-    // Jayce placeholder
-    if(name.includes("jayce") || name.includes("j-a-y-c-e")){
-      return `<div class="avatarBadge">${esc('J')}</div>`;
-    }
-    const init = initials(p && p.name ? p.name : (p && p.email ? p.email : "?"));
-    return esc(init);
-  }catch(e){
-    return "?";
-  }
-}
-
 async function renderHome(){
   __landingSetMode(false);
 
@@ -4612,7 +4586,7 @@ async function renderHome(){
   const roster = players.map(p=>`
     <div class="rosterCard">
       <div class="rosterLeft">
-        <div class="avatar ${isOnline(p.email)?`online`:``} rosterAvatar">${avatarHTML(p)}</div>
+        <div class="avatar ${isOnline(p.email)?`online`:``} rosterAvatar">${esc(initials(p.name))}</div>
         ${p.email===meUser.email?`<span class="badge rosterYou">YOU</span>`:""}
       </div>
       <div class="rosterCenter">
@@ -4964,7 +4938,7 @@ async function renderGameSetup(){
   updateSetupUI();
 
   document.getElementById("startMatchBtn").onclick = async()=>{
-    // v455: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
+    // v442: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
     if(!g.active){ toastMsg="Coming soon."; return render(); }
 
     const startBtn = document.getElementById("startMatchBtn");
@@ -5206,7 +5180,7 @@ async function renderGamePlay(){
         const updatedBy = normEmail(roomDoc.updatedBy || "");
         const me = normEmail(meUser.email);
 
-        // v455 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
+        // v442 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
         if(!match || (inRev > myRev && updatedBy !== me)){
           match = incoming;
           roomSynced = true;
@@ -5737,7 +5711,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 
 <style id="v421_player_carousel_ui">
-/* v455 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
+/* v442 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
 .playerCarouselWrap{ margin:8px 0 2px; }
 .playerCarousel{
   display:flex;
@@ -5773,6 +5747,78 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
   .pcard{ flex-basis: 260px; }
 }
 </style>
+
+
+<script>
+/* v456 avatar decoration (UI only, safe, no Firebase changes) */
+(function(){
+  function norm(s){ return (s||"").toString().trim().toLowerCase(); }
+  function avatarSpec(name, email){
+    name = norm(name); email = norm(email);
+    // Steve / Moody (only if explicitly matches)
+    if(email.indexOf("smoody")!==-1 || name==="steve" || name==="steve moody" || name==="moody") {
+      return {t:"img", src:"MY%20DART%20AVATAR.png"};
+    }
+    // Bill / William
+    if(name==="bill" || name==="bill moody" || name==="william" || name==="william moody" || email.indexOf("bill")!==-1) {
+      return {t:"img", src:"WILLIAM%20DART%20AVATAR.png"};
+    }
+    // Jayce placeholder
+    if(name==="jayce" || name.indexOf("jayce")!==-1) return {t:"badge", text:"J"};
+    var ch = (name && name[0]) ? name[0].toUpperCase() : (email && email[0] ? email[0].toUpperCase() : "?");
+    return {t:"badge", text: ch};
+  }
+
+  function decorateNode(node, big){
+    if(!node || node.dataset && node.dataset.avatarDone==="1") return;
+    var txt = node.textContent || "";
+    // Try to parse "Name" and "(email)" patterns
+    var name = txt, email = "";
+    var m = txt.match(/\(([^)@]+@[^)]+)\)/);
+    if(m){ email = m[1]; name = txt.replace(m[0],"").trim(); }
+    var spec = avatarSpec(name, email);
+    // wrap only once
+    var wrap = document.createElement("span");
+    wrap.className = "nameWithAvatar";
+    var badge;
+    if(spec.t==="img"){
+      badge = document.createElement("img");
+      badge.className = "avatarCircle" + (big ? " big" : "");
+      badge.alt = name || "avatar";
+      badge.src = spec.src;
+    } else {
+      badge = document.createElement("span");
+      badge.className = "avatarBadge" + (big ? " big" : "");
+      badge.textContent = spec.text;
+    }
+    var label = document.createElement("span");
+    label.textContent = txt;
+    wrap.appendChild(badge);
+    wrap.appendChild(label);
+    node.textContent = "";
+    node.appendChild(wrap);
+    if(node.dataset) node.dataset.avatarDone="1";
+  }
+
+  function scan(){
+    // Common selectors for player name labels
+    var sels = [".playerName",".player-name",".playerLabel",".player-label",".nameLabel",".name-label"];
+    for(var i=0;i<sels.length;i++){
+      var nodes = document.querySelectorAll(sels[i]);
+      for(var j=0;j<nodes.length;j++) decorateNode(nodes[j], false);
+    }
+    // Active player strip (bigger)
+    var active = document.querySelectorAll(".activePlayerName,.active-player-name,.turnPlayerName,.turn-player-name");
+    for(var k=0;k<active.length;k++) decorateNode(active[k], true);
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    try{ scan(); }catch(e){}
+    // lightweight re-scan, avoids deep coupling
+    setInterval(function(){ try{ scan(); }catch(e){} }, 1200);
+  });
+})();
+</script>
 
 </body>
 </html>
@@ -5873,75 +5919,89 @@ button.statsBtn, .statsBtn{
   z-index:5;
 }
 
-/* v455 COSMETIC: bigger headers, pill buttons, centered players, avatars */
+
+/* ===== v456 COSMETIC + RESTORE PASS (UI ONLY) ===== */
 :root{
-  --uiTitle: 30px;
-  --uiHeader: 22px;
-  --uiPill: 999px;
+  --safeTop: env(safe-area-inset-top, 0px);
+  --titleSize: 28px;
+  --headerSize: 22px;
+  --btnRadius: 999px;
 }
 
-/* Top title stronger */
+/* Top bar: reserve space so title never clips under buttons */
+.topBar, #topBar, .appTopBar{
+  padding-top: calc(var(--safeTop) + 10px) !important;
+  min-height: calc(var(--safeTop) + 60px) !important;
+  overflow: visible !important;
+}
+.topBar .left, #topBar .left, .appTopBar .left{ flex:0 0 84px !important; }
+.topBar .right, #topBar .right, .appTopBar .right{ flex:0 0 84px !important; display:flex !important; justify-content:flex-end !important; }
+.topBar .center, #topBar .center, .appTopBar .center{ flex:1 1 auto !important; min-width:0 !important; display:flex !important; justify-content:center !important; }
 .topTitle, #topTitle, .topBar .title, #topBar .title, .appTopBar .title{
-  font-size: var(--uiTitle) !important;
+  font-size: var(--titleSize) !important;
   font-weight: 900 !important;
-  letter-spacing: .2px !important;
+  line-height: 1.1 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
 }
 
-/* Section headers */
-.pageTitle, .sectionTitle, .h1, h2, h3{
-  font-size: var(--uiHeader) !important;
+/* Section/page headers */
+.sectionTitle, .pageTitle, h2, h3{
+  font-size: var(--headerSize) !important;
   font-weight: 900 !important;
 }
 
-/* All buttons pill/bubble */
-button, .btn, .action, .pillBtn{
-  border-radius: var(--uiPill) !important;
+/* Pill/bubble buttons everywhere (no flat buttons) */
+button, input[type="button"], input[type="submit"], .btn, .btnPrimary, .btnSecondary, .chipBtn, .pillBtn, a.btn, a.button{
+  border-radius: var(--btnRadius) !important;
 }
-button.btn, .btn{
+button, input[type="button"], input[type="submit"]{
   font-weight: 900 !important;
 }
-.btn:active, button:active{
+button:active, input[type="button"]:active, input[type="submit"]:active{
   transform: scale(0.98);
 }
 
-/* Center player roster content a bit nicer */
-.playerPage .rosterGrid, .playerPage .list, .playerPage .playersGrid{
-  justify-content: center !important;
-}
-.playerPage .rosterCard{
-  border-radius: 22px !important;
-}
-.playerPage .rosterCenter{ text-align:center !important; }
-.playerPage .rosterLeft{ display:flex !important; align-items:center !important; justify-content:center !important; gap:8px !important; }
-.rosterAvatar{
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  overflow:hidden !important;
-}
-.rosterAvatar img{
-  width:100% !important;
-  height:100% !important;
-  object-fit:cover !important;
-  border-radius:50% !important;
-  display:block !important;
-}
-/* Slightly bigger avatars in waiting room / active strip if those reuse .bigAvatar */
-.bigAvatar, .avatar.big{
-  width:44px !important;
-  height:44px !important;
-  font-size:18px !important;
+/* Crop sound button hitbox (keep icon size) */
+#soundBtn, .soundBtn, #speakerBtn{
+  padding: 6px !important;
+  margin: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
 }
 
-/* Placeholder badge for Jayce */
-.avatarBadge{
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight: 1000;
+/* Center player lists (common containers) */
+#playersList, .playersList, #playerList, .playerList, #setupPlayersGrid, .setupPlayersGrid, .playersGrid{
+  justify-content: center !important;
+  text-align: center !important;
 }
+#playersList > *, .playersList > *, #playerList > *, .playerList > *{
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Landing: ensure logo/title are never masked/clipped */
+#landingCard, .landingCard, #landingWrap, .landingWrap, #introWrap{
+  overflow: visible !important;
+}
+#landingVideo, #introVideo{
+  transform: none !important;
+}
+#landingLogoOverlay, #logoOverlay, .landingLogo{
+  z-index: 1000 !important;
+  background: transparent !important;
+  mix-blend-mode: normal !important;
+  pointer-events: none !important;
+}
+
+/* Avatars: small in lists, slightly larger in active strips */
+.nameWithAvatar{ display:inline-flex !important; align-items:center !important; gap:10px !important; }
+.avatarCircle{ width:26px !important; height:26px !important; border-radius:50% !important; object-fit: contain !important; object-position:center !important; flex:0 0 auto !important; }
+.avatarCircle.big{ width:36px !important; height:36px !important; }
+.avatarBadge{ width:26px !important; height:26px !important; border-radius:50% !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; font-weight:900 !important; }
+.avatarBadge.big{ width:36px !important; height:36px !important; font-size:18px !important; }
+/* ===== end v456 ===== */
 
 </style>
 
