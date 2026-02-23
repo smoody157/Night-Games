@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v505</title>
+<title>Night Games • v506</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   Night Games v505 — FULL BUILD (single-file; text-file friendly)
+   Night Games v506 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -61,7 +61,7 @@ html,body{height:100%;margin:0;color:var(--text);
 }
 
 
-/* --- v505 Skin: pull colors from the banner asset (repo) --- */
+/* --- v506 Skin: pull colors from the banner asset (repo) --- */
 body::before{
   content:"";
   position:fixed; inset:-20%;
@@ -104,23 +104,28 @@ body::after{
 }
 
 
-/* --- v505 Landing Color Scheme --- */
+/* --- v506 Landing Color Scheme --- */
 .heroHeader{
-  border-bottom:1px solid rgba(120,180,255,.16);
+  border:1px solid rgba(0,215,255,.20);
+  border-left:none; border-right:none; /* keep clean inside main frame */
   background:
-    radial-gradient(120% 140% at 12% 10%, rgba(0,215,255,.22), rgba(0,0,0,0) 55%),
-    radial-gradient(120% 140% at 88% 65%, rgba(255,173,0,.16), rgba(0,0,0,0) 60%),
-    linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.35));
+    radial-gradient(120% 140% at 12% 10%, rgba(0,215,255,.26), rgba(0,0,0,0) 55%),
+    radial-gradient(120% 140% at 88% 35%, rgba(255,173,0,.22), rgba(0,0,0,0) 60%),
+    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.34));
+  box-shadow:0 0 18px rgba(0,215,255,.08);
 }
-.heroInner{padding:18px 14px 14px 14px;text-align:center;}
+.heroInner{padding:10px 10px 10px 10px;text-align:center;}
 .heroLogo{
   width:100%;
   max-width:980px;
-  max-height:520px;
+  max-height:640px;
   object-fit:contain;
-  filter:drop-shadow(0 26px 46px rgba(0,0,0,.62))
-         drop-shadow(0 0 24px rgba(0,215,255,.24))
-         drop-shadow(0 0 20px rgba(255,173,0,.16));
+  margin:0 auto;
+  display:block;
+  /* no border; only glow */
+  filter:drop-shadow(0 22px 44px rgba(0,0,0,.62))
+         drop-shadow(0 0 26px rgba(0,215,255,.24))
+         drop-shadow(0 0 22px rgba(255,173,0,.16));
 }
 .heroTitle{
   margin-top:10px;
@@ -131,13 +136,14 @@ body::after{
 }
 .heroSub{color:rgba(233,242,255,.75);font-size:13px;margin-top:4px;}
 .heroPanel{
-  max-width:640px;
+  max-width:760px;
   margin:0 auto;
   background:
-    radial-gradient(120% 120% at 15% 15%, rgba(0,215,255,.10), rgba(0,0,0,0) 55%),
+    radial-gradient(120% 120% at 15% 15%, rgba(0,215,255,.12), rgba(0,0,0,0) 55%),
+    radial-gradient(120% 120% at 85% 35%, rgba(255,173,0,.10), rgba(0,0,0,0) 60%),
     rgba(0,0,0,.28);
-  border:1px solid rgba(0,215,255,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.42), 0 0 26px rgba(0,215,255,.08);
+  border:1px solid rgba(0,215,255,.24);
+  box-shadow:0 18px 44px rgba(0,0,0,.44), 0 0 30px rgba(0,215,255,.10), 0 0 18px rgba(255,173,0,.07);
 }
 .input{
   border:1px solid rgba(0,215,255,.22);
@@ -145,7 +151,7 @@ body::after{
 }
 
 
-/* --- v505: Night Games neon theme (match logo colors) --- */
+/* --- v506: Night Games neon theme (match logo colors) --- */
 :root{
   --cBlue: rgba(0,215,255,.26);
   --cBlue2: rgba(42,127,255,.20);
@@ -251,17 +257,14 @@ body::after{
 *{box-sizing:border-box}
 a{color:var(--cyan);text-decoration:none}
 .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:16px;}
-.card{width:min(980px,100%);background:var(--panel);
-  border-radius:var(--r);overflow:hidden;position:relative;
-  border:1px solid rgba(0,0,0,0);
-  box-shadow:var(--shadow), 0 0 0 1px rgba(0,215,255,.16) inset, 0 0 34px rgba(0,215,255,.10), 0 0 26px rgba(255,173,0,.08);
-}
-.card::before{
-  content:""; position:absolute; inset:0; padding:1px; border-radius:inherit;
-  background:linear-gradient(135deg, rgba(0,215,255,.32), rgba(255,173,0,.22), rgba(42,127,255,.22));
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
+.card{
+  width:min(980px,100%);
+  background:var(--panel);
+  border-radius:var(--r);
+  overflow:hidden;
+  position:relative;
+  border:2px solid rgba(0,0,0,0);
+  box-shadow:var(--shadow), 0 0 0 2px rgba(0,215,255,.18), 0 0 26px rgba(0,215,255,.10), 0 0 18px rgba(255,173,0,.08);
 }
 .main{padding:14px;}
 .grid{display:grid;grid-template-columns:1fr;gap:12px;}
@@ -299,7 +302,7 @@ a{color:var(--cyan);text-decoration:none}
 .input{width:100%;padding:12px;border-radius:14px;border:1px solid rgba(120,180,255,.22);
   background:rgba(0,0,0,.35);color:var(--text);outline:none;
 }
-.input:focus{outline:none;}
+.input:focus{outline:none;border-color:rgba(255,173,0,.30);box-shadow:0 0 0 1px rgba(255,255,255,.04) inset, 0 0 26px rgba(255,173,0,.10), 0 0 20px rgba(0,215,255,.08);}
 
 .btn{width:100%;padding:12px;border-radius:999px;border:1px solid rgba(120,180,255,.22);
   background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.18));
@@ -417,7 +420,7 @@ a{color:var(--cyan);text-decoration:none}
 }
 #errBox b{font-family:inherit;}
 
-/* --- v505: stronger global neon wash (blue + orange) --- */
+/* --- v506: stronger global neon wash (blue + orange) --- */
 body::after{
   background:
     radial-gradient(140% 140% at 14% 10%, rgba(0,215,255,.28), rgba(0,0,0,0) 58%),
@@ -446,7 +449,7 @@ body::after{
       <img class="heroLogo" src="${asset('7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png')}" alt="Night Games"
         onerror="this.onerror=null; this.src='7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png';"/>
       <div class="heroTitle">Night Games</div>
-      <div class="heroSub">Enter your email to continue • v505</div>
+      <div class="heroSub">Enter your email to continue • v506</div>
     </div>
   </div>
   <div class="main">
@@ -470,7 +473,7 @@ body::after{
 <div id="fatalErr" style="position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;display:none;padding:10px 12px;border-radius:14px;background:rgba(60,0,0,.78);border:1px solid rgba(255,77,77,.55);color:#ffd6d6;font:12px/1.3 system-ui;box-shadow:0 18px 40px rgba(0,0,0,.55);white-space:pre-wrap;"></div>
 
 <script>
-// v505: Global error handlers so we NEVER get a blank page with no clue.
+// v506: Global error handlers so we NEVER get a blank page with no clue.
 (function(){
   function show(msg){
     try{
@@ -487,7 +490,7 @@ body::after{
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD=505;
+const BUILD=506;
 
 const ASSET_BASE = new URL('.', document.baseURI).toString();
 const asset = (p)=> new URL(p, ASSET_BASE).toString();
@@ -504,7 +507,7 @@ function showError(msg){
   const box=document.getElementById("errBox");
   if(!box) return;
   box.style.display="block";
-  box.innerHTML = "<b>Build v505 error:</b>\n"+String(msg);
+  box.innerHTML = "<b>Build v506 error:</b>\n"+String(msg);
 }
 window.addEventListener("error",(e)=>{
   showError(e?.error?.stack || e?.message || e);
@@ -621,7 +624,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v505";
+  const key="sweepShown_v506";
   if(store.get(key,false)) return;
 
   const ov=$("#sweepOverlay");
@@ -1348,7 +1351,7 @@ function screenHistory(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">History view is wired as a real page in v505. Next pass we populate it from match logs / saved games.</div>
+        <div class="ok">History view is wired as a real page in v506. Next pass we populate it from match logs / saved games.</div>
       </div>
     </div>
     ${footer()}
@@ -1373,7 +1376,7 @@ function screenStats(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">Stats page is a real page in v505. Next pass we show the stat definitions + your notables.</div>
+        <div class="ok">Stats page is a real page in v506. Next pass we show the stat definitions + your notables.</div>
       </div>
     </div>
     ${footer()}
@@ -1584,7 +1587,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v505: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v506: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -1715,7 +1718,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v505: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v506: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
