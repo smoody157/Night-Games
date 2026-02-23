@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v514</title>
+<title>Night Games • v517</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   Night Games v514 — FULL BUILD (single-file; text-file friendly)
+   Night Games v517 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -61,7 +61,7 @@ html,body{height:100%;margin:0;color:var(--text);
 }
 
 
-/* --- v514 Skin: pull colors from the banner asset (repo) --- */
+/* --- v517 Skin: pull colors from the banner asset (repo) --- */
 body::before{
   content:"";
   position:fixed; inset:-20%;
@@ -104,7 +104,7 @@ body::after{
 }
 
 
-/* --- v514 Landing Color Scheme --- */
+/* --- v517 Landing Color Scheme --- */
 .heroHeader{
   border-bottom:1px solid rgba(120,180,255,.16);
   background:
@@ -142,7 +142,7 @@ body::after{
 }
 
 
-/* --- v514: Night Games neon theme (match logo colors) --- */
+/* --- v517: Night Games neon theme (match logo colors) --- */
 :root{
   --cBlue: rgba(0,215,255,.26);
   --cBlue2: rgba(42,127,255,.20);
@@ -405,7 +405,7 @@ a{color:var(--cyan);text-decoration:none}
 }
 #errBox b{font-family:inherit;}
 
-/* --- v514 LANDING VISUALS (OBVIOUS CHANGES) --- */
+/* --- v517 LANDING VISUALS (OBVIOUS CHANGES) --- */
 body{background:#000 !important;}
 /* Outer screen border (neon, NOT green) */
 .card{
@@ -475,7 +475,7 @@ body{background:#000 !important;}
   100%{opacity:0; transform:translate(18vw, -10vw) rotate(-45deg) scale(1.02);}
 }
 
-/* ===== v514: REMOVE GREEN FRAME / SIMPLE BLACK CANVAS ===== */
+/* ===== v517: REMOVE GREEN FRAME / SIMPLE BLACK CANVAS ===== */
 html,body{background:#000 !important;}
 /* Outer display: ONE neon border only */
 .card{
@@ -532,7 +532,7 @@ body::after{
     0 0 10px rgba(255,120,35,.06) !important;
 }
 
-/* ===== v514 MINIMAL BLACK CANVAS ===== */
+/* ===== v517 MINIMAL BLACK CANVAS ===== */
 
 /* Pure black everywhere */
 html,body{
@@ -594,7 +594,7 @@ body::after{
   display:none !important;
 }
 
-/* ===== v514: blended background + keep blue outline on sign-in ===== */
+/* ===== v517: blended background + keep blue outline on sign-in ===== */
 
 /* Blend the black canvas subtly so it doesn't look like a hard flat slab */
 html,body{
@@ -643,7 +643,7 @@ html,body{
 /* Keep it readable */
 .sub{ color:rgba(235,240,255,.70) !important; }
 
-/* ===== v514 THEME PASS (no green glow, blended logo, new fonts, open layout) ===== */
+/* ===== v517 THEME PASS (no green glow, blended logo, new fonts, open layout) ===== */
 
 /* Kill any green glow remnants */
 .btn.green::after{ box-shadow:none !important; }
@@ -772,6 +772,67 @@ body::after{ display:none !important; } /* remove earlier wash layers so we cont
   color: #2ee66b !important;
   text-shadow: 0 0 14px rgba(46,230,107,.12) !important;
 }
+
+/* ===== v517: STRIPPED LANDING (NO FRAMES / NO EXTRA BORDERS) ===== */
+html,body{background:#000 !important;}
+body::before, body::after{display:none !important;}
+.wrap{padding:0 !important;}
+/* Remove any "frame" look */
+.card{
+  width:100% !important;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+/* Top area is just black canvas */
+.heroHeader, .heroInner{
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+  padding:0 !important;
+}
+/* Logo big */
+.heroLogo{
+  width:100% !important;
+  max-width:1100px !important;
+  max-height:620px !important;
+  object-fit:cover !important;
+  display:block !important;
+  margin:0 auto !important;
+  filter:none !important;
+}
+/* Only keep a simple outline on the email input (not the whole panel) */
+.heroPanel{
+  max-width:760px !important;
+  margin:24px auto 0 auto !important;
+  padding:18px 16px !important;
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+}
+.input{
+  background:rgba(0,0,0,.35) !important;
+  border:none !important;
+  box-shadow:none !important;
+}
+.input:focus{outline:none !important;}
+/* Minimal button (no glow) */
+.btn.green{
+  background:#ffb000 !important;
+  border-color:#ffb000 !important;
+  color:#000 !important;
+  box-shadow:none !important;
+}
+.btn.green::after{display:none !important;}
+/* Text colors */
+.h2{color:#2ee66b !important;}
+.sub{color:rgba(255,255,255,.65) !important;}
+/* Footer */
+.footer{
+  background:transparent !important;
+  border:none !important;
+}
 </style>
 </head>
 <body>
@@ -792,7 +853,7 @@ body::after{ display:none !important; } /* remove earlier wash layers so we cont
       <img class="heroLogo" src="${asset('7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png')}" alt="Night Games"
         onerror="this.onerror=null; this.src='7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png';"/>
       <div class="heroTitle">Night Games</div>
-      <div class="heroSub">Enter your email to continue • v514</div>
+      <div class="heroSub">Enter your email to continue • v517</div>
     </div>
   </div>
   <div class="main">
@@ -816,7 +877,7 @@ body::after{ display:none !important; } /* remove earlier wash layers so we cont
 <div id="fatalErr" style="position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;display:none;padding:10px 12px;border-radius:14px;background:rgba(60,0,0,.78);border:1px solid rgba(255,77,77,.55);color:#ffd6d6;font:12px/1.3 system-ui;box-shadow:0 18px 40px rgba(0,0,0,.55);white-space:pre-wrap;"></div>
 
 <script>
-// v514: Global error handlers so we NEVER get a blank page with no clue.
+// v517: Global error handlers so we NEVER get a blank page with no clue.
 (function(){
   function show(msg){
     try{
@@ -833,7 +894,7 @@ body::after{ display:none !important; } /* remove earlier wash layers so we cont
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD=514;
+const BUILD=517;
 
 const ASSET_BASE = new URL('.', document.baseURI).toString();
 const asset = (p)=> new URL(p, ASSET_BASE).toString();
@@ -850,7 +911,7 @@ function showError(msg){
   const box=document.getElementById("errBox");
   if(!box) return;
   box.style.display="block";
-  box.innerHTML = "<b>Build v514 error:</b>\n"+String(msg);
+  box.innerHTML = "<b>Build v517 error:</b>\n"+String(msg);
 }
 window.addEventListener("error",(e)=>{
   showError(e?.error?.stack || e?.message || e);
@@ -967,7 +1028,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v514";
+  const key="sweepShown_v517";
   if(store.get(key,false)) return;
 
   const ov=$("#sweepOverlay");
@@ -1456,113 +1517,28 @@ async function onStart(){
 
 function screenAuth(){
   setHtml(`
-    <div class="heroCanvas">
-      <img class="heroLogo" src="./7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png" alt="Night Games"
-           onerror="this.style.display='none'"/>
-    </div>
-
-    <div class="heroText">
-      <div class="titleStack">
-        <div class="titleNight">NIGHT</div>
-        <div class="titleGames">GAMES</div>
+    <div class="header heroHeader">
+      <div class="heroInner">
+        <img class="heroLogo" src="./7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png" alt="Night Games"
+          onerror="this.style.display='none'"/>
       </div>
-      <div class="heroSub">Enter your email to continue • v${BUILD}</div>
     </div>
 
     <div class="main">
-      <div class="panel heroPanel">
+      <div class="heroPanel">
         <div class="h2">Sign in</div>
-        <div class="sub">Email only. If you’re new, we’ll ask your name one time.</div>
         <div style="height:10px"></div>
-        <input id="inEmail" class="input inputBlue" placeholder="you@example.com" autocomplete="email" inputmode="email"/>
+        <input id="inEmail" class="input" placeholder="you@example.com" autocomplete="email" inputmode="email"/>
         <div style="height:10px"></div>
-        <button id="btnEnter" class="btn goldGrad pulse">Enter</button>
-        <div class="accentBar" aria-hidden="true"></div>
+        <button id="btnEnter" class="btn green">Enter</button>
       </div>
     </div>
     ${footer()}
   `);
 
   $("#btnEnter").onclick=onStart;
-  $("#inEmail").addEventListener("keydown", (e)=>{ if(e.key==="Enter") onStart(); });
-
-  // play sweep once shortly after render (autoplay may be blocked; first tap triggers too)
-  setTimeout(()=>runSweepOnce(), 350);
-}function screenPlayer(){
-  setHtml(`
-    ${headerBanner("Night Games")}
-    <div class="main">
-      ${topbar()}
-      <div style="height:12px"></div>
-
-      <div class="panel">
-        <div class="row space">
-          <h3 class="h2" style="margin:0">Games</h3>
-          <div class="sub">Tap <b>Play</b> or <b>History</b> for each game.</div>
-        </div>
-        <div style="height:10px"></div>
-
-        <div class="cards" id="gameCards"></div>
-
-        <div style="height:14px"></div>
-        <div class="row space">
-          <h3 class="h2" style="margin:0">Players</h3>
-          <div class="sub">Green dot = online.</div>
-        </div>
-        <div style="height:10px"></div>
-        <div id="playersUnderGames" class="list smallList"></div>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <div class="panel">
-        <div class="row space">
-          <h3 class="h2" style="margin:0">Matches</h3>
-          <button class="btn sm green" id="btnNewMatch">New match</button>
-        </div>
-        <div class="sub">Create a match and others can join from their device.</div>
-        <div style="height:10px"></div>
-        <div id="matches" class="list"></div>
-      </div>
-
-      <div style="height:10px"></div>
-      <div class="sub">Need the email gate page? Hit <b>Sign out</b>.</div>
-    </div>
-    ${footer()}
-  `);
-
-  $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
-  $("#btnPlayers").onclick=()=>go("players");
-  $("#btnSignOut").onclick=()=>signOut();
-
-  const host=$("#gameCards");
-  host.innerHTML = GAMES.map(g=>`
-    <div class="gcard">
-      <div class="gtitle">${g.name}</div>
-      <div class="gsub">Quick actions</div>
-      <div class="grow">
-        <button class="btn neon ${g.id==="cricket"||g.id==="01"?"green pulse":""}" data-play="${g.id}">Play</button>
-        <button class="btn" data-history="${g.id}">History</button>
-        <button class="btn" data-stats="${g.id}">Stats</button>
-      </div>
-    </div>
-  `).join("");
-
-  host.querySelectorAll("button[data-play]").forEach(b=>{
-    b.onclick=()=>go("game_setup",{gameId:b.getAttribute("data-play")});
-  });
-  host.querySelectorAll("button[data-history]").forEach(b=>{
-    b.onclick=()=>go("history",{gameId:b.getAttribute("data-history")});
-  });
-  host.querySelectorAll("button[data-stats]").forEach(b=>{
-    b.onclick=()=>go("stats",{gameId:b.getAttribute("data-stats")});
-  });
-
-  renderPlayersUnderGames();
-  renderMatchesList();
-  $("#btnNewMatch").onclick=()=>go("game_setup", {gameId:"01"});
+  $("#inEmail").addEventListener("keydown",(e)=>{ if(e.key==="Enter") onStart(); });
 }
-
 function renderPlayersUnderGames(){
   const host=$("#playersUnderGames");
   if(!host) return;
@@ -1695,7 +1671,7 @@ function screenHistory(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">History view is wired as a real page in v514. Next pass we populate it from match logs / saved games.</div>
+        <div class="ok">History view is wired as a real page in v517. Next pass we populate it from match logs / saved games.</div>
       </div>
     </div>
     ${footer()}
@@ -1720,7 +1696,7 @@ function screenStats(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">Stats page is a real page in v514. Next pass we show the stat definitions + your notables.</div>
+        <div class="ok">Stats page is a real page in v517. Next pass we show the stat definitions + your notables.</div>
       </div>
     </div>
     ${footer()}
@@ -1931,7 +1907,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v514: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v517: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -2062,7 +2038,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v514: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v517: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
