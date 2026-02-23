@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v487</title>
+<title>Night Games • v488</title>
 
 <!-- Firebase compat (single-file web) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -149,6 +149,33 @@ html,body{height:100%;margin:0;color:var(--text);
   background:rgba(0,0,0,.55);border:1px solid rgba(120,180,255,.25);color:#bfe7ff;font:12px/1.1 system-ui;
   pointer-events:none;box-shadow:0 10px 24px rgba(0,0,0,.45);
 }
+
+/* Landing header + footer */
+.landingHeader{border-radius:18px;overflow:hidden;border:1px solid rgba(0,215,255,.22);
+  background:
+    radial-gradient(120% 120% at 15% 25%, rgba(0,215,255,.22), rgba(0,0,0,0) 55%),
+    radial-gradient(120% 120% at 85% 70%, rgba(42,127,255,.18), rgba(0,0,0,0) 55%),
+    linear-gradient(180deg, rgba(10,12,16,.92), rgba(0,0,0,.72));
+  box-shadow:0 18px 44px rgba(0,0,0,.55), 0 0 34px rgba(0,215,255,.08);
+  margin-bottom:12px;
+}
+.landingInner{padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.landingBrand{display:flex;align-items:center;gap:12px;min-width:0}
+.landingLogo{height:54px;width:auto;max-width:240px;object-fit:contain;
+  filter:drop-shadow(0 14px 26px rgba(0,160,255,.35));
+}
+.landingTitle{font-size:28px;font-weight:1000;letter-spacing:.2px;line-height:1;}
+.landingMeta{font-size:12px;color:var(--muted);}
+.versionPill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;
+  border:1px solid rgba(120,180,255,.22);background:rgba(0,0,0,.30);font-weight:1000;font-size:12px;
+  box-shadow:0 0 22px rgba(0,215,255,.08);
+}
+.footerBar{margin-top:14px;padding:10px 12px;border-radius:16px;
+  border:1px solid rgba(120,180,255,.16);background:rgba(0,0,0,.20);
+  text-align:center;font-size:11px;color:rgba(233,242,255,.70);line-height:1.35;
+}
+.footerBar b{color:rgba(233,242,255,.92);}
+
 </style>
 </head>
 <body>
@@ -162,11 +189,13 @@ html,body{height:100%;margin:0;color:var(--text);
 <div id="modal"></div>
 
 <div class="wrap"><div id="app" class="card"></div></div>
-<div id="badge">v487</div>
+<div id="badge">v488</div>
 
 <script>
-const BUILD=487;
+const BUILD=488;
 const LOGO="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png";
+const APP_NAME="Night Games";
+const COPYRIGHT_YEAR=2026;
 const OWNER_EMAIL="stevewmoody@yahoo.com";
 const OWNER_NAME="Steve Moody";
 const firebaseConfig = {"apiKey": "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo", "authDomain": "gamenightdarts-e7601.firebaseapp.com", "projectId": "gamenightdarts-e7601", "storageBucket": "gamenightdarts-e7601.firebasestorage.app", "messagingSenderId": "270045452251", "appId": "1:270045452251:web:5a4a661140a60780e939fe", "measurementId": "G-M60TDFYBW0"};
@@ -229,7 +258,7 @@ function openModal(title, bodyHtml, actionsHtml){
 
 // sweep once
 function runSweepOnce(){
-  const key="sweepShown_v487";
+  const key="sweepShown_v488";
   if(store.get(key,false)) return;
   store.set(key,true);
   const ov=$("#sweepOverlay"); const v=$("#sweepVideo");
@@ -457,8 +486,19 @@ const GAMES=[
 function renderAuth(){
   const saved=store.get("me",null);
   setHtml(`
-    <div class="hero"><div class="heroInner"><img src="${LOGO}" alt="Night Games"/></div></div>
-    <div class="h1">Night Games</div>
+    <div class="landingHeader">
+      <div class="landingInner">
+        <div class="landingBrand">
+          <img class="landingLogo" src="${LOGO}" alt="${APP_NAME}"/>
+          <div>
+            <div class="landingTitle">${APP_NAME}</div>
+            <div class="landingMeta">A <b>The Dart Room</b> game • v${BUILD}</div>
+          </div>
+        </div>
+        <div class="versionPill">v${BUILD}</div>
+      </div>
+    </div>
+
     <div class="sub">Email only. If you're new, we ask your name once.</div>
     <div style="height:12px"></div>
 
@@ -467,6 +507,11 @@ function renderAuth(){
       <input id="inEmail" class="input" placeholder="you@example.com" value="${(saved?.email||"").replaceAll('"','&quot;')}"/>
       <div style="height:12px"></div>
       <button id="btnStart" class="btn green pulse">Start</button>
+    </div>
+
+    <div class="footerBar">
+      <div><b>${APP_NAME}</b> is owned by <b>The Dart Room</b>. © ${COPYRIGHT_YEAR} The Dart Room. All rights reserved.</div>
+      <div>Designed by <b>Steve's Graphic Designs</b>.</div>
     </div>
   `);
   const start=()=>onStart();
@@ -681,7 +726,7 @@ function renderSetupCricket(){
       </div>
 
       <div class="panel">
-        <div class="h2">Cricket Entry (v487)</div>
+        <div class="h2">Cricket Entry (v488)</div>
         <div class="sub">Simple marks-per-turn entry (0–9) so multiplayer + turn locking work start-to-finish.</div>
       </div>
     </div>
@@ -856,7 +901,7 @@ function renderSetup01(){
       </div>
 
       <div class="panel">
-        <div class="h2">01 Entry (v487)</div>
+        <div class="h2">01 Entry (v488)</div>
         <div class="sub">Enter points per turn (0–180). Exact 0 wins. Double-out simplified (final score must be even).</div>
       </div>
     </div>
