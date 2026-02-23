@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v491</title>
+<title>Night Games • v493</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   Night Games v491 — FULL BUILD (single-file; text-file friendly)
+   Night Games v493 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -104,12 +104,12 @@ a{color:var(--cyan);text-decoration:none}
 }
 .input:focus{border-color:rgba(0,215,255,.55);box-shadow:0 0 0 3px rgba(0,215,255,.12);}
 
-.btn{width:100%;padding:12px;border-radius:var(--btnR);border:1px solid rgba(120,180,255,.18);
+.btn{width:100%;padding:12px;border-radius:var(--btnR);border:1px solid rgba(120,180,255,.22);
   background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.18));
   color:var(--text);font-weight:900;letter-spacing:.2px;cursor:pointer;position:relative;
 }
 .btn::after{content:"";position:absolute;inset:0;border-radius:var(--btnR);
-  box-shadow:0 0 0 1px rgba(255,255,255,.04) inset, 0 12px 28px rgba(0,0,0,.35);
+  box-shadow:0 0 0 1px rgba(255,255,255,.05) inset, 0 12px 28px rgba(0,0,0,.38), 0 0 18px rgba(0,215,255,.12);
   pointer-events:none;
 }
 .btn:hover{border-color:rgba(0,215,255,.45);}
@@ -165,6 +165,14 @@ a{color:var(--cyan);text-decoration:none}
 }
 .footer b{color:#e9f2ff;}
 
+
+.gameGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+@media (min-width:860px){.gameGrid{grid-template-columns:repeat(2,1fr);}}
+.btn.neon{border-color:rgba(0,215,255,.42);background:linear-gradient(180deg, rgba(0,215,255,.12), rgba(0,0,0,.18));}
+.btn.neon:hover{box-shadow:0 0 0 4px rgba(0,215,255,.10), 0 0 26px rgba(0,215,255,.18);}
+.smallList .playerRow{padding:9px;}
+.smallList .pemail{display:none;}
+
 /* Modal */
 #modalBg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:999998;}
 #modalBg.show{display:block;}
@@ -212,13 +220,13 @@ a{color:var(--cyan);text-decoration:none}
 <div id="modal"></div>
 
 <div class="wrap"><div id="app" class="card"></div></div>
-<div id="badge">v491</div>
+<div id="badge">v493</div>
 
 <script>
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD=491;
+const BUILD=493;
 const BANNER_PRIMARY="night_games_logo_top_right_blue.png";
 const BANNER_FALLBACK="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png";
 const OWNER_EMAIL="stevewmoody@yahoo.com";
@@ -244,16 +252,24 @@ function footer(){
     </div>
   `;
 }
-function headerBanner(title="Night Games"){
+function headerBanner(title="Night Games", opts={}){
+  const showTitleBelow = !!opts.titleBelow; // landing: logo above title
   return `
     <div class="header">
       <img class="banner" src="${BANNER_PRIMARY}" alt="Night Games Banner"
         onerror="this.onerror=null; this.src='${BANNER_FALLBACK}';"/>
       <div class="bannerShade"></div>
-      <div class="titleRow">
-        <div class="h1">${title}</div>
-        <div class="badge">v${BUILD}</div>
-      </div>
+      ${showTitleBelow ? `
+        <div class="titleRow" style="position:relative; left:auto; right:auto; bottom:auto; padding:12px 14px 0 14px;">
+          <div class="h1">${title}</div>
+          <div class="badge">v${BUILD}</div>
+        </div>
+      ` : `
+        <div class="titleRow">
+          <div class="h1">${title}</div>
+          <div class="badge">v${BUILD}</div>
+        </div>
+      `}
     </div>
   `;
 }
@@ -313,7 +329,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v491";
+  const key="sweepShown_v493";
   if(store.get(key,false)) return;
   store.set(key,true);
   const ov=$("#sweepOverlay");
@@ -738,7 +754,7 @@ async function submitCricket(matchId, marksThisTurn){
    ============================ */
 function screenAuth(){
   setHtml(`
-    ${headerBanner("Night Games")}
+    ${headerBanner("Night Games",{titleBelow:true})}
     <div class="main">
       <div class="grid">
         <div class="panel">
@@ -748,7 +764,7 @@ function screenAuth(){
           <input id="inEmail" class="input" placeholder="you@example.com" autocomplete="email" inputmode="email"/>
           <div style="height:10px"></div>
           <button id="btnStart" class="btn green pulse">Start</button>
-          <div class="sub" style="margin-top:10px;">v491 includes the banner + neon glow across every page.</div>
+          <div class="sub" style="margin-top:10px;">v493 includes the banner + neon glow across every page.</div>
         </div>
         <div class="panel">
           <h3 class="h2">What you should see</h3>
@@ -837,9 +853,15 @@ function screenPlayer(){
       <div class="grid">
         <div class="panel">
           <h3 class="h2">Games</h3>
-          <div class="sub">Cricket and 01 are playable in this first full run.</div>
+          <div class="sub">Pick a game, then your match setup. Players list stays right under the games (up to 8).</div>
           <div style="height:10px"></div>
-          <div class="col" id="gameBtns"></div>
+          <div class="gameGrid" id="gameBtns"></div>
+
+          <div style="height:14px"></div>
+          <h3 class="h2">Players</h3>
+          <div class="sub">Green dot = online.</div>
+          <div style="height:10px"></div>
+          <div id="playersUnderGames" class="list smallList"></div>
         </div>
 
         <div class="panel">
@@ -862,7 +884,7 @@ function screenPlayer(){
 
   const gb=$("#gameBtns");
   gb.innerHTML = GAMES.map(g=>`
-    <button class="btn ${g.id==="cricket"||g.id==="01"?"green":""}" data-game="${g.id}">${g.name}</button>
+    <button class="btn neon ${g.id==="cricket"||g.id==="01"?"green pulse":""}" data-game="${g.id}">${g.name}</button>
   `).join("");
   gb.querySelectorAll("button").forEach(b=>{
     b.onclick=()=>{
@@ -871,10 +893,37 @@ function screenPlayer(){
     };
   });
 
+  renderPlayersUnderGames();
   renderMatchesList();
   $("#btnNewMatch").onclick=()=>go("game_setup", {gameId:"01"});
 }
 
+function renderPlayersUnderGames(){
+  const host=$("#playersUnderGames");
+  if(!host) return;
+  const players=[...(App.players||[])].sort((a,b)=>a.name.localeCompare(b.name)).slice(0,8);
+  host.innerHTML = players.map(p=>{
+    const online=isOnline(p.email);
+    const av=avatarFor(p.email,p.name);
+    return `
+      <div class="playerRow">
+        <div class="left">
+          <span class="dot ${online?"on":""}"></span>
+          <div class="nameWithAvatar">
+            ${av?`<img src="${av}" alt="avatar" onerror="this.style.display='none'"/>`:""}
+            <div class="pmeta">
+              <div class="pname">${p.name}${p.locked?' <span class="chip">owner</span>':""}</div>
+              <div class="pemail">${p.email}</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <span class="chip">${online?"online":"offline"}</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
 function renderMatchesList(){
   const host=$("#matches");
   if(!host) return;
@@ -1166,7 +1215,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v491: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v493: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -1297,7 +1346,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v491: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v493: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
