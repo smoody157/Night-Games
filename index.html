@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />
-<title>Game Night • v465</title>
+<title>Game Night • v466</title>
 
 <style>
 /* ====== STYLE (your colorful/glow theme) ====== */
@@ -497,7 +497,7 @@ button.btn{ position:relative; z-index:3; }
 body.authMode .footerLegal{display:none !important;}
 body.authMode .footerLegal *{display:none !important;}
 
-/* ===== v465 COSMETIC FIXES (TARGETED, NO JS CHANGES) ===== */
+/* ===== v466 COSMETIC FIXES (TARGETED, NO JS CHANGES) ===== */
 /* 1) Header/title clipping fix */
 .topbar{
   grid-template-columns: auto 1fr auto !important;
@@ -540,7 +540,7 @@ body.authMode .footerLegal *{display:none !important;}
 #loginIntroVideo{position:relative !important; z-index:1 !important;}
 #landingLogoOverlay{position:absolute !important; z-index:5 !important;}
 
-/* ===== end v465 ===== */
+/* ===== end v466 ===== */
 
 </style>
 
@@ -1947,7 +1947,7 @@ header, .header {
 
   <!-- Firebase SDK (compat) for Firestore sync (v156) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-/* ===== v465 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
+/* ===== v466 STRUCTURE REBUILD PHASE 2 (CORE): single click dispatcher =====
    - One router for navigation + player actions.
    - Does not change artwork/UI markup; routes by data-action and known data-* attributes.
 */
@@ -2043,7 +2043,7 @@ header, .header {
 })();
 
 
-/* ===== v465 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
+/* ===== v466 STRUCTURE REBUILD PHASE 1: stripped global routers/guards (per-screen handlers only) ===== */
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -2127,7 +2127,7 @@ header, .header {
 
 <body>
 
-<!-- ================= v465 EARLY BOOT GUARD (runs before app scripts) ================= -->
+<!-- ================= v466 EARLY BOOT GUARD (runs before app scripts) ================= -->
 <script>
 (function(){
   // Capture any boot-time errors even if app init never reaches render()
@@ -2144,7 +2144,7 @@ header, .header {
           ${d}
           <div class="divider"></div>
           <button class="btn ok" onclick="location.reload()">Reload</button>
-          <div class="small" style="margin-top:10px;opacity:.8">v465 boot guard</div>
+          <div class="small" style="margin-top:10px;opacity:.8">v466 boot guard</div>
         </div>`;
     }catch(_){}
   }
@@ -2199,7 +2199,7 @@ header, .header {
   }, 2500);
 })();
 </script>
-<!-- ================= END v465 EARLY BOOT GUARD ================= -->
+<!-- ================= END v466 EARLY BOOT GUARD ================= -->
 
 
 <div class="topbar">
@@ -2209,7 +2209,7 @@ header, .header {
   </div>
   <div class="brand">
     <div class="t" id="brandTitle">Game Night</div>
-    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v465</span></div>
+    <div class="s">The Dart Room • Designed by Steve’s Graphic Designs • <span class="verInline" id="verInline">v466</span></div>
   </div>
   <div class="topActions right">
     <div class="verStack" aria-label="Version and sound">
@@ -2223,11 +2223,11 @@ header, .header {
 </div>
 
 <div class="footerLegal" aria-hidden="true">
-  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v465</div>
+  <div class="txt">Night Games is an official Dart Room online training tool. All rights reserved © Steve’s Graphic Designs. • v466</div>
 </div>
 
 <script>
-const BUILD_ID="v465";
+const BUILD_ID="v466";
 
 
 
@@ -2257,7 +2257,7 @@ const BUILD_ID="v465";
   }
 })();
 
-/* ===== v166 CLEAN BOOT (v465) =====
+/* ===== v166 CLEAN BOOT (v466) =====
    Structural rebuild: ensure app renders once on startup. No patch stacking.
 */
 (function(){
@@ -2337,7 +2337,7 @@ const BUILD_ID="v465";
       }
     }catch(e){ showBootError(e.message||e); }
   
-  // v465: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
+  // v466: Secondary watchdog — if still on splash after 4500ms, force a render attempt.
   setTimeout(()=>{
     try{
       const app = document.getElementById("app");
@@ -2680,7 +2680,7 @@ async function cleanupDuplicatePlayersByEmail(email){
   }catch(_){}
 }
 
-// --- Snapshot compatibility helpers (v465 stability) ---
+// --- Snapshot compatibility helpers (v466 stability) ---
 function docExists(snap){
   if(!snap) return false;
   try{
@@ -3065,7 +3065,7 @@ function isOnline(email){
   try{
     const me = normEmail(meUser?.email||"");
     const em = normEmail(email||"");
-    // v465: always show self as online once signed in
+    // v466: always show self as online once signed in
     if(me && em && me===em) return true;
 
     let ms = presCache[em] || null;
@@ -3083,7 +3083,7 @@ function isOnline(email){
 }
 
 function startPresence(email, name){
-  // v465: restore stable behavior + compatibility across older presence doc ids.
+  // v466: restore stable behavior + compatibility across older presence doc ids.
   const em = normEmail(email||"");
   stopPresence();
   if(!em) return;
@@ -3255,7 +3255,7 @@ async function saveMatchState(roomId, match){
   const base = await resolveDataBase();
   const ref = doc(base, C_ROOMS, roomId);
 
-  // v465: authoritative turn guard at the write boundary (applies to all games)
+  // v466: authoritative turn guard at the write boundary (applies to all games)
   try{
     const me = normEmail(meUser?.email || "");
     const players = Array.isArray(match?.players) ? match.players : [];
@@ -3274,7 +3274,7 @@ async function saveMatchState(roomId, match){
     }
   }catch(e){ /* do not block on guard errors */ }
 
-  // v465: rev consistency (matchData._rev always matches room.rev)
+  // v466: rev consistency (matchData._rev always matches room.rev)
   const nextRev = Number(match?match._rev||0:0) + 1;
   match._rev = nextRev;
 
@@ -3449,7 +3449,7 @@ let match = null;
 
 let roomId = null;          // current multiplayer room (optional)
 
-/* ===== v465 BOOT SPINE: ensure initial render happens once core is loaded =====
+/* ===== v466 BOOT SPINE: ensure initial render happens once core is loaded =====
    Structural-only: triggers first render without adding new UI or changing artwork.
 */
 (function(){
@@ -4459,10 +4459,10 @@ async function renderAuth(){
 
     <div class="card" style="padding:10px 10px 8px 10px; position:relative; overflow:hidden;">
       <video id="loginIntroVideo" playsinline muted autoplay loop
-        style="width:100%;max-width:520px;height:320px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center;transform:none;transform-origin:center center;">
+        style="width:100%;max-width:520px;height:378px;border-radius:16px;display:block;margin:0 auto;background:rgba(0,0,0,.25);object-fit:contain;object-position:center top;transform:translateY(-58px) scale(1.10);transform-origin:center top;">
       </video>
       <img id="landingLogoOverlay" src="${DARTROOM_LOGO_DATA}" alt="Dartroom logo"
-        style="position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:320px;max-width:92%;opacity:1;pointer-events:none;filter:drop-shadow(0 10px 22px rgba(0,0,0,.6));background:transparent;padding:0;border-radius:0;" />
+        style="position:absolute;left:50%;bottom:6px;transform:translateX(-50%);width:170px;max-width:68%;opacity:.96;pointer-events:none;filter:drop-shadow(0 10px 22px rgba(0,0,0,.6));background:transparent;padding:0;border-radius:0;" />
 
     </div>
 `;
@@ -4986,7 +4986,7 @@ async function renderGameSetup(){
   updateSetupUI();
 
   document.getElementById("startMatchBtn").onclick = async()=>{
-    // v465: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
+    // v466: "new road" Start Match — stateless selection, immediate feedback, no silent no-op.
     if(!g.active){ toastMsg="Coming soon."; return render(); }
 
     const startBtn = document.getElementById("startMatchBtn");
@@ -5228,7 +5228,7 @@ async function renderGamePlay(){
         const updatedBy = normEmail(roomDoc.updatedBy || "");
         const me = normEmail(meUser.email);
 
-        // v465 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
+        // v466 MP core: Accept if room rev is newer; also accept opponent updates when rev is >= ours
         if(!match || (inRev > myRev && updatedBy !== me)){
           match = incoming;
           roomSynced = true;
@@ -5465,7 +5465,7 @@ if(window.__rendering){ window.__renderAgain=true; return; }
     // auth-only topbar positioning
     if(screen!=="auth"){ document.body.classList.remove("authMode"); }
 
-    // v465: Topbar Home button should be hidden on Home/Players screen
+    // v466: Topbar Home button should be hidden on Home/Players screen
     try{
       const hb=document.getElementById("homeBtn");
       if(hb) hb.style.display = (screen==="auth" || screen==="home") ? "none" : "inline-flex";
@@ -5766,7 +5766,7 @@ try{ render(); }catch(e){ console.error(e); try{ const el=document.getElementByI
 
 
 <style id="v421_player_carousel_ui">
-/* v465 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
+/* v466 Step 1: Player carousel (UI-only). Theme-safe: uses existing palette. */
 .playerCarouselWrap{ margin:8px 0 2px; }
 .playerCarousel{
   display:flex;
@@ -5906,7 +5906,7 @@ button.statsBtn, .statsBtn{
 
 
 
-<!-- BEGIN COSMETIC PATCH v465: center player text + remove YOU badge (CSS ONLY) -->
+<!-- BEGIN COSMETIC PATCH v466: center player text + remove YOU badge (CSS ONLY) -->
 <style>
 /* Hide the YOU/U badge in player rows */
 .you-badge, .u-badge, .youBadge, .uBadge, [data-role="you-badge"], [data-role="u-badge"]{
@@ -5928,5 +5928,5 @@ button.statsBtn, .statsBtn{
   text-align: center !important;
 }
 </style>
-<!-- END COSMETIC PATCH v465 -->
+<!-- END COSMETIC PATCH v466 -->
 
