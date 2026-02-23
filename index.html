@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v493</title>
+<title>Night Games • v494</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   Night Games v493 — FULL BUILD (single-file; text-file friendly)
+   Night Games v494 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -104,7 +104,7 @@ a{color:var(--cyan);text-decoration:none}
 }
 .input:focus{border-color:rgba(0,215,255,.55);box-shadow:0 0 0 3px rgba(0,215,255,.12);}
 
-.btn{width:100%;padding:12px;border-radius:var(--btnR);border:1px solid rgba(120,180,255,.22);
+.btn{width:100%;padding:12px;border-radius:999px;border:1px solid rgba(120,180,255,.22);
   background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.18));
   color:var(--text);font-weight:900;letter-spacing:.2px;cursor:pointer;position:relative;
 }
@@ -119,7 +119,7 @@ a{color:var(--cyan);text-decoration:none}
 .btn.danger{background:linear-gradient(180deg, rgba(255,77,77,.14), rgba(0,0,0,.18));
   border-color:rgba(255,77,77,.40);
 }
-.btn.sm{width:auto;padding:8px 10px;border-radius:12px;font-size:12px;}
+.btn.sm{width:auto;padding:8px 12px;border-radius:999px;font-size:12px;}
 .btn.inline{width:auto}
 .btn[disabled]{opacity:.55;pointer-events:none;}
 
@@ -166,7 +166,16 @@ a{color:var(--cyan);text-decoration:none}
 .footer b{color:#e9f2ff;}
 
 
-.gameGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.cards{display:grid;grid-template-columns:1fr;gap:12px;}
+@media (min-width:860px){.cards{grid-template-columns:1fr 1fr;}}
+.gcard{border:1px solid rgba(120,180,255,.14);background:rgba(0,0,0,.20);border-radius:18px;padding:12px;
+  box-shadow:0 12px 26px rgba(0,0,0,.26), 0 0 22px rgba(0,215,255,.05);
+}
+.gtitle{font-weight:1000;font-size:16px;letter-spacing:.2px;}
+.gsub{color:var(--muted);font-size:12px;margin-top:2px;}
+.grow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px;}
+@media (max-width:520px){.grow{grid-template-columns:1fr;}}
+
 @media (min-width:860px){.gameGrid{grid-template-columns:repeat(2,1fr);}}
 .btn.neon{border-color:rgba(0,215,255,.42);background:linear-gradient(180deg, rgba(0,215,255,.12), rgba(0,0,0,.18));}
 .btn.neon:hover{box-shadow:0 0 0 4px rgba(0,215,255,.10), 0 0 26px rgba(0,215,255,.18);}
@@ -201,11 +210,6 @@ a{color:var(--cyan);text-decoration:none}
   100%{transform:translateX(120%) translateY(-18%) rotate(-18deg);opacity:0;}
 }
 
-/* Build badge */
-#badge{position:fixed;right:10px;bottom:10px;z-index:999997;padding:6px 10px;border-radius:12px;
-  background:rgba(0,0,0,.55);border:1px solid rgba(120,180,255,.25);color:#bfe7ff;font:12px/1.1 system-ui;
-  pointer-events:none;box-shadow:0 10px 24px rgba(0,0,0,.45);
-}
 </style>
 </head>
 <body>
@@ -220,13 +224,12 @@ a{color:var(--cyan);text-decoration:none}
 <div id="modal"></div>
 
 <div class="wrap"><div id="app" class="card"></div></div>
-<div id="badge">v493</div>
 
 <script>
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD=493;
+const BUILD=494;
 const BANNER_PRIMARY="night_games_logo_top_right_blue.png";
 const BANNER_FALLBACK="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png";
 const OWNER_EMAIL="stevewmoody@yahoo.com";
@@ -329,7 +332,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v493";
+  const key="sweepShown_v494";
   if(store.get(key,false)) return;
   store.set(key,true);
   const ov=$("#sweepOverlay");
@@ -764,7 +767,9 @@ function screenAuth(){
           <input id="inEmail" class="input" placeholder="you@example.com" autocomplete="email" inputmode="email"/>
           <div style="height:10px"></div>
           <button id="btnStart" class="btn green pulse">Start</button>
-          <div class="sub" style="margin-top:10px;">v493 includes the banner + neon glow across every page.</div>
+          <div style="height:8px"></div>
+          <button id="btnClearRemember" class="btn">Clear saved login</button>
+          <div class="sub" style="margin-top:10px;">v494 includes the banner + neon glow across every page.</div>
         </div>
         <div class="panel">
           <h3 class="h2">What you should see</h3>
@@ -778,6 +783,7 @@ function screenAuth(){
   `);
 
   $("#btnStart").onclick=onStart;
+  $("#btnClearRemember").onclick=()=>{ store.del("me"); $("#inEmail").value=""; alert("Saved login cleared."); };
   $("#inEmail").addEventListener("keydown", (e)=>{ if(e.key==="Enter") onStart(); });
 
   const remembered=store.get("me", null);
@@ -850,30 +856,38 @@ function screenPlayer(){
       ${topbar()}
       <div style="height:12px"></div>
 
-      <div class="grid">
-        <div class="panel">
-          <h3 class="h2">Games</h3>
-          <div class="sub">Pick a game, then your match setup. Players list stays right under the games (up to 8).</div>
-          <div style="height:10px"></div>
-          <div class="gameGrid" id="gameBtns"></div>
+      <div class="panel">
+        <div class="row space">
+          <h3 class="h2" style="margin:0">Games</h3>
+          <div class="sub">Tap <b>Play</b> or <b>History</b> for each game.</div>
+        </div>
+        <div style="height:10px"></div>
 
-          <div style="height:14px"></div>
-          <h3 class="h2">Players</h3>
+        <div class="cards" id="gameCards"></div>
+
+        <div style="height:14px"></div>
+        <div class="row space">
+          <h3 class="h2" style="margin:0">Players</h3>
           <div class="sub">Green dot = online.</div>
-          <div style="height:10px"></div>
-          <div id="playersUnderGames" class="list smallList"></div>
         </div>
-
-        <div class="panel">
-          <div class="row space">
-            <h3 class="h2" style="margin:0">Open matches</h3>
-            <button class="btn sm green" id="btnNewMatch">New match</button>
-          </div>
-          <div class="sub">No codes. Create a match and it appears here for others to join.</div>
-          <div style="height:10px"></div>
-          <div id="matches" class="list"></div>
-        </div>
+        <div style="height:10px"></div>
+        <div id="playersUnderGames" class="list smallList"></div>
       </div>
+
+      <div style="height:12px"></div>
+
+      <div class="panel">
+        <div class="row space">
+          <h3 class="h2" style="margin:0">Matches</h3>
+          <button class="btn sm green" id="btnNewMatch">New match</button>
+        </div>
+        <div class="sub">Create a match and others can join from their device.</div>
+        <div style="height:10px"></div>
+        <div id="matches" class="list"></div>
+      </div>
+
+      <div style="height:10px"></div>
+      <div class="sub">Need the email gate page? Hit <b>Sign out</b>.</div>
     </div>
     ${footer()}
   `);
@@ -882,15 +896,27 @@ function screenPlayer(){
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
 
-  const gb=$("#gameBtns");
-  gb.innerHTML = GAMES.map(g=>`
-    <button class="btn neon ${g.id==="cricket"||g.id==="01"?"green pulse":""}" data-game="${g.id}">${g.name}</button>
+  const host=$("#gameCards");
+  host.innerHTML = GAMES.map(g=>`
+    <div class="gcard">
+      <div class="gtitle">${g.name}</div>
+      <div class="gsub">Quick actions</div>
+      <div class="grow">
+        <button class="btn neon ${g.id==="cricket"||g.id==="01"?"green pulse":""}" data-play="${g.id}">Play</button>
+        <button class="btn" data-history="${g.id}">History</button>
+        <button class="btn" data-stats="${g.id}">Stats</button>
+      </div>
+    </div>
   `).join("");
-  gb.querySelectorAll("button").forEach(b=>{
-    b.onclick=()=>{
-      const gameId=b.getAttribute("data-game");
-      go("game_setup", {gameId});
-    };
+
+  host.querySelectorAll("button[data-play]").forEach(b=>{
+    b.onclick=()=>go("game_setup",{gameId:b.getAttribute("data-play")});
+  });
+  host.querySelectorAll("button[data-history]").forEach(b=>{
+    b.onclick=()=>go("history",{gameId:b.getAttribute("data-history")});
+  });
+  host.querySelectorAll("button[data-stats]").forEach(b=>{
+    b.onclick=()=>go("stats",{gameId:b.getAttribute("data-stats")});
   });
 
   renderPlayersUnderGames();
@@ -1013,6 +1039,57 @@ function screenPlayers(){
       </div>
     `;
   }).join("");
+}
+
+
+function screenHistory(){
+  const gameId=App.params.gameId;
+  const g=GAMES.find(x=>x.id===gameId) || {id:gameId,name:gameId};
+  setHtml(`
+    ${headerBanner("Game History")}
+    <div class="main">
+      ${topbar()}
+      <div style="height:12px"></div>
+      <div class="panel">
+        <div class="row space">
+          <h3 class="h2" style="margin:0">${g.name} • Game History</h3>
+          <button class="btn sm" id="btnBack">Back</button>
+        </div>
+        <div style="height:10px"></div>
+        <div class="ok">History view is wired as a real page in v494. Next pass we populate it from match logs / saved games.</div>
+      </div>
+    </div>
+    ${footer()}
+  `);
+  $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
+  $("#btnPlayers").onclick=()=>go("players");
+  $("#btnSignOut").onclick=()=>signOut();
+  $("#btnBack").onclick=()=>go("player");
+}
+
+function screenStats(){
+  const gameId=App.params.gameId;
+  const g=GAMES.find(x=>x.id===gameId) || {id:gameId,name:gameId};
+  setHtml(`
+    ${headerBanner("Stats")}
+    <div class="main">
+      ${topbar()}
+      <div style="height:12px"></div>
+      <div class="panel">
+        <div class="row space">
+          <h3 class="h2" style="margin:0">${g.name} • Stats</h3>
+          <button class="btn sm" id="btnBack">Back</button>
+        </div>
+        <div style="height:10px"></div>
+        <div class="ok">Stats page is a real page in v494. Next pass we show the stat definitions + your notables.</div>
+      </div>
+    </div>
+    ${footer()}
+  `);
+  $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
+  $("#btnPlayers").onclick=()=>go("players");
+  $("#btnSignOut").onclick=()=>signOut();
+  $("#btnBack").onclick=()=>go("player");
 }
 
 function screenGameSetup(){
@@ -1215,7 +1292,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v493: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v494: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -1346,7 +1423,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v493: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v494: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -1461,6 +1538,8 @@ function render(){
   if(App.screen==="player") return screenPlayer();
   if(App.screen==="players") return screenPlayers();
   if(App.screen==="game_setup") return screenGameSetup();
+  if(App.screen==="history") return screenHistory();
+  if(App.screen==="stats") return screenStats();
 
   if(App.screen.startsWith("game_")){
     const id=App.screen.replace("game_","");
