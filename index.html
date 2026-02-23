@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v494</title>
+<title>Night Games • v495</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,14 +12,14 @@
 
 <style>
 /* ============================================================
-   Night Games v494 — FULL BUILD (single-file; text-file friendly)
+   Night Games v495 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
    - Place in your repo root alongside these assets (NOT embedded):
-       night_games_logo_top_right_blue.png   (banner game design)
-       9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png (fallback banner)
-       0217.mp4 (optional sweep overlay; if missing it will skip)
+       night_games_logo_top_right_blue.png?v=495   (banner game design)
+       9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png?v=495 (fallback banner)
+       0217.mp4?v=495 (optional sweep overlay; if missing it will skip)
        MY DART AVATAR.png (optional)
        WILLIAM DART AVATAR.png (optional)
        Jayce.png (optional)
@@ -58,6 +58,49 @@ html,body{height:100%;margin:0;color:var(--text);
     radial-gradient(120% 120% at 85% 78%, rgba(42,127,255,.14), rgba(0,0,0,0) 56%),
     linear-gradient(180deg,var(--bg1),var(--bg0));
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+
+
+/* --- v495 Skin: pull colors from the banner asset (repo) --- */
+body::before{
+  content:"";
+  position:fixed; inset:-20%;
+  background-image:url('night_games_logo_top_right_blue.png?v=495');
+  background-size:cover; background-position:center;
+  filter: blur(28px) saturate(1.15) contrast(1.08);
+  opacity:.12;
+  transform:scale(1.08);
+  pointer-events:none;
+  z-index:-2;
+}
+body::after{
+  content:"";
+  position:fixed; inset:0;
+  background:
+    radial-gradient(120% 120% at 18% 12%, rgba(0,215,255,.20), rgba(0,0,0,0) 54%),
+    radial-gradient(120% 120% at 85% 78%, rgba(42,127,255,.18), rgba(0,0,0,0) 56%),
+    linear-gradient(180deg, rgba(0,0,0,.40), rgba(0,0,0,.72));
+  pointer-events:none;
+  z-index:-1;
+}
+/* extra glow / bevel */
+.btn{
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.26));
+}
+.btn::after{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.08) inset,
+    0 10px 24px rgba(0,0,0,.42),
+    0 0 26px rgba(0,215,255,.16);
+}
+.btn.green::after{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.10) inset,
+    0 10px 24px rgba(0,0,0,.42),
+    0 0 28px rgba(46,230,107,.22);
+}
+.panel{
+  box-shadow:0 16px 36px rgba(0,0,0,.35), 0 0 22px rgba(0,215,255,.06);
 }
 
 *{box-sizing:border-box}
@@ -216,7 +259,7 @@ a{color:var(--cyan);text-decoration:none}
 
 <div id="sweepOverlay">
   <video id="sweepVideo" muted playsinline preload="auto">
-    <source src="0217.mp4" type="video/mp4"/>
+    <source src="0217.mp4?v=495" type="video/mp4"/>
   </video>
 </div>
 
@@ -229,9 +272,9 @@ a{color:var(--cyan);text-decoration:none}
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD=494;
-const BANNER_PRIMARY="night_games_logo_top_right_blue.png";
-const BANNER_FALLBACK="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png";
+const BUILD=495;
+const BANNER_PRIMARY="night_games_logo_top_right_blue.png?v=495";
+const BANNER_FALLBACK="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png?v=495";
 const OWNER_EMAIL="stevewmoody@yahoo.com";
 const OWNER_NAME="Steve Moody";
 const firebaseConfig = {"apiKey": "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo", "authDomain": "gamenightdarts-e7601.firebaseapp.com", "projectId": "gamenightdarts-e7601", "storageBucket": "gamenightdarts-e7601.firebasestorage.app", "messagingSenderId": "270045452251", "appId": "1:270045452251:web:5a4a661140a60780e939fe", "measurementId": "G-M60TDFYBW0"};
@@ -332,7 +375,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v494";
+  const key="sweepShown_v495";
   if(store.get(key,false)) return;
   store.set(key,true);
   const ov=$("#sweepOverlay");
@@ -769,7 +812,7 @@ function screenAuth(){
           <button id="btnStart" class="btn green pulse">Start</button>
           <div style="height:8px"></div>
           <button id="btnClearRemember" class="btn">Clear saved login</button>
-          <div class="sub" style="margin-top:10px;">v494 includes the banner + neon glow across every page.</div>
+          <div class="sub" style="margin-top:10px;">v495 includes the banner + neon glow across every page.</div>
         </div>
         <div class="panel">
           <h3 class="h2">What you should see</h3>
@@ -1056,7 +1099,7 @@ function screenHistory(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">History view is wired as a real page in v494. Next pass we populate it from match logs / saved games.</div>
+        <div class="ok">History view is wired as a real page in v495. Next pass we populate it from match logs / saved games.</div>
       </div>
     </div>
     ${footer()}
@@ -1081,7 +1124,7 @@ function screenStats(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">Stats page is a real page in v494. Next pass we show the stat definitions + your notables.</div>
+        <div class="ok">Stats page is a real page in v495. Next pass we show the stat definitions + your notables.</div>
       </div>
     </div>
     ${footer()}
@@ -1292,7 +1335,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v494: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v495: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -1423,7 +1466,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v494: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v495: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
