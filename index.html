@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v525</title>
+<title>Night Games • v526</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   Night Games v525 — FULL BUILD (single-file; text-file friendly)
+   Night Games v526 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -61,7 +61,7 @@ html,body{height:100%;margin:0;color:var(--text);
 }
 
 
-/* --- v525 Skin: pull colors from the banner asset (repo) --- */
+/* --- v526 Skin: pull colors from the banner asset (repo) --- */
 body::before{
   content:"";
   position:fixed; inset:-20%;
@@ -104,7 +104,7 @@ body::after{
 }
 
 
-/* --- v525 Landing Color Scheme --- */
+/* --- v526 Landing Color Scheme --- */
 .heroHeader{
   border-bottom:1px solid rgba(120,180,255,.16);
   background:
@@ -142,7 +142,7 @@ body::after{
 }
 
 
-/* --- v525: Night Games neon theme (match logo colors) --- */
+/* --- v526: Night Games neon theme (match logo colors) --- */
 :root{
   --cBlue: rgba(0,215,255,.26);
   --cBlue2: rgba(42,127,255,.20);
@@ -405,7 +405,7 @@ a{color:var(--cyan);text-decoration:none}
 }
 #errBox b{font-family:inherit;}
 
-/* --- v525 LANDING VISUALS (OBVIOUS CHANGES) --- */
+/* --- v526 LANDING VISUALS (OBVIOUS CHANGES) --- */
 body{background:#000 !important;}
 /* Outer screen border (neon, NOT green) */
 .card{
@@ -475,7 +475,7 @@ body{background:#000 !important;}
   100%{opacity:0; transform:translate(18vw, -10vw) rotate(-45deg) scale(1.02);}
 }
 
-/* ===== v525: REMOVE GREEN FRAME / SIMPLE BLACK CANVAS ===== */
+/* ===== v526: REMOVE GREEN FRAME / SIMPLE BLACK CANVAS ===== */
 html,body{background:#000 !important;}
 /* Outer display: ONE neon border only */
 .card{
@@ -532,7 +532,7 @@ body::after{
     0 0 10px rgba(255,120,35,.06) !important;
 }
 
-/* ===== v525 MINIMAL BLACK CANVAS ===== */
+/* ===== v526 MINIMAL BLACK CANVAS ===== */
 
 /* Pure black everywhere */
 html,body{
@@ -594,7 +594,7 @@ body::after{
   display:none !important;
 }
 
-/* ===== v525: blended background + keep blue outline on sign-in ===== */
+/* ===== v526: blended background + keep blue outline on sign-in ===== */
 
 /* Blend the black canvas subtly so it doesn't look like a hard flat slab */
 html,body{
@@ -643,7 +643,7 @@ html,body{
 /* Keep it readable */
 .sub{ color:rgba(235,240,255,.70) !important; }
 
-/* ===== v525 THEME PASS (no green glow, blended logo, new fonts, open layout) ===== */
+/* ===== v526 THEME PASS (no green glow, blended logo, new fonts, open layout) ===== */
 
 /* Kill any green glow remnants */
 .btn.green::after{ box-shadow:none !important; }
@@ -773,7 +773,7 @@ body::after{ display:none !important; } /* remove earlier wash layers so we cont
   text-shadow: 0 0 14px rgba(46,230,107,.12) !important;
 }
 
-/* ===== v525: STRIPPED LANDING (NO FRAMES / NO EXTRA BORDERS) ===== */
+/* ===== v526: STRIPPED LANDING (NO FRAMES / NO EXTRA BORDERS) ===== */
 html,body{background:#000 !important;}
 body::before, body::after{display:none !important;}
 .wrap{padding:0 !important;}
@@ -834,7 +834,7 @@ body::before, body::after{display:none !important;}
   border:none !important;
 }
 
-/* ===== v525 LANDING LOCK ===== */
+/* ===== v526 LANDING LOCK ===== */
 :root{
   --ng-blue:#00d7ff;
   --ng-blue2:#2a7fff;
@@ -990,7 +990,7 @@ body::before, body::after{display:none !important;}
   opacity:.55;
 }
 
-/* ===== v525: Enter button glass + granular text (ONLY) ===== */
+/* ===== v526: Enter button glass + granular text (ONLY) ===== */
 #btnEnter{
   position:relative;
   border-radius:999px !important;
@@ -1049,6 +1049,84 @@ body::before, body::after{display:none !important;}
     0 0 10px rgba(255,176,0,.14),
     0 0 14px rgba(255,120,35,.10);
 }
+
+/* ===== v526 tweaks: glossy enter + spacing + blue title glass ===== */
+
+/* Glossy glass ENTER (ensure applies even if classes differ) */
+#btnEnter, .btn.green{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,0) 42%),
+    linear-gradient(180deg, #ffe9b8 0%, #ffd000 32%, #ffb000 58%, #ff8f2e 100%) !important;
+  border:1px solid rgba(255,226,154,.62) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.65),
+    inset 0 -10px 18px rgba(0,0,0,.35),
+    0 18px 40px rgba(0,0,0,.55),
+    0 0 26px rgba(255,176,0,.16) !important;
+  position:relative;
+  overflow:hidden;
+}
+
+/* extra glossy streak */
+#btnEnter::before, .btn.green::before{
+  content:"";
+  position:absolute;
+  left:-20%;
+  top:-35%;
+  width:140%;
+  height:85%;
+  background:linear-gradient(135deg, rgba(255,255,255,.55), rgba(255,255,255,0) 55%);
+  transform:rotate(-6deg);
+  opacity:.55;
+  pointer-events:none;
+}
+
+/* granular sparkle texture */
+#btnEnter::after, .btn.green::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(rgba(255,255,255,.40) 1px, transparent 1px),
+    radial-gradient(rgba(255,255,255,.22) 1px, transparent 1px);
+  background-size:6px 6px, 10px 10px;
+  background-position:0 0, 3px 5px;
+  opacity:.18;
+  pointer-events:none;
+}
+
+/* 2) Spacing: make area between ENTER and spark bar breathe */
+#btnEnter, .btn.green{ margin-bottom:10px !important; }
+.sparkBar{ margin-top:22px !important; height:8px !important; }
+
+/* 3) Night Games title: glass/gradient like button but blue palette (matching logo NIGHT blue) */
+.heroNight, .heroGames{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,0) 55%),
+    linear-gradient(180deg, #6ff1ff 0%, #00d7ff 35%, #2a7fff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent !important;
+  text-shadow:
+    0 0 18px rgba(0,215,255,.22),
+    0 0 30px rgba(42,127,255,.14);
+  position:relative;
+}
+
+/* subtle grain on title */
+.heroNight::after, .heroGames::after{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background-image:radial-gradient(rgba(255,255,255,.35) 1px, transparent 1px);
+  background-size:7px 7px;
+  opacity:.12;
+  -webkit-mask-image:linear-gradient(#000,#000);
+  pointer-events:none;
+}
+
+/* make the stack feel less cramped */
+.heroText{ margin-top:10px !important; }
 </style>
 </head>
 <body>
@@ -1069,7 +1147,7 @@ body::before, body::after{display:none !important;}
       <img class="heroLogo" src="${asset('7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png')}" alt="Night Games"
         onerror="this.onerror=null; this.src='7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png';"/>
       <div class="heroTitle">Night Games</div>
-      <div class="heroSub">Enter your email to continue • v525</div>
+      <div class="heroSub">Enter your email to continue • v526</div>
     </div>
   </div>
   <div class="main">
@@ -1093,7 +1171,7 @@ body::before, body::after{display:none !important;}
 <div id="fatalErr" style="position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;display:none;padding:10px 12px;border-radius:14px;background:rgba(60,0,0,.78);border:1px solid rgba(255,77,77,.55);color:#ffd6d6;font:12px/1.3 system-ui;box-shadow:0 18px 40px rgba(0,0,0,.55);white-space:pre-wrap;"></div>
 
 <script>
-// v525: Global error handlers so we NEVER get a blank page with no clue.
+// v526: Global error handlers so we NEVER get a blank page with no clue.
 (function(){
   function show(msg){
     try{
@@ -1110,7 +1188,7 @@ body::before, body::after{display:none !important;}
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD=525;
+const BUILD=526;
 
 const ASSET_BASE = new URL('.', document.baseURI).toString();
 const asset = (p)=> new URL(p, ASSET_BASE).toString();
@@ -1127,7 +1205,7 @@ function showError(msg){
   const box=document.getElementById("errBox");
   if(!box) return;
   box.style.display="block";
-  box.innerHTML = "<b>Build v525 error:</b>\n"+String(msg);
+  box.innerHTML = "<b>Build v526 error:</b>\n"+String(msg);
 }
 window.addEventListener("error",(e)=>{
   showError(e?.error?.stack || e?.message || e);
@@ -1244,7 +1322,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v525";
+  const key="sweepShown_v526";
   if(store.get(key,false)) return;
 
   const ov=$("#sweepOverlay");
@@ -1896,7 +1974,7 @@ function screenHistory(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">History view is wired as a real page in v525. Next pass we populate it from match logs / saved games.</div>
+        <div class="ok">History view is wired as a real page in v526. Next pass we populate it from match logs / saved games.</div>
       </div>
     </div>
     ${footer()}
@@ -1921,7 +1999,7 @@ function screenStats(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">Stats page is a real page in v525. Next pass we show the stat definitions + your notables.</div>
+        <div class="ok">Stats page is a real page in v526. Next pass we show the stat definitions + your notables.</div>
       </div>
     </div>
     ${footer()}
@@ -2132,7 +2210,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v525: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v526: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -2263,7 +2341,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v525: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v526: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
