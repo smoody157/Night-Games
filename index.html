@@ -3,60 +3,112 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v488</title>
+<title>Night Games • v491</title>
 
-<!-- Firebase compat (single-file web) -->
+<!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <style>
+/* ============================================================
+   Night Games v491 — FULL BUILD (single-file; text-file friendly)
+   ============================================================
+   How to use:
+   - Save as index.html (or rename this text file to index.html)
+   - Place in your repo root alongside these assets (NOT embedded):
+       night_games_logo_top_right_blue.png   (banner game design)
+       9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png (fallback banner)
+       0217.mp4 (optional sweep overlay; if missing it will skip)
+       MY DART AVATAR.png (optional)
+       WILLIAM DART AVATAR.png (optional)
+       Jayce.png (optional)
+   ------------------------------------------------------------
+   What this build includes:
+   - Email-only sign-in
+   - New user => asks name once (modal)
+   - Player page with big name top, speaker, sign out
+   - Neon / glow night theme across ALL screens
+   - Banner across top (game design image)
+   - Footer disclosure across bottom on ALL screens
+   - Players list with online green dot (presence pings)
+   - Games: Cricket + 01 basic playable turn loop (per-turn entry)
+   - Other games: placeholder screens (navigable)
+   - Online matches WITHOUT codes:
+       "Open Matches" list (create match; others can tap to join)
+   ============================================================ */
+
 :root{
   --bg0:#05070a; --bg1:#070a10;
-  --panel:rgba(10,12,16,.78);
+  --panel:rgba(10,12,16,.80);
+  --panel2:rgba(0,0,0,.28);
   --stroke:rgba(120,180,255,.18);
+  --stroke2:rgba(0,215,255,.30);
   --text:#e9f2ff; --muted:rgba(233,242,255,.72);
   --cyan:#00d7ff; --blue:#2a7fff;
   --green:#2ee66b; --danger:#ff4d4d; --amber:#ffb000;
   --shadow:0 18px 42px rgba(0,0,0,.55);
   --r:18px;
+  --btnR:16px;
 }
+
 html,body{height:100%;margin:0;color:var(--text);
   background:
-    radial-gradient(120% 120% at 20% 10%, rgba(0,180,255,.14), rgba(0,0,0,0) 55%),
-    radial-gradient(120% 120% at 80% 80%, rgba(42,127,255,.10), rgba(0,0,0,0) 55%),
+    radial-gradient(120% 120% at 18% 12%, rgba(0,215,255,.18), rgba(0,0,0,0) 54%),
+    radial-gradient(120% 120% at 85% 78%, rgba(42,127,255,.14), rgba(0,0,0,0) 56%),
     linear-gradient(180deg,var(--bg1),var(--bg0));
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 }
-.wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:18px;}
+
+*{box-sizing:border-box}
+a{color:var(--cyan);text-decoration:none}
+.wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:16px;}
 .card{width:min(980px,100%);background:var(--panel);border:1px solid var(--stroke);
-  border-radius:var(--r);box-shadow:var(--shadow);backdrop-filter:blur(10px);padding:16px;
+  border-radius:var(--r);box-shadow:var(--shadow);backdrop-filter:blur(10px);overflow:hidden;
 }
-.topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;
-  padding:4px 2px 12px 2px;border-bottom:1px solid rgba(120,180,255,.12);margin-bottom:12px;
+.main{padding:14px;}
+.grid{display:grid;grid-template-columns:1fr;gap:12px;}
+@media (min-width:860px){.grid{grid-template-columns:1fr 1fr;}}
+
+.header{position:relative;border-bottom:1px solid rgba(120,180,255,.14);
+  background:
+    radial-gradient(120% 120% at 20% 20%, rgba(0,215,255,.16), rgba(0,0,0,0) 55%),
+    radial-gradient(120% 120% at 90% 10%, rgba(42,127,255,.14), rgba(0,0,0,0) 55%),
+    linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.20));
 }
-.brand{display:flex;gap:10px;align-items:center;min-width:0}
-.brand img{height:34px;width:auto;object-fit:contain;filter:drop-shadow(0 10px 20px rgba(0,160,255,.22));}
-.h1{font-size:22px;font-weight:900;letter-spacing:.2px;}
-.h2{font-size:16px;font-weight:900;opacity:.95;}
+.banner{width:100%;height:min(220px, 34vh);object-fit:cover;display:block;
+  filter: drop-shadow(0 18px 34px rgba(0,0,0,.55)) saturate(1.10) contrast(1.06);
+}
+.bannerShade{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg, rgba(0,0,0,.02), rgba(0,0,0,.58));
+}
+.titleRow{position:absolute;left:14px;right:14px;bottom:12px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap;
+}
+.h1{font-size:26px;font-weight:1000;letter-spacing:.2px;text-shadow:0 10px 30px rgba(0,0,0,.85);}
+.badge{padding:8px 10px;border-radius:999px;border:1px solid rgba(0,215,255,.35);
+  background:rgba(0,0,0,.35);
+  box-shadow:0 0 0 3px rgba(0,215,255,.08), 0 18px 40px rgba(0,0,0,.45);
+  font-weight:900;
+}
+
 .sub{color:var(--muted);font-size:13px;line-height:1.35;}
+.h2{font-size:16px;font-weight:1000;opacity:.95;margin:0}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
 .row.space{justify-content:space-between;}
 .col{display:flex;flex-direction:column;gap:10px;}
-.grid{display:grid;grid-template-columns:1fr;gap:12px;}
-@media (min-width:860px){.grid{grid-template-columns:1fr 1fr;}}
+
 .panel{border:1px solid rgba(120,180,255,.14);background:rgba(0,0,0,.22);border-radius:16px;padding:12px;}
-.input{width:100%;box-sizing:border-box;padding:12px;border-radius:14px;
-  border:1px solid rgba(120,180,255,.22);background:rgba(0,0,0,.35);color:var(--text);outline:none;
+.input{width:100%;padding:12px;border-radius:14px;border:1px solid rgba(120,180,255,.22);
+  background:rgba(0,0,0,.35);color:var(--text);outline:none;
 }
 .input:focus{border-color:rgba(0,215,255,.55);box-shadow:0 0 0 3px rgba(0,215,255,.12);}
 
-/* Bubble buttons + glow */
-.btn{width:100%;padding:12px;border-radius:16px;border:1px solid rgba(120,180,255,.18);
+.btn{width:100%;padding:12px;border-radius:var(--btnR);border:1px solid rgba(120,180,255,.18);
   background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.18));
   color:var(--text);font-weight:900;letter-spacing:.2px;cursor:pointer;position:relative;
 }
-.btn::after{content:"";position:absolute;inset:0;border-radius:16px;
+.btn::after{content:"";position:absolute;inset:0;border-radius:var(--btnR);
   box-shadow:0 0 0 1px rgba(255,255,255,.04) inset, 0 12px 28px rgba(0,0,0,.35);
   pointer-events:none;
 }
@@ -68,7 +120,9 @@ html,body{height:100%;margin:0;color:var(--text);
   border-color:rgba(255,77,77,.40);
 }
 .btn.sm{width:auto;padding:8px 10px;border-radius:12px;font-size:12px;}
+.btn.inline{width:auto}
 .btn[disabled]{opacity:.55;pointer-events:none;}
+
 .pulse{animation:pulseGlow 1.15s ease-in-out infinite;}
 @keyframes pulseGlow{
   0%{box-shadow:0 0 0 0 rgba(46,230,107,.0);}
@@ -76,28 +130,15 @@ html,body{height:100%;margin:0;color:var(--text);
   100%{box-shadow:0 0 0 0 rgba(46,230,107,.0);}
 }
 
-/* Auth hero */
-.hero{border-radius:18px;overflow:hidden;border:1px solid rgba(120,180,255,.18);
-  background:radial-gradient(120% 120% at 20% 20%, rgba(0,180,255,.18), rgba(0,0,0,0) 55%),
-            linear-gradient(180deg, rgba(10,12,16,.92), rgba(0,0,0,.92));
-  box-shadow:0 10px 30px rgba(0,0,0,.55);margin-bottom:12px;
+.topbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  padding:10px 12px;border:1px solid rgba(120,180,255,.14);background:rgba(0,0,0,.18);
+  border-radius:16px;
 }
-.heroInner{padding:12px;}
-.hero img{display:block;width:100%;height:230px;object-fit:contain;
-  filter:drop-shadow(0 12px 24px rgba(0,160,255,.35));
-}
+.bigName{font-size:22px;font-weight:1000;letter-spacing:.2px;text-shadow:0 10px 30px rgba(0,0,0,.65);}
 
-/* Pills */
-.pillRow{display:flex;flex-wrap:wrap;gap:8px;}
-.pill{padding:8px 10px;border-radius:999px;border:1px solid rgba(120,180,255,.18);
-  background:rgba(0,0,0,.25);cursor:pointer;font-weight:900;font-size:12px;
-}
-.pill.on{border-color:rgba(0,215,255,.55);box-shadow:0 0 0 3px rgba(0,215,255,.10);}
-
-/* Players list */
 .list{display:flex;flex-direction:column;gap:10px;}
 .playerRow{display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:10px 10px;border-radius:16px;border:1px solid rgba(120,180,255,.14);background:rgba(0,0,0,.22);
+  padding:10px;border-radius:16px;border:1px solid rgba(120,180,255,.14);background:rgba(0,0,0,.22);
 }
 .left{display:flex;align-items:center;gap:10px;min-width:0;}
 .dot{width:10px;height:10px;border-radius:50%;background:rgba(233,242,255,.20);}
@@ -105,22 +146,30 @@ html,body{height:100%;margin:0;color:var(--text);
 .nameWithAvatar{display:flex;align-items:center;gap:10px;min-width:0;}
 .nameWithAvatar img{width:26px;height:26px;border-radius:8px;object-fit:cover;box-shadow:0 6px 16px rgba(0,0,0,.35);}
 .pmeta{min-width:0;}
-.pname{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pname{font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .pemail{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-/* Game UI */
-.bigScore{font-size:40px;font-weight:1000;letter-spacing:-.5px;}
 .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;
   border:1px solid rgba(120,180,255,.18);background:rgba(0,0,0,.25);font-weight:900;font-size:12px;
 }
 .lock{padding:10px;border-radius:16px;border:1px solid rgba(255,176,0,.35);background:rgba(255,176,0,.08);}
 .ok{padding:10px;border-radius:16px;border:1px solid rgba(46,230,107,.35);background:rgba(46,230,107,.06);}
 
+.table{width:100%;border-collapse:collapse;font-size:13px;}
+.table th,.table td{padding:8px 6px;border-bottom:1px solid rgba(120,180,255,.12);text-align:left;}
+.table th{color:rgba(233,242,255,.85);font-weight:1000;}
+
+.footer{padding:10px 12px;border-top:1px solid rgba(120,180,255,.14);
+  background:rgba(0,0,0,.28);color:rgba(233,242,255,.78);
+  font-size:12px;line-height:1.35;text-align:center;
+}
+.footer b{color:#e9f2ff;}
+
 /* Modal */
 #modalBg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:999998;}
 #modalBg.show{display:block;}
 #modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:min(520px,calc(100% - 28px));
+  width:min(560px,calc(100% - 28px));
   background:rgba(10,12,16,.92);border:1px solid rgba(120,180,255,.22);
   border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.65);padding:14px;display:none;z-index:999999;
 }
@@ -129,7 +178,7 @@ html,body{height:100%;margin:0;color:var(--text);
 .modalBody{margin-top:8px;}
 .modalActions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap;}
 
-/* Sweep overlay */
+/* Sweep overlay (MP4 one-time) */
 #sweepOverlay{position:fixed;inset:0;z-index:999999;pointer-events:none;display:none;}
 #sweepOverlay.show{display:block;}
 #sweepVideo{position:absolute;inset:-25% -35%;width:170%;height:170%;object-fit:cover;
@@ -149,36 +198,10 @@ html,body{height:100%;margin:0;color:var(--text);
   background:rgba(0,0,0,.55);border:1px solid rgba(120,180,255,.25);color:#bfe7ff;font:12px/1.1 system-ui;
   pointer-events:none;box-shadow:0 10px 24px rgba(0,0,0,.45);
 }
-
-/* Landing header + footer */
-.landingHeader{border-radius:18px;overflow:hidden;border:1px solid rgba(0,215,255,.22);
-  background:
-    radial-gradient(120% 120% at 15% 25%, rgba(0,215,255,.22), rgba(0,0,0,0) 55%),
-    radial-gradient(120% 120% at 85% 70%, rgba(42,127,255,.18), rgba(0,0,0,0) 55%),
-    linear-gradient(180deg, rgba(10,12,16,.92), rgba(0,0,0,.72));
-  box-shadow:0 18px 44px rgba(0,0,0,.55), 0 0 34px rgba(0,215,255,.08);
-  margin-bottom:12px;
-}
-.landingInner{padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-.landingBrand{display:flex;align-items:center;gap:12px;min-width:0}
-.landingLogo{height:54px;width:auto;max-width:240px;object-fit:contain;
-  filter:drop-shadow(0 14px 26px rgba(0,160,255,.35));
-}
-.landingTitle{font-size:28px;font-weight:1000;letter-spacing:.2px;line-height:1;}
-.landingMeta{font-size:12px;color:var(--muted);}
-.versionPill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;
-  border:1px solid rgba(120,180,255,.22);background:rgba(0,0,0,.30);font-weight:1000;font-size:12px;
-  box-shadow:0 0 22px rgba(0,215,255,.08);
-}
-.footerBar{margin-top:14px;padding:10px 12px;border-radius:16px;
-  border:1px solid rgba(120,180,255,.16);background:rgba(0,0,0,.20);
-  text-align:center;font-size:11px;color:rgba(233,242,255,.70);line-height:1.35;
-}
-.footerBar b{color:rgba(233,242,255,.92);}
-
 </style>
 </head>
 <body>
+
 <div id="sweepOverlay">
   <video id="sweepVideo" muted playsinline preload="auto">
     <source src="0217.mp4" type="video/mp4"/>
@@ -189,13 +212,15 @@ html,body{height:100%;margin:0;color:var(--text);
 <div id="modal"></div>
 
 <div class="wrap"><div id="app" class="card"></div></div>
-<div id="badge">v488</div>
+<div id="badge">v491</div>
 
 <script>
-const BUILD=488;
-const LOGO="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png";
-const APP_NAME="Night Games";
-const COPYRIGHT_YEAR=2026;
+/* ============================
+   Config / Helpers
+   ============================ */
+const BUILD=491;
+const BANNER_PRIMARY="night_games_logo_top_right_blue.png";
+const BANNER_FALLBACK="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png";
 const OWNER_EMAIL="stevewmoody@yahoo.com";
 const OWNER_NAME="Steve Moody";
 const firebaseConfig = {"apiKey": "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo", "authDomain": "gamenightdarts-e7601.firebaseapp.com", "projectId": "gamenightdarts-e7601", "storageBucket": "gamenightdarts-e7601.firebasestorage.app", "messagingSenderId": "270045452251", "appId": "1:270045452251:web:5a4a661140a60780e939fe", "measurementId": "G-M60TDFYBW0"};
@@ -208,7 +233,30 @@ const store={
 };
 function normEmail(e){return String(e||"").trim().toLowerCase();}
 function normName(n,email){const v=String(n||"").trim(); return v?v:normEmail(email);}
+function nowMs(){return Date.now();}
 
+function setHtml(h){ $("#app").innerHTML=h; }
+function footer(){
+  return `
+    <div class="footer">
+      <b>Night Games</b> is owned by <b>The Dart Room</b>. © 2026 The Dart Room. All rights reserved. •
+      Designed by <b>Steve’s Graphic Designs</b>.
+    </div>
+  `;
+}
+function headerBanner(title="Night Games"){
+  return `
+    <div class="header">
+      <img class="banner" src="${BANNER_PRIMARY}" alt="Night Games Banner"
+        onerror="this.onerror=null; this.src='${BANNER_FALLBACK}';"/>
+      <div class="bannerShade"></div>
+      <div class="titleRow">
+        <div class="h1">${title}</div>
+        <div class="badge">v${BUILD}</div>
+      </div>
+    </div>
+  `;
+}
 function avatarFor(email,name){
   const e=normEmail(email);
   const n=String(name||"").toLowerCase();
@@ -218,28 +266,33 @@ function avatarFor(email,name){
   return null;
 }
 
-let fb={app:null,auth:null,db:null};
-function initFirebase(){
-  if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-  fb.app=firebase.app(); fb.auth=firebase.auth(); fb.db=firebase.firestore();
-}
-async function ensureBackendAuth(){
-  if(fb.auth.currentUser) return fb.auth.currentUser;
-  const cred=await fb.auth.signInAnonymously();
-  return cred.user;
-}
-async function safeInit(){
+/* ============================
+   Sound (speaker button)
+   ============================ */
+let audioCtx=null;
+function soundOn(){return store.get("soundOn", true);}
+function setSound(on){store.set("soundOn", !!on);}
+function beep(freq=520, ms=45, gain=0.04){
+  if(!soundOn()) return;
   try{
-    initFirebase();
-    await ensureBackendAuth();
-    return true;
-  }catch(e){
-    alert("Firebase init failed.\n\n"+(e?.message||e));
-    return false;
-  }
+    if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator();
+    const g=audioCtx.createGain();
+    o.type="sine"; o.frequency.value=freq;
+    g.gain.value=gain;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    setTimeout(()=>o.stop(), ms);
+  }catch(_){}
 }
+document.addEventListener("click", (e)=>{
+  const btn=e.target.closest("button");
+  if(btn) beep();
+});
 
-// modal
+/* ============================
+   Modal
+   ============================ */
 function closeModal(){
   $("#modalBg").classList.remove("show");
   $("#modal").classList.remove("show");
@@ -253,41 +306,82 @@ function openModal(title, bodyHtml, actionsHtml){
   `;
   $("#modalBg").classList.add("show");
   $("#modal").classList.add("show");
-  $("#modalBg").onclick = closeModal;
+  $("#modalBg").onclick=closeModal;
 }
 
-// sweep once
+/* ============================
+   Sweep (once)
+   ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v488";
+  const key="sweepShown_v491";
   if(store.get(key,false)) return;
   store.set(key,true);
-  const ov=$("#sweepOverlay"); const v=$("#sweepVideo");
+  const ov=$("#sweepOverlay");
+  const v=$("#sweepVideo");
   if(!ov||!v) return;
-  ov.classList.add("show"); ov.classList.add("run");
-  try{v.currentTime=0; v.play().catch(()=>{});}catch{}
+
+  ov.classList.add("show");
+  ov.classList.add("run");
+  try{v.currentTime=0; v.play().catch(()=>{});}catch(_){}
+
   const done=()=>{ov.classList.remove("run"); ov.classList.remove("show");};
-  v.addEventListener("ended",done,{once:true});
-  setTimeout(done,2200);
+  v.addEventListener("ended", done, {once:true});
+  setTimeout(done, 2200);
 }
 
-// presence
+/* ============================
+   Firebase
+   ============================ */
+let fb={app:null,auth:null,db:null};
+function initFirebase(){
+  if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  fb.app=firebase.app();
+  fb.auth=firebase.auth();
+  fb.db=firebase.firestore();
+}
+async function ensureBackendAuth(){
+  if(fb.auth.currentUser) return fb.auth.currentUser;
+  const cred=await fb.auth.signInAnonymously();
+  return cred.user;
+}
+async function safeInit(){
+  try{
+    initFirebase();
+    await ensureBackendAuth();
+    return true;
+  }catch(e){
+    alert("Firebase init/auth failed:\n\n"+(e?.message||e));
+    return false;
+  }
+}
+
+/* ============================
+   Presence (online dot)
+   ============================ */
 let presenceTimer=null;
 let unsubPresence=null;
-const App={screen:"auth", me:null, players:[], presence:new Map(), params:{}, roomId:null, room:null, unsubRoom:null};
-
 function startPresence(me){
   if(unsubPresence) unsubPresence();
   if(presenceTimer) clearInterval(presenceTimer);
+
   const email=normEmail(me.email);
-  const ref = fb.db.collection("presence").doc(email);
+  const ref=fb.db.collection("presence").doc(email);
+
   async function ping(){
     try{
-      await ref.set({email, name: me.name, lastSeenMs: Date.now(), updatedAt: firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-    }catch{}
+      await ref.set({
+        email,
+        name: me.name,
+        lastSeenMs: nowMs(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, {merge:true});
+    }catch(_){}
   }
+
   ping();
-  presenceTimer=setInterval(ping,25000);
-  unsubPresence = fb.db.collection("presence").onSnapshot((snap)=>{
+  presenceTimer=setInterval(ping, 25000);
+
+  unsubPresence=fb.db.collection("presence").onSnapshot((snap)=>{
     const m=new Map();
     snap.forEach(doc=>{
       const d=doc.data()||{};
@@ -301,179 +395,12 @@ function isOnline(email){
   const p=App.presence.get(normEmail(email));
   if(!p) return false;
   const ms=Number(p.lastSeenMs||0);
-  return (Date.now()-ms) <= 90000;
+  return (nowMs()-ms)<=90000;
 }
 
-// ui helpers
-function setHtml(h){ $("#app").innerHTML=h; }
-function topbar(title, rightHtml=""){
-  return `
-    <div class="topbar">
-      <div class="brand">
-        <img src="${LOGO}" alt="Night Games"/>
-        <div>
-          <div class="h2">${title}</div>
-          <div class="sub">${App.me?`Signed in as <b>${App.me.name}</b>`:""}</div>
-        </div>
-      </div>
-      <div class="row">${rightHtml}</div>
-    </div>
-  `;
-}
-function go(screen, params={}){
-  App.screen=screen;
-  App.params=params||{};
-  render();
-}
-function pillGroup(id, options, selected){
-  return `
-    <div class="pillRow" data-group="${id}">
-      ${options.map(o=>`<div class="pill ${selected===o.value?"on":""}" data-value="${o.value}">${o.label}</div>`).join("")}
-    </div>
-  `;
-}
-function wirePills(root=document){
-  root.querySelectorAll(".pillRow").forEach(row=>{
-    row.addEventListener("click",(e)=>{
-      const p=e.target.closest(".pill"); if(!p) return;
-      row.querySelectorAll(".pill").forEach(x=>x.classList.remove("on"));
-      p.classList.add("on");
-    });
-  });
-}
-function pillValue(groupId, fallback){
-  return document.querySelector(`[data-group="${groupId}"] .pill.on`)?.dataset.value || fallback;
-}
-
-// firestore players
-async function loadPlayers(){
-  const snap = await fb.db.collection("players").get();
-  App.players = snap.docs.map(d=>d.data()).filter(Boolean).map(p=>({
-    email:normEmail(p.email),
-    name:normName(p.name,p.email),
-    locked: normEmail(p.email)===normEmail(OWNER_EMAIL)
-  }));
-  if(!App.players.some(p=>normEmail(p.email)===normEmail(OWNER_EMAIL))){
-    App.players.unshift({email:normEmail(OWNER_EMAIL), name:OWNER_NAME, locked:true});
-    try{
-      await fb.db.collection("players").doc(normEmail(OWNER_EMAIL)).set({
-        email:normEmail(OWNER_EMAIL), name:OWNER_NAME, locked:true,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      },{merge:true});
-    }catch{}
-  }
-}
-async function upsertPlayer(email,name){
-  email=normEmail(email); name=normName(name,email);
-  await fb.db.collection("players").doc(email).set({email,name,updatedAt: firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-}
-
-// rooms
-function randCode(len=6){
-  const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let s="";
-  for(let i=0;i<len;i++) s+=chars[Math.floor(Math.random()*chars.length)];
-  return s;
-}
-async function createRoom(payload){
-  const code=randCode(6);
-  const ref=fb.db.collection("rooms").doc(code);
-  const now=Date.now();
-  const players = payload.players || [];
-  const state = {
-    code, game: payload.game, config: payload.config||{}, players,
-    createdBy: App.me.email, createdAtMs: now, updatedAtMs: now,
-    turnEmail: players[0]?.email || App.me.email,
-    status:"active", data: payload.data||{}
-  };
-  await ref.set(state);
-  return code;
-}
-async function joinRoom(code){
-  code=String(code||"").trim().toUpperCase();
-  const ref=fb.db.collection("rooms").doc(code);
-  const doc=await ref.get();
-  if(!doc.exists) throw new Error("Room not found.");
-  const room=doc.data();
-  const me={email:App.me.email, name:App.me.name};
-  const exists=(room.players||[]).some(p=>normEmail(p.email)===normEmail(me.email));
-  if(!exists){
-    const players=[...(room.players||[]), me];
-    await ref.set({players, updatedAtMs: Date.now()},{merge:true});
-  }
-  subscribeRoom(code);
-  App.roomId=code;
-  return true;
-}
-function subscribeRoom(code){
-  if(App.unsubRoom) App.unsubRoom();
-  const ref=fb.db.collection("rooms").doc(code);
-  App.unsubRoom = ref.onSnapshot((doc)=>{
-    if(!doc.exists){ App.room=null; App.roomId=null; return; }
-    App.room=doc.data();
-    if(App.screen.startsWith("game_")) render();
-  });
-}
-async function updateRoom(patch){
-  if(!App.roomId) return;
-  const ref=fb.db.collection("rooms").doc(App.roomId);
-  patch.updatedAtMs=Date.now();
-  await ref.set(patch,{merge:true});
-}
-
-function seatForEmail(room, email){
-  const seats=room?.data?.seats||[];
-  const e=normEmail(email);
-  return seats.find(s=>normEmail(s.email)===e) || null;
-}
-async function claimSeat(roomId, seatId){
-  const ref=fb.db.collection("rooms").doc(roomId);
-  const doc=await ref.get();
-  if(!doc.exists) throw new Error("Room missing");
-  const r=doc.data();
-  const seats=[...(r.data?.seats||[])];
-  const idx=seats.findIndex(s=>s.seat===seatId);
-  if(idx<0) throw new Error("Seat not found");
-  if(seats[idx].email && normEmail(seats[idx].email)!==normEmail(App.me.email)) throw new Error("Seat already claimed");
-  seats[idx].email=App.me.email; seats[idx].name=App.me.name;
-
-  const mergedPlayers = Array.from(new Map([...(r.players||[]), {email:App.me.email, name:App.me.name}]
-    .map(p=>[normEmail(p.email), p])).values());
-
-  await ref.set({players: mergedPlayers, data: {...r.data, seats}, updatedAtMs: Date.now()},{merge:true});
-}
-function iHaveTurnSeat(room){
-  const mine=seatForEmail(room, App.me.email);
-  if(!mine) return false;
-  return mine.seat === (room?.data?.turnSeat || "");
-}
-function clampInt(n,min,max){
-  n=parseInt(String(n||"0"),10);
-  if(Number.isNaN(n)) n=0;
-  return Math.max(min, Math.min(max,n));
-}
-async function advanceTurn(room){
-  const seats=room.data.seats||[];
-  const cur=room.data.turnSeat;
-  const idx=seats.findIndex(s=>s.seat===cur);
-  const next=seats[(idx+1+seats.length)%seats.length]?.seat || cur;
-  const nextEmail=(seats.find(s=>s.seat===next)?.email)||room.turnEmail||"";
-  await updateRoom({data:{...room.data, turnSeat: next}, turnEmail: nextEmail});
-}
-function renderRoomHeader(room){
-  const mine=seatForEmail(room, App.me.email);
-  const turnSeat=room?.data?.turnSeat || room?.data?.startingSeat || "A1";
-  const seatTurn=(room?.data?.seats||[]).find(s=>s.seat===turnSeat);
-  const turnName=seatTurn?.name || turnSeat;
-  return `
-    <div class="row" style="justify-content:space-between;gap:10px">
-      <div class="chip">You: <b>${mine?mine.seat:"spectator"}</b></div>
-      <div class="chip">Turn: <b>${turnName}</b></div>
-    </div>
-  `;
-}
-
-// games list
+/* ============================
+   App state
+   ============================ */
 const GAMES=[
   {id:"shanghai", name:"Shanghai"},
   {id:"killer", name:"Killer"},
@@ -482,41 +409,363 @@ const GAMES=[
   {id:"01", name:"01"},
 ];
 
-// screens
-function renderAuth(){
-  const saved=store.get("me",null);
-  setHtml(`
-    <div class="landingHeader">
-      <div class="landingInner">
-        <div class="landingBrand">
-          <img class="landingLogo" src="${LOGO}" alt="${APP_NAME}"/>
-          <div>
-            <div class="landingTitle">${APP_NAME}</div>
-            <div class="landingMeta">A <b>The Dart Room</b> game • v${BUILD}</div>
-          </div>
-        </div>
-        <div class="versionPill">v${BUILD}</div>
+const App={
+  screen:"auth",
+  me:null,
+  players:[],
+  presence:new Map(),
+  matches:[],
+  match:null,
+  matchId:null,
+  unsubMatches:null,
+  unsubMatch:null,
+  params:{},
+};
+
+function go(screen, params={}){
+  App.screen=screen;
+  App.params=params||{};
+  render();
+}
+
+function topbar(){
+  const sOn=soundOn();
+  return `
+    <div class="topbar">
+      <div>
+        <div class="bigName">${App.me?.name||""}</div>
+        <div class="sub">${App.me?.email||""}</div>
+      </div>
+      <div class="row">
+        <button class="btn sm" id="btnSpeaker">${sOn?"🔊":"🔇"}</button>
+        <button class="btn sm" id="btnPlayers">Players</button>
+        <button class="btn sm danger" id="btnSignOut">Sign out</button>
       </div>
     </div>
+  `;
+}
 
-    <div class="sub">Email only. If you're new, we ask your name once.</div>
-    <div style="height:12px"></div>
+/* ============================
+   Players collection
+   ============================ */
+async function ensureOwner(){
+  try{
+    await fb.db.collection("players").doc(normEmail(OWNER_EMAIL)).set({
+      email:normEmail(OWNER_EMAIL),
+      name:OWNER_NAME,
+      locked:true,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, {merge:true});
+  }catch(_){}
+}
+async function loadPlayers(){
+  const snap=await fb.db.collection("players").get();
+  App.players=snap.docs.map(d=>d.data()).filter(Boolean).map(p=>({
+    email:normEmail(p.email),
+    name:normName(p.name,p.email),
+    locked: !!p.locked || normEmail(p.email)===normEmail(OWNER_EMAIL)
+  }));
+  if(!App.players.some(p=>p.email===normEmail(OWNER_EMAIL))){
+    App.players.unshift({email:normEmail(OWNER_EMAIL), name:OWNER_NAME, locked:true});
+    await ensureOwner();
+  }
+}
+async function upsertPlayer(email,name){
+  email=normEmail(email); name=normName(name,email);
+  await fb.db.collection("players").doc(email).set({
+    email, name,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  }, {merge:true});
+}
 
-    <div class="panel">
-      <div class="sub">Email</div>
-      <input id="inEmail" class="input" placeholder="you@example.com" value="${(saved?.email||"").replaceAll('"','&quot;')}"/>
-      <div style="height:12px"></div>
-      <button id="btnStart" class="btn green pulse">Start</button>
+/* ============================
+   Matches (no codes)
+   ============================ */
+function randId(len=18){
+  const chars="abcdefghijklmnopqrstuvwxyz0123456789";
+  let s="";
+  for(let i=0;i<len;i++) s+=chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+function subscribeMatches(){
+  if(App.unsubMatches) App.unsubMatches();
+  App.unsubMatches=fb.db.collection("matches")
+    .orderBy("createdAtMs","desc")
+    .limit(25)
+    .onSnapshot((snap)=>{
+      const list=[];
+      snap.forEach(doc=>{
+        const d=doc.data()||{};
+        if(d.status==="open" || d.status==="active"){
+          d.matchId=doc.id;
+          list.push(d);
+        }
+      });
+      App.matches=list;
+      if(App.screen==="player") render();
+    });
+}
+function subscribeMatch(matchId){
+  if(App.unsubMatch) App.unsubMatch();
+  App.unsubMatch=fb.db.collection("matches").doc(matchId).onSnapshot((doc)=>{
+    if(!doc.exists){
+      App.match=null; App.matchId=null;
+      if(App.screen.startsWith("game_")) go("player");
+      return;
+    }
+    App.match=doc.data()||{};
+    App.matchId=matchId;
+    if(App.screen.startsWith("game_")) render();
+  });
+}
+
+function matchTitle(gameId, settings){
+  if(gameId==="01"){
+    const base=settings.base||501;
+    const inMode=settings.inMode||"straight";
+    const outMode=settings.outMode||"double";
+    return `01 • ${base} • ${inMode}-in/${outMode}-out`;
+  }
+  if(gameId==="cricket") return "Cricket • Standard";
+  return `${(GAMES.find(g=>g.id===gameId)?.name)||gameId}`;
+}
+
+function initGameState(gameId, settings, seats){
+  if(gameId==="01"){
+    const base = Number(settings.base||501);
+    const leftBySeat={};
+    seats.forEach(s=>{ leftBySeat[s.seat]=base; });
+    return {leftBySeat, winnerSeat:null};
+  }
+  if(gameId==="cricket"){
+    const keys=["20","19","18","17","16","15","B"];
+    const marks={};
+    const score={};
+    seats.forEach(s=>{
+      marks[s.seat]={};
+      keys.forEach(k=>marks[s.seat][k]=0);
+      score[s.seat]=0;
+    });
+    return {marks, score, winnerSeat:null};
+  }
+  return {note:"placeholder", winnerSeat:null};
+}
+
+async function createMatch(gameId, settings, seatCount=2){
+  const matchId=randId(20);
+  const seats=[];
+  for(let i=0;i<seatCount;i++){
+    seats.push({seat:i+1, email:"", name:""});
+  }
+  // creator claims seat 1
+  seats[0]={seat:1, email:App.me.email, name:App.me.name};
+
+  await fb.db.collection("matches").doc(matchId).set({
+    status:"open",
+    createdAtMs: nowMs(),
+    updatedAtMs: nowMs(),
+    createdBy: App.me.email,
+    title: matchTitle(gameId, settings),
+    gameId,
+    settings,
+    seats,
+    turnSeat: settings.startingSeat||1,
+    turnEmail: (settings.startingSeat||1)===1 ? App.me.email : "",
+    state: initGameState(gameId, settings, seats),
+    log: []
+  });
+
+  subscribeMatch(matchId);
+  go("game_"+gameId, {matchId});
+}
+
+async function claimSeat(matchId, seatNum){
+  const ref=fb.db.collection("matches").doc(matchId);
+  await fb.db.runTransaction(async (tx)=>{
+    const snap=await tx.get(ref);
+    if(!snap.exists) throw new Error("Match not found.");
+    const m=snap.data()||{};
+    const seats=(m.seats||[]).map(s=>({...s}));
+    const seat=seats.find(s=>Number(s.seat)===Number(seatNum));
+    if(!seat) throw new Error("Seat not found.");
+    if(seat.email && normEmail(seat.email)!==normEmail(App.me.email)){
+      throw new Error("Seat already taken.");
+    }
+    seat.email=App.me.email;
+    seat.name=App.me.name;
+
+    // if match has no turnEmail yet, set it to first seat's email
+    let turnSeat=m.turnSeat||1;
+    let turnEmail=m.turnEmail||"";
+    const ts=seats.find(s=>Number(s.seat)===Number(turnSeat));
+    if(ts && ts.email) turnEmail=ts.email;
+
+    tx.update(ref, {seats, status:"active", turnSeat, turnEmail, updatedAtMs: nowMs()});
+  });
+}
+
+function mySeat(m){
+  const email=normEmail(App.me?.email);
+  return (m.seats||[]).find(s=>normEmail(s.email)===email)?.seat || null;
+}
+function isMyTurn(m){
+  return normEmail(m.turnEmail)===normEmail(App.me?.email);
+}
+
+/* ============================
+   Game actions
+   ============================ */
+async function submit01(matchId, points){
+  const ref=fb.db.collection("matches").doc(matchId);
+  await fb.db.runTransaction(async (tx)=>{
+    const snap=await tx.get(ref);
+    if(!snap.exists) throw new Error("Match not found.");
+    const m=snap.data()||{};
+    if(normEmail(m.turnEmail)!==normEmail(App.me.email)) throw new Error("Not your turn.");
+    const seat=mySeat(m);
+    if(!seat) throw new Error("You are not seated in this match.");
+
+    const pts=Math.max(0, Math.min(180, Number(points||0)));
+    const state=m.state||{};
+    const leftBySeat={...(state.leftBySeat||{})};
+    const left=Number(leftBySeat[seat]||0);
+    const newLeft=left-pts;
+
+    let appliedLeft=left;
+    let winnerSeat=state.winnerSeat||null;
+
+    if(newLeft===0){
+      appliedLeft=0; winnerSeat=seat;
+    }else if(newLeft>0){
+      appliedLeft=newLeft;
+    } // else bust => no change
+
+    leftBySeat[seat]=appliedLeft;
+
+    const seats=m.seats||[];
+    const ordered=seats.map(s=>Number(s.seat)).sort((a,b)=>a-b);
+    let idx=ordered.indexOf(Number(m.turnSeat)); if(idx<0) idx=0;
+    let nextSeat=ordered[(idx+1)%ordered.length];
+    if(winnerSeat) nextSeat=seat;
+
+    const nextSeatObj=seats.find(s=>Number(s.seat)===Number(nextSeat))||{};
+    const nextEmail=nextSeatObj.email||"";
+
+    const log=(m.log||[]).slice(0,300);
+    log.unshift({t:nowMs(), game:"01", seat, name:App.me.name, email:App.me.email, pts, leftBefore:left, leftAfter:appliedLeft});
+
+    tx.update(ref, {
+      state:{...state, leftBySeat, winnerSeat},
+      turnSeat: nextSeat,
+      turnEmail: nextEmail,
+      status:"active",
+      updatedAtMs: nowMs(),
+      log
+    });
+  });
+}
+
+async function submitCricket(matchId, marksThisTurn){
+  const ref=fb.db.collection("matches").doc(matchId);
+  await fb.db.runTransaction(async (tx)=>{
+    const snap=await tx.get(ref);
+    if(!snap.exists) throw new Error("Match not found.");
+    const m=snap.data()||{};
+    if(normEmail(m.turnEmail)!==normEmail(App.me.email)) throw new Error("Not your turn.");
+    const seat=mySeat(m);
+    if(!seat) throw new Error("You are not seated in this match.");
+
+    const state=m.state||{};
+    const marks=JSON.parse(JSON.stringify(state.marks||{}));
+    const score={...(state.score||{})};
+    const keys=["20","19","18","17","16","15","B"];
+
+    let totalAdded=0;
+    keys.forEach(k=>{
+      const add=Math.max(0, Math.min(3, Number(marksThisTurn[k]||0)));
+      totalAdded+=add;
+      if(!marks[seat]) marks[seat]={};
+      marks[seat][k]=Number(marks[seat][k]||0)+add;
+    });
+
+    const val={"20":20,"19":19,"18":18,"17":17,"16":16,"15":15,"B":25};
+    let gained=0;
+    keys.forEach(k=>{
+      const before = Number(state.marks?.[seat]?.[k]||0);
+      const after = Number(marks[seat][k]||0);
+      const beforeOver=Math.max(0, before-3);
+      const afterOver=Math.max(0, after-3);
+      const inc=afterOver-beforeOver;
+      if(inc>0) gained += inc*val[k];
+    });
+    score[seat]=Number(score[seat]||0)+gained;
+
+    let winnerSeat=state.winnerSeat||null;
+    const closedAll = keys.every(k=>Number(marks[seat][k]||0)>=3);
+    if(closedAll){
+      let maxOther=0;
+      Object.keys(score).forEach(s=>{
+        if(Number(s)!==Number(seat)) maxOther=Math.max(maxOther, Number(score[s]||0));
+      });
+      if(Number(score[seat]||0)>=maxOther) winnerSeat=seat;
+    }
+
+    const seats=m.seats||[];
+    const ordered=seats.map(s=>Number(s.seat)).sort((a,b)=>a-b);
+    let idx=ordered.indexOf(Number(m.turnSeat)); if(idx<0) idx=0;
+    let nextSeat=ordered[(idx+1)%ordered.length];
+    if(winnerSeat) nextSeat=seat;
+
+    const nextSeatObj=seats.find(s=>Number(s.seat)===Number(nextSeat))||{};
+    const nextEmail=nextSeatObj.email||"";
+
+    const log=(m.log||[]).slice(0,300);
+    log.unshift({t:nowMs(), game:"cricket", seat, name:App.me.name, email:App.me.email, totalMarks:totalAdded, gained, scoreAfter:score[seat]});
+
+    tx.update(ref, {
+      state:{...state, marks, score, winnerSeat},
+      turnSeat: nextSeat,
+      turnEmail: nextEmail,
+      status:"active",
+      updatedAtMs: nowMs(),
+      log
+    });
+  });
+}
+
+/* ============================
+   Screens
+   ============================ */
+function screenAuth(){
+  setHtml(`
+    ${headerBanner("Night Games")}
+    <div class="main">
+      <div class="grid">
+        <div class="panel">
+          <h3 class="h2">Sign in</h3>
+          <div class="sub">Enter your email. If you're new, we’ll ask your name one time.</div>
+          <div style="height:10px"></div>
+          <input id="inEmail" class="input" placeholder="you@example.com" autocomplete="email" inputmode="email"/>
+          <div style="height:10px"></div>
+          <button id="btnStart" class="btn green pulse">Start</button>
+          <div class="sub" style="margin-top:10px;">v491 includes the banner + neon glow across every page.</div>
+        </div>
+        <div class="panel">
+          <h3 class="h2">What you should see</h3>
+          <div class="sub">• Banner image across top<br/>• Pulse start button<br/>• Footer disclosure across bottom</div>
+          <div style="height:10px"></div>
+          <div class="ok"><b>Note:</b> If Firebase fails, you will get an alert with the exact error.</div>
+        </div>
+      </div>
     </div>
-
-    <div class="footerBar">
-      <div><b>${APP_NAME}</b> is owned by <b>The Dart Room</b>. © ${COPYRIGHT_YEAR} The Dart Room. All rights reserved.</div>
-      <div>Designed by <b>Steve's Graphic Designs</b>.</div>
-    </div>
+    ${footer()}
   `);
-  const start=()=>onStart();
-  $("#btnStart").onclick=start;
-  $("#inEmail").addEventListener("keydown",(e)=>{ if(e.key==="Enter") start(); });
+
+  $("#btnStart").onclick=onStart;
+  $("#inEmail").addEventListener("keydown", (e)=>{ if(e.key==="Enter") onStart(); });
+
+  const remembered=store.get("me", null);
+  if(remembered?.email) $("#inEmail").value=remembered.email;
 }
 
 async function onStart(){
@@ -526,568 +775,681 @@ async function onStart(){
   const ok=await safeInit();
   if(!ok) return;
 
+  await ensureOwner();
   await loadPlayers();
 
-  const existing=App.players.find(p=>normEmail(p.email)===email);
+  const existing=App.players.find(p=>p.email===email);
   if(existing){
     App.me={email, name: existing.name};
     store.set("me", App.me);
     startPresence(App.me);
+    subscribeMatches();
     runSweepOnce();
     go("player");
     return;
   }
 
   openModal("New player", `
-    <div class="sub">Enter your name once for <b>${email}</b>.</div>
+    <div class="sub">We don't have an account for <b>${email}</b>.</div>
     <div style="height:10px"></div>
     <input id="newName" class="input" placeholder="Your name"/>
   `, `
     <button class="btn sm" id="mCancel">Cancel</button>
     <button class="btn sm green" id="mCreate">Create</button>
   `);
+
   $("#mCancel").onclick=closeModal;
   $("#mCreate").onclick=async ()=>{
     const name=normName($("#newName")?.value, email);
     if(!name || name===email){ alert("Please enter your name."); return; }
     try{
-      await upsertPlayer(email, name);
+      await upsertPlayer(email,name);
       await loadPlayers();
       App.me={email, name};
       store.set("me", App.me);
       closeModal();
       startPresence(App.me);
+      subscribeMatches();
       runSweepOnce();
       go("player");
     }catch(e){
-      alert("Could not create player: " + (e?.message||e));
+      alert("Could not create player:\n\n"+(e?.message||e));
     }
   };
 }
 
-function renderPlayer(){
-  setHtml(`
-    ${topbar("Player Page", `
-      <button class="btn sm" id="btnPlayers">Players</button>
-      <button class="btn sm" id="btnSignOut">Sign out</button>
-    `)}
-    <div class="grid">
-      <div class="panel">
-        <div class="h2">Games</div>
-        <div class="sub">Pick a game.</div>
-        <div style="height:10px"></div>
-        <div class="col" id="games">
-          ${GAMES.map(g=>`<button class="btn" data-game="${g.id}">${g.name}</button>`).join("")}
-        </div>
-      </div>
+function signOut(){
+  store.del("me");
+  App.me=null;
+  App.match=null; App.matchId=null;
+  if(App.unsubMatch) App.unsubMatch();
+  if(App.unsubMatches) App.unsubMatches();
+  go("auth");
+}
 
-      <div class="panel">
-        <div class="h2">Multiplayer Rooms</div>
-        <div class="sub">Join an existing room code.</div>
-        <div style="height:10px"></div>
-        <div class="row">
-          <input id="joinCode" class="input" placeholder="Room code (e.g. A1B2C3)"/>
-          <button class="btn sm green" id="btnJoin">Join</button>
+function screenPlayer(){
+  setHtml(`
+    ${headerBanner("Night Games")}
+    <div class="main">
+      ${topbar()}
+      <div style="height:12px"></div>
+
+      <div class="grid">
+        <div class="panel">
+          <h3 class="h2">Games</h3>
+          <div class="sub">Cricket and 01 are playable in this first full run.</div>
+          <div style="height:10px"></div>
+          <div class="col" id="gameBtns"></div>
         </div>
-        <div style="height:10px"></div>
-        <div class="sub">Current room: <b>${App.roomId||"none"}</b></div>
-        <div class="row" style="margin-top:10px">
-          <button class="btn sm" id="btnLeave" ${App.roomId?"":"disabled"}>Leave</button>
-          <button class="btn sm" id="btnRoomInfo" ${App.roomId?"":"disabled"}>Info</button>
+
+        <div class="panel">
+          <div class="row space">
+            <h3 class="h2" style="margin:0">Open matches</h3>
+            <button class="btn sm green" id="btnNewMatch">New match</button>
+          </div>
+          <div class="sub">No codes. Create a match and it appears here for others to join.</div>
+          <div style="height:10px"></div>
+          <div id="matches" class="list"></div>
         </div>
       </div>
     </div>
+    ${footer()}
   `);
 
-  $("#btnPlayers").onclick=async ()=>{ await loadPlayers(); go("players"); };
-  $("#btnSignOut").onclick=()=>{ store.del("me"); App.me=null; App.roomId=null; App.room=null; if(App.unsubRoom) App.unsubRoom(); go("auth"); };
-  $("#games").onclick=(e)=>{
-    const b=e.target.closest("button[data-game]"); if(!b) return;
-    const id=b.getAttribute("data-game");
-    if(id==="cricket") return go("setup_cricket");
-    if(id==="01") return go("setup_01");
-    go("game_simple",{game:id});
-  };
-  $("#btnJoin").onclick=async ()=>{
-    const code=$("#joinCode").value.trim().toUpperCase();
-    if(!code){ alert("Enter a room code."); return; }
-    try{ await joinRoom(code); alert("Joined room "+code); }catch(e){ alert(e?.message||e); }
-  };
-  $("#btnLeave").onclick=()=>{ if(App.unsubRoom) App.unsubRoom(); App.room=null; App.roomId=null; alert("Left room."); render(); };
-  $("#btnRoomInfo").onclick=()=>{
-    const r=App.room; if(!r) return;
-    openModal("Room "+r.code, `
-      <div class="sub">Game: <b>${r.game}</b></div>
-      <div class="sub">Turn email: <b>${r.turnEmail||"—"}</b></div>
-      <div style="height:10px"></div>
-      <div class="sub"><b>Players</b></div>
-      ${(r.players||[]).map(p=>`<div class="sub">• ${p.name} (${p.email})</div>`).join("")}
-    `, `<button class="btn sm" id="mOk">OK</button>`);
-    $("#mOk").onclick=closeModal;
-  };
+  $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
+  $("#btnPlayers").onclick=()=>go("players");
+  $("#btnSignOut").onclick=()=>signOut();
+
+  const gb=$("#gameBtns");
+  gb.innerHTML = GAMES.map(g=>`
+    <button class="btn ${g.id==="cricket"||g.id==="01"?"green":""}" data-game="${g.id}">${g.name}</button>
+  `).join("");
+  gb.querySelectorAll("button").forEach(b=>{
+    b.onclick=()=>{
+      const gameId=b.getAttribute("data-game");
+      go("game_setup", {gameId});
+    };
+  });
+
+  renderMatchesList();
+  $("#btnNewMatch").onclick=()=>go("game_setup", {gameId:"01"});
 }
 
-function renderPlayers(){
-  const rows=App.players.map(p=>{
-    const on=isOnline(p.email);
-    const av=avatarFor(p.email,p.name);
-    const you = normEmail(p.email)===normEmail(App.me.email) ? " (you)" : "";
+function renderMatchesList(){
+  const host=$("#matches");
+  if(!host) return;
+  const list=App.matches||[];
+
+  if(list.length===0){
+    host.innerHTML = `<div class="sub">No open matches yet.</div>`;
+    return;
+  }
+
+  host.innerHTML = list.map(m=>{
+    const seats=m.seats||[];
+    const taken=seats.filter(s=>s.email).length;
+    const online = seats.some(s=>s.email && isOnline(s.email));
     return `
       <div class="playerRow">
         <div class="left">
-          <div class="dot ${on?"on":""}"></div>
-          <div class="pmeta">
-            <div class="pname">
-              <span class="nameWithAvatar">
-                ${av?`<img src="${av}" alt=""/>`:""}
-                <span>${p.name}${you}</span>
-              </span>
-            </div>
-            <div class="pemail">${p.email}</div>
+          <span class="dot ${online?"on":""}"></span>
+          <div class="pmeta" style="min-width:0">
+            <div class="pname">${m.title||m.gameId||"Match"}</div>
+            <div class="pemail">${taken}/${seats.length} seated • ${m.status}</div>
           </div>
         </div>
-        <button class="btn sm" data-email="${p.email}">Open</button>
+        <div class="row">
+          <button class="btn sm" data-open="${m.matchId}">Open</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  host.querySelectorAll("button[data-open]").forEach(btn=>{
+    btn.onclick=()=>{
+      const id=btn.getAttribute("data-open");
+      subscribeMatch(id);
+      const m=App.matches.find(x=>x.matchId===id);
+      const gameId=m?.gameId || "01";
+      go("game_"+gameId, {matchId:id, gameId});
+    };
+  });
+}
+
+function screenPlayers(){
+  setHtml(`
+    ${headerBanner("Players")}
+    <div class="main">
+      ${topbar()}
+      <div style="height:12px"></div>
+
+      <div class="panel">
+        <div class="row space">
+          <h3 class="h2" style="margin:0">Players</h3>
+          <button class="btn sm" id="btnBack">Back</button>
+        </div>
+        <div class="sub">Green dot means online (last ping within 90 seconds).</div>
+        <div style="height:10px"></div>
+        <div id="plist" class="list"></div>
+      </div>
+    </div>
+    ${footer()}
+  `);
+
+  $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
+  $("#btnPlayers").onclick=()=>go("players");
+  $("#btnSignOut").onclick=()=>signOut();
+  $("#btnBack").onclick=()=>go("player");
+
+  const plist=$("#plist");
+  const players=[...App.players].sort((a,b)=>a.name.localeCompare(b.name));
+  plist.innerHTML = players.map(p=>{
+    const av=avatarFor(p.email,p.name);
+    const online=isOnline(p.email);
+    return `
+      <div class="playerRow">
+        <div class="left">
+          <span class="dot ${online?"on":""}"></span>
+          <div class="nameWithAvatar">
+            ${av?`<img src="${av}" alt="avatar" onerror="this.style.display='none'"/>`:""}
+            <div class="pmeta">
+              <div class="pname">${p.name}${p.locked?' <span class="chip">owner</span>':""}</div>
+              <div class="pemail">${p.email}</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <span class="chip">${online?"online":"offline"}</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function screenGameSetup(){
+  const gameId=App.params.gameId;
+  const g=GAMES.find(x=>x.id===gameId) || {id:gameId,name:gameId};
+  const is01 = gameId==="01";
+  const isCricket = gameId==="cricket";
+
+  setHtml(`
+    ${headerBanner(g.name)}
+    <div class="main">
+      ${topbar()}
+      <div style="height:12px"></div>
+
+      <div class="panel">
+        <div class="row space">
+          <h3 class="h2" style="margin:0">${g.name} setup</h3>
+          <button class="btn sm" id="btnBack">Back</button>
+        </div>
+        <div class="sub">Pick 2 players and choose who starts (manual or random).</div>
+        <div style="height:12px"></div>
+
+        <div class="grid">
+          <div class="panel">
+            <h3 class="h2">Players (2)</h3>
+            <div class="sub">Teams come next pass. This first full run keeps it simple.</div>
+            <div style="height:10px"></div>
+            <select id="p1" class="input"></select>
+            <div style="height:10px"></div>
+            <select id="p2" class="input"></select>
+            <div style="height:10px"></div>
+            <button class="btn" id="btnRandomStart">Random who starts</button>
+            <div class="sub" id="startInfo" style="margin-top:8px;"></div>
+          </div>
+
+          <div class="panel">
+            <h3 class="h2">Options</h3>
+            ${is01?`
+              <div class="sub">Pick 301 / 501 / 701 and in/out options.</div>
+              <div style="height:10px"></div>
+              <select id="base" class="input">
+                <option value="301">301</option>
+                <option value="501" selected>501</option>
+                <option value="701">701</option>
+              </select>
+              <div style="height:10px"></div>
+              <select id="inMode" class="input">
+                <option value="straight" selected>Straight in</option>
+                <option value="double">Double in</option>
+              </select>
+              <div style="height:10px"></div>
+              <select id="outMode" class="input">
+                <option value="double" selected>Double out</option>
+                <option value="straight">Straight out</option>
+              </select>
+            `: isCricket?`
+              <div class="ok">Cricket standard numbers 20–15 + bull.</div>
+            `:`
+              <div class="ok">Placeholder screen included so the build is complete.</div>
+            `}
+            <div style="height:12px"></div>
+            <button class="btn green pulse" id="btnCreate">Create match</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    ${footer()}
+  `);
+
+  $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
+  $("#btnPlayers").onclick=()=>go("players");
+  $("#btnSignOut").onclick=()=>signOut();
+  $("#btnBack").onclick=()=>go("player");
+
+  const players=[...App.players].sort((a,b)=>a.name.localeCompare(b.name));
+  const options=players.map(p=>`<option value="${p.email}">${p.name} (${p.email})</option>`).join("");
+  $("#p1").innerHTML=options;
+  $("#p2").innerHTML=options;
+
+  const meEmail=normEmail(App.me.email);
+  $("#p1").value=meEmail;
+  const other=players.find(p=>p.email!==meEmail) || players[0];
+  $("#p2").value=other.email;
+
+  let startingSeat=1;
+  const updateStartInfo=()=>{
+    const p1=$("#p1").value; const p2=$("#p2").value;
+    const n1=players.find(p=>p.email===p1)?.name||p1;
+    const n2=players.find(p=>p.email===p2)?.name||p2;
+    const startName = startingSeat===1?n1:n2;
+    $("#startInfo").textContent = "Starts first: " + startName;
+  };
+  updateStartInfo();
+
+  $("#btnRandomStart").onclick=()=>{ startingSeat = (Math.random()<0.5)?1:2; updateStartInfo(); };
+  $("#p1").onchange=updateStartInfo;
+  $("#p2").onchange=updateStartInfo;
+
+  $("#btnCreate").onclick=async ()=>{
+    const p1=$("#p1").value;
+    const p2=$("#p2").value;
+    if(p1===p2){ alert("Pick two different players."); return; }
+
+    const n1=players.find(p=>p.email===p1)?.name||p1;
+    const n2=players.find(p=>p.email===p2)?.name||p2;
+
+    // settings
+    const settings = is01 ? {
+      base:Number($("#base").value),
+      inMode:$("#inMode").value,
+      outMode:$("#outMode").value,
+      startingSeat
+    } : {startingSeat};
+
+    // create match, then set seat 2 to chosen player if it's you; otherwise it's open and they join
+    try{
+      await createMatch(gameId, settings, 2);
+      // after create, we can set seat2 to the selected opponent immediately (so it feels like your old builds)
+      const matchId=App.matchId;
+      const ref=fb.db.collection("matches").doc(matchId);
+      await fb.db.runTransaction(async (tx)=>{
+        const snap=await tx.get(ref);
+        if(!snap.exists) return;
+        const m=snap.data()||{};
+        const seats=(m.seats||[]).map(s=>({...s}));
+        seats[0]={seat:1,email:p1,name:n1};
+        seats[1]={seat:2,email:p2,name:n2};
+        // set turn email to starting seat email
+        const ts=seats.find(s=>Number(s.seat)===Number(startingSeat));
+        tx.update(ref, {seats, turnSeat:startingSeat, turnEmail:ts?.email||"", status:"active", updatedAtMs: nowMs()});
+      });
+      subscribeMatch(matchId);
+      go("game_"+gameId, {matchId});
+    }catch(e){
+      alert("Could not create match:\n\n"+(e?.message||e));
+    }
+  };
+}
+
+function screenGameCricket(){
+  const m=App.match;
+  if(!m){ go("player"); return; }
+
+  const seats=m.seats||[];
+  const seatMe=mySeat(m);
+  const myTurn=isMyTurn(m);
+  const winner=m.state?.winnerSeat || null;
+
+  const scoreRows=seats.map(s=>{
+    const online=isOnline(s.email);
+    const isTurn = Number(m.turnSeat)===Number(s.seat);
+    const sc=Number(m.state?.score?.[s.seat]||0);
+    const closedAll = ["20","19","18","17","16","15","B"].every(k=>Number(m.state?.marks?.[s.seat]?.[k]||0)>=3);
+    return `
+      <div class="playerRow">
+        <div class="left">
+          <span class="dot ${online?"on":""}"></span>
+          <div class="pmeta">
+            <div class="pname">${s.name} ${isTurn?'<span class="chip">turn</span>':""} ${winner===s.seat?'<span class="chip">winner</span>':""}</div>
+            <div class="pemail">${s.email}</div>
+          </div>
+        </div>
+        <div class="row">
+          <span class="chip">Score: ${sc}</span>
+          <span class="chip">${closedAll?"closed":"open"}</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  const keys=["20","19","18","17","16","15","B"];
+  const marksTable = `
+    <table class="table">
+      <thead><tr><th>Number</th>${seats.map(s=>`<th>${s.name}</th>`).join("")}</tr></thead>
+      <tbody>
+        ${keys.map(k=>`
+          <tr>
+            <td>${k==="B"?"Bull":k}</td>
+            ${seats.map(s=>{
+              const v=Number(m.state?.marks?.[s.seat]?.[k]||0);
+              const show = v>=3 ? ("✔ "+v) : String(v);
+              return `<td>${show}</td>`;
+            }).join("")}
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+
+  setHtml(`
+    ${headerBanner("Cricket")}
+    <div class="main">
+      ${topbar()}
+      <div style="height:12px"></div>
+
+      <div class="panel">
+        <div class="row space">
+          <h3 class="h2" style="margin:0">${m.title||"Cricket"}</h3>
+          <div class="row">
+            <button class="btn sm" id="btnBack">Back</button>
+          </div>
+        </div>
+        <div class="sub">v491: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div style="height:12px"></div>
+
+        ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
+
+        <div class="grid">
+          <div class="panel">
+            <h3 class="h2">Players</h3>
+            <div style="height:10px"></div>
+            ${scoreRows}
+          </div>
+          <div class="panel">
+            <h3 class="h2">Board</h3>
+            <div style="height:10px"></div>
+            ${marksTable}
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+        <div class="grid">
+          <div class="panel">
+            <h3 class="h2">Your turn controls</h3>
+            ${myTurn?`
+              <div class="sub">Enter marks for this turn (0–3 each).</div>
+              <div style="height:10px"></div>
+              ${keys.map(k=>`
+                <div class="row" style="justify-content:space-between;margin-bottom:8px">
+                  <div class="chip">${k==="B"?"Bull":k}</div>
+                  <input class="input" style="width:120px" type="number" min="0" max="3" value="0" id="mk_${k}"/>
+                </div>
+              `).join("")}
+              <button class="btn green pulse" id="btnSubmit">Submit turn</button>
+            `:`
+              <div class="lock">Not your turn. Waiting for <b>${m.turnEmail||"other player"}</b>.</div>
+            `}
+          </div>
+          <div class="panel">
+            <h3 class="h2">Match log</h3>
+            <div class="sub">Latest first</div>
+            <div style="height:10px"></div>
+            <div id="log"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    ${footer()}
+  `);
+
+  $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
+  $("#btnPlayers").onclick=()=>go("players");
+  $("#btnSignOut").onclick=()=>signOut();
+  $("#btnBack").onclick=()=>go("player");
+
+  if(!seatMe){
+    openModal("Join match", `
+      <div class="sub">Pick a seat.</div>
+      <div style="height:10px"></div>
+      ${seats.map(s=>`
+        <button class="btn" data-seat="${s.seat}">Seat ${s.seat}: ${s.email?`${s.name}`:"(open)"}</button>
+      `).join('<div style="height:8px"></div>')}
+    `, `<button class="btn sm" id="mClose">Close</button>`);
+    $("#mClose").onclick=closeModal;
+    $("#modal").querySelectorAll("button[data-seat]").forEach(b=>{
+      b.onclick=async ()=>{
+        const seat=Number(b.getAttribute("data-seat"));
+        try{ await claimSeat(App.matchId, seat); closeModal(); }
+        catch(e){ alert(e?.message||e); }
+      };
+    });
+  }
+
+  const btn=$("#btnSubmit");
+  if(btn){
+    btn.onclick=async ()=>{
+      const payload={};
+      keys.forEach(k=> payload[k]=Number($("#mk_"+k).value||0));
+      try{ await submitCricket(App.matchId, payload); }
+      catch(e){ alert(e?.message||e); }
+    };
+  }
+
+  const logHost=$("#log");
+  const log=(m.log||[]).slice(0,20);
+  logHost.innerHTML = log.length? log.map(x=>`
+    <div class="sub">• ${new Date(x.t).toLocaleTimeString()} — ${x.name} (${x.game}) marks:${x.totalMarks}, +${x.gained} pts</div>
+  `).join("") : `<div class="sub">No turns yet.</div>`;
+}
+
+function screenGame01(){
+  const m=App.match;
+  if(!m){ go("player"); return; }
+
+  const seats=m.seats||[];
+  const seatMe=mySeat(m);
+  const myTurn=isMyTurn(m);
+  const winner=m.state?.winnerSeat || null;
+
+  const rows=seats.map(s=>{
+    const online=isOnline(s.email);
+    const isTurn = Number(m.turnSeat)===Number(s.seat);
+    const left=Number(m.state?.leftBySeat?.[s.seat]||0);
+    return `
+      <div class="playerRow">
+        <div class="left">
+          <span class="dot ${online?"on":""}"></span>
+          <div class="pmeta">
+            <div class="pname">${s.name} ${isTurn?'<span class="chip">turn</span>':""} ${winner===s.seat?'<span class="chip">winner</span>':""}</div>
+            <div class="pemail">${s.email}</div>
+          </div>
+        </div>
+        <div class="row">
+          <span class="chip">Left: ${left}</span>
+        </div>
       </div>
     `;
   }).join("");
 
   setHtml(`
-    ${topbar("Players", `<button class="btn sm" id="btnBack">Back</button>`)}
-    <div class="sub">Green dot = online.</div>
-    <div style="height:12px"></div>
-    <div class="list" id="plist">${rows}</div>
-  `);
-  $("#btnBack").onclick=()=>go("player");
-  $("#plist").onclick=(e)=>{
-    const b=e.target.closest("button[data-email]"); if(!b) return;
-    go("player_view",{email:b.getAttribute("data-email")});
-  };
-}
-
-function renderPlayerView(){
-  const email=App.params.email;
-  const p=App.players.find(x=>normEmail(x.email)===normEmail(email)) || {email, name: email};
-  const av=avatarFor(p.email,p.name);
-  setHtml(`
-    ${topbar("Player", `<button class="btn sm" id="btnBack">Back</button>`)}
-    <div class="panel">
-      <div class="h1">
-        <span class="nameWithAvatar">${av?`<img src="${av}" alt=""/>`:""}<span>${p.name}</span></span>
-      </div>
-      <div class="sub">${p.email}</div>
+    ${headerBanner("01")}
+    <div class="main">
+      ${topbar()}
       <div style="height:12px"></div>
-      <div class="row">
-        <button class="btn" id="btnStats">Stats</button>
-        <button class="btn" id="btnHistory">History</button>
-      </div>
-    </div>
-  `);
-  $("#btnBack").onclick=()=>go("players");
-  $("#btnStats").onclick=()=>openModal("Stats", `<div class="sub">Stats populate after matches are saved.</div>`, `<button class="btn sm" id="mOk">OK</button>`);
-  $("#btnHistory").onclick=()=>openModal("History", `<div class="sub">History populates after matches are saved.</div>`, `<button class="btn sm" id="mOk2">OK</button>`);
-  const ok=$("#mOk"); if(ok) ok.onclick=closeModal;
-  const ok2=$("#mOk2"); if(ok2) ok2.onclick=closeModal;
-}
 
-// setup cricket + game cricket
-function renderSetupCricket(){
-  setHtml(`
-    ${topbar("Cricket Setup", `<button class="btn sm" id="btnBack">Back</button>`)}
-    <div class="grid">
-      <div class="panel">
-        <div class="h2">Mode</div>
-        ${pillGroup("mode",[{label:"Solo",value:"solo"},{label:"Vs",value:"vs"},{label:"Teams",value:"teams"}],"vs")}
-        <div style="height:10px"></div>
-
-        <div class="h2">Who starts?</div>
-        ${pillGroup("starter",[{label:"Random",value:"random"},{label:"Manual",value:"manual"}],"random")}
-
-        <div style="height:10px"></div>
-        <div class="h2">Names</div>
-        <div class="sub">Teams: fill both names on a side. Vs: just first box each side.</div>
-        <div style="height:10px"></div>
-        <div class="grid">
-          <div class="panel">
-            <div class="sub">Side A</div>
-            <input id="a1" class="input" placeholder="Player 1 / Team A" value="${App.me.name}"/>
-            <div style="height:8px"></div>
-            <input id="a2" class="input" placeholder="(optional teammate)"/>
-          </div>
-          <div class="panel">
-            <div class="sub">Side B</div>
-            <input id="b1" class="input" placeholder="Opponent / Team B"/>
-            <div style="height:8px"></div>
-            <input id="b2" class="input" placeholder="(optional teammate)"/>
-          </div>
-        </div>
-
-        <div style="height:12px"></div>
-        <button class="btn green pulse" id="btnCreate">Create Match</button>
-      </div>
-
-      <div class="panel">
-        <div class="h2">Cricket Entry (v488)</div>
-        <div class="sub">Simple marks-per-turn entry (0–9) so multiplayer + turn locking work start-to-finish.</div>
-      </div>
-    </div>
-  `);
-  $("#btnBack").onclick=()=>go("player");
-  wirePills(document);
-
-  $("#btnCreate").onclick=async ()=>{
-    const mode=pillValue("mode","vs");
-    const starter=pillValue("starter","random");
-    const sides={
-      A:[$("#a1").value,$("#a2").value].filter(x=>String(x||"").trim()),
-      B:[$("#b1").value,$("#b2").value].filter(x=>String(x||"").trim()),
-    };
-    const seats=[
-      {seat:"A1", name:sides.A[0]||App.me.name, email:App.me.email},
-      sides.A[1]?{seat:"A2", name:sides.A[1], email:""}:null,
-      {seat:"B1", name:sides.B[0]||"Opponent", email:""},
-      sides.B[1]?{seat:"B2", name:sides.B[1], email:""}:null,
-    ].filter(Boolean);
-
-    let startingSeat="A1";
-    if(starter==="random"){
-      const choices=seats.map(s=>s.seat);
-      startingSeat = choices[Math.floor(Math.random()*choices.length)];
-    }
-
-    const data={seats, mode, starter, scoreA:0, scoreB:0, turns:[], startingSeat, turnSeat: startingSeat};
-
-    try{
-      const code=await createRoom({
-        game:"cricket",
-        config:{mode,starter},
-        players: seats.filter(s=>s.email).map(s=>({email:s.email,name:s.name})),
-        data
-      });
-      App.roomId=code; subscribeRoom(code);
-      alert("Room created: "+code);
-      go("game_cricket",{code});
-    }catch(e){ alert("Could not create room: "+(e?.message||e)); }
-  };
-}
-
-function renderGameCricket(){
-  const room=App.room;
-  if(!room){ setHtml(`${topbar("Cricket",`<button class="btn sm" id="btnBack">Back</button>`)}<div class="panel"><div class="sub">No room loaded.</div></div>`); $("#btnBack").onclick=()=>go("player"); return; }
-  const d=room.data||{};
-  const seats=d.seats||[];
-  const scoreA=Number(d.scoreA||0), scoreB=Number(d.scoreB||0);
-  const mineSeat=seatForEmail(room, App.me.email);
-  const haveTurn=iHaveTurnSeat(room);
-
-  setHtml(`
-    ${topbar("Cricket",`
-      <button class="btn sm" id="btnBack">Back</button>
-      <button class="btn sm" id="btnInfo">Room</button>
-    `)}
-    ${renderRoomHeader(room)}
-    <div style="height:10px"></div>
-
-    ${haveTurn ? `<div class="ok"><b>Your turn.</b> Enter marks (0–9) and submit.</div>`
-               : `<div class="lock"><b>Locked.</b> Waiting for active player.</div>`}
-
-    <div class="grid" style="margin-top:12px">
       <div class="panel">
         <div class="row space">
-          <div>
-            <div class="h2">Side A</div>
-            <div class="sub">${(seats.filter(s=>s.seat.startsWith("A")).map(s=>s.name).filter(Boolean).join(" / "))||"—"}</div>
+          <h3 class="h2" style="margin:0">${m.title||"01"}</h3>
+          <div class="row">
+            <button class="btn sm" id="btnBack">Back</button>
           </div>
-          <div class="bigScore">${scoreA}</div>
         </div>
+        <div class="sub">v491: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div style="height:12px"></div>
 
-        <div class="row space" style="margin-top:10px">
-          <div>
-            <div class="h2">Side B</div>
-            <div class="sub">${(seats.filter(s=>s.seat.startsWith("B")).map(s=>s.name).filter(Boolean).join(" / "))||"—"}</div>
-          </div>
-          <div class="bigScore">${scoreB}</div>
-        </div>
-      </div>
+        ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
 
-      <div class="panel">
-        <div class="h2">Turn Entry</div>
-        <div class="sub">Marks this turn (0–9)</div>
-        <div style="height:8px"></div>
-        <input id="marks" class="input" inputmode="numeric" placeholder="0 - 9"/>
-        <div style="height:10px"></div>
-        <div class="row">
-          <button class="btn green pulse" id="btnEnter" ${(!haveTurn)?"disabled":""}>Enter Turn</button>
-          <button class="btn" id="btnClaim" ${(mineSeat)?"disabled":""}>Claim Seat</button>
-        </div>
-      </div>
-    </div>
-  `);
-
-  $("#btnBack").onclick=()=>go("player");
-  $("#btnInfo").onclick=()=>openModal("Room "+room.code, `<div class="sub">Share code: <b>${room.code}</b></div>`, `<button class="btn sm" id="mOk">OK</button>`);
-  const ok=$("#mOk"); if(ok) ok.onclick=closeModal;
-
-  $("#btnClaim").onclick=async ()=>{
-    const empty=seats.filter(s=>!s.email);
-    if(empty.length===0){ alert("No empty seats."); return; }
-    openModal("Claim Seat",`
-      <div class="sub">Pick your seat:</div>
-      <div style="height:10px"></div>
-      <div class="col">
-        ${empty.map(s=>`<button class="btn" data-seat="${s.seat}">${s.seat} • ${s.name||"Empty"}</button>`).join("")}
-      </div>
-    `,`<button class="btn sm" id="mCancel">Cancel</button>`);
-    $("#mCancel").onclick=closeModal;
-    $("#modal").querySelector(".col").onclick=async (e)=>{
-      const b=e.target.closest("button[data-seat]"); if(!b) return;
-      const seat=b.getAttribute("data-seat");
-      try{ await claimSeat(App.roomId, seat); closeModal(); }catch(err){ alert(err?.message||err); }
-    };
-  };
-
-  $("#btnEnter").onclick=async ()=>{
-    if(!mineSeat) return;
-    const m=clampInt($("#marks").value,0,9);
-    const side = mineSeat.seat.startsWith("A") ? "A" : "B";
-    const nextA = side==="A" ? scoreA + m : scoreA;
-    const nextB = side==="B" ? scoreB + m : scoreB;
-    const turns=[...(d.turns||[]), {at:Date.now(), seat:mineSeat.seat, marks:m}];
-    await updateRoom({data:{...d, scoreA:nextA, scoreB:nextB, turns}});
-    await advanceTurn(room);
-    $("#marks").value="";
-  };
-}
-
-// setup 01 + game 01
-function renderSetup01(){
-  setHtml(`
-    ${topbar("01 Setup", `<button class="btn sm" id="btnBack">Back</button>`)}
-    <div class="grid">
-      <div class="panel">
-        <div class="h2">Game</div>
-        ${pillGroup("start",[{label:"301",value:"301"},{label:"501",value:"501"},{label:"701",value:"701"}],"501")}
-        <div style="height:10px"></div>
-
-        <div class="h2">In / Out</div>
-        ${pillGroup("inout",[{label:"Straight-in • Double-out",value:"straight_double"},{label:"Double-in • Double-out",value:"double_double"}],"straight_double")}
-        <div style="height:10px"></div>
-
-        <div class="h2">Mode</div>
-        ${pillGroup("mode",[{label:"Solo",value:"solo"},{label:"Vs",value:"vs"},{label:"Teams",value:"teams"}],"vs")}
-        <div style="height:10px"></div>
-
-        <div class="h2">Who starts?</div>
-        ${pillGroup("starter",[{label:"Random",value:"random"},{label:"Manual",value:"manual"}],"random")}
-
-        <div style="height:10px"></div>
-        <div class="h2">Names</div>
         <div class="grid">
           <div class="panel">
-            <div class="sub">Side A</div>
-            <input id="a1" class="input" placeholder="Player 1 / Team A" value="${App.me.name}"/>
-            <div style="height:8px"></div>
-            <input id="a2" class="input" placeholder="(optional teammate)"/>
+            <h3 class="h2">Players</h3>
+            <div style="height:10px"></div>
+            ${rows}
           </div>
+
           <div class="panel">
-            <div class="sub">Side B</div>
-            <input id="b1" class="input" placeholder="Opponent / Team B"/>
-            <div style="height:8px"></div>
-            <input id="b2" class="input" placeholder="(optional teammate)"/>
+            <h3 class="h2">Your turn controls</h3>
+            ${myTurn?`
+              <div class="sub">Enter points scored this turn (0–180).</div>
+              <div style="height:10px"></div>
+              <input id="pts" class="input" type="number" min="0" max="180" value="60"/>
+              <div style="height:10px"></div>
+              <button class="btn green pulse" id="btnSubmit">Submit turn</button>
+            `:`
+              <div class="lock">Not your turn. Waiting for <b>${m.turnEmail||"other player"}</b>.</div>
+            `}
+            <div style="height:10px"></div>
+            <div class="sub">Settings: ${m.settings?.base||501} • ${m.settings?.inMode||"straight"}-in / ${m.settings?.outMode||"double"}-out</div>
           </div>
         </div>
 
         <div style="height:12px"></div>
-        <button class="btn green pulse" id="btnCreate">Create Match</button>
-      </div>
-
-      <div class="panel">
-        <div class="h2">01 Entry (v488)</div>
-        <div class="sub">Enter points per turn (0–180). Exact 0 wins. Double-out simplified (final score must be even).</div>
-      </div>
-    </div>
-  `);
-  $("#btnBack").onclick=()=>go("player");
-  wirePills(document);
-
-  $("#btnCreate").onclick=async ()=>{
-    const start=parseInt(pillValue("start","501"),10);
-    const inout=pillValue("inout","straight_double");
-    const mode=pillValue("mode","vs");
-    const starter=pillValue("starter","random");
-    const sides={
-      A:[$("#a1").value,$("#a2").value].filter(x=>String(x||"").trim()),
-      B:[$("#b1").value,$("#b2").value].filter(x=>String(x||"").trim()),
-    };
-    const seats=[
-      {seat:"A1", name:sides.A[0]||App.me.name, email:App.me.email},
-      sides.A[1]?{seat:"A2", name:sides.A[1], email:""}:null,
-      {seat:"B1", name:sides.B[0]||"Opponent", email:""},
-      sides.B[1]?{seat:"B2", name:sides.B[1], email:""}:null,
-    ].filter(Boolean);
-
-    let startingSeat="A1";
-    if(starter==="random"){
-      const choices=seats.map(s=>s.seat);
-      startingSeat = choices[Math.floor(Math.random()*choices.length)];
-    }
-
-    const remaining=Object.fromEntries(seats.map(s=>[s.seat,start]));
-    const data={seats,start,inout,mode,starter,remaining,turns:[],winnerSeat:"",startingSeat,turnSeat:startingSeat};
-
-    try{
-      const code=await createRoom({
-        game:"01",
-        config:{start,inout,mode,starter},
-        players: seats.filter(s=>s.email).map(s=>({email:s.email,name:s.name})),
-        data
-      });
-      App.roomId=code; subscribeRoom(code);
-      alert("Room created: "+code);
-      go("game_01",{code});
-    }catch(e){ alert("Could not create room: "+(e?.message||e)); }
-  };
-}
-
-function renderGame01(){
-  const room=App.room;
-  if(!room){ setHtml(`${topbar("01",`<button class="btn sm" id="btnBack">Back</button>`)}<div class="panel"><div class="sub">No room loaded.</div></div>`); $("#btnBack").onclick=()=>go("player"); return; }
-  const d=room.data||{};
-  const seats=d.seats||[];
-  const remaining=d.remaining||{};
-  const mineSeat=seatForEmail(room, App.me.email);
-  const haveTurn=iHaveTurnSeat(room);
-  const winner=d.winnerSeat||"";
-  const ended=!!winner;
-
-  const remLines = seats.map(s=>`
-    <div class="row space"><div class="sub"><b>${s.seat}</b> • ${s.name}</div><div class="bigScore">${remaining[s.seat] ?? "—"}</div></div>
-  `).join("");
-
-  setHtml(`
-    ${topbar("01",`
-      <button class="btn sm" id="btnBack">Back</button>
-      <button class="btn sm" id="btnInfo">Room</button>
-    `)}
-    ${renderRoomHeader(room)}
-    <div class="row" style="justify-content:space-between;margin-top:10px">
-      <div class="chip">Start: <b>${d.start||"501"}</b></div>
-      <div class="chip">Out: <b>Double-out</b></div>
-    </div>
-
-    <div style="height:10px"></div>
-    ${ended ? `<div class="ok"><b>Game Over.</b> Winner: <b>${(seats.find(s=>s.seat===winner)?.name)||winner}</b></div>` :
-      haveTurn ? `<div class="ok"><b>Your turn.</b> Enter score (0–180) and submit.</div>` :
-      `<div class="lock"><b>Locked.</b> Waiting for active player.</div>`}
-
-    <div class="grid" style="margin-top:12px">
-      <div class="panel">
-        <div class="h2">Remaining</div>
-        <div style="height:8px"></div>
-        ${remLines}
-      </div>
-
-      <div class="panel">
-        <div class="h2">Turn Entry</div>
-        <div class="sub">Points this turn (0–180)</div>
-        <div style="height:8px"></div>
-        <input id="score" class="input" inputmode="numeric" placeholder="0 - 180"/>
-        <div style="height:10px"></div>
-        <div class="row">
-          <button class="btn green pulse" id="btnEnter" ${(!ended && haveTurn)?"":"disabled"}>Enter Turn</button>
-          <button class="btn" id="btnClaim" ${(mineSeat)?"disabled":""}>Claim Seat</button>
-          <button class="btn danger" id="btnReset" ${ended?"":"disabled"}>New Game</button>
+        <div class="panel">
+          <h3 class="h2">Match log</h3>
+          <div class="sub">Latest first</div>
+          <div style="height:10px"></div>
+          <div id="log"></div>
         </div>
+
       </div>
     </div>
+    ${footer()}
   `);
 
+  $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
+  $("#btnPlayers").onclick=()=>go("players");
+  $("#btnSignOut").onclick=()=>signOut();
   $("#btnBack").onclick=()=>go("player");
-  $("#btnInfo").onclick=()=>openModal("Room "+room.code, `<div class="sub">Share code: <b>${room.code}</b></div>`, `<button class="btn sm" id="mOk">OK</button>`);
-  const ok=$("#mOk"); if(ok) ok.onclick=closeModal;
 
-  $("#btnClaim").onclick=async ()=>{
-    const empty=seats.filter(s=>!s.email);
-    if(empty.length===0){ alert("No empty seats."); return; }
-    openModal("Claim Seat",`
-      <div class="sub">Pick your seat:</div>
+  if(!seatMe){
+    openModal("Join match", `
+      <div class="sub">Pick a seat.</div>
       <div style="height:10px"></div>
-      <div class="col">
-        ${empty.map(s=>`<button class="btn" data-seat="${s.seat}">${s.seat} • ${s.name||"Empty"}</button>`).join("")}
-      </div>
-    `,`<button class="btn sm" id="mCancel">Cancel</button>`);
-    $("#mCancel").onclick=closeModal;
-    $("#modal").querySelector(".col").onclick=async (e)=>{
-      const b=e.target.closest("button[data-seat]"); if(!b) return;
-      const seat=b.getAttribute("data-seat");
-      try{ await claimSeat(App.roomId, seat); closeModal(); }catch(err){ alert(err?.message||err); }
+      ${seats.map(s=>`
+        <button class="btn" data-seat="${s.seat}">Seat ${s.seat}: ${s.email?`${s.name}`:"(open)"}</button>
+      `).join('<div style="height:8px"></div>')}
+    `, `<button class="btn sm" id="mClose">Close</button>`);
+    $("#mClose").onclick=closeModal;
+    $("#modal").querySelectorAll("button[data-seat]").forEach(b=>{
+      b.onclick=async ()=>{
+        const seat=Number(b.getAttribute("data-seat"));
+        try{ await claimSeat(App.matchId, seat); closeModal(); }
+        catch(e){ alert(e?.message||e); }
+      };
+    });
+  }
+
+  const btn=$("#btnSubmit");
+  if(btn){
+    btn.onclick=async ()=>{
+      const pts=Number($("#pts").value||0);
+      try{ await submit01(App.matchId, pts); }
+      catch(e){ alert(e?.message||e); }
     };
-  };
+  }
 
-  $("#btnEnter").onclick=async ()=>{
-    if(!mineSeat) return;
-    const mine=mineSeat.seat;
-    const score=clampInt($("#score").value,0,180);
-    const cur=Number(remaining[mine]);
-    const next=cur-score;
-
-    let bust=false;
-    if(next<0 || next===1) bust=true;
-
-    let winnerSeat="";
-    if(!bust && next===0){
-      if(score%2!==0) bust=true; // simplified double-out
-      else winnerSeat=mine;
-    }
-
-    const newRem={...remaining};
-    if(!bust) newRem[mine]=next;
-
-    const turns=[...(d.turns||[]), {at:Date.now(), seat:mine, score, bust}];
-    await updateRoom({data:{...d, remaining:newRem, turns, winnerSeat: (winnerSeat||d.winnerSeat||"")}});
-    if(winnerSeat) return;
-    await advanceTurn(room);
-    $("#score").value="";
-  };
-
-  $("#btnReset").onclick=async ()=>{
-    const start=Number(d.start||501);
-    const rem=Object.fromEntries((d.seats||[]).map(s=>[s.seat,start]));
-    await updateRoom({data:{...d, remaining: rem, turns:[], winnerSeat:"", turnSeat:d.startingSeat}});
-  };
+  const logHost=$("#log");
+  const log=(m.log||[]).slice(0,25);
+  logHost.innerHTML = log.length? log.map(x=>`
+    <div class="sub">• ${new Date(x.t).toLocaleTimeString()} — ${x.name}: ${x.pts} (left ${x.leftBefore} → ${x.leftAfter})</div>
+  `).join("") : `<div class="sub">No turns yet.</div>`;
 }
 
-// placeholders
-function renderGameSimple(){
-  const gameId=App.params.game;
-  const gameName=GAMES.find(g=>g.id===gameId)?.name || gameId;
+function screenGamePlaceholder(){
+  const gameId=App.params.gameId;
+  const g=GAMES.find(x=>x.id===gameId) || {id:gameId,name:gameId};
   setHtml(`
-    ${topbar(gameName, `<button class="btn sm" id="btnBack">Back</button>`)}
-    <div class="panel">
-      <div class="h2">${gameName}</div>
-      <div class="sub">This screen is live and clickable. Game logic for this title is next pass.</div>
+    ${headerBanner(g.name)}
+    <div class="main">
+      ${topbar()}
       <div style="height:12px"></div>
-      <button class="btn green pulse" id="btnOk">OK</button>
+
+      <div class="panel">
+        <div class="row space">
+          <h3 class="h2" style="margin:0">${g.name}</h3>
+          <button class="btn sm" id="btnBack">Back</button>
+        </div>
+        <div style="height:10px"></div>
+        <div class="ok">This game screen is included so the build is complete start-to-finish. We wire full rules after Cricket + 01.</div>
+      </div>
     </div>
+    ${footer()}
   `);
+
+  $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
+  $("#btnPlayers").onclick=()=>go("players");
+  $("#btnSignOut").onclick=()=>signOut();
   $("#btnBack").onclick=()=>go("player");
-  $("#btnOk").onclick=()=>go("player");
 }
 
+/* ============================
+   Render router
+   ============================ */
 function render(){
-  if(!App.me && App.screen!=="auth") App.screen="auth";
-  if(App.screen==="auth") return renderAuth();
-  if(App.screen==="player") return renderPlayer();
-  if(App.screen==="players") return renderPlayers();
-  if(App.screen==="player_view") return renderPlayerView();
-  if(App.screen==="setup_cricket") return renderSetupCricket();
-  if(App.screen==="setup_01") return renderSetup01();
-  if(App.screen==="game_cricket") return renderGameCricket();
-  if(App.screen==="game_01") return renderGame01();
-  if(App.screen==="game_simple") return renderGameSimple();
-  return renderAuth();
+  if(App.screen==="auth") return screenAuth();
+  if(App.screen==="player") return screenPlayer();
+  if(App.screen==="players") return screenPlayers();
+  if(App.screen==="game_setup") return screenGameSetup();
+
+  if(App.screen.startsWith("game_")){
+    const id=App.screen.replace("game_","");
+    if(id==="cricket") return screenGameCricket();
+    if(id==="01") return screenGame01();
+    return screenGamePlaceholder();
+  }
+
+  screenAuth();
 }
 
-(function boot(){ render(); })();
+/* ============================
+   Boot
+   ============================ */
+(async function boot(){
+  render();
+
+  const remembered=store.get("me", null);
+  if(remembered?.email){
+    const ok=await safeInit();
+    if(!ok) return;
+    await ensureOwner();
+    await loadPlayers();
+    const existing=App.players.find(p=>p.email===normEmail(remembered.email));
+    if(existing){
+      App.me={email: existing.email, name: existing.name};
+      startPresence(App.me);
+      subscribeMatches();
+      go("player");
+    }
+  }
+})();
+
+// small refresh to keep match list fresh while on player screen
+setInterval(()=>{
+  if(App.screen==="player") renderMatchesList();
+}, 2000);
+
 </script>
 </body>
 </html>
