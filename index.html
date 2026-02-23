@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v499</title>
+<title>Night Games • v500</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,14 +12,14 @@
 
 <style>
 /* ============================================================
-   Night Games v499 — FULL BUILD (single-file; text-file friendly)
+   Night Games v500 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
    - Place in your repo root alongside these assets (NOT embedded):
-       night_games_logo_top_right_blue.png?v=495   (banner game design)
+       9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png?v=495   (banner game design)
        9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png?v=495 (fallback banner)
-       0217.mp4?v=495 (optional sweep overlay; if missing it will skip)
+       ${asset('0217.mp4')}?v=495 (optional sweep overlay; if missing it will skip)
        MY DART AVATAR.png (optional)
        WILLIAM DART AVATAR.png (optional)
        Jayce.png (optional)
@@ -61,7 +61,7 @@ html,body{height:100%;margin:0;color:var(--text);
 }
 
 
-/* --- v499 Skin: pull colors from the banner asset (repo) --- */
+/* --- v500 Skin: pull colors from the banner asset (repo) --- */
 body::before{
   content:"";
   position:fixed; inset:-20%;
@@ -104,7 +104,7 @@ body::after{
 }
 
 
-/* --- v499 Landing Color Scheme --- */
+/* --- v500 Landing Color Scheme --- */
 .heroHeader{
   border-bottom:1px solid rgba(120,180,255,.16);
   background:
@@ -306,7 +306,7 @@ a{color:var(--cyan);text-decoration:none}
 
 <div id="sweepOverlay">
   <video id="sweepVideo" muted playsinline preload="auto">
-    <source src="0217.mp4?v=495" type="video/mp4"/>
+    <source src="${asset('0217.mp4')}" type="video/mp4"/>
   </video>
 </div>
 
@@ -317,10 +317,10 @@ a{color:var(--cyan);text-decoration:none}
 <div class="wrap"><div id="app" class="card">
   <div class="header heroHeader">
     <div class="heroInner">
-      <img class="heroLogo" src="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png" alt="Night Games Logo"
-        onerror="this.onerror=null; this.src='night_games_logo_top_right_blue.png';"/>
+      <img class="heroLogo" src="${asset('9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png')}" alt="Night Games"
+        onerror="this.onerror=null; this.src='9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png';"/>
       <div class="heroTitle">Night Games</div>
-      <div class="heroSub">Enter your email to continue • v499</div>
+      <div class="heroSub">Enter your email to continue • v500</div>
     </div>
   </div>
   <div class="main">
@@ -344,7 +344,7 @@ a{color:var(--cyan);text-decoration:none}
 <div id="fatalErr" style="position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;display:none;padding:10px 12px;border-radius:14px;background:rgba(60,0,0,.78);border:1px solid rgba(255,77,77,.55);color:#ffd6d6;font:12px/1.3 system-ui;box-shadow:0 18px 40px rgba(0,0,0,.55);white-space:pre-wrap;"></div>
 
 <script>
-// v499: Global error handlers so we NEVER get a blank page with no clue.
+// v500: Global error handlers so we NEVER get a blank page with no clue.
 (function(){
   function show(msg){
     try{
@@ -361,7 +361,11 @@ a{color:var(--cyan);text-decoration:none}
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD=499;
+const BUILD=500;
+
+const ASSET_BASE = new URL('.', document.baseURI).toString();
+const asset = (p)=> new URL(p, ASSET_BASE).toString();
+
 const BANNER_PRIMARY="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png?v=496";
 const BANNER_FALLBACK="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png?v=496";
 const OWNER_EMAIL="stevewmoody@yahoo.com";
@@ -374,7 +378,7 @@ function showError(msg){
   const box=document.getElementById("errBox");
   if(!box) return;
   box.style.display="block";
-  box.innerHTML = "<b>Build v499 error:</b>\n"+String(msg);
+  box.innerHTML = "<b>Build v500 error:</b>\n"+String(msg);
 }
 window.addEventListener("error",(e)=>{
   showError(e?.error?.stack || e?.message || e);
@@ -477,7 +481,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v499";
+  const key="sweepShown_v500";
   if(store.get(key,false)) return;
 
   const ov=$("#sweepOverlay");
@@ -918,13 +922,50 @@ async function submitCricket(matchId, marksThisTurn){
 /* ============================
    Screens
    ============================ */
+
+async function onStart(){
+  try{
+    const email = normEmail($("#inEmail")?.value || "");
+    if(!email){
+      alert("Enter your email.");
+      return;
+    }
+
+    // ensure firebase initialized + anonymous session
+    await safeInit();
+
+    // load players and find existing
+    await loadPlayers();
+    let p = (App.players||[]).find(x=>normEmail(x.email)===email);
+
+    if(!p){
+      const nameRaw = prompt("New player. Enter your name:");
+      const name = normName(nameRaw||"");
+      if(!name){
+        alert("Name is required for a new player.");
+        return;
+      }
+      p = await upsertPlayer({email, name});
+      await loadPlayers();
+    }
+
+    // remember for convenience (but landing still shows first by design in this build series)
+    store.set("me", {email: p.email, name: p.name, ts: nowMs()});
+
+    App.me = p;
+    go("player");
+  }catch(err){
+    showError(err);
+  }
+}
+
 function screenAuth(){
+  const logoUrl = asset("9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png");
   setHtml(`
     <div class="header heroHeader">
       <div class="heroInner">
-        <img class="heroLogo" src="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png" alt="Night Games Logo"
-          onerror="this.onerror=null; this.src='night_games_logo_top_right_blue.png';"/>
-        <div class="heroTitle">Night Games</div>
+        <img class="heroLogo" src="${logoUrl}" alt="Night Games"
+          onerror="this.style.display='none'"/>
         <div class="heroSub">Enter your email to continue • v${BUILD}</div>
       </div>
     </div>
@@ -951,10 +992,8 @@ function screenAuth(){
   const remembered=store.get("me", null);
   if(remembered?.email) $("#inEmail").value=remembered.email;
 
-  // run the diagonal sweep once (may require first gesture)
   setTimeout(()=>runSweepOnce(), 350);
-}
-function signOut(){
+}function signOut(){
   store.del("me");
   App.me=null;
   App.match=null; App.matchId=null;
@@ -1170,7 +1209,7 @@ function screenHistory(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">History view is wired as a real page in v499. Next pass we populate it from match logs / saved games.</div>
+        <div class="ok">History view is wired as a real page in v500. Next pass we populate it from match logs / saved games.</div>
       </div>
     </div>
     ${footer()}
@@ -1195,7 +1234,7 @@ function screenStats(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">Stats page is a real page in v499. Next pass we show the stat definitions + your notables.</div>
+        <div class="ok">Stats page is a real page in v500. Next pass we show the stat definitions + your notables.</div>
       </div>
     </div>
     ${footer()}
@@ -1406,7 +1445,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v499: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v500: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -1537,7 +1576,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v499: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v500: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
