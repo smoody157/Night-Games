@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v498</title>
+<title>Night Games • v499</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   Night Games v498 — FULL BUILD (single-file; text-file friendly)
+   Night Games v499 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -61,7 +61,7 @@ html,body{height:100%;margin:0;color:var(--text);
 }
 
 
-/* --- v498 Skin: pull colors from the banner asset (repo) --- */
+/* --- v499 Skin: pull colors from the banner asset (repo) --- */
 body::before{
   content:"";
   position:fixed; inset:-20%;
@@ -101,6 +101,44 @@ body::after{
 }
 .panel{
   box-shadow:0 16px 36px rgba(0,0,0,.35), 0 0 22px rgba(0,215,255,.06);
+}
+
+
+/* --- v499 Landing Color Scheme --- */
+.heroHeader{
+  border-bottom:1px solid rgba(120,180,255,.16);
+  background:
+    radial-gradient(120% 140% at 12% 10%, rgba(0,215,255,.22), rgba(0,0,0,0) 55%),
+    radial-gradient(120% 140% at 88% 65%, rgba(255,173,0,.16), rgba(0,0,0,0) 60%),
+    linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.35));
+}
+.heroInner{padding:18px 14px 14px 14px;text-align:center;}
+.heroLogo{
+  width:min(860px,100%);
+  max-height:260px;
+  object-fit:contain;
+  filter:drop-shadow(0 26px 46px rgba(0,0,0,.62)) drop-shadow(0 0 18px rgba(0,215,255,.22));
+}
+.heroTitle{
+  margin-top:10px;
+  font-size:28px;
+  font-weight:1000;
+  letter-spacing:.25px;
+  text-shadow:0 0 18px rgba(0,215,255,.18);
+}
+.heroSub{color:rgba(233,242,255,.75);font-size:13px;margin-top:4px;}
+.heroPanel{
+  max-width:640px;
+  margin:0 auto;
+  background:
+    radial-gradient(120% 120% at 15% 15%, rgba(0,215,255,.10), rgba(0,0,0,0) 55%),
+    rgba(0,0,0,.28);
+  border:1px solid rgba(0,215,255,.18);
+  box-shadow:0 18px 44px rgba(0,0,0,.42), 0 0 26px rgba(0,215,255,.08);
+}
+.input{
+  border:1px solid rgba(0,215,255,.22);
+  box-shadow:0 0 0 1px rgba(255,255,255,.04) inset, 0 0 22px rgba(0,215,255,.06);
 }
 
 *{box-sizing:border-box}
@@ -275,21 +313,26 @@ a{color:var(--cyan);text-decoration:none}
 <div id="modalBg"></div>
 <div id="modal"></div>
 
+
 <div class="wrap"><div id="app" class="card">
-  <div class="header" style="border-bottom:1px solid rgba(120,180,255,.14)">
-    <div style="padding:18px 14px 14px 14px; text-align:center;">
-      <img src="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png" alt="Night Games Logo"
-        style="width:min(760px,100%); max-height:240px; object-fit:contain; filter:drop-shadow(0 18px 34px rgba(0,0,0,.55));"
-        onerror="this.style.display='none'"/>
-      <div style="height:10px"></div>
-      <div style="font-size:26px;font-weight:1000;letter-spacing:.2px;">Night Games</div>
-      <div style="color:rgba(233,242,255,.72);font-size:13px;margin-top:4px;">Enter your email to continue • v498</div>
+  <div class="header heroHeader">
+    <div class="heroInner">
+      <img class="heroLogo" src="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png" alt="Night Games Logo"
+        onerror="this.onerror=null; this.src='night_games_logo_top_right_blue.png';"/>
+      <div class="heroTitle">Night Games</div>
+      <div class="heroSub">Enter your email to continue • v499</div>
     </div>
   </div>
   <div class="main">
-    <div class="panel" style="max-width:640px;margin:0 auto;">
-      <div style="font-size:16px;font-weight:1000;">Loading…</div>
-      <div class="sub" style="margin-top:6px;">If this stays blank, scroll down for the red error box.</div>
+    <div class="panel heroPanel">
+      <div class="h2" style="margin:0 0 6px 0;">Sign in</div>
+      <div class="sub">Email only. If you’re new, we’ll ask your name one time.</div>
+      <div style="height:10px"></div>
+      <input id="inEmail" class="input" placeholder="you@example.com" autocomplete="email" inputmode="email"/>
+      <div style="height:10px"></div>
+      <button id="btnEnter" class="btn green pulse">Enter</button>
+      <div style="height:8px"></div>
+      <button id="btnClearRemember" class="btn">Clear saved login</button>
     </div>
   </div>
   <div class="footer">
@@ -297,10 +340,11 @@ a{color:var(--cyan);text-decoration:none}
     Designed by <b>Steve’s Graphic Designs</b>.
   </div>
 </div></div>
+
 <div id="fatalErr" style="position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;display:none;padding:10px 12px;border-radius:14px;background:rgba(60,0,0,.78);border:1px solid rgba(255,77,77,.55);color:#ffd6d6;font:12px/1.3 system-ui;box-shadow:0 18px 40px rgba(0,0,0,.55);white-space:pre-wrap;"></div>
 
 <script>
-// v498: Global error handlers so we NEVER get a blank page with no clue.
+// v499: Global error handlers so we NEVER get a blank page with no clue.
 (function(){
   function show(msg){
     try{
@@ -317,7 +361,7 @@ a{color:var(--cyan);text-decoration:none}
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD=498;
+const BUILD=499;
 const BANNER_PRIMARY="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png?v=496";
 const BANNER_FALLBACK="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png?v=496";
 const OWNER_EMAIL="stevewmoody@yahoo.com";
@@ -330,7 +374,7 @@ function showError(msg){
   const box=document.getElementById("errBox");
   if(!box) return;
   box.style.display="block";
-  box.innerHTML = "<b>Build v498 error:</b>\n"+String(msg);
+  box.innerHTML = "<b>Build v499 error:</b>\n"+String(msg);
 }
 window.addEventListener("error",(e)=>{
   showError(e?.error?.stack || e?.message || e);
@@ -433,7 +477,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v498";
+  const key="sweepShown_v499";
   if(store.get(key,false)) return;
 
   const ov=$("#sweepOverlay");
@@ -876,25 +920,23 @@ async function submitCricket(matchId, marksThisTurn){
    ============================ */
 function screenAuth(){
   setHtml(`
-    <div class="header" style="border-bottom:1px solid rgba(120,180,255,.14)">
-      <div style="padding:18px 14px 14px 14px; text-align:center;">
-        <img src="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png?v=496" alt="Night Games Logo"
-          style="width:min(760px,100%); max-height:240px; object-fit:contain; filter:drop-shadow(0 18px 34px rgba(0,0,0,.55));"
-          onerror="this.style.display='none'"/>
-        <div style="height:10px"></div>
-        <div class="h1" style="position:relative; bottom:auto; left:auto; right:auto;">Night Games</div>
-        <div class="sub" style="margin-top:4px;">Enter your email to continue • v${BUILD}</div>
+    <div class="header heroHeader">
+      <div class="heroInner">
+        <img class="heroLogo" src="9238EAD8-8D2B-4820-9620-1692FA1DC3D4.png" alt="Night Games Logo"
+          onerror="this.onerror=null; this.src='night_games_logo_top_right_blue.png';"/>
+        <div class="heroTitle">Night Games</div>
+        <div class="heroSub">Enter your email to continue • v${BUILD}</div>
       </div>
     </div>
 
     <div class="main">
-      <div class="panel" style="max-width:640px;margin:0 auto;">
+      <div class="panel heroPanel">
         <h3 class="h2">Sign in</h3>
         <div class="sub">Email only. If you’re new, we’ll ask your name one time.</div>
         <div style="height:10px"></div>
         <input id="inEmail" class="input" placeholder="you@example.com" autocomplete="email" inputmode="email"/>
         <div style="height:10px"></div>
-        <button id="btnStart" class="btn green pulse">Enter</button>
+        <button id="btnEnter" class="btn green pulse">Enter</button>
         <div style="height:8px"></div>
         <button id="btnClearRemember" class="btn">Clear saved login</button>
       </div>
@@ -902,62 +944,16 @@ function screenAuth(){
     ${footer()}
   `);
 
-  $("#btnStart").onclick=onStart;
+  $("#btnEnter").onclick=onStart;
   $("#inEmail").addEventListener("keydown", (e)=>{ if(e.key==="Enter") onStart(); });
   $("#btnClearRemember").onclick=()=>{ store.del("me"); $("#inEmail").value=""; alert("Saved login cleared."); };
 
   const remembered=store.get("me", null);
   if(remembered?.email) $("#inEmail").value=remembered.email;
-}(){
-  const email=normEmail($("#inEmail")?.value);
-  if(!email || !email.includes("@")){ alert("Enter a valid email."); return; }
 
-  const ok=await safeInit();
-  if(!ok) return;
-
-  await ensureOwner();
-  await loadPlayers();
-
-  const existing=App.players.find(p=>p.email===email);
-  if(existing){
-    App.me={email, name: existing.name};
-    store.set("me", App.me);
-    startPresence(App.me);
-    subscribeMatches();
-    runSweepOnce();
-    go("player");
-    return;
-  }
-
-  openModal("New player", `
-    <div class="sub">We don't have an account for <b>${email}</b>.</div>
-    <div style="height:10px"></div>
-    <input id="newName" class="input" placeholder="Your name"/>
-  `, `
-    <button class="btn sm" id="mCancel">Cancel</button>
-    <button class="btn sm green" id="mCreate">Create</button>
-  `);
-
-  $("#mCancel").onclick=closeModal;
-  $("#mCreate").onclick=async ()=>{
-    const name=normName($("#newName")?.value, email);
-    if(!name || name===email){ alert("Please enter your name."); return; }
-    try{
-      await upsertPlayer(email,name);
-      await loadPlayers();
-      App.me={email, name};
-      store.set("me", App.me);
-      closeModal();
-      startPresence(App.me);
-      subscribeMatches();
-      runSweepOnce();
-      go("player");
-    }catch(e){
-      alert("Could not create player:\n\n"+(e?.message||e));
-    }
-  };
+  // run the diagonal sweep once (may require first gesture)
+  setTimeout(()=>runSweepOnce(), 350);
 }
-
 function signOut(){
   store.del("me");
   App.me=null;
@@ -1174,7 +1170,7 @@ function screenHistory(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">History view is wired as a real page in v498. Next pass we populate it from match logs / saved games.</div>
+        <div class="ok">History view is wired as a real page in v499. Next pass we populate it from match logs / saved games.</div>
       </div>
     </div>
     ${footer()}
@@ -1199,7 +1195,7 @@ function screenStats(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">Stats page is a real page in v498. Next pass we show the stat definitions + your notables.</div>
+        <div class="ok">Stats page is a real page in v499. Next pass we show the stat definitions + your notables.</div>
       </div>
     </div>
     ${footer()}
@@ -1410,7 +1406,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v498: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v499: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -1541,7 +1537,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v498: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v499: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
