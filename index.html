@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v507</title>
+<title>Night Games • v509</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   Night Games v507 — FULL BUILD (single-file; text-file friendly)
+   Night Games v509 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -61,7 +61,7 @@ html,body{height:100%;margin:0;color:var(--text);
 }
 
 
-/* --- v507 Skin: pull colors from the banner asset (repo) --- */
+/* --- v509 Skin: pull colors from the banner asset (repo) --- */
 body::before{
   content:"";
   position:fixed; inset:-20%;
@@ -104,25 +104,20 @@ body::after{
 }
 
 
-/* --- v507 Landing Color Scheme --- */
+/* --- v509 Landing Color Scheme --- */
 .heroHeader{
-  background:rgba(0,0,0,.0);
-  border:none;
-  box-shadow:none;
-  padding:0;
+  border-bottom:1px solid rgba(120,180,255,.16);
+  background:
+    radial-gradient(120% 140% at 12% 10%, rgba(0,215,255,.22), rgba(0,0,0,0) 55%),
+    radial-gradient(120% 140% at 88% 65%, rgba(255,173,0,.16), rgba(0,0,0,0) 60%),
+    linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.35));
 }
-.heroInner{padding:0;text-align:center;}
+.heroInner{padding:18px 14px 14px 14px;text-align:center;}
 .heroLogo{
-  width:100%;
-  max-width:980px;
-  max-height:520px;
-  object-fit:cover;
-  display:block;
-  margin:0 auto;
-  /* subtle glow only */
-  filter:drop-shadow(0 18px 36px rgba(0,0,0,.70))
-         drop-shadow(0 0 22px rgba(0,215,255,.22))
-         drop-shadow(0 0 18px rgba(255,173,0,.14));
+  width:min(860px,100%);
+  max-height:260px;
+  object-fit:contain;
+  filter:drop-shadow(0 26px 46px rgba(0,0,0,.62)) drop-shadow(0 0 18px rgba(0,215,255,.22));
 }
 .heroTitle{
   margin-top:10px;
@@ -133,14 +128,13 @@ body::after{
 }
 .heroSub{color:rgba(233,242,255,.75);font-size:13px;margin-top:4px;}
 .heroPanel{
-  max-width:760px;
+  max-width:640px;
   margin:0 auto;
   background:
-    radial-gradient(120% 120% at 15% 15%, rgba(0,215,255,.12), rgba(0,0,0,0) 55%),
-    radial-gradient(120% 120% at 85% 35%, rgba(255,173,0,.10), rgba(0,0,0,0) 60%),
+    radial-gradient(120% 120% at 15% 15%, rgba(0,215,255,.10), rgba(0,0,0,0) 55%),
     rgba(0,0,0,.28);
-  border:1px solid rgba(0,215,255,.24);
-  box-shadow:0 18px 44px rgba(0,0,0,.44), 0 0 30px rgba(0,215,255,.10), 0 0 18px rgba(255,173,0,.07);
+  border:1px solid rgba(0,215,255,.18);
+  box-shadow:0 18px 44px rgba(0,0,0,.42), 0 0 26px rgba(0,215,255,.08);
 }
 .input{
   border:1px solid rgba(0,215,255,.22);
@@ -148,7 +142,7 @@ body::after{
 }
 
 
-/* --- v507: Night Games neon theme (match logo colors) --- */
+/* --- v509: Night Games neon theme (match logo colors) --- */
 :root{
   --cBlue: rgba(0,215,255,.26);
   --cBlue2: rgba(42,127,255,.20);
@@ -235,7 +229,7 @@ body::after{
 }
 #sweepOverlay.show{display:flex;}
 #sweepVideo{
-  width:min(520px, 80vw);
+  width:min(560px, 78vw);
   height:auto;
   transform:rotate(-45deg);
   opacity:0;
@@ -254,18 +248,8 @@ body::after{
 *{box-sizing:border-box}
 a{color:var(--cyan);text-decoration:none}
 .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:16px;}
-.card{
-  width:min(980px,100%);
-  background:rgba(0,0,0,.65);
-  border-radius:20px;
-  overflow:hidden;
-  position:relative;
-  border:1px solid rgba(0,0,0,0);
-  box-shadow:
-    0 18px 50px rgba(0,0,0,.55),
-    0 0 0 2px rgba(130,110,255,.22),
-    0 0 24px rgba(0,215,255,.10),
-    0 0 18px rgba(255,173,0,.08);
+.card{width:min(980px,100%);background:var(--panel);border:1px solid var(--stroke);
+  border-radius:var(--r);box-shadow:var(--shadow);backdrop-filter:blur(10px);overflow:hidden;
 }
 .main{padding:14px;}
 .grid{display:grid;grid-template-columns:1fr;gap:12px;}
@@ -303,7 +287,7 @@ a{color:var(--cyan);text-decoration:none}
 .input{width:100%;padding:12px;border-radius:14px;border:1px solid rgba(120,180,255,.22);
   background:rgba(0,0,0,.35);color:var(--text);outline:none;
 }
-.input:focus{outline:none;border-color:rgba(255,173,0,.30);box-shadow:0 0 0 1px rgba(255,255,255,.04) inset, 0 0 26px rgba(255,173,0,.10), 0 0 20px rgba(0,215,255,.08);}
+.input:focus{border-color:rgba(0,215,255,.55);box-shadow:0 0 0 3px rgba(0,215,255,.12);}
 
 .btn{width:100%;padding:12px;border-radius:999px;border:1px solid rgba(120,180,255,.22);
   background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.18));
@@ -421,27 +405,75 @@ a{color:var(--cyan);text-decoration:none}
 }
 #errBox b{font-family:inherit;}
 
-/* --- v507: stronger global neon wash (blue + orange) --- */
-body::after{
-  background:
-    radial-gradient(140% 140% at 14% 10%, rgba(0,215,255,.28), rgba(0,0,0,0) 58%),
-    radial-gradient(140% 140% at 86% 16%, rgba(255,173,0,.24), rgba(0,0,0,0) 60%),
-    radial-gradient(140% 140% at 86% 86%, rgba(42,127,255,.22), rgba(0,0,0,0) 62%),
-    radial-gradient(140% 140% at 14% 86%, rgba(255,120,35,.16), rgba(0,0,0,0) 64%),
-    linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.82));
-}
-
-/* --- v507: landing is pure black canvas + neon wash (no green frame) --- */
+/* --- v509 LANDING VISUALS (OBVIOUS CHANGES) --- */
 body{background:#000 !important;}
-.wrap{padding:16px;}
-/* Sign-in segment border */
-.heroPanel{
-  border:1px solid rgba(130,110,255,.26) !important;
-  box-shadow:0 12px 34px rgba(0,0,0,.55), 0 0 22px rgba(0,215,255,.10), 0 0 14px rgba(255,173,0,.07) !important;
+/* Outer screen border (neon, NOT green) */
+.card{
+  border:1px solid rgba(0,0,0,0) !important;
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.55),
+    0 0 0 2px rgba(130,110,255,.30),
+    0 0 26px rgba(0,215,255,.12),
+    0 0 18px rgba(255,173,0,.10) !important;
 }
-/* Make the sign-in title + sub use theme colors */
-.h2{color:rgba(210,220,255,.96) !important; text-shadow:0 0 18px rgba(130,110,255,.14);}
-.sub{color:rgba(230,236,255,.72) !important;}
+/* Top canvas is full-width black, no frame */
+.heroCanvas{
+  background:#000;
+  padding:0;
+}
+.heroLogo{
+  width:100%;
+  max-width:980px;
+  max-height:520px;
+  object-fit:cover;
+  display:block;
+  margin:0 auto;
+  filter:drop-shadow(0 18px 38px rgba(0,0,0,.72))
+         drop-shadow(0 0 24px rgba(0,215,255,.22))
+         drop-shadow(0 0 18px rgba(255,173,0,.14));
+}
+/* Sign-in segment neon border */
+.heroPanel{
+  border:1px solid rgba(130,110,255,.30) !important;
+  box-shadow:0 12px 34px rgba(0,0,0,.55), 0 0 22px rgba(0,215,255,.10), 0 0 14px rgba(255,173,0,.08) !important;
+}
+/* Theme text */
+.h2{color:rgba(210,220,255,.96) !important;}
+.sub{color:rgba(230,236,255,.75) !important;}
+/* Neon Enter button */
+.btn.neon{
+  background:linear-gradient(180deg, rgba(130,110,255,.32), rgba(0,0,0,.35));
+  border:1px solid rgba(0,215,255,.26);
+}
+.btn.neon::after{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.10) inset,
+    0 10px 24px rgba(0,0,0,.46),
+    0 0 34px rgba(0,215,255,.18),
+    0 0 16px rgba(255,173,0,.10);
+}
+/* MP4 overlay */
+#sweepOverlay{
+  position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+  pointer-events:none; z-index:9999;
+}
+#sweepOverlay.show{display:flex;}
+#sweepVideo{
+  width:min(520px, 80vw);
+  height:auto;
+  transform:rotate(-45deg);
+  opacity:0;
+  filter:drop-shadow(0 26px 46px rgba(0,0,0,.65))
+         drop-shadow(0 0 18px rgba(0,215,255,.22))
+         drop-shadow(0 0 14px rgba(255,173,0,.14));
+}
+#sweepOverlay.run #sweepVideo{animation:sweepOnce 1.1s ease-in-out forwards;}
+@keyframes sweepOnce{
+  0%{opacity:0; transform:translate(-18vw, 10vw) rotate(-45deg) scale(.96);}
+  18%{opacity:1;}
+  70%{opacity:1; transform:translate(0,0) rotate(-45deg) scale(1.0);}
+  100%{opacity:0; transform:translate(18vw, -10vw) rotate(-45deg) scale(1.02);}
+}
 </style>
 </head>
 <body>
@@ -462,7 +494,7 @@ body{background:#000 !important;}
       <img class="heroLogo" src="${asset('7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png')}" alt="Night Games"
         onerror="this.onerror=null; this.src='7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png';"/>
       <div class="heroTitle">Night Games</div>
-      <div class="heroSub">Enter your email to continue • v507</div>
+      <div class="heroSub">Enter your email to continue • v509</div>
     </div>
   </div>
   <div class="main">
@@ -474,7 +506,7 @@ body{background:#000 !important;}
       <div style="height:10px"></div>
       <button id="btnEnter" class="btn green pulse">Enter</button>
       <div style="height:8px"></div>
-      <button id="btnClearRemember" class="btn">Clear saved login</button>
+      <button id="btnClearRemember" class="btn"></button>
     </div>
   </div>
   <div class="footer">
@@ -486,7 +518,7 @@ body{background:#000 !important;}
 <div id="fatalErr" style="position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;display:none;padding:10px 12px;border-radius:14px;background:rgba(60,0,0,.78);border:1px solid rgba(255,77,77,.55);color:#ffd6d6;font:12px/1.3 system-ui;box-shadow:0 18px 40px rgba(0,0,0,.55);white-space:pre-wrap;"></div>
 
 <script>
-// v507: Global error handlers so we NEVER get a blank page with no clue.
+// v509: Global error handlers so we NEVER get a blank page with no clue.
 (function(){
   function show(msg){
     try{
@@ -503,7 +535,7 @@ body{background:#000 !important;}
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD=507;
+const BUILD=509;
 
 const ASSET_BASE = new URL('.', document.baseURI).toString();
 const asset = (p)=> new URL(p, ASSET_BASE).toString();
@@ -520,7 +552,7 @@ function showError(msg){
   const box=document.getElementById("errBox");
   if(!box) return;
   box.style.display="block";
-  box.innerHTML = "<b>Build v507 error:</b>\n"+String(msg);
+  box.innerHTML = "<b>Build v509 error:</b>\n"+String(msg);
 }
 window.addEventListener("error",(e)=>{
   showError(e?.error?.stack || e?.message || e);
@@ -637,7 +669,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v507";
+  const key="sweepShown_v509";
   if(store.get(key,false)) return;
 
   const ov=$("#sweepOverlay");
@@ -1126,23 +1158,20 @@ async function onStart(){
 
 function screenAuth(){
   setHtml(`
-    <div class="header heroHeader">
-      <div class="heroInner">
-        <img class="heroLogo" src="./7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png" alt="Night Games"
-          onerror="this.style.display='none'"/>
-        <div class="heroSub">Enter your email to continue • v${BUILD}</div>
-      </div>
+    <div class="heroCanvas">
+      <img class="heroLogo" src="./7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png" alt="Night Games"
+           onerror="this.style.display='none'"/>
     </div>
 
     <div class="main">
       <div class="panel heroPanel">
-        <h3 class="h2">Sign in</h3>
+        <div class="h2">Sign in</div>
         <div class="sub">Email only. If you’re new, we’ll ask your name one time.</div>
         <div style="height:10px"></div>
         <input id="inEmail" class="input" placeholder="you@example.com" autocomplete="email" inputmode="email"/>
         <div style="height:10px"></div>
-        <button id="btnEnter" class="btn green pulse">Enter</button>
-              </div>
+        <button id="btnEnter" class="btn neon pulse">Enter</button>
+      </div>
     </div>
     ${footer()}
   `);
@@ -1150,11 +1179,9 @@ function screenAuth(){
   $("#btnEnter").onclick=onStart;
   $("#inEmail").addEventListener("keydown", (e)=>{ if(e.key==="Enter") onStart(); });
 
-  
-  // Diagonal sweep once on landing (autoplay may be blocked; first tap will trigger it)
+  // play sweep once shortly after render (autoplay may be blocked; first tap triggers too)
   setTimeout(()=>runSweepOnce(), 350);
-}
-function screenPlayer(){
+}function screenPlayer(){
   setHtml(`
     ${headerBanner("Night Games")}
     <div class="main">
@@ -1361,7 +1388,7 @@ function screenHistory(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">History view is wired as a real page in v507. Next pass we populate it from match logs / saved games.</div>
+        <div class="ok">History view is wired as a real page in v509. Next pass we populate it from match logs / saved games.</div>
       </div>
     </div>
     ${footer()}
@@ -1386,7 +1413,7 @@ function screenStats(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">Stats page is a real page in v507. Next pass we show the stat definitions + your notables.</div>
+        <div class="ok">Stats page is a real page in v509. Next pass we show the stat definitions + your notables.</div>
       </div>
     </div>
     ${footer()}
@@ -1597,7 +1624,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v507: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v509: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -1728,7 +1755,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v507: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v509: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
