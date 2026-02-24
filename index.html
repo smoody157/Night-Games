@@ -26,7 +26,7 @@
 
     
     :root {
-      --bg: url("IMG_7287.png?b=632");
+      --bg: url("IMG_7287.png?b=633");
       --bgShiftY: -8px; /* micro-tune: moves image DOWN slightly */
       --glass: rgba(0,0,0,.22);
       --stroke: rgba(120,180,255,.18);
@@ -465,15 +465,17 @@ border: 2px solid var(--blue);
       z-index: 1;              /* above background, below UI */
       pointer-events: none;     /* don't block inputs */
       display: grid;
-      place-items: center;
+      align-content: start;     /* move toward top */
+      justify-items: center;
+      padding-top: 8vh;         /* sits under logo area */
       opacity: 0;
       transition: opacity 650ms ease;
     }
     #introVideoWrap.on{ opacity: 1; }
 
-    /* The cinematic "card" holding the MP4 (smaller, centered) */
+    /* Larger cinematic "card" holding the MP4 (near logo) */
     #introVideo{
-      width: min(520px, 86vw);
+      width: min(980px, 94vw);  /* ~2x larger than previous */
       aspect-ratio: 16 / 9;
       height: auto;
       border-radius: 18px;
@@ -491,17 +493,18 @@ border: 2px solid var(--blue);
 
       /* Floating depth + neon rim */
       box-shadow:
-        0 18px 44px rgba(0,0,0,.72),
-        0 0 26px rgba(0,210,255,.22),
-        0 0 18px rgba(255,208,0,.12),
+        0 22px 58px rgba(0,0,0,.78),
+        0 0 32px rgba(0,210,255,.22),
+        0 0 22px rgba(255,208,0,.14),
         inset 0 0 0 1px rgba(255,255,255,.10);
     }
 
-    /* Soft edge fade so it blends into space */
+    /* Soft edge fade so it blends into space and under logo */
     #introVideoWrap::after{
       content:"";
       position:absolute;
-      width: min(560px, 90vw);
+      top: 6vh;
+      width: min(1040px, 98vw);
       aspect-ratio: 16 / 9;
       border-radius: 22px;
       background: radial-gradient(closest-side,
@@ -603,11 +606,11 @@ border: 2px solid var(--blue);
   <!-- Intro video overlay (Landing only) -->
   <div id="introVideoWrap" aria-hidden="true">
     <video id="introVideo" playsinline muted preload="auto">
-      <source src="0217.mp4?b=632" type="video/mp4" />
+      <source src="0217.mp4?b=633" type="video/mp4" />
     </video>
   </div>
 
-<!-- BUILD 632 2026-02-24 18:19:50 -->
+<!-- BUILD 633 2026-02-24 18:22:36 -->
 
   
   <div id="app">
@@ -707,7 +710,7 @@ border: 2px solid var(--blue);
     </div>
   </div>
 
-  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v632</span></div>
+  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v633</span></div>
 
   <script>
     // =========================================================
