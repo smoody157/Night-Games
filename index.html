@@ -52,6 +52,10 @@ html,body{
   display:flex;
   justify-content:center;
 }
+.logoSpacer{
+  height: clamp(140px, 28vw, 240px); /* reserves space for logo area baked into background */
+}
+
 .logo{
   width:min(980px,100%);
   max-width:980px;
@@ -81,7 +85,7 @@ html,body{
   margin: 0 auto;
   text-align:center;
   width:min(420px,90%);
-  padding-top: 6px; /* keeps it below logo+divider */
+  padding-top: 0px; /* spacer above handles layout */
 }
 
 h1{
@@ -185,16 +189,12 @@ button{
 
 <body>
 
-<div class="badge">v653</div>
+<div class="badge">v654</div>
 
 <!-- LANDING -->
 <section id="landing" class="scene active">
-  <div class="logoWrap">
-    <!-- Main logo image (repo asset) -->
-    <img class="logo" src="NightGames_full_background_logo_top.png" alt="Night Games" />
-  </div>
-
-  <div class="divider" aria-hidden="true"></div>
+      <div class="logoSpacer" aria-hidden="true"></div>
+<div class="divider" aria-hidden="true"></div>
 
   <div class="center">
     <h1>ENTER</h1>
