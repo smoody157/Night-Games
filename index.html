@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v600</title>
-<!-- NightGames FULL BUILD v600 generated 2026-02-24 13:16:50 -->
+<title>Night Games • v601</title>
+<!-- NightGames FULL BUILD v601 generated 2026-02-24 13:16:50 -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -65,7 +65,7 @@ html,body{height:100%;margin:0;color:var(--text);font-family:system-ui,-apple-sy
 .footer{margin-top:18px;padding:12px 12px;text-align:center;color:rgba(233,242,255,.78);font-size:12px;line-height:1.35;}
 
 /* =========================================================
-   NG — STAGE SYSTEM v600
+   NG — STAGE SYSTEM v601
    Full-screen background image + 3D floating modules
    Generated 2026-02-24 13:16:50
    ========================================================= */
@@ -130,7 +130,7 @@ body{
 }
 .playerRow > *, .gcard > *{ position:relative; z-index:1; }
 .heroLogo{width:min(980px,100%);max-height:380px;object-fit:contain;display:block;margin:0 auto 6px;}
-.hero{min-height:55vh;display:flex;flex-direction:column;justify-content:flex-start;padding-top:8px;text-align:center;}
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:flex-start;padding-top:8px;text-align:center;}
 
 
 /* =========================================================
@@ -543,19 +543,19 @@ document.addEventListener("DOMContentLoaded", boot);
 </style>
 </head>
 <body>
-<div class="badge">v600</div>
+<div class="badge">v601</div>
 <div id="errBox"></div>
 <div id="modalBg"></div>
 <div id="modal"></div>
 <div class="wrap">
   <div id="app"></div>
-  <div class="footer"><b>Night Games</b> • v600 • GitHub Pages</div>
+  <div class="footer"><b>Night Games</b> • v601 • GitHub Pages</div>
 </div>
 
 <script>
 (() => {
 "use strict";
-const BUILD = 600;
+const BUILD = 601;
 const firebaseConfig = {"apiKey": "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo", "authDomain": "gamenightdarts-e7601.firebaseapp.com", "projectId": "gamenightdarts-e7601", "storageBucket": "gamenightdarts-e7601.firebasestorage.app", "messagingSenderId": "270045452251", "appId": "1:270045452251:web:5a4a661140a60780e939fe", "measurementId": "G-M60TDFYBW0"};
 
 const $ = (sel, root=document) => root.querySelector(sel);
@@ -575,7 +575,9 @@ function showError(msg){ const box=$("#errBox"); if(!box) return; box.style.disp
 window.addEventListener("error",(e)=>showError(e?.error?.stack||e?.message||e));
 window.addEventListener("unhandledrejection",(e)=>showError(e?.reason?.stack||e?.reason||e));
 
+const BG_IMAGE_PRIMARY = "./IMG_bg.png"; // rename your repo background to this for guaranteed load
 const BG_CANDIDATES = [
+  BG_IMAGE_PRIMARY,
   "./IMG_NightGames_full_background_logo_top.png",
   "./IMG_NightGames_full_background_logo_top.jpg",
   "./IMG_NightGames_full_background_logo_top.jpeg",
@@ -583,6 +585,8 @@ const BG_CANDIDATES = [
   "./IMG_full_background_logo_top.jpg",
   "./IMG_full_background_logo_top.jpeg",
   "./NightGames_full_background_logo_top.png",
+  "./NightGames_full_background_logo_top.jpg",
+  "./NightGames_full_background_logo_top.jpeg",
   "./a_digital_graphic_promotional_graphic_for_a_mobile.png"
 ];
 function setBg(url){
