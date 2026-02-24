@@ -26,7 +26,7 @@
 
     
     :root {
-      --bg: url("IMG_7287.png?b=644");
+      --bg: url("IMG_7287.png?b=645");
       --bgShiftY: -8px; /* micro-tune: moves image DOWN slightly */
       --glass: rgba(0,0,0,.22);
       --stroke: rgba(120,180,255,.18);
@@ -613,7 +613,7 @@ border: 2px solid var(--blue);
 
 <body>
 
-  <!-- BUILD 644 2026-02-24 20:22:18 -->
+  <!-- BUILD 645 2026-02-24 20:26:25 -->
 
   
   <div id="app">
@@ -720,79 +720,74 @@ border: 2px solid var(--blue);
     </div>
   </div>
 
-  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v644</span></div>
+  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v645</span></div>
 
-  <script>
+    <script>
     // =========================================================
-    // NightGames PHASE 1 JS 
-    // - No Firebase here yet.
-    // - No auto-jump. Landing is default.
-    // - Only navigation: ENTER -> Players, Back -> Landing
+    // NightGames PHASE 1 JS (clean) v645
+    // - No auto-jump
+    // - ENTER -> Players (only if email entered)
+    // - Exit/Back -> Landing
     // =========================================================
-
     const $ = (id) => document.getElementById(id);
+
     const landing = $("sceneLanding");
     const players = $("scenePlayers");
     const inEmail = $("inEmail");
     const btnEnter = $("btnEnter");
-    const btnBack = $("btnBack");
-    const btnExit = $("btnExit");
+    const btnBack  = $("btnBack");
+    const btnExit  = $("btnExit");
+
+    function resetScroll() {
+      try {
+        if (landing) landing.scrollTop = 0;
+        if (players) players.scrollTop = 0;
+        window.scrollTo(0, 0);
+      } catch (e) {}
+    }
 
     function showLanding() {
-      landing.classList.add("on");
-      players.classList.remove("on");
-      try { landing.scrollTop = 0; players.scrollTop = 0; window.scrollTo(0,0); } catch(e) {}
-      try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
-    } catch(e) {}
-      try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
-    }catch(e){}
-      // lock hash
-      try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
+      if (landing) landing.classList.add("on");
+      if (players) players.classList.remove("on");
+      resetScroll();
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
     }
 
     function showPlayers() {
-      landing.classList.remove("on");
-      players.classList.add("on");
-      try { landing.scrollTop = 0; players.scrollTop = 0; window.scrollTo(0,0); } catch(e) {}
-      try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
-    } catch(e) {}
-      try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
-    }catch(e){}
-      try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
+      if (landing) landing.classList.remove("on");
+      if (players) players.classList.add("on");
+      resetScroll();
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
     }
 
-    // Always start on landing (no auto-jump)
-    showLanding();
-
     function enterFlow() {
-      const email = (inEmail.value || "").trim();
+      const email = (inEmail?.value || "").trim();
       if (!email) {
-        inEmail.focus();
-        inEmail.placeholder = "Enter your email first…";
+        if (inEmail) {
+          inEmail.focus();
+          inEmail.placeholder = "Enter your email first…";
+        }
         return;
       }
       showPlayers();
     }
 
-    // Click + touch + keyboard stable
-    btnEnter.addEventListener("click", enterFlow, { passive: true });
-    btnEnter.addEventListener("pointerup", (e) => {
-      if (e.pointerType === "touch" || e.pointerType === "pen") enterFlow();
-    }, { passive: true });
-    inEmail.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") enterFlow();
-    });
+    // Always start on landing
+    showLanding();
 
-    btnBack.addEventListener("click", showLanding, { passive: true });
-    if(btnExit){ btnExit.addEventListener("click", showLanding, { passive: true }); }
+    // Stable events
+    if (btnEnter) btnEnter.addEventListener("click", (e) => { e.preventDefault(); enterFlow(); });
+    if (inEmail) inEmail.addEventListener("keydown", (e) => { if (e.key === "Enter") enterFlow(); });
 
-    // Safety: prevent any stale hash routing
+    if (btnBack) btnBack.addEventListener("click", (e) => { e.preventDefault(); showLanding(); });
+    if (btnExit) btnExit.addEventListener("click", (e) => { e.preventDefault(); showLanding(); });
+
+    // Safety: clear any hash routing
     try {
       if (location.hash && location.hash !== "#") {
         history.replaceState(null, "", location.pathname + location.search);
       }
-    } catch(e) {}
-  
-    </script>
+    } catch (e) {}
+  </script>
 </body>
 </html>
