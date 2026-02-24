@@ -26,7 +26,7 @@
 
     
     :root {
-      --bg: url("IMG_7287.png?b=634");
+      --bg: url("IMG_7287.png?b=635");
       --bgShiftY: -8px; /* micro-tune: moves image DOWN slightly */
       --glass: rgba(0,0,0,.22);
       --stroke: rgba(120,180,255,.18);
@@ -458,50 +458,6 @@ border: 2px solid var(--blue);
     .scene.on { display: block; }
 
   
-    /* ===== Crisp neon divider (intentional, hides seam) ===== */
-    .glowDivider{
-      width: min(92vw, 720px);
-      height: 10px;
-      margin: 10px auto 16px auto;
-      position: relative;
-      pointer-events: none;
-      z-index: 2;
-    }
-    .glowDivider::before{
-      content:"";
-      position:absolute;
-      left:0; right:0;
-      top: 50%;
-      height: 3px;
-      transform: translateY(-50%);
-      border-radius: 999px;
-      background: linear-gradient(90deg,
-        rgba(0,0,0,0),
-        rgba(235,245,255,.35) 18%,
-        rgba(0,210,255,.55) 38%,
-        rgba(255,208,0,.45) 62%,
-        rgba(235,245,255,.25) 82%,
-        rgba(0,0,0,0)
-      );
-      box-shadow:
-        0 0 10px rgba(0,210,255,.18),
-        0 0 14px rgba(255,208,0,.12),
-        0 0 22px rgba(255,208,0,.08);
-    }
-    .glowDivider::after{
-      content:"";
-      position:absolute;
-      inset: -16px -22px;
-      border-radius: 999px;
-      background: radial-gradient(closest-side at 50% 50%,
-        rgba(255,208,0,.10),
-        rgba(0,210,255,.08) 42%,
-        rgba(0,0,0,0) 70%
-      );
-      filter: blur(2px);
-      opacity: .9;
-    }
-
     /* ===== Metallic glints on input + button borders ===== */
     .glint{
       position: relative;
@@ -540,12 +496,60 @@ border: 2px solid var(--blue);
       filter: blur(.2px);
     }
 
+  
+    /* ===== Crisp neon divider (intentional, hides seam) ===== */
+    .glowDivider{
+      width: min(92vw, 760px);
+      height: 14px;
+      margin: 10px auto 18px auto;
+      position: relative;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .glowDivider::before{
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      top: 50%;
+      height: 4px;
+      transform: translateY(-50%);
+      border-radius: 999px;
+      background: linear-gradient(90deg,
+        rgba(0,0,0,0),
+        rgba(255,255,255,.18) 16%,
+        rgba(0,210,255,.62) 40%,
+        rgba(255,208,0,.52) 60%,
+        rgba(255,255,255,.14) 84%,
+        rgba(0,0,0,0)
+      );
+      box-shadow:
+        0 0 10px rgba(0,210,255,.20),
+        0 0 16px rgba(0,210,255,.14),
+        0 0 14px rgba(255,208,0,.14),
+        0 0 22px rgba(255,208,0,.08);
+    }
+    .glowDivider::after{
+      content:"";
+      position:absolute;
+      inset: -18px -26px;
+      border-radius: 999px;
+      background:
+        radial-gradient(closest-side at 50% 50%,
+          rgba(0,210,255,.10),
+          rgba(255,208,0,.08) 42%,
+          rgba(0,0,0,0) 72%
+        );
+      filter: blur(2px);
+      opacity: .95;
+      pointer-events:none;
+    }
+
   </style>
 </head>
 
 <body>
 
-  <!-- BUILD 634 2026-02-24 18:25:23 -->
+  <!-- BUILD 635 2026-02-24 18:30:34 -->
 
   
   <div id="app">
@@ -645,7 +649,7 @@ border: 2px solid var(--blue);
     </div>
   </div>
 
-  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v634</span></div>
+  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v635</span></div>
 
   <script>
     // =========================================================
