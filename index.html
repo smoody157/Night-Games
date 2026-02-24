@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Night Games • v623</title>
+  <title>Night Games • v624</title>
 
   <style>
     /* =========================================================
-       NightGames — PHASE 1 (Fresh Start) v623
+       NightGames — PHASE 1 (Fresh Start) v624
        Includes:
          - Fullscreen layout (no corner shrink)
          - Repo background: IMG_7287.png (no embedding)
@@ -16,7 +16,7 @@
          - Landing never auto-jumps to Players (ENTER only)
          - Floating / neon look aligned to logo colors
          - Bottom rights-reserved footer
-       Generated: 2026-02-24 17:17:59
+       Generated: 2026-02-24 17:29:09
        ========================================================= */
 
     :root {
@@ -84,17 +84,16 @@
     .wrap { width: min(980px, 100%); }
 
     /* Floating modules */
-    .float {
-      background: var(--glass);
-      border: 1px solid var(--stroke);
-      border-radius: 18px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-      filter: var(--shadow);
+    .float{
+      background: none !important;
+      border: none !important;
+      border-radius: 0 !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: none !important;
+      filter: none !important;
     }
-
-    .top {
+.top {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -117,11 +116,16 @@
       background: rgba(0,0,0,.18);
     }
 
-    .panel {
+    .panel{
       margin-top: 14px;
-      padding: 16px 16px 18px 16px;
+      padding: 0;
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
     }
-    .h1 {
+.h1 {
       margin: 0 0 6px 0;
       font-size: 34px;
       line-height: 1.1;
@@ -188,14 +192,14 @@
     @media (min-width: 860px) {
       .cards { grid-template-columns: 1fr 1fr; }
     }
-    .gcard {
-      padding: 12px 12px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.14);
-      border: 1px solid rgba(120,180,255,.16);
-      filter: var(--shadow);
+    .gcard{
+      padding: 0;
+      border-radius: 0;
+      background: none !important;
+      border: none !important;
+      filter: none !important;
     }
-    .gtitle { font-weight: 900; letter-spacing: .5px; }
+.gtitle { font-weight: 900; letter-spacing: .5px; }
     .gsub { color: var(--muted); margin-top: 4px; font-size: 13px; }
     .chips { display:flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
     .chip {
@@ -209,18 +213,18 @@
     }
 
     .list { display:grid; gap: 10px; }
-    .row {
+    .row{
       display:flex;
       align-items:center;
       justify-content: space-between;
       gap: 12px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      background: rgba(0,0,0,.14);
-      border: 1px solid rgba(120,180,255,.16);
-      filter: var(--shadow);
+      padding: 0;
+      border-radius: 0;
+      background: none !important;
+      border: none !important;
+      filter: none !important;
     }
-    .left { display:flex; align-items:center; gap: 10px; }
+.left { display:flex; align-items:center; gap: 10px; }
     .dot {
       width: 10px; height: 10px;
       border-radius: 50%;
@@ -272,18 +276,20 @@
       margin-top: 10px;
     }
 
-    /* small version badge (since top bar removed) */
-    .vbadge {
-      display: inline-block;
-      margin: 0 auto 10px auto;
-      font-weight: 800;
-      font-size: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(0,210,255,.25);
-      color: rgba(200,240,255,.92);
-      background: rgba(0,0,0,.18);
-      filter: var(--shadow);
+
+    /* Landing: keep centered, but no panel background */
+    #sceneLanding{
+      display: grid;
+      place-items: center;
+      min-height: 88vh;
+      padding-top: 6vh;
+      box-sizing: border-box;
+    }
+    #sceneLanding .panel{
+      max-width: 720px;
+      width: 100%;
+      text-align: center;
+      padding: 0;
     }
 
     /* Scene visibility */
@@ -296,19 +302,19 @@
 <body>
   <div id="app">
     <div class="wrap">
-<div class="badge">v623</div>
+<div class="badge">v624</div>
       </div>
 
       <!-- LANDING -->
       <section id="sceneLanding" class="scene on">
         <div class="float panel">
-          <div class="h1">Enter</div>
-          <div class="vbadge">v623</div>
-          <div class="sub">Email-only access. ENTER takes you to Games and Players.</div>
+          <div class="h1">ENTER</div>
+<div class="sub">Email-only access. ENTER takes you to Games and Players.</div>
 
           <div style="display:grid; gap: 10px;">
             <input id="inEmail" type="email" autocomplete="email" placeholder="Email address" />
             <button id="btnEnter" class="btn">Enter</button>
+          </div>
           </div>
         </div>
       </section>
@@ -397,7 +403,7 @@
 
   <script>
     // =========================================================
-    // NightGames PHASE 1 JS v623
+    // NightGames PHASE 1 JS v624
     // - No Firebase here yet.
     // - No auto-jump. Landing is default.
     // - Only navigation: ENTER -> Players, Back -> Landing
