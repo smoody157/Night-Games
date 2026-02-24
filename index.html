@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v549</title>
+<title>Night Games • v550</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   Night Games v549 — FULL BUILD (single-file; text-file friendly)
+   Night Games v550 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -61,7 +61,7 @@ html,body{height:100%;margin:0;color:var(--text);
 }
 
 
-/* --- v549 Skin: pull colors from the banner asset (repo) --- */
+/* --- v550 Skin: pull colors from the banner asset (repo) --- */
 body::before{
   content:"";
   position:fixed; inset:-20%;
@@ -101,10 +101,14 @@ body::after{
 }
 .panel{
   box-shadow:0 16px 36px rgba(0,0,0,.35), 0 0 22px rgba(0,215,255,.06);
+
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 
-/* --- v549 Landing Color Scheme --- */
+/* --- v550 Landing Color Scheme --- */
 .heroHeader{
   border-bottom:1px solid rgba(120,180,255,.16);
   background:
@@ -135,6 +139,12 @@ body::after{
     rgba(0,0,0,.28);
   border:1px solid rgba(0,215,255,.18);
   box-shadow:0 18px 44px rgba(0,0,0,.42), 0 0 26px rgba(0,215,255,.08);
+
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  backdrop-filter: none !important;
 }
 .input{
   border:1px solid rgba(0,215,255,.22);
@@ -142,7 +152,7 @@ body::after{
 }
 
 
-/* --- v549: Night Games neon theme (match logo colors) --- */
+/* --- v550: Night Games neon theme (match logo colors) --- */
 :root{
   --cBlue: rgba(0,215,255,.26);
   --cBlue2: rgba(42,127,255,.20);
@@ -250,6 +260,10 @@ a{color:var(--cyan);text-decoration:none}
 .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:16px;}
 .card{width:min(980px,100%);background:var(--panel);border:1px solid var(--stroke);
   border-radius:var(--r);box-shadow:var(--shadow);backdrop-filter:blur(10px);overflow:hidden;
+
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 .main{padding:14px;}
 .grid{display:grid;grid-template-columns:1fr;gap:12px;}
@@ -405,7 +419,7 @@ a{color:var(--cyan);text-decoration:none}
 }
 #errBox b{font-family:inherit;}
 
-/* --- v549 LANDING VISUALS (OBVIOUS CHANGES) --- */
+/* --- v550 LANDING VISUALS (OBVIOUS CHANGES) --- */
 body{background:#000 !important;}
 /* Outer screen border (neon, NOT green) */
 .card{
@@ -475,7 +489,7 @@ body{background:#000 !important;}
   100%{opacity:0; transform:translate(18vw, -10vw) rotate(-45deg) scale(1.02);}
 }
 
-/* ===== v549: REMOVE GREEN FRAME / SIMPLE BLACK CANVAS ===== */
+/* ===== v550: REMOVE GREEN FRAME / SIMPLE BLACK CANVAS ===== */
 html,body{background:#000 !important;}
 /* Outer display: ONE neon border only */
 .card{
@@ -532,7 +546,7 @@ body::after{
     0 0 10px rgba(255,120,35,.06) !important;
 }
 
-/* ===== v549 MINIMAL BLACK CANVAS ===== */
+/* ===== v550 MINIMAL BLACK CANVAS ===== */
 
 /* Pure black everywhere */
 html,body{
@@ -613,7 +627,7 @@ body::after{
   display:none !important;
 }
 
-/* ===== v549: blended background + keep blue outline on sign-in ===== */
+/* ===== v550: blended background + keep blue outline on sign-in ===== */
 
 /* Blend the black canvas subtly so it doesn't look like a hard flat slab */
 html,body{
@@ -662,7 +676,7 @@ html,body{
 /* Keep it readable */
 .sub{ color:rgba(235,240,255,.70) !important; }
 
-/* ===== v549 THEME PASS (no green glow, blended logo, new fonts, open layout) ===== */
+/* ===== v550 THEME PASS (no green glow, blended logo, new fonts, open layout) ===== */
 
 /* Kill any green glow remnants */
 .btn.green::after{ box-shadow:none !important; }
@@ -792,7 +806,7 @@ body::after{ display:none !important; } /* remove earlier wash layers so we cont
   text-shadow: 0 0 14px rgba(46,230,107,.12) !important;
 }
 
-/* ===== v549: STRIPPED LANDING (NO FRAMES / NO EXTRA BORDERS) ===== */
+/* ===== v550: STRIPPED LANDING (NO FRAMES / NO EXTRA BORDERS) ===== */
 html,body{background:#000 !important;}
 body::before, body::after{display:none !important;}
 .wrap{padding:0 !important;}
@@ -853,7 +867,7 @@ body::before, body::after{display:none !important;}
   border:none !important;
 }
 
-/* ===== v549 LANDING LOCK ===== */
+/* ===== v550 LANDING LOCK ===== */
 :root{
   --ng-blue:#00d7ff;
   --ng-blue2:#2a7fff;
@@ -1009,7 +1023,7 @@ body::before, body::after{display:none !important;}
   opacity:.55;
 }
 
-/* ===== v549: Enter button glass + granular text (ONLY) ===== */
+/* ===== v550: Enter button glass + granular text (ONLY) ===== */
 #btnEnter{
   position:relative;
   border-radius:999px !important;
@@ -1069,7 +1083,7 @@ body::before, body::after{display:none !important;}
     0 0 14px rgba(255,120,35,.10);
 }
 
-/* ===== v549 tweaks: glossy enter + spacing + blue title glass ===== */
+/* ===== v550 tweaks: glossy enter + spacing + blue title glass ===== */
 
 /* Glossy glass ENTER (ensure applies even if classes differ) */
 #btnEnter, .btn.green{
@@ -1119,7 +1133,7 @@ body::before, body::after{display:none !important;}
 .sparkBar{ margin-top:22px !important; height:8px !important; }
 
 
-/* ===== v549 TITLE MATCHES LOGO NIGHT BLUE ===== */
+/* ===== v550 TITLE MATCHES LOGO NIGHT BLUE ===== */
 
 .heroNight, .heroGames{
   font-weight:1100;
@@ -1147,7 +1161,7 @@ body::before, body::after{display:none !important;}
   pointer-events:none;
 }
 
-/* ===== v549: Deep blue email border + darker subtitle ===== */
+/* ===== v550: Deep blue email border + darker subtitle ===== */
 
 /* Email entry field (above Enter) */
 #inEmail{
@@ -1179,7 +1193,7 @@ body::before, body::after{display:none !important;}
   opacity:1 !important;
 }
 
-/* ===== v549: TRUE FLOATING (no panels/frames/backgrounds on elements) ===== */
+/* ===== v550: TRUE FLOATING (no panels/frames/backgrounds on elements) ===== */
 
 /* Space/void background like logo backdrop */
 html, body{
@@ -1325,7 +1339,7 @@ body::after{
   box-shadow: 0 0 16px rgba(0,210,255,.16) !important;
 }
 
-/* ===== v549: ZERO BACKGROUNDS + OUTLINE-ONLY ENTER ===== */
+/* ===== v550: ZERO BACKGROUNDS + OUTLINE-ONLY ENTER ===== */
 
 /* No backgrounds anywhere (everything floats) */
 *{
@@ -1392,6 +1406,10 @@ html, body{
 .card, .heroPanel, .heroHeader, .panel, .shell, .frame{
   border:none !important;
   box-shadow:none !important;
+
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* Ensure labels remain visible */
@@ -1405,7 +1423,7 @@ label, .label, .small, .hint{
   border: 1px solid rgba(0,210,255,.22) !important;
 }
 
-/* ===== v549: FRAME FULLY REMOVED ===== */
+/* ===== v550: FRAME FULLY REMOVED ===== */
 
 /* Kill any remaining structural containers */
 .frame, .shell, .outer, .container, .wrapper, .appFrame {
@@ -1442,7 +1460,7 @@ body > div {
     box-shadow: none !important;
 }
 
-/* ===== v549: BRUTE FORCE NO-FRAME / NO-BACKGROUNDS ===== */
+/* ===== v550: BRUTE FORCE NO-FRAME / NO-BACKGROUNDS ===== */
 
 /* 1) Nuke all frames/panels/wrappers */
 .frame,.shell,.outer,.container,.wrapper,.appFrame,.card,.wrap,.panel,.heroPanel,.heroHeader,.viewport,.phone,.stage,.canvas{
@@ -1513,7 +1531,7 @@ html,body{
   box-shadow: 0 0 16px rgba(0,210,255,.16) !important;
 }
 
-/* ===== v549: logo-canvas background + truly floating UI (no frames) ===== */
+/* ===== v550: logo-canvas background + truly floating UI (no frames) ===== */
 
 /* Background matches the logo-backdrop vibe (cool blue + warm amber on black) */
 html, body{
@@ -1641,7 +1659,7 @@ body::after{
   z-index:5;
 }
 
-/* ===== v549: POLISH PASS (space atmosphere + true floating + small version) ===== */
+/* ===== v550: POLISH PASS (space atmosphere + true floating + small version) ===== */
 
 /* Deeper space: reduce "wall gradient" look, add vignette */
 html, body{
@@ -1771,7 +1789,7 @@ body > *{
   border: 1px solid rgba(0,210,255,.14) !important;
 }
 
-/* ===== v549: WOW POLISH (space-float + unified neon light) ===== */
+/* ===== v550: WOW POLISH (space-float + unified neon light) ===== */
 
 /* 1) Deep void canvas (logo-like atmosphere) */
 html, body{
@@ -1990,7 +2008,7 @@ body > *{ position:relative; z-index:2; }
 /* safety: hide any leftover center watermark classes */
 .wmVer, .wm540{ display:none !important; }
 
-/* ===== v549: TRUE NO-FRAME / NO-PANELS (everything floats) ===== */
+/* ===== v550: TRUE NO-FRAME / NO-PANELS (everything floats) ===== */
 .wrap{padding:0 !important; align-items:flex-start !important; justify-content:center !important;}
 #app.card, .card{
   width:100% !important;
@@ -2025,7 +2043,7 @@ body > *{ position:relative; z-index:2; }
 #inEmail{border:2px solid #0a4bff !important;}
 #btnEnter{border:2px solid #ffd000 !important;}
 
-/* ===== v549: REMOVE FRAME FOR REAL + TRUE FLOATING DEPTH ===== */
+/* ===== v550: REMOVE FRAME FOR REAL + TRUE FLOATING DEPTH ===== */
 
 /* 0) Hard reset: NO page inset / NO outer frame */
 html,body{margin:0 !important;padding:0 !important;border:0 !important;outline:0 !important;background:#000 !important;overflow-x:hidden !important;}
@@ -2131,9 +2149,136 @@ input, #inEmail{
   border-radius:12px !important;
   box-shadow:none !important;
 }
+
+/* VOID_THEME_V550 */
+:root{
+  --ng-blue:#1aa3ff;
+  --ng-gold:#ffb000;
+  --ng-green:#2dff88;
+  --ng-ink:#02040b;
+}
+html,body{height:100%;}
+body{
+  background:
+    radial-gradient(1200px 700px at 15% 10%, rgba(26,163,255,.25), transparent 60%),
+    radial-gradient(900px 600px at 85% 25%, rgba(255,176,0,.18), transparent 55%),
+    radial-gradient(700px 520px at 70% 85%, rgba(45,255,136,.10), transparent 60%),
+    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.35), transparent 60%),
+    radial-gradient(1px 1px at 60% 50%, rgba(255,255,255,.25), transparent 60%),
+    radial-gradient(1px 1px at 80% 70%, rgba(255,255,255,.18), transparent 60%),
+    var(--ng-ink);
+  color:#eaf3ff;
+}
+@media (prefers-reduced-motion:no-preference){
+  .floaty{animation: floaty 6s ease-in-out infinite;}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+}
+/* Remove any framed layout constraints */
+.container, .wrap, .page, .main{background:transparent !important;border:none !important;box-shadow:none !important;}
+/* Hero image: full-bleed, no “card” feel */
+img.logo, .logoImg, #logoImg{
+  width:min(980px, 100%);
+  max-width:100%;
+  height:auto;
+  display:block;
+  margin:0 auto 14px auto;
+  border-radius:14px;
+  background:transparent;
+  box-shadow:
+    0 0 0 1px rgba(26,163,255,.22),
+    0 0 38px rgba(26,163,255,.18),
+    0 0 26px rgba(255,176,0,.10);
+}
+/* Title glow */
+h1, .titleText{
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  background: linear-gradient(180deg, #7fd3ff 0%, #1aa3ff 45%, #0a2a66 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:
+    0 0 18px rgba(26,163,255,.35),
+    0 0 28px rgba(26,163,255,.18);
+}
+/* Sub-title toned blue */
+.subtitle, .subTitle, .helperText{
+  color: rgba(26,163,255,.85) !important;
+}
+/* “SIGN IN” neon */
+.signInLabel, .labelSignIn, .signinLabel{
+  color: var(--ng-green) !important;
+  text-shadow: 0 0 12px rgba(45,255,136,.35);
+  letter-spacing:.22em;
+}
+/* Email input: deep blue outline + subtle sparks */
+.inputWrap, .emailWrap{
+  position:relative;
+}
+input[type="email"], .emailInput{
+  background: rgba(0,0,0,.25) !important;
+  border: 2px solid rgba(26,163,255,.9) !important;
+  box-shadow: 0 0 18px rgba(26,163,255,.22);
+}
+.inputWrap:before, .emailWrap:before{
+  content:"";
+  position:absolute;
+  inset:-10px -14px;
+  pointer-events:none;
+  border-radius:999px;
+  background:
+    radial-gradient(2px 2px at 10% 35%, rgba(255,255,255,.55), transparent 60%),
+    radial-gradient(1px 1px at 35% 20%, rgba(255,176,0,.45), transparent 70%),
+    radial-gradient(1px 1px at 80% 65%, rgba(26,163,255,.45), transparent 70%),
+    radial-gradient(1px 1px at 55% 80%, rgba(45,255,136,.35), transparent 70%);
+  filter: blur(.2px);
+  opacity:.55;
+}
+/* Enter button: outline-only, floating, gold glow */
+button.primary, .enterBtn, #enterBtn{
+  background: transparent !important;
+  border: 2px solid rgba(255,176,0,.95) !important;
+  color: rgba(255,176,0,.98) !important;
+  box-shadow: 0 0 22px rgba(255,176,0,.18);
+  text-shadow: 0 0 14px rgba(255,176,0,.25);
+}
+button.primary:hover, .enterBtn:hover, #enterBtn:hover{
+  box-shadow: 0 0 28px rgba(255,176,0,.28);
+}
+/* Bottom bar: thinner + logo-like glow */
+.bottomBar, .underEnter, .progressBar{
+  height: 10px !important;
+  border-radius: 999px !important;
+  background:
+    linear-gradient(90deg, rgba(26,163,255,.0) 0%,
+                          rgba(26,163,255,.38) 22%,
+                          rgba(255,176,0,.40) 50%,
+                          rgba(45,255,136,.22) 78%,
+                          rgba(45,255,136,0) 100%) !important;
+  box-shadow:
+    0 0 22px rgba(26,163,255,.10),
+    0 0 18px rgba(255,176,0,.10);
+  opacity:.85;
+}
+/* Version badge: always visible */
+#versionBadge{
+  position: fixed;
+  top: 10px;
+  right: 12px;
+  z-index: 9999;
+  font: 700 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color: rgba(255,255,255,.75);
+  letter-spacing:.08em;
+  padding:6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(26,163,255,.35);
+  background: rgba(0,0,0,.22);
+  box-shadow: 0 0 18px rgba(26,163,255,.12);
+}
 </style>
 </head>
 <body>
+<div id="versionBadge">v550</div>
 <div id="sweepOverlay">
   <video id="sweepVideo" muted playsinline preload="auto">
     <source src="0217.mp4" type="video/mp4"/>
@@ -2150,7 +2295,7 @@ input, #inEmail{
       <img class="heroLogo" src="${asset('7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png')}" alt="Night Games"
         onerror="this.onerror=null; this.src='7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png';"/>
       <div class="heroTitle">Night Games</div>
-      <div class="heroSub">Enter your email to continue • v549</div>
+      <div class="heroSub">Enter your email to continue • v550</div>
     </div>
   </div>
   <div class="main">
@@ -2174,7 +2319,7 @@ input, #inEmail{
 <div id="fatalErr" style="position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;display:none;padding:10px 12px;border-radius:14px;background:rgba(60,0,0,.78);border:1px solid rgba(255,77,77,.55);color:#ffd6d6;font:12px/1.3 system-ui;box-shadow:0 18px 40px rgba(0,0,0,.55);white-space:pre-wrap;"></div>
 
 <script>
-// v549: Global error handlers so we NEVER get a blank page with no clue.
+// v550: Global error handlers so we NEVER get a blank page with no clue.
 (function(){
   function show(msg){
     try{
@@ -2208,7 +2353,7 @@ function showError(msg){
   const box=document.getElementById("errBox");
   if(!box) return;
   box.style.display="block";
-  box.innerHTML = "<b>Build v549 error:</b>\n"+String(msg);
+  box.innerHTML = "<b>Build v550 error:</b>\n"+String(msg);
 }
 window.addEventListener("error",(e)=>{
   showError(e?.error?.stack || e?.message || e);
@@ -2258,12 +2403,12 @@ function headerBanner(title="Night Games", opts={}){
       ${showTitleBelow ? `
         <div class="titleRow" style="position:relative; left:auto; right:auto; bottom:auto; padding:12px 14px 0 14px;">
           <div class="h1">${title}</div>
-          <div class="badge">v549</div>
+          <div class="badge">v550</div>
         </div>
       ` : `
         <div class="titleRow">
           <div class="h1">${title}</div>
-          <div class="badge">v549</div>
+          <div class="badge">v550</div>
         </div>
       `}
     </div>
@@ -2325,7 +2470,7 @@ function openModal(title, bodyHtml, actionsHtml){
    Sweep (once)
    ============================ */
 function runSweepOnce(){
-  const key="sweepShown_v549";
+  const key="sweepShown_v550";
   if(store.get(key,false)) return;
 
   const ov=$("#sweepOverlay");
@@ -2977,7 +3122,7 @@ function screenHistory(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">History view is wired as a real page in v549. Next pass we populate it from match logs / saved games.</div>
+        <div class="ok">History view is wired as a real page in v550. Next pass we populate it from match logs / saved games.</div>
       </div>
     </div>
     ${footer()}
@@ -3002,7 +3147,7 @@ function screenStats(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">Stats page is a real page in v549. Next pass we show the stat definitions + your notables.</div>
+        <div class="ok">Stats page is a real page in v550. Next pass we show the stat definitions + your notables.</div>
       </div>
     </div>
     ${footer()}
@@ -3213,7 +3358,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v549: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v550: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -3344,7 +3489,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v549: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v550: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -3497,106 +3642,3 @@ setInterval(()=>{
 </script>
 </body>
 </html>
-
-
-
-/* =========================================================
-   NG — TRUE FLOATING THEME (APPLIED)
-   Goal: no frames; consistent 3D floating assets like logo
-   ========================================================= */
-
-html, body{
-  background:
-    radial-gradient(120% 90% at 18% 12%, rgba(0,210,255,.14), rgba(0,0,0,0) 55%),
-    radial-gradient(110% 80% at 82% 14%, rgba(255,175,0,.12), rgba(0,0,0,0) 58%),
-    radial-gradient(120% 120% at 50% 96%, rgba(160,120,255,.09), rgba(0,0,0,0) 62%),
-    #000 !important;
-}
-
-body::after{
-  content:"";
-  position:fixed; inset:0;
-  background-image:
-    radial-gradient(rgba(255,255,255,.22) 1px, transparent 1px),
-    radial-gradient(rgba(0,210,255,.18) 1px, transparent 1px),
-    radial-gradient(rgba(255,175,0,.14) 1px, transparent 1px);
-  background-size: 95px 95px, 140px 140px, 180px 180px;
-  background-position: 0 0, 34px 58px, 72px 24px;
-  opacity:.07;
-  pointer-events:none;
-}
-
-.wrap, #app, .card, .frame, .shell, .outer, .container, .wrapper, .appFrame,
-.heroHeader, .heroPanel, .panel, .footer,
-.viewport, .phone, .stage, .canvas{
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-  backdrop-filter: none !important;
-}
-
-.topbar, .playerRow, .gcard, .chip, .lock, .ok, .table, .list,
-.header, .main, .grid, .cards{
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-:root{
-  --floatShadow: drop-shadow(0 18px 34px rgba(0,0,0,.66));
-  --edgeCyan: 0 0 22px rgba(0,210,255,.18);
-  --edgeAmber: 0 0 18px rgba(255,175,0,.12);
-}
-
-.heroLogo, .h1, .h2, .sub,
-.btn, button, a.btn,
-input, select,
-.playerRow *, .topbar *, .gcard *{
-  filter: var(--floatShadow);
-}
-
-input, select, .input, #inEmail{
-  background: transparent !important;
-  border-radius: 16px !important;
-  border: 2px solid rgba(10,75,255,.95) !important;
-  color: rgba(235,245,255,.92) !important;
-  box-shadow:
-    0 0 14px rgba(10,75,255,.55),
-    0 0 30px rgba(10,75,255,.22),
-    inset 0 0 10px rgba(10,75,255,.14) !important;
-}
-input::placeholder{ color: rgba(200,220,255,.45) !important; }
-
-.btn, button, #btnEnter{
-  background: transparent !important;
-  border-radius: 16px !important;
-  border: 2px solid rgba(255,208,0,.95) !important;
-  color: rgba(255,208,0,.95) !important;
-  box-shadow:
-    0 0 18px rgba(255,208,0,.22),
-    0 0 34px rgba(255,160,0,.14),
-    var(--edgeCyan),
-    var(--edgeAmber) !important;
-  text-shadow:
-    0 0 12px rgba(255,208,0,.45),
-    0 0 24px rgba(255,160,0,.25) !important;
-}
-.btn::before, .btn::after,
-#btnEnter::before, #btnEnter::after{
-  content:none !important;
-}
-
-.sparkBar, .underBar{
-  height: 8px !important;
-  border-radius: 999px !important;
-  background: linear-gradient(90deg,
-    rgba(10,75,255,.10),
-    rgba(0,210,255,.18),
-    rgba(255,175,0,.14),
-    rgba(10,75,255,.10)
-  ) !important;
-  box-shadow:
-    0 0 16px rgba(0,210,255,.12),
-    0 0 14px rgba(255,175,0,.08) !important;
-}
