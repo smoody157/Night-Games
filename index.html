@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v564</title>
+<title>Night Games • v565</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -12,7 +12,7 @@
 
 <style>
 /* ============================================================
-   Night Games v564 — FULL BUILD (single-file; text-file friendly)
+   Night Games v549 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -86,7 +86,7 @@ body::after{
 /* extra glow / bevel */
 .btn{
   background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.26));
-}
+transition:transform .08s ease, filter .12s ease;}
 .btn::after{
   box-shadow:
     0 0 0 1px rgba(255,255,255,.08) inset,
@@ -136,9 +136,11 @@ body::after{
   border:1px solid rgba(0,215,255,.18);
   box-shadow:0 18px 44px rgba(0,0,0,.42), 0 0 26px rgba(0,215,255,.08);
 }
-.input{border:1px solid rgba(0,215,255,.22);
+.input{
+  border:1px solid rgba(0,215,255,.22);
   box-shadow:0 0 0 1px rgba(255,255,255,.04) inset, 0 0 22px rgba(0,215,255,.06);
-  font-size:16px;}
+font-size:16px;}
+
 
 
 /* --- v549: Night Games neon theme (match logo colors) --- */
@@ -947,13 +949,14 @@ body::before, body::after{display:none !important;}
   filter:blur(0px);
   pointer-events:none;
 }
-.inputEmail{position:relative;
+.inputEmail{
+  position:relative;
   width:100%;
   border-radius:14px !important;
   border:1px solid rgba(0,215,255,.55) !important;
   background:rgba(0,0,0,.55) !important;
   box-shadow:0 0 0 1px rgba(255,255,255,.06) inset !important;
-  font-size:16px;}
+}
 
 /* Glass beveled Enter button */
 .btnEnter{
@@ -2130,13 +2133,12 @@ input, #inEmail{
   box-shadow:none !important;
 }
 
+/* v565: ensure sweep overlay never blocks UI */
+#sweepOverlay{pointer-events:none;}
+#sweepOverlay.show{pointer-events:none;}
 
-/* v564: remove outer frame/panels; true floating */
-.wrap{ background:transparent !important; padding:0 !important; }
-#app.card, #app{ background:transparent !important; border:none !important; box-shadow:none !important; }
-.panel, .heroPanel{ background:transparent !important; border:none !important; box-shadow:none !important; backdrop-filter:none !important; }
-/* v564: tactile press state */
-.btn.isPressed{ transform:translateY(1px) scale(0.99) !important; filter:brightness(0.95) !important; }
+
+.btn:active{transform:translateY(1px) scale(.99);filter:brightness(1.08);}
 </style>
 </head>
 <body>
@@ -2153,10 +2155,10 @@ input, #inEmail{
 <div class="wrap"><div id="app" class="card">
   <div class="header heroHeader">
     <div class="heroInner">
-      <img class="heroLogo" src="./7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png" alt="Night Games"
+      <img class="heroLogo" src="${asset('7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png')}" alt="Night Games"
         onerror="this.onerror=null; this.src='7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png';"/>
       <div class="heroTitle">Night Games</div>
-      <div class="heroSub">Enter your email to continue • v564</div>
+      <div class="heroSub">Enter your email to continue • v549</div>
     </div>
   </div>
   <div class="main">
@@ -2166,9 +2168,10 @@ input, #inEmail{
       <div style="height:10px"></div>
       <input id="inEmail" class="input" placeholder="you@example.com" autocomplete="email" inputmode="email"/>
       <div style="height:10px"></div>
-      <button id="btnEnter" class="btn green pulse">Enter</button>
+      <button id="btnEnter" type="button" class="btn green pulse">Enter</button>
       <div style="height:8px"></div>
-      <button id="btnClearRemember" class="btn"></button>
+      <div id="authHint" class="sub" style="min-height:18px;margin-top:6px;"></div>
+      <button id="btnClearRemember" class="btn" style="display:none"></button>
     </div>
   </div>
   <div class="footer">
@@ -2197,7 +2200,7 @@ input, #inEmail{
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD = 549;
+const BUILD = 565;
 
 const ASSET_BASE = new URL('.', document.baseURI).toString();
 const asset = (p)=> new URL(p, ASSET_BASE).toString();
@@ -2254,59 +2257,6 @@ function footer(){
     </div>
   `;
 }
-
-/* ============================
-   v564: Hard fallback wiring for GitHub Pages
-   ============================ */
-(function wireAuthFallback(){
-  function beep(){
-    try{
-      const ctx = new (window.AudioContext||window.webkitAudioContext)();
-      const o=ctx.createOscillator(), g=ctx.createGain();
-      o.type="triangle"; o.frequency.value=520;
-      g.gain.value=0.03;
-      o.connect(g); g.connect(ctx.destination);
-      o.start();
-      setTimeout(()=>{ o.stop(); ctx.close(); }, 70);
-    }catch(e){}
-  }
-  function press(el, on){ if(el) el.classList.toggle("isPressed", !!on); }
-
-  function attach(){
-    const btn=document.getElementById("btnEnter");
-    const inEl=document.getElementById("inEmail");
-    if(btn && !btn.__wired){
-      btn.__wired=true;
-      btn.addEventListener("pointerdown", ()=>press(btn,true));
-      btn.addEventListener("pointerup", ()=>press(btn,false));
-      btn.addEventListener("pointercancel", ()=>press(btn,false));
-      btn.addEventListener("click", ()=>{
-        beep();
-        if(typeof onStart==="function"){ onStart(); return; }
-      });
-    }
-    if(inEl && !inEl.__wired){
-      inEl.__wired=true;
-      inEl.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ btn?.click(); }});
-    }
-  }
-
-  if(document.readyState==="loading"){ document.addEventListener("DOMContentLoaded", attach); }
-  else { attach(); }
-
-  // Re-attach after any render() that swaps innerHTML
-  try{
-    const _setHtml = (typeof setHtml==="function") ? setHtml : null;
-    if(_setHtml && !window.__setHtmlWrapped){
-      window.__setHtmlWrapped=true;
-      window.setHtml=function(){
-        const r=_setHtml.apply(this, arguments);
-        try{ attach(); }catch(e){}
-        return r;
-      };
-    }
-  }catch(e){}
-})();
 function headerBanner(title="Night Games", opts={}){
   const showTitleBelow = !!opts.titleBelow; // landing: logo above title
   return `
@@ -2606,7 +2556,8 @@ function subscribeMatch(matchId){
   App.unsubMatch=fb.db.collection("matches").doc(matchId).onSnapshot((doc)=>{
     if(!doc.exists){
       App.match=null; App.matchId=null;
-      if(App.screen.startsWith("game_")) go("player");
+      if(App.screen.startsWith("game_")) setHint("Entering...");
+    go("player");
       return;
     }
     App.match=doc.data()||{};
@@ -2835,22 +2786,29 @@ async function submitCricket(matchId, marksThisTurn){
 
 async function onStart(){
   try{
+    const hintEl=document.getElementById("authHint");
+    const setHint=(t)=>{ if(hintEl) hintEl.textContent=t||""; };
+    setHint("");
+
     const inEl=$("#inEmail");
     const email = normEmail((inEl?.value || ""));
     if(inEl) inEl.value=""; // auto-clear so next person never sees the previous email
     if(!email){
-      alert("Enter your email.");
+      setHint("Enter your email."); alert("Enter your email.");
       return;
     }
 
     // ensure firebase initialized + anonymous session
+    setHint("Connecting...");
     await safeInit();
 
     // load players and find existing
+    setHint("Loading players...");
     await loadPlayers();
     let p = (App.players||[]).find(x=>normEmail(x.email)===email);
 
     if(!p){
+      setHint("New player — enter name");
       const nameRaw = prompt("New player. Enter your name:");
       const name = normName(nameRaw||"");
       if(!name){
@@ -2858,13 +2816,15 @@ async function onStart(){
         return;
       }
       p = await upsertPlayer({email, name});
-      await loadPlayers();
+      setHint("Loading players...");
+    await loadPlayers();
     }
 
     // remember for convenience (but landing still shows first by design in this build series)
     store.set("me", {email: p.email, name: p.name, ts: nowMs()});
 
     App.me = p;
+    setHint("Entering...");
     go("player");
   }catch(err){
     showError(err);
@@ -2903,6 +2863,7 @@ function screenAuth(){
   `);
 
   $("#btnEnter").onclick=onStart;
+  bindAuthFallback();
   $("#inEmail").addEventListener("keydown",(e)=>{ if(e.key==="Enter") onStart(); });
 }function renderPlayersUnderGames(){
   const host=$("#playersUnderGames");
@@ -2994,7 +2955,8 @@ function screenPlayers(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>go("player");
+  $("#btnBack").onclick=()=>setHint("Entering...");
+    go("player");
 
   const plist=$("#plist");
   const players=[...App.players].sort((a,b)=>a.name.localeCompare(b.name));
@@ -3044,7 +3006,8 @@ function screenHistory(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>go("player");
+  $("#btnBack").onclick=()=>setHint("Entering...");
+    go("player");
 }
 
 function screenStats(){
@@ -3069,7 +3032,8 @@ function screenStats(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>go("player");
+  $("#btnBack").onclick=()=>setHint("Entering...");
+    go("player");
 }
 
 function screenGameSetup(){
@@ -3142,7 +3106,8 @@ function screenGameSetup(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>go("player");
+  $("#btnBack").onclick=()=>setHint("Entering...");
+    go("player");
 
   const players=[...App.players].sort((a,b)=>a.name.localeCompare(b.name));
   const options=players.map(p=>`<option value="${p.email}">${p.name} (${p.email})</option>`).join("");
@@ -3211,7 +3176,8 @@ function screenGameSetup(){
 
 function screenGameCricket(){
   const m=App.match;
-  if(!m){ go("player"); return; }
+  if(!m){ setHint("Entering...");
+    go("player"); return; }
 
   const seats=m.seats||[];
   const seatMe=mySeat(m);
@@ -3324,7 +3290,8 @@ function screenGameCricket(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>go("player");
+  $("#btnBack").onclick=()=>setHint("Entering...");
+    go("player");
 
   if(!seatMe){
     openModal("Join match", `
@@ -3363,7 +3330,8 @@ function screenGameCricket(){
 
 function screenGame01(){
   const m=App.match;
-  if(!m){ go("player"); return; }
+  if(!m){ setHint("Entering...");
+    go("player"); return; }
 
   const seats=m.seats||[];
   const seatMe=mySeat(m);
@@ -3447,7 +3415,8 @@ function screenGame01(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>go("player");
+  $("#btnBack").onclick=()=>setHint("Entering...");
+    go("player");
 
   if(!seatMe){
     openModal("Join match", `
@@ -3507,7 +3476,8 @@ function screenGamePlaceholder(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>go("player");
+  $("#btnBack").onclick=()=>setHint("Entering...");
+    go("player");
 }
 
 /* ============================
@@ -3531,11 +3501,30 @@ function render(){
   screenAuth();
 }
 
+
+// v565: hard fallback binding so Enter can never be dead.
+function bindAuthFallback(){
+  const b=document.getElementById("btnEnter");
+  const i=document.getElementById("inEmail");
+  if(b && !b.__bound){
+    b.__bound=true;
+    b.addEventListener("click", (e)=>{ e.preventDefault(); onStart(); });
+    b.addEventListener("pointerdown", ()=>{ b.classList.add("pressed"); });
+    b.addEventListener("pointerup", ()=>{ b.classList.remove("pressed"); });
+    b.addEventListener("pointercancel", ()=>{ b.classList.remove("pressed"); });
+  }
+  if(i && !i.__bound){
+    i.__bound=true;
+    i.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); onStart(); }});
+  }
+}
+
 /* ============================
    Boot
    ============================ */
 (async function boot(){
   render();
+  bindAuthFallback();
 
   // Always start on landing/email gate. Prefill saved email only.
   const remembered=store.get("me", null);
