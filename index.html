@@ -26,7 +26,7 @@
 
     
     :root {
-      --bg: url("IMG_7287.png?b=630");
+      --bg: url("IMG_7287.png?b=631");
       --bgShiftY: -8px; /* micro-tune: moves image DOWN slightly */
       --glass: rgba(0,0,0,.22);
       --stroke: rgba(120,180,255,.18);
@@ -457,11 +457,121 @@ border: 2px solid var(--blue);
     .scene { display: none; }
     .scene.on { display: block; }
 
+  
+    /* ===== Intro MP4 overlay (plays once, then disappears) ===== */
+    #introVideoWrap{
+      position: fixed;
+      inset: 0;
+      z-index: 1;              /* above background, below UI */
+      pointer-events: none;     /* don't block inputs */
+      opacity: 0;
+      transition: opacity 700ms ease;
+    }
+    #introVideoWrap.on{ opacity: 1; }
+    #introVideo{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      filter: brightness(.78) contrast(1.08) saturate(.95);
+    }
+
+    /* ===== Crisp neon divider (intentional, hides seam) ===== */
+    .glowDivider{
+      width: min(92vw, 720px);
+      height: 10px;
+      margin: 10px auto 16px auto;
+      position: relative;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .glowDivider::before{
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      top: 50%;
+      height: 3px;
+      transform: translateY(-50%);
+      border-radius: 999px;
+      background: linear-gradient(90deg,
+        rgba(0,0,0,0),
+        rgba(235,245,255,.35) 18%,
+        rgba(0,210,255,.55) 38%,
+        rgba(255,208,0,.45) 62%,
+        rgba(235,245,255,.25) 82%,
+        rgba(0,0,0,0)
+      );
+      box-shadow:
+        0 0 10px rgba(0,210,255,.18),
+        0 0 14px rgba(255,208,0,.12),
+        0 0 22px rgba(255,208,0,.08);
+    }
+    .glowDivider::after{
+      content:"";
+      position:absolute;
+      inset: -16px -22px;
+      border-radius: 999px;
+      background: radial-gradient(closest-side at 50% 50%,
+        rgba(255,208,0,.10),
+        rgba(0,210,255,.08) 42%,
+        rgba(0,0,0,0) 70%
+      );
+      filter: blur(2px);
+      opacity: .9;
+    }
+
+    /* ===== Metallic glints on input + button borders ===== */
+    .glint{
+      position: relative;
+      overflow: hidden;
+    }
+    .glint::before{
+      content:"";
+      position:absolute;
+      left:-20%;
+      top:-40%;
+      width: 60%;
+      height: 180%;
+      transform: rotate(18deg);
+      background: linear-gradient(90deg,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.14),
+        rgba(255,255,255,0)
+      );
+      opacity: .55;
+      pointer-events:none;
+    }
+    .glint::after{
+      content:"";
+      position:absolute;
+      right: 10px;
+      top: 10px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+        rgba(255,255,255,.38),
+        rgba(255,255,255,0) 70%
+      );
+      opacity: .55;
+      pointer-events:none;
+      filter: blur(.2px);
+    }
+
   </style>
 </head>
 
 <body>
-<!-- BUILD 630 2026-02-24 18:06:04 -->
+
+  <!-- Intro video overlay (Landing only) -->
+  <div id="introVideoWrap" aria-hidden="true">
+    <video id="introVideo" playsinline muted preload="auto">
+      <source src="0217.mp4?b=631" type="video/mp4" />
+    </video>
+  </div>
+
+<!-- BUILD 631 2026-02-24 18:15:26 -->
 
   
   <div id="app">
@@ -474,8 +584,8 @@ border: 2px solid var(--blue);
 <div class="sub">Email-only access. ENTER takes you to Games and Players.</div>
 
           <div style="display:grid; gap: 10px;">
-            <input id="inEmail" type="email" autocomplete="email" placeholder="Email address" />
-            <button id="btnEnter" class="btn">ENTER</button>
+            <input id="inEmail" type="email" autocomplete="email" placeholder="Email address" / class="glint">
+            <button id="btnEnter" class="btn glint" class="glint">ENTER</button>
           </div>
           </div>
         </div>
@@ -561,7 +671,7 @@ border: 2px solid var(--blue);
     </div>
   </div>
 
-  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v630</span></div>
+  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v631</span></div>
 
   <script>
     // =========================================================
@@ -621,6 +731,49 @@ border: 2px solid var(--blue);
         history.replaceState(null, "", location.pathname + location.search);
       }
     } catch(e) {}
+  
+    // ===== Intro video (Landing only): fade in, play once, hold, fade out, remove =====
+    (function(){
+      const wrap = document.getElementById("introVideoWrap");
+      const vid  = document.getElementById("introVideo");
+      if(!wrap || !vid) return;
+
+      // Start only on landing view
+      function startIntro(){
+        try{
+          // Some iOS versions need explicit play after user gesture; this still works when allowed.
+          wrap.classList.add("on");
+          const p = vid.play();
+          if(p && typeof p.catch === "function"){
+            p.catch(()=>{
+              // If autoplay blocked, just fade it out quickly so it doesn't hang.
+              setTimeout(()=>{ wrap.classList.remove("on"); }, 900);
+              setTimeout(()=>{ wrap.remove(); }, 1700);
+            });
+          }
+        }catch(e){
+          try{ wrap.remove(); }catch(_){}
+        }
+      }
+
+      // When finished, hold 900ms then fade out and remove
+      vid.addEventListener("ended", ()=>{
+        setTimeout(()=>{ wrap.classList.remove("on"); }, 900);
+        setTimeout(()=>{ try{ wrap.remove(); }catch(e){} }, 1900);
+      });
+
+      // Safety: if it never ends (streaming issues), kill after 12s
+      setTimeout(()=>{
+        if(document.body.contains(wrap)){
+          wrap.classList.remove("on");
+          setTimeout(()=>{ try{ wrap.remove(); }catch(e){} }, 900);
+        }
+      }, 12000);
+
+      // Start after first paint
+      requestAnimationFrame(()=> setTimeout(startIntro, 120));
+    })();
+
   </script>
 </body>
 </html>
