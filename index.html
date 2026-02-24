@@ -26,7 +26,7 @@
 
     
     :root {
-      --bg: url("IMG_7287.png?b=631");
+      --bg: url("IMG_7287.png?b=632");
       --bgShiftY: -8px; /* micro-tune: moves image DOWN slightly */
       --glass: rgba(0,0,0,.22);
       --stroke: rgba(120,180,255,.18);
@@ -464,20 +464,56 @@ border: 2px solid var(--blue);
       inset: 0;
       z-index: 1;              /* above background, below UI */
       pointer-events: none;     /* don't block inputs */
+      display: grid;
+      place-items: center;
       opacity: 0;
-      transition: opacity 700ms ease;
+      transition: opacity 650ms ease;
     }
     #introVideoWrap.on{ opacity: 1; }
+
+    /* The cinematic "card" holding the MP4 (smaller, centered) */
     #introVideo{
-      width: 100%;
-      height: 100%;
+      width: min(520px, 86vw);
+      aspect-ratio: 16 / 9;
+      height: auto;
+      border-radius: 18px;
       object-fit: cover;
       object-position: center;
       display: block;
-      filter: brightness(.78) contrast(1.08) saturate(.95);
+
+      /* Color grade toward logo palette */
+      filter:
+        brightness(.78)
+        contrast(1.12)
+        saturate(.92)
+        sepia(.18)
+        hue-rotate(188deg);
+
+      /* Floating depth + neon rim */
+      box-shadow:
+        0 18px 44px rgba(0,0,0,.72),
+        0 0 26px rgba(0,210,255,.22),
+        0 0 18px rgba(255,208,0,.12),
+        inset 0 0 0 1px rgba(255,255,255,.10);
     }
 
-    /* ===== Crisp neon divider (intentional, hides seam) ===== */
+    /* Soft edge fade so it blends into space */
+    #introVideoWrap::after{
+      content:"";
+      position:absolute;
+      width: min(560px, 90vw);
+      aspect-ratio: 16 / 9;
+      border-radius: 22px;
+      background: radial-gradient(closest-side,
+        rgba(0,0,0,0) 54%,
+        rgba(0,0,0,.28) 82%,
+        rgba(0,0,0,.62) 100%
+      );
+      filter: blur(2px);
+      opacity: .9;
+      pointer-events:none;
+    }
+/* ===== Crisp neon divider (intentional, hides seam) ===== */
     .glowDivider{
       width: min(92vw, 720px);
       height: 10px;
@@ -567,11 +603,11 @@ border: 2px solid var(--blue);
   <!-- Intro video overlay (Landing only) -->
   <div id="introVideoWrap" aria-hidden="true">
     <video id="introVideo" playsinline muted preload="auto">
-      <source src="0217.mp4?b=631" type="video/mp4" />
+      <source src="0217.mp4?b=632" type="video/mp4" />
     </video>
   </div>
 
-<!-- BUILD 631 2026-02-24 18:15:26 -->
+<!-- BUILD 632 2026-02-24 18:19:50 -->
 
   
   <div id="app">
@@ -671,7 +707,7 @@ border: 2px solid var(--blue);
     </div>
   </div>
 
-  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v631</span></div>
+  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v632</span></div>
 
   <script>
     // =========================================================
@@ -747,8 +783,13 @@ border: 2px solid var(--blue);
           if(p && typeof p.catch === "function"){
             p.catch(()=>{
               // If autoplay blocked, just fade it out quickly so it doesn't hang.
-              setTimeout(()=>{ wrap.classList.remove("on"); }, 900);
-              setTimeout(()=>{ wrap.remove(); }, 1700);
+              try{
+                const landing = document.getElementById("sceneLanding");
+                const players = document.getElementById("scenePlayers");
+                if(landing && players){ landing.classList.add("on"); players.classList.remove("on"); }
+              }catch(e){}
+              setTimeout(()=>{ wrap.classList.remove("on"); }, 600);
+              setTimeout(()=>{ wrap.remove(); }, 1300);
             });
           }
         }catch(e){
@@ -758,11 +799,19 @@ border: 2px solid var(--blue);
 
       // When finished, hold 900ms then fade out and remove
       vid.addEventListener("ended", ()=>{
+        // Force landing scene to remain (prevents any accidental auto-jump)
+        try{
+          const landing = document.getElementById("sceneLanding");
+          const players = document.getElementById("scenePlayers");
+          if(landing && players){
+            landing.classList.add("on");
+            players.classList.remove("on");
+          }
+        }catch(e){}
         setTimeout(()=>{ wrap.classList.remove("on"); }, 900);
         setTimeout(()=>{ try{ wrap.remove(); }catch(e){} }, 1900);
       });
-
-      // Safety: if it never ends (streaming issues), kill after 12s
+// Safety: if it never ends (streaming issues), kill after 12s
       setTimeout(()=>{
         if(document.body.contains(wrap)){
           wrap.classList.remove("on");
