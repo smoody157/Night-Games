@@ -1,4 +1,165 @@
-<!doctype html>
+<!doctype html><!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Night Games • Stable Build</title>
+
+<style>
+:root{
+  --bg:url("IMG_7287.png");
+  --text:#eaf2ff;
+  --muted:#a9b7d6;
+  --amber:#ffd000;
+  --blue:#0a4bff;
+}
+
+html,body{
+  margin:0;
+  height:100%;
+  background:
+    linear-gradient(to bottom,rgba(0,0,0,.15),rgba(0,0,0,.55)),
+    var(--bg) center/cover no-repeat fixed;
+  font-family:system-ui;
+  color:var(--text);
+}
+
+/* SCENES */
+.scene{
+  position:fixed;
+  inset:0;
+  display:none;
+}
+.scene.active{ display:flex; }
+
+/* CENTER BLOCK */
+.center{
+  margin:auto;
+  text-align:center;
+  width:min(420px,90%);
+}
+
+h1{
+  font-size:42px;
+  margin-bottom:8px;
+  letter-spacing:2px;
+}
+
+.sub{
+  margin-bottom:18px;
+  color:var(--muted);
+}
+
+/* INPUT + BUTTON */
+input{
+  width:100%;
+  padding:14px;
+  border-radius:16px;
+  border:2px solid var(--blue);
+  background:rgba(0,0,0,.25);
+  color:var(--text);
+  font-size:16px;
+}
+
+button{
+  margin-top:12px;
+  width:100%;
+  padding:14px;
+  border-radius:16px;
+  border:2px solid var(--amber);
+  background:transparent;
+  color:var(--amber);
+  font-weight:900;
+  letter-spacing:2px;
+  cursor:pointer;
+}
+
+/* PLAYERS PAGE */
+.playersWrap{
+  margin:auto;
+  width:min(720px,92%);
+}
+
+.playersTitle{
+  font-size:22px;
+  margin-bottom:12px;
+}
+
+.player{
+  padding:12px;
+  border-bottom:1px solid rgba(255,255,255,.15);
+}
+</style>
+</head>
+
+<body>
+
+<!-- LANDING -->
+<section id="landing" class="scene active">
+  <div class="center">
+    <h1>ENTER</h1>
+    <div class="sub">Email only access. ENTER takes you to Games and Players.</div>
+    <input id="email" type="email" placeholder="Enter email address" />
+    <button id="enterBtn">ENTER</button>
+  </div>
+</section>
+
+<!-- PLAYERS PAGE -->
+<section id="players" class="scene">
+  <div class="playersWrap">
+    <div class="playersTitle">Players</div>
+    <div id="playerList"></div>
+  </div>
+</section>
+
+<script>
+const landing = document.getElementById("landing");
+const players = document.getElementById("players");
+const emailInput = document.getElementById("email");
+const enterBtn = document.getElementById("enterBtn");
+const playerList = document.getElementById("playerList");
+
+let sessionPlayers = [];
+
+function showPlayers(){
+  landing.classList.remove("active");
+  players.classList.add("active");
+}
+
+function addPlayer(email){
+  if(!email) return;
+  if(sessionPlayers.includes(email)) return;
+  if(sessionPlayers.length >= 8) return;
+
+  sessionPlayers.push(email);
+  renderPlayers();
+}
+
+function renderPlayers(){
+  playerList.innerHTML = "";
+  sessionPlayers.forEach(e=>{
+    const div=document.createElement("div");
+    div.className="player";
+    div.textContent=e;
+    playerList.appendChild(div);
+  });
+}
+
+enterBtn.onclick = ()=>{
+  const email = emailInput.value.trim();
+  if(!email) return;
+  addPlayer(email);
+  showPlayers();
+};
+
+emailInput.addEventListener("keydown",e=>{
+  if(e.key==="Enter") enterBtn.onclick();
+});
+</script>
+
+</body>
+</html>
+
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -3497,3 +3658,4 @@ setInterval(()=>{
 </script>
 </body>
 </html>
+
