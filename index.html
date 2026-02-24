@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v609</title>
-<!-- Build v609 CLEAN REWIRE generated 2026-02-24 16:07:39
+<title>Night Games • v611</title>
+<!-- Build v611 CLEAN REWIRE generated 2026-02-24 16:12:57
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -13,16 +13,51 @@
 
 <style>
 
-/* === NG v609 FULLSCREEN FIX === */
-html,body{width:100%;height:100%;margin:0;}
-#app,.wrap,.container,.outer,.shell{width:100% !important;max-width:none !important;min-height:100vh !important;margin:0 auto;}
-.heroHeader,.main{width:100% !important;max-width:none !important;}
-/* prevent "small in corner" caused by transform/scale wrappers */
-body{overflow-x:hidden;}
+/* =========================================================
+   NG — BACKGROUND LOCK v611
+   Applies to ALL pages (landing + players) because set on html/body.
+   How to force exact file without editing code:
+     - URL: ?bg=IMG_XXXX.png
+     - OR:  localStorage.setItem('ng_bg_url','./IMG_XXXX.png')
+   Recommended repo filename: IMG_bg.png
+   Generated: 2026-02-24 16:12:57
+   ========================================================= */
+:root{
+  --ngBgUrl: none;
+  --ngCyan: rgba(0,210,255,.95);
+  --ngGold: rgba(255,208,0,.95);
+  --ngBlue: rgba(10,75,255,.95);
+  --ngText: rgba(235,245,255,.92);
+}
+html, body{
+  min-height:100%;
+  background-image:
+    var(--ngBgUrl),
+    url("./IMG_bg.png"),
+    url("./IMG_bg.jpg"),
+    url("./IMG_bg.jpeg"),
+    url("./IMG_background.png"),
+    url("./IMG_background.jpg"),
+    url("./IMG_background.jpeg"),
+    url("./NightGames_full_background_logo_top.png"),
+    url("./NightGames_full_background_logo_top.jpg"),
+    url("./NightGames_full_background_logo_top.jpeg"),
+    url("./IMG_NightGames_full_background_logo_top.png"),
+    url("./IMG_NightGames_full_background_logo_top.jpg"),
+    url("./IMG_NightGames_full_background_logo_top.jpeg"),
+    radial-gradient(120% 90% at 18% 12%, rgba(0,210,255,.14), rgba(0,0,0,0) 55%),
+    radial-gradient(110% 80% at 82% 14%, rgba(255,175,0,.12), rgba(0,0,0,0) 58%),
+    radial-gradient(120% 120% at 50% 96%, rgba(160,120,255,.09), rgba(0,0,0,0) 62%),
+    #000 !important;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
 
 
 /* =========================================================
-   NG — BACKGROUND HARD-BIND v609
+   NG — BACKGROUND HARD-BIND v611
    - Works on BOTH landing + players because applied to html/body
    - If your repo image starts with IMG, set it explicitly via:
        ?bg=IMG_1234.png   OR   localStorage ng_bg_url = "./IMG_1234.png"
@@ -56,7 +91,7 @@ html, body{
 }
 
 /* ============================================================
-   Night Games v609 — FULL BUILD (single-file; text-file friendly)
+   Night Games v611 — FULL BUILD (single-file; text-file friendly)
    ============================================================
    How to use:
    - Save as index.html (or rename this text file to index.html)
@@ -105,7 +140,7 @@ html,body{height:100%;margin:0;color:var(--text);
 }
 
 
-/* --- v609 Skin: pull colors from the banner asset (repo) --- */
+/* --- v611 Skin: pull colors from the banner asset (repo) --- */
 body::before{
   content:"";
   position:fixed; inset:-20%;
@@ -148,7 +183,7 @@ transition:transform .08s ease, filter .12s ease;}
 }
 
 
-/* --- v609 Landing Color Scheme --- */
+/* --- v611 Landing Color Scheme --- */
 .heroHeader{
   border-bottom:1px solid rgba(120,180,255,.16);
   background:
@@ -187,7 +222,7 @@ font-size:16px;}
 
 
 
-/* --- v609: Night Games neon theme (match logo colors) --- */
+/* --- v611: Night Games neon theme (match logo colors) --- */
 :root{
   --cBlue: rgba(0,215,255,.26);
   --cBlue2: rgba(42,127,255,.20);
@@ -450,7 +485,7 @@ a{color:var(--cyan);text-decoration:none}
 }
 #errBox b{font-family:inherit;}
 
-/* --- v609 LANDING VISUALS (OBVIOUS CHANGES) --- */
+/* --- v611 LANDING VISUALS (OBVIOUS CHANGES) --- */
 body{background:#000 !important;}
 /* Outer screen border (neon, NOT green) */
 .card{
@@ -520,7 +555,7 @@ body{background:#000 !important;}
   100%{opacity:0; transform:translate(18vw, -10vw) rotate(-45deg) scale(1.02);}
 }
 
-/* ===== v609: REMOVE GREEN FRAME / SIMPLE BLACK CANVAS ===== */
+/* ===== v611: REMOVE GREEN FRAME / SIMPLE BLACK CANVAS ===== */
 html,body{background:#000 !important;}
 /* Outer display: ONE neon border only */
 .card{
@@ -577,7 +612,7 @@ body::after{
     0 0 10px rgba(255,120,35,.06) !important;
 }
 
-/* ===== v609 MINIMAL BLACK CANVAS ===== */
+/* ===== v611 MINIMAL BLACK CANVAS ===== */
 
 /* Pure black everywhere */
 html,body{
@@ -658,7 +693,7 @@ body::after{
   display:none !important;
 }
 
-/* ===== v609: blended background + keep blue outline on sign-in ===== */
+/* ===== v611: blended background + keep blue outline on sign-in ===== */
 
 /* Blend the black canvas subtly so it doesn't look like a hard flat slab */
 html,body{
@@ -707,7 +742,7 @@ html,body{
 /* Keep it readable */
 .sub{ color:rgba(235,240,255,.70) !important; }
 
-/* ===== v609 THEME PASS (no green glow, blended logo, new fonts, open layout) ===== */
+/* ===== v611 THEME PASS (no green glow, blended logo, new fonts, open layout) ===== */
 
 /* Kill any green glow remnants */
 .btn.green::after{ box-shadow:none !important; }
@@ -837,7 +872,7 @@ body::after{ display:none !important; } /* remove earlier wash layers so we cont
   text-shadow: 0 0 14px rgba(46,230,107,.12) !important;
 }
 
-/* ===== v609: STRIPPED LANDING (NO FRAMES / NO EXTRA BORDERS) ===== */
+/* ===== v611: STRIPPED LANDING (NO FRAMES / NO EXTRA BORDERS) ===== */
 html,body{background:#000 !important;}
 body::before, body::after{display:none !important;}
 .wrap{padding:0 !important;}
@@ -898,7 +933,7 @@ body::before, body::after{display:none !important;}
   border:none !important;
 }
 
-/* ===== v609 LANDING LOCK ===== */
+/* ===== v611 LANDING LOCK ===== */
 :root{
   --ng-blue:#00d7ff;
   --ng-blue2:#2a7fff;
@@ -1054,7 +1089,7 @@ body::before, body::after{display:none !important;}
   opacity:.55;
 }
 
-/* ===== v609: Enter button glass + granular text (ONLY) ===== */
+/* ===== v611: Enter button glass + granular text (ONLY) ===== */
 #btnEnter{
   position:relative;
   border-radius:999px !important;
@@ -1114,7 +1149,7 @@ body::before, body::after{display:none !important;}
     0 0 14px rgba(255,120,35,.10);
 }
 
-/* ===== v609 tweaks: glossy enter + spacing + blue title glass ===== */
+/* ===== v611 tweaks: glossy enter + spacing + blue title glass ===== */
 
 /* Glossy glass ENTER (ensure applies even if classes differ) */
 #btnEnter, .btn.green{
@@ -1164,7 +1199,7 @@ body::before, body::after{display:none !important;}
 .sparkBar{ margin-top:22px !important; height:8px !important; }
 
 
-/* ===== v609 TITLE MATCHES LOGO NIGHT BLUE ===== */
+/* ===== v611 TITLE MATCHES LOGO NIGHT BLUE ===== */
 
 .heroNight, .heroGames{
   font-weight:1100;
@@ -1192,7 +1227,7 @@ body::before, body::after{display:none !important;}
   pointer-events:none;
 }
 
-/* ===== v609: Deep blue email border + darker subtitle ===== */
+/* ===== v611: Deep blue email border + darker subtitle ===== */
 
 /* Email entry field (above Enter) */
 #inEmail{
@@ -1224,7 +1259,7 @@ body::before, body::after{display:none !important;}
   opacity:1 !important;
 }
 
-/* ===== v609: TRUE FLOATING (no panels/frames/backgrounds on elements) ===== */
+/* ===== v611: TRUE FLOATING (no panels/frames/backgrounds on elements) ===== */
 
 /* Space/void background like logo backdrop */
 html, body{
@@ -1370,7 +1405,7 @@ body::after{
   box-shadow: 0 0 16px rgba(0,210,255,.16) !important;
 }
 
-/* ===== v609: ZERO BACKGROUNDS + OUTLINE-ONLY ENTER ===== */
+/* ===== v611: ZERO BACKGROUNDS + OUTLINE-ONLY ENTER ===== */
 
 /* No backgrounds anywhere (everything floats) */
 *{
@@ -1450,7 +1485,7 @@ label, .label, .small, .hint{
   border: 1px solid rgba(0,210,255,.22) !important;
 }
 
-/* ===== v609: FRAME FULLY REMOVED ===== */
+/* ===== v611: FRAME FULLY REMOVED ===== */
 
 /* Kill any remaining structural containers */
 .frame, .shell, .outer, .container, .wrapper, .appFrame {
@@ -1487,7 +1522,7 @@ body > div {
     box-shadow: none !important;
 }
 
-/* ===== v609: BRUTE FORCE NO-FRAME / NO-BACKGROUNDS ===== */
+/* ===== v611: BRUTE FORCE NO-FRAME / NO-BACKGROUNDS ===== */
 
 /* 1) Nuke all frames/panels/wrappers */
 .frame,.shell,.outer,.container,.wrapper,.appFrame,.card,.wrap,.panel,.heroPanel,.heroHeader,.viewport,.phone,.stage,.canvas{
@@ -1558,7 +1593,7 @@ html,body{
   box-shadow: 0 0 16px rgba(0,210,255,.16) !important;
 }
 
-/* ===== v609: logo-canvas background + truly floating UI (no frames) ===== */
+/* ===== v611: logo-canvas background + truly floating UI (no frames) ===== */
 
 /* Background matches the logo-backdrop vibe (cool blue + warm amber on black) */
 html, body{
@@ -1686,7 +1721,7 @@ body::after{
   z-index:5;
 }
 
-/* ===== v609: POLISH PASS (space atmosphere + true floating + small version) ===== */
+/* ===== v611: POLISH PASS (space atmosphere + true floating + small version) ===== */
 
 /* Deeper space: reduce "wall gradient" look, add vignette */
 html, body{
@@ -1816,7 +1851,7 @@ body > *{
   border: 1px solid rgba(0,210,255,.14) !important;
 }
 
-/* ===== v609: WOW POLISH (space-float + unified neon light) ===== */
+/* ===== v611: WOW POLISH (space-float + unified neon light) ===== */
 
 /* 1) Deep void canvas (logo-like atmosphere) */
 html, body{
@@ -2035,7 +2070,7 @@ body > *{ position:relative; z-index:2; }
 /* safety: hide any leftover center watermark classes */
 .wmVer, .wm540{ display:none !important; }
 
-/* ===== v609: TRUE NO-FRAME / NO-PANELS (everything floats) ===== */
+/* ===== v611: TRUE NO-FRAME / NO-PANELS (everything floats) ===== */
 .wrap{padding:0 !important; align-items:flex-start !important; justify-content:center !important;}
 #app.card, .card{
   width:100% !important;
@@ -2070,7 +2105,7 @@ body > *{ position:relative; z-index:2; }
 #inEmail{border:2px solid #0a4bff !important;}
 #btnEnter{border:2px solid #ffd000 !important;}
 
-/* ===== v609: REMOVE FRAME FOR REAL + TRUE FLOATING DEPTH ===== */
+/* ===== v611: REMOVE FRAME FOR REAL + TRUE FLOATING DEPTH ===== */
 
 /* 0) Hard reset: NO page inset / NO outer frame */
 html,body{margin:0 !important;padding:0 !important;border:0 !important;outline:0 !important;background:#000 !important;overflow-x:hidden !important;}
@@ -2177,14 +2212,14 @@ input, #inEmail{
   box-shadow:none !important;
 }
 
-/* v609: ensure sweep overlay never blocks UI */
+/* v611: ensure sweep overlay never blocks UI */
 #sweepOverlay{pointer-events:none;}
 #sweepOverlay.show{pointer-events:none;}
 
 
 .btn:active{transform:translateY(1px) scale(.99);filter:brightness(1.08);}
 
-/* ===== v609: button press feedback ===== */
+/* ===== v611: button press feedback ===== */
 #btnEnter{ pointer-events:auto !important; cursor:pointer !important; touch-action:manipulation !important; }
 #btnEnter.pressed{ transform: translateY(2px) scale(.985) !important; }
 
@@ -2307,7 +2342,7 @@ input::placeholder{ color: rgba(200,220,255,.45) !important; }
 
 
 /* =========================================================
-   NG — STAGE + FLOAT MODULE SYSTEM (v609)
+   NG — STAGE + FLOAT MODULE SYSTEM (v611)
    Goal: everything feels suspended like the hero logo.
    Generated: 2026-02-24 12:42:04
    ========================================================= */
@@ -2436,6 +2471,41 @@ input::placeholder{ color: rgba(200,220,255,.45) !important; }
 }
 
 
+
+/* Fullscreen safety */
+html, body { width:100%; height:100%; }
+#app { min-height:100vh; }
+.wrap, .stage { width:100%; min-height:100vh; }
+img { max-width:100%; height:auto; }
+
+
+/* NG — Floating 3D enhance (landing + hub) */
+.heroTitle, .heroLogo, h1, h2, .h2 {
+  color: var(--ngText);
+  text-shadow:
+    0 0 18px rgba(0,210,255,.22),
+    0 0 22px rgba(255,208,0,.12);
+}
+.btn, button, #btnEnter {
+  border-color: var(--ngGold) !important;
+  color: var(--ngGold) !important;
+  box-shadow:
+    0 0 18px rgba(255,208,0,.22),
+    0 0 34px rgba(255,160,0,.14),
+    0 0 20px rgba(0,210,255,.12) !important;
+}
+input, #inEmail, #inName {
+  border-color: var(--ngBlue) !important;
+  box-shadow:
+    0 0 18px rgba(10,75,255,.35),
+    0 0 26px rgba(0,210,255,.10),
+    inset 0 0 10px rgba(10,75,255,.14) !important;
+}
+.ngModule, .playerRow, .gcard {
+  transform: translateZ(0);
+  filter: drop-shadow(0 18px 34px rgba(0,0,0,.66));
+}
+
 </style>
 </head>
 <body>
@@ -2455,7 +2525,7 @@ input::placeholder{ color: rgba(200,220,255,.45) !important; }
       <img class="heroLogo" src="${asset('7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png')}" alt="Night Games"
         onerror="this.onerror=null; this.src='7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png';"/>
       <div class="heroTitle">Night Games</div>
-      <div class="heroSub">Enter your email to continue • v609</div>
+      <div class="heroSub">Enter your email to continue • v611</div>
     </div>
   </div>
   <div class="main">
@@ -2480,7 +2550,7 @@ input::placeholder{ color: rgba(200,220,255,.45) !important; }
 <div id="fatalErr" style="position:fixed;left:10px;right:10px;bottom:10px;z-index:999999;display:none;padding:10px 12px;border-radius:14px;background:rgba(60,0,0,.78);border:1px solid rgba(255,77,77,.55);color:#ffd6d6;font:12px/1.3 system-ui;box-shadow:0 18px 40px rgba(0,0,0,.55);white-space:pre-wrap;"></div>
 
 <script>
-// v609: Global error handlers so we NEVER get a blank page with no clue.
+// v611: Global error handlers so we NEVER get a blank page with no clue.
 (function(){
   function show(msg){
     try{
@@ -2497,7 +2567,7 @@ input::placeholder{ color: rgba(200,220,255,.45) !important; }
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD = 609;
+const BUILD = 611;
 
 const ASSET_BASE = new URL('.', document.baseURI).toString();
 const asset = (p)=> new URL(p, ASSET_BASE).toString();
@@ -2514,7 +2584,7 @@ function showError(msg){
   const box=document.getElementById("errBox");
   if(!box) return;
   box.style.display="block";
-  box.innerHTML = "<b>Build v609 error:</b>\n"+String(msg);
+  box.innerHTML = "<b>Build v611 error:</b>\n"+String(msg);
 }
 window.addEventListener("error",(e)=>{
   showError(e?.error?.stack || e?.message || e);
@@ -2564,12 +2634,12 @@ function headerBanner(title="Night Games", opts={}){
       ${showTitleBelow ? `
         <div class="titleRow" style="position:relative; left:auto; right:auto; bottom:auto; padding:12px 14px 0 14px;">
           <div class="h1">${title}</div>
-          <div class="badge">v609</div>
+          <div class="badge">v611</div>
         </div>
       ` : `
         <div class="titleRow">
           <div class="h1">${title}</div>
-          <div class="badge">v609</div>
+          <div class="badge">v611</div>
         </div>
       `}
     </div>
@@ -3082,7 +3152,7 @@ async function submitCricket(matchId, marksThisTurn){
    ============================ */
 
 
-/* ===== v609: minimal audio unlock ===== */
+/* ===== v611: minimal audio unlock ===== */
 let NG_AUDIO_CTX=null;
 async function ngUnlockAudio(){
   try{
@@ -3303,7 +3373,7 @@ function screenHistory(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">History view is wired as a real page in v609. Next pass we populate it from match logs / saved games.</div>
+        <div class="ok">History view is wired as a real page in v611. Next pass we populate it from match logs / saved games.</div>
       </div>
     </div>
     ${footer()}
@@ -3329,7 +3399,7 @@ function screenStats(){
           <button class="btn sm" id="btnBack">Back</button>
         </div>
         <div style="height:10px"></div>
-        <div class="ok">Stats page is a real page in v609. Next pass we show the stat definitions + your notables.</div>
+        <div class="ok">Stats page is a real page in v611. Next pass we show the stat definitions + your notables.</div>
       </div>
     </div>
     ${footer()}
@@ -3543,7 +3613,7 @@ function screenGameCricket(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v609: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
+        <div class="sub">v611: Enter marks-per-turn (0–3 each). Scoring is simplified for this first full run.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -3676,7 +3746,7 @@ function screenGame01(){
             <button class="btn sm" id="btnBack">Back</button>
           </div>
         </div>
-        <div class="sub">v609: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
+        <div class="sub">v611: per-turn points entry (0–180). Exact 0 wins. Enforcement of double-in/out comes next pass.</div>
         <div style="height:12px"></div>
 
         ${winner?`<div class="ok"><b>Winner:</b> ${seats.find(s=>s.seat===winner)?.name||winner}</div><div style="height:10px"></div>`:""}
@@ -3790,7 +3860,7 @@ function screenGamePlaceholder(){
    ============================ */
 
 /* ============================
-   v609: CLEAN WIRING LAYER
+   v611: CLEAN WIRING LAYER
    - no stacked handlers
    - binds after every render
    - landing Enter -> onStart -> player
@@ -3867,7 +3937,7 @@ function render(){
 }
 
 
-// v609: hard fallback binding so Enter can never be dead.
+// v611: hard fallback binding so Enter can never be dead.
 function bindAuthFallback(){
   const b=document.getElementById("btnEnter");
   const i=document.getElementById("inEmail");
@@ -3888,15 +3958,6 @@ function bindAuthFallback(){
    Boot
    ============================ */
 (async function boot(){
-  // v609: Always start on landing (auth). Prevent stale #players hash from auto-jumping.
-  try{
-    const sp=new URLSearchParams(location.search);
-    const allow=sp.get('screen');
-    if(allow!=='players' && allow!=='player'){
-      if(location.hash) location.hash='';
-      App.screen='auth';
-    }
-  }catch(_e){}
   render();
 // Always start on landing/email gate. Prefill saved email only.
   const remembered=store.get("me", null);
@@ -3917,7 +3978,7 @@ setInterval(()=>{
 
 
 /* =========================================================
-   NG v609 — CLEAN BOOT / SINGLE ROUTER WIRING (NO PATCH STACKS)
+   NG v611 — CLEAN BOOT / SINGLE ROUTER WIRING (NO PATCH STACKS)
    Purpose:
    - Ensure the app ALWAYS renders the landing screen on load
    - Ensure Enter ALWAYS calls onStart and routes to Player
@@ -3932,7 +3993,7 @@ setInterval(()=>{
       var box=document.getElementById("errBox");
       if(!box) return;
       box.style.display="block";
-      box.innerHTML="<b>Build v609 error:</b>\n"+String(msg);
+      box.innerHTML="<b>Build v611 error:</b>\n"+String(msg);
     }catch(_e){}
   }
   window.addEventListener("error", function(e){ __ngShowErr(e && (e.error && e.error.stack) || e.message || e); });
@@ -3957,7 +4018,7 @@ setInterval(()=>{
       if(typeof ngUnlockAudio==="function"){ try{ await ngUnlockAudio(); }catch(_e){} }
       if(typeof onStart==="function"){ await onStart(); return; }
     }catch(err){
-      try{ console.warn("v609: onStart failed", err); }catch(_e){}
+      try{ console.warn("v611: onStart failed", err); }catch(_e){}
     }
     // Absolute fallback: route to player (so UI never dead)
     try{ if(typeof go==="function") go("player"); }catch(_e){}
@@ -3997,7 +4058,7 @@ setInterval(()=>{
 
 <script>
 /* =========================================================
-   NightGames v609 — Boot Contract Bridge (rewire)
+   NightGames v611 — Boot Contract Bridge (rewire)
    Guarantees ENTER always routes Landing -> Players.
    ========================================================= */
 (function() {
@@ -4063,7 +4124,7 @@ setInterval(()=>{
 
 <script>
 /* =========================================================
-   NightGames Engine-First Runtime v609
+   NightGames Engine-First Runtime v611
    Generated: 2026-02-24 12:33:31
    Guarantee: Landing -> Players works even if legacy code fails.
    No external build tools required (GitHub Pages safe).
@@ -4073,7 +4134,7 @@ setInterval(()=>{
   if (window.__NG_ENGINE_FIRST_V598) return;
   window.__NG_ENGINE_FIRST_V598 = true;
 
-  const BUILD = 609;
+  const BUILD = 611;
   const firebaseConfig = {"apiKey": "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo", "authDomain": "gamenightdarts-e7601.firebaseapp.com", "projectId": "gamenightdarts-e7601", "storageBucket": "gamenightdarts-e7601.firebasestorage.app", "messagingSenderId": "270045452251", "appId": "1:270045452251:web:5a4a661140a60780e939fe", "measurementId": "G-M60TDFYBW0"};
 
   const CDN = {
@@ -4137,14 +4198,14 @@ setInterval(()=>{
   function hardMountShell() {
     // Make sure we own the UI regardless of what legacy code did.
     document.body.innerHTML = `
-      <div class="badge">v609</div>
+      <div class="badge">v611</div>
       <div id="ngErr" style="display:none; position:fixed; left:12px; right:12px; bottom:12px; z-index:99999;
         background:rgba(20,0,0,.92); border:1px solid rgba(255,80,80,.5);
         border-radius:14px; padding:12px; color:#ffd7d7; white-space:pre-wrap;
         box-shadow:0 16px 40px rgba(0,0,0,.55), 0 0 22px rgba(255,80,80,.18);
         font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace; font-size:12px;"></div>
       <div class="wrap"><div id="ngApp"></div>
-        <div class="footer"><b>Night Games</b> • Engine-first v609 • GitHub Pages-safe</div>
+        <div class="footer"><b>Night Games</b> • Engine-first v611 • GitHub Pages-safe</div>
       </div>
     `;
   }
@@ -4404,7 +4465,7 @@ setInterval(()=>{
   }
 })();
 
-// ===== NG background resolver v609 =====
+// ===== NG background resolver v611 =====
 (function(){
   try{
     const sp = new URLSearchParams(location.search);
