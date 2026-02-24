@@ -26,7 +26,7 @@
 
     
     :root {
-      --bg: url("IMG_7287.png?b=637");
+      --bg: url("IMG_7287.png?b=638");
       --bgShiftY: -8px; /* micro-tune: moves image DOWN slightly */
       --glass: rgba(0,0,0,.22);
       --stroke: rgba(120,180,255,.18);
@@ -349,14 +349,15 @@ border: 2px solid var(--blue);
 
 
     /* Landing layout tweaks (Phase 1 step) */
-    #sceneLanding {
+    #sceneLanding.scene.on{
       display: grid;
       place-items: center;
       min-height: 88vh;
       padding-top: 6vh;
       box-sizing: border-box;
     }
-    #sceneLanding .panel {
+    #sceneLanding{ /* when hidden, .scene display:none wins */ }
+#sceneLanding .panel {
       text-align: center;
       max-width: 720px;
     }
@@ -579,6 +580,10 @@ border: 2px solid var(--blue);
       z-index: 3;
     }
 
+    
+    /* Narrow the landing form so inputs/buttons don't stretch too wide */
+    .formNarrow{ width: min(520px, 100%); margin: 0 auto; }
+
     /* ===== True screen scenes (no long-page scroll) ===== */
     #app{ padding: 0 !important; }
     .wrap{
@@ -597,13 +602,14 @@ border: 2px solid var(--blue);
       box-sizing: border-box;
     }
     .scene.on{ display: block; }
+    #sceneLanding.scene.on{ display: grid; }
 
   </style>
 </head>
 
 <body>
 
-  <!-- BUILD 637 2026-02-24 19:32:13 -->
+  <!-- BUILD 638 2026-02-24 19:36:41 -->
 
   
   <div id="app">
@@ -615,7 +621,7 @@ border: 2px solid var(--blue);
           <div class="h1">ENTER</div>
 <div class="sub">Email-only access. ENTER takes you to Games and Players.</div>
 
-          <div style="display:grid; gap: 10px;">
+          <div class="formNarrow" style="display:grid; gap: 10px;">
             <input id="inEmail" type="email" autocomplete="email" placeholder="Email address" / class="glint">
             <button id="btnEnter" class="btn glint" class="glint">ENTER</button>
           </div>
@@ -710,7 +716,7 @@ border: 2px solid var(--blue);
     </div>
   </div>
 
-  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v637</span></div>
+  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v638</span></div>
 
   <script>
     // =========================================================
