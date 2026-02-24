@@ -7,12 +7,12 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
-  <title>Night Games • v626</title>
+  <title>Night Games • v627</title>
 
   <style>
-    /* BUILD_STAMP v626 2026-02-24 17:33:57 */
+    /* BUILD_STAMP v627 2026-02-24 17:33:57 */
     /* =========================================================
-       NightGames — PHASE 1 (Fresh Start) v626
+       NightGames — PHASE 1 (Fresh Start) v627
        Includes:
          - Fullscreen layout (no corner shrink)
          - Repo background: IMG_7287.png (no embedding)
@@ -21,13 +21,13 @@
          - Landing never auto-jumps to Players (ENTER only)
          - Floating / neon look aligned to logo colors
          - Bottom rights-reserved footer
-       Generated: 2026-02-24 17:40:43
+       Generated: 2026-02-24 17:46:47
        ========================================================= */
 
     
     :root {
-      --bg: url("IMG_7287.png?v=626");
-      --bgShiftY: -90px; /* moves background upward (brings logo/strip down into view area) */
+      --bg: url("IMG_7287.png?v=627");
+      --bgShiftY: -20px; /* tuned: moves image DOWN */ /* moves background upward (brings logo/strip down into view area) */
       --glass: rgba(0,0,0,.22);
       --stroke: rgba(120,180,255,.18);
       --text: rgba(235,245,255,.92);
@@ -158,6 +158,15 @@
       filter: var(--shadow);
       font-size: 16px;
     }
+    
+    input[type="email"]:focus, input[type="text"]:focus{
+      border-color: rgba(0,210,255,.98);
+      box-shadow:
+        0 0 14px rgba(0,210,255,.55),
+        0 0 30px rgba(0,210,255,.22),
+        inset 0 0 10px rgba(0,210,255,.14);
+    }
+
     input::placeholder { color: rgba(200,220,255,.45); }
 
     /* Buttons */
@@ -373,6 +382,22 @@
       opacity: .65;
     }
 
+
+    /* iOS/Safari autofill (kills yellow fill) */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active{
+      -webkit-text-fill-color: rgba(235,245,255,.92) !important;
+      transition: background-color 5000s ease-in-out 0s;
+      box-shadow:
+        0 0 0px 1000px rgba(5,18,40,.65) inset,
+        0 0 18px rgba(0,210,255,.45),
+        0 0 34px rgba(0,210,255,.18) !important;
+      border: 2px solid rgba(0,210,255,.95) !important;
+      caret-color: rgba(235,245,255,.92) !important;
+    }
+
     /* Scene visibility */
     .scene { display: none; }
     .scene.on { display: block; }
@@ -483,7 +508,7 @@
 
   <script>
     // =========================================================
-    // NightGames PHASE 1 JS v626
+    // NightGames PHASE 1 JS v627
     // - No Firebase here yet.
     // - No auto-jump. Landing is default.
     // - Only navigation: ENTER -> Players, Back -> Landing
