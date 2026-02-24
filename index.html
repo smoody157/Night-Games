@@ -26,7 +26,7 @@
 
     
     :root {
-      --bg: url("IMG_7287.png?b=638");
+      --bg: url("IMG_7287.png?b=639");
       --bgShiftY: -8px; /* micro-tune: moves image DOWN slightly */
       --glass: rgba(0,0,0,.22);
       --stroke: rgba(120,180,255,.18);
@@ -53,6 +53,8 @@
       background-attachment: fixed;
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    
+      overflow: hidden;
     }
 
     /* Seam / strip disguise + depth vignette */
@@ -225,8 +227,7 @@ border: 2px solid var(--blue);
     input::placeholder { color: rgba(200,220,255,.45); }
 
     /* Buttons */
-    .btn{
-      width: 100%;
+    .btn{ width: auto;
       padding: 14px 14px;
       border-radius: 18px;
       background: rgba(0,0,0,.10);
@@ -582,7 +583,11 @@ border: 2px solid var(--blue);
 
     
     /* Narrow the landing form so inputs/buttons don't stretch too wide */
-    .formNarrow{ width: min(520px, 100%); margin: 0 auto; }
+    .formNarrow{ width: min(420px, 100%); margin: 0 auto; }
+
+    /* Keep landing ENTER button full-width inside form only */
+    #sceneLanding .formNarrow .btn{ width: 100%; }
+
 
     /* ===== True screen scenes (no long-page scroll) ===== */
     #app{ padding: 0 !important; }
@@ -602,6 +607,8 @@ border: 2px solid var(--blue);
       box-sizing: border-box;
     }
     .scene.on{ display: block; }
+    .scene{ overscroll-behavior: contain; }
+
     #sceneLanding.scene.on{ display: grid; }
 
   </style>
@@ -609,7 +616,7 @@ border: 2px solid var(--blue);
 
 <body>
 
-  <!-- BUILD 638 2026-02-24 19:36:41 -->
+  <!-- BUILD 639 2026-02-24 20:08:21 -->
 
   
   <div id="app">
@@ -716,7 +723,7 @@ border: 2px solid var(--blue);
     </div>
   </div>
 
-  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v638</span></div>
+  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v639</span></div>
 
   <script>
     // =========================================================
