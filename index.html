@@ -26,7 +26,7 @@
 
     
     :root {
-      --bg: url("IMG_7287.png?b=639");
+      --bg: url("IMG_7287.png?b=641");
       --bgShiftY: -8px; /* micro-tune: moves image DOWN slightly */
       --glass: rgba(0,0,0,.22);
       --stroke: rgba(120,180,255,.18);
@@ -350,15 +350,7 @@ border: 2px solid var(--blue);
 
 
     /* Landing layout tweaks (Phase 1 step) */
-    #sceneLanding.scene.on{
-      display: grid;
-      place-items: center;
-      min-height: 88vh;
-      padding-top: 6vh;
-      box-sizing: border-box;
-    }
-    #sceneLanding{ /* when hidden, .scene display:none wins */ }
-#sceneLanding .panel {
+    #sceneLanding#sceneLanding .panel {
       text-align: center;
       max-width: 720px;
     }
@@ -372,13 +364,6 @@ border: 2px solid var(--blue);
 
 
     /* Landing: keep centered, but no panel background */
-    #sceneLanding{
-      display: grid;
-      place-items: center;
-      min-height: 88vh;
-      padding-top: 6vh;
-      box-sizing: border-box;
-    }
     #sceneLanding .panel{
       max-width: 720px;
       width: 100%;
@@ -388,14 +373,6 @@ border: 2px solid var(--blue);
 
 
     /* Landing positioning */
-    #sceneLanding{
-      display: grid;
-      place-items: center;
-      min-height: 82vh;
-      padding-top: 12vh;
-      box-sizing: border-box;
-      text-align: center;
-    }
     #sceneLanding .panel{
       width: min(860px, 100%);
       text-align: center;
@@ -589,34 +566,51 @@ border: 2px solid var(--blue);
     #sceneLanding .formNarrow .btn{ width: 100%; }
 
 
-    /* ===== True screen scenes (no long-page scroll) ===== */
-    #app{ padding: 0 !important; }
+    
+    /* Landing centers its content when active */
+    
+    /* ===== True screen scenes (Landing + Players are separate screens) ===== */
+    html, body{ overflow: hidden; }
+
+    .scene{
+      position: fixed;
+      inset: 0;
+      display: none;              /* hidden by default */
+      overflow-y: auto;           /* each screen can scroll if needed */
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      padding: 0;
+      box-sizing: border-box;
+      z-index: 0;
+    }
+    .scene.on{ display: block; z-index: 1; }
+
+    /* Keep content centered with safe padding */
     .wrap{
       width: min(980px, 100%);
       margin: 0 auto;
       padding: 18px 14px calc(70px + env(safe-area-inset-bottom)) 14px;
       box-sizing: border-box;
     }
-    .scene{
-      position: fixed;
-      inset: 0;
-      display: none;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    .scene.on{ display: block; }
-    .scene{ overscroll-behavior: contain; }
 
-    #sceneLanding.scene.on{ display: grid; }
+    /* Landing uses grid centering ONLY when active */
+    #sceneLanding.scene.on{
+      display: grid;
+      align-content: start;
+      justify-items: center;
+    }
+
+  
+    /* ===== Players readability on background ===== */
+    #scenePlayers{ color: rgba(235,245,255,.92); }
+    #scenePlayers *{ text-shadow: 0 0 18px rgba(0,0,0,.75); }
 
   </style>
 </head>
 
 <body>
 
-  <!-- BUILD 639 2026-02-24 20:08:21 -->
+  <!-- BUILD 641 2026-02-24 20:15:46 -->
 
   
   <div id="app">
@@ -723,7 +717,7 @@ border: 2px solid var(--blue);
     </div>
   </div>
 
-  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v639</span></div>
+  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v641</span></div>
 
   <script>
     // =========================================================
@@ -744,7 +738,9 @@ border: 2px solid var(--blue);
     function showLanding() {
       landing.classList.add("on");
       players.classList.remove("on");
-      try{ landing.scrollTop = 0; players.scrollTop = 0; window.scrollTo(0,0);}catch(e){}
+      try { landing.scrollTop = 0; players.scrollTop = 0; window.scrollTo(0,0); } catch(e) {}
+      try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
+    }catch(e){}
       // lock hash
       try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
     }
@@ -752,7 +748,9 @@ border: 2px solid var(--blue);
     function showPlayers() {
       landing.classList.remove("on");
       players.classList.add("on");
-      try{ landing.scrollTop = 0; players.scrollTop = 0; window.scrollTo(0,0);}catch(e){}
+      try { landing.scrollTop = 0; players.scrollTop = 0; window.scrollTo(0,0); } catch(e) {}
+      try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
+    }catch(e){}
       try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
     }
 
