@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Night Games • v650</title>
+  <title>Night Games • v651</title>
 
   <style>
     /* =========================================================
-       NightGames — PHASE 1 (Landing + Players) v650
+       NightGames — PHASE 1 (Landing + Players) v651
        - Fullscreen background from repo: IMG_7287.png
        - Two scenes only (Landing, Players) — no auto-jump
        - ENTER always navigates to Players
@@ -17,7 +17,7 @@
        ========================================================= */
 
     :root{
-      --ver: "v650";
+      --ver: "v651";
       --bgUrl: url("IMG_7287.png");
 
       --text: rgba(235,245,255,.92);
@@ -72,6 +72,7 @@
       min-height:100vh;
       width:100%;
       padding: 18px 14px calc(70px + env(safe-area-inset-bottom)) 14px;
+      padding-top: clamp(210px, 28vh, 330px); /* clear logo embedded in background */
       box-sizing:border-box;
       display:grid;
       place-items:start center;
@@ -105,36 +106,6 @@
     .scene.on{ display:block; }
 
     /* Logo block */
-    .logoWrap{
-      width:100%;
-      display:grid;
-      place-items:center;
-      margin-top: 8px;
-    }
-    .logo{
-      width: min(920px, 100%);
-      height: clamp(170px, 24vh, 270px);
-      border-radius: 18px;
-      overflow:hidden;
-      position:relative;
-      filter: var(--floatShadow);
-    }
-    .logo::before{
-      content:"";
-      position:absolute; inset:0;
-      background: var(--bgUrl) center top / cover no-repeat;
-      transform: scale(1.02);
-    }
-    .logo::after{
-      content:"";
-      position:absolute; inset:0;
-      border-radius: 18px;
-      box-shadow:
-        0 0 18px rgba(255,208,0,.16),
-        0 0 22px rgba(0,210,255,.16),
-        inset 0 0 0 1px rgba(120,180,255,.14);
-      pointer-events:none;
-    }
 
     /* Glow divider to disguise seam */
     .divider{
@@ -401,7 +372,7 @@
 
     button, input{ touch-action: manipulation; }
   
-    /* ===== v650 Landing-only position tweak (ONLY change) =====
+    /* ===== v651 Landing-only position tweak (ONLY change) =====
        Purpose: move the Landing center DOWN so it doesn't ride into the logo.
        Nothing else in the build changed.
     */
@@ -412,15 +383,13 @@
 
 <body>
 <!-- BUILD 650 2026-02-24 21:50:08 -->
-  <div class="verBadge" aria-hidden="true">v650</div>
+  <div class="verBadge" aria-hidden="true">v651</div>
 
   <div id="app">
     <div class="wrap">
 
       <!-- LANDING -->
       <section id="sceneLanding" class="scene on" aria-label="Landing">
-        <div class="logoWrap">
-          <div class="logo" role="img" aria-label="Night Games logo banner"></div>
         </div>
 
         <div class="divider" aria-hidden="true"></div>
@@ -440,9 +409,7 @@
 
       <!-- PLAYERS -->
       <section id="scenePlayers" class="scene" aria-label="Players and Games">
-        <div class="logoWrap" style="margin-top: 2px;">
-          <div class="logo" style="height: clamp(120px, 18vh, 200px);" role="img" aria-label="Night Games banner"></div>
-        </div>
+</div>
 
         <div class="divider" aria-hidden="true" style="margin-top: 12px;"></div>
 
@@ -553,11 +520,11 @@
     </div>
   </div>
 
-  <div class="rights">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved. • v650</div>
+  <div class="rights">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved. • v651</div>
 
   <script>
     // =========================================================
-    // NightGames PHASE 1 JS v650
+    // NightGames PHASE 1 JS v651
     // - No Firebase here yet
     // - No auto-jump (Landing always first)
     // - ENTER -> Players, Back -> Landing
