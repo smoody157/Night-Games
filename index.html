@@ -3,192 +3,455 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-
-  <title>Night Games</title>
+  <title>Night Games • v650</title>
 
   <style>
-    /* BUILD_STAMP  2026-02-24 17:33:57 */
     /* =========================================================
-       NightGames — PHASE 1 (Fresh Start) 
-       Includes:
-         - Fullscreen layout (no corner shrink)
-         - Repo background: IMG_7287.png (no embedding)
-         - Seam blend overlay
-         - Two scenes only: Landing + Players
-         - Landing never auto-jumps to Players (ENTER only)
-         - Floating / neon look aligned to logo colors
-         - Bottom rights-reserved footer
-       Generated: 2026-02-24 17:53:43
+       NightGames — PHASE 1 (Landing + Players) v650
+       - Fullscreen background from repo: IMG_7287.png
+       - Two scenes only (Landing, Players) — no auto-jump
+       - ENTER always navigates to Players
+       - Layout fixed (no overlap with logo)
+       - Floating neon outlines (no glass panels)
+       - iOS autofill yellow override (light-blue tint)
        ========================================================= */
 
-    
-    :root {
-      --bg: url("IMG_7287.png?b=647");
-      --bgShiftY: -8px; /* micro-tune: moves image DOWN slightly */
-      --glass: rgba(0,0,0,.22);
-      --stroke: rgba(120,180,255,.18);
+    :root{
+      --ver: "v650";
+      --bgUrl: url("IMG_7287.png");
+
       --text: rgba(235,245,255,.92);
-      --muted: rgba(200,220,255,.62);
+      --muted: rgba(200,220,255,.58);
+
       --blue: rgba(10,75,255,.95);
       --cyan: rgba(0,210,255,.85);
       --amber: rgba(255,208,0,.95);
-      --shadow: drop-shadow(0 18px 34px rgba(0,0,0,.66));
+
+      --floatShadow: drop-shadow(0 18px 34px rgba(0,0,0,.66));
+      --edgeCyan: 0 0 22px rgba(0,210,255,.18);
+      --edgeAmber: 0 0 18px rgba(255,175,0,.12);
     }
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      min-height: 100vh;
-      overflow-x: hidden;
-      background-color: #000;
-      background-image: var(--bg);
-      background-position: center var(--bgShiftY);
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
+    html, body{
+      margin:0;
+      padding:0;
+      width:100%;
+      height:100%;
+      min-height:100vh;
+      background:
+        radial-gradient(120% 90% at 18% 12%, rgba(0,210,255,.14), rgba(0,0,0,0) 55%),
+        radial-gradient(110% 80% at 82% 14%, rgba(255,175,0,.12), rgba(0,0,0,0) 58%),
+        radial-gradient(120% 120% at 50% 96%, rgba(160,120,255,.09), rgba(0,0,0,0) 62%),
+        linear-gradient(to bottom, rgba(0,0,0,.12), rgba(0,0,0,.38) 55%, rgba(0,0,0,.68)),
+        var(--bgUrl) center top / cover no-repeat fixed,
+        #000;
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    
-      overflow: hidden;
+      overflow-x:hidden;
     }
 
-    /* Seam / strip disguise + depth vignette */
-    /* very subtle sparkle dust (matches logo sparkles) */
-    /* Seam blend overlay (full-screen) */
-    /* Keep app above overlay */
-    #app { position: relative; z-index: 1;
-       position: relative; z-index: 1; }
+    /* Tiny star dust */
+    body::after{
+      content:"";
+      position:fixed; inset:0;
+      background-image:
+        radial-gradient(rgba(255,255,255,.22) 1px, transparent 1px),
+        radial-gradient(rgba(0,210,255,.18) 1px, transparent 1px),
+        radial-gradient(rgba(255,175,0,.14) 1px, transparent 1px);
+      background-size: 95px 95px, 140px 140px, 180px 180px;
+      background-position: 0 0, 34px 58px, 72px 24px;
+      opacity:.06;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    /* App frame */
+    #app{
+      position:relative;
+      z-index:1;
+      min-height:100vh;
+      width:100%;
+      padding: 18px 14px calc(70px + env(safe-area-inset-bottom)) 14px;
+      box-sizing:border-box;
+      display:grid;
+      place-items:start center;
+    }
+    .wrap{
+      width:min(980px, 100%);
+    }
+
+    /* Version badge (top-right) */
+    .verBadge{
+      position:fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 30;
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,210,255,.28);
+      background: rgba(0,0,0,.18);
+      color: rgba(200,240,255,.95);
+      font-weight: 900;
+      letter-spacing: .6px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      filter: var(--floatShadow);
+      box-shadow: var(--edgeCyan), 0 0 22px rgba(0,0,0,.35);
+      user-select:none;
+    }
+
+    /* Scenes */
+    .scene{ display:none; }
+    .scene.on{ display:block; }
+
+    /* Logo block */
+    .logoWrap{
+      width:100%;
+      display:grid;
+      place-items:center;
+      margin-top: 8px;
+    }
+    .logo{
+      width: min(920px, 100%);
+      height: clamp(170px, 24vh, 270px);
+      border-radius: 18px;
+      overflow:hidden;
+      position:relative;
+      filter: var(--floatShadow);
+    }
+    .logo::before{
+      content:"";
+      position:absolute; inset:0;
+      background: var(--bgUrl) center top / cover no-repeat;
+      transform: scale(1.02);
+    }
+    .logo::after{
+      content:"";
+      position:absolute; inset:0;
+      border-radius: 18px;
+      box-shadow:
+        0 0 18px rgba(255,208,0,.16),
+        0 0 22px rgba(0,210,255,.16),
+        inset 0 0 0 1px rgba(120,180,255,.14);
+      pointer-events:none;
+    }
+
+    /* Glow divider to disguise seam */
+    .divider{
+      margin: 14px auto 16px auto;
+      width: min(920px, 100%);
+      height: 14px;
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg,
+          rgba(0,0,0,0),
+          rgba(10,75,255,.16),
+          rgba(0,210,255,.24),
+          rgba(255,175,0,.18),
+          rgba(0,0,0,0)
+        );
+      box-shadow:
+        0 0 16px rgba(0,210,255,.12),
+        0 0 14px rgba(255,175,0,.08);
+      filter: var(--floatShadow);
+      opacity: .9;
+    }
+
+    /* Landing center content (NO glass background) */
+    .center{
+      width: min(920px, 100%);
+      text-align:center;
+      padding: 12px 10px 0 10px;
+      box-sizing:border-box;
+    }
+    .title{
+      margin: 6px 0 10px 0;
+      font-size: clamp(40px, 5.2vw, 56px);
+      letter-spacing: .22em;
+      font-weight: 900;
+      text-transform: uppercase;
+      text-shadow: 0 0 16px rgba(0,210,255,.18), 0 0 20px rgba(0,0,0,.6);
+      filter: var(--floatShadow);
+    }
+    .sub{
+      margin: 0 auto 14px auto;
+      max-width: 46ch;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.35;
+      text-shadow: 0 0 14px rgba(0,0,0,.55);
+      filter: var(--floatShadow);
+    }
+
+    /* Inputs (outline-only neon) */
+    .field{
+      margin: 10px auto 12px auto;
+      width: min(760px, 100%);
+      display:grid;
+      gap: 12px;
+      justify-items:center;
+    }
+
+    input[type="email"]{
+      width: 100%;
+      box-sizing:border-box;
+      padding: 16px 16px;
+      border-radius: 18px;
+      background: transparent;
+      border: 2px solid var(--blue);
+      color: var(--text);
+      outline: none;
+      font-size: 16px;
+      box-shadow:
+        0 0 14px rgba(10,75,255,.55),
+        0 0 30px rgba(10,75,255,.22),
+        inset 0 0 10px rgba(10,75,255,.14);
+      filter: var(--floatShadow);
+    }
+    input::placeholder{ color: rgba(200,220,255,.45); }
+
+    /* iOS/Chrome autofill background override (no puke-yellow) */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus{
+      -webkit-text-fill-color: var(--text) !important;
+      caret-color: var(--text);
+      transition: background-color 9999s ease-out 0s;
+      box-shadow:
+        0 0 14px rgba(10,75,255,.55),
+        0 0 30px rgba(10,75,255,.22),
+        inset 0 0 0 1000px rgba(10,75,255,.12),
+        inset 0 0 10px rgba(10,75,255,.18) !important;
+    }
+
+    /* Button: 3D outline + sparkle hits */
+    .btn{
+      width: 100%;
+      padding: 16px 16px;
+      border-radius: 18px;
+      background: transparent;
+      border: 2px solid var(--amber);
+      color: var(--amber);
+      font-weight: 900;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      cursor:pointer;
+      position:relative;
+      user-select:none;
+      box-shadow:
+        0 0 18px rgba(255,208,0,.22),
+        0 0 34px rgba(255,160,0,.14),
+        var(--edgeCyan),
+        var(--edgeAmber),
+        inset 0 0 0 1px rgba(255,255,255,.05);
+      text-shadow:
+        0 0 12px rgba(255,208,0,.45),
+        0 0 24px rgba(255,160,0,.25);
+      filter: var(--floatShadow);
+      overflow:hidden;
+    }
+    .btn:active{ transform: translateY(1px); }
+
+    .btn::before, .btn::after{
+      content:"";
+      position:absolute;
+      top:-30%;
+      width: 90px;
+      height: 180%;
+      background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.18), rgba(255,255,255,0));
+      opacity: .55;
+      transform: rotate(18deg);
+      pointer-events:none;
+    }
+    .btn::before{ left: 14%; }
+    .btn::after{ right: 10%; opacity: .35; width: 70px; }
+
+    .inputSpark{
+      position:relative;
+      width:100%;
+    }
+    .inputSpark::before{
+      content:"";
+      position:absolute;
+      inset: 2px;
+      border-radius: 16px;
+      pointer-events:none;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0) 45%, rgba(255,255,255,0));
+      opacity:.6;
+      mix-blend-mode: screen;
+    }
+
+    /* Players page */
+    .sectionTitle{
+      margin: 18px 0 8px 0;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(120,255,190,.9);
+      text-shadow: 0 0 16px rgba(0,255,140,.12), 0 0 18px rgba(0,0,0,.6);
+      filter: var(--floatShadow);
+    }
+    .cards{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 860px){
+      .cards{ grid-template-columns: 1fr 1fr; }
+    }
+    .card{
+      background: rgba(0,0,0,.10);
+      border: 1px solid rgba(120,180,255,.14);
+      border-radius: 18px;
+      padding: 12px 12px;
+      filter: var(--floatShadow);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+    .card h3{
+      margin: 0;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+    .card p{
+      margin: 6px 0 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .chips{ display:flex; flex-wrap:wrap; gap: 8px; margin-top: 10px; }
+    .chip{
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,208,0,.35);
+      color: rgba(255,208,0,.92);
+      background: rgba(0,0,0,.14);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: .08em;
+      filter: var(--floatShadow);
+    }
+
+    .list{ display:grid; gap: 10px; }
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.10);
+      border: 1px solid rgba(120,180,255,.14);
+      filter: var(--floatShadow);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+    .left{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width:0;
+    }
+    .dot{
+      width: 10px; height:10px;
+      border-radius:50%;
+      background: rgba(255,255,255,.22);
+      box-shadow: 0 0 10px rgba(255,255,255,.08);
+      flex: 0 0 auto;
+    }
+    .dot.on{
+      background: rgba(0,255,140,.85);
+      box-shadow: 0 0 14px rgba(0,255,140,.25), 0 0 24px rgba(0,255,140,.18);
+    }
+    .pmeta{ min-width:0; }
+    .pname{ font-weight: 900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .pemail{ color: var(--muted); font-size: 13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+    .smallBtn{
+      padding: 10px 14px;
+      border-radius: 16px;
+      border: 2px solid var(--amber);
+      background: transparent;
+      color: var(--amber);
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor:pointer;
+      filter: var(--floatShadow);
+      box-shadow:
+        0 0 18px rgba(255,208,0,.16),
+        0 0 22px rgba(0,210,255,.10);
+    }
 
     /* Footer */
     .rights{
       position: fixed;
+      bottom: 14px;
       left: 0;
-      bottom: 12px;
       width: 100%;
-      box-sizing: border-box;
-      padding: 0 14px calc(env(safe-area-inset-bottom)) 14px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      text-align: center;
       font-size: 12px;
       letter-spacing: .6px;
-      color: rgba(255,255,255,.70);
-      text-shadow: 0 0 8px rgba(0,210,255,.25), 0 0 14px rgba(0,0,0,.6);
-      pointer-events: none;
-      z-index: 9999;
-    }
-    .rights .rev{
-      position: absolute;
-      right: 14px;
-      bottom: 0;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(0,210,255,.30);
-      background: rgba(0,0,0,.22);
-      color: rgba(200,240,255,.92);
-      font-weight: 900;
-    }
-
-    #sceneLanding.scene.on{
-      display: grid;
-      align-content: start;
-      justify-items: center;
-      padding-top: clamp(220px, 28vh, 320px); /* push below logo */; }
-
-
-    /* ===== Version badge (top-right) ===== */
-    #versionBadge{
-      position: fixed;
-      top: calc(10px + env(safe-area-inset-top));
-      right: calc(10px + env(safe-area-inset-right));
-      z-index: 9999;
-      font-weight: 900;
-      font-size: 12px;
-      letter-spacing: 1px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      color: rgba(235,245,255,.92);
-      background: rgba(0,0,0,.22);
-      border: 1px solid rgba(0,210,255,.28);
-      box-shadow:
-        0 0 14px rgba(0,210,255,.14),
-        0 0 10px rgba(255,208,0,.08);
+      color: rgba(255,255,255,.65);
       text-shadow:
-        0 0 10px rgba(0,210,255,.20),
-        0 0 8px rgba(0,0,0,.65);
-      pointer-events: none;
+        0 0 8px rgba(0,210,255,.25),
+        0 0 14px rgba(0,0,0,.6);
+      pointer-events:none;
+      z-index: 25;
     }
 
+    button, input{ touch-action: manipulation; }
+  
+    /* ===== v650 Landing-only position tweak (ONLY change) =====
+       Purpose: move the Landing center DOWN so it doesn't ride into the logo.
+       Nothing else in the build changed.
+    */
+    #sceneLanding.scene.on{ padding-top: 14vh !important; }
 
-    /* ===== True screen scenes (canonical, prevents stacking) ===== */
-    html, body{ overflow: hidden; }
-
-    .scene{
-      position: fixed;
-      inset: 0;
-      display: none;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior: contain;
-      padding: 0;
-      box-sizing: border-box;
-      z-index: 0;
-    }
-    .scene.on{ display: block; z-index: 1; }
-
-    .wrap{
-      width: min(980px, 100%);
-      margin: 0 auto;
-      padding: 18px 14px calc(70px + env(safe-area-inset-bottom)) 14px;
-      box-sizing: border-box;
-    }
-
-    </style>
+  </style>
 </head>
 
 <body>
+<!-- BUILD 650 2026-02-24 21:50:08 -->
+  <div class="verBadge" aria-hidden="true">v650</div>
 
-  <!-- BUILD 647 2026-02-24 21:37:15 -->
-
-  
-  <div id="versionBadge">v648</div>
   <div id="app">
     <div class="wrap">
-<!-- LANDING -->
-      <section id="sceneLanding" class="scene on">
-        <div class="float panel">
-          <div class="glowDivider" aria-hidden="true"></div>
-          <div class="h1">ENTER</div>
-<div class="sub">Email-only access. ENTER takes you to Games and Players.</div>
 
-          <div class="formNarrow" style="display:grid; gap: 10px;">
-            <input id="inEmail" type="email" autocomplete="email" placeholder="Email address" / class="glint">
-            <button id="btnEnter" class="btn glint" class="glint">ENTER</button>
-          </div>
+      <!-- LANDING -->
+      <section id="sceneLanding" class="scene on" aria-label="Landing">
+        <div class="logoWrap">
+          <div class="logo" role="img" aria-label="Night Games logo banner"></div>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="center">
+          <div class="title">ENTER</div>
+          <div class="sub">Email-only access. ENTER takes you to Games and Players.</div>
+
+          <div class="field">
+            <div class="inputSpark">
+              <input id="inEmail" type="email" autocomplete="email" inputmode="email" placeholder="Email address" />
+            </div>
+            <button id="btnEnter" class="btn" type="button">ENTER</button>
           </div>
         </div>
       </section>
 
-      <!-- PLAYERS HUB -->
-      <section id="scenePlayers" class="scene">
-        <div id="playersTopbar" style="display:flex; gap:10px; align-items:center; justify-content:space-between; margin-top: 2px;">
-          <div style="font-weight:900; letter-spacing:.5px; text-transform:uppercase; text-shadow:0 0 18px rgba(0,0,0,.65);">Players</div>
-          <button id="btnExit" class="btn" style="width:auto; padding:10px 14px; letter-spacing:2px;">Exit</button>
+      <!-- PLAYERS -->
+      <section id="scenePlayers" class="scene" aria-label="Players and Games">
+        <div class="logoWrap" style="margin-top: 2px;">
+          <div class="logo" style="height: clamp(120px, 18vh, 200px);" role="img" aria-label="Night Games banner"></div>
         </div>
 
-        <div class="float panel">
-          <div class="h2">Games</div>
-          <div class="sub">Phase 1: layout + background + navigation only (no Firebase yet).</div>
+        <div class="divider" aria-hidden="true" style="margin-top: 12px;"></div>
 
+        <div class="center" style="text-align:left; padding-left: 6px; padding-right: 6px;">
+          <div class="sectionTitle">Games</div>
           <div class="cards">
-            <div class="gcard">
-              <div class="gtitle">01</div>
-              <div class="gsub">One game. Choose start score:</div>
+            <div class="card">
+              <h3>01</h3>
+              <p>One game. Choose start score:</p>
               <div class="chips">
                 <span class="chip">701</span>
                 <span class="chip">501</span>
@@ -196,53 +459,83 @@
               </div>
             </div>
 
-            <div class="gcard">
-              <div class="gtitle">Cricket</div>
-              <div class="gsub">15–20 + Bull</div>
+            <div class="card">
+              <h3>Cricket</h3>
+              <p>15–20 + Bull</p>
               <div class="chips"><span class="chip">Ready</span></div>
             </div>
 
-            <div class="gcard">
-              <div class="gtitle">Shanghai</div>
-              <div class="gsub">Singles/Doubles/Triples per round</div>
+            <div class="card">
+              <h3>Shanghai</h3>
+              <p>Singles / Doubles / Triples per round</p>
               <div class="chips"><span class="chip">Ready</span></div>
             </div>
 
-            <div class="gcard">
-              <div class="gtitle">Around the World</div>
-              <div class="gsub">1→20→Bull</div>
+            <div class="card">
+              <h3>Around the World</h3>
+              <p>1 → 20 → Bull</p>
               <div class="chips"><span class="chip">Ready</span></div>
             </div>
 
-            <div class="gcard">
-              <div class="gtitle">Killer</div>
-              <div class="gsub">Lives + knockouts</div>
+            <div class="card">
+              <h3>Killer</h3>
+              <p>Lives + knockouts</p>
               <div class="chips"><span class="chip">Ready</span></div>
             </div>
           </div>
-        </div>
 
-        <div class="glowDivider"></div>
+          <div class="sectionTitle" style="margin-top: 18px;">Players</div>
+          <div class="sub" style="max-width:none; margin-bottom: 10px;">Placeholder list for Phase 1.</div>
 
-        <!-- Players UNDER Games (as requested) -->
-        <div class="float panel">
-          <div class="h2">Players</div>
-          <div class="sub">Phase 1 placeholder list. Green dot = online (later we’ll wire heartbeat).</div>
           <div class="list" id="playerList">
             <div class="row">
               <div class="left">
-                <div class="dot on"></div>
-                <div>
-                  <div class="pname">Player One</div>
-                  <div class="pemail">player1@example.com</div>
+                <div class="dot on" title="Online"></div>
+                <div class="pmeta">
+                  <div class="pname">Steve Moody</div>
+                  <div class="pemail">stevemoody@yahoo.com</div>
                 </div>
               </div>
               <span class="chip">Ready</span>
             </div>
+
             <div class="row">
               <div class="left">
-                <div class="dot"></div>
-                <div>
+                <div class="dot on" title="Online"></div>
+                <div class="pmeta">
+                  <div class="pname">Bill Moody</div>
+                  <div class="pemail">wmoody7931@aol.com</div>
+                </div>
+              </div>
+              <span class="chip">Ready</span>
+            </div>
+
+            <div class="row">
+              <div class="left">
+                <div class="dot" title="Offline"></div>
+                <div class="pmeta">
+                  <div class="pname">Jayce Moody</div>
+                  <div class="pemail">jmoody7712@gmail.com</div>
+                </div>
+              </div>
+              <span class="chip">Locked</span>
+            </div>
+
+            <div class="row">
+              <div class="left">
+                <div class="dot" title="Offline"></div>
+                <div class="pmeta">
+                  <div class="pname">Player One</div>
+                  <div class="pemail">player1@example.com</div>
+                </div>
+              </div>
+              <span class="chip">Offline</span>
+            </div>
+
+            <div class="row">
+              <div class="left">
+                <div class="dot" title="Offline"></div>
+                <div class="pmeta">
                   <div class="pname">Player Two</div>
                   <div class="pemail">player2@example.com</div>
                 </div>
@@ -250,67 +543,74 @@
               <span class="chip">Offline</span>
             </div>
           </div>
-        </div>
 
-        <div style="margin-top:14px;">
-          <button id="btnBack" class="btn">Back to Landing</button>
+          <div style="margin-top: 16px; display:flex; gap: 10px; flex-wrap:wrap;">
+            <button id="btnBack" class="smallBtn" type="button">Back</button>
+          </div>
         </div>
-
       </section>
 
     </div>
   </div>
 
-  <div class="rights">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.<span class="rev">v648</span></div>
+  <div class="rights">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved. • v650</div>
 
-    <script>
+  <script>
     // =========================================================
-    // NightGames PHASE 1 JS v648
-    // Landing -> Players via ENTER only. No auto-jump.
+    // NightGames PHASE 1 JS v650
+    // - No Firebase here yet
+    // - No auto-jump (Landing always first)
+    // - ENTER -> Players, Back -> Landing
     // =========================================================
+
     const $ = (id) => document.getElementById(id);
-
     const landing = $("sceneLanding");
     const players = $("scenePlayers");
-    const inEmail  = $("inEmail");
+    const inEmail = $("inEmail");
     const btnEnter = $("btnEnter");
-    const btnBack  = $("btnBack");
-    const btnExit  = $("btnExit");
+    const btnBack = $("btnBack");
 
-    function showLanding() {
+    function showLanding(){
       landing.classList.add("on");
       players.classList.remove("on");
-      try { landing.scrollTop = 0; players.scrollTop = 0; window.scrollTo(0,0); } catch(e) {}
       try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
     }
 
-    function showPlayers() {
+    function showPlayers(){
       landing.classList.remove("on");
       players.classList.add("on");
-      try { landing.scrollTop = 0; players.scrollTop = 0; window.scrollTo(0,0); } catch(e) {}
       try { history.replaceState(null, "", location.pathname + location.search); } catch(e) {}
     }
 
-    function enterFlow() {
-      const email = (inEmail?.value || "").trim();
-      if (!email) {
-        if (inEmail) {
-          inEmail.focus();
-          inEmail.placeholder = "Enter your email first…";
-        }
+    // Always start on landing.
+    showLanding();
+
+    function enterFlow(){
+      const email = (inEmail.value || "").trim();
+      if(!email){
+        inEmail.focus();
         return;
       }
       showPlayers();
     }
 
-    // Start on Landing, always.
-    showLanding();
+    btnEnter.addEventListener("click", enterFlow);
+    btnEnter.addEventListener("pointerup", (e) => {
+      if (e.pointerType === "touch" || e.pointerType === "pen") enterFlow();
+    }, { passive: true });
 
-    if (btnEnter) btnEnter.addEventListener("click", enterFlow, { passive: true });
-    if (inEmail) inEmail.addEventListener("keydown", (e) => { if (e.key === "Enter") enterFlow(); });
+    inEmail.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") enterFlow();
+    });
 
-    if (btnBack) btnBack.addEventListener("click", showLanding, { passive: true });
-    if (btnExit) btnExit.addEventListener("click", showLanding, { passive: true });
+    btnBack.addEventListener("click", showLanding);
+
+    // Safety: prevent any stale hash routing / auto navigation
+    try {
+      if (location.hash && location.hash !== "#") {
+        history.replaceState(null, "", location.pathname + location.search);
+      }
+    } catch(e) {}
   </script>
 </body>
 </html>
