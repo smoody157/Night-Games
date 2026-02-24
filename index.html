@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Night Games • v620</title>
+  <title>Night Games • v623</title>
 
   <style>
     /* =========================================================
-       NightGames — PHASE 1 (Fresh Start) v620
+       NightGames — PHASE 1 (Fresh Start) v623
        Includes:
          - Fullscreen layout (no corner shrink)
          - Repo background: IMG_7287.png (no embedding)
@@ -16,7 +16,7 @@
          - Landing never auto-jumps to Players (ENTER only)
          - Floating / neon look aligned to logo colors
          - Bottom rights-reserved footer
-       Generated: 2026-02-24 17:06:35
+       Generated: 2026-02-24 17:17:59
        ========================================================= */
 
     :root {
@@ -31,6 +31,8 @@
       --shadow: drop-shadow(0 18px 34px rgba(0,0,0,.66));
     }
 
+    
+    
     html, body {
       margin: 0;
       padding: 0;
@@ -39,18 +41,35 @@
       min-height: 100vh;
       overflow-x: hidden;
       background-color: #000;
-      /* background + seam blend overlay */
-      background:
-        linear-gradient(
-          to bottom,
-          rgba(0,0,0,0.12) 0%,
-          rgba(0,0,0,0.32) 55%,
-          rgba(0,0,0,0.62) 100%
-        ),
-        var(--bg) center top / cover no-repeat fixed;
+      /* ONE background image only */
+      background-image: url("IMG_7287.png");
+      background-position: center top;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     }
+
+    /* Seam blend overlay (full-screen) */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.12) 0%,
+        rgba(0,0,0,0.32) 55%,
+        rgba(0,0,0,0.62) 100%
+      );
+    }
+
+    /* Keep app above overlay */
+    #app { position: relative; z-index: 1; }
+    .rights { position: fixed; z-index: 2; }
+
 
     /* Fullscreen stage */
     #app {
@@ -232,6 +251,41 @@
       z-index: 9999;
     }
 
+
+    /* Landing layout tweaks (Phase 1 step) */
+    #sceneLanding {
+      display: grid;
+      place-items: center;
+      min-height: 88vh;
+      padding-top: 6vh;
+      box-sizing: border-box;
+    }
+    #sceneLanding .panel {
+      text-align: center;
+      max-width: 720px;
+    }
+    #sceneLanding .h1,
+    #sceneLanding .sub {
+      text-align: center;
+    }
+    #sceneLanding .panel .field {
+      margin-top: 10px;
+    }
+
+    /* small version badge (since top bar removed) */
+    .vbadge {
+      display: inline-block;
+      margin: 0 auto 10px auto;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,210,255,.25);
+      color: rgba(200,240,255,.92);
+      background: rgba(0,0,0,.18);
+      filter: var(--shadow);
+    }
+
     /* Scene visibility */
     .scene { display: none; }
     .scene.on { display: block; }
@@ -242,17 +296,15 @@
 <body>
   <div id="app">
     <div class="wrap">
-
-      <div class="float top">
-        <div class="brand">Night Games</div>
-        <div class="badge">v620</div>
+<div class="badge">v623</div>
       </div>
 
       <!-- LANDING -->
       <section id="sceneLanding" class="scene on">
         <div class="float panel">
           <div class="h1">Enter</div>
-          <div class="sub">Email-only access. ENTER button takes you to Players.</div>
+          <div class="vbadge">v623</div>
+          <div class="sub">Email-only access. ENTER takes you to Games and Players.</div>
 
           <div style="display:grid; gap: 10px;">
             <input id="inEmail" type="email" autocomplete="email" placeholder="Email address" />
@@ -345,7 +397,7 @@
 
   <script>
     // =========================================================
-    // NightGames PHASE 1 JS v620
+    // NightGames PHASE 1 JS v623
     // - No Firebase here yet.
     // - No auto-jump. Landing is default.
     // - Only navigation: ENTER -> Players, Back -> Landing
