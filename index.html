@@ -26,7 +26,7 @@
 
     
     :root {
-      --bg: url("IMG_7287.png?b=633");
+      --bg: url("IMG_7287.png?b=634");
       --bgShiftY: -8px; /* micro-tune: moves image DOWN slightly */
       --glass: rgba(0,0,0,.22);
       --stroke: rgba(120,180,255,.18);
@@ -458,65 +458,7 @@ border: 2px solid var(--blue);
     .scene.on { display: block; }
 
   
-    /* ===== Intro MP4 overlay (plays once, then disappears) ===== */
-    #introVideoWrap{
-      position: fixed;
-      inset: 0;
-      z-index: 1;              /* above background, below UI */
-      pointer-events: none;     /* don't block inputs */
-      display: grid;
-      align-content: start;     /* move toward top */
-      justify-items: center;
-      padding-top: 8vh;         /* sits under logo area */
-      opacity: 0;
-      transition: opacity 650ms ease;
-    }
-    #introVideoWrap.on{ opacity: 1; }
-
-    /* Larger cinematic "card" holding the MP4 (near logo) */
-    #introVideo{
-      width: min(980px, 94vw);  /* ~2x larger than previous */
-      aspect-ratio: 16 / 9;
-      height: auto;
-      border-radius: 18px;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-
-      /* Color grade toward logo palette */
-      filter:
-        brightness(.78)
-        contrast(1.12)
-        saturate(.92)
-        sepia(.18)
-        hue-rotate(188deg);
-
-      /* Floating depth + neon rim */
-      box-shadow:
-        0 22px 58px rgba(0,0,0,.78),
-        0 0 32px rgba(0,210,255,.22),
-        0 0 22px rgba(255,208,0,.14),
-        inset 0 0 0 1px rgba(255,255,255,.10);
-    }
-
-    /* Soft edge fade so it blends into space and under logo */
-    #introVideoWrap::after{
-      content:"";
-      position:absolute;
-      top: 6vh;
-      width: min(1040px, 98vw);
-      aspect-ratio: 16 / 9;
-      border-radius: 22px;
-      background: radial-gradient(closest-side,
-        rgba(0,0,0,0) 54%,
-        rgba(0,0,0,.28) 82%,
-        rgba(0,0,0,.62) 100%
-      );
-      filter: blur(2px);
-      opacity: .9;
-      pointer-events:none;
-    }
-/* ===== Crisp neon divider (intentional, hides seam) ===== */
+    /* ===== Crisp neon divider (intentional, hides seam) ===== */
     .glowDivider{
       width: min(92vw, 720px);
       height: 10px;
@@ -603,14 +545,7 @@ border: 2px solid var(--blue);
 
 <body>
 
-  <!-- Intro video overlay (Landing only) -->
-  <div id="introVideoWrap" aria-hidden="true">
-    <video id="introVideo" playsinline muted preload="auto">
-      <source src="0217.mp4?b=633" type="video/mp4" />
-    </video>
-  </div>
-
-<!-- BUILD 633 2026-02-24 18:22:36 -->
+  <!-- BUILD 634 2026-02-24 18:25:23 -->
 
   
   <div id="app">
@@ -710,7 +645,7 @@ border: 2px solid var(--blue);
     </div>
   </div>
 
-  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v633</span></div>
+  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v634</span></div>
 
   <script>
     // =========================================================
@@ -771,61 +706,6 @@ border: 2px solid var(--blue);
       }
     } catch(e) {}
   
-    // ===== Intro video (Landing only): fade in, play once, hold, fade out, remove =====
-    (function(){
-      const wrap = document.getElementById("introVideoWrap");
-      const vid  = document.getElementById("introVideo");
-      if(!wrap || !vid) return;
-
-      // Start only on landing view
-      function startIntro(){
-        try{
-          // Some iOS versions need explicit play after user gesture; this still works when allowed.
-          wrap.classList.add("on");
-          const p = vid.play();
-          if(p && typeof p.catch === "function"){
-            p.catch(()=>{
-              // If autoplay blocked, just fade it out quickly so it doesn't hang.
-              try{
-                const landing = document.getElementById("sceneLanding");
-                const players = document.getElementById("scenePlayers");
-                if(landing && players){ landing.classList.add("on"); players.classList.remove("on"); }
-              }catch(e){}
-              setTimeout(()=>{ wrap.classList.remove("on"); }, 600);
-              setTimeout(()=>{ wrap.remove(); }, 1300);
-            });
-          }
-        }catch(e){
-          try{ wrap.remove(); }catch(_){}
-        }
-      }
-
-      // When finished, hold 900ms then fade out and remove
-      vid.addEventListener("ended", ()=>{
-        // Force landing scene to remain (prevents any accidental auto-jump)
-        try{
-          const landing = document.getElementById("sceneLanding");
-          const players = document.getElementById("scenePlayers");
-          if(landing && players){
-            landing.classList.add("on");
-            players.classList.remove("on");
-          }
-        }catch(e){}
-        setTimeout(()=>{ wrap.classList.remove("on"); }, 900);
-        setTimeout(()=>{ try{ wrap.remove(); }catch(e){} }, 1900);
-      });
-// Safety: if it never ends (streaming issues), kill after 12s
-      setTimeout(()=>{
-        if(document.body.contains(wrap)){
-          wrap.classList.remove("on");
-          setTimeout(()=>{ try{ wrap.remove(); }catch(e){} }, 900);
-        }
-      }, 12000);
-
-      // Start after first paint
-      requestAnimationFrame(()=> setTimeout(startIntro, 120));
-    })();
-
-  </script>
+    </script>
 </body>
 </html>
