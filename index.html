@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Night Games • v565</title>
+<title>Night Games • v566</title>
 
 <!-- Firebase compat (single-file web build) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -2200,7 +2200,7 @@ input, #inEmail{
 /* ============================
    Config / Helpers
    ============================ */
-const BUILD = 565;
+const BUILD = 566;
 
 const ASSET_BASE = new URL('.', document.baseURI).toString();
 const asset = (p)=> new URL(p, ASSET_BASE).toString();
@@ -2291,21 +2291,28 @@ function avatarFor(email,name){
    Sound (speaker button)
    ============================ */
 let audioCtx=null;
+function unlockAudio(){
+  try{
+    if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended") audioCtx.resume();
+  }catch(_){ }
+}
 function soundOn(){return store.get("soundOn", true);}
 function setSound(on){store.set("soundOn", !!on);}
 function beep(freq=520, ms=45, gain=0.04){
   if(!soundOn()) return;
   try{
-    if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    unlockAudio();
     const o=audioCtx.createOscillator();
     const g=audioCtx.createGain();
     o.type="sine"; o.frequency.value=freq;
     g.gain.value=gain;
     o.connect(g); g.connect(audioCtx.destination);
     o.start();
-    setTimeout(()=>o.stop(), ms);
-  }catch(_){}
+    setTimeout(()=>{ try{ o.stop(); }catch(_){ } try{ o.disconnect(); }catch(_){ } try{ g.disconnect(); }catch(_){ } }, ms);
+  }catch(_){ }
 }
+document.addEventListener("pointerdown", ()=>{ unlockAudio(); }, {once:true});
 document.addEventListener("click", (e)=>{
   const btn=e.target.closest("button");
   if(btn) beep();
@@ -2362,13 +2369,6 @@ function runSweepOnce(){
   // Hide after ~1.6s (animation length). If video ends sooner, also hide.
   v.addEventListener("ended", hide, {once:true});
   setTimeout(hide, 1700);
-}
-  const done=()=>{
-    ov.classList.remove("run");
-    ov.classList.remove("show");
-  };
-  v.addEventListener("ended", done, {once:true});
-  setTimeout(done, 2200);
 }
 
 /* If autoplay is blocked on some devices, run the sweep on the first user gesture. */
@@ -2800,7 +2800,9 @@ async function onStart(){
 
     // ensure firebase initialized + anonymous session
     setHint("Connecting...");
-    await safeInit();
+    unlockAudio();
+    const ok = await safeInit();
+    if(!ok){ setHint("Could not connect."); return; }
 
     // load players and find existing
     setHint("Loading players...");
@@ -2824,6 +2826,10 @@ async function onStart(){
     store.set("me", {email: p.email, name: p.name, ts: nowMs()});
 
     App.me = p;
+    // start presence + matches live feed
+    try{ startPresence(App.me); }catch(_){ }
+    try{ subscribeMatches(); }catch(_){ }
+
     setHint("Entering...");
     go("player");
   }catch(err){
@@ -2856,15 +2862,15 @@ function screenAuth(){
         <div style="height:12px"></div>
         <button id="btnEnter" class="btn btnEnter glass">Enter</button>
 
+        <div id="authHint" class="sub" style="margin-top:10px;min-height:18px"></div>
+
         <div class="sparkBar" aria-hidden="true"></div>
       </div>
     </div>
     ${footer()}
   `);
 
-  $("#btnEnter").onclick=onStart;
   bindAuthFallback();
-  $("#inEmail").addEventListener("keydown",(e)=>{ if(e.key==="Enter") onStart(); });
 }function renderPlayersUnderGames(){
   const host=$("#playersUnderGames");
   if(!host) return;
@@ -2932,6 +2938,98 @@ function renderMatchesList(){
   });
 }
 
+
+function screenPlayer(){
+  // Guard: if not signed in, go back to landing
+  if(!App.me){ go("auth"); return; }
+
+  setHtml(`
+    <div class="header heroHeader">
+      <div class="heroInner">
+        <img class="heroLogo" src="./7F737C26-56A1-497B-A4A2-CCD6141E7B8C.png" alt="Night Games"
+          onerror="this.style.display='none'"/>
+        <div class="heroText">
+          <div class="heroNight">NIGHT</div>
+          <div class="heroGames">GAMES</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="heroPanel open">
+
+        <div class="row space" style="align-items:flex-start">
+          <div>
+            <div class="h2" style="margin:0">Player</div>
+            <div class="sub" style="margin-top:4px"><b>${App.me.name}</b> • ${App.me.email}</div>
+          </div>
+          <div class="row">
+            <button class="btn sm" id="btnSpeaker">${soundOn()?"🔊":"🔇"}</button>
+            <button class="btn sm" id="btnPlayers">Players</button>
+            <button class="btn sm danger" id="btnSignOut">Sign out</button>
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div class="cards gameGrid">
+          ${GAMES.map(g=>`
+            <div class="gcard">
+              <div class="gtitle">${g.name}</div>
+              <div class="gsub">${g.id==="cricket"?"Play Cricket (marks + score).":(g.id==="01"?"Play 01 (501/301 etc).":"Placeholder screen (wired).")}</div>
+              <div class="grow">
+                <button class="btn neon" data-game="${g.id}">Play</button>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div class="panel">
+          <div class="row space">
+            <h3 class="h2" style="margin:0">Open Matches</h3>
+            <span class="chip">tap to join</span>
+          </div>
+          <div style="height:10px"></div>
+          <div id="matches"></div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div class="panel smallList">
+          <div class="row space">
+            <h3 class="h2" style="margin:0">Players</h3>
+            <span class="chip">online dot</span>
+          </div>
+          <div style="height:10px"></div>
+          <div id="playersUnderGames" class="list"></div>
+        </div>
+
+      </div>
+    </div>
+    ${footer()}
+  `);
+
+  // Actions
+  $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); unlockAudio(); render(); };
+  $("#btnPlayers").onclick=()=>go("players");
+  $("#btnSignOut").onclick=()=>signOut();
+
+  // Play buttons
+  document.querySelectorAll("[data-game]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const gameId=btn.getAttribute("data-game");
+      go("game_setup",{gameId});
+    });
+  });
+
+  // Live lists
+  renderMatchesList();
+  renderPlayersUnderGames();
+}
+
+
 function screenPlayers(){
   setHtml(`
     ${headerBanner("Players")}
@@ -2955,8 +3053,7 @@ function screenPlayers(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>setHint("Entering...");
-    go("player");
+  $("#btnBack").onclick=()=>{ setHint("Entering..."); go("player"); };
 
   const plist=$("#plist");
   const players=[...App.players].sort((a,b)=>a.name.localeCompare(b.name));
@@ -3006,8 +3103,7 @@ function screenHistory(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>setHint("Entering...");
-    go("player");
+  $("#btnBack").onclick=()=>{ setHint("Entering..."); go("player"); };
 }
 
 function screenStats(){
@@ -3032,8 +3128,7 @@ function screenStats(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>setHint("Entering...");
-    go("player");
+  $("#btnBack").onclick=()=>{ setHint("Entering..."); go("player"); };
 }
 
 function screenGameSetup(){
@@ -3106,8 +3201,7 @@ function screenGameSetup(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>setHint("Entering...");
-    go("player");
+  $("#btnBack").onclick=()=>{ setHint("Entering..."); go("player"); };
 
   const players=[...App.players].sort((a,b)=>a.name.localeCompare(b.name));
   const options=players.map(p=>`<option value="${p.email}">${p.name} (${p.email})</option>`).join("");
@@ -3290,8 +3384,7 @@ function screenGameCricket(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>setHint("Entering...");
-    go("player");
+  $("#btnBack").onclick=()=>{ setHint("Entering..."); go("player"); };
 
   if(!seatMe){
     openModal("Join match", `
@@ -3415,8 +3508,7 @@ function screenGame01(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>setHint("Entering...");
-    go("player");
+  $("#btnBack").onclick=()=>{ setHint("Entering..."); go("player"); };
 
   if(!seatMe){
     openModal("Join match", `
@@ -3476,8 +3568,7 @@ function screenGamePlaceholder(){
   $("#btnSpeaker").onclick=()=>{ setSound(!soundOn()); render(); };
   $("#btnPlayers").onclick=()=>go("players");
   $("#btnSignOut").onclick=()=>signOut();
-  $("#btnBack").onclick=()=>setHint("Entering...");
-    go("player");
+  $("#btnBack").onclick=()=>{ setHint("Entering..."); go("player"); };
 }
 
 /* ============================
