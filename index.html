@@ -26,7 +26,7 @@
 
     
     :root {
-      --bg: url("IMG_7287.png?b=646");
+      --bg: url("IMG_7287.png?b=647");
       --bgShiftY: -8px; /* micro-tune: moves image DOWN slightly */
       --glass: rgba(0,0,0,.22);
       --stroke: rgba(120,180,255,.18);
@@ -579,8 +579,15 @@ border: 2px solid var(--blue);
 
   
     
+
     /* ===== Landing LOCK (stable vertical spacing) ===== */
-    #sceneLanding .panel{ margin-top: 22px !important; }
+    #sceneLanding.scene.on{
+      display: grid;
+      align-content: start;
+      justify-items: center;
+      padding-top: 10vh; /* brings center down */
+    }
+    #sceneLanding .panel{ margin-top: 0 !important; }
 
 
     /* ===== Version badge (top-right) ===== */
@@ -630,22 +637,15 @@ border: 2px solid var(--blue);
       box-sizing: border-box;
     }
 
-    /* Landing: center layout ONLY when active */
-    #sceneLanding.scene.on{
-      display: grid;
-      align-content: start;
-      justify-items: center;
-    }
-
-  </style>
+    </style>
 </head>
 
 <body>
 
-  <!-- BUILD 646 2026-02-24 21:34:12 -->
+  <!-- BUILD 647 2026-02-24 21:37:15 -->
 
   
-  <div id="versionBadge">v646</div>
+  <div id="versionBadge">v647</div>
   <div id="app">
     <div class="wrap">
 <!-- LANDING -->
@@ -750,11 +750,11 @@ border: 2px solid var(--blue);
     </div>
   </div>
 
-  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v646</span></div>
+  <div class="rights"><span class="rightsText">Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.</span><span class="rev">v647</span></div>
 
     <script>
     // =========================================================
-    // NightGames PHASE 1 JS v646
+    // NightGames PHASE 1 JS v647
     // Landing -> Players via ENTER only. No auto-jump.
     // =========================================================
     const $ = (id) => document.getElementById(id);
