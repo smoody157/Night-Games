@@ -3,218 +3,218 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v667</title>
+  <title>Night Games v671</title>
   <style>
     :root{
-      --bgLanding: url("./6D8C9E48-62E1-4BDC-A560-4A7A501867B0.png");
-      --bgPlayers: url("./IMG_7315.jpeg");
+      /* IMPORTANT: Use the blank stage background so we don't double-stack baked UI */
+      --bgStage: url("./IMG_7315.jpeg");
 
-      /* Layout anchors tuned for your art (logo/footer already in the images) */
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 32px));
-      --xPad: 16px;
+      --txt: rgba(245,250,255,.94);
 
-      /* 3D glow language */
       --cyan: rgba(0,210,255,.95);
-      --cyanSoft: rgba(0,210,255,.25);
-      --gold: rgba(255,175,0,.95);
-      --goldSoft: rgba(255,175,0,.22);
-
-      --txt: rgba(235,245,255,.92);
-      --muted: rgba(200,220,255,.55);
+      --cyanGlow: rgba(0,210,255,.14);
+      --amber: rgba(255,175,0,.95);
+      --amberGlow: rgba(255,175,0,.10);
 
       --zShadow: drop-shadow(0 22px 46px rgba(0,0,0,.72));
       --zShadowSoft: drop-shadow(0 10px 22px rgba(0,0,0,.55));
-
-      --glass: rgba(0,0,0,.14);
-      --glass2: rgba(0,0,0,.20);
     }
 
     html, body{
-      height: 100%;
-      margin: 0;
-      background: #000;
-      color: var(--txt);
+      height:100%;
+      margin:0;
+      background:#000;
+      color:var(--txt);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      overflow: hidden; /* we only scroll inside lists */
+      overflow:hidden;
     }
 
-    /* App root */
-    #app{
+    /* Visible version badge (always) */
+    .buildBadge{
       position: fixed;
-      inset: 0;
+      top: 10px;
+      left: 10px;
+      z-index: 9999;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.92);
+      font-weight: 1000;
+      letter-spacing: 1px;
+      font-size: 12px;
+      text-transform: uppercase;
+      pointer-events: none;
+      box-shadow: 0 10px 22px rgba(0,0,0,.55);
     }
+    .buildBadge b{ color: rgba(0,210,255,.95); }
 
-    /* Screen wrapper with full-bleed art */
+    #app{ position:fixed; inset:0; }
+
     .screen{
-      position: absolute;
-      inset: 0;
-      display: none;
+      position:absolute;
+      inset:0;
+      display:none;
     }
-    .screen.active{ display: block; }
+    .screen.active{ display:block; }
 
     .screen::before{
       content:"";
       position:absolute;
       inset:0;
-      background-position: center bottom;
-      background-repeat: no-repeat;
-      background-size: cover;
+      background-image: var(--bgStage);
+      background-repeat:no-repeat;
+      background-size:cover;
+      background-position: center bottom; /* keep footer visible */
       transform: translateZ(0);
     }
-    #screenLanding::before{ background-image: var(--bgLanding); }
-    #screenPlayers::before{ background-image: var(--bgPlayers); }
-
-    /* A gentle vignette so overlays read (does NOT create a frame) */
     .screen::after{
       content:"";
       position:absolute;
       inset:0;
-      background:
-        radial-gradient(130% 110% at 50% 25%, rgba(0,0,0,0), rgba(0,0,0,.28) 60%, rgba(0,0,0,.55) 100%);
+      background: radial-gradient(130% 110% at 50% 25%, rgba(0,0,0,0), rgba(0,0,0,.22) 60%, rgba(0,0,0,.52) 100%);
       pointer-events:none;
     }
 
-    /* LANDING interactive overlay (no extra text, only functional controls) */
-    .landing-ui{
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: var(--uiW);
-      max-width: var(--maxW);
-      /* This vertical placement matches the art’s email input region */
-      top: clamp(360px, 52vh, 600px);
-      display: grid;
-      gap: 18px;
-      justify-items: center;
-      pointer-events: none; /* allow only the controls to receive events */
+    /* ===== Shared crystal UI components (no fog / no blur) ===== */
+    .panel{
+      border-radius: 22px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow:
+        inset 0 2px 6px rgba(255,255,255,.38),
+        inset 0 -14px 22px rgba(0,0,0,.62),
+        0 0 18px rgba(0,210,255,.10);
+      overflow:hidden;
+      filter: var(--zShadowSoft);
+    }
+
+    .title{
+      font-weight: 1000;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: 15px;
+      color: rgba(255,255,255,.94);
+      text-shadow: 0 0 14px rgba(0,210,255,.10);
     }
 
     .field3d, .btn3d{
-      pointer-events: auto;
       width: min(640px, 92vw);
       height: 74px;
       border-radius: 22px;
       -webkit-tap-highlight-color: transparent;
       transform: translateZ(0);
       filter: var(--zShadow);
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.035);
+      box-shadow:
+        inset 0 2px 6px rgba(255,255,255,.45),
+        inset 0 -14px 22px rgba(0,0,0,.60),
+        0 0 18px rgba(0,210,255,.10);
+      position:relative;
+      overflow:hidden;
     }
 
-    /* 3D "glass" input that sits on top of the baked-in art */
-    .field3d{
-      display:flex;
-      align-items:center;
-      padding: 0 22px;
-      box-sizing: border-box;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)),
-        linear-gradient(90deg, rgba(0,210,255,.12), rgba(255,175,0,.08));
-      border: 1px solid rgba(140,220,255,.40);
-      box-shadow:
-        inset 0 0 0 1px rgba(0,210,255,.20),
-        inset 0 -10px 30px rgba(0,0,0,.28),
-        0 0 26px rgba(0,210,255,.16);
-      position: relative;
-      overflow: hidden;
-    }
-    .field3d::before{
-      content:"";
-      position:absolute;
-      inset: 8px 10px auto 10px;
-      height: 16px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,255,255,.34), rgba(255,255,255,0));
-      opacity: .30;
-      pointer-events:none;
-    }
-    .field3d input{
-      width: 100%;
-      height: 100%;
-      border: 0;
-      outline: none;
-      background: transparent;
-      color: var(--txt);
-      font-size: 20px;
-      letter-spacing: .5px;
-    }
-    .field3d input::placeholder{ color: rgba(235,245,255,.55); }
-
-    /* 3D gold button */
-    .btn3d{
-      border: 1px solid rgba(255,210,120,.50);
-      background:
-        radial-gradient(140% 120% at 30% 20%, rgba(255,255,255,.28), rgba(255,255,255,0) 55%),
-        linear-gradient(180deg, rgba(255,175,0,.22), rgba(255,120,0,.12)),
-        rgba(0,0,0,.10);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,175,0,.26),
-        inset 0 -12px 34px rgba(0,0,0,.35),
-        0 0 34px rgba(255,175,0,.18);
-      color: rgba(255,240,210,.96);
-      font-weight: 800;
-      font-size: 30px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-    .btn3d::before{
+    .field3d::before, .btn3d::before{
       content:"";
       position:absolute;
       inset: 10px 12px auto 12px;
       height: 18px;
       border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,255,255,.40), rgba(255,255,255,0));
-      opacity: .40;
+      background: linear-gradient(90deg, rgba(255,255,255,.50), rgba(255,255,255,0));
+      opacity: .42;
       pointer-events:none;
+    }
+
+    .field3d::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: 22px;
+      box-shadow: inset 0 0 0 1px rgba(0,210,255,.14);
+      pointer-events:none;
+    }
+
+    .btn3d::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: 22px;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,175,0,.14),
+        0 0 18px rgba(255,175,0,.08);
+      pointer-events:none;
+    }
+
+    .field3d input{
+      width:100%;
+      height:100%;
+      border:0;
+      outline:none;
+      background:transparent;
+      color: rgba(255,255,255,.95);
+      font-size: 20px;
+      letter-spacing: .6px;
+      padding: 0 22px;
+      box-sizing:border-box;
+    }
+    .field3d input::placeholder{ color: rgba(235,245,255,.55); }
+
+    .btn3d{
+      cursor:pointer;
+      color: rgba(255,255,255,.96);
+      font-weight: 1000;
+      font-size: 30px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
     .btn3d:active{
       transform: translateY(2px) scale(.995);
       filter: var(--zShadowSoft);
     }
 
-    /* Small inline error (only shows if needed; no extra footer text) */
     .err{
-      pointer-events:none;
       margin-top: -6px;
       font-size: 14px;
       color: rgba(255,200,160,.92);
       text-shadow: 0 0 12px rgba(255,150,80,.25);
       opacity: 0;
       transition: opacity .15s ease;
+      pointer-events:none;
     }
     .err.show{ opacity: 1; }
 
-    /* PLAYERS HUB overlay: Games top + Players bottom, both scrollable */
-    .hub{
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
+    /* ===== Landing (same style as Players) ===== */
+    .landingUI{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
       width: var(--uiW);
       max-width: var(--maxW);
-      /* Place below the baked logo area */
-      top: clamp(240px, 33vh, 360px);
-      bottom: clamp(160px, 14vh, 210px); /* keep off baked footer line */
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-      gap: 18px;
-      padding: 0 var(--xPad);
-      box-sizing: border-box;
+      top: clamp(360px, 52vh, 610px);
+      display:grid;
+      gap: 16px;
+      justify-items:center;
+      z-index:2;
     }
 
-    .section{
-      position: relative;
-      border-radius: 22px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
-        rgba(0,0,0,.10);
-      border: 1px solid rgba(255,255,255,.06);
-      box-shadow:
-        inset 0 0 0 1px rgba(0,0,0,.18),
-        0 0 26px rgba(0,210,255,.08);
-      overflow: hidden;
-      filter: var(--zShadowSoft);
+    /* ===== Players hub ===== */
+    .hub{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      width: var(--uiW);
+      max-width: var(--maxW);
+      top: clamp(240px, 33vh, 360px);
+      bottom: max(140px, env(safe-area-inset-bottom)); /* keep off footer text */
+      display:grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 18px;
+      padding: 0 16px;
+      box-sizing:border-box;
+      z-index:2;
     }
 
     .sectionHead{
@@ -225,49 +225,19 @@
       gap: 10px;
     }
 
-    .title{
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-size: 15px;
-      color: rgba(255,255,255,.92);
-      text-shadow:
-        0 1px 0 rgba(255,255,255,.65),
-        0 -1px 2px rgba(0,0,0,.6),
-        0 0 14px rgba(0,210,255,.18);
-    }
-
-    .miniBtn{
-      border: 1px solid rgba(0,210,255,.35);
-      background:
-        radial-gradient(130% 130% at 30% 20%, rgba(255,255,255,.24), rgba(255,255,255,0) 55%),
-        rgba(0,0,0,.14);
-      color: rgba(220,250,255,.92);
-      border-radius: 14px;
-      padding: 8px 12px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      font-size: 12px;
-      cursor:pointer;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.50));
-    }
-    .miniBtn:active{ transform: translateY(1px); }
-
     .list{
       position:absolute;
       left: 0; right: 0;
       top: 44px; bottom: 0;
       padding: 10px 12px 12px 12px;
       box-sizing: border-box;
-      overflow: auto;
+      overflow:auto;
       scrollbar-gutter: stable;
     }
 
-    /* Scrollbar styling (subtle; no frames) */
     .list::-webkit-scrollbar{ width: 10px; }
     .list::-webkit-scrollbar-thumb{
-      background: linear-gradient(180deg, rgba(0,210,255,.25), rgba(255,175,0,.18));
+      background: linear-gradient(180deg, rgba(0,210,255,.22), rgba(255,175,0,.16));
       border-radius: 999px;
       border: 2px solid rgba(0,0,0,.25);
     }
@@ -281,22 +251,32 @@
       padding: 12px 12px;
       border-radius: 18px;
       margin-bottom: 10px;
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.025);
+      border: 1px solid rgba(255,255,255,.14);
       box-shadow:
-        inset 0 2px 6px rgba(255,255,255,.45),
-        inset 0 -10px 16px rgba(0,0,0,.55);
+        inset 0 2px 6px rgba(255,255,255,.32),
+        inset 0 -12px 18px rgba(0,0,0,.62);
+      position:relative;
+      overflow:hidden;
     }
-
+    .row::after{
+      content:"";
+      position:absolute;
+      inset:-60% -20%;
+      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.10), rgba(255,255,255,0) 55%);
+      transform: rotate(12deg);
+      pointer-events:none;
+      opacity:.55;
+    }
     .row strong{
       font-size: 15px;
       letter-spacing: .4px;
-      color: rgba(255,255,255,.95);
-      text-shadow:
-        0 1px 0 rgba(255,255,255,.55),
-        0 -1px 2px rgba(0,0,0,.65),
-        0 0 10px rgba(0,210,255,.12);
+      color: rgba(255,255,255,.96);
+      text-shadow: 0 1px 0 rgba(255,255,255,.35), 0 -1px 2px rgba(0,0,0,.70);
+      position:relative;
+      z-index:1;
     }
+    .actions{ display:flex; gap:10px; align-items:center; flex:0 0 auto; position:relative; z-index:1; }
 
     .pill{
       border: 1px solid rgba(255,255,255,.22);
@@ -305,366 +285,126 @@
       border-radius: 999px;
       padding: 8px 12px;
       font-size: 12px;
-      font-weight: 900;
+      font-weight: 1000;
       letter-spacing: 1px;
       text-transform: uppercase;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
+      cursor:pointer;
       box-shadow:
-        inset 0 2px 4px rgba(255,255,255,.55),
-        inset 0 -8px 14px rgba(0,0,0,.55),
+        inset 0 2px 4px rgba(255,255,255,.45),
+        inset 0 -10px 14px rgba(0,0,0,.62),
         0 0 14px rgba(0,210,255,.10);
     }
-    .pill::before{
-      content:"";
-      position:absolute;
-      inset: 2px 8px auto 8px;
-      height: 10px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,255,255,.55), rgba(255,255,255,0));
-      opacity:.55;
-      pointer-events:none;
-    }
-    /* subtle cyan edge tint, no fog */
-    .pill{ outline: 1px solid rgba(0,210,255,.10); }
-    .pill.secondary{
-      outline: 1px solid rgba(255,175,0,.10);
+    .pill:active{ transform: translateY(1px); }
+
+    /* Active player highlight */
+    .row.active{
+      border-color: rgba(0,210,255,.22);
       box-shadow:
-        inset 0 2px 4px rgba(255,255,255,.55),
-        inset 0 -8px 14px rgba(0,0,0,.55),
-        0 0 14px rgba(255,175,0,.08);
+        inset 0 2px 6px rgba(255,255,255,.32),
+        inset 0 -12px 18px rgba(0,0,0,.62),
+        0 0 18px rgba(0,210,255,.14);
     }
-.row.active{
-      border-color: rgba(255,175,0,.25);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,175,0,.14),
-        0 0 28px rgba(255,175,0,.10);
-    }
-
-    /* Mobile safe-area handling */
-    @supports(padding: max(0px)){
-      .landing-ui{ padding-bottom: max(0px, env(safe-area-inset-bottom)); }
-      .hub{ padding-bottom: max(0px, env(safe-area-inset-bottom)); }
-    }
-  
-/* ===== 01 Selector Glass Panel ===== */
-.selectorPanel{
-  position:absolute;
-  inset: 44px 0 0 0;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  padding:14px;
-  box-sizing:border-box;
-  animation: fadeIn .25s ease;
-}
-
-.selectorBtn{
-  border-radius:18px;
-  padding:16px;
-  font-weight:900;
-  font-size:18px;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  cursor:pointer;
-  border:1px solid rgba(0,210,255,.22);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.04)),
-    radial-gradient(150% 150% at 30% 20%, rgba(0,210,255,.22), rgba(0,0,0,.10) 62%);
-  
-  color: rgba(255,255,255,.95);
-  box-shadow:
-    inset 0 2px 6px rgba(255,255,255,.32),
-    inset 0 -10px 18px rgba(0,0,0,.48),
-    0 0 22px rgba(0,210,255,.18);
-}
-
-.selectorBtn:active{
-  transform: translateY(2px);
-}
-
-@keyframes fadeIn{
-  from{ opacity:0; transform: translateY(8px); }
-  to{ opacity:1; transform: translateY(0); }
-}
-
-
-    /* ===== Visible Build Badge ===== */
-    .buildBadge{
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 9999;
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(0,0,0,.35);
-      border: 1px solid rgba(255,255,255,.14);
-      color: rgba(255,255,255,.92);
-      font-weight: 800;
-      letter-spacing: 1px;
-      font-size: 12px;
-      text-transform: uppercase;
-      pointer-events: none;
-      box-shadow: 0 10px 22px rgba(0,0,0,.55);
-    }
-    .buildBadge b{ color: rgba(0,210,255,.95); }
-    .buildBadge .ok{ color: rgba(140,255,200,.92); }
-    .buildBadge .bad{ color: rgba(255,170,140,.92); }
-
-
-    .actions{ display:flex; gap:10px; align-items:center; flex:0 0 auto; }
-    
-</style>
+  </style>
 </head>
 <body>
-
-  <div class="buildBadge" id="buildBadge">
-    <div>Build <b>v667</b></div>
-    <div>Status: <span id="jsStatus" class="bad">JS not running</span></div>
-    <div>Screen: <span id="screenStatus">landing</span></div>
-  </div>
+  <div class="buildBadge">Build <b>v671</b></div>
 
   <div id="app">
-
     <!-- LANDING -->
-    <section id="screenLanding" class="screen active" aria-label="Landing screen">
-      <div class="landing-ui" aria-hidden="false">
-        <div class="field3d" role="group" aria-label="Email input">
-          <input id="email" type="email" inputmode="email" autocomplete="email"
-                 placeholder="YOUR EMAIL" aria-label="Email address"/>
+    <section id="screenLanding" class="screen active" aria-label="Landing">
+      <div class="landingUI">
+        <div class="field3d" aria-label="Email">
+          <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="YOUR EMAIL"/>
         </div>
-        <button id="enterBtn" class="btn3d" type="button" aria-label="Enter">Enter</button>
+        <button id="enterBtn" class="btn3d" type="button">Enter</button>
         <div id="err" class="err" aria-live="polite">Enter your email to continue.</div>
       </div>
     </section>
 
-    <!-- PLAYERS HUB (Games top / Players bottom) -->
-    <section id="screenPlayers" class="screen" aria-label="Players screen">
-      <div class="hub" aria-hidden="false">
-        <div class="section" aria-label="Games section">
+    <!-- PLAYERS -->
+    <section id="screenPlayers" class="screen" aria-label="Players">
+      <div class="hub">
+        <div class="panel" style="position:relative;">
           <div class="sectionHead">
             <div class="title">Games</div>
-            
           </div>
-          <div class="list" id="gamesList" role="list">
-            <!-- starter items -->
-          </div>
+          <div class="list" id="gamesList" role="list"></div>
         </div>
 
-        <div class="section" aria-label="Players section">
+        <div class="panel" style="position:relative;">
           <div class="sectionHead">
             <div class="title">Players</div>
-            
           </div>
-          <div class="list" id="playersList" role="list">
-            <!-- starter items -->
-          </div>
+          <div class="list" id="playersList" role="list"></div>
         </div>
       </div>
     </section>
-
   </div>
 
   <script>
     (function(){
-      console.log('Night Games build v667 loaded');
-      const jsStatus = document.getElementById('jsStatus');
-      const screenStatus = document.getElementById('screenStatus');
-      if(jsStatus){ jsStatus.textContent = 'JS running'; jsStatus.className='ok'; }
+      console.log("Night Games v671 loaded");
 
       const $ = (id)=>document.getElementById(id);
-
       const screenLanding = $("screenLanding");
       const screenPlayers = $("screenPlayers");
-
       const email = $("email");
       const enterBtn = $("enterBtn");
       const err = $("err");
 
       const gamesList = $("gamesList");
       const playersList = $("playersList");
-function show(screen){
+
+      function show(screen){
         screenLanding.classList.toggle("active", screen === "landing");
         screenPlayers.classList.toggle("active", screen === "players");
-        if(screenStatus) screenStatus.textContent = screen;
       }
 
-      function validEmail(v){
-        return (v || "").trim().length > 0;
-      }
-
-      function setError(on){
-        err.classList.toggle("show", !!on);
-      }
+      function setError(on){ err.classList.toggle("show", !!on); }
 
       function goPlayers(){
         const v = (email.value || "").trim();
-        if(!v){
-          setError(true);
-          return;
-        }
-        setError(false);
-        localStorage.setItem("ng_email", v);
-        show("players");
-      }
+        if(!v){ setError(true); return; }
         setError(false);
         localStorage.setItem("ng_email", v);
         show("players");
       }
 
-      function rowHTML(label, type){
-        const actions = (type === "player")
-          ? ["History","Stats"]
-          : ["Enter","History"];
-        const btns = actions.map(a => `<button class="pill" type="button" data-action="${a.toLowerCase()}">${a}</button>`).join("");
-        return `
-          <div class="row" role="listitem">
-            <strong>${label}</strong>
-            <div class="actions">${btns}</div>
-          </div>
-        `;
-      }
-      }</strong>
-            <button class="pill" type="button">${rightText}</button>
-          </div>
-        `;
+      enterBtn.addEventListener("click", goPlayers);
+      email.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter"){ e.preventDefault(); goPlayers(); }
+      });
+
+      function row(label, actions){
+        const btns = (actions||[]).map(a => `<button class="pill" data-action="${a.action}">${a.text}</button>`).join("");
+        return `<div class="row"><strong>${label}</strong><div class="actions">${btns}</div></div>`;
       }
 
       function seed(){
-        const defaultPlayers = ["Steven Moody", "Jace Moody", "Brother Moody"];
-        const defaultGames = ["01", "Cricket", "Killer", "Shanghai", "Around the World", "Half It"];
+        const games = ["01","Cricket","Killer","Shanghai","Around the World","Half It"];
+        const players = ["Steven Moody","Jace Moody","Brother Moody"];
 
-        playersList.innerHTML = defaultPlayers.map(p => rowHTML(p, "player")).join("");
-        gamesList.innerHTML = defaultGames.map(g => rowHTML(g, "game")).join("");
+        gamesList.innerHTML = games.map(g => row(g, [{action:"enter", text:"Enter"}, {action:"history", text:"History"}])).join("");
+        playersList.innerHTML = players.map(p => row(p, [{action:"history", text:"History"}, {action:"stats", text:"Stats"}])).join("");
 
-        // Players actions
-        playersList.onclick = (e)=>{
-          const row = e.target.closest(".row");
-          if(!row) return;
-          const name = (row.querySelector("strong")?.textContent || "").trim();
-          const btn = e.target.closest("button.pill");
-          if(btn){
-            const action = btn.getAttribute("data-action");
-            if(action === "history") alert("Player History: " + name);
-            if(action === "stats") alert("Player Stats: " + name);
-            return;
-          }
-          [...playersList.querySelectorAll(".row")].forEach(r=>r.classList.remove("active"));
-          row.classList.add("active");
-          localStorage.setItem("ng_active_player", name);
-        };
-
-        // Games actions (Enter/History)
-        function show01Selector(){
-          gamesList.innerHTML = "";
-          const panel = document.createElement("div");
-          panel.className = "selectorPanel";
-          ["301","501","701"].forEach(score=>{
-            const btn = document.createElement("button");
-            btn.className = "selectorBtn";
-            btn.textContent = score;
-            btn.onclick = function(){
-              localStorage.setItem("ng_01_start", score);
-              alert("01 start set to " + score + " (next: board screen)");
-            };
-            panel.appendChild(btn);
-          });
-          gamesList.appendChild(panel);
-        }
-
-        gamesList.onclick = (e)=>{
-          const row = e.target.closest(".row");
-          if(!row) return;
-          const game = (row.querySelector("strong")?.textContent || "").trim();
-          const btn = e.target.closest("button.pill");
-          if(!btn) return;
-          const action = btn.getAttribute("data-action");
-          if(action === "history"){
-            alert("Game History: " + game);
-            return;
-          }
-          if(action === "enter"){
-            if(game === "01") show01Selector();
-            else alert("Enter " + game + " (next: board screen)");
-          }
-        };
-      }
-
-          // click row selects active player
-          [...playersList.querySelectorAll(".row")].forEach(r=>r.classList.remove("active"));
-          row.classList.add("active");
-          localStorage.setItem("ng_active_player", name);
-        });
-
-        // Games: Enter / History
-        function show01Selector(){
-          gamesList.innerHTML = "";
-          const panel = document.createElement("div");
-          panel.className = "selectorPanel";
-
-          ["301","501","701"].forEach(score=>{
-            const btn = document.createElement("button");
-            btn.className = "selectorBtn";
-            btn.textContent = score;
-            btn.onclick = function(){
-              localStorage.setItem("ng_01_start", score);
-              alert("01 start set to " + score + " (next: board screen)");
-            };
-            panel.appendChild(btn);
-          });
-
-          gamesList.appendChild(panel);
-        }
-
-        gamesList.addEventListener("click", (e)=>{
-          const row = e.target.closest(".row");
-          if(!row) return;
-          const game = (row.querySelector("strong")?.textContent || "").trim();
-          const btn = e.target.closest("button.pill");
-          if(!btn) return;
-          const label = (btn.textContent || "").trim().toLowerCase();
-
-          if(label === "history"){
-            alert("Game History: " + game);
-            return;
-          }
-          if(label === "enter"){
-            if(game === "01") return show01Selector();
-            localStorage.setItem("ng_selected_game", game);
-            alert("Enter " + game + " (next: board screen)");
-            return;
-          }
+        // Active player click (row body)
+        playersList.addEventListener("click", (e)=>{
+          const r = e.target.closest(".row");
+          if(!r) return;
+          const btn = e.target.closest(".pill");
+          if(btn) return; // buttons will be wired later
+          [...playersList.querySelectorAll(".row")].forEach(x=>x.classList.remove("active"));
+          r.classList.add("active");
         });
       }
-
-      // landing wiring
-      enterBtn.addEventListener("click", goPlayers);
-      email.addEventListener("keydown", (e)=>{
-        if(e.key === "Enter"){
-          e.preventDefault();
-          goPlayers();
-        }
-      });
-
-      // lightweight add buttons (prompt for now)
-              if(!name) return;
-        playersList.insertAdjacentHTML("beforeend", rowHTML(name.trim(), "Select"));
-      });
-
-              if(!name) return;
-        gamesList.insertAdjacentHTML("beforeend", rowHTML(name.trim(), "Open"));
-      });
-
-      // If email already saved, optionally auto-focus email field
-      const saved = localStorage.getItem("ng_email");
-      if(saved && typeof saved === "string"){
-        email.value = saved;
-      }
-      // keep focus on email on landing
-      setTimeout(()=>{ try{ email.focus(); }catch(_){} }, 50);
 
       seed();
+
+      // Helpful: if already signed in before, prefill
+      const saved = localStorage.getItem("ng_email");
+      if(saved) email.value = saved;
+
+      setTimeout(()=>{ try{ email.focus(); }catch(_){} }, 50);
     })();
   </script>
 </body>
