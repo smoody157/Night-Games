@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v748  |  2026-02-25
+  NIGHT GAMES v749  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v748 (MASTER STABLE)</title>
+  <title>Night Games v749 (MASTER STABLE)</title>
   <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -104,7 +104,8 @@
     .bad{ color: rgba(255,120,120,.95); }
     .ok{ color: rgba(90,255,170,.95); }
 
-    #app{ position:fixed; inset:0; }
+    #app{
+  padding-top: 72px; /* keep UI clear of header */ position:fixed; inset:0; }
     .screen{ position:absolute; inset:0; display:none; }
     .screen.active{ display:block; }
 
@@ -786,14 +787,14 @@ border: 1px solid rgba(255,255,255,.22);
 #setup .panel .detailBody{ position: relative; }
 
 
-/* ===================== v748 HEADER BAR (ONE ROW, NO WRAP) ===================== */
+/* ===================== v749 HEADER BAR (ONE ROW, NO WRAP) ===================== */
 #ngHeaderBar{
   position: fixed;
   top: max(10px, env(safe-area-inset-top));
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
-  width: min(720px, 92vw);
+  width: min(760px, 94vw);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -801,14 +802,33 @@ border: 1px solid rgba(255,255,255,.22);
   padding: 8px 12px;
   border-radius: 16px;
   border: 1px solid rgba(255,255,255,.18);
-  background: rgba(0,0,0,.25);
+  background: linear-gradient(180deg, rgba(12,28,56,.35), rgba(0,0,0,.22));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0,0,0,.35);
-  text-align: center;
-  white-space: nowrap;
+  box-shadow: 0 10px 28px rgba(0,0,0,.35);
   overflow: hidden;
 }
+#ngHeaderBar::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:16px;
+  pointer-events:none;
+  background: radial-gradient(120px 80px at 18% 0%, rgba(70,170,255,.28), transparent 70%),
+              radial-gradient(140px 90px at 82% 0%, rgba(70,255,160,.22), transparent 72%),
+              linear-gradient(90deg, rgba(70,170,255,.12), rgba(70,255,160,.10));
+  mix-blend-mode: screen;
+}
+#ngHeaderBar > span{
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+  font-size: 13px;
+  letter-spacing: .2px;
+}
+.ngHeaderLeft{ font-weight: 700; }
+.ngHeaderCenter{ opacity: .95; }
+.ngHeaderRight{ opacity: .85; }
 #ngHeaderBar span{
   font-size: 12px;
   line-height: 1;
@@ -870,7 +890,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v748</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v749</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 
 <!--
 ================================================================================
@@ -1037,7 +1057,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Single voice module; no duplicate declarations.
 */
 
-const NG_BUILD = "v748";
+const NG_BUILD = "v749";
 const NG_WELCOME_LINE = "Welcome to America's Sixth Bill Moody's Limited Edition Night Games. Shoot well.";
 
 const NGVoice = (function(){
@@ -1230,14 +1250,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script id="ngBoot_v748">
 /* =============================================================================
-   v748 BOOT (NO PATCHING / NO DUPLICATE INITS)
+   v749 BOOT (NO PATCHING / NO DUPLICATE INITS)
    - Fixes Enter wiring (email -> players)
    - Keeps Error HUD always enabled
    - Hides Debug panel unless ?debug=1
 ============================================================================= */
 (function(){
-  if(window.__NG_BOOT_V748__) return;
-  window.__NG_BOOT_V748__ = true;
+  if(window.__NG_BOOT_V749__) return;
+  window.__NG_BOOT_V749__ = true;
 
   function $(id){ return document.getElementById(id); }
   function showScreen(id){
@@ -1280,6 +1300,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(status) status.textContent = 'Signed in as ' + email;
     // voice confirmation (if enabled)
     try{ if(window.ngSpeak) window.ngSpeak('Signed in.'); }catch(e){}
+    try{ if(emailEl) emailEl.value=''; }catch(e){}
     showScreen('players');
   }
 
@@ -1299,11 +1320,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindEnter);
   else bindEnter();
 
-  // Restore session if present
-  try{
-    const saved = localStorage.getItem('ng_email');
-    if(saved && $('emailInput')) $('emailInput').value = saved;
-  }catch(e){}
 })();
 </script>
 
