@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v683</title>
+  <title>Night Games v685</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -183,14 +183,24 @@
       letter-spacing: 3px;
       text-transform: uppercase;
       font-size: clamp(22px, 3.0vh, 30px);
-      color: rgba(255,255,255,.94);
-      text-shadow:
-        0 1px 0 rgba(255,255,255,.35),
-        0 -2px 8px rgba(0,0,0,.65),
-        0 0 18px rgba(0,210,255,.12);
       position: relative;
       padding-bottom: 6px;
       width: 100%;
+
+      /* Blue glass text */
+      background: linear-gradient(180deg,
+        rgba(210,245,255,.96) 0%,
+        rgba(90,210,255,.92) 35%,
+        rgba(235,250,255,.98) 70%,
+        rgba(120,225,255,.88) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-stroke: 0.7px rgba(255,255,255,.18);
+      text-shadow:
+        0 1px 0 rgba(255,255,255,.22),
+        0 -2px 10px rgba(0,0,0,.70),
+        0 0 22px rgba(0,210,255,.18);
     }
     .title::after{
       content:"";
@@ -236,7 +246,7 @@
       letter-spacing: .6px;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
+      text-overflow: clip;
       background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(210,245,255,.78) 40%, rgba(255,255,255,.92));
       -webkit-background-clip: text;
       background-clip: text;
@@ -288,10 +298,22 @@
       transform: translateY(2px) scale(.99);
       filter: var(--zShadowSoft);
     }
+  
+    /* ===== v685: ensure full names visible ===== */
+    .leftStack{ flex: 1 1 auto; min-width: 0; }
+    .glassText{ text-overflow: clip; } /* don't ellipsize */
+    .itemLine{ padding-left: 4px; padding-right: 4px; }
+    .actions{ gap: 8px; }
+    .pill{
+      padding: 9px 11px;
+      font-size: 12px;
+      letter-spacing: .8px;
+    }
+
   </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v683</b></div>
+  <div class="buildBadge">Build <b>v685</b></div>
 
   <div id="app">
     <section id="landing" class="screen active">
@@ -382,8 +404,8 @@
               <span class="glassText">${p.name}</span>
             </div>
             <div class="actions">
-              <button class="pill" data-action="player_history" data-value="${p.email}">History</button>
               <button class="pill" data-action="player_stats" data-value="${p.email}">Stats</button>
+              <button class="pill" data-action="player_history" data-value="${p.email}">History</button>
             </div>
           </div>
         `).join("");
