@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v718 (Enter Restored Baseline)</title>
+  <title>Night Games v719 (Game Setup Modal Added)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v718: header row + mini pill */
+    /* v719: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v718: session indicator */
+    /* v719: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -430,19 +430,19 @@
     }
 
   
-    /* v718 layout lock: micro vertical drop */
+    /* v719 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v718 layout lock adjustment: additional micro drop */
+    /* v719 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v718 ATW emoji: keep color + one-line */
+    /* v719 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -465,7 +465,7 @@
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v718</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v719</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -878,7 +878,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v718 Multiplayer
+    // v719 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -1028,5 +1028,76 @@
     // If the module runs, hide the fatal overlay (in case something else turned it on)
     document.getElementById("fatal").style.display = "none";
   </script>
+
+<!-- v719 Game Setup Modal (isolated, click-only) -->
+<style>
+#gameSetupModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+#gameSetupModal .panel {
+  width: 90%;
+  max-width: 420px;
+  border-radius: 18px;
+  padding: 20px;
+  background: rgba(20,20,20,0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+}
+#gameSetupModal select, #gameSetupModal button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+}
+</style>
+
+<div id="gameSetupModal">
+  <div class="panel">
+    <h3>Game Setup</h3>
+    <label>Number of Players</label>
+    <select id="playerCountSelect">
+      <option>1</option><option>2</option><option>3</option><option>4</option>
+      <option>5</option><option>6</option><option>7</option><option>8</option>
+    </select>
+    <label>Select Players</label>
+    <select id="playerListSelect" multiple>
+      <option>Player 1</option>
+      <option>Player 2</option>
+      <option>Player 3</option>
+      <option>Player 4</option>
+    </select>
+    <button id="startGameBtn">Start</button>
+    <button id="closeGameSetupBtn">Cancel</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  // attach only after DOM ready, no startup execution affecting login
+  document.addEventListener("DOMContentLoaded", function(){
+    const modal = document.getElementById("gameSetupModal");
+    const closeBtn = document.getElementById("closeGameSetupBtn");
+
+    // attach to any game buttons if present
+    document.querySelectorAll("[data-game], .game-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        modal.style.display = "flex";
+      });
+    });
+
+    if(closeBtn){
+      closeBtn.addEventListener("click", ()=> modal.style.display="none");
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
