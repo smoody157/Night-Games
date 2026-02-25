@@ -1,12 +1,22 @@
 <!--
-Night Games v732
-Date: 2026-02-25
+================================================================================
+  NIGHT GAMES v734    |    2026-02-25
+================================================================================
+  GOAL OF THIS BUILD:
+   - Enter stability (no changes to routing logic)
+   - Strong, obvious section labeling (scan at a glance)
+   - Error HUD stays (only appears on errors)
+   - Extra safety guards so random runtime errors don’t crash the app
 
-CHANGELOG
-- Stabilize baseline (no feature changes besides Error HUD)
-- Add on-screen error bubble/toast ("Hey Steve — ...") with details
-- Add clear section markers + edit-friendly notes
-NOTE: Enter/login wiring intentionally untouched.
+  QUICK SEARCH TAGS:
+   [EDIT_BG] [EDIT_LOGO] [EDIT_VERSION] [EDIT_COLORS] [EDIT_DROPDOWNS]
+   [SECTION_CONFIG] [SECTION_STATE] [SECTION_ROUTING] [SECTION_UI]
+   [SECTION_PLAYERS] [SECTION_GAMES] [SECTION_SETUP] [SECTION_WAITING]
+   [SECTION_FIREBASE] [SECTION_UTILS]
+
+  NOTE:
+   - If something is "maybe needed", it is kept and labeled as [KEEP_MAYBE].
+================================================================================
 -->
 
 <!doctype html>
@@ -14,9 +24,13 @@ NOTE: Enter/login wiring intentionally untouched.
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v732 (Stable + Error HUD)</title>
+  <title>Night Games v734 (Setup Fixed + Player Dropdown)</title>
   <style>
-    :root{
+/* =============================================================================
+   SECTION: VISUAL THEME  [EDIT_COLORS]
+   - Keep theme styles grouped here.
+============================================================================= */
+:root{
       --bgStage: url("./IMG_7315.jpeg");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
@@ -418,7 +432,7 @@ NOTE: Enter/login wiring intentionally untouched.
       border-radius: 14px;
     }
   
-    /* v732: header row + mini pill */
+    /* v734: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -429,7 +443,7 @@ NOTE: Enter/login wiring intentionally untouched.
     }
 
   
-    /* v732: session indicator */
+    /* v734: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -447,19 +461,19 @@ NOTE: Enter/login wiring intentionally untouched.
     }
 
   
-    /* v732 layout lock: micro vertical drop */
+    /* v734 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v732 layout lock adjustment: additional micro drop */
+    /* v734 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v732 ATW emoji: keep color + one-line */
+    /* v734 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -481,7 +495,7 @@ NOTE: Enter/login wiring intentionally untouched.
 
 
 
-    /* v732: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    /* v734: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
     #setup .detailWrap{
       top: clamp(150px, 18vh, 260px);
       bottom: max(80px, env(safe-area-inset-bottom));
@@ -496,7 +510,7 @@ NOTE: Enter/login wiring intentionally untouched.
 
 
 
-    /* v732: glass dropdowns (no white/yellow) */
+    /* v734: glass dropdowns (no white/yellow) */
     .glassSelect{
       width: 100%;
       padding: 14px 44px 14px 16px;
@@ -547,7 +561,7 @@ NOTE: Enter/login wiring intentionally untouched.
 
 
     /***********************
-     *  v732 ERROR HUD
+     *  v734 ERROR HUD
      *  - Appears only when an error occurs
      *  - Small, not in the way
      ***********************/
@@ -630,23 +644,134 @@ NOTE: Enter/login wiring intentionally untouched.
     }
     #ngErrToast.expanded .detail{ display:block; }
 
+
+/* =============================================================================
+   SECTION: EDITABLE COORDINATES  [EDIT_LOGO] [EDIT_BG] [EDIT_VERSION]
+   - If you want to move the logo or tweak offsets, search for these tags.
+============================================================================= */
+
+/* =============================================================================
+   SECTION_SETUP: PLAYER PICKER DROPDOWN  [SECTION_SETUP]
+============================================================================= */
+/* v734: player picker dropdown */
+.glassBtn{
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.96);
+  font-weight: 1100;
+  font-size: 20px;
+  line-height: 1.1;
+  box-shadow: inset 0 0 18px rgba(255,255,255,.06), 0 0 18px rgba(255,255,255,.06);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+}
+.glassBtn .sub{ opacity:.72; font-weight:900; font-size:16px; }
+.glassBtn:active{ transform: translateY(1px); opacity:.96; }
+.pickerModal{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.58);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index: 99999;
+  padding: 18px;
+}
+.pickerCard{
+  width: min(520px, 100%);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(20,20,24,.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 0 30px rgba(0,0,0,.35), inset 0 0 24px rgba(255,255,255,.06);
+  overflow:hidden;
+}
+.pickerHead{
+  padding: 14px 16px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+.pickerHead .t{ font-weight:1200; font-size:18px; }
+.pickerHead .c{ opacity:.75; font-weight:900; font-size:14px; }
+.pickerBody{
+  max-height: 46vh;
+  overflow-y:auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 12px;
+}
+.pickerRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+  margin-bottom: 10px;
+}
+.pickerRow .nm{ font-weight:1100; }
+.pickerRow .em{ opacity:.65; font-size:12px; font-weight:800; }
+.pickerFoot{
+  padding: 12px 12px;
+  display:flex;
+  gap: 10px;
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+.pickerFoot .pill{ flex:1; }
 </style>
+
+<script id="ngGuards_v734">
+/* =============================================================================
+   SECTION_UTILS: SAFETY GUARDS  [SECTION_UTILS]
+   - Prevents small errors from killing the whole app.
+   - Does NOT change normal behavior when everything is working.
+============================================================================= */
+(function(){
+  // Safe wrapper for event handlers
+  window.ngSafe = function(fn, label){
+    return function(){
+      try { return fn.apply(this, arguments); }
+      catch (e) {
+        try {
+          if (window.ngErr) window.ngErr(label || "Handler error", e && (e.stack || e.message || String(e)));
+        } catch(_e){}
+      }
+    };
+  };
+
+  // Guard common DOM lookup usage
+  window.ng$ = function(sel){ return document.querySelector(sel); };
+  window.ngAll = function(sel){ return Array.from(document.querySelectorAll(sel)); };
+})();
+</script>
+
 </head>
 <body>
 
 <!--
-========================
-EDIT NOTES (v732)
-- Search tags to quickly find editable UI pieces:
-  [EDIT_BG] background image / colors
-  [EDIT_LOGO] logo placement
-  [EDIT_VERSION] version label
-  [EDIT_DROPDOWNS] glass dropdown styling
-- Tip: Use Ctrl/Cmd+F with the tags above.
-========================
--->
+================================================================================
+  EDIT NOTES (v734)
+================================================================================
+  [EDIT_BG]       Background image / gradient choices
+  [EDIT_LOGO]     Logo placement / size
+  [EDIT_VERSION]  Version label placement
+  [EDIT_DROPDOWNS]Glass dropdown styling
+  [EDIT_COLORS]   Color/opacity tweaks for glass
 
-  <div class="buildBadge">Build <b>v732</b> • Firebase</div>
+  TIP: Use Ctrl/Cmd+F for the tags above to jump to the exact spot.
+================================================================================
+-->
+<div class="buildBadge">Build <b>v734</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -820,7 +945,11 @@ EDIT NOTES (v732)
     }
 
     // ===== Config (from Steven) =====
-    const firebaseConfig = {
+    /* =============================================================================
+   SECTION_FIREBASE  [SECTION_FIREBASE]
+   - Firebase configuration lives here.
+============================================================================= */
+const firebaseConfig = {
       apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
       authDomain: "gamenightdarts-e7601.firebaseapp.com",
       projectId: "gamenightdarts-e7601",
@@ -936,7 +1065,7 @@ function safeEmail(email){
     }
 
     
-    // v732: minimal session + setup → waiting room (does not touch login)
+    // v734: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -991,8 +1120,32 @@ function safeEmail(email){
         </select>
 
         <div style="margin:14px 0 10px; font-weight:900; opacity:.85;">Which Players</div>
-        <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
-          ${opts}
+        <button type="button" id="openPlayerPicker" class="glassBtn">
+          <span>Select players</span>
+          <span class="sub" id="playerPickSummary">1 selected</span>
+        </button>
+        <div id="setupPlayersWrapHolder" style="display:none;">
+          <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
+            ${opts}
+          </div>
+        </div>
+
+        <!-- v734 player picker modal -->
+        <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
+          <div class="pickerCard">
+            <div class="pickerHead">
+              <div>
+                <div class="t">Pick Players</div>
+                <div class="c" id="pickerCountLabel">1 / 1 selected</div>
+              </div>
+              <button class="pill" id="pickerCloseTop" type="button" style="padding:10px 14px;">Close</button>
+            </div>
+            <div class="pickerBody" id="pickerBody"></div>
+            <div class="pickerFoot">
+              <button class="pill" id="pickerCancel" type="button" style="opacity:.85;">Cancel</button>
+              <button class="pill" id="pickerDone" type="button">Done</button>
+            </div>
+          </div>
         </div>
 
         <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
@@ -1008,17 +1161,120 @@ function safeEmail(email){
       // defaults
       countSel.value = "1";
       const checks = Array.from(document.querySelectorAll(".pickPlayer"));
+      // v734 picker wiring (dropdown-style player selector)
+      const openBtn = document.getElementById("openPlayerPicker");
+      const modal = document.getElementById("playerPickerModal");
+      const body = document.getElementById("pickerBody");
+      const doneBtn = document.getElementById("pickerDone");
+      const cancelBtn = document.getElementById("pickerCancel");
+      const closeTop = document.getElementById("pickerCloseTop");
+      const summary = document.getElementById("playerPickSummary");
+      const countLabel = document.getElementById("pickerCountLabel");
+
+      let snapshotSelected = new Set();
+
+      function getSelectedEmails(){
+        return checks.filter(c=>c.).map(c=>c.value);
+      }
+      function setSelectedEmails(set){
+        checks.forEach(c=>{ c.= set.has(c.value); });
+      }
+      function refreshSummary(){
+        const sel = getSelectedEmails();
+        summary.textContent = `${sel.length} selected`;
+      }
+      function refreshCountLabel(want){
+        const sel = getSelectedEmails().length;
+        countLabel.textContent = `${sel} / ${want} selected`;
+      }
+      function rebuildPicker(want){
+        body.innerHTML = "";
+        const sel = new Set(getSelectedEmails());
+        checks.forEach(c=>{
+          const email = c.value;
+          const label = c.closest("label");
+          const nm = label ? (label.querySelector("div")?.innerText || email) : email;
+          const row = document.createElement("div");
+          row.className = "pickerRow";
+          row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "pill";
+          btn.style.padding = "10px 12px";
+          btn.textContent = sel.has(email) ? "Selected" : "Select";
+          btn.addEventListener("click", ()=>{
+            const now = new Set(getSelectedEmails());
+            const isOn = now.has(email);
+            if(isOn){
+              now.delete(email);
+            }else{
+              if(now.size >= want){
+                try{ ping && ping(); }catch(e){}
+                return;
+              }
+              now.add(email);
+            }
+            setSelectedEmails(now);
+            enforce();
+            rebuildPicker(want);
+          });
+          row.appendChild(btn);
+          body.appendChild(row);
+        });
+        refreshCountLabel(want);
+        refreshSummary();
+      }
+      function openPicker(want){
+        snapshotSelected = new Set(getSelectedEmails());
+        rebuildPicker(want);
+        modal.style.display = "flex";
+        modal.setAttribute("aria-hidden","false");
+      }
+      function closePicker(){
+        modal.style.display = "none";
+        modal.setAttribute("aria-hidden","true");
+      }
+      if(openBtn){
+        openBtn.addEventListener("click", ()=>{
+          const want = parseInt((document.getElementById("setupCount")?.value)||"1",10) || 1;
+          openPicker(want);
+        });
+      }
+      [cancelBtn, closeTop].forEach(b=> b && b.addEventListener("click", ()=>{
+        setSelectedEmails(snapshotSelected);
+        enforce();
+        refreshSummary();
+        closePicker();
+      }));
+      if(doneBtn){
+        doneBtn.addEventListener("click", ()=>{
+          closePicker();
+          refreshSummary();
+        });
+      }
+      if(modal){
+        modal.addEventListener("click", (e)=>{
+          if(e.target === modal){
+            setSelectedEmails(snapshotSelected);
+            enforce();
+            refreshSummary();
+            closePicker();
+          }
+        });
+      }
+      refreshSummary();
+
       // default select current user
-      checks.forEach(c=>{ if(c.value === me) c.checked = true; });
+      checks.forEach(c=>{ if(c.value === me) c.= true; });
 
       function enforce(){
         const want = parseInt(countSel.value||"1",10) || 1;
-        const picked = checks.filter(c=>c.checked).map(c=>c.value);
+        const picked = checks.filter(c=>c.).map(c=>c.value);
         // always keep me selected
         const fixed = _ensureCurrentInList(picked);
         // trim to count
         const trimmed = fixed.slice(0, want);
-        checks.forEach(c=>{ c.checked = trimmed.includes(c.value); });
+        checks.forEach(c=>{ c.= trimmed.includes(c.value); });
       }
 
       countSel.addEventListener("change", enforce);
@@ -1029,9 +1285,10 @@ function safeEmail(email){
       });
 
       startBtn.addEventListener("click", async ()=>{
+        // v734: Stable start behavior (no broken/partial calls)
         enforce();
         const want = parseInt(countSel.value||"1",10) || 1;
-        const picked = checks.filter(c=>c.checked).map(c=>c.value);
+        const picked = checks.filter(c=>c.).map(c=>c.value);
         const emails = _ensureCurrentInList(picked).slice(0, want);
 
         activeSession = activeSession || {};
@@ -1039,16 +1296,21 @@ function safeEmail(email){
         activeSession.setup = { count: want, emails };
 
         try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
-      listenSessionInvites();
-        try{ await sendInvitesForSession(); }catch(e){}
-        listenSessionInvites();
-        renderWaitingRoom();
-        show("waiting");
+
+        // If solo -> go straight in. If multiplayer -> go to waiting room.
+        if(want <= 1){
+          show("waiting");
+          try{ startGameFromSession && startGameFromSession(); }catch(e){}
+        }else{
+          show("waiting");
+          try{ await sendInvitesForSession(); }catch(e){}
+          try{ listenSessionInvites && listenSessionInvites(); }catch(e){}
+        }
       });
-    }
+}
 
     
-    // v732: invites (in-app) — Join / No Thanks
+    // v734: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
@@ -1230,7 +1492,7 @@ function safeEmail(email){
 
 
     function renderPlayers(list){
-      // v732: float online players to top
+      // v734: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -1279,7 +1541,7 @@ function safeEmail(email){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v732: re-render to reorder online players immediately
+        // v734: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -1369,7 +1631,7 @@ function safeEmail(email){
       const db = getFirestore(app);
 
     
-      // v732: expose firebase handles for non-module code (prevents "db is not defined")
+      // v734: expose firebase handles for non-module code (prevents "db is not defined")
       window.ngFirebase = {
         app, auth, db,
         doc, setDoc, getDoc,
@@ -1377,7 +1639,7 @@ function safeEmail(email){
         serverTimestamp, query, where
       };
       window.db = db;
-// v732 Multiplayer
+// v734 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -1530,7 +1792,7 @@ function safeEmail(email){
   </script>
 
 <!-- =======================
-     v732 ERROR HUD (shows only on errors)
+     v734 ERROR HUD (shows only on errors)
      ======================= -->
 <div id="ngErrToast" aria-live="polite" aria-atomic="true">
   <div class="card">
@@ -1549,9 +1811,9 @@ function safeEmail(email){
 </div>
 
 
-<script id="ngErrorHud_v732">
+<script id="ngErrorHud_v734">
 /***********************
- *  v732: ERROR HUD + SAFE LOGGING
+ *  v734: ERROR HUD + SAFE LOGGING
  *  Purpose:
  *   - If a runtime error happens, show a small toast with details.
  *   - Does NOT block the UI and does NOT change game logic.
@@ -1614,6 +1876,28 @@ function safeEmail(email){
   window.ngErr = function(message, detail){
     showToast('Hey Steve — heads up', message || 'Notice', detail || '');
   };
+})();
+</script>
+
+
+<script id="ngPatch_v734">
+/* =============================================================================
+   SECTION_ROUTING: HARDEN ENTER  [SECTION_ROUTING]
+   - Wraps Enter click handler safely without changing logic.
+============================================================================= */
+(function(){
+  function wrapEnter(){
+    const btn = document.getElementById('enterBtn') || document.getElementById('enter') || document.querySelector('[data-action="enter"]');
+    if(!btn) return;
+    // If an inline onclick exists, wrap it.
+    if(typeof btn.onclick === 'function' && !btn._ngWrapped){
+      const orig = btn.onclick;
+      btn.onclick = ngSafe(orig, "Enter button error");
+      btn._ngWrapped = true;
+    }
+  }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", wrapEnter);
+  else wrapEnter();
 })();
 </script>
 
