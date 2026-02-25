@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v738  |  2026-02-25
+  NIGHT GAMES v739  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v738 (MASTER CLEAN)</title>
+  <title>Night Games v739 (MASTER CLEAN)</title>
   <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -433,7 +433,7 @@
       border-radius: 14px;
     }
   
-    /* v738: header row + mini pill */
+    /* v739: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -444,7 +444,7 @@
     }
 
   
-    /* v738: session indicator */
+    /* v739: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -462,19 +462,19 @@
     }
 
   
-    /* v738 layout lock: micro vertical drop */
+    /* v739 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v738 layout lock adjustment: additional micro drop */
+    /* v739 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v738 ATW emoji: keep color + one-line */
+    /* v739 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -496,7 +496,7 @@
 
 
 
-    /* v738: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    /* v739: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
     #setup .detailWrap{
       top: clamp(150px, 18vh, 260px);
       bottom: max(80px, env(safe-area-inset-bottom));
@@ -511,7 +511,7 @@
 
 
 
-    /* v738: glass dropdowns (no white/yellow) */
+    /* v739: glass dropdowns (no white/yellow) */
     .glassSelect{
       width: 100%;
       padding: 14px 44px 14px 16px;
@@ -562,7 +562,7 @@
 
 
     /***********************
-     *  v738 ERROR HUD
+     *  v739 ERROR HUD
      *  - Appears only when an error occurs
      *  - Small, not in the way
      ***********************/
@@ -654,7 +654,7 @@
 /* =============================================================================
    SECTION_SETUP: PLAYER PICKER DROPDOWN  [SECTION_SETUP]
 ============================================================================= */
-/* v738: player picker dropdown */
+/* v739: player picker dropdown */
 .glassBtn{
   width: 100%;
   padding: 14px 16px;
@@ -781,7 +781,7 @@
 
 <!--
 ================================================================================
-  EDIT NOTES (v738)
+  EDIT NOTES (v739)
 ================================================================================
   [EDIT_BG]       Background image / gradient choices
   [EDIT_LOGO]     Logo placement / size
@@ -792,7 +792,7 @@
   TIP: Use Ctrl/Cmd+F for the tags above to jump to the exact spot.
 ================================================================================
 -->
-<div class="buildBadge">Build <b>v738</b> • Firebase</div>
+<div class="buildBadge">Build <b>v739</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -1104,7 +1104,7 @@ function safeEmail(email){
     }
 
     
-    // v738: minimal session + setup → waiting room (does not touch login)
+    // v739: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -1175,7 +1175,7 @@ function renderSetupForGame(game){
           </div>
         </div>
 
-        <!-- v738 player picker modal -->
+        <!-- v739 player picker modal -->
         <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
           <div class="pickerCard">
             <div class="pickerHead">
@@ -1206,7 +1206,7 @@ function renderSetupForGame(game){
       // defaults
       countSel.value = "1";
       const checks = Array.from(document.querySelectorAll(".pickPlayer"));
-      // v738 picker wiring (dropdown-style player selector)
+      // v739 picker wiring (dropdown-style player selector)
       const openBtn = document.getElementById("openPlayerPicker");
       const modal = document.getElementById("playerPickerModal");
       const body = document.getElementById("pickerBody");
@@ -1219,7 +1219,7 @@ function renderSetupForGame(game){
       let snapshotSelected = new Set();
 
       function getSelectedEmails(){
-        return checks.filter(c=>c.).map(c=>c.value);
+        return checks.filter(c=>c.checked).map(c=>c.value);
       }
       function setSelectedEmails(set){
         checks.forEach(c=>{ c.= set.has(c.value); });
@@ -1314,7 +1314,7 @@ function renderSetupForGame(game){
 
       function enforce(){
         const want = parseInt(countSel.value||"1",10) || 1;
-        const picked = checks.filter(c=>c.).map(c=>c.value);
+        const picked = checks.filter(c=>c.checked).map(c=>c.value);
         // always keep me selected
         const fixed = _ensureCurrentInList(picked);
         // trim to count
@@ -1330,10 +1330,10 @@ function renderSetupForGame(game){
       });
 
       startBtn.addEventListener("click", async ()=>{
-        // v738: Stable start behavior (no broken/partial calls)
+        // v739: Stable start behavior (no broken/partial calls)
         enforce();
         const want = parseInt(countSel.value||"1",10) || 1;
-        const picked = checks.filter(c=>c.).map(c=>c.value);
+        const picked = checks.filter(c=>c.checked).map(c=>c.value);
         const emails = _ensureCurrentInList(picked).slice(0, want);
 
         activeSession = activeSession || {};
@@ -1361,7 +1361,7 @@ sendInvitesForSession(); }catch(e){}
 }
 
     
-    // v738: invites (in-app) — Join / No Thanks
+    // v739: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
@@ -1555,7 +1555,7 @@ renderWaitingRoom();
 ================================================================================
 */
 function renderPlayers(list){
-      // v738: float online players to top
+      // v739: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -1604,7 +1604,7 @@ function renderPlayers(list){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v738: re-render to reorder online players immediately
+        // v739: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -1694,7 +1694,7 @@ function renderPlayers(list){
       const db = getFirestore(app);
 
     
-      // v738: expose firebase handles for non-module code (prevents "db is not defined")
+      // v739: expose firebase handles for non-module code (prevents "db is not defined")
       window.ngFirebase = {
         app, auth, db,
         doc, setDoc, getDoc,
@@ -1702,7 +1702,7 @@ function renderPlayers(list){
         serverTimestamp, query, where
       };
       window.db = db;
-// v738 Multiplayer
+// v739 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -1861,7 +1861,7 @@ function onEnter() {
   </script>
 
 <!-- =======================
-     v738 ERROR HUD (shows only on errors)
+     v739 ERROR HUD (shows only on errors)
      ======================= -->
 <div id="ngErrToast" aria-live="polite" aria-atomic="true">
   <div class="card">
@@ -1882,7 +1882,7 @@ function onEnter() {
 
 <script id="ngErrorHud_v737">
 /***********************
- *  v738: ERROR HUD + SAFE LOGGING
+ *  v739: ERROR HUD + SAFE LOGGING
  *  Purpose:
  *   - If a runtime error happens, show a small toast with details.
  *   - Does NOT block the UI and does NOT change game logic.
