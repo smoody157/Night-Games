@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v721 (Setup → Waiting Room)</title>
+  <title>Night Games v722 (Invites: Join / No Thanks)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -407,7 +407,7 @@
       border-radius: 14px;
     }
   
-    /* v721: header row + mini pill */
+    /* v722: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -418,7 +418,7 @@
     }
 
   
-    /* v721: session indicator */
+    /* v722: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -436,19 +436,19 @@
     }
 
   
-    /* v721 layout lock: micro vertical drop */
+    /* v722 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v721 layout lock adjustment: additional micro drop */
+    /* v722 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v721 ATW emoji: keep color + one-line */
+    /* v722 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -471,7 +471,7 @@
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v721</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v722</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -621,7 +621,7 @@
       getFirestore,
       doc, setDoc, getDoc,
       collection, onSnapshot,
-      serverTimestamp, query
+      serverTimestamp, query, where
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const dbgState = document.getElementById("dbgState");
@@ -761,7 +761,7 @@ function safeEmail(email){
     }
 
     
-    // v721: minimal session + setup → waiting room (does not touch login)
+    // v722: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -779,6 +779,7 @@ function safeEmail(email){
         setup: { count: 1, emails: [(currentEmail||"").toLowerCase()].filter(Boolean) }
       };
       try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+      listenSessionInvites();
     }
 
     function _ensureCurrentInList(emails){
@@ -852,7 +853,7 @@ function safeEmail(email){
         show("players");
       });
 
-      startBtn.addEventListener("click", ()=>{
+      startBtn.addEventListener("click", async ()=>{
         enforce();
         const want = parseInt(countSel.value||"1",10) || 1;
         const picked = checks.filter(c=>c.checked).map(c=>c.value);
@@ -863,10 +864,140 @@ function safeEmail(email){
         activeSession.setup = { count: want, emails };
 
         try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+      listenSessionInvites();
+        try{ await sendInvitesForSession(); }catch(e){}
+        listenSessionInvites();
         renderWaitingRoom();
         show("waiting");
       });
     }
+
+    
+    // v722: invites (in-app) — Join / No Thanks
+    let invitesUnsub = null;
+    function listenForInvites(){
+      try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
+      invitesUnsub = null;
+      if(!db || !currentEmail) return;
+      const me = (currentEmail||"").toLowerCase();
+      const invRef = collection(db, "invites");
+      const qInv = query(invRef, where("to", "==", me), where("status", "==", "pending"));
+      invitesUnsub = onSnapshot(qInv, (snap)=>{
+        if(!snap || snap.empty) return;
+        // take newest pending invite
+        const docSnap = snap.docs[0];
+        const inv = docSnap.data() || {};
+        const from = inv.from || "Host";
+        const game = inv.game || "Game";
+        const sessionId = inv.sessionId || null;
+        const invited = Array.isArray(inv.invited) ? inv.invited : [];
+        const count = inv.count || invited.length || 1;
+
+        openDetail("INVITE", `
+          <div style="font-weight:1100; font-size:22px; margin-bottom:10px;">${from} invited you</div>
+          <div style="opacity:.82; margin-bottom:14px;">Game: <b>${game}</b></div>
+          <div style="opacity:.78; margin-bottom:14px;">Join this room?</div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="pill" id="invJoinBtn" type="button">Join</button>
+            <button class="pill" id="invNoBtn" type="button" style="opacity:.85;">No Thanks</button>
+          </div>
+        `);
+
+        const joinBtn = document.getElementById("invJoinBtn");
+        const noBtn = document.getElementById("invNoBtn");
+
+        if(joinBtn){
+          joinBtn.addEventListener("click", async ()=>{
+            try{
+              await setDoc(doc(db, "invites", docSnap.id), { status:"accepted", respondedAt: serverTimestamp() }, { merge:true });
+            }catch(e){ alert(e.message||e); }
+            // set local session + go waiting
+            if(sessionId){
+              activeSessionId = sessionId;
+              activeSession = { id: sessionId, game, host: inv.fromEmail||inv.from||"", setup:{ count, emails: invited } };
+              try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+      listenSessionInvites();
+              listenSessionInvites();
+              renderWaitingRoom();
+              show("waiting");
+              closeDetail();
+            }
+          });
+        }
+        if(noBtn){
+          noBtn.addEventListener("click", async ()=>{
+            try{
+              await setDoc(doc(db, "invites", docSnap.id), { status:"declined", respondedAt: serverTimestamp() }, { merge:true });
+            }catch(e){ alert(e.message||e); }
+            closeDetail();
+          });
+        }
+      });
+    }
+
+    async function sendInvitesForSession(){
+      if(!db || !activeSessionId || !activeSession || !activeSession.setup) return;
+      const hostEmail = (currentEmail||"").toLowerCase();
+      const hostName = (lastPeople||[]).find(p => (p.email||"").toLowerCase()===hostEmail)?.name || (hostEmail.split("@")[0]||"Host");
+      const game = activeSession.game || "Game";
+      const invited = (activeSession.setup.emails||[]).map(x=>(x||"").toLowerCase()).filter(Boolean);
+      const count = activeSession.setup.count || invited.length || 1;
+
+      // create/merge session doc (meta)
+      try{
+        await setDoc(doc(db, "sessions", activeSessionId), {
+          sessionId: activeSessionId,
+          game,
+          host: hostEmail,
+          hostName,
+          invited,
+          count,
+          createdAt: serverTimestamp()
+        }, { merge:true });
+      }catch(e){ /* non-fatal */ }
+
+      // create invite docs for non-host
+      const others = invited.filter(em => em !== hostEmail);
+      for(const to of others){
+        const invId = `${activeSessionId}_${safeEmail(to)}`;
+        await setDoc(doc(db, "invites", invId), {
+          sessionId: activeSessionId,
+          game,
+          from: hostName,
+          fromEmail: hostEmail,
+          to,
+          invited,
+          count,
+          status: "pending",
+          createdAt: serverTimestamp()
+        }, { merge:true });
+      }
+    }
+
+    let inviteStatusCache = new Map();
+    let sessionInvitesUnsub = null;
+    function listenSessionInvites(){
+      try{ if(sessionInvitesUnsub) sessionInvitesUnsub(); }catch(e){}
+      sessionInvitesUnsub = null;
+      if(!db || !activeSessionId) return;
+      const invRef = collection(db, "invites");
+      const qSess = query(invRef, where("sessionId","==", activeSessionId));
+      sessionInvitesUnsub = onSnapshot(qSess, (snap)=>{
+        inviteStatusCache = new Map();
+        try{
+          snap.docs.forEach(d=>{
+            const v = d.data()||{};
+            if(v.to) inviteStatusCache.set(String(v.to).toLowerCase(), v.status||"pending");
+          });
+        }catch(e){}
+
+        // refresh waiting room statuses when invites change
+        if(waiting && waiting.classList.contains("active")){
+          renderWaitingRoom();
+        }
+      });
+    }
+
 
     function renderWaitingRoom(){
       const game = (activeSession && activeSession.game) ? activeSession.game : "Game";
@@ -876,13 +1007,16 @@ function safeEmail(email){
       const rows = emails.map(em=>{
         const p = (lastPeople||[]).find(x => (x.email||"").toLowerCase()===String(em||"").toLowerCase());
         const name = p ? (p.name||em.split("@")[0]||em) : (em.split("@")[0]||em);
-        const online = (p && isOnline(p)) || (String(em).toLowerCase()===(currentEmail||"").toLowerCase());
+        const lower = String(em||"").toLowerCase();
+        const online = (p && isOnline(p)) || (lower===(currentEmail||"").toLowerCase());
+        const status = (lower===(currentEmail||"").toLowerCase()) ? "host" : (inviteStatusCache.get(lower)||"pending");
+        const statusLabel = status==="accepted" ? "joined" : status==="declined" ? "no thanks" : status==="host" ? "host" : "invited";
         return `<div class="row">
           <div class="left">
             <span class="dot ${online ? "online" : ""}"></span>
             <div class="label">${name}</div>
           </div>
-          <div class="right" style="opacity:.75;">${online ? "online" : "offline"}</div>
+          <div class="right" style="opacity:.75;">${statusLabel} • ${online ? "online" : "offline"}</div>
         </div>`;
       }).join("");
 
@@ -919,7 +1053,7 @@ function safeEmail(email){
 
 
     function renderPlayers(list){
-      // v721: float online players to top
+      // v722: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -968,7 +1102,7 @@ function safeEmail(email){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v721: re-render to reorder online players immediately
+        // v722: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -1057,7 +1191,7 @@ function safeEmail(email){
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v721 Multiplayer
+    // v722 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
