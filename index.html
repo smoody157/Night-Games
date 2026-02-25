@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v737  |  2026-02-25
+  NIGHT GAMES v738  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v737 (MASTER CLEAN)</title>
+  <title>Night Games v738 (MASTER CLEAN)</title>
   <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -433,7 +433,7 @@
       border-radius: 14px;
     }
   
-    /* v737: header row + mini pill */
+    /* v738: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -444,7 +444,7 @@
     }
 
   
-    /* v737: session indicator */
+    /* v738: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -462,19 +462,19 @@
     }
 
   
-    /* v737 layout lock: micro vertical drop */
+    /* v738 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v737 layout lock adjustment: additional micro drop */
+    /* v738 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v737 ATW emoji: keep color + one-line */
+    /* v738 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -496,7 +496,7 @@
 
 
 
-    /* v737: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    /* v738: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
     #setup .detailWrap{
       top: clamp(150px, 18vh, 260px);
       bottom: max(80px, env(safe-area-inset-bottom));
@@ -511,7 +511,7 @@
 
 
 
-    /* v737: glass dropdowns (no white/yellow) */
+    /* v738: glass dropdowns (no white/yellow) */
     .glassSelect{
       width: 100%;
       padding: 14px 44px 14px 16px;
@@ -562,7 +562,7 @@
 
 
     /***********************
-     *  v737 ERROR HUD
+     *  v738 ERROR HUD
      *  - Appears only when an error occurs
      *  - Small, not in the way
      ***********************/
@@ -654,7 +654,7 @@
 /* =============================================================================
    SECTION_SETUP: PLAYER PICKER DROPDOWN  [SECTION_SETUP]
 ============================================================================= */
-/* v737: player picker dropdown */
+/* v738: player picker dropdown */
 .glassBtn{
   width: 100%;
   padding: 14px 16px;
@@ -781,7 +781,7 @@
 
 <!--
 ================================================================================
-  EDIT NOTES (v737)
+  EDIT NOTES (v738)
 ================================================================================
   [EDIT_BG]       Background image / gradient choices
   [EDIT_LOGO]     Logo placement / size
@@ -792,7 +792,7 @@
   TIP: Use Ctrl/Cmd+F for the tags above to jump to the exact spot.
 ================================================================================
 -->
-<div class="buildBadge">Build <b>v737</b> • Firebase</div>
+<div class="buildBadge">Build <b>v738</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -1104,7 +1104,7 @@ function safeEmail(email){
     }
 
     
-    // v737: minimal session + setup → waiting room (does not touch login)
+    // v738: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -1175,7 +1175,7 @@ function renderSetupForGame(game){
           </div>
         </div>
 
-        <!-- v737 player picker modal -->
+        <!-- v738 player picker modal -->
         <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
           <div class="pickerCard">
             <div class="pickerHead">
@@ -1206,12 +1206,12 @@ function renderSetupForGame(game){
       // defaults
       countSel.value = "1";
       const checks = Array.from(document.querySelectorAll(".pickPlayer"));
-      // v737 picker wiring (dropdown-style player selector)
+      // v738 picker wiring (dropdown-style player selector)
       const openBtn = document.getElementById("openPlayerPicker");
       const modal = document.getElementById("playerPickerModal");
       const body = document.getElementById("pickerBody");
       const doneBtn = document.getElementById("pickerDone");
-      const cancelBtn = document.getElementById("pickerCancel");
+      const pickerCancelBtn = document.getElementById("pickerCancel");
       const closeTop = document.getElementById("pickerCloseTop");
       const summary = document.getElementById("playerPickSummary");
       const countLabel = document.getElementById("pickerCountLabel");
@@ -1285,7 +1285,7 @@ function renderSetupForGame(game){
           openPicker(want);
         });
       }
-      [cancelBtn, closeTop].forEach(b=> b && b.addEventListener("click", ()=>{
+      [pickerCancelBtn, closeTop].forEach(b=> b && b.addEventListener("click", ()=>{
         setSelectedEmails(snapshotSelected);
         enforce();
         refreshSummary();
@@ -1330,7 +1330,7 @@ function renderSetupForGame(game){
       });
 
       startBtn.addEventListener("click", async ()=>{
-        // v737: Stable start behavior (no broken/partial calls)
+        // v738: Stable start behavior (no broken/partial calls)
         enforce();
         const want = parseInt(countSel.value||"1",10) || 1;
         const picked = checks.filter(c=>c.).map(c=>c.value);
@@ -1361,7 +1361,7 @@ sendInvitesForSession(); }catch(e){}
 }
 
     
-    // v737: invites (in-app) — Join / No Thanks
+    // v738: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
@@ -1555,7 +1555,7 @@ renderWaitingRoom();
 ================================================================================
 */
 function renderPlayers(list){
-      // v737: float online players to top
+      // v738: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -1604,7 +1604,7 @@ function renderPlayers(list){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v737: re-render to reorder online players immediately
+        // v738: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -1694,7 +1694,7 @@ function renderPlayers(list){
       const db = getFirestore(app);
 
     
-      // v737: expose firebase handles for non-module code (prevents "db is not defined")
+      // v738: expose firebase handles for non-module code (prevents "db is not defined")
       window.ngFirebase = {
         app, auth, db,
         doc, setDoc, getDoc,
@@ -1702,7 +1702,7 @@ function renderPlayers(list){
         serverTimestamp, query, where
       };
       window.db = db;
-// v737 Multiplayer
+// v738 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -1861,7 +1861,7 @@ function onEnter() {
   </script>
 
 <!-- =======================
-     v737 ERROR HUD (shows only on errors)
+     v738 ERROR HUD (shows only on errors)
      ======================= -->
 <div id="ngErrToast" aria-live="polite" aria-atomic="true">
   <div class="card">
@@ -1882,7 +1882,7 @@ function onEnter() {
 
 <script id="ngErrorHud_v737">
 /***********************
- *  v737: ERROR HUD + SAFE LOGGING
+ *  v738: ERROR HUD + SAFE LOGGING
  *  Purpose:
  *   - If a runtime error happens, show a small toast with details.
  *   - Does NOT block the UI and does NOT change game logic.
