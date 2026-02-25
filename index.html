@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v722 (Invites: Join / No Thanks)</title>
+  <title>Night Games v723 (Fix db + Sweep)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -407,7 +407,7 @@
       border-radius: 14px;
     }
   
-    /* v722: header row + mini pill */
+    /* v723: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -418,7 +418,7 @@
     }
 
   
-    /* v722: session indicator */
+    /* v723: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -436,19 +436,19 @@
     }
 
   
-    /* v722 layout lock: micro vertical drop */
+    /* v723 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v722 layout lock adjustment: additional micro drop */
+    /* v723 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v722 ATW emoji: keep color + one-line */
+    /* v723 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -471,7 +471,7 @@
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v722</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v723</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -761,7 +761,7 @@ function safeEmail(email){
     }
 
     
-    // v722: minimal session + setup → waiting room (does not touch login)
+    // v723: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -873,14 +873,15 @@ function safeEmail(email){
     }
 
     
-    // v722: invites (in-app) — Join / No Thanks
+    // v723: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
       invitesUnsub = null;
-      if(!db || !currentEmail) return;
+      const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
+      if(!db2 || !currentEmail) return;
       const me = (currentEmail||"").toLowerCase();
-      const invRef = collection(db, "invites");
+      const invRef = collection(db2, "invites");
       const qInv = query(invRef, where("to", "==", me), where("status", "==", "pending"));
       invitesUnsub = onSnapshot(qInv, (snap)=>{
         if(!snap || snap.empty) return;
@@ -909,7 +910,7 @@ function safeEmail(email){
         if(joinBtn){
           joinBtn.addEventListener("click", async ()=>{
             try{
-              await setDoc(doc(db, "invites", docSnap.id), { status:"accepted", respondedAt: serverTimestamp() }, { merge:true });
+              await setDoc(doc(db2, "invites", docSnap.id), { status:"accepted", respondedAt: serverTimestamp() }, { merge:true });
             }catch(e){ alert(e.message||e); }
             // set local session + go waiting
             if(sessionId){
@@ -927,7 +928,7 @@ function safeEmail(email){
         if(noBtn){
           noBtn.addEventListener("click", async ()=>{
             try{
-              await setDoc(doc(db, "invites", docSnap.id), { status:"declined", respondedAt: serverTimestamp() }, { merge:true });
+              await setDoc(doc(db2, "invites", docSnap.id), { status:"declined", respondedAt: serverTimestamp() }, { merge:true });
             }catch(e){ alert(e.message||e); }
             closeDetail();
           });
@@ -945,7 +946,7 @@ function safeEmail(email){
 
       // create/merge session doc (meta)
       try{
-        await setDoc(doc(db, "sessions", activeSessionId), {
+        await setDoc(doc(db2, "sessions", activeSessionId), {
           sessionId: activeSessionId,
           game,
           host: hostEmail,
@@ -960,7 +961,7 @@ function safeEmail(email){
       const others = invited.filter(em => em !== hostEmail);
       for(const to of others){
         const invId = `${activeSessionId}_${safeEmail(to)}`;
-        await setDoc(doc(db, "invites", invId), {
+        await setDoc(doc(db2, "invites", invId), {
           sessionId: activeSessionId,
           game,
           from: hostName,
@@ -979,8 +980,9 @@ function safeEmail(email){
     function listenSessionInvites(){
       try{ if(sessionInvitesUnsub) sessionInvitesUnsub(); }catch(e){}
       sessionInvitesUnsub = null;
-      if(!db || !activeSessionId) return;
-      const invRef = collection(db, "invites");
+      const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
+      if(!db2 || !activeSessionId) return;
+      const invRef = collection(db2, "invites");
       const qSess = query(invRef, where("sessionId","==", activeSessionId));
       sessionInvitesUnsub = onSnapshot(qSess, (snap)=>{
         inviteStatusCache = new Map();
@@ -1053,7 +1055,7 @@ function safeEmail(email){
 
 
     function renderPlayers(list){
-      // v722: float online players to top
+      // v723: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -1102,7 +1104,7 @@ function safeEmail(email){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v722: re-render to reorder online players immediately
+        // v723: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -1191,7 +1193,16 @@ function safeEmail(email){
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v722 Multiplayer
+    
+      // v723: expose firebase handles for non-module code (prevents "db is not defined")
+      window.ngFirebase = {
+        app, auth, db,
+        doc, setDoc, getDoc,
+        collection, onSnapshot,
+        serverTimestamp, query, where
+      };
+      window.db = db;
+// v723 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
