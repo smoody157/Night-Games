@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v703 (Enter Fixed + Error Banner)</title>
+  <title>Night Games v704 (Stable Enter + Setup Screen)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v703: header row + mini pill */
+    /* v704: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v703: session indicator */
+    /* v704: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -430,20 +430,26 @@
     }
 
   
-    /* v703 layout lock: micro vertical drop */
+    /* v704 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v703 layout lock adjustment: additional micro drop */
+    /* v704 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v703 ATW emoji + setup */
-    .gameLabelWrap{ display:flex; align-items:center; gap:10px; min-width:0; white-space:nowrap; }
+    /* v704 ATW emoji: keep color + one-line */
+    .gameLabelWrap{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      white-space:nowrap;
+    }
     .emojiGlobe{
       display:inline-block;
       font-size: 18px;
@@ -455,18 +461,11 @@
       background-clip: initial !important;
       filter: drop-shadow(0 0 10px rgba(120,200,255,.18));
     }
-    .setupRow{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 4px; border-bottom:1px solid rgba(255,255,255,.10); }
-    .setupLabel{ font-weight:1000; letter-spacing:.8px; text-transform:uppercase; opacity:.92; }
-    .countPill{ min-width: 44px; text-align:center; }
-    .playerPick{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 4px; border-bottom:1px solid rgba(255,255,255,.10); cursor:pointer; }
-    .checkDot{ width:14px; height:14px; border-radius:999px; border:1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.03); box-shadow: inset 0 2px 6px rgba(255,255,255,.12), inset 0 -8px 10px rgba(0,0,0,.5); }
-    .playerPick.sel .checkDot{ border-color: rgba(90,255,170,.55); box-shadow: 0 0 14px rgba(90,255,170,.12), inset 0 2px 6px rgba(255,255,255,.12), inset 0 -8px 10px rgba(0,0,0,.5); background: rgba(90,255,170,.06); }
-    input[type="range"].slider{ width: 220px; }
 
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v703</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v704</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -514,14 +513,15 @@
     <section id="setup" class="screen">
       <div class="detailWrap">
         <div class="panel">
-          <div class="sectionHead"><div class="title" id="setupTitle">Setup</div></div>
-          <div class="detailBody" id="setupBody">Loading…</div>
+          <div class="sectionHead"><div class="title">Setup</div></div>
+          <div class="detailBody" id="setupBody">
+            <div style="opacity:.82;">Setup screen is installed. Wiring comes next.</div>
+          </div>
         </div>
         <div class="panel">
           <div class="sectionHead"><div class="title">Controls</div></div>
           <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
             <button class="pill" id="setupBackBtn" type="button">Back</button>
-            <button class="pill" id="setupOkBtn" type="button">OK</button>
           </div>
         </div>
       </div>
@@ -538,6 +538,7 @@
           <div class="sectionHead"><div class="title">Controls</div></div>
           <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
             <button class="pill" id="lobbyBackBtn" type="button">Back</button>
+            <button class="pill" id="lobbySetupBtn" type="button">Setup</button>
             <button class="pill" id="lobbyStartBtn" type="button" style="display:none;">Start</button>
             <button class="pill" id="lobbyEndBtn" type="button" style="display:none;">End</button>
           </div>
@@ -595,8 +596,7 @@
       getFirestore,
       doc, setDoc, getDoc,
       collection, onSnapshot,
-      serverTimestamp, query,
-      addDoc, updateDoc, deleteField
+      serverTimestamp, query
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const dbgState = document.getElementById("dbgState");
@@ -643,27 +643,12 @@
     const backBtn = document.getElementById("backBtn");
     const homeBtn = document.getElementById("homeBtn");
     const statusLine = document.getElementById("statusLine");
-
-    // v703: show JS errors so we don't guess
-    window.addEventListener('error', (ev)=>{
-      try{
-        const msg = (ev && ev.message) ? ev.message : 'Script error';
-        if(typeof statusLine !== 'undefined' && statusLine){
-          statusLine.textContent = 'ERROR: ' + msg;
-        }else{
-          alert('ERROR: ' + msg);
-        }
-      }catch(e){}
-    });
-
+    const setup = document.getElementById("setup");
+    const setupBackBtn = document.getElementById("setupBackBtn");
+    const lobbySetupBtn = document.getElementById("lobbySetupBtn");
     const lobby = document.getElementById("lobby");
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody = document.getElementById("lobbyBody");
-    const setup = document.getElementById("setup");
-    const setupTitle = document.getElementById("setupTitle");
-    const setupBody = document.getElementById("setupBody");
-    const setupBackBtn = document.getElementById("setupBackBtn");
-    const setupOkBtn = document.getElementById("setupOkBtn");
     const lobbyBackBtn = document.getElementById("lobbyBackBtn");
     const lobbyStartBtn = document.getElementById("lobbyStartBtn");
     const lobbyEndBtn = document.getElementById("lobbyEndBtn");
@@ -722,25 +707,18 @@
       "Cricket": "20–15 + Bull. Close numbers then score. Team/solo rules configurable.",
       "Killer": "Assign a number, get to killer, then knock others out. (We’ll match your house rules).",
       "Shanghai": "Each round targets a number. Shanghai = single+double+triple in same round. (House rules).",
-      "ATW 🌍": "Around the World: hit 1→20 (and bull if you want). Miss = move on / stay (house rules).",
+      "ATW 🌍": "ATW: hit 1→20 (and bull if you want). Miss = move on / stay (house rules).",
       "Half It": "Hit the called target each round or score is halved. (House rules)."
     };
-
-    function gameLabel(g){
-      if(g==="ATW"){
-        return '<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>';
-      }
-      return '<span class="glassText">'+g+'</span>';
-    }
 
     function renderGames(){
       gamesList.innerHTML = games.map(g => `
         <div class="itemLine">
-          <div class="leftStack"><div class="gameLabelWrap">${gameLabel(g)}</div></div>
+          <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? `<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>` : `<span class="glassText">${g}</span>`}</div></div>
           <div class="actions">
             <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
             <button class="pill" data-action="game_history" data-value="${g}">History</button>
-            <button class="pill" data-action="game_rules" data-value="${g}">Rules</button>
+            
           </div>
         </div>
       `).join("");
@@ -900,203 +878,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v703 session + lobby
-    const ROOM_ID = "dart-room";
-    const MAX_PLAYERS = 8;
-    let activeSessionId = null;
-    let activeGame = null;
-    let activeHostUid = null;
-    let activeHostEmail = null;
-    let sessionStatus = null;
-    let sessionMembers = [];
-
-    // v703 setup state
-    let setupState = { game:null, playerCount:1, selectedUids:new Set() };
-    let registry = [];
-
-    function renderLobby(){
-      if(!activeSessionId){
-        lobbyTitle.textContent = "Lobby";
-        lobbyBody.innerHTML = `<div style="opacity:.82;">No active session. Tap <b>Enter</b> on a game.</div>`;
-        lobbyStartBtn.style.display = "none";
-        lobbyEndBtn.style.display = "none";
-        return;
-      }
-      const isHost = (activeHostUid && currentUid && activeHostUid===currentUid);
-      lobbyTitle.textContent = `Lobby • ${activeGame||"Session"}`;
-      const count = sessionMembers.length;
-      const capTag = `<span class="tag ${count<=MAX_PLAYERS?"ok":"warn"}">${count}/${MAX_PLAYERS}</span>`;
-      const hostTag = `<span class="tag ok">HOST: ${(activeHostEmail||"").split("@")[0]||"—"}</span>`;
-      const statusTag = `<span class="tag">${sessionStatus||"lobby"}</span>`;
-      const rows = sessionMembers.map(m=>{
-        const name = (m.name || (m.email||"").split("@")[0] || "player");
-        return `<div class="lobbyRow"><div style="font-weight:1000; letter-spacing:.6px;">${name}</div><div class="tag ok">joined</div></div>`;
-      }).join("");
-      lobbyBody.innerHTML = `
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">${capTag}${hostTag}${statusTag}</div>
-        <div style="opacity:.78; font-size:12px; margin-bottom:12px;">Room: <b>${ROOM_ID}</b> • Session: <b>${activeSessionId}</b></div>
-        <div>${rows || `<div style="opacity:.82;">Waiting for players…</div>`}</div>
-      `;
-      lobbyStartBtn.style.display = isHost ? "inline-flex" : "none";
-      lobbyEndBtn.style.display = isHost ? "inline-flex" : "none";
-    }
-
-    async function createSessionForGame(game){
-      const ref = await addDoc(collection(db, "sessions"), {
-        roomId: ROOM_ID,
-        game,
-        status: "lobby",
-        createdAt: serverTimestamp(),
-        hostUid: currentUid,
-        hostEmail: currentEmail
-      });
-      activeSessionId = ref.id;
-      activeGame = game;
-      activeHostUid = currentUid;
-      activeHostEmail = currentEmail;
-      await setDoc(doc(db, "rooms", ROOM_ID), {
-        activeSessionId,
-        activeGame,
-        activeHostUid,
-        activeHostEmail,
-        updatedAt: serverTimestamp()
-      }, { merge:true });
-      await setDoc(doc(db, "sessions", activeSessionId, "members", currentUid), {
-        uid: currentUid,
-        email: currentEmail,
-        name: (currentEmail||"").split("@")[0],
-        joinedAt: serverTimestamp()
-      }, { merge:true });
-      return activeSessionId;
-    }
-
-    async function joinRoom(){
-      if(!currentUid || !currentEmail) return;
-      await setDoc(doc(db, "rooms", ROOM_ID), { roomId: ROOM_ID, updatedAt: serverTimestamp() }, { merge:true });
-      await setDoc(doc(db, "rooms", ROOM_ID, "members", currentUid), {
-        uid: currentUid,
-        email: currentEmail,
-        lastActive: serverTimestamp(),
-        joinedAt: serverTimestamp()
-      }, { merge:true });
-    }
-
-    function watchRoom(){
-      onSnapshot(doc(db, "rooms", ROOM_ID), async (snap)=>{
-        const d = snap.data()||{};
-        activeSessionId = d.activeSessionId || null;
-        activeGame = d.activeGame || null;
-        activeHostUid = d.activeHostUid || null;
-        activeHostEmail = d.activeHostEmail || null;
-        renderLobby();
-        if(activeSessionId && currentUid){
-          try{
-            await setDoc(doc(db, "sessions", activeSessionId, "members", currentUid), {
-              uid: currentUid,
-              email: currentEmail,
-              name: (currentEmail||"").split("@")[0],
-              joinedAt: serverTimestamp()
-            }, { merge:true });
-          }catch(e){}
-        }
-      });
-    }
-
-    function watchSession(){
-      if(!activeSessionId) return;
-      onSnapshot(collection(db, "sessions", activeSessionId, "members"), (snap)=>{
-        sessionMembers = snap.docs.map(x=>x.data()||{}).filter(x=>x.email);
-        renderLobby();
-      });
-      onSnapshot(doc(db, "sessions", activeSessionId), (snap)=>{
-        const d = snap.data()||{};
-        sessionStatus = d.status || "lobby";
-        renderLobby();
-      });
-    }
-
-    async function startSession(){
-      if(!activeSessionId) return;
-      if(sessionMembers.length > MAX_PLAYERS){ alert("Too many players (max 8)."); return; }
-      await updateDoc(doc(db, "sessions", activeSessionId), { status:"started", startedAt: serverTimestamp() });
-      renderLobby();
-    }
-
-    async function endSession(){
-      if(!activeSessionId) return;
-      await setDoc(doc(db, "rooms", ROOM_ID), {
-        activeSessionId: deleteField(),
-        activeGame: deleteField(),
-        activeHostUid: deleteField(),
-        activeHostEmail: deleteField(),
-        updatedAt: serverTimestamp()
-      }, { merge:true });
-      activeSessionId=null; activeGame=null; activeHostUid=null; activeHostEmail=null; sessionMembers=[]; sessionStatus=null;
-      renderLobby();
-    }
-
-    function renderSetup(){
-      setupTitle.textContent = `Setup • ${setupState.game||activeGame||"Game"}`;
-      if(setupState.selectedUids.size===0 && currentUid){ setupState.selectedUids.add(currentUid); }
-      const players = registry.map(p=>({
-        uid: p.uid || (p.email||"").toLowerCase(),
-        email: p.email||"",
-        name: p.name || (p.email||"").split("@")[0] || "Player"
-      })).filter(p=>p.email);
-      const picks = players.map(p=>{
-        const sel = setupState.selectedUids.has(p.uid);
-        return `<div class="playerPick ${sel?"sel":""}" data-uid="${p.uid}">
-          <div style="min-width:0;">
-            <div style="font-weight:1000; letter-spacing:.6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.name}</div>
-            <div style="opacity:.68; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.email}</div>
-          </div>
-          <div class="checkDot"></div>
-        </div>`;
-      }).join("");
-      setupBody.innerHTML = `
-        <div class="setupRow">
-          <div class="setupLabel">Players</div>
-          <div style="display:flex; align-items:center; gap:12px;">
-            <input class="slider" id="playerCountSlider" type="range" min="1" max="8" value="${setupState.playerCount}" />
-            <span class="pill countPill" id="playerCountPill">${setupState.playerCount}</span>
-          </div>
-        </div>
-        <div style="opacity:.78; font-size:12px; margin:10px 2px 10px;">Tap players to select. Default = you.</div>
-        <div>${picks || `<div style="opacity:.82;">No players registered yet.</div>`}</div>
-      `;
-      const slider = document.getElementById("playerCountSlider");
-      const pill = document.getElementById("playerCountPill");
-      slider.addEventListener("input", ()=>{
-        setupState.playerCount = parseInt(slider.value||"1",10);
-        pill.textContent = String(setupState.playerCount);
-        const arr = Array.from(setupState.selectedUids);
-        if(arr.length > setupState.playerCount){
-          setupState.selectedUids = new Set(arr.slice(0, setupState.playerCount));
-          renderSetup();
-        }
-      });
-    }
-
-    async function saveSetup(){
-      if(!activeSessionId) return;
-      const selected = Array.from(setupState.selectedUids).slice(0, setupState.playerCount);
-      await updateDoc(doc(db, "sessions", activeSessionId), {
-        setup: { playerCount: setupState.playerCount, selectedUids: selected, game: setupState.game||activeGame||null },
-        updatedAt: serverTimestamp()
-      });
-    }
-
-    function watchRegistry(){
-      onSnapshot(collection(db, "registry"), (snap)=>{
-        registry = snap.docs.map(d=>d.data()||{}).filter(x=>x.email);
-        if(setup && setup.classList.contains("active")){
-          try{ renderSetup(); }catch(e){}
-        }
-      });
-    }
-
-
-    // v703 Multiplayer
+    // v704 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -1164,12 +946,8 @@
       if(action === "enter_game"){
         try{
           await createSessionForGame(value);
-          watchSession();
-          setupState.game = value;
-          setupState.playerCount = 1;
-          setupState.selectedUids = new Set();
-          renderSetup();
-          show("setup");
+          renderLobby();
+          show("lobby");
         }catch(e){
           alert("Session error: " + (e.message||e));
         }
@@ -1237,10 +1015,10 @@
       homeBtn.addEventListener("click", ()=> show("landing"));
 
       lobbyBackBtn.addEventListener("click", ()=> show("players"));
+      lobbySetupBtn.addEventListener("click", ()=> show("setup"));
+      setupBackBtn.addEventListener("click", ()=> show("lobby"));
       lobbyStartBtn.addEventListener("click", ()=> startSession().catch(e=>alert(e.message||e)));
       lobbyEndBtn.addEventListener("click", ()=> endSession().catch(e=>alert(e.message||e)));
-      setupBackBtn.addEventListener("click", ()=> show("players"));
-      setupOkBtn.addEventListener("click", async ()=>{ try{ await saveSetup(); show("lobby"); }catch(e){ alert(e.message||e); } });
 
 
     } catch (err) {
