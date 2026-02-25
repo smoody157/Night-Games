@@ -1008,21 +1008,49 @@ function ngGetBestVoice(){
   }
 }
 
-function ngSpeak(text, opts={}){
+function ngSpeak(text, opts = {}) {
   try {
-    if(!NG_VOICE_ENABLED) return;
-    if(!window.speechSynthesis) return;
-    const u = new SpeechSynthesisUtterance(String(text||""));
-    const v = ngGetBestVoice();
-    if(v) u.voice = v;
-    // Calm, friendly, less robotic
-    u.rate = opts.rate ?? 0.95;
-    u.pitch = opts.pitch ?? 1.05;
-    u.volume = opts.volume ?? 1.0;
-    window.speechSynthesis.cancel(); // avoid piling up
-    window.speechSynthesis.speak(u);
-  } catch(e) {
-    // fail silently
+    if (!('speechSynthesis' in window)) return;
+    const synth = window.speechSynthesis;
+
+    // iOS/Safari loads voices asynchronously; this helps populate.
+    const voices = (typeof synth.getVoices === 'function') ? synth.getVoices() : [];
+
+    const prefer = [
+      'Samantha','Ava','Victoria','Moira','Karen','Tessa','Allison','Serena','Nicky','Veena'
+    ];
+
+    // Pick a more human-sounding (often female) voice if available.
+    let voice = null;
+    if (opts.voiceName) {
+      voice = voices.find(v => v && v.name === opts.voiceName) || null;
+    }
+    if (!voice && voices.length) {
+      for (const name of prefer) {
+        const v = voices.find(x => x && x.name && x.name.toLowerCase().includes(name.toLowerCase()));
+        if (v) { voice = v; break; }
+      }
+    }
+    if (!voice && voices.length) voice = voices[0];
+
+    // Some browsers choke if we cancel too aggressively; guard it.
+    if (opts.cancel !== false) {
+      try { synth.cancel(); } catch (e) {}
+    }
+
+    const u = new SpeechSynthesisUtterance(String(text || ''));
+    if (voice) u.voice = voice;
+
+    u.rate  = typeof opts.rate  === 'number' ? opts.rate  : 0.98;
+    u.pitch = typeof opts.pitch === 'number' ? opts.pitch : 1.05;
+    u.volume = typeof opts.volume === 'number' ? opts.volume : 1;
+
+    // Small pauses feel less robotic.
+    u.lang = (voice && voice.lang) ? voice.lang : (opts.lang || 'en-US');
+
+    synth.speak(u);
+  } catch (e) {
+    // swallow (we surface errors via NG_ERROR_HUD elsewhere)
   }
 }
 
@@ -1750,7 +1778,8 @@ renderWaitingRoom();
       }catch(e){ return null; }
     }
 
-    function ngSpeak(text, opts={}){
+    /* (deduped) removed duplicate ngSpeak() */
+){
       try{
         if(!NG_VOICE.enabled) return;
         if(!text || !String(text).trim()) return;
