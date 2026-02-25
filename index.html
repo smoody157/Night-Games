@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v699 (ATW Globe + Header Clean)</title>
+  <title>Night Games v700 (Setup Screen)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v699: header row + mini pill */
+    /* v700: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v699: session indicator */
+    /* v700: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -430,19 +430,19 @@
     }
 
   
-    /* v699 layout lock: micro vertical drop */
+    /* v700 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v699 layout lock adjustment: additional micro drop */
+    /* v700 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v699 ATW emoji: keep color + one-line */
+    /* v700 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -462,10 +462,20 @@
       filter: drop-shadow(0 0 10px rgba(120,200,255,.18));
     }
 
+
+    /* v700 setup screen */
+    .setupRow{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 4px; border-bottom:1px solid rgba(255,255,255,.10); }
+    .setupLabel{ font-weight:1000; letter-spacing:.8px; text-transform:uppercase; opacity:.92; }
+    .countPill{ min-width: 44px; text-align:center; }
+    .playerPick{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 4px; border-bottom:1px solid rgba(255,255,255,.10); cursor:pointer; }
+    .checkDot{ width:14px; height:14px; border-radius:999px; border:1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.03); box-shadow: inset 0 2px 6px rgba(255,255,255,.12), inset 0 -8px 10px rgba(0,0,0,.5); }
+    .playerPick.sel .checkDot{ border-color: rgba(90,255,170,.55); box-shadow: 0 0 14px rgba(90,255,170,.12), inset 0 2px 6px rgba(255,255,255,.12), inset 0 -8px 10px rgba(0,0,0,.5); background: rgba(90,255,170,.06); }
+    input[type="range"].slider{ width: 220px; }
+
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v699</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v700</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -509,6 +519,24 @@
     </section>
 
     
+    
+    <section id="setup" class="screen">
+      <div class="detailWrap">
+        <div class="panel">
+          <div class="sectionHead"><div class="title" id="setupTitle">Setup</div></div>
+          <div class="detailBody" id="setupBody">Loading…</div>
+        </div>
+        <div class="panel">
+          <div class="sectionHead"><div class="title">Controls</div></div>
+          <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="pill" id="setupBackBtn" type="button">Back</button>
+            <button class="pill" id="setupOkBtn" type="button">OK</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
     <section id="lobby" class="screen">
       <div class="detailWrap">
         <div class="panel">
@@ -610,6 +638,8 @@
       measurementId: "G-LQEHF02ZVR"
     };
 
+    let registry = [];
+
     // ===== UI refs =====
     const landing = document.getElementById("landing");
     const players = document.getElementById("players");
@@ -623,6 +653,11 @@
     const backBtn = document.getElementById("backBtn");
     const homeBtn = document.getElementById("homeBtn");
     const statusLine = document.getElementById("statusLine");
+    const setup = document.getElementById("setup");
+    const setupTitle = document.getElementById("setupTitle");
+    const setupBody = document.getElementById("setupBody");
+    const setupBackBtn = document.getElementById("setupBackBtn");
+    const setupOkBtn = document.getElementById("setupOkBtn");
     const lobby = document.getElementById("lobby");
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody = document.getElementById("lobbyBody");
@@ -634,6 +669,7 @@
     function show(which){
       landing.classList.toggle("active", which==="landing");
       players.classList.toggle("active", which==="players");
+      setup.classList.toggle("active", which==="setup");
       lobby.classList.toggle("active", which==="lobby");
       detail.classList.toggle("active", which==="detail");
     }
@@ -854,7 +890,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v699 Multiplayer
+    // v700 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -922,8 +958,11 @@
       if(action === "enter_game"){
         try{
           await createSessionForGame(value);
-          renderLobby();
-          show("lobby");
+          setupState.game = value;
+          setupState.playerCount = 1;
+          setupState.selectedUids = new Set();
+          renderSetup();
+          show("setup");
         }catch(e){
           alert("Session error: " + (e.message||e));
         }
@@ -993,6 +1032,11 @@
       lobbyBackBtn.addEventListener("click", ()=> show("players"));
       lobbyStartBtn.addEventListener("click", ()=> startSession().catch(e=>alert(e.message||e)));
       lobbyEndBtn.addEventListener("click", ()=> endSession().catch(e=>alert(e.message||e)));
+
+      setupBackBtn.addEventListener("click", ()=> show("players"));
+      setupOkBtn.addEventListener("click", async ()=>{
+        try{ await saveSetup(); show("lobby"); }catch(e){ alert(e.message||e); }
+      });
 
 
     } catch (err) {
