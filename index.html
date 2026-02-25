@@ -3,21 +3,13 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v671</title>
+  <title>Night Games v673</title>
   <style>
     :root{
-      /* IMPORTANT: Use the blank stage background so we don't double-stack baked UI */
       --bgStage: url("./IMG_7315.jpeg");
-
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 32px));
       --txt: rgba(245,250,255,.94);
-
-      --cyan: rgba(0,210,255,.95);
-      --cyanGlow: rgba(0,210,255,.14);
-      --amber: rgba(255,175,0,.95);
-      --amberGlow: rgba(255,175,0,.10);
-
       --zShadow: drop-shadow(0 22px 46px rgba(0,0,0,.72));
       --zShadowSoft: drop-shadow(0 10px 22px rgba(0,0,0,.55));
     }
@@ -31,7 +23,6 @@
       overflow:hidden;
     }
 
-    /* Visible version badge (always) */
     .buildBadge{
       position: fixed;
       top: 10px;
@@ -53,11 +44,7 @@
 
     #app{ position:fixed; inset:0; }
 
-    .screen{
-      position:absolute;
-      inset:0;
-      display:none;
-    }
+    .screen{ position:absolute; inset:0; display:none; }
     .screen.active{ display:block; }
 
     .screen::before{
@@ -68,7 +55,6 @@
       background-repeat:no-repeat;
       background-size:cover;
       background-position: center bottom; /* keep footer visible */
-      transform: translateZ(0);
     }
     .screen::after{
       content:"";
@@ -78,37 +64,15 @@
       pointer-events:none;
     }
 
-    /* ===== Shared crystal UI components (no fog / no blur) ===== */
-    .panel{
-      border-radius: 22px;
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow:
-        inset 0 2px 6px rgba(255,255,255,.38),
-        inset 0 -14px 22px rgba(0,0,0,.62),
-        0 0 18px rgba(0,210,255,.10);
-      overflow:hidden;
-      filter: var(--zShadowSoft);
-    }
-
-    .title{
-      font-weight: 1000;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-size: 15px;
-      color: rgba(255,255,255,.94);
-      text-shadow: 0 0 14px rgba(0,210,255,.10);
-    }
-
+    /* Crystal clear (no fog) */
     .field3d, .btn3d{
       width: min(640px, 92vw);
-      height: 74px;
+      height: 72px;
       border-radius: 22px;
-      -webkit-tap-highlight-color: transparent;
       transform: translateZ(0);
       filter: var(--zShadow);
-      border: 1px solid rgba(255,255,255,.22);
       background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.18);
       box-shadow:
         inset 0 2px 6px rgba(255,255,255,.45),
         inset 0 -14px 22px rgba(0,0,0,.60),
@@ -116,38 +80,16 @@
       position:relative;
       overflow:hidden;
     }
-
     .field3d::before, .btn3d::before{
       content:"";
       position:absolute;
       inset: 10px 12px auto 12px;
-      height: 18px;
+      height: 16px;
       border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,255,255,.50), rgba(255,255,255,0));
+      background: linear-gradient(90deg, rgba(255,255,255,.52), rgba(255,255,255,0));
       opacity: .42;
       pointer-events:none;
     }
-
-    .field3d::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius: 22px;
-      box-shadow: inset 0 0 0 1px rgba(0,210,255,.14);
-      pointer-events:none;
-    }
-
-    .btn3d::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius: 22px;
-      box-shadow:
-        inset 0 0 0 1px rgba(255,175,0,.14),
-        0 0 18px rgba(255,175,0,.08);
-      pointer-events:none;
-    }
-
     .field3d input{
       width:100%;
       height:100%;
@@ -155,18 +97,17 @@
       outline:none;
       background:transparent;
       color: rgba(255,255,255,.95);
-      font-size: 20px;
+      font-size: 18px;
       letter-spacing: .6px;
-      padding: 0 22px;
+      padding: 0 20px;
       box-sizing:border-box;
     }
     .field3d input::placeholder{ color: rgba(235,245,255,.55); }
-
     .btn3d{
       cursor:pointer;
       color: rgba(255,255,255,.96);
       font-weight: 1000;
-      font-size: 30px;
+      font-size: 28px;
       letter-spacing: 2px;
       text-transform: uppercase;
     }
@@ -183,24 +124,30 @@
       opacity: 0;
       transition: opacity .15s ease;
       pointer-events:none;
+      text-align:center;
+      max-width: min(640px, 92vw);
     }
     .err.show{ opacity: 1; }
 
-    /* ===== Landing (same style as Players) ===== */
     .landingUI{
       position:absolute;
       left:50%;
       transform:translateX(-50%);
       width: var(--uiW);
       max-width: var(--maxW);
-      top: clamp(360px, 52vh, 610px);
+      top: clamp(320px, 48vh, 590px);
       display:grid;
-      gap: 16px;
+      gap: 14px;
       justify-items:center;
       z-index:2;
     }
+    .hint{
+      font-size: 12px;
+      opacity: .6;
+      text-align:center;
+      max-width: min(640px, 92vw);
+    }
 
-    /* ===== Players hub ===== */
     .hub{
       position:absolute;
       left:50%;
@@ -208,7 +155,7 @@
       width: var(--uiW);
       max-width: var(--maxW);
       top: clamp(240px, 33vh, 360px);
-      bottom: max(140px, env(safe-area-inset-bottom)); /* keep off footer text */
+      bottom: max(140px, env(safe-area-inset-bottom));
       display:grid;
       grid-template-rows: 1fr 1fr;
       gap: 18px;
@@ -216,7 +163,18 @@
       box-sizing:border-box;
       z-index:2;
     }
-
+    .panel{
+      position:relative;
+      border-radius: 22px;
+      background: rgba(255,255,255,.03);
+      border: none; /* no outer clear border */
+      box-shadow:
+        inset 0 2px 6px rgba(255,255,255,.38),
+        inset 0 -14px 22px rgba(0,0,0,.62),
+        0 0 18px rgba(0,210,255,.10);
+      overflow:hidden;
+      filter: var(--zShadowSoft);
+    }
     .sectionHead{
       display:flex;
       align-items:center;
@@ -224,7 +182,14 @@
       padding: 12px 14px 8px 14px;
       gap: 10px;
     }
-
+    .title{
+      font-weight: 1000;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: 15px;
+      color: rgba(255,255,255,.94);
+      text-shadow: 0 0 14px rgba(0,210,255,.10);
+    }
     .list{
       position:absolute;
       left: 0; right: 0;
@@ -234,15 +199,6 @@
       overflow:auto;
       scrollbar-gutter: stable;
     }
-
-    .list::-webkit-scrollbar{ width: 10px; }
-    .list::-webkit-scrollbar-thumb{
-      background: linear-gradient(180deg, rgba(0,210,255,.22), rgba(255,175,0,.16));
-      border-radius: 999px;
-      border: 2px solid rgba(0,0,0,.25);
-    }
-    .list::-webkit-scrollbar-track{ background: rgba(0,0,0,.12); border-radius: 999px; }
-
     .row{
       display:flex;
       align-items:center;
@@ -252,21 +208,12 @@
       border-radius: 18px;
       margin-bottom: 10px;
       background: rgba(255,255,255,.025);
-      border: 1px solid rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.12);
       box-shadow:
         inset 0 2px 6px rgba(255,255,255,.32),
         inset 0 -12px 18px rgba(0,0,0,.62);
       position:relative;
       overflow:hidden;
-    }
-    .row::after{
-      content:"";
-      position:absolute;
-      inset:-60% -20%;
-      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,.10), rgba(255,255,255,0) 55%);
-      transform: rotate(12deg);
-      pointer-events:none;
-      opacity:.55;
     }
     .row strong{
       font-size: 15px;
@@ -275,6 +222,21 @@
       text-shadow: 0 1px 0 rgba(255,255,255,.35), 0 -1px 2px rgba(0,0,0,.70);
       position:relative;
       z-index:1;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.18);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.12);
+      flex: 0 0 auto;
+    }
+    .dot.online{
+      background: rgba(90,255,170,.92);
+      box-shadow: 0 0 10px rgba(90,255,170,.35), 0 0 0 1px rgba(90,255,170,.28);
     }
     .actions{ display:flex; gap:10px; align-items:center; flex:0 0 auto; position:relative; z-index:1; }
 
@@ -295,46 +257,32 @@
         0 0 14px rgba(0,210,255,.10);
     }
     .pill:active{ transform: translateY(1px); }
-
-    /* Active player highlight */
-    .row.active{
-      border-color: rgba(0,210,255,.22);
-      box-shadow:
-        inset 0 2px 6px rgba(255,255,255,.32),
-        inset 0 -12px 18px rgba(0,0,0,.62),
-        0 0 18px rgba(0,210,255,.14);
-    }
+    .muted{ opacity:.65; font-size:12px; padding:8px 2px; }
   </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v671</b></div>
+  <div class="buildBadge">Build <b>v673</b></div>
 
   <div id="app">
-    <!-- LANDING -->
-    <section id="screenLanding" class="screen active" aria-label="Landing">
+    <!-- SIGN-IN (registered emails only) -->
+    <section id="screenLanding" class="screen active" aria-label="Sign in">
       <div class="landingUI">
-        <div class="field3d" aria-label="Email">
-          <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="YOUR EMAIL"/>
-        </div>
+        <div class="field3d"><input id="email" type="email" inputmode="email" autocomplete="email" placeholder="YOUR EMAIL"/></div>
         <button id="enterBtn" class="btn3d" type="button">Enter</button>
-        <div id="err" class="err" aria-live="polite">Enter your email to continue.</div>
+        <div class="hint">Only registered emails can enter. (We can add a real register flow next.)</div>
+        <div id="err" class="err" aria-live="polite">Not registered.</div>
       </div>
     </section>
 
-    <!-- PLAYERS -->
+    <!-- PLAYERS PAGE -->
     <section id="screenPlayers" class="screen" aria-label="Players">
       <div class="hub">
-        <div class="panel" style="position:relative;">
-          <div class="sectionHead">
-            <div class="title">Games</div>
-          </div>
+        <div class="panel">
+          <div class="sectionHead"><div class="title">Games</div></div>
           <div class="list" id="gamesList" role="list"></div>
         </div>
-
-        <div class="panel" style="position:relative;">
-          <div class="sectionHead">
-            <div class="title">Players</div>
-          </div>
+        <div class="panel">
+          <div class="sectionHead"><div class="title">Players</div></div>
           <div class="list" id="playersList" role="list"></div>
         </div>
       </div>
@@ -343,68 +291,143 @@
 
   <script>
     (function(){
-      console.log("Night Games v671 loaded");
+      console.log("Night Games v673 loaded");
 
       const $ = (id)=>document.getElementById(id);
-      const screenLanding = $("screenLanding");
-      const screenPlayers = $("screenPlayers");
-      const email = $("email");
+      const landing = $("screenLanding");
+      const players = $("screenPlayers");
+      const emailEl = $("email");
       const enterBtn = $("enterBtn");
       const err = $("err");
-
       const gamesList = $("gamesList");
       const playersList = $("playersList");
 
-      function show(screen){
-        screenLanding.classList.toggle("active", screen === "landing");
-        screenPlayers.classList.toggle("active", screen === "players");
+      // "Registered" directory (demo). Replace later with real backend/auth.
+      // NOTE: Put real emails here when you’re ready.
+      const registry = [
+        { email: "steven@example.com", name: "Steven Moody" },
+        { email: "jayce@example.com",  name: "JAYCE Moody" },
+        { email: "bill@example.com",   name: "Bill" }
+      ];
+
+      const games = ["01","Cricket","Killer","Shanghai","Around the World","Half It"];
+
+      function show(which){
+        landing.classList.toggle("active", which === "landing");
+        players.classList.toggle("active", which === "players");
       }
 
-      function setError(on){ err.classList.toggle("show", !!on); }
-
-      function goPlayers(){
-        const v = (email.value || "").trim();
-        if(!v){ setError(true); return; }
-        setError(false);
-        localStorage.setItem("ng_email", v);
-        show("players");
+      function setError(msg){
+        err.textContent = msg || "";
+        err.classList.toggle("show", !!msg);
       }
 
-      enterBtn.addEventListener("click", goPlayers);
-      email.addEventListener("keydown", (e)=>{
-        if(e.key === "Enter"){ e.preventDefault(); goPlayers(); }
-      });
+      function normalizeEmail(v){
+        return (v||"").trim().toLowerCase();
+      }
 
-      function row(label, actions){
+      // Online indicator (local demo):
+      // We store a heartbeat timestamp in localStorage and mark "online" if seen within 20s.
+      const HEARTBEAT_MS = 4000;
+      const ONLINE_WINDOW_MS = 20000;
+
+      function keyLastSeen(email){ return "ng_lastseen_" + email; }
+
+      function heartbeat(email){
+        localStorage.setItem(keyLastSeen(email), String(Date.now()));
+      }
+
+      function isOnline(email){
+        const raw = localStorage.getItem(keyLastSeen(email));
+        if(!raw) return false;
+        const t = Number(raw);
+        return Number.isFinite(t) && (Date.now() - t) <= ONLINE_WINDOW_MS;
+      }
+
+      let currentUser = null;
+      let hbTimer = null;
+      let uiTimer = null;
+
+      function row(label, dotOnline, actions){
+        const dotCls = dotOnline ? "dot online" : "dot";
         const btns = (actions||[]).map(a => `<button class="pill" data-action="${a.action}">${a.text}</button>`).join("");
-        return `<div class="row"><strong>${label}</strong><div class="actions">${btns}</div></div>`;
+        return `
+          <div class="row">
+            <strong><span class="${dotCls}"></span>${label}</strong>
+            <div class="actions">${btns}</div>
+          </div>
+        `;
       }
 
-      function seed(){
-        const games = ["01","Cricket","Killer","Shanghai","Around the World","Half It"];
-        const players = ["Steven Moody","Jace Moody","Brother Moody"];
+      function renderPlayers(){
+        // Only show registered users in the wheel
+        playersList.innerHTML = registry.map(u => row(u.name, isOnline(u.email), [
+          {action:"history", text:"History"},
+          {action:"stats", text:"Stats"}
+        ])).join("");
 
-        gamesList.innerHTML = games.map(g => row(g, [{action:"enter", text:"Enter"}, {action:"history", text:"History"}])).join("");
-        playersList.innerHTML = players.map(p => row(p, [{action:"history", text:"History"}, {action:"stats", text:"Stats"}])).join("");
-
-        // Active player click (row body)
-        playersList.addEventListener("click", (e)=>{
-          const r = e.target.closest(".row");
-          if(!r) return;
-          const btn = e.target.closest(".pill");
-          if(btn) return; // buttons will be wired later
-          [...playersList.querySelectorAll(".row")].forEach(x=>x.classList.remove("active"));
-          r.classList.add("active");
-        });
+        playersList.insertAdjacentHTML("beforeend", `<div class="muted">Online light is a local demo (needs a server for real multi-device presence).</div>`);
       }
 
-      seed();
+      function renderGames(){
+        gamesList.innerHTML = games.map(g => row(g, false, [
+          {action:"enter", text:"Enter"},
+          {action:"history", text:"History"}
+        ])).join("");
+      }
 
-      // Helpful: if already signed in before, prefill
+      function startPresence(email){
+        stopPresence();
+        hbTimer = setInterval(()=>heartbeat(email), HEARTBEAT_MS);
+        uiTimer = setInterval(renderPlayers, 1000);
+        heartbeat(email);
+      }
+
+      function stopPresence(){
+        if(hbTimer) clearInterval(hbTimer);
+        if(uiTimer) clearInterval(uiTimer);
+        hbTimer = null;
+        uiTimer = null;
+      }
+
+      function signIn(){
+        const email = normalizeEmail(emailEl.value);
+        if(!email) return setError("Enter your email.");
+        const user = registry.find(u => normalizeEmail(u.email) === email);
+        if(!user) return setError("Not registered. (We can add register next.)");
+
+        currentUser = user;
+        localStorage.setItem("ng_email", email);
+        localStorage.setItem("ng_name", user.name);
+
+        setError("");
+        renderGames();
+        renderPlayers();
+        show("players");
+        startPresence(email);
+      }
+
+      // Wire sign-in
+      enterBtn.addEventListener("click", signIn);
+      emailEl.addEventListener("keydown", (e)=>{ if(e.key === "Enter"){ e.preventDefault(); signIn(); } });
+
+      // Prefill last email (if any)
       const saved = localStorage.getItem("ng_email");
-      if(saved) email.value = saved;
+      if(saved) emailEl.value = saved;
 
-      setTimeout(()=>{ try{ email.focus(); }catch(_){} }, 50);
+      // Initial render (games only once players screen shown)
+      renderGames();
+      renderPlayers();
+
+      // If previously signed in and still registered, auto-enter (optional)
+      if(saved){
+        const user = registry.find(u => normalizeEmail(u.email) === normalizeEmail(saved));
+        if(user){
+          currentUser = user;
+          show("players");
+          startPresence(normalizeEmail(saved));
+        }
+      }
     })();
   </script>
 </body>
