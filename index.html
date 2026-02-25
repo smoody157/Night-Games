@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v708 (Enter Fixed)</title>
+  <title>Night Games v709 (Top3 Clean + Enter Safe)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v708: header row + mini pill */
+    /* v709: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v708: session indicator */
+    /* v709: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -430,19 +430,19 @@
     }
 
   
-    /* v708 layout lock: micro vertical drop */
+    /* v709 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v708 layout lock adjustment: additional micro drop */
+    /* v709 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v708 ATW emoji: keep color + one-line */
+    /* v709 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -465,7 +465,7 @@
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v708</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v709</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -643,6 +643,13 @@
     const backBtn = document.getElementById("backBtn");
     const homeBtn = document.getElementById("homeBtn");
     const statusLine = document.getElementById("statusLine");
+    // v709: visible error reporting (Safari-friendly)
+    window.addEventListener("error", (ev)=>{
+      try{ statusLine.textContent = "ERROR: " + (ev.message || "unknown"); }catch(e){}
+    });
+    window.addEventListener("unhandledrejection", (ev)=>{
+      try{ statusLine.textContent = "ERROR: " + (ev.reason && ev.reason.message ? ev.reason.message : String(ev.reason||"unknown")); }catch(e){}
+    });
     const setup = document.getElementById("setup");
     const setupBackBtn = document.getElementById("setupBackBtn");
     const lobbySetupBtn = document.getElementById("lobbySetupBtn");
@@ -718,6 +725,7 @@
           <div class="actions">
             <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
             <button class="pill" data-action="game_history" data-value="${g}">History</button>
+            <button class="pill" data-action="game_rules" data-value="${g}">Rules</button>
             
           </div>
         </div>
@@ -878,7 +886,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v708 Multiplayer
+    // v709 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -903,473 +911,7 @@
         if(e.key === "Enter"){ e.preventDefault(); onEnter(); }
       });
 
-          
-    // =========================
-    // v708 ADD-ON (no removals)
-    // Top 3 installs:
-    // 1) Rules wired per game (adds Rules button beside each game)
-    // 2) Start/End control (creates/starts/ends session)
-    // 3) Lobby shows selected players (setup selection saved to session)
-    // =========================
-
-    const ROOM_ID = "dart-room";
-    let activeSessionId = null;
-    let activeGame = null;
-    let activeHostEmail = null;
-    let activeHostUid = null;
-    let activeStatus = "idle";
-    let sessionSetup = { count: 1, emails: [] };
-    let sessionMembers = [];
-    let setupState = { count: 1, emails: new Set() };
-
-    function sessionIdNow(){
-      const uid = (currentUid || "anon").slice(0, 8);
-      return `sess_${Date.now()}_${uid}`;
-    }
-
-    function safeText(s){
-      return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
-    }
-
-    // ---- (1) Rules wired per game: inject Rules buttons after renderGames() ----
-    function injectGameRulesButtons(){
-      const lines = gamesList.querySelectorAll(".itemLine");
-      if(!lines.length) return false;
-
-      lines.forEach(line=>{
-        const actions = line.querySelector(".actions");
-        if(!actions) return;
-
-        // If already has rules button, skip
-        if(actions.querySelector('[data-action="game_rules"]')) return;
-
-        // Find game label from glassText inside leftStack
-        const labelEl = line.querySelector(".leftStack .glassText");
-        const label = (labelEl ? labelEl.textContent : "").trim();
-        if(!label) return;
-
-        const btn = document.createElement("button");
-        btn.className = "pill";
-        btn.type = "button";
-        btn.dataset.action = "game_rules";
-        btn.dataset.value = label;
-        btn.textContent = "Rules";
-        actions.appendChild(btn);
-      });
-      return true;
-    }
-
-    // ---- Setup UI (minimal; lives in setupBody without changing layout) ----
-    function renderSetupUI(){
-      const people = Array.isArray(lastPeople) ? lastPeople : [];
-      if(setupState.emails.size === 0 && currentEmail){
-        setupState.emails.add(currentEmail.toLowerCase());
-      }
-
-      const rows = people.map(p=>{
-        const em = (p.email||"").toLowerCase();
-        const selected = setupState.emails.has(em);
-        return `
-          <div class="itemLine" data-pick-email="${safeText(em)}" style="cursor:pointer;">
-            <div class="leftStack">
-              <span class="dot ${selected ? "online" : ""}" style="opacity:${selected?1:.35};"></span>
-              <span class="glassText">${safeText(p.name||em)}</span>
-            </div>
-            <div class="actions">
-              <span class="tag ${selected ? "ok" : ""}">${selected ? "Selected" : ""}</span>
-            </div>
-          </div>
-        `;
-      }).join("");
-
-      setupBody.innerHTML = `
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
-          <div style="font-weight:1000; letter-spacing:.6px;">Players</div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <input id="setupCount" type="range" min="1" max="8" value="${setupState.count}" />
-            <span class="pill" id="setupCountPill" style="min-width:44px; justify-content:center;">${setupState.count}</span>
-          </div>
-        </div>
-        <div style="opacity:.75; font-size:12px; margin-bottom:10px;">Tap names to select. Then press OK in the Lobby.</div>
-        <div class="list">${rows || `<div style="opacity:.82;">No players found yet.</div>`}</div>
-      `;
-
-      const slider = document.getElementById("setupCount");
-      const pill = document.getElementById("setupCountPill");
-      slider.addEventListener("input", ()=>{
-        setupState.count = parseInt(slider.value||"1", 10);
-        pill.textContent = String(setupState.count);
-
-        // If selected too many, trim (keep current user if possible)
-        const arr = Array.from(setupState.emails);
-        if(arr.length > setupState.count){
-          const keep = [];
-          const me = (currentEmail||"").toLowerCase();
-          if(me && setupState.emails.has(me)) keep.push(me);
-          for(const e of arr){
-            if(keep.length >= setupState.count) break;
-            if(!keep.includes(e)) keep.push(e);
-          }
-          setupState.emails = new Set(keep);
-          renderSetupUI();
-        }
-      });
-    }
-
-    // click selection inside setup screen (no new buttons)
-    
-    document.addEventListener("click", async (e)=>{
-      const b = e.target.closest(".pill");
-      if(!b) return;
-
-      const action = b.dataset.action;
-      const value = b.dataset.value || "";
-
-      if(action === "game_rules"){
-        const txt = (GAME_RULES[value] || "Rules coming soon.");
-        openDetail("RULES • " + value, `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${value}</div>
-          <div style="opacity:.82; font-size:14px; line-height:1.55;">${txt}</div>
-        `);
-        return;
-      }
-
-
-      // Global rules list
-      if(action === "show_rules"){
-        const list = Object.entries(GAME_RULES).map(([k,v]) => `
-          <div style="margin: 0 0 14px 0;">
-            <div style="font-weight:1000; font-size:20px; margin-bottom:4px;">${k}</div>
-            <div style="opacity:.78; font-size:14px; line-height:1.45;">${v}</div>
-          </div>
-        `).join("");
-        openDetail("RULES", `<div>${list}</div>`);
-        return;
-      }
-
-      // Per-game rules
-      if(action === "game_rules"){
-        const txt = (GAME_RULES[value] || "Rules coming soon.");
-        openDetail("RULES • " + value, `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${value}</div>
-          <div style="opacity:.82; font-size:14px; line-height:1.55;">${txt}</div>
-        `);
-        return;
-      }
-
-      // Enter game (multiplayer session)
-      if(action === "enter_game"){
-        try{
-          await createSessionForGame(value);
-          renderLobby();
-          show("lobby");
-        }catch(e){
-          alert("Session error: " + (e.message||e));
-        }
-        return;
-      }
-
-      if(action === "game_history"){
-        openDetail("GAME HISTORY", `
-          <div style="font-weight:1000; font-size:26px; margin-bottom:6px;">${value}</div>
-          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
-        `);
-        return;
-      }
-
-      if(action === "player_stats"){
-        openDetail("PLAYER STATS", `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${value}</div>
-          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
-        `);
-        return;
-      }
-
-      if(action === "player_history"){
-        openDetail("PLAYER HISTORY", `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${value}</div>
-          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
-        `);
-        return;
-      }
-
-      if(action === "show_session"){
-        if(!activeSessionId){
-          openDetail("SESSION", `<div style="opacity:.78;">No active session.</div>`);
-          return;
-        }
-        openDetail("SESSION • LIVE", `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${activeGame || "Game"}</div>
-          <div style="opacity:.82; font-size:14px; line-height:1.55;">
-            Room: <b>${ROOM_ID}</b><br/>
-            Session: <b>${activeSessionId}</b><br/>
-            Host: <b>${activeHost || "—"}</b>
-          </div>
-          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="pill" data-action="join_session" type="button">Join</button>
-            <button class="pill" data-action="end_session" type="button">End</button>
-          </div>
-        `);
-        return;
-      }
-
-      if(action === "join_session"){
-        try{ await joinActiveSessionIfAny(); }catch(e){}
-        openDetail("JOINED", `<div style="opacity:.85;">Joined session.</div>`);
-        return;
-      }
-
-      if(action === "end_session"){
-        try{ await endSession(); }catch(e){}
-        openDetail("SESSION ENDED", `<div style="opacity:.85;">Session ended.</div>`);
-        return;
-      }
-    });
-
-
-    // v708: setup picker clicks (non-blocking)
-    document.addEventListener("click", (e)=>{
-      const pick = e.target.closest && e.target.closest("[data-pick-email]");
-      if(!pick) return;
-      if(!setup.classList.contains("active")) return;
-
-      const em = (pick.getAttribute("data-pick-email")||"").toLowerCase();
-      if(!em) return;
-
-      const isSel = setupState.emails.has(em);
-      if(isSel){
-        setupState.emails.delete(em);
-      }else{
-        if(setupState.emails.size < setupState.count){
-          setupState.emails.add(em);
-        }
-      }
-      renderSetupUI();
-    });
-
-    // ---- (2) & (3) Session control + lobby display ----
-    async function createSessionForGame(game){
-      if(!db) throw new Error("DB not ready");
-      activeGame = game;
-      const sid = sessionIdNow();
-      activeSessionId = sid;
-      activeHostEmail = currentEmail || "";
-      activeHostUid = currentUid || "";
-      activeStatus = "lobby";
-
-      // Create session doc
-      await setDoc(doc(db, "sessions", sid), {
-        roomId: ROOM_ID,
-        game,
-        status: "lobby",
-        hostEmail: activeHostEmail,
-        hostUid: activeHostUid,
-        createdAt: serverTimestamp(),
-        setup: { count: 1, emails: [ (currentEmail||"").toLowerCase() ].filter(Boolean) }
-      }, { merge: true });
-
-      // Point room to active session
-      await setDoc(doc(db, "rooms", ROOM_ID), {
-        activeSessionId: sid,
-        activeGame: game,
-        hostEmail: activeHostEmail,
-        hostUid: activeHostUid,
-        updatedAt: serverTimestamp()
-      }, { merge: true });
-
-      // Join self as member
-      await setDoc(doc(db, "sessions", sid, "members", safeEmail(currentEmail||"me")), {
-        email: currentEmail || "",
-        name: (currentEmail||"").split("@")[0] || "Player",
-        joinedAt: serverTimestamp()
-      }, { merge: true });
-
-      // Start watchers
-      watchRoom();
-      watchSession(sid);
-    }
-
-    async function joinActiveSessionIfAny(){
-      const roomSnap = await getDoc(doc(db, "rooms", ROOM_ID));
-      const room = roomSnap.exists() ? (roomSnap.data()||{}) : {};
-      const sid = room.activeSessionId || null;
-      if(!sid) throw new Error("No active session");
-      activeSessionId = sid;
-      activeGame = room.activeGame || null;
-      activeHostEmail = room.hostEmail || null;
-      activeHostUid = room.hostUid || null;
-      watchRoom();
-      watchSession(sid);
-
-      await setDoc(doc(db, "sessions", sid, "members", safeEmail(currentEmail||"me")), {
-        email: currentEmail || "",
-        name: (currentEmail||"").split("@")[0] || "Player",
-        joinedAt: serverTimestamp()
-      }, { merge:true });
-
-      renderLobby();
-    }
-
-    async function startSession(){
-      if(!activeSessionId) throw new Error("No session");
-      // Save current setup (if any)
-      await saveSetupToSession();
-      activeStatus = "started";
-      await setDoc(doc(db, "sessions", activeSessionId), { status:"started", startedAt: serverTimestamp() }, { merge:true });
-      renderLobby();
-    }
-
-    async function endSession(){
-      if(!activeSessionId) throw new Error("No session");
-      // Mark ended
-      await setDoc(doc(db, "sessions", activeSessionId), { status:"ended", endedAt: serverTimestamp() }, { merge:true });
-      // Clear room pointer
-      await setDoc(doc(db, "rooms", ROOM_ID), {
-        activeSessionId: "",
-        activeGame: "",
-        hostEmail: "",
-        hostUid: "",
-        updatedAt: serverTimestamp()
-      }, { merge:true });
-
-      activeSessionId = null;
-      activeGame = null;
-      activeHostEmail = null;
-      activeHostUid = null;
-      activeStatus = "idle";
-      sessionMembers = [];
-      sessionSetup = { count:1, emails:[] };
-      renderLobby();
-    }
-
-    async function saveSetupToSession(){
-      if(!activeSessionId) return;
-      const emails = Array.from(setupState.emails).slice(0, setupState.count);
-      sessionSetup = { count: setupState.count, emails };
-      await setDoc(doc(db, "sessions", activeSessionId), {
-        setup: sessionSetup,
-        updatedAt: serverTimestamp()
-      }, { merge:true });
-    }
-
-    function watchRoom(){
-      if(!db) return;
-      onSnapshot(doc(db, "rooms", ROOM_ID), (snap)=>{
-        if(!snap.exists()) return;
-        const r = snap.data()||{};
-        const sid = (r.activeSessionId || "").trim();
-        activeSessionId = sid || null;
-        activeGame = (r.activeGame || "").trim() || null;
-        activeHostEmail = (r.hostEmail || "").trim() || null;
-        activeHostUid = (r.hostUid || "").trim() || null;
-        renderLobby();
-      });
-    }
-
-    function watchSession(sid){
-      if(!db || !sid) return;
-
-      onSnapshot(doc(db, "sessions", sid), (snap)=>{
-        if(!snap.exists()) return;
-        const s = snap.data()||{};
-        activeStatus = s.status || "lobby";
-        const st = s.setup || {};
-        sessionSetup = { count: st.count || 1, emails: (st.emails || []).map(x=>(x||"").toLowerCase()).filter(Boolean) };
-        renderLobby();
-      });
-
-      onSnapshot(collection(db, "sessions", sid, "members"), (snap)=>{
-        sessionMembers = snap.docs.map(d=>d.data()||{}).filter(x=>x.email);
-        renderLobby();
-      });
-    }
-
-    function lobbySelectedHtml(){
-      const people = Array.isArray(lastPeople) ? lastPeople : [];
-      const map = new Map(people.map(p=>[(p.email||"").toLowerCase(), p.name||p.email]));
-      const list = (sessionSetup.emails && sessionSetup.emails.length) ? sessionSetup.emails : Array.from(setupState.emails);
-      const names = list.map(em=> map.get(em) || em).slice(0, sessionSetup.count || setupState.count);
-
-      if(!names.length){
-        return `<div style="opacity:.75;">Selected players: —</div>`;
-      }
-      return `
-        <div style="margin-top:10px;">
-          <div style="opacity:.8; font-size:12px; margin-bottom:6px;">Selected players (${names.length}/${sessionSetup.count || setupState.count}):</div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            ${names.map(n=>`<span class="tag ok">${safeText(n)}</span>`).join("")}
-          </div>
-        </div>
-      `;
-    }
-
-    function renderLobby(){
-      // Always safe to call, even before session exists
-      const isHost = !!(activeSessionId && currentEmail && activeHostEmail && currentEmail.toLowerCase() === (activeHostEmail||"").toLowerCase());
-      lobbyStartBtn.style.display = isHost ? "inline-flex" : "none";
-      lobbyEndBtn.style.display = isHost ? "inline-flex" : "none";
-
-      if(!activeSessionId){
-        lobbyTitle.textContent = "Lobby";
-        lobbyBody.innerHTML = `
-          <div style="opacity:.82;">No active session. Tap <b>Enter</b> on a game.</div>
-          ${lobbySelectedHtml()}
-        `;
-        return;
-      }
-
-      const hostName = (activeHostEmail||"").split("@")[0] || "host";
-      const membersHtml = sessionMembers.length
-        ? sessionMembers.map(m=>`<div class="lobbyRow"><div style="font-weight:1000;">${safeText(m.name||m.email)}</div><div class="tag ok">joined</div></div>`).join("")
-        : `<div style="opacity:.8;">Waiting for players…</div>`;
-
-      lobbyTitle.textContent = `Lobby • ${activeGame || "Session"}`;
-      lobbyBody.innerHTML = `
-        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
-          <span class="tag ok">HOST: ${safeText(hostName)}</span>
-          <span class="tag">${safeText(activeStatus)}</span>
-        </div>
-        ${lobbySelectedHtml()}
-        <div style="margin-top:14px;">
-          <div style="opacity:.8; font-size:12px; margin-bottom:6px;">Members</div>
-          ${membersHtml}
-        </div>
-      `;
-    }
-
-    // When setup screen opens, render UI
-    const _origShow = show;
-    show = function(which){
-      _origShow(which);
-      if(which === "setup"){
-        try{ renderSetupUI(); }catch(e){}
-      }
-      if(which === "players"){
-        // After renderGames runs, add Rules buttons
-        setTimeout(()=>{ try{ injectGameRulesButtons(); }catch(e){} }, 0);
-      }
-      if(which === "lobby"){
-        setTimeout(()=>{ try{ renderLobby(); }catch(e){} }, 0);
-      }
-    };
-
-    // Ensure Rules buttons injected even if user never leaves Players
-    (function bootstrapRulesInject(){
-      let tries = 0;
-      const t = setInterval(()=>{
-        tries++;
-        try{
-          const ok = injectGameRulesButtons();
-          if(ok || tries > 30) clearInterval(t);
-        }catch(e){
-          if(tries > 10) clearInterval(t);
-        }
-      }, 250);
-    })();
-
-
-
-      document.addEventListener("click", async (e)=>{
+          document.addEventListener("click", async (e)=>{
       const b = e.target.closest(".pill");
       if(!b) return;
 
