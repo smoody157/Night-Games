@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v712 (Fix createSessionForGame)</title>
+  <title>Night Games v714 (Turn Order Reveal)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v712: header row + mini pill */
+    /* v714: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v712: session indicator */
+    /* v714: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -430,19 +430,19 @@
     }
 
   
-    /* v712 layout lock: micro vertical drop */
+    /* v714 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v712 layout lock adjustment: additional micro drop */
+    /* v714 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v712 ATW emoji: keep color + one-line */
+    /* v714 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -463,7 +463,7 @@
     }
 
 
-    /* v712 setup controls */
+    /* v714 setup controls */
     .setupRow{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 4px; border-bottom:1px solid rgba(255,255,255,.10); }
     .setupLabel{ font-weight:1000; letter-spacing:.8px; text-transform:uppercase; opacity:.92; }
     .countPill{ min-width:44px; text-align:center; }
@@ -474,10 +474,81 @@
     .pickRow.sel .checkDot{ border-color: rgba(90,255,170,.55); background: rgba(90,255,170,.06); box-shadow: 0 0 14px rgba(90,255,170,.12),
       inset 0 2px 6px rgba(255,255,255,.12), inset 0 -8px 10px rgba(0,0,0,.5); }
 
+
+    /* v714 setup wheels */
+    .wheelBlock{ margin: 10px 0 14px; }
+    .wheelLabel{ font-weight:1000; letter-spacing:.8px; text-transform:uppercase; opacity:.9; font-size:12px; margin: 0 2px 8px; }
+    .wheel{
+      position: relative;
+      height: 58px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      box-shadow: inset 0 2px 10px rgba(255,255,255,.10), inset 0 -18px 22px rgba(0,0,0,.45), 0 0 24px rgba(90,180,255,.08);
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: pan-y;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .wheel::before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(to bottom, rgba(0,0,0,.42), rgba(0,0,0,0) 28%, rgba(0,0,0,0) 72%, rgba(0,0,0,.42));
+      pointer-events:none;
+    }
+    .wheelValue{
+      position:relative;
+      font-weight:1100;
+      letter-spacing: .8px;
+      font-size: 22px;
+      padding: 0 18px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 92%;
+    }
+    .wheelHint{ opacity:.55; font-size:11px; margin: 6px 2px 0; }
+    .setupGrid{ display:grid; grid-template-columns: 1fr; gap: 10px; }
+
+
+    /* v714 turn order reveal */
+    .orderGrid{ display:flex; flex-direction:column; gap:10px; margin-top:4px; }
+    .orderRow{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      box-shadow: inset 0 2px 10px rgba(255,255,255,.08), inset 0 -18px 24px rgba(0,0,0,.45), 0 0 22px rgba(90,180,255,.06);
+      overflow:hidden;
+    }
+    .orderNum{
+      font-weight:1100; letter-spacing:.6px; font-size:18px; opacity:.9;
+      width: 34px; flex: 0 0 auto;
+    }
+    .orderName{
+      flex: 1 1 auto;
+      font-weight:1100; letter-spacing:.6px; font-size:18px;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      text-align:right;
+      opacity:.92;
+    }
+    .orderRow.spin .orderName{
+      opacity:.75;
+      filter: blur(.15px);
+    }
+    .orderRow.locked{
+      border-color: rgba(90,255,170,.35);
+      box-shadow: 0 0 24px rgba(90,255,170,.10), inset 0 2px 10px rgba(255,255,255,.08), inset 0 -18px 24px rgba(0,0,0,.45);
+    }
+
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v712</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v714</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -535,6 +606,26 @@
           <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
             <button class="pill" id="setupBackBtn" type="button">Back</button>
             <button class="pill" id="setupOkBtn" type="button">OK</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    
+    <section id="order" class="screen">
+      <div class="detailWrap">
+        <div class="panel">
+          <div class="sectionHead"><div class="title">Turn Order</div></div>
+          <div class="detailBody" id="orderBody">
+            <div id="orderGrid" class="orderGrid"></div>
+            <div id="orderHint" style="opacity:.7; font-size:12px; margin-top:10px;">Drawing order…</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="sectionHead"><div class="title">Controls</div></div>
+          <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="pill" id="orderBackBtn" type="button">Back</button>
           </div>
         </div>
       </div>
@@ -657,7 +748,7 @@
     const homeBtn = document.getElementById("homeBtn");
     const statusLine = document.getElementById("statusLine");
 
-    // v712: required session stubs for Setup + Lobby (keeps existing Firebase wiring untouched)
+    // v714: required session stubs for Setup + Lobby (keeps existing Firebase wiring untouched)
     // If your Firebase-backed versions exist later in the file, these will be replaced by those declarations.
     if(typeof activeSession === "undefined"){ var activeSession = null; }
     if(typeof activeSessionId === "undefined"){ var activeSessionId = null; }
@@ -704,18 +795,20 @@
         const s = (activeSession && activeSession.setup) ? activeSession.setup : null;
         const picked = s ? (s.emails||[]) : [];
         const pickedLine = picked.length ? `<div style="opacity:.78; font-size:12px; margin-top:10px;">Selected: <b>${picked.map(x=>x.split("@")[0]).join(", ")}</b></div>` : "";
+      const ord = (activeSession && Array.isArray(activeSession.order)) ? activeSession.order : null;
+      const ordLine = (ord && ord.length) ? `<div style="opacity:.78; font-size:12px; margin-top:8px;">Order: <b>${ord.map(x=>x.split("@")[0]).join(" → ")}</b></div>` : "";
         if(typeof lobbyTitle !== "undefined" && lobbyTitle) lobbyTitle.textContent = `Lobby • ${g}`;
         if(typeof lobbyBody !== "undefined" && lobbyBody){
           lobbyBody.innerHTML = `
             <div style="opacity:.82;">Session: <b>${activeSessionId||"—"}</b></div>
             <div style="opacity:.82; margin-top:6px;">Players: <b>${s ? s.count : "—"}</b></div>
-            ${pickedLine}
+            ${pickedLine}${ordLine}
           `;
         }
       }catch(e){}
     }
 
-    // v712: visible error reporting (Safari-friendly)
+    // v714: visible error reporting (Safari-friendly)
     window.addEventListener("error", (ev)=>{
       try{ statusLine.textContent = "ERROR: " + (ev.message || "unknown"); }catch(e){}
     });
@@ -725,7 +818,280 @@
     const setup = document.getElementById("setup");
     const setupBackBtn = document.getElementById("setupBackBtn");
     const setupOkBtn = document.getElementById("setupOkBtn");
+
+    // v714: setup UI (wheels) + per-game options
+    let setupGame = null;
+    let setup01 = { distance: "501", inout: "Single In / Double Out" };
+
+    const INOUT_OPTIONS = [
+      "Single In / Double Out",
+      "Double In / Double Out",
+      "Single In / Single Out"
+    ];
+    const DIST_OPTIONS = ["301","501","701"];
+
+    function _peopleList(){
+      // best-effort: use whatever list the build already keeps
+      // lastPeople should exist in this file's data watchers; fallback to [].
+      try{
+        return (typeof lastPeople !== "undefined" && Array.isArray(lastPeople)) ? lastPeople : [];
+      }catch(e){
+        return [];
+      }
+    }
+
+    function _wheelSet(el, arr, val){
+      const idx = Math.max(0, arr.indexOf(val));
+      el.dataset.idx = String(idx >= 0 ? idx : 0);
+      el.dataset.arr = JSON.stringify(arr);
+      el.querySelector(".wheelValue").textContent = arr[parseInt(el.dataset.idx,10)] || arr[0] || "";
+    }
+    function _wheelGet(el){
+      try{
+        const arr = JSON.parse(el.dataset.arr || "[]");
+        const idx = parseInt(el.dataset.idx||"0",10);
+        return arr[idx] || arr[0] || "";
+      }catch(e){
+        return "";
+      }
+    }
+    function _wheelStep(el, dir){
+      try{
+        const arr = JSON.parse(el.dataset.arr || "[]");
+        if(!arr.length) return;
+        let idx = parseInt(el.dataset.idx||"0",10);
+        idx += dir;
+        if(idx < 0) idx = arr.length-1;
+        if(idx >= arr.length) idx = 0;
+        el.dataset.idx = String(idx);
+        el.querySelector(".wheelValue").textContent = arr[idx];
+        el.dispatchEvent(new CustomEvent("wheelchange", { detail: { value: arr[idx] }}));
+      }catch(e){}
+    }
+    function _bindWheel(el){
+      let y0 = null;
+      el.addEventListener("touchstart", (ev)=>{ y0 = ev.touches && ev.touches[0] ? ev.touches[0].clientY : null; }, {passive:true});
+      el.addEventListener("touchmove", (ev)=>{
+        if(y0 === null) return;
+        const y = ev.touches && ev.touches[0] ? ev.touches[0].clientY : null;
+        if(y === null) return;
+        const dy = y - y0;
+        if(Math.abs(dy) > 18){
+          _wheelStep(el, dy > 0 ? -1 : 1);
+          y0 = y;
+        }
+      }, {passive:true});
+      el.addEventListener("wheel", (ev)=>{
+        ev.preventDefault();
+        _wheelStep(el, ev.deltaY > 0 ? 1 : -1);
+      }, {passive:false});
+      el.addEventListener("click", ()=> _wheelStep(el, 1));
+    }
+
+    function renderSetup(){
+      setupGame = (setupGame || activeGame || "").toUpperCase();
+      // load saved selection (per game) if present
+      try{ loadSetup(); }catch(e){}
+
+      const is01 = (setupGame === "01" || setupGame === "O1" || setupGame === "01 ");
+
+      const people = _peopleList().map(p=>({
+        email: String(p.email||"").toLowerCase(),
+        name: p.name || (String(p.email||"").split("@")[0]||"Player")
+      })).filter(p=>p.email);
+
+      // default selection: self
+      if(currentEmail && setupState && setupState.emails && setupState.emails.size===0){
+        setupState.emails.add(currentEmail.toLowerCase());
+      }
+
+      const playerWheelArr = people.length ? people.map(p=>`${p.name} <${p.email}>`) : ["(no players yet)"];
+      const currentPick = (()=>{
+        const first = setupState.emails && setupState.emails.size ? Array.from(setupState.emails)[0] : (currentEmail||"").toLowerCase();
+        const hit = people.find(p=>p.email===first);
+        return hit ? `${hit.name} <${hit.email}>` : (playerWheelArr[0]||"");
+      })();
+
+      setupBody.innerHTML = `
+        <div class="setupGrid">
+          ${is01 ? `
+          <div class="wheelBlock">
+            <div class="wheelLabel">01 Distance</div>
+            <div class="wheel" id="wheelDistance"><div class="wheelValue"></div></div>
+            <div class="wheelHint">Swipe / scroll / tap</div>
+          </div>
+          <div class="wheelBlock">
+            <div class="wheelLabel">In / Out</div>
+            <div class="wheel" id="wheelInOut"><div class="wheelValue"></div></div>
+            <div class="wheelHint">Swipe / scroll / tap</div>
+          </div>
+          ` : ``}
+
+          <div class="wheelBlock">
+            <div class="wheelLabel">Players (count)</div>
+            <div class="wheel" id="wheelCount"><div class="wheelValue"></div></div>
+            <div class="wheelHint">1–8</div>
+          </div>
+
+          <div class="wheelBlock">
+            <div class="wheelLabel">Pick Players</div>
+            <div class="wheel" id="wheelPlayer"><div class="wheelValue"></div></div>
+            <div class="wheelHint">Tap wheel to cycle. (Multi-pick next)</div>
+          </div>
+        </div>
+      `;
+
+      // label the OK button as Start
+      try{ setupOkBtn.textContent = "Start"; }catch(e){}
+
+      // bind wheels
+      const wCount = document.getElementById("wheelCount");
+      const countArr = ["1","2","3","4","5","6","7","8"];
+      _wheelSet(wCount, countArr, String(setupState.count||"1"));
+      _bindWheel(wCount);
+      wCount.addEventListener("wheelchange", (ev)=>{
+        const v = parseInt(ev.detail.value||"1",10);
+        setupState.count = Math.max(1, Math.min(8, v));
+        // trim selection to 1 for now; multi-select will be built next
+        if(setupState.emails && setupState.emails.size > setupState.count){
+          setupState.emails = new Set(Array.from(setupState.emails).slice(0, setupState.count));
+        }
+      });
+
+      const wPlayer = document.getElementById("wheelPlayer");
+      _wheelSet(wPlayer, playerWheelArr, currentPick);
+      _bindWheel(wPlayer);
+      wPlayer.addEventListener("wheelchange", ()=>{
+        const raw = _wheelGet(wPlayer);
+        const m = raw.match(/<([^>]+)>/);
+        const em = m ? m[1].toLowerCase() : "";
+        if(em){
+          setupState.emails = new Set([em]);  // multi-pick comes next step
+        }
+      });
+
+      if(is01){
+        const wD = document.getElementById("wheelDistance");
+        const wIO = document.getElementById("wheelInOut");
+        _wheelSet(wD, DIST_OPTIONS, setup01.distance);
+        _wheelSet(wIO, INOUT_OPTIONS, setup01.inout);
+        _bindWheel(wD); _bindWheel(wIO);
+        wD.addEventListener("wheelchange", ()=>{ setup01.distance = _wheelGet(wD); });
+        wIO.addEventListener("wheelchange", ()=>{ setup01.inout = _wheelGet(wIO); });
+      }
+    }
+
+    
+    // v714: order reveal (uses selected players only)
+    function _shuffle(arr){
+      const a = arr.slice();
+      for(let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]] = [a[j],a[i]];
+      }
+      return a;
+    }
+
+    function _selectedPlayers(){
+      const s = (activeSession && activeSession.setup) ? activeSession.setup : null;
+      const emails = s && Array.isArray(s.emails) ? s.emails.slice(0, s.count||s.emails.length) : [];
+      // if empty, fallback to current
+      const out = emails.length ? emails : ((currentEmail? [currentEmail.toLowerCase()] : []));
+      return out.filter(Boolean);
+    }
+
+    function _emailToName(email){
+      const em = String(email||"").toLowerCase();
+      const people = _peopleList().map(p=>({email:String(p.email||"").toLowerCase(), name:p.name||((p.email||"").split("@")[0]||"Player")}));
+      const hit = people.find(p=>p.email===em);
+      return hit ? hit.name : (em.split("@")[0] || em);
+    }
+
+    function renderOrderShell(count){
+      const rows = [];
+      for(let i=0;i<count;i++){
+        rows.push(`
+          <div class="orderRow spin" data-slot="${i}">
+            <div class="orderNum">${i+1}</div>
+            <div class="orderName">…</div>
+          </div>
+        `);
+      }
+      orderGrid.innerHTML = rows.join("");
+    }
+
+    async function runOrderReveal(){
+      const emails = _selectedPlayers();
+      const count = Math.max(1, Math.min(8, emails.length));
+      renderOrderShell(count);
+      show("order");
+      orderHint.textContent = "Drawing order…";
+
+      // build final order once (clean randomness)
+      const final = _shuffle(emails).slice(0, count);
+
+      // animation: spin names then lock each slot
+      const poolNames = emails.map(_emailToName);
+      let tick = 0;
+      const t0 = Date.now();
+      const spin = setInterval(()=>{
+        tick++;
+        const rows = orderGrid.querySelectorAll(".orderRow.spin");
+        rows.forEach((row)=>{
+          const nameEl = row.querySelector(".orderName");
+          const n = poolNames[(tick + Math.floor(Math.random()*poolNames.length)) % poolNames.length] || "…";
+          nameEl.textContent = n;
+        });
+        if(Date.now() - t0 > 900){ // about 0.9s global spin
+          clearInterval(spin);
+          // lock sequentially
+          let k = 0;
+          const lockNext = ()=>{
+            const row = orderGrid.querySelector(`.orderRow[data-slot="${k}"]`);
+            if(!row) return;
+            row.classList.remove("spin");
+            row.classList.add("locked");
+            row.querySelector(".orderName").textContent = _emailToName(final[k]);
+            k++;
+            if(k < count){
+              setTimeout(lockNext, 600); // ~0.6s per player (not too fast)
+            }else{
+              // save
+              activeSession = activeSession || {};
+              activeSession.order = final;
+              try{ localStorage.setItem(`ng_order_${activeSessionId||"na"}`, JSON.stringify(final)); }catch(e){}
+              orderHint.textContent = "Order locked.";
+              // return to lobby after short pause
+              setTimeout(()=>{ renderLobby(); show("lobby"); }, 800);
+            }
+          };
+          setTimeout(lockNext, 350);
+        }
+      }, 90);
+    }
+
+function startFromSetup(){
+      // persist the setup
+      try{
+        if(activeGame){
+          // store 01 options if applicable
+          const is01 = (String(activeGame||"").toUpperCase()==="01");
+          if(is01){
+            activeSession = activeSession || {};
+            activeSession.o1 = { distance: setup01.distance, inout: setup01.inout };
+          }
+        }
+        saveSetup();
+        renderLobby();
+      }catch(e){}
+      show("lobby");
+    }
+
     const lobbySetupBtn = document.getElementById("lobbySetupBtn");
+    const order = document.getElementById("order");
+    const orderGrid = document.getElementById("orderGrid");
+    const orderHint = document.getElementById("orderHint");
+    const orderBackBtn = document.getElementById("orderBackBtn");
     const lobby = document.getElementById("lobby");
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody = document.getElementById("lobbyBody");
@@ -738,6 +1104,7 @@
       landing.classList.toggle("active", which==="landing");
       players.classList.toggle("active", which==="players");
       setup.classList.toggle("active", which==="setup");
+      order.classList.toggle("active", which==="order");
       lobby.classList.toggle("active", which==="lobby");
       detail.classList.toggle("active", which==="detail");
     }
@@ -959,7 +1326,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v712 Multiplayer
+    // v714 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -985,7 +1352,7 @@
       });
 
           document.addEventListener("click", (e)=>{
-      // v712: pick handler for setup rows
+      // v714: pick handler for setup rows
       const pick = e.target.closest && e.target.closest("[data-pick-email]");
       if(pick && setup.classList.contains("active")){
         const em = (pick.getAttribute("data-pick-email")||"").toLowerCase();
@@ -1042,8 +1409,9 @@
       if(action === "enter_game"){
         try{
           await createSessionForGame(value);
-          renderLobby();
-          show("lobby");
+          setupGame = value;
+          renderSetup();
+          show("setup");
         }catch(e){
           alert("Session error: " + (e.message||e));
         }
@@ -1111,9 +1479,11 @@
       homeBtn.addEventListener("click", ()=> show("landing"));
 
       lobbyBackBtn.addEventListener("click", ()=> show("players"));
-      lobbySetupBtn.addEventListener("click", ()=>{ loadSetup(); renderSetupUI(); show("setup"); });
+      lobbySetupBtn.addEventListener("click", ()=>{ setupGame = activeGame; renderSetup(); show("setup"); });
       setupBackBtn.addEventListener("click", ()=> show("lobby"));
-      setupOkBtn.addEventListener("click", ()=>{ saveSetup(); renderLobby(); show("lobby"); });
+      orderBackBtn.addEventListener("click", ()=> show("lobby"));
+      setupOkBtn.addEventListener("click", ()=>{ startFromSetup(); });
+      renderLobby(); show("lobby"); });
       lobbyStartBtn.addEventListener("click", ()=> startSession().catch(e=>alert(e.message||e)));
       lobbyEndBtn.addEventListener("click", ()=> endSession().catch(e=>alert(e.message||e)));
 
