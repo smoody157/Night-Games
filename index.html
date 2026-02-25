@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v692 (Multiplayer Hotfix)</title>
+  <title>Night Games v695 (Multiplayer Lobby + Rules)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v692: header row + mini pill */
+    /* v695: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v692: session indicator */
+    /* v695: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -432,7 +432,7 @@
   </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v692</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v695</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -474,6 +474,25 @@
         </div>
       </div>
     </section>
+
+    
+    <section id="lobby" class="screen">
+      <div class="detailWrap">
+        <div class="panel">
+          <div class="sectionHead"><div class="title" id="lobbyTitle">Lobby</div></div>
+          <div class="detailBody" id="lobbyBody">Loading…</div>
+        </div>
+        <div class="panel">
+          <div class="sectionHead"><div class="title">Controls</div></div>
+          <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="pill" id="lobbyBackBtn" type="button">Back</button>
+            <button class="pill" id="lobbyStartBtn" type="button" style="display:none;">Start</button>
+            <button class="pill" id="lobbyEndBtn" type="button" style="display:none;">End</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
 
     <section id="detail" class="screen">
       <div class="detailWrap">
@@ -571,11 +590,18 @@
     const backBtn = document.getElementById("backBtn");
     const homeBtn = document.getElementById("homeBtn");
     const statusLine = document.getElementById("statusLine");
+    const lobby = document.getElementById("lobby");
+    const lobbyTitle = document.getElementById("lobbyTitle");
+    const lobbyBody = document.getElementById("lobbyBody");
+    const lobbyBackBtn = document.getElementById("lobbyBackBtn");
+    const lobbyStartBtn = document.getElementById("lobbyStartBtn");
+    const lobbyEndBtn = document.getElementById("lobbyEndBtn");
     const sessionBtn = document.getElementById("sessionBtn");
 
     function show(which){
       landing.classList.toggle("active", which==="landing");
       players.classList.toggle("active", which==="players");
+      lobby.classList.toggle("active", which==="lobby");
       detail.classList.toggle("active", which==="detail");
     }
     function openDetail(title, html){
@@ -617,7 +643,7 @@
       return (email||"").toLowerCase().replaceAll(".", "(dot)").replaceAll("@","(at)");
     }
 
-    const games = ["01","Cricket","Killer","Shanghai","ATW 🌍","Half It"];
+    const games = ["01","Cricket","Killer","Shanghai","ATW","Half It"];
 
     const GAME_RULES = {
       "01": "Classic x01. Start at 301/501/701 etc (we'll add selector next). Lowest to zero wins (bust rules configurable).",
@@ -631,7 +657,7 @@
     function renderGames(){
       gamesList.innerHTML = games.map(g => `
         <div class="itemLine">
-          <div class="leftStack"><span class="glassText">${g}</span></div>
+          <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? '<svg class="iconGlobe" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">  <circle cx="12" cy="12" r="9" stroke="rgba(200,245,255,.92)" stroke-width="1.6"/>  <path d="M3.5 12h17" stroke="rgba(200,245,255,.7)" stroke-width="1.4" stroke-linecap="round"/>  <path d="M12 3c2.6 2.7 4.1 5.9 4.1 9S14.6 18.3 12 21c-2.6-2.7-4.1-5.9-4.1-9S9.4 5.7 12 3Z" stroke="rgba(200,245,255,.7)" stroke-width="1.4" stroke-linejoin="round"/></svg>' : ""}<span class="glassText">${g}</span></div></div>
           <div class="actions">
             <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
             <button class="pill" data-action="game_history" data-value="${g}">History</button>
@@ -795,7 +821,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v692 Multiplayer
+    // v695 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -827,6 +853,16 @@
       const action = b.dataset.action;
       const value = b.dataset.value || "";
 
+      if(action === "game_rules"){
+        const txt = (GAME_RULES[value] || "Rules coming soon.");
+        openDetail("RULES • " + value, `
+          <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${value}</div>
+          <div style="opacity:.82; font-size:14px; line-height:1.55;">${txt}</div>
+        `);
+        return;
+      }
+
+
       // Global rules list
       if(action === "show_rules"){
         const list = Object.entries(GAME_RULES).map(([k,v]) => `
@@ -852,19 +888,12 @@
       // Enter game (multiplayer session)
       if(action === "enter_game"){
         try{
-          if(!activeSessionId){
-            await createSessionForGame(value);
-          }else{
-            await joinActiveSessionIfAny();
-          }
-        }catch(e){}
-
-        openDetail("ENTER " + value, `
-          <div style="opacity:.9; margin-bottom:10px;">Session:</div>
-          <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${activeSessionId ? activeSessionId : "—"}</div>
-          <div style="opacity:.75;">Room: ${ROOM_ID}</div>
-          <div style="opacity:.75; margin-top:10px;">Next: board screen + scoring.</div>
-        `);
+          await createSessionForGame(value);
+          renderLobby();
+          show("lobby");
+        }catch(e){
+          alert("Session error: " + (e.message||e));
+        }
         return;
       }
 
@@ -927,6 +956,11 @@
 
       backBtn.addEventListener("click", ()=> show("players"));
       homeBtn.addEventListener("click", ()=> show("landing"));
+
+      lobbyBackBtn.addEventListener("click", ()=> show("players"));
+      lobbyStartBtn.addEventListener("click", ()=> startSession().catch(e=>alert(e.message||e)));
+      lobbyEndBtn.addEventListener("click", ()=> endSession().catch(e=>alert(e.message||e)));
+
 
     } catch (err) {
       failHard("Firebase init failed (imports loaded but initialize failed).", err);
