@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v689 (Online Immediate)</title>
+  <title>Night Games v690 (Online Immediate)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -400,10 +400,21 @@
       padding: 10px 12px;
       border-radius: 14px;
     }
+  
+    /* v690: header row + mini pill */
+    .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
+    .pillMini{
+      padding: 8px 12px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      height: 34px;
+      align-self: center;
+    }
+
   </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v689</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v690</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -433,7 +444,10 @@
     <section id="players" class="screen">
       <div class="hub">
         <div class="panel">
-          <div class="sectionHead"><div class="title">Games</div></div>
+          <div class="sectionHead headerRow">
+            <div class="title">Games</div>
+            <button class="pill pillMini" data-action="show_rules" type="button">Rules</button>
+          </div>
           <div class="list" id="gamesList"></div>
         </div>
         <div class="panel">
@@ -584,7 +598,17 @@
       return (email||"").toLowerCase().replaceAll(".", "(dot)").replaceAll("@","(at)");
     }
 
-    const games = ["01","Cricket","Killer","Shanghai","Around the World","Half It"];
+    const games = ["01","Cricket","Killer","Shanghai","ATW 🌍","Half It"];
+
+    const GAME_RULES = {
+      "01": "Classic x01. Start at 301/501/701 etc (we'll add selector next). Lowest to zero wins (bust rules configurable).",
+      "Cricket": "20–15 + Bull. Close numbers then score. Team/solo rules configurable.",
+      "Killer": "Assign a number, get to killer, then knock others out. (We’ll match your house rules).",
+      "Shanghai": "Each round targets a number. Shanghai = single+double+triple in same round. (House rules).",
+      "ATW 🌍": "Around the World: hit 1→20 (and bull if you want). Miss = move on / stay (house rules).",
+      "Half It": "Hit the called target each round or score is halved. (House rules)."
+    };
+
     function renderGames(){
       gamesList.innerHTML = games.map(g => `
         <div class="itemLine">
@@ -774,7 +798,18 @@
         if(!b) return;
         const action = b.dataset.action;
         const value = b.dataset.value || "";
-        if(action === "enter_game") openDetail("ENTER " + value, `<div style="font-weight:1000; font-size:34px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: board screen.</div>`);
+        
+      if(action === "show_rules"){
+        const list = Object.entries(GAME_RULES).map(([k,v]) => `
+          <div style="margin: 0 0 14px 0;">
+            <div style="font-weight:1000; font-size:20px; margin-bottom:4px;">${k}</div>
+            <div style="opacity:.78; font-size:14px; line-height:1.45;">${v}</div>
+          </div>
+        `).join("");
+        openDetail("RULES", `<div>${list}</div>`);
+        return;
+      }
+if(action === "enter_game") openDetail("ENTER " + value, `<div style="font-weight:1000; font-size:34px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: board screen.</div>`);
         if(action === "game_history") openDetail("GAME HISTORY", `<div style="font-weight:1000; font-size:26px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: pull history from Firestore.</div>`);
         if(action === "player_stats") openDetail("PLAYER STATS", `<div style="font-weight:1000; font-size:22px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: pull stats from Firestore.</div>`);
         if(action === "player_history") openDetail("PLAYER HISTORY", `<div style="font-weight:1000; font-size:22px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: pull history from Firestore.</div>`);
