@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v746  |  2026-02-25
+  NIGHT GAMES v748  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v746 (VOICE+HEADER FIX)</title>
+  <title>Night Games v748 (MASTER STABLE)</title>
   <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -71,18 +71,7 @@
     .buildBadge b{ color: rgba(0,210,255,.95); }
 
     /* Debug panel (toggle) */
-    .dbg{
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 9999;
-      background: rgba(0,0,0,.45);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
-      box-shadow: 0 10px 22px rgba(0,0,0,.45);
-      overflow:hidden;
-      max-width: min(340px, calc(100vw - 24px));
-    }
+    .dbg{ display:none; }
     .dbgHead{
       padding: 10px 12px;
       display:flex;
@@ -355,7 +344,7 @@
     .actions{ display:flex; gap:8px; flex:0 0 auto; }
 
     .pill{
-      /* v742 uniform button sizing */
+      /* v748 uniform button sizing */
 border: 1px solid rgba(255,255,255,.22);
       background: rgba(255,255,255,.03);
       color: rgba(255,255,255,.95);
@@ -447,7 +436,7 @@ border: 1px solid rgba(255,255,255,.22);
       border-radius: 14px;
     }
   
-    /* v742: header row + mini pill */
+    /* v748: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -458,7 +447,7 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
   
-    /* v742: session indicator */
+    /* v748: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -476,19 +465,19 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
   
-    /* v742 layout lock: micro vertical drop */
+    /* v748 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v742 layout lock adjustment: additional micro drop */
+    /* v748 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v742 ATW emoji: keep color + one-line */
+    /* v748 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -510,7 +499,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-    /* v742: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    /* v748: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
     #setup .detailWrap{
       top: clamp(150px, 18vh, 260px);
       bottom: max(80px, env(safe-area-inset-bottom));
@@ -525,7 +514,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-    /* v742: glass dropdowns (no white/yellow) */
+    /* v748: glass dropdowns (no white/yellow) */
     .glassSelect{
       width: 100%;
       padding: 14px 44px 14px 16px;
@@ -576,7 +565,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
     /***********************
-     *  v742 ERROR HUD
+     *  v748 ERROR HUD
      *  - Appears only when an error occurs
      *  - Small, not in the way
      ***********************/
@@ -668,7 +657,7 @@ border: 1px solid rgba(255,255,255,.22);
 /* =============================================================================
    SECTION_SETUP: PLAYER PICKER DROPDOWN  [SECTION_SETUP]
 ============================================================================= */
-/* v742: player picker dropdown */
+/* v748: player picker dropdown */
 .glassBtn{
   width: 100%;
   padding: 14px 16px;
@@ -780,7 +769,7 @@ border: 1px solid rgba(255,255,255,.22);
   box-shadow: inset 0 0 18px rgba(120,190,255,.08);
 }
 
-/* v745 ADVANCE BUTTONS + SETUP LAYOUT FIXES */
+/* v748 ADVANCE BUTTONS + SETUP LAYOUT FIXES */
 .pill.btnAdvance, .btnAdvance, .btn-advance{
   border: 1px solid rgba(120,255,170,.35) !important;
   background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
@@ -797,18 +786,19 @@ border: 1px solid rgba(255,255,255,.22);
 #setup .panel .detailBody{ position: relative; }
 
 
-/* ===================== v746 HEADER BAR ===================== */
+/* ===================== v748 HEADER BAR (ONE ROW, NO WRAP) ===================== */
 #ngHeaderBar{
   position: fixed;
-  top: 10px;
+  top: max(10px, env(safe-area-inset-top));
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
+  width: min(720px, 92vw);
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  align-items: baseline;
-  justify-content: center;
-  padding: 8px 14px;
+  padding: 8px 12px;
   border-radius: 16px;
   border: 1px solid rgba(255,255,255,.18);
   background: rgba(0,0,0,.25);
@@ -816,26 +806,28 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 10px 30px rgba(0,0,0,.35);
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
 }
-#ngHeaderBar .ngHeaderTitle{
-  letter-spacing: .08em;
+#ngHeaderBar span{
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: .06em;
   text-transform: uppercase;
-  font-weight: 800;
-  font-size: 12px;
-  opacity: .95;
+  font-weight: 900;
+  opacity: .92;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-#ngHeaderBar .ngHeaderSub{
-  font-weight: 700;
-  font-size: 12px;
-  opacity: .75;
-}
+#ngHeaderBar .ngHeaderLeft{ flex: 0 0 auto; max-width: 45%; }
+#ngHeaderBar .ngHeaderCenter{ flex: 1 1 auto; opacity: .80; max-width: 40%; }
+#ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
 /* Make sure landing UI sits below the header */
-#landing .landingUI{
-  padding-top: 48px;
-}
+#landing .landingUI{ padding-top: 54px; }
 
-/* ===================== v746 GREEN ADVANCE BUTTONS ===================== */
+/* ===================== v748 GREEN ADVANCE BUTTONS ===================== */
 .btnAdvance, .btn-advance, .btnAdvanceGreen{
   border: 1px solid rgba(120,255,170,.35) !important;
   background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
@@ -851,7 +843,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 </style>
 
-<script id="ngGuards_v737">
+<script id="ngGuards_v748">
 /* =============================================================================
    SECTION_UTILS: SAFETY GUARDS  [SECTION_UTILS]
    - Prevents small errors from killing the whole app.
@@ -878,11 +870,11 @@ border: 1px solid rgba(255,255,255,.22);
 
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderTitle">Night Games v746</span><span class="ngHeaderSub">Firebase</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v748</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 
 <!--
 ================================================================================
-  EDIT NOTES (v742)
+  EDIT NOTES (v748)
 ================================================================================
   [EDIT_BG]       Background image / gradient choices
   [EDIT_LOGO]     Logo placement / size
@@ -897,7 +889,7 @@ border: 1px solid rgba(255,255,255,.22);
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
       <span>Debug <b id="dbgState">INIT</b></span>
-      <span style="opacity:.7;">tap</span>
+      <span style="opacity:.7;"></span>
     </div>
     <div class="dbgBody" id="dbgBody">
       <div class="kv"><span>URL</span><code id="dbgUrl"></code></div>
@@ -1038,15 +1030,15 @@ border: 1px solid rgba(255,255,255,.22);
   <script type="module">
 
 
-/* v746 VOICE (Phase 4 finalized)
+/* v748 VOICE (Phase 4 finalized)
    - iOS requires a user gesture before speech.
    - We trigger on FIRST focus/tap of the email field.
    - We speak the welcome line (NOT a generic prompt).
    - Single voice module; no duplicate declarations.
 */
 
-const NG_BUILD = "v746";
-const NG_WELCOME_LINE = "Welcome to America’s Six… Bill Moody’s Limited Edition Night Games. Shoot well.";
+const NG_BUILD = "v748";
+const NG_WELCOME_LINE = "Welcome to America's Sixth Bill Moody's Limited Edition Night Games. Shoot well.";
 
 const NGVoice = (function(){
   const api = { enabled:true, unlocked:false, voice:null, queue:[] };
@@ -1145,7 +1137,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <!-- =======================
-     v742 ERROR HUD (shows only on errors)
+     v748 ERROR HUD (shows only on errors)
      ======================= -->
 <div id="ngErrToast" aria-live="polite" aria-atomic="true">
   <div class="card">
@@ -1164,14 +1156,15 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>
 
 
-<script id="ngErrorHud_v737">
+<script id="ngErrorHud_v748">
 /***********************
- *  v742: ERROR HUD + SAFE LOGGING
+ *  v748: ERROR HUD + SAFE LOGGING
  *  Purpose:
  *   - If a runtime error happens, show a small toast with details.
  *   - Does NOT block the UI and does NOT change game logic.
  ***********************/
 (function(){
+  if(window.__NG_ERRHUD__) return; window.__NG_ERRHUD__=true;
   const toast = document.getElementById('ngErrToast');
   if(!toast) return;
   const titleEl = document.getElementById('ngErrTitle');
@@ -1233,24 +1226,84 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 
-<script id="ngPatch_v737">
+
+
+<script id="ngBoot_v748">
 /* =============================================================================
-   SECTION_ROUTING: HARDEN ENTER  [SECTION_ROUTING]
-   - Wraps Enter click handler safely without changing logic.
+   v748 BOOT (NO PATCHING / NO DUPLICATE INITS)
+   - Fixes Enter wiring (email -> players)
+   - Keeps Error HUD always enabled
+   - Hides Debug panel unless ?debug=1
 ============================================================================= */
 (function(){
-  function wrapEnter(){
-    const btn = document.getElementById('enterBtn') || document.getElementById('enter') || document.querySelector('[data-action="enter"]');
-    if(!btn) return;
-    // If an inline onclick exists, wrap it.
-    if(typeof btn.onclick === 'function' && !btn._ngWrapped){
-      const orig = btn.onclick;
-      btn.onclick = ngSafe(orig, "Enter button error");
-      btn._ngWrapped = true;
+  if(window.__NG_BOOT_V748__) return;
+  window.__NG_BOOT_V748__ = true;
+
+  function $(id){ return document.getElementById(id); }
+  function showScreen(id){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = $(id);
+    if(el) el.classList.add('active');
+  }
+
+  // Debug panel: only if ?debug=1
+  try{
+    const dbg = $('dbg');
+    const showDbg = /(?:\?|&)debug=1(?:&|$)/.test(location.search);
+    if(dbg) dbg.style.display = showDbg ? 'block' : 'none';
+  }catch(e){}
+
+  // Header right: simple online indicator (local)
+  try{
+    const right = $('ngHeaderRight');
+    if(right){
+      right.textContent = navigator.onLine ? 'Online' : 'Offline';
+      window.addEventListener('online', ()=> right.textContent='Online');
+      window.addEventListener('offline', ()=> right.textContent='Offline');
+    }
+  }catch(e){}
+
+  // Enter: validate + store + route
+  function onEnter(){
+    const emailEl = $('emailInput');
+    const raw = emailEl ? String(emailEl.value||'').trim() : '';
+    const email = raw.toLowerCase();
+    if(!email || email.indexOf('@')<1 || email.indexOf('.')<3){
+      if(window.ngErr) window.ngErr('Enter a valid email to continue.', 'emailInput invalid: ' + raw);
+      const status = $('statusLine');
+      if(status) status.textContent = 'Please enter a valid email.';
+      try{ emailEl && emailEl.focus(); }catch(e){}
+      return;
+    }
+    try{ localStorage.setItem('ng_email', email); }catch(e){}
+    const status = $('statusLine');
+    if(status) status.textContent = 'Signed in as ' + email;
+    // voice confirmation (if enabled)
+    try{ if(window.ngSpeak) window.ngSpeak('Signed in.'); }catch(e){}
+    showScreen('players');
+  }
+
+  function bindEnter(){
+    const btn = $('enterBtn');
+    const emailEl = $('emailInput');
+    if(btn && !btn.__ngBound){
+      btn.addEventListener('click', onEnter, { passive:true });
+      btn.__ngBound = true;
+    }
+    if(emailEl && !emailEl.__ngBound){
+      emailEl.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); onEnter(); }});
+      emailEl.__ngBound = true;
     }
   }
-  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", wrapEnter);
-  else wrapEnter();
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindEnter);
+  else bindEnter();
+
+  // Restore session if present
+  try{
+    const saved = localStorage.getItem('ng_email');
+    if(saved && $('emailInput')) $('emailInput').value = saved;
+  }catch(e){}
 })();
 </script>
 
