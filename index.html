@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v685</title>
+  <title>Night Games v688 (Firebase Stable)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -44,8 +44,52 @@
     }
     .buildBadge b{ color: rgba(0,210,255,.95); }
 
-    #app{ position:fixed; inset:0; }
+    /* Debug panel (toggle) */
+    .dbg{
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 9999;
+      background: rgba(0,0,0,.45);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.45);
+      overflow:hidden;
+      max-width: min(340px, calc(100vw - 24px));
+    }
+    .dbgHead{
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .dbgHead span{
+      font-size: 12px;
+      font-weight: 1000;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: .92;
+    }
+    .dbgHead b{ color: rgba(90,255,170,.92); }
+    .dbgBody{
+      display:none;
+      padding: 10px 12px 12px 12px;
+      font-size: 12px;
+      line-height: 1.4;
+      opacity: .9;
+    }
+    .dbg.open .dbgBody{ display:block; }
+    .kv{ display:flex; justify-content: space-between; gap:10px; }
+    .kv code{ opacity:.95; }
+    .warn{ color: rgba(255,210,90,.95); }
+    .bad{ color: rgba(255,120,120,.95); }
+    .ok{ color: rgba(90,255,170,.95); }
 
+    #app{ position:fixed; inset:0; }
     .screen{ position:absolute; inset:0; display:none; }
     .screen.active{ display:block; }
 
@@ -121,7 +165,7 @@
     }
     .field3d input::placeholder{ color: rgba(235,245,255,.55); }
 
-    /* iOS Safari yellow autofill kill (use same fill as bubble) */
+    /* iOS Safari yellow autofill kill */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -146,7 +190,15 @@
     }
     .btn3d:active{ transform: translateY(2px) scale(.995); filter: var(--zShadowSoft); }
 
-    /* ===== Players Hub ===== */
+    .hint{
+      font-size: 12px;
+      opacity: .78;
+      text-align:center;
+      max-width: min(640px, 92vw);
+      line-height: 1.35;
+    }
+
+    /* ===== Hub ===== */
     .hub{
       position:absolute;
       left:50%;
@@ -186,8 +238,6 @@
       position: relative;
       padding-bottom: 6px;
       width: 100%;
-
-      /* Blue glass text */
       background: linear-gradient(180deg,
         rgba(210,245,255,.96) 0%,
         rgba(90,210,255,.92) 35%,
@@ -222,13 +272,12 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /* ===== NO BUBBLES on items: just clean rows + glass text ===== */
     .itemLine{
       display:flex;
       align-items:center;
       justify-content: space-between;
       gap: 12px;
-      padding: 14px 6px;
+      padding: 14px 4px;
       border-bottom: 1px solid rgba(255,255,255,.10);
     }
 
@@ -245,7 +294,7 @@
       font-size: clamp(22px, 2.8vh, 30px);
       letter-spacing: .6px;
       white-space: nowrap;
-      overflow: hidden;
+      overflow: visible;
       text-overflow: clip;
       background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(210,245,255,.78) 40%, rgba(255,255,255,.92));
       -webkit-background-clip: text;
@@ -271,18 +320,17 @@
       box-shadow: 0 0 10px rgba(90,255,170,.35), 0 0 0 1px rgba(90,255,170,.28);
     }
 
-    /* Buttons back (but not bubbled) */
-    .actions{ display:flex; gap:10px; flex:0 0 auto; }
+    .actions{ display:flex; gap:8px; flex:0 0 auto; }
 
     .pill{
       border: 1px solid rgba(255,255,255,.22);
       background: rgba(255,255,255,.03);
       color: rgba(255,255,255,.95);
       border-radius: 999px;
-      padding: 11px 14px;
-      font-size: 13px;
+      padding: 9px 11px;
+      font-size: 12px;
       font-weight: 1000;
-      letter-spacing: 1px;
+      letter-spacing: .8px;
       text-transform: uppercase;
       cursor:pointer;
       position:relative;
@@ -298,22 +346,78 @@
       transform: translateY(2px) scale(.99);
       filter: var(--zShadowSoft);
     }
-  
-    /* ===== v685: ensure full names visible ===== */
-    .leftStack{ flex: 1 1 auto; min-width: 0; }
-    .glassText{ text-overflow: clip; } /* don't ellipsize */
-    .itemLine{ padding-left: 4px; padding-right: 4px; }
-    .actions{ gap: 8px; }
-    .pill{
-      padding: 9px 11px;
-      font-size: 12px;
-      letter-spacing: .8px;
+
+    .detailWrap{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      width: var(--uiW);
+      max-width: var(--maxW);
+      top: clamp(220px, 30vh, 340px);
+      bottom: max(120px, env(safe-area-inset-bottom));
+      z-index: 2;
+      display:grid;
+      grid-template-rows: 1fr auto;
+      gap: 18px;
+      padding: 0 12px;
+      box-sizing:border-box;
+    }
+    .detailBody{
+      padding: 14px 14px 18px 14px;
+      line-height: 1.55;
+      font-size: 18px;
+      opacity: .92;
     }
 
+    .fatal{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.82);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 20px;
+      z-index: 99999;
+    }
+    .fatal .card{
+      width: min(720px, 92vw);
+      border-radius: 22px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 22px 46px rgba(0,0,0,.55);
+      padding: 16px 16px 18px 16px;
+    }
+    .fatal h2{ margin:0 0 8px 0; font-size: 18px; letter-spacing:1px; text-transform: uppercase; }
+    .fatal p{ margin:0 0 10px 0; opacity:.88; line-height:1.45; }
+    .fatal pre{
+      margin:0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 12px;
+      opacity: .9;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 10px 12px;
+      border-radius: 14px;
+    }
   </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v685</b></div>
+  <div class="buildBadge">Build <b>v688</b> • Firebase</div>
+
+  <div class="dbg" id="dbg">
+    <div class="dbgHead" id="dbgHead">
+      <span>Debug <b id="dbgState">INIT</b></span>
+      <span style="opacity:.7;">tap</span>
+    </div>
+    <div class="dbgBody" id="dbgBody">
+      <div class="kv"><span>URL</span><code id="dbgUrl"></code></div>
+      <div class="kv"><span>Auth</span><code id="dbgAuth"></code></div>
+      <div class="kv"><span>Firestore</span><code id="dbgFs"></code></div>
+      <div class="kv"><span>Last error</span><code id="dbgErr" class="warn">none</code></div>
+      <div style="margin-top:8px; opacity:.8;">If anything fails on iPhone, this box tells us exactly what.</div>
+    </div>
+  </div>
 
   <div id="app">
     <section id="landing" class="screen active">
@@ -322,6 +426,7 @@
           <input id="emailInput" type="email" placeholder="Enter your email" autocomplete="email" inputmode="email"/>
         </div>
         <button id="enterBtn" class="btn3d" type="button">Enter</button>
+        <div class="hint" id="statusLine">Email-only sign-in (no password). Firebase stable build.</div>
       </div>
     </section>
 
@@ -337,70 +442,191 @@
         </div>
       </div>
     </section>
+
+    <section id="detail" class="screen">
+      <div class="detailWrap">
+        <div class="panel">
+          <div class="sectionHead"><div class="title" id="detailTitle">Detail</div></div>
+          <div class="detailBody" id="detailBody">Loading…</div>
+        </div>
+        <div class="panel">
+          <div class="sectionHead"><div class="title">Navigation</div></div>
+          <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="pill" id="backBtn" type="button">Back</button>
+            <button class="pill" id="homeBtn" type="button">Home</button>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
+  <div class="fatal" id="fatal">
+    <div class="card">
+      <h2>Firebase didn’t start</h2>
+      <p>This page uses Firebase modules. If you’re on a web link and still see this, the host is blocking module imports or Firebase is blocked.</p>
+      <pre id="fatalMsg">No details.</pre>
+    </div>
+  </div>
+
+  <script nomodule>
+    // Very old browsers only
+    document.getElementById("fatal").style.display = "flex";
+    document.getElementById("fatalMsg").textContent = "Your browser doesn’t support ES Modules. Use a modern Safari/Chrome.";
+  </script>
+
   <script>
+    // Debug UI toggle
     (function(){
-      const registry = [
-        { email: "stevewmoody@yahoo.com", name: "Steve Moody" },
-        { email: "jmoody7712@gmail.com", name: "Jayce Moody" },
-        { email: "wmoody7931@aol.com", name: "Bill Moody" }
-      ];
-      const games = ["01","Cricket","Killer","Shanghai","Around the World","Half It"];
+      const dbg = document.getElementById("dbg");
+      const head = document.getElementById("dbgHead");
+      head.addEventListener("click", ()=> dbg.classList.toggle("open"));
+      document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
+    })();
+  </script>
 
-      const landing = document.getElementById("landing");
-      const players = document.getElementById("players");
-      const emailInput = document.getElementById("emailInput");
-      const enterBtn = document.getElementById("enterBtn");
-      const gamesList = document.getElementById("gamesList");
-      const playersList = document.getElementById("playersList");
+  <script type="module">
+    // ===== Firebase (stable) =====
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import {
+      getFirestore,
+      doc, setDoc, getDoc,
+      collection, onSnapshot,
+      serverTimestamp, query
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-      function show(which){
-        landing.classList.toggle("active", which==="landing");
-        players.classList.toggle("active", which==="players");
-      }
+    const dbgState = document.getElementById("dbgState");
+    const dbgAuth = document.getElementById("dbgAuth");
+    const dbgFs = document.getElementById("dbgFs");
+    const dbgErr = document.getElementById("dbgErr");
+    function setDbg(state, auth, fs, err){
+      if(state) dbgState.textContent = state;
+      if(auth) dbgAuth.textContent = auth;
+      if(fs) dbgFs.textContent = fs;
+      if(err) dbgErr.textContent = err;
+    }
 
-      // Audio on iOS: must be created/resumed inside a user gesture.
-      let audioCtx = null;
-      function ensureAudio(){
-        if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if(audioCtx.state === "suspended") audioCtx.resume();
-      }
-      function clickSound(){
-        try{
-          ensureAudio();
-          const t = audioCtx.currentTime;
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = "triangle";
-          osc.frequency.setValueAtTime(680, t);
-          osc.frequency.exponentialRampToValueAtTime(260, t + 0.07);
-          gain.gain.setValueAtTime(0.0001, t);
-          gain.gain.exponentialRampToValueAtTime(0.22, t + 0.01);
-          gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
-          osc.connect(gain).connect(audioCtx.destination);
-          osc.start(t);
-          osc.stop(t + 0.10);
-        }catch(e){}
-      }
+    const fatal = document.getElementById("fatal");
+    const fatalMsg = document.getElementById("fatalMsg");
+    function failHard(msg, err){
+      console.error(msg, err);
+      fatal.style.display = "flex";
+      fatalMsg.textContent = msg + (err ? ("\n\n" + (err.stack||err.message||String(err))) : "");
+      setDbg("FAIL", "—", "—", msg);
+    }
 
-      function renderGames(){
-        gamesList.innerHTML = games.map(g => `
-          <div class="itemLine">
-            <div class="leftStack"><span class="glassText">${g}</span></div>
-            <div class="actions">
-              <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
-              <button class="pill" data-action="game_history" data-value="${g}">History</button>
-            </div>
+    // ===== Config (from Steven) =====
+    const firebaseConfig = {
+      apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
+      authDomain: "gamenightdarts-e7601.firebaseapp.com",
+      projectId: "gamenightdarts-e7601",
+      storageBucket: "gamenightdarts-e7601.firebasestorage.app",
+      messagingSenderId: "270045452251",
+      appId: "1:270045452251:web:393956ce18b43316e939fe",
+      measurementId: "G-LQEHF02ZVR"
+    };
+
+    // ===== UI refs =====
+    const landing = document.getElementById("landing");
+    const players = document.getElementById("players");
+    const detail = document.getElementById("detail");
+    const emailInput = document.getElementById("emailInput");
+    const enterBtn = document.getElementById("enterBtn");
+    const gamesList = document.getElementById("gamesList");
+    const playersList = document.getElementById("playersList");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailBody = document.getElementById("detailBody");
+    const backBtn = document.getElementById("backBtn");
+    const homeBtn = document.getElementById("homeBtn");
+    const statusLine = document.getElementById("statusLine");
+
+    function show(which){
+      landing.classList.toggle("active", which==="landing");
+      players.classList.toggle("active", which==="players");
+      detail.classList.toggle("active", which==="detail");
+    }
+    function openDetail(title, html){
+      detailTitle.textContent = title;
+      detailBody.innerHTML = html;
+      show("detail");
+    }
+
+    // ===== Click sound (iPhone safe) =====
+    let audioCtx = null;
+    function ensureAudio(){
+      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state === "suspended") audioCtx.resume();
+    }
+    function clickSound(){
+      try{
+        ensureAudio();
+        const t = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(680, t);
+        osc.frequency.exponentialRampToValueAtTime(260, t + 0.07);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.22, t + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + 0.10);
+      }catch(e){}
+    }
+    document.addEventListener("pointerdown", (e)=>{
+      const b = e.target.closest("button");
+      if(!b) return;
+      clickSound();
+    }, {passive:true});
+
+    function safeEmail(email){
+      return (email||"").toLowerCase().replaceAll(".", "(dot)").replaceAll("@","(at)");
+    }
+
+    const games = ["01","Cricket","Killer","Shanghai","Around the World","Half It"];
+    function renderGames(){
+      gamesList.innerHTML = games.map(g => `
+        <div class="itemLine">
+          <div class="leftStack"><span class="glassText">${g}</span></div>
+          <div class="actions">
+            <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
+            <button class="pill" data-action="game_history" data-value="${g}">History</button>
           </div>
-        `).join("");
-      }
+        </div>
+      `).join("");
+    }
 
-      function renderPlayers(currentEmail){
-        playersList.innerHTML = registry.map(p => `
+    // Seed registry (only merges; harmless)
+    const SEED = [
+      { email: "stevewmoody@yahoo.com", name: "Steve Moody" },
+      { email: "jmoody7712@gmail.com", name: "Jayce Moody" },
+      { email: "wmoody7931@aol.com", name: "Bill Moody" }
+    ];
+    async function seedRegistry(db){
+      for(const u of SEED){
+        await setDoc(doc(db, "registry", safeEmail(u.email)), {
+          email: u.email.toLowerCase(),
+          name: u.name,
+          createdAt: serverTimestamp()
+        }, { merge: true });
+      }
+    }
+
+    let currentEmail = null;
+    let currentUid = null;
+    let presenceTimer = null;
+    let presenceMap = new Map(); // id -> lastActiveMillis
+
+    function renderPlayers(list){
+      playersList.innerHTML = list.map(p => {
+        const id = safeEmail(p.email);
+        const last = presenceMap.get(id) || 0;
+        const online = (Date.now() - last) < 25000;
+        return `
           <div class="itemLine">
             <div class="leftStack">
-              <span class="dot ${p.email===currentEmail ? 'online' : ''}"></span>
+              <span class="dot ${online ? "online" : ""}"></span>
               <span class="glassText">${p.name}</span>
             </div>
             <div class="actions">
@@ -408,39 +634,154 @@
               <button class="pill" data-action="player_history" data-value="${p.email}">History</button>
             </div>
           </div>
-        `).join("");
+        `;
+      }).join("");
+    }
+
+    function watchData(db){
+      // registry
+      onSnapshot(query(collection(db, "registry")), (snap)=>{
+        const people = snap.docs.map(d => d.data()).filter(x=>x && x.email && x.name);
+        people.sort((a,b)=>(a.name||"").localeCompare(b.name||""));
+        renderPlayers(people);
+        setDbg("OK", dbgAuth.textContent || "—", "registry live", dbgErr.textContent || "none");
+      }, (err)=>{
+        setDbg("FAIL", dbgAuth.textContent || "—", "registry fail", err.code || err.message || String(err));
+      });
+
+      // presence
+      onSnapshot(query(collection(db, "presence")), (snap)=>{
+        const m = new Map();
+        snap.docs.forEach(d => {
+          const data = d.data() || {};
+          const ts = data.lastActive;
+          let ms = 0;
+          try{
+            ms = ts && typeof ts.toMillis === "function" ? ts.toMillis() : Date.now();
+          }catch(_e){ ms = Date.now(); }
+          m.set(d.id, ms);
+        });
+        presenceMap = m;
+      }, (err)=>{
+        setDbg("FAIL", dbgAuth.textContent || "—", "presence fail", err.code || err.message || String(err));
+      });
+
+      // dot refresh
+      setInterval(()=>{
+        // re-render quickly by triggering minimal update if list already rendered
+        const rows = playersList.querySelectorAll(".itemLine");
+        if(!rows.length) return;
+        rows.forEach((row)=>{
+          const nameEl = row.querySelector(".glassText");
+          const dot = row.querySelector(".dot");
+          if(!nameEl || !dot) return;
+          const name = nameEl.textContent || "";
+          // find matching registry entry by name is not safe; we keep last state until next snapshot.
+          // presence updates will come through snapshot anyway.
+        });
+      }, 2000);
+    }
+
+    async function startPresence(db){
+      if(!currentEmail || !currentUid) return;
+      const id = safeEmail(currentEmail);
+      const ref = doc(db, "presence", id);
+      async function tick(){
+        await setDoc(ref, {
+          email: currentEmail,
+          uid: currentUid,
+          lastActive: serverTimestamp()
+        }, { merge: true });
+      }
+      await tick();
+      clearInterval(presenceTimer);
+      presenceTimer = setInterval(()=> tick().catch(()=>{}), 5000);
+    }
+
+    async function signInFlow(auth, db, email){
+      currentEmail = (email||"").trim().toLowerCase();
+      if(!currentEmail) return;
+
+      statusLine.textContent = "Signing in…";
+      setDbg("AUTH", "starting…", "—", dbgErr.textContent || "none");
+
+      // 1) Auth (anonymous)
+      const cred = await signInAnonymously(auth);
+      currentUid = cred.user.uid;
+      dbgAuth.textContent = "anon uid " + currentUid.slice(0,6) + "…";
+
+      // 2) Seed registry
+      await seedRegistry(db);
+
+      // 3) Verify registration
+      const regRef = doc(db, "registry", safeEmail(currentEmail));
+      const regSnap = await getDoc(regRef);
+      if(!regSnap.exists()) {
+        statusLine.textContent = "Not registered.";
+        setDbg("FAIL", dbgAuth.textContent, "registry miss", "not registered: " + currentEmail);
+        alert("Email not registered yet.");
+        return;
       }
 
-      function signIn(){
-        const email = (emailInput.value||"").trim().toLowerCase();
-        const match = registry.find(r => r.email.toLowerCase() === email);
-        if(!match) return alert("Email not registered.");
-        renderGames();
-        renderPlayers(match.email);
-        show("players");
+      // 4) Write user record (optional)
+      await setDoc(doc(db, "users", currentUid), {
+        email: currentEmail,
+        lastLogin: serverTimestamp()
+      }, { merge: true });
+
+      // 5) Presence + live listeners
+      await startPresence(db);
+      renderGames();
+      watchData(db);
+      show("players");
+      statusLine.textContent = "Signed in.";
+      setDbg("OK", dbgAuth.textContent, "connected", "none");
+    }
+
+    // Start Firebase and wire handlers
+    try {
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      setDbg("INIT", "ready", "ready", "none");
+
+      onAuthStateChanged(auth, (u)=>{
+        if(u) dbgAuth.textContent = "anon uid " + u.uid.slice(0,6) + "…";
+      });
+
+      function onEnter() {
+        signInFlow(auth, db, emailInput.value).catch((err)=>{
+          const msg = err?.code || err?.message || String(err);
+          statusLine.textContent = "Firebase error.";
+          setDbg("FAIL", dbgAuth.textContent || "—", "fail", msg);
+          alert("Firebase error: " + msg);
+        });
       }
-
-      // Click sound on ANY tap (helps iOS wake audio)
-      document.addEventListener("pointerdown", (e)=>{
-        const b = e.target.closest("button");
-        if(!b) return;
-        clickSound();
-      }, {passive:true});
-
-      enterBtn.addEventListener("click", ()=>{ signIn(); });
-      emailInput.addEventListener("keydown", (e)=>{ if(e.key==="Enter"){ e.preventDefault(); clickSound(); signIn(); } });
+      enterBtn.addEventListener("click", onEnter);
+      emailInput.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter"){ e.preventDefault(); onEnter(); }
+      });
 
       document.addEventListener("click", (e)=>{
         const b = e.target.closest(".pill");
         if(!b) return;
-        const a = b.dataset.action;
-        const v = b.dataset.value;
-        if(a==="enter_game") alert("Enter " + v + " (next: board)");
-        if(a==="game_history") alert("Game History: " + v);
-        if(a==="player_history") alert("Player History");
-        if(a==="player_stats") alert("Player Stats");
+        const action = b.dataset.action;
+        const value = b.dataset.value || "";
+        if(action === "enter_game") openDetail("ENTER " + value, `<div style="font-weight:1000; font-size:34px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: board screen.</div>`);
+        if(action === "game_history") openDetail("GAME HISTORY", `<div style="font-weight:1000; font-size:26px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: pull history from Firestore.</div>`);
+        if(action === "player_stats") openDetail("PLAYER STATS", `<div style="font-weight:1000; font-size:22px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: pull stats from Firestore.</div>`);
+        if(action === "player_history") openDetail("PLAYER HISTORY", `<div style="font-weight:1000; font-size:22px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: pull history from Firestore.</div>`);
       });
-    })();
+
+      backBtn.addEventListener("click", ()=> show("players"));
+      homeBtn.addEventListener("click", ()=> show("landing"));
+
+    } catch (err) {
+      failHard("Firebase init failed (imports loaded but initialize failed).", err);
+    }
+
+    // If the module runs, hide the fatal overlay (in case something else turned it on)
+    document.getElementById("fatal").style.display = "none";
   </script>
 </body>
 </html>
