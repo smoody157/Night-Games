@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v695 (Multiplayer Lobby + Rules)</title>
+  <title>Night Games v696 (Locked Layout Drop)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v695: header row + mini pill */
+    /* v696: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v695: session indicator */
+    /* v696: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -429,10 +429,16 @@
         0 0 16px rgba(90,255,170,.12);
     }
 
-  </style>
+  
+    /* v696 layout lock: micro vertical drop */
+    .appWrap, .screen, .landing, .players {
+        transform: translateY(10px);
+    }
+
+</style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v695</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v696</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -821,7 +827,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v695 Multiplayer
+    // v696 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
