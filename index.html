@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games</title>
+  <title>Night Games v664</title>
   <style>
     :root{
       --bgLanding: url("./IMG_7315.jpeg");
@@ -415,6 +415,7 @@
 
   <script>
     (function(){
+      console.log('Night Games build v664 loaded');
       const $ = (id)=>document.getElementById(id);
 
       const screenLanding = $("screenLanding");
@@ -436,8 +437,7 @@
       }
 
       function validEmail(v){
-        // light validation; you can tighten later
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+        return (v || "").trim().length > 0;
       }
 
       function setError(on){
@@ -488,59 +488,70 @@
       }
 
       function seed(){
-        // Seed players from your note: You, Jace, Brother
-        const defaultPlayers = ["Steven", "Jace", "Brother"];
-        const defaultGames = ["01", "Cricket", "Killer", "Shanghai", "Around the World", "Half It"];
+        // Players: use full names; if you later add storage, we can pull from it
+        const defaultPlayers = ["Steven Moody", "Jace Moody", "Brother Moody"];
 
         playersList.innerHTML = defaultPlayers.map(p => rowHTML(p, "player")).join("");
         gamesList.innerHTML = defaultGames.map(g => rowHTML(g, "game")).join("");
 
-        
-        
-// 01 dynamic selector
-gamesList.addEventListener("click", function(e){
-  const row = e.target.closest(".row");
-  if(!row) return;
-  if(!e.target.closest(".pill")) return;
+        // Players: History / Stats
+        playersList.addEventListener("click", (e)=>{
+          const row = e.target.closest(".row");
+          if(!row) return;
+          const name = (row.querySelector("strong")?.textContent || "").trim();
 
-  const gameName = row.querySelector("strong")?.textContent.trim();
-  if(gameName !== "01") return;
+          const btn = e.target.closest("button.pill");
+          if(btn){
+            const label = (btn.textContent || "").trim().toLowerCase();
+            if(label === "history") alert("Player History: " + name);
+            if(label === "stats") alert("Player Stats: " + name);
+            return;
+          }
 
-  // Clear games list and show selector
-  gamesList.innerHTML = "";
-  const panel = document.createElement("div");
-  panel.className = "selectorPanel";
+          // click row selects active player
+          [...playersList.querySelectorAll(".row")].forEach(r=>r.classList.remove("active"));
+          row.classList.add("active");
+          localStorage.setItem("ng_active_player", name);
+        });
 
-  ["301","501","701"].forEach(score=>{
-    const btn = document.createElement("button");
-    btn.className = "selectorBtn";
-    btn.textContent = score;
-    btn.onclick = function(){
-      alert("Starting 01 - " + score);
-    };
-    panel.appendChild(btn);
-  });
+        // Games: Enter / History
+        function show01Selector(){
+          gamesList.innerHTML = "";
+          const panel = document.createElement("div");
+          panel.className = "selectorPanel";
 
-  gamesList.appendChild(panel);
-});
+          ["301","501","701"].forEach(score=>{
+            const btn = document.createElement("button");
+            btn.className = "selectorBtn";
+            btn.textContent = score;
+            btn.onclick = function(){
+              localStorage.setItem("ng_01_start", score);
+              alert("01 start set to " + score + " (next: board screen)");
+            };
+            panel.appendChild(btn);
+          });
+
+          gamesList.appendChild(panel);
+        }
 
         gamesList.addEventListener("click", (e)=>{
           const row = e.target.closest(".row");
           if(!row) return;
-          if(!e.target.closest(".pill")) return;
-          const gameName = (row.querySelector("strong")?.textContent || "").trim();
-          // TODO: route to game setup/score screen
-          alert("Start " + gameName);
-        });
+          const game = (row.querySelector("strong")?.textContent || "").trim();
+          const btn = e.target.closest("button.pill");
+          if(!btn) return;
+          const label = (btn.textContent || "").trim().toLowerCase();
 
-// click-to-select active player
-        playersList.addEventListener("click", (e)=>{
-          const row = e.target.closest(".row");
-          if(!row) return;
-          // only treat clicks on the pill as "select"
-          if(!e.target.closest(".pill")) return;
-          [...playersList.querySelectorAll(".row")].forEach(r=>r.classList.remove("active"));
-          row.classList.add("active");
+          if(label === "history"){
+            alert("Game History: " + game);
+            return;
+          }
+          if(label === "enter"){
+            if(game === "01") return show01Selector();
+            localStorage.setItem("ng_selected_game", game);
+            alert("Enter " + game + " (next: board screen)");
+            return;
+          }
         });
       }
 
