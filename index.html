@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v723 (Fix db + Sweep)</title>
+  <title>Night Games v724 (Setup scroll fix)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -407,7 +407,7 @@
       border-radius: 14px;
     }
   
-    /* v723: header row + mini pill */
+    /* v724: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -418,7 +418,7 @@
     }
 
   
-    /* v723: session indicator */
+    /* v724: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -436,19 +436,19 @@
     }
 
   
-    /* v723 layout lock: micro vertical drop */
+    /* v724 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v723 layout lock adjustment: additional micro drop */
+    /* v724 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v723 ATW emoji: keep color + one-line */
+    /* v724 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -468,10 +468,25 @@
       filter: drop-shadow(0 0 10px rgba(120,200,255,.18));
     }
 
+
+
+    /* v724: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    #setup .detailWrap{
+      top: clamp(150px, 18vh, 260px);
+      bottom: max(80px, env(safe-area-inset-bottom));
+    }
+    /* Ensure list area can always finger-scroll */
+    #setup .list{
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+    }
+
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v723</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v724</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -761,7 +776,7 @@ function safeEmail(email){
     }
 
     
-    // v723: minimal session + setup → waiting room (does not touch login)
+    // v724: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -873,7 +888,7 @@ function safeEmail(email){
     }
 
     
-    // v723: invites (in-app) — Join / No Thanks
+    // v724: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
@@ -1055,7 +1070,7 @@ function safeEmail(email){
 
 
     function renderPlayers(list){
-      // v723: float online players to top
+      // v724: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -1104,7 +1119,7 @@ function safeEmail(email){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v723: re-render to reorder online players immediately
+        // v724: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -1194,7 +1209,7 @@ function safeEmail(email){
       const db = getFirestore(app);
 
     
-      // v723: expose firebase handles for non-module code (prevents "db is not defined")
+      // v724: expose firebase handles for non-module code (prevents "db is not defined")
       window.ngFirebase = {
         app, auth, db,
         doc, setDoc, getDoc,
@@ -1202,7 +1217,7 @@ function safeEmail(email){
         serverTimestamp, query, where
       };
       window.db = db;
-// v723 Multiplayer
+// v724 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
