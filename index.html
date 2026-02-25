@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v702 (Setup + Buttons Fixed)</title>
+  <title>Night Games v703 (Enter Fixed + Error Banner)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v702: header row + mini pill */
+    /* v703: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v702: session indicator */
+    /* v703: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -430,19 +430,19 @@
     }
 
   
-    /* v702 layout lock: micro vertical drop */
+    /* v703 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v702 layout lock adjustment: additional micro drop */
+    /* v703 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v702 ATW emoji + setup */
+    /* v703 ATW emoji + setup */
     .gameLabelWrap{ display:flex; align-items:center; gap:10px; min-width:0; white-space:nowrap; }
     .emojiGlobe{
       display:inline-block;
@@ -466,7 +466,7 @@
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v702</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v703</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -643,6 +643,19 @@
     const backBtn = document.getElementById("backBtn");
     const homeBtn = document.getElementById("homeBtn");
     const statusLine = document.getElementById("statusLine");
+
+    // v703: show JS errors so we don't guess
+    window.addEventListener('error', (ev)=>{
+      try{
+        const msg = (ev && ev.message) ? ev.message : 'Script error';
+        if(typeof statusLine !== 'undefined' && statusLine){
+          statusLine.textContent = 'ERROR: ' + msg;
+        }else{
+          alert('ERROR: ' + msg);
+        }
+      }catch(e){}
+    });
+
     const lobby = document.getElementById("lobby");
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody = document.getElementById("lobbyBody");
@@ -713,10 +726,17 @@
       "Half It": "Hit the called target each round or score is halved. (House rules)."
     };
 
+    function gameLabel(g){
+      if(g==="ATW"){
+        return '<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>';
+      }
+      return '<span class="glassText">'+g+'</span>';
+    }
+
     function renderGames(){
       gamesList.innerHTML = games.map(g => `
         <div class="itemLine">
-          <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? `<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>` : `<span class="glassText">${g}</span>`}</div></div>
+          <div class="leftStack"><div class="gameLabelWrap">${gameLabel(g)}</div></div>
           <div class="actions">
             <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
             <button class="pill" data-action="game_history" data-value="${g}">History</button>
@@ -880,7 +900,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v702 session + lobby
+    // v703 session + lobby
     const ROOM_ID = "dart-room";
     const MAX_PLAYERS = 8;
     let activeSessionId = null;
@@ -890,7 +910,7 @@
     let sessionStatus = null;
     let sessionMembers = [];
 
-    // v702 setup state
+    // v703 setup state
     let setupState = { game:null, playerCount:1, selectedUids:new Set() };
     let registry = [];
 
@@ -1076,7 +1096,7 @@
     }
 
 
-    // v702 Multiplayer
+    // v703 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
