@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v724 (Setup scroll fix)</title>
+  <title>Night Games v726 (REAL Scroll Wheels + Knurl)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -407,7 +407,7 @@
       border-radius: 14px;
     }
   
-    /* v724: header row + mini pill */
+    /* v726: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -418,7 +418,7 @@
     }
 
   
-    /* v724: session indicator */
+    /* v726: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -436,19 +436,19 @@
     }
 
   
-    /* v724 layout lock: micro vertical drop */
+    /* v726 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v724 layout lock adjustment: additional micro drop */
+    /* v726 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v724 ATW emoji: keep color + one-line */
+    /* v726 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -470,7 +470,7 @@
 
 
 
-    /* v724: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    /* v726: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
     #setup .detailWrap{
       top: clamp(150px, 18vh, 260px);
       bottom: max(80px, env(safe-area-inset-bottom));
@@ -483,10 +483,97 @@
       touch-action: pan-y;
     }
 
+
+
+    /* v726: glass knurled scroll-edge indicator (visual only) */
+    .scrollHint{ position: relative; }
+    .scrollHint::after{
+      content:"";
+      position:absolute;
+      right: 10px;
+      top: 10px;
+      bottom: 10px;
+      width: 10px;               /* thin */
+      border-radius: 10px;
+      pointer-events:none;
+      opacity: .55;
+      background:
+        linear-gradient(180deg,
+          rgba(255,255,255,.18),
+          rgba(255,255,255,.04) 40%,
+          rgba(255,255,255,.10) 70%,
+          rgba(255,255,255,.06)
+        ),
+        repeating-linear-gradient(180deg,
+          rgba(255,255,255,.22) 0px,
+          rgba(255,255,255,.22) 1px,
+          rgba(255,255,255,.02) 3px,
+          rgba(255,255,255,.02) 6px
+        );
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.10),
+        0 0 16px rgba(255,255,255,.10),
+        inset 0 0 10px rgba(255,255,255,.10);
+      filter: blur(.15px);
+    }
+    .scrollHint.isScrolling::after{ opacity: .75; }
+
+    /* v726: wheel (real scroll, no dropdown) */
+    .wheel{
+      position: relative;
+      height: 148px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: y mandatory;
+      padding: 44px 0; /* creates top/bottom space so center line works */
+      touch-action: pan-y;
+    }
+    .wheel .wheelItem{
+      height: 44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight: 1100;
+      font-size: 22px;
+      opacity: .72;
+      scroll-snap-align: center;
+      user-select:none;
+    }
+    .wheel .wheelItem.active{
+      opacity: 1;
+      text-shadow: 0 0 10px rgba(255,255,255,.18);
+    }
+    .wheel::before{
+      content:"";
+      position:absolute;
+      left: 10px;
+      right: 28px; /* leave room for knurl */
+      top: 50%;
+      height: 46px;
+      transform: translateY(-50%);
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      pointer-events:none;
+      box-shadow: inset 0 0 16px rgba(255,255,255,.08);
+    }
+
+    /* v726: ensure setup player list actually scrolls on iOS */
+    #setupPlayersWrap{
+      max-height: 240px !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      touch-action: pan-y;
+    }
+
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v724</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v726</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -520,11 +607,11 @@
             <div class="title">Games</div>
             <div style="display:flex; gap:10px; align-items:center;"><button class="pill pillMini sessionPill" id="sessionBtn" data-action="show_session" type="button" style="display:none;">Session</button></div>
           </div>
-          <div class="list" id="gamesList"></div>
+          <div class="list scrollHint" id="gamesList"></div>
         </div>
         <div class="panel">
           <div class="sectionHead"><div class="title">Players</div></div>
-          <div class="list" id="playersList"></div>
+          <div class="list scrollHint" id="playersList"></div>
         </div>
       </div>
     </section>
@@ -776,7 +863,7 @@ function safeEmail(email){
     }
 
     
-    // v724: minimal session + setup → waiting room (does not touch login)
+    // v726: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -826,12 +913,12 @@ function safeEmail(email){
         <div style="opacity:.78; margin-bottom:14px;">Pick players, then Start.</div>
 
         <div style="margin-bottom:10px; font-weight:900; opacity:.85;">Number of Players</div>
-        <select id="setupCount" class="pill" style="width:100%; padding:12px 14px; border-radius:14px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); color:#fff;">
-          ${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}">${n}</option>`).join("")}
-        </select>
+        <div id="setupCountWheel" class="wheel scrollHint" aria-label="Number of players wheel">
+          ${[1,2,3,4,5,6,7,8].map(n=>`<div class="wheelItem" data-value="${n}">${n}</div>`).join("")}
+        </div>
 
         <div style="margin:14px 0 10px; font-weight:900; opacity:.85;">Which Players</div>
-        <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
+        <div id="setupPlayersWrap" class="scrollHint" style="max-height:240px; overflow:auto; padding-right:4px;">
           ${opts}
         </div>
 
@@ -841,18 +928,56 @@ function safeEmail(email){
         </div>
       `;
 
-      const countSel = document.getElementById("setupCount");
+      const countWheel = document.getElementById("setupCountWheel");
       const startBtn = document.getElementById("setupStartBtn");
       const cancelBtn = document.getElementById("setupCancelBtn");
 
       // defaults
-      countSel.value = "1";
+      let countValue = 1;
       const checks = Array.from(document.querySelectorAll(".pickPlayer"));
+      // v726 wheel wiring (real scroll)
+      function syncWheelActive(){
+        if(!countWheel) return;
+        const rect = countWheel.getBoundingClientRect();
+        const centerY = rect.top + rect.height/2;
+        let best = null;
+        let bestDist = 1e9;
+        countWheel.querySelectorAll('.wheelItem').forEach(it=>{
+          const r = it.getBoundingClientRect();
+          const cy = r.top + r.height/2;
+          const d = Math.abs(cy - centerY);
+          if(d < bestDist){ bestDist = d; best = it; }
+        });
+        if(best){
+          countWheel.querySelectorAll('.wheelItem').forEach(it=>it.classList.toggle('active', it===best));
+          const v = parseInt(best.getAttribute('data-value')||'1',10) || 1;
+          countValue = v;
+        }
+      }
+      // snap to 1 on open
+      requestAnimationFrame(()=>{
+        try{
+          const first = countWheel.querySelector('.wheelItem[data-value="1"]');
+          if(first) first.scrollIntoView({block:'center'});
+        }catch(e){}
+        syncWheelActive();
+      });
+      let wheelT=null;
+      countWheel.addEventListener('scroll', ()=>{
+        countWheel.classList.add('isScrolling');
+        if(wheelT) clearTimeout(wheelT);
+        wheelT = setTimeout(()=>{
+          countWheel.classList.remove('isScrolling');
+          syncWheelActive();
+          enforce();
+        }, 120);
+      }, {passive:true});
+
       // default select current user
       checks.forEach(c=>{ if(c.value === me) c.checked = true; });
 
       function enforce(){
-        const want = parseInt(countSel.value||"1",10) || 1;
+        const want = parseInt(String(countValue||1),10) || 1;
         const picked = checks.filter(c=>c.checked).map(c=>c.value);
         // always keep me selected
         const fixed = _ensureCurrentInList(picked);
@@ -861,7 +986,7 @@ function safeEmail(email){
         checks.forEach(c=>{ c.checked = trimmed.includes(c.value); });
       }
 
-      countSel.addEventListener("change", enforce);
+      /* wheel drives countValue */
       checks.forEach(c=>c.addEventListener("change", enforce));
 
       cancelBtn.addEventListener("click", ()=>{
@@ -870,7 +995,7 @@ function safeEmail(email){
 
       startBtn.addEventListener("click", async ()=>{
         enforce();
-        const want = parseInt(countSel.value||"1",10) || 1;
+        const want = parseInt(String(countValue||1),10) || 1;
         const picked = checks.filter(c=>c.checked).map(c=>c.value);
         const emails = _ensureCurrentInList(picked).slice(0, want);
 
@@ -888,7 +1013,7 @@ function safeEmail(email){
     }
 
     
-    // v724: invites (in-app) — Join / No Thanks
+    // v726: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
@@ -1070,7 +1195,7 @@ function safeEmail(email){
 
 
     function renderPlayers(list){
-      // v724: float online players to top
+      // v726: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -1119,7 +1244,7 @@ function safeEmail(email){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v724: re-render to reorder online players immediately
+        // v726: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -1209,7 +1334,7 @@ function safeEmail(email){
       const db = getFirestore(app);
 
     
-      // v724: expose firebase handles for non-module code (prevents "db is not defined")
+      // v726: expose firebase handles for non-module code (prevents "db is not defined")
       window.ngFirebase = {
         app, auth, db,
         doc, setDoc, getDoc,
@@ -1217,7 +1342,7 @@ function safeEmail(email){
         serverTimestamp, query, where
       };
       window.db = db;
-// v724 Multiplayer
+// v726 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -1368,5 +1493,23 @@ function safeEmail(email){
     // If the module runs, hide the fatal overlay (in case something else turned it on)
     document.getElementById("fatal").style.display = "none";
   </script>
+
+<script id="v726ScrollHint">
+(function(){
+  function wire(){
+    document.querySelectorAll('.scrollHint').forEach(el=>{
+      let t=null;
+      el.addEventListener('scroll', ()=>{
+        el.classList.add('isScrolling');
+        if(t) clearTimeout(t);
+        t = setTimeout(()=> el.classList.remove('isScrolling'), 220);
+      }, {passive:true});
+    });
+  }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire);
+  else wire();
+})();
+</script>
+
 </body>
 </html>
