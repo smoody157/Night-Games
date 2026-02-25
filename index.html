@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v665</title>
+  <title>Night Games v667</title>
   <style>
     :root{
-      --bgLanding: url("./IMG_7315.jpeg");
+      --bgLanding: url("./6D8C9E48-62E1-4BDC-A560-4A7A501867B0.png");
       --bgPlayers: url("./IMG_7315.jpeg");
 
       /* Layout anchors tuned for your art (logo/footer already in the images) */
@@ -57,7 +57,7 @@
       content:"";
       position:absolute;
       inset:0;
-      background-position: top center;
+      background-position: center bottom;
       background-repeat: no-repeat;
       background-size: cover;
       transform: translateZ(0);
@@ -195,7 +195,7 @@
       max-width: var(--maxW);
       /* Place below the baked logo area */
       top: clamp(240px, 33vh, 360px);
-      bottom: clamp(110px, 10vh, 140px); /* keep off baked footer line */
+      bottom: clamp(160px, 14vh, 210px); /* keep off baked footer line */
       display: grid;
       grid-template-rows: 1fr 1fr;
       gap: 18px;
@@ -299,8 +299,8 @@
     }
 
     .pill{
-      border: 1px solid rgba(255,255,255,.25);
-      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.03);
       color: rgba(255,255,255,.95);
       border-radius: 999px;
       padding: 8px 12px;
@@ -309,13 +309,33 @@
       letter-spacing: 1px;
       text-transform: uppercase;
       cursor: pointer;
+      position: relative;
+      overflow: hidden;
       box-shadow:
         inset 0 2px 4px rgba(255,255,255,.55),
-        inset 0 -6px 10px rgba(0,0,0,.55),
-        0 0 14px rgba(0,210,255,.18);
+        inset 0 -8px 14px rgba(0,0,0,.55),
+        0 0 14px rgba(0,210,255,.10);
     }
-
-    .row.active{
+    .pill::before{
+      content:"";
+      position:absolute;
+      inset: 2px 8px auto 8px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,255,255,.55), rgba(255,255,255,0));
+      opacity:.55;
+      pointer-events:none;
+    }
+    /* subtle cyan edge tint, no fog */
+    .pill{ outline: 1px solid rgba(0,210,255,.10); }
+    .pill.secondary{
+      outline: 1px solid rgba(255,175,0,.10);
+      box-shadow:
+        inset 0 2px 4px rgba(255,255,255,.55),
+        inset 0 -8px 14px rgba(0,0,0,.55),
+        0 0 14px rgba(255,175,0,.08);
+    }
+.row.active{
       border-color: rgba(255,175,0,.25);
       box-shadow:
         inset 0 0 0 1px rgba(255,175,0,.14),
@@ -369,9 +389,42 @@
   to{ opacity:1; transform: translateY(0); }
 }
 
+
+    /* ===== Visible Build Badge ===== */
+    .buildBadge{
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 9999;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.92);
+      font-weight: 800;
+      letter-spacing: 1px;
+      font-size: 12px;
+      text-transform: uppercase;
+      pointer-events: none;
+      box-shadow: 0 10px 22px rgba(0,0,0,.55);
+    }
+    .buildBadge b{ color: rgba(0,210,255,.95); }
+    .buildBadge .ok{ color: rgba(140,255,200,.92); }
+    .buildBadge .bad{ color: rgba(255,170,140,.92); }
+
+
+    .actions{ display:flex; gap:10px; align-items:center; flex:0 0 auto; }
+    
 </style>
 </head>
 <body>
+
+  <div class="buildBadge" id="buildBadge">
+    <div>Build <b>v667</b></div>
+    <div>Status: <span id="jsStatus" class="bad">JS not running</span></div>
+    <div>Screen: <span id="screenStatus">landing</span></div>
+  </div>
+
   <div id="app">
 
     <!-- LANDING -->
@@ -415,7 +468,11 @@
 
   <script>
     (function(){
-      console.log('Night Games build v665 loaded');
+      console.log('Night Games build v667 loaded');
+      const jsStatus = document.getElementById('jsStatus');
+      const screenStatus = document.getElementById('screenStatus');
+      if(jsStatus){ jsStatus.textContent = 'JS running'; jsStatus.className='ok'; }
+
       const $ = (id)=>document.getElementById(id);
 
       const screenLanding = $("screenLanding");
@@ -430,6 +487,7 @@
 function show(screen){
         screenLanding.classList.toggle("active", screen === "landing");
         screenPlayers.classList.toggle("active", screen === "players");
+        if(screenStatus) screenStatus.textContent = screen;
       }
 
       function validEmail(v){
@@ -456,27 +514,17 @@ function show(screen){
       }
 
       function rowHTML(label, type){
-        if(type === "player"){
-          return `
-            <div class="row" role="listitem">
-              <strong>${label}</strong>
-              <div style="display:flex;gap:8px;">
-                <button class="pill">History</button>
-                <button class="pill">Stats</button>
-              </div>
-            </div>
-          `;
-        } else {
-          return `
-            <div class="row" role="listitem">
-              <strong>${label}</strong>
-              <div style="display:flex;gap:8px;">
-                <button class="pill">Enter</button>
-                <button class="pill">History</button>
-              </div>
-            </div>
-          `;
-        }
+        const actions = (type === "player")
+          ? ["History","Stats"]
+          : ["Enter","History"];
+        const btns = actions.map(a => `<button class="pill" type="button" data-action="${a.toLowerCase()}">${a}</button>`).join("");
+        return `
+          <div class="row" role="listitem">
+            <strong>${label}</strong>
+            <div class="actions">${btns}</div>
+          </div>
+        `;
+      }
       }</strong>
             <button class="pill" type="button">${rightText}</button>
           </div>
@@ -484,26 +532,64 @@ function show(screen){
       }
 
       function seed(){
-        // Players: use full names; if you later add storage, we can pull from it
         const defaultPlayers = ["Steven Moody", "Jace Moody", "Brother Moody"];
         const defaultGames = ["01", "Cricket", "Killer", "Shanghai", "Around the World", "Half It"];
 
         playersList.innerHTML = defaultPlayers.map(p => rowHTML(p, "player")).join("");
         gamesList.innerHTML = defaultGames.map(g => rowHTML(g, "game")).join("");
 
-        // Players: History / Stats
-        playersList.addEventListener("click", (e)=>{
+        // Players actions
+        playersList.onclick = (e)=>{
           const row = e.target.closest(".row");
           if(!row) return;
           const name = (row.querySelector("strong")?.textContent || "").trim();
-
           const btn = e.target.closest("button.pill");
           if(btn){
-            const label = (btn.textContent || "").trim().toLowerCase();
-            if(label === "history") alert("Player History: " + name);
-            if(label === "stats") alert("Player Stats: " + name);
+            const action = btn.getAttribute("data-action");
+            if(action === "history") alert("Player History: " + name);
+            if(action === "stats") alert("Player Stats: " + name);
             return;
           }
+          [...playersList.querySelectorAll(".row")].forEach(r=>r.classList.remove("active"));
+          row.classList.add("active");
+          localStorage.setItem("ng_active_player", name);
+        };
+
+        // Games actions (Enter/History)
+        function show01Selector(){
+          gamesList.innerHTML = "";
+          const panel = document.createElement("div");
+          panel.className = "selectorPanel";
+          ["301","501","701"].forEach(score=>{
+            const btn = document.createElement("button");
+            btn.className = "selectorBtn";
+            btn.textContent = score;
+            btn.onclick = function(){
+              localStorage.setItem("ng_01_start", score);
+              alert("01 start set to " + score + " (next: board screen)");
+            };
+            panel.appendChild(btn);
+          });
+          gamesList.appendChild(panel);
+        }
+
+        gamesList.onclick = (e)=>{
+          const row = e.target.closest(".row");
+          if(!row) return;
+          const game = (row.querySelector("strong")?.textContent || "").trim();
+          const btn = e.target.closest("button.pill");
+          if(!btn) return;
+          const action = btn.getAttribute("data-action");
+          if(action === "history"){
+            alert("Game History: " + game);
+            return;
+          }
+          if(action === "enter"){
+            if(game === "01") show01Selector();
+            else alert("Enter " + game + " (next: board screen)");
+          }
+        };
+      }
 
           // click row selects active player
           [...playersList.querySelectorAll(".row")].forEach(r=>r.classList.remove("active"));
