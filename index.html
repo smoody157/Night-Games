@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v697 (Locked Layout Drop Adjusted)</title>
+  <title>Night Games v699 (ATW Globe + Header Clean)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v697: header row + mini pill */
+    /* v699: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v697: session indicator */
+    /* v699: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -430,21 +430,42 @@
     }
 
   
-    /* v697 layout lock: micro vertical drop */
+    /* v699 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v697 layout lock adjustment: additional micro drop */
+    /* v699 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
+    }
+
+
+    /* v699 ATW emoji: keep color + one-line */
+    .gameLabelWrap{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      white-space:nowrap;
+    }
+    .emojiGlobe{
+      display:inline-block;
+      font-size: 18px;
+      line-height: 1;
+      color: initial !important;
+      background: none !important;
+      -webkit-text-fill-color: initial !important;
+      -webkit-background-clip: initial !important;
+      background-clip: initial !important;
+      filter: drop-shadow(0 0 10px rgba(120,200,255,.18));
     }
 
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v697</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v699</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -476,7 +497,7 @@
         <div class="panel">
           <div class="sectionHead headerRow">
             <div class="title">Games</div>
-            <div style="display:flex; gap:10px; align-items:center;"><button class="pill pillMini" data-action="show_rules" type="button">Rules</button><button class="pill pillMini sessionPill" id="sessionBtn" data-action="show_session" type="button" style="display:none;">Session</button></div>
+            <div style="display:flex; gap:10px; align-items:center;"><button class="pill pillMini sessionPill" id="sessionBtn" data-action="show_session" type="button" style="display:none;">Session</button></div>
           </div>
           <div class="list" id="gamesList"></div>
         </div>
@@ -662,18 +683,18 @@
       "Cricket": "20–15 + Bull. Close numbers then score. Team/solo rules configurable.",
       "Killer": "Assign a number, get to killer, then knock others out. (We’ll match your house rules).",
       "Shanghai": "Each round targets a number. Shanghai = single+double+triple in same round. (House rules).",
-      "ATW 🌍": "Around the World: hit 1→20 (and bull if you want). Miss = move on / stay (house rules).",
+      "ATW 🌍": "ATW: hit 1→20 (and bull if you want). Miss = move on / stay (house rules).",
       "Half It": "Hit the called target each round or score is halved. (House rules)."
     };
 
     function renderGames(){
       gamesList.innerHTML = games.map(g => `
         <div class="itemLine">
-          <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? '<svg class="iconGlobe" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">  <circle cx="12" cy="12" r="9" stroke="rgba(200,245,255,.92)" stroke-width="1.6"/>  <path d="M3.5 12h17" stroke="rgba(200,245,255,.7)" stroke-width="1.4" stroke-linecap="round"/>  <path d="M12 3c2.6 2.7 4.1 5.9 4.1 9S14.6 18.3 12 21c-2.6-2.7-4.1-5.9-4.1-9S9.4 5.7 12 3Z" stroke="rgba(200,245,255,.7)" stroke-width="1.4" stroke-linejoin="round"/></svg>' : ""}<span class="glassText">${g}</span></div></div>
+          <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? `<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>` : `<span class="glassText">${g}</span>`}</div></div>
           <div class="actions">
             <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
             <button class="pill" data-action="game_history" data-value="${g}">History</button>
-            <button class="pill" data-action="game_rules" data-value="${g}">Rules</button>
+            
           </div>
         </div>
       `).join("");
@@ -833,7 +854,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v697 Multiplayer
+    // v699 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
