@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v743  |  2026-02-25
+  NIGHT GAMES v745  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v743 (Uniform Buttons + Name/Email Picker)</title>
+  <title>Night Games v745 (Uniform Buttons + Name/Email Picker)</title>
   <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -780,7 +780,7 @@ border: 1px solid rgba(255,255,255,.22);
   box-shadow: inset 0 0 18px rgba(120,190,255,.08);
 }
 
-/* v743 ADVANCE BUTTONS + SETUP LAYOUT FIXES */
+/* v745 ADVANCE BUTTONS + SETUP LAYOUT FIXES */
 .pill.btnAdvance, .btnAdvance, .btn-advance{
   border: 1px solid rgba(120,255,170,.35) !important;
   background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
@@ -824,7 +824,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 </head>
 <body>
-<div id="ngVersionBadge">Night Games v743</div>
+<div id="ngVersionBadge">Night Games v745</div>
 
 <!--
 ================================================================================
@@ -984,7 +984,7 @@ border: 1px solid rgba(255,255,255,.22);
 
   <script type="module">
 
-/* v743 VOICE */
+/* v745 VOICE */
 let NG_VOICE_ENABLED = true;
 let NG_VOICE_UNLOCKED = false;
 let NG_BOOT_QUEUED = true;
@@ -1008,1158 +1008,107 @@ function ngGetBestVoice(){
   }
 }
 
-function ngSpeak(text, opts = {}) {
-  try {
-    if (!('speechSynthesis' in window)) return;
-    const synth = window.speechSynthesis;
+/* =========================================================
+   VOICE (Phase 4) — iOS gesture-safe + less robotic
+   - iOS requires a user gesture before speech will play.
+   - We queue speech until the user taps/focuses the email box.
+   ========================================================= */
 
-    // iOS/Safari loads voices asynchronously; this helps populate.
-    const voices = (typeof synth.getVoices === 'function') ? synth.getVoices() : [];
+const NG_VOICE = {
+  enabled: true,
+  unlocked: false,
+  voice: null,
+  queue: [],
 
-    const prefer = [
-      'Samantha','Ava','Victoria','Moira','Karen','Tessa','Allison','Serena','Nicky','Veena'
-    ];
-
-    // Pick a more human-sounding (often female) voice if available.
-    let voice = null;
-    if (opts.voiceName) {
-      voice = voices.find(v => v && v.name === opts.voiceName) || null;
+  init() {
+    if (!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined") {
+      this.enabled = false;
+      return;
     }
-    if (!voice && voices.length) {
-      for (const name of prefer) {
-        const v = voices.find(x => x && x.name && x.name.toLowerCase().includes(name.toLowerCase()));
-        if (v) { voice = v; break; }
-      }
-    }
-    if (!voice && voices.length) voice = voices[0];
+    const pick = () => { try { this.voice = chooseBestVoice(); } catch(e) {} };
+    pick();
+    try { window.speechSynthesis.onvoiceschanged = pick; } catch(e) {}
+  },
 
-    // Some browsers choke if we cancel too aggressively; guard it.
-    if (opts.cancel !== false) {
-      try { synth.cancel(); } catch (e) {}
-    }
+  unlock() {
+    if (!this.enabled) return;
+    this.unlocked = true;
+    this.flush();
+  },
 
-    const u = new SpeechSynthesisUtterance(String(text || ''));
-    if (voice) u.voice = voice;
+  speak(text) {
+    if (!this.enabled || !text) return;
+    if (!this.unlocked) { this.queue.push(text); return; }
 
-    u.rate  = typeof opts.rate  === 'number' ? opts.rate  : 0.98;
-    u.pitch = typeof opts.pitch === 'number' ? opts.pitch : 1.05;
-    u.volume = typeof opts.volume === 'number' ? opts.volume : 1;
+    try { window.speechSynthesis.cancel(); } catch(e) {}
+    const u = new SpeechSynthesisUtterance(String(text));
+    if (this.voice) u.voice = this.voice;
 
-    // Small pauses feel less robotic.
-    u.lang = (voice && voice.lang) ? voice.lang : (opts.lang || 'en-US');
+    // Less robotic: slightly slower + a touch of warmth.
+    u.rate = 0.97;
+    u.pitch = 1.08;
+    u.volume = 1.0;
 
-    synth.speak(u);
-  } catch (e) {
-    // swallow (we surface errors via NG_ERROR_HUD elsewhere)
-  }
-}
+    try { window.speechSynthesis.speak(u); } catch(e) {}
+  },
 
-function ngSpeakSequence(lines){
-  try {
-    if(!NG_VOICE_ENABLED) return;
-    if(!window.speechSynthesis) return;
-    const v = ngGetBestVoice();
+  speakSeq(lines, gapMs = 650) {
+    if (!Array.isArray(lines) || !lines.length) return;
     let i = 0;
-    const next = () => {
-      if(i>=lines.length) return;
-      const u = new SpeechSynthesisUtterance(String(lines[i]));
-      if(v) u.voice = v;
-      u.rate = 0.95;
-      u.pitch = 1.05;
-      u.volume = 1.0;
-      u.onend = () => { i++; setTimeout(next, 120); };
-      u.onerror = () => { i++; setTimeout(next, 120); };
-      window.speechSynthesis.speak(u);
+    const step = () => {
+      if (i >= lines.length) return;
+      this.speak(lines[i++]);
+      setTimeout(step, gapMs);
     };
-    next();
-  } catch(e) {}
-}
+    step();
+  },
 
-// iOS/Safari often blocks speech until a user gesture.
-// We queue the boot line and speak it on the first tap anywhere.
-function ngUnlockVoice(){
-  if(NG_VOICE_UNLOCKED) return;
-  NG_VOICE_UNLOCKED = true;
-  if(NG_BOOT_QUEUED){
-    NG_BOOT_QUEUED = false;
-    ngSpeak(NG_BOOT_LINE);
+  flush() {
+    if (!this.unlocked || !this.queue.length) return;
+    const q = this.queue.slice();
+    this.queue.length = 0;
+    this.speakSeq(q, 700);
   }
-}
-document.addEventListener("pointerdown", ngUnlockVoice, {once:true});
-document.addEventListener("touchstart", ngUnlockVoice, {once:true});
+};
 
+const ngSpeak = (t) => NG_VOICE.speak(t);
+const ngSpeakSequence = (arr) => NG_VOICE.speakSeq(arr, 700);
 
-    // ===== Firebase (stable) =====
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import {
-      getFirestore,
-      doc, setDoc, getDoc,
-      collection, onSnapshot,
-      serverTimestamp, query, where
-    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+window.ngSpeak = ngSpeak;
+window.ngSpeakSequence = ngSpeakSequence;
 
-    const dbgState = document.getElementById("dbgState");
-    const dbgAuth = document.getElementById("dbgAuth");
-    const dbgFs = document.getElementById("dbgFs");
-    const dbgErr = document.getElementById("dbgErr");
-    function setDbg(state, auth, fs, err){
-      if(state) dbgState.textContent = state;
-      if(auth) dbgAuth.textContent = auth;
-      if(fs) dbgFs.textContent = fs;
-      if(err) dbgErr.textContent = err;
-    }
+NG_VOICE.init();
 
-    const fatal = document.getElementById("fatal");
-    const fatalMsg = document.getElementById("fatalMsg");
-    function failHard(msg, err){
-      console.error(msg, err);
-      fatal.style.display = "flex";
-      fatalMsg.textContent = msg + (err ? ("\n\n" + (err.stack||err.message||String(err))) : "");
-      setDbg("FAIL", "—", "—", msg);
-    }
+const NG_WELCOME =
+  "Welcome to America's Six, Bill Moody's Limited Edition Night Games. Shoot well.";
 
-    // ===== Config (from Steven) =====
-    /* =============================================================================
-   SECTION_FIREBASE  [SECTION_FIREBASE]
-   - Firebase configuration lives here.
-============================================================================= */
+document.addEventListener("DOMContentLoaded", () => {
+  // Queue welcome; will play right after the first allowed gesture.
+  NG_VOICE.queue.push(NG_WELCOME);
 
-/*
-================================================================================
-  CONFIG / CONSTANTS  [SECTION_CONFIG]
-================================================================================
-*/
+  const emailEl =
+    document.getElementById("emailInput") ||
+    document.querySelector('input[type="email"]') ||
+    document.querySelector("input");
 
-/*
-================================================================================
-  FIREBASE CONFIG  [SECTION_FIREBASE]
-================================================================================
-*/
-const firebaseConfig = {
-      apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-      authDomain: "gamenightdarts-e7601.firebaseapp.com",
-      projectId: "gamenightdarts-e7601",
-      storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-      messagingSenderId: "270045452251",
-      appId: "1:270045452251:web:393956ce18b43316e939fe",
-      measurementId: "G-LQEHF02ZVR"
-    };
+  const unlockOnce = () => NG_VOICE.unlock();
 
-    // ===== UI refs =====
-    const landing = document.getElementById("landing");
-    const players = document.getElementById("players");
-    const detail = document.getElementById("detail");
-    const emailInput = document.getElementById("emailInput");
-    const enterBtn = document.getElementById("enterBtn");
-    const gamesList = document.getElementById("gamesList");
-    const playersList = document.getElementById("playersList");
-    const detailTitle = document.getElementById("detailTitle");
-    const detailBody = document.getElementById("detailBody");
-    const backBtn = document.getElementById("backBtn");
-    const homeBtn = document.getElementById("homeBtn");
-    const statusLine = document.getElementById("statusLine");
-    const setup = document.getElementById("setup");
-    const waiting = document.getElementById("waiting");
-    const waitingBody = document.getElementById("waitingBody");
-    const waitingBackBtn = document.getElementById("waitingBackBtn");
-    const setupBackBtn = document.getElementById("setupBackBtn");
-    const lobbySetupBtn = document.getElementById("lobbySetupBtn");
-    const lobby = document.getElementById("lobby");
-    const lobbyTitle = document.getElementById("lobbyTitle");
-    const lobbyBody = document.getElementById("lobbyBody");
-    const lobbyBackBtn = document.getElementById("lobbyBackBtn");
-    const lobbyStartBtn = document.getElementById("lobbyStartBtn");
-    const lobbyEndBtn = document.getElementById("lobbyEndBtn");
-    const sessionBtn = document.getElementById("sessionBtn");
+  if (emailEl) {
+    // iOS gesture unlock: focus/tap the email field.
+    emailEl.addEventListener("focus", unlockOnce, { once: true });
+    emailEl.addEventListener("pointerdown", unlockOnce, { once: true });
+    emailEl.addEventListener("touchstart", unlockOnce, { once: true });
 
-    
-/*
-================================================================================
-  ROUTING / NAV  [SECTION_ROUTING]
-================================================================================
-*/
-function show(which){
-      landing.classList.toggle("active", which==="landing");
-      players.classList.toggle("active", which==="players");
-      setup.classList.toggle("active", which==="setup");
-      waiting.classList.toggle("active", which==="waiting");
-      lobby.classList.toggle("active", which==="lobby");
-      detail.classList.toggle("active", which==="detail");
-    }
-    function openDetail(title, html){
-      detailTitle.textContent = title;
-      detailBody.innerHTML = html;
-      show("detail");
-    }
+    // Friendly prompt (plays once unlocked; otherwise queues).
+    emailEl.addEventListener("focus", () => ngSpeak("Enter your email."));
+  } else {
+    // Fallback: first tap anywhere unlocks.
+    window.addEventListener("pointerdown", unlockOnce, { once: true });
+    window.addEventListener("touchstart", unlockOnce, { once: true });
+  }
+});
 
-    // ===== Click sound (iPhone safe) =====
-    let audioCtx = null;
-    function ensureAudio(){
-      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if(audioCtx.state === "suspended") audioCtx.resume();
-    }
-    function clickSound(){
-      try{
-        ensureAudio();
-        const t = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = "triangle";
-        osc.frequency.setValueAtTime(680, t);
-        osc.frequency.exponentialRampToValueAtTime(260, t + 0.07);
-        gain.gain.setValueAtTime(0.0001, t);
-        gain.gain.exponentialRampToValueAtTime(0.22, t + 0.01);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
-        osc.connect(gain).connect(audioCtx.destination);
-        osc.start(t);
-        osc.stop(t + 0.10);
-      }catch(e){}
-    }
-    document.addEventListener("pointerdown", (e)=>{
-      const b = e.target.closest("button");
-      if(!b) return;
-      clickSound();
-    }, {passive:true});
-
-    
-    function isOnline(p){
-      const id = safeEmail(p.email);
-      const last = presenceMap.get(id) || 0;
-      return (p.email || "").toLowerCase() === (currentEmail || "").toLowerCase() || ((Date.now() - last) < 25000);
-    }
-
-function safeEmail(email){
-      return (email||"").toLowerCase().replaceAll(".", "(dot)").replaceAll("@","(at)");
-    }
-
-    const games = ["01","Cricket","Killer","Shanghai","ATW","Half It"];
-
-    const GAME_RULES = {
-      "01": "Classic x01. Start at 301/501/701 etc (we'll add selector next). Lowest to zero wins (bust rules configurable).",
-      "Cricket": "20–15 + Bull. Close numbers then score. Team/solo rules configurable.",
-      "Killer": "Assign a number, get to killer, then knock others out. (We’ll match your house rules).",
-      "Shanghai": "Each round targets a number. Shanghai = single+double+triple in same round. (House rules).",
-      "ATW 🌍": "ATW: hit 1→20 (and bull if you want). Miss = move on / stay (house rules).",
-      "Half It": "Hit the called target each round or score is halved. (House rules)."
-    };
-
-    function renderGames(){
-      gamesList.innerHTML = games.map(g => `
-        <div class="itemLine">
-          <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? `<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>` : `<span class="glassText">${g}</span>`}</div></div>
-          <div class="actions">
-            <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
-            <button class="pill" data-action="game_history" data-value="${g}">History</button>
-            
-          </div>
-        </div>
-      `).join("");
-    }
-
-    
-    // v742: minimal session + setup → waiting room (does not touch login)
-    let activeSessionId = null;
-    let activeSession = null;
-
-    function newSessionId(){
-      return "sess_" + Date.now() + "_" + Math.random().toString(16).slice(2);
-    }
-
-    async function createSessionForGame(game){
-      activeSessionId = newSessionId();
-      activeSession = {
-        id: activeSessionId,
-        game,
-        host: (currentEmail||"").toLowerCase(),
-        createdAt: Date.now(),
-        setup: { count: 1, emails: [(currentEmail||"").toLowerCase()].filter(Boolean) }
-      };
-      try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
-      listenSessionInvites();
-    }
-
-    function _ensureCurrentInList(emails){
-      const me = (currentEmail||"").toLowerCase();
-      const set = new Set((emails||[]).map(x=>(x||"").toLowerCase()).filter(Boolean));
-      if(me) set.add(me);
-      return Array.from(set);
-    }
-
-    
-/*
-================================================================================
-  GAME SETUP  [SECTION_SETUP]
-================================================================================
-*/
-function renderSetupForGame(game){
-      try{ ngSpeak(`You selected ${game}`); }catch(e){}
-      const people = (lastPeople||[]).slice();
-      // ensure current user exists as a selectable option
-      const me = (currentEmail||"").toLowerCase();
-      if(me && !people.some(p => (p.email||"").toLowerCase()===me)){
-        people.unshift({ email: me, name: (me.split("@")[0]||"Me") });
-      }
-
-      const opts = people.map(p=>{
-        const em = (p.email||"").toLowerCase();
-        const nm = p.name || (em.split("@")[0]||em);
-        return `<label class="chip" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); margin:0 0 10px 0;">
-          <input type="checkbox" class="pickPlayer" value="${em}" style="transform:scale(1.1)"/>
-          <span style="flex:1; min-width:0;"><div style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:950; line-height:1.05;">${nm}</div><div style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:.75; font-size:12px; margin-top:2px;">${em}</div></span>
-        </label>`;
-      }).join("");
-
-      setupBody.innerHTML = `
-        <div style="font-weight:1100; font-size:26px; margin-bottom:6px;">${game}</div>
-        <div style="opacity:.78; margin-bottom:14px;">Pick players, then Start.</div>
-
-        <div class="fieldLabel">Number of Players</div>
-        <select id="setupCount" class="glassSelect" class="glassSelect">
-          ${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}">${n}</option>`).join("")}
-        </select>
-
-        <div class="fieldLabel" style="margin-top:14px;">Which Players</div>
-        <button type="button" id="openPlayerPicker" class="glassBtn">
-          <span>Select players</span>
-          <span class="sub" id="playerPickSummary">1 selected</span>
-        </button>
-        <div id="selectedPlayersDisplay" style="margin-top:10px; opacity:.9; font-weight:800; font-size:13px; line-height:1.35;"></div>
-        <div id="setupPlayersWrapHolder" style="display:none;">
-          <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
-            ${opts}
-          </div>
-        </div>
-
-        <!-- v742 player picker modal -->
-        <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
-          <div class="pickerCard">
-            <div class="pickerHead">
-              <div>
-                <div class="t">Pick Players</div>
-                <div class="c" id="pickerCountLabel">1 / 1 selected</div>
-              </div>
-              <button class="pill" id="pickerCloseTop" type="button">Close</button>
-            </div>
-            <div class="pickerBody" id="pickerBody"></div>
-            <div class="pickerFoot">
-              <button class="pill" id="pickerCancel" type="button" style="opacity:.85;">Cancel</button>
-              <button class="pill" id="pickerDone" type="button">Done</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      const countSel = document.getElementById("setupCount");
-      const startBtn = document.getElementById("setupStartBtn");
-      const cancelBtn = document.getElementById("setupBackBtn");
-
-      // v743 show start button in setup controls bar
-      if(startBtn){ startBtn.style.display=""; startBtn.classList.add("btnAdvance"); }
-
-      // defaults
-      countSel.value = "1";
-      // voice + enforce on count change
-      countSel.addEventListener("change", ()=>{ enforce(true); refreshCountLabel(parseInt(countSel.value||"1",10)||1); });
-
-      const checks = Array.from(document.querySelectorAll(".pickPlayer"));
-      // v742 picker wiring (dropdown-style player selector)
-      const openBtn = document.getElementById("openPlayerPicker");
-      const modal = document.getElementById("playerPickerModal");
-      const body = document.getElementById("pickerBody");
-      const doneBtn = document.getElementById("pickerDone");
-      const pickerCancelBtn = document.getElementById("pickerCancel");
-      const closeTop = document.getElementById("pickerCloseTop");
-      const summary = document.getElementById("playerPickSummary");
-      const countLabel = document.getElementById("pickerCountLabel");
-
-      let snapshotSelected = new Set();
-
-      const emailToName = new Map(people.map(p=>[(p.email||"").toLowerCase(), (p.name||((p.email||"").split("@")[0]||""))]));
-      function nameForEmail(em){
-        const k = (em||"").toLowerCase();
-        return emailToName.get(k) || (k.split("@")[0]||k) || k;
-      }
-
-
-      function getSelectedEmails(){
-        return checks.filter(c=>c.checked).map(c=>c.value);
-      }
-      function setSelectedEmails(set){
-        checks.forEach(c=>{ c.checked = set.has(c.value); });
-      }
-      function refreshSummary(){
-        const sel = getSelectedEmails();
-        summary.textContent = `${sel.length} selected`;
-      }
-      function refreshCountLabel(want){
-        const sel = getSelectedEmails().length;
-        countLabel.textContent = `${sel} / ${want} selected`;
-      }
-      function rebuildPicker(want){
-        body.innerHTML = "";
-        const sel = new Set(getSelectedEmails());
-        checks.forEach(c=>{
-          const email = c.value;
-          const label = c.closest("label");
-          const nm = nameForEmail(email);
-          const row = document.createElement("div");
-          row.className = "pickerRow";
-          row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "pill";
-          btn.style.padding = "10px 12px";
-          btn.textContent = sel.has(email) ? "Selected" : "Select";
-          btn.addEventListener("click", ()=>{
-            const now = new Set(getSelectedEmails());
-            const isOn = now.has(email);
-            const nmSpeak = nameForEmail(email);
-            if(isOn){
-              now.delete(email);
-              ngSpeak("Removed " + nmSpeak + ".", { interrupt:true });
-            }else{
-              if(now.size >= want){
-                try{ ping && ping(); }catch(e){}
-                return;
-              }
-              now.add(email);
-              ngSaySelected(nmSpeak);
-            }
-            setSelectedEmails(now);
-            enforce(false);
-            rebuildPicker(want);
-          });
-          row.appendChild(btn);
-          body.appendChild(row);
-        });
-        refreshCountLabel(want);
-        refreshSummary();
-      }
-      function openPicker(want){
-        snapshotSelected = new Set(getSelectedEmails());
-        rebuildPicker(want);
-        modal.style.display = "flex";
-        modal.setAttribute("aria-hidden","false");
-      }
-      function closePicker(){
-        modal.style.display = "none";
-        modal.setAttribute("aria-hidden","true");
-      }
-      if(openBtn){
-        openBtn.addEventListener("click", ()=>{
-          const want = parseInt((document.getElementById("setupCount")?.value)||"1",10) || 1;
-          openPicker(want);
-        });
-      }
-      [pickerCancelBtn, closeTop].forEach(b=> b && b.addEventListener("click", ()=>{
-        setSelectedEmails(snapshotSelected);
-        enforce(false);
-        refreshSummary();
-        closePicker();
-      }));
-      if(doneBtn){
-        doneBtn.addEventListener("click", ()=>{
-          closePicker();
-          refreshSummary();
-        });
-      }
-      if(modal){
-        modal.addEventListener("click", (e)=>{
-          if(e.target === modal){
-            setSelectedEmails(snapshotSelected);
-            enforce(false);
-            refreshSummary();
-            closePicker();
-          }
-        });
-      }
-      refreshSummary();
-
-      // default select current user
-      checks.forEach(c=>{ if(c.value === me) c.checked = true; });
-
-      function enforce(speakCount){
-        const want = parseInt(countSel.value||"1",10) || 1;
-        const picked = checks.filter(c=>c.checked).map(c=>c.value);
-        // always keep me selected
-        const fixed = _ensureCurrentInList(picked);
-        // trim to count
-        const trimmed = fixed.slice(0, want);
-        checks.forEach(c=>{ c.checked = trimmed.includes(c.value); });
-
-        // UI summary + selected list
-        try{
-          const selNames = trimmed.map(nameForEmail);
-          summary.textContent = selNames.length + " selected";
-          const disp = document.getElementById("selectedPlayersDisplay");
-          if(disp){
-            if(selNames.length){
-              disp.innerHTML = "<span style='opacity:.75; font-weight:900;'>Selected:</span> " + selNames.join(", ");
-            }else{
-              disp.innerHTML = "<span style='opacity:.75; font-weight:900;'>Selected:</span> (none)";
-            }
-          }
-          // Start should be available when at least 1 player is selected
-          const ok = selNames.length >= 1;
-          startBtn.disabled = !ok;
-          startBtn.style.opacity = ok ? "1" : ".55";
-        }catch(e){}
-
-        if(speakCount){
-          ngSaySelected(want + " player" + (want===1 ? "" : "s"));
-        }
-      }
-
-      countSel.addEventListener("change", enforce);
-      checks.forEach(c=>c.addEventListener("change", enforce));
-
-      cancelBtn.addEventListener("click", ()=>{
-        show("players");
-      });
-
-      startBtn.addEventListener("click", async ()=>{
-        // v742: Stable start behavior (no broken/partial calls)
-        enforce(false);
-        const want = parseInt(countSel.value||"1",10) || 1;
-        const picked = checks.filter(c=>c.checked).map(c=>c.value);
-        const emails = _ensureCurrentInList(picked).slice(0, want);
-
-        // Voice intro (calm verification → then match intro)
-        try{
-          const names = emails.map(nameForEmail);
-          ngSayMatchIntro(game, names);
-        }catch(e){}
-
-        activeSession = activeSession || {};
-        activeSession.game = game;
-        activeSession.setup = { count: want, emails };
-
-        try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
-
-        // If solo -> go straight in. If multiplayer -> go to waiting room.
-        if(want <= 1){
-          show("waiting");
-          try{ startGameFromSession && startGameFromSession(); }catch(e){}
-        }else{
-          show("waiting");
-          try{ await 
-/*
-================================================================================
-  INVITES  [SECTION_INVITES]
-================================================================================
-*/
-sendInvitesForSession(); }catch(e){}
-          try{ listenSessionInvites && listenSessionInvites(); }catch(e){}
-        }
-      });
-}
-
-    
-    // v742: invites (in-app) — Join / No Thanks
-    let invitesUnsub = null;
-    function listenForInvites(){
-      try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
-      invitesUnsub = null;
-      const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
-      if(!db2 || !currentEmail) return;
-      const me = (currentEmail||"").toLowerCase();
-      const invRef = collection(db2, "invites");
-      const qInv = query(invRef, where("to", "==", me), where("status", "==", "pending"));
-      invitesUnsub = onSnapshot(qInv, (snap)=>{
-        if(!snap || snap.empty) return;
-        // take newest pending invite
-        const docSnap = snap.docs[0];
-        const inv = docSnap.data() || {};
-        const from = inv.from || "Host";
-        const game = inv.game || "Game";
-        const sessionId = inv.sessionId || null;
-        const invited = Array.isArray(inv.invited) ? inv.invited : [];
-        const count = inv.count || invited.length || 1;
-
-        openDetail("INVITE", `
-          <div style="font-weight:1100; font-size:22px; margin-bottom:10px;">${from} invited you</div>
-          <div style="opacity:.82; margin-bottom:14px;">Game: <b>${game}</b></div>
-          <div style="opacity:.78; margin-bottom:14px;">Join this room?</div>
-          <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <button class="pill" id="invJoinBtn" type="button">Join</button>
-            <button class="pill" id="invNoBtn" type="button" style="opacity:.85;">No Thanks</button>
-          </div>
-        `);
-
-        const joinBtn = document.getElementById("invJoinBtn");
-        const noBtn = document.getElementById("invNoBtn");
-
-        if(joinBtn){
-          joinBtn.addEventListener("click", async ()=>{
-            try{
-              await setDoc(doc(db2, "invites", docSnap.id), { status:"accepted", respondedAt: serverTimestamp() }, { merge:true });
-            }catch(e){ alert(e.message||e); }
-            // set local session + go waiting
-            if(sessionId){
-              activeSessionId = sessionId;
-              activeSession = { id: sessionId, game, host: inv.fromEmail||inv.from||"", setup:{ count, emails: invited } };
-              try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
-      listenSessionInvites();
-              listenSessionInvites();
-              
-/*
-================================================================================
-  WAITING ROOM  [SECTION_WAITING]
-================================================================================
-*/
-renderWaitingRoom();
-              show("waiting");
-              closeDetail();
-            }
-          });
-        }
-        if(noBtn){
-          noBtn.addEventListener("click", async ()=>{
-            try{
-              await setDoc(doc(db2, "invites", docSnap.id), { status:"declined", respondedAt: serverTimestamp() }, { merge:true });
-            }catch(e){ alert(e.message||e); }
-            closeDetail();
-          });
-        }
-      });
-    }
-
-    async function sendInvitesForSession(){
-      if(!db || !activeSessionId || !activeSession || !activeSession.setup) return;
-      const hostEmail = (currentEmail||"").toLowerCase();
-      const hostName = (lastPeople||[]).find(p => (p.email||"").toLowerCase()===hostEmail)?.name || (hostEmail.split("@")[0]||"Host");
-      const game = activeSession.game || "Game";
-      const invited = (activeSession.setup.emails||[]).map(x=>(x||"").toLowerCase()).filter(Boolean);
-      const count = activeSession.setup.count || invited.length || 1;
-
-      // create/merge session doc (meta)
-      try{
-        await setDoc(doc(db2, "sessions", activeSessionId), {
-          sessionId: activeSessionId,
-          game,
-          host: hostEmail,
-          hostName,
-          invited,
-          count,
-          createdAt: serverTimestamp()
-        }, { merge:true });
-      }catch(e){ /* non-fatal */ }
-
-      // create invite docs for non-host
-      const others = invited.filter(em => em !== hostEmail);
-      for(const to of others){
-        const invId = `${activeSessionId}_${safeEmail(to)}`;
-        await setDoc(doc(db2, "invites", invId), {
-          sessionId: activeSessionId,
-          game,
-          from: hostName,
-          fromEmail: hostEmail,
-          to,
-          invited,
-          count,
-          status: "pending",
-          createdAt: serverTimestamp()
-        }, { merge:true });
-      }
-    }
-
-    let inviteStatusCache = new Map();
-    let sessionInvitesUnsub = null;
-    function listenSessionInvites(){
-      try{ if(sessionInvitesUnsub) sessionInvitesUnsub(); }catch(e){}
-      sessionInvitesUnsub = null;
-      const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
-      if(!db2 || !activeSessionId) return;
-      const invRef = collection(db2, "invites");
-      const qSess = query(invRef, where("sessionId","==", activeSessionId));
-      sessionInvitesUnsub = onSnapshot(qSess, (snap)=>{
-        inviteStatusCache = new Map();
-        try{
-          snap.docs.forEach(d=>{
-            const v = d.data()||{};
-            if(v.to) inviteStatusCache.set(String(v.to).toLowerCase(), v.status||"pending");
-          });
-        }catch(e){}
-
-        // refresh waiting room statuses when invites change
-        if(waiting && waiting.classList.contains("active")){
-          renderWaitingRoom();
-        }
-      });
-    }
-
-
-    function renderWaitingRoom(){
-      const game = (activeSession && activeSession.game) ? activeSession.game : "Game";
-      const s = (activeSession && activeSession.setup) ? activeSession.setup : {emails:[],count:0};
-      const emails = (s.emails||[]).slice(0, s.count||s.emails.length);
-
-      const rows = emails.map(em=>{
-        const p = (lastPeople||[]).find(x => (x.email||"").toLowerCase()===String(em||"").toLowerCase());
-        const name = p ? (p.name||em.split("@")[0]||em) : (em.split("@")[0]||em);
-        const lower = String(em||"").toLowerCase();
-        const online = (p && isOnline(p)) || (lower===(currentEmail||"").toLowerCase());
-        const status = (lower===(currentEmail||"").toLowerCase()) ? "host" : (inviteStatusCache.get(lower)||"pending");
-        const statusLabel = status==="accepted" ? "joined" : status==="declined" ? "no thanks" : status==="host" ? "host" : "invited";
-        return `<div class="row">
-          <div class="left">
-            <span class="dot ${online ? "online" : ""}"></span>
-            <div class="label">${name}</div>
-          </div>
-          <div class="right" style="opacity:.75;">${statusLabel} • ${online ? "online" : "offline"}</div>
-        </div>`;
-      }).join("");
-
-      waitingBody.innerHTML = `
-        <div style="font-weight:1100; font-size:26px; margin-bottom:6px;">${game}</div>
-        <div style="opacity:.78; margin-bottom:14px;">Waiting for invited players to join…</div>
-        <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
-      `;
-    }
-
-
-    // Seed registry (only merges; harmless)
-    const SEED = [
-      { email: "stevewmoody@yahoo.com", name: "Steve Moody" },
-      { email: "jmoody7712@gmail.com", name: "Jayce Moody" },
-      { email: "wmoody7931@aol.com", name: "Bill Moody" }
-    ];
-    async function seedRegistry(db){
-      for(const u of SEED){
-        await setDoc(doc(db, "registry", safeEmail(u.email)), {
-          email: u.email.toLowerCase(),
-          name: u.name,
-          createdAt: serverTimestamp()
-        }, { merge: true });
-      }
-    }
-
-    let currentEmail = null;
-    let currentUid = null;
-    let presenceTimer = null;
-    let presenceMap = new Map(); // id -> lastActiveMillis
-
-    let lastPeople = []; // cached registry list for re-render on presence updates
-
-
-    /* =============================================================================
-       SECTION_VOICE: CALM FEMALE ANNOUNCER (TTS)  [SECTION_VOICE]
-       - iPhone Safari may require a user gesture before audio can play.
-       - We queue the boot greeting until the first tap if needed.
-       - Fails silently: app must keep working even if speech is blocked.
-    ============================================================================= */
-    const NG_VOICE = {
-      enabled: true,
-      bootLine: "Welcome to America’s Six, Bill Moody’s Limited Edition Night Games. Shoot well.",
-      voiceHint: { lang: "en-US", preferNames: ["Samantha","Ava","Allison","Serena","Victoria","Karen"] },
-      rate: 0.95,
-      pitch: 1.03,
-      volume: 1.0,
-      _voice: null,
-      _bootSpoken: false,
-      _armed: false
-    };
-
-    function ngPickVoice(){
-      try{
-        const list = window.speechSynthesis ? speechSynthesis.getVoices() : [];
-        if(!list || !list.length) return null;
-        const byLang = list.filter(v => (v.lang||"").toLowerCase().startsWith((NG_VOICE.voiceHint.lang||"en").toLowerCase()));
-        const pool = byLang.length ? byLang : list;
-        const prefer = NG_VOICE.voiceHint.preferNames || [];
-        for(const name of prefer){
-          const hit = pool.find(v => (v.name||"").toLowerCase().includes(name.toLowerCase()));
-          if(hit) return hit;
-        }
-        // fallback: pick a non-robotic sounding voice if possible
-        const nonCompact = pool.find(v => !(v.name||"").toLowerCase().includes("compact"));
-        return nonCompact || pool[0] || null;
-      }catch(e){ return null; }
-    }
-
-    /* (deduped) removed duplicate ngSpeak() */
-){
-      try{
-        if(!NG_VOICE.enabled) return;
-        if(!text || !String(text).trim()) return;
-        if(!window.speechSynthesis || !window.SpeechSynthesisUtterance) return;
-
-        // iOS Safari sometimes needs voices primed
-        if(!NG_VOICE._voice) NG_VOICE._voice = ngPickVoice();
-
-        const u = new SpeechSynthesisUtterance(String(text));
-        if(NG_VOICE._voice) u.voice = NG_VOICE._voice;
-        u.rate = NG_VOICE.rate;
-        u.pitch = NG_VOICE.pitch;
-        u.volume = NG_VOICE.volume;
-
-        if(opts.interrupt){
-          try{ speechSynthesis.cancel(); }catch(e){}
-        }
-        speechSynthesis.speak(u);
-      }catch(e){
-        // silent by design
-      }
-    }
-
-    function ngSaySelected(label){
-      // verification mode: calm confirmations
-      ngSpeak("You selected " + label + ".", { interrupt: true });
-    }
-
-    function ngSayMatchIntro(game, names){
-      const cleanGame = String(game||"").trim();
-      const roster = (names||[]).filter(Boolean);
-      if(roster.length <= 1){
-        ngSpeak("Alright Steve… let's play some " + cleanGame + ".", { interrupt: true });
-        return;
-      }
-      if(roster.length === 2){
-        ngSpeak(roster[0] + " versus " + roster[1] + ". Let's play " + cleanGame + ".", { interrupt: true });
-        return;
-      }
-      ngSpeak(cleanGame + ". " + roster.length + " players. " + roster.join(". ") + ". Starting match.", { interrupt: true });
-    }
-
-    // Boot greeting: attempt on load; if blocked, speak on first user gesture.
-    (function armBootVoice(){
-      function tryBoot(){
-        if(NG_VOICE._bootSpoken) return;
-        NG_VOICE._bootSpoken = true;
-        ngSpeak(NG_VOICE.bootLine, { interrupt: true });
-      }
-      if(NG_VOICE._armed) return;
-      NG_VOICE._armed = true;
-
-      // attempt after DOM ready (may be blocked)
-      if(document.readyState === "loading"){
-        document.addEventListener("DOMContentLoaded", ()=>{ setTimeout(tryBoot, 350); });
-      }else{
-        setTimeout(tryBoot, 350);
-      }
-
-      // guaranteed fallback: first user interaction
-      window.addEventListener("pointerdown", ()=>{ 
-        if(!NG_VOICE._bootSpoken){ tryBoot(); }
-      }, { once:true, passive:true });
-    })();
-
-
-    
-/*
-================================================================================
-  PLAYERS  [SECTION_PLAYERS]
-================================================================================
-*/
-function renderPlayers(list){
-      // v742: float online players to top
-      const sorted = (list||[]).slice().sort((a,b)=>{
-        const ao = isOnline(a), bo = isOnline(b);
-        if(ao !== bo) return ao ? -1 : 1;
-        return (a.name||"").localeCompare(b.name||"");
-      });
-      playersList.innerHTML = sorted.map(p => {
-        const id = safeEmail(p.email);
-        const online = isOnline(p);
-        return `
-          <div class="itemLine">
-            <div class="leftStack">
-              <span class="dot ${online ? "online" : ""}"></span>
-              <span class="glassText">${p.name}</span>
-            </div>
-            <div class="actions">
-              <button class="pill" data-action="player_stats" data-value="${p.email}">Stats</button>
-              <button class="pill" data-action="player_history" data-value="${p.email}">History</button>
-            </div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    function watchData(db){
-      // registry
-      onSnapshot(query(collection(db, "registry")), (snap)=>{
-        const people = snap.docs.map(d => d.data()).filter(x=>x && x.email && x.name);
-        people.sort((a,b)=>(a.name||"").localeCompare(b.name||""));
-        lastPeople = people;
-        renderPlayers(people);
-        setDbg("OK", dbgAuth.textContent || "—", "registry live", dbgErr.textContent || "none");
-      }, (err)=>{
-        setDbg("FAIL", dbgAuth.textContent || "—", "registry fail", err.code || err.message || String(err));
-      });
-
-      // presence
-      onSnapshot(query(collection(db, "presence")), (snap)=>{
-        const m = new Map();
-        snap.docs.forEach(d => {
-          const data = d.data() || {};
-          const ts = data.lastActive;
-          let ms = 0;
-          try{
-            ms = ts && typeof ts.toMillis === "function" ? ts.toMillis() : Date.now();
-          }catch(_e){ ms = Date.now(); }
-          m.set(d.id, ms);
-        });
-        presenceMap = m;
-        // v742: re-render to reorder online players immediately
-        if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
-          renderPlayers(lastPeople);
-        }
-}, (err)=>{
-        setDbg("FAIL", dbgAuth.textContent || "—", "presence fail", err.code || err.message || String(err));
-      });
-
-      // dot refresh
-      setInterval(()=>{
-        // re-render quickly by triggering minimal update if list already rendered
-        const rows = playersList.querySelectorAll(".itemLine");
-        if(!rows.length) return;
-        rows.forEach((row)=>{
-          const nameEl = row.querySelector(".glassText");
-          const dot = row.querySelector(".dot");
-          if(!nameEl || !dot) return;
-          const name = nameEl.textContent || "";
-          // find matching registry entry by name is not safe; we keep last state until next snapshot.
-          // presence updates will come through snapshot anyway.
-        });
-      }, 2000);
-    }
-
-    async function startPresence(db){
-      if(!currentEmail || !currentUid) return;
-      const id = safeEmail(currentEmail);
-      const ref = doc(db, "presence", id);
-      async function tick(){
-        await setDoc(ref, {
-          email: currentEmail,
-          uid: currentUid,
-          lastActive: serverTimestamp()
-        }, { merge: true });
-        // optimistic: show online immediately
-        try { presenceMap.set(id, Date.now()); if(lastPeople && lastPeople.length) renderPlayers(lastPeople); } catch(e) {}
-      }
-      await tick();
-      clearInterval(presenceTimer);
-      presenceTimer = setInterval(()=> tick().catch(()=>{}), 5000);
-    }
-
-    async function signInFlow(auth, db, email){
-      currentEmail = (email||"").trim().toLowerCase();
-      if(!currentEmail) return;
-
-      statusLine.textContent = "Signing in…";
-      setDbg("AUTH", "starting…", "—", dbgErr.textContent || "none");
-
-      // 1) Auth (anonymous)
-      const cred = await signInAnonymously(auth);
-      currentUid = cred.user.uid;
-      dbgAuth.textContent = "anon uid " + currentUid.slice(0,6) + "…";
-
-      // 2) Seed registry
-      await seedRegistry(db);
-
-      // 3) Verify registration
-      const regRef = doc(db, "registry", safeEmail(currentEmail));
-      const regSnap = await getDoc(regRef);
-      if(!regSnap.exists()) {
-        statusLine.textContent = "Not registered.";
-        setDbg("FAIL", dbgAuth.textContent, "registry miss", "not registered: " + currentEmail);
-        alert("Email not registered yet.");
-        return;
-      }
-
-      // 4) Write user record (optional)
-      await setDoc(doc(db, "users", currentUid), {
-        email: currentEmail,
-        lastLogin: serverTimestamp()
-      }, { merge: true });
-
-      // 5) Presence + live listeners
-      try { presenceMap.set(safeEmail(currentEmail), Date.now()); } catch(e) {}
-      await startPresence(db);
-      renderGames();
-      watchData(db);
-      show("players");
-      statusLine.textContent = "Signed in.";
-      setDbg("OK", dbgAuth.textContent, "connected", "none");
-    }
-
-    // Start Firebase and wire handlers
-    try {
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-
-    
-      // v742: expose firebase handles for non-module code (prevents "db is not defined")
-      window.ngFirebase = {
-        app, auth, db,
-        doc, setDoc, getDoc,
-        collection, onSnapshot,
-        serverTimestamp, query, where
-      };
-      window.db = db;
-// v742 Multiplayer
-    const ROOM_ID = "dart-room";
-    let activeSessionId = null;
-    let activeGame = null;
-    let activeHost = null;
-
-      setDbg("INIT", "ready", "ready", "none");
-
-      onAuthStateChanged(auth, (u)=>{
-        if(u) dbgAuth.textContent = "anon uid " + u.uid.slice(0,6) + "…";
-      });
-
-      
-/*
-================================================================================
-  ENTER / SIGN-IN ROUTING  [SECTION_ROUTING]
-================================================================================
-*/
-function onEnter() {
-        signInFlow(auth, db, emailInput.value).catch((err)=>{
-          const msg = err?.code || err?.message || String(err);
-          statusLine.textContent = "Firebase error.";
-          setDbg("FAIL", dbgAuth.textContent || "—", "fail", msg);
-          alert("Firebase error: " + msg);
-        });
-      }
-      enterBtn.addEventListener("click", onEnter);
-      emailInput.addEventListener("keydown", (e)=>{
-        if(e.key === "Enter"){ e.preventDefault(); onEnter(); }
-      });
-
-          document.addEventListener("click", async (e)=>{
-      const b = e.target.closest(".pill");
-      if(!b) return;
-
-      const action = b.dataset.action;
-      const value = b.dataset.value || "";
-
-      if(action === "game_rules"){
-        const txt = (GAME_RULES[value] || "Rules coming soon.");
-        openDetail("RULES • " + value, `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${value}</div>
-          <div style="opacity:.82; font-size:14px; line-height:1.55;">${txt}</div>
-        `);
-        return;
-      }
-
-
-      // Global rules list
-      if(action === "show_rules"){
-        const list = Object.entries(GAME_RULES).map(([k,v]) => `
-          <div style="margin: 0 0 14px 0;">
-            <div style="font-weight:1000; font-size:20px; margin-bottom:4px;">${k}</div>
-            <div style="opacity:.78; font-size:14px; line-height:1.45;">${v}</div>
-          </div>
-        `).join("");
-        openDetail("RULES", `<div>${list}</div>`);
-        return;
-      }
-
-      // Per-game rules
-      if(action === "game_rules"){
-        const txt = (GAME_RULES[value] || "Rules coming soon.");
-        openDetail("RULES • " + value, `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${value}</div>
-          <div style="opacity:.82; font-size:14px; line-height:1.55;">${txt}</div>
-        `);
-        return;
-      }
-
-      // Enter game (multiplayer session)
-      if(action === "enter_game"){
-        try{
-          ngSaySelected(value);
-          await createSessionForGame(value);
-          renderSetupForGame(value);
-          show("setup");
-        }catch(e){
-          alert("Session error: " + (e.message||e));
-        }
-        return;
-      }
-
-      if(action === "game_history"){
-        openDetail("GAME HISTORY", `
-          <div style="font-weight:1000; font-size:26px; margin-bottom:6px;">${value}</div>
-          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
-        `);
-        return;
-      }
-
-      if(action === "player_stats"){
-        openDetail("PLAYER STATS", `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${value}</div>
-          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
-        `);
-        return;
-      }
-
-      if(action === "player_history"){
-        openDetail("PLAYER HISTORY", `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${value}</div>
-          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
-        `);
-        return;
-      }
-
-      if(action === "show_session"){
-        if(!activeSessionId){
-          openDetail("SESSION", `<div style="opacity:.78;">No active session.</div>`);
-          return;
-        }
-        openDetail("SESSION • LIVE", `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${activeGame || "Game"}</div>
-          <div style="opacity:.82; font-size:14px; line-height:1.55;">
-            Room: <b>${ROOM_ID}</b><br/>
-            Session: <b>${activeSessionId}</b><br/>
-            Host: <b>${activeHost || "—"}</b>
-          </div>
-          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="pill" data-action="join_session" type="button">Join</button>
-            <button class="pill" data-action="end_session" type="button">End</button>
-          </div>
-        `);
-        return;
-      }
-
-      if(action === "join_session"){
-        try{ await joinActiveSessionIfAny(); }catch(e){}
-        openDetail("JOINED", `<div style="opacity:.85;">Joined session.</div>`);
-        return;
-      }
-
-      if(action === "end_session"){
-        try{ await endSession(); }catch(e){}
-        openDetail("SESSION ENDED", `<div style="opacity:.85;">Session ended.</div>`);
-        return;
-      }
-    });
-
-      backBtn.addEventListener("click", ()=> show("players"));
-      homeBtn.addEventListener("click", ()=> show("landing"));
-
-      lobbyBackBtn.addEventListener("click", ()=> show("players"));
-      lobbySetupBtn.addEventListener("click", ()=> show("setup"));
-      setupBackBtn.addEventListener("click", ()=> show("players"));
-      waitingBackBtn.addEventListener("click", ()=> show("setup"));
-      lobbyStartBtn.addEventListener("click", ()=> startSession().catch(e=>alert(e.message||e)));
-      lobbyEndBtn.addEventListener("click", ()=> endSession().catch(e=>alert(e.message||e)));
-
-
-    } catch (err) {
-      failHard("Firebase init failed (imports loaded but initialize failed).", err);
-    }
-
-    // If the module runs, hide the fatal overlay (in case something else turned it on)
-    document.getElementById("fatal").style.display = "none";
-  
-// v743 attempt boot voice on load (may be blocked until first tap)
-try{ if(!NG_VOICE_UNLOCKED){ /* queued */ } else { ngSpeak(NG_BOOT_LINE); } }catch(e){}
+// END VOICE
 </script>
 
 <!-- =======================
