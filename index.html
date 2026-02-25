@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v688 (Firebase Stable)</title>
+  <title>Night Games v689 (Online Immediate)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -403,7 +403,7 @@
   </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v688</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v689</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -618,11 +618,14 @@
     let presenceTimer = null;
     let presenceMap = new Map(); // id -> lastActiveMillis
 
+    let lastPeople = []; // cached registry list for re-render on presence updates
+
+
     function renderPlayers(list){
       playersList.innerHTML = list.map(p => {
         const id = safeEmail(p.email);
         const last = presenceMap.get(id) || 0;
-        const online = (Date.now() - last) < 25000;
+        const online = (p.email || "").toLowerCase() === (currentEmail || "").toLowerCase() || ((Date.now() - last) < 25000);
         return `
           <div class="itemLine">
             <div class="leftStack">
@@ -643,6 +646,7 @@
       onSnapshot(query(collection(db, "registry")), (snap)=>{
         const people = snap.docs.map(d => d.data()).filter(x=>x && x.email && x.name);
         people.sort((a,b)=>(a.name||"").localeCompare(b.name||""));
+        lastPeople = people;
         renderPlayers(people);
         setDbg("OK", dbgAuth.textContent || "—", "registry live", dbgErr.textContent || "none");
       }, (err)=>{
@@ -692,6 +696,8 @@
           uid: currentUid,
           lastActive: serverTimestamp()
         }, { merge: true });
+        // optimistic: show online immediately
+        try { presenceMap.set(id, Date.now()); if(lastPeople && lastPeople.length) renderPlayers(lastPeople); } catch(e) {}
       }
       await tick();
       clearInterval(presenceTimer);
@@ -730,6 +736,7 @@
       }, { merge: true });
 
       // 5) Presence + live listeners
+      try { presenceMap.set(safeEmail(currentEmail), Date.now()); } catch(e) {}
       await startPresence(db);
       renderGames();
       watchData(db);
