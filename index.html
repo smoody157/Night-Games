@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v664</title>
+  <title>Night Games v665</title>
   <style>
     :root{
       --bgLanding: url("./IMG_7315.jpeg");
@@ -415,7 +415,7 @@
 
   <script>
     (function(){
-      console.log('Night Games build v664 loaded');
+      console.log('Night Games build v665 loaded');
       const $ = (id)=>document.getElementById(id);
 
       const screenLanding = $("screenLanding");
@@ -427,11 +427,7 @@
 
       const gamesList = $("gamesList");
       const playersList = $("playersList");
-
-      const addGameBtn = $("addGameBtn");
-      const addPlayerBtn = $("addPlayerBtn");
-
-      function show(screen){
+function show(screen){
         screenLanding.classList.toggle("active", screen === "landing");
         screenPlayers.classList.toggle("active", screen === "players");
       }
@@ -490,6 +486,7 @@
       function seed(){
         // Players: use full names; if you later add storage, we can pull from it
         const defaultPlayers = ["Steven Moody", "Jace Moody", "Brother Moody"];
+        const defaultGames = ["01", "Cricket", "Killer", "Shanghai", "Around the World", "Half It"];
 
         playersList.innerHTML = defaultPlayers.map(p => rowHTML(p, "player")).join("");
         gamesList.innerHTML = defaultGames.map(g => rowHTML(g, "game")).join("");
