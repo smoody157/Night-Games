@@ -184,6 +184,188 @@ button{
   z-index: 9998;
   pointer-events:none;
 }
+
+
+/* ===============================
+   TRUE FLOATING UI OVERRIDES
+   =============================== */
+
+:root{
+  --bgLanding:url("IMG_7315.jpeg");
+  --bgHub:url("IMG_7315.jpeg");
+  --panelGlass: rgba(10,18,40,.14);
+  --edgeBlue: rgba(40,170,255,.70);
+  --edgeGold: rgba(255,200,0,.78);
+  --text: #eaf2ff;
+  --muted:#a9b7d6;
+}
+
+/* Scene-specific backgrounds */
+body{
+  background:
+    radial-gradient(120% 90% at 18% 12%, rgba(0,210,255,.14), rgba(0,0,0,0) 55%),
+    radial-gradient(110% 80% at 82% 14%, rgba(255,175,0,.12), rgba(0,0,0,0) 58%),
+    radial-gradient(120% 120% at 50% 96%, rgba(160,120,255,.09), rgba(0,0,0,0) 62%),
+    #000 !important;
+}
+.scene{
+  background: transparent !important;
+}
+#landing.active{
+  background-image: var(--bgLanding) !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+#players.active{
+  background-image: var(--bgHub) !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
+/* Kill any leftover frames */
+.wrap,#app,.card,.panel,.playersWrap{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Floating headline */
+h1{
+  letter-spacing:.06em;
+  text-shadow: 0 0 26px rgba(0,210,255,.22), 0 0 16px rgba(255,175,0,.12);
+}
+
+/* 3D input + button */
+#email{
+  width:min(560px,86vw);
+  padding: 18px 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(120,210,255,.60) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.22),
+    inset 0 -10px 18px rgba(0,0,0,.30),
+    0 22px 46px rgba(0,0,0,.62),
+    0 0 28px rgba(0,210,255,.16) !important;
+  color: var(--text) !important;
+}
+#email::placeholder{ color: rgba(200,220,255,.55) !important; }
+
+#enterBtn{
+  width:min(560px,86vw);
+  padding: 18px 22px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,210,80,.62) !important;
+  background:
+    radial-gradient(120% 120% at 50% 20%, rgba(255,255,255,.28), rgba(0,0,0,0) 52%),
+    linear-gradient(180deg, rgba(255,210,80,.22), rgba(255,140,0,.12)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.20),
+    inset 0 -14px 22px rgba(0,0,0,.36),
+    0 24px 52px rgba(0,0,0,.64),
+    0 0 34px rgba(255,175,0,.18) !important;
+  color: rgba(255,235,190,.98) !important;
+  letter-spacing:.06em;
+  font-weight:800;
+  cursor:pointer;
+}
+#enterBtn:hover{ transform: translateY(-2px); }
+#enterBtn:active{ transform: translateY(1px); }
+
+/* HUB layout */
+.hub{
+  width:min(760px, 92vw);
+  margin: 0 auto;
+  padding: 16px 0 28px;
+  display:flex;
+  flex-direction:column;
+  gap: 18px;
+}
+.hubTop,.hubBottom{
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -18px 30px rgba(0,0,0,.36),
+    0 22px 46px rgba(0,0,0,.62);
+  backdrop-filter: blur(8px);
+  overflow:hidden;
+}
+.hubHdr{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 14px 16px 10px;
+}
+.hubTitle{
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing:.08em;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(0,210,255,.18);
+}
+.scrollBox{
+  max-height: 210px;
+  overflow:auto;
+  padding: 10px 12px 14px;
+}
+@media (max-height: 740px){
+  .scrollBox{ max-height: 180px; }
+}
+
+/* Styled scrollbars (WebKit + Firefox) */
+.scrollBox{ scrollbar-width: thin; scrollbar-color: rgba(0,210,255,.35) rgba(0,0,0,.15); }
+.scrollBox::-webkit-scrollbar{ width: 10px; }
+.scrollBox::-webkit-scrollbar-track{ background: rgba(0,0,0,.18); border-radius: 999px; }
+.scrollBox::-webkit-scrollbar-thumb{ background: rgba(0,210,255,.28); border-radius: 999px; }
+.scrollBox::-webkit-scrollbar-thumb:hover{ background: rgba(0,210,255,.40); }
+
+/* Floating row items */
+.row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 14px 14px;
+  border-radius: 18px;
+  margin: 10px 0;
+  background: linear-gradient(180deg, rgba(10,75,255,.10), rgba(0,0,0,.10));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -10px 18px rgba(0,0,0,.28),
+    0 14px 28px rgba(0,0,0,.54);
+}
+.rowTitle{
+  font-weight: 800;
+  letter-spacing:.02em;
+}
+.pill{
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,210,255,.38);
+  color: rgba(210,235,255,.90);
+  box-shadow: 0 0 16px rgba(0,210,255,.10);
+}
+
+/* Mini buttons */
+.miniBtn{
+  border-radius: 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(0,210,255,.48);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+  color: rgba(235,245,255,.92);
+  box-shadow: 0 14px 26px rgba(0,0,0,.55), 0 0 18px rgba(0,210,255,.10);
+  cursor:pointer;
+}
+.miniBtn.gold{
+  border-color: rgba(255,210,80,.60);
+  box-shadow: 0 14px 26px rgba(0,0,0,.55), 0 0 20px rgba(255,175,0,.12);
+}
+.miniBtn:hover{ transform: translateY(-1px); }
+.miniBtn:active{ transform: translateY(1px); }
+
 </style>
 </head>
 
@@ -206,9 +388,22 @@ button{
 
 <!-- PLAYERS PAGE -->
 <section id="players" class="scene">
-  <div class="playersWrap">
-    <div class="playersTitle">Players</div>
-    <div id="playerList"></div>
+  <div class="hub">
+    <div class="hubTop">
+      <div class="hubHdr">
+        <div class="hubTitle">Games</div>
+        <button class="miniBtn" id="addGameBtn" type="button">+ Add</button>
+      </div>
+      <div class="scrollBox" id="gameList" aria-label="Games list"></div>
+    </div>
+
+    <div class="hubBottom">
+      <div class="hubHdr">
+        <div class="hubTitle">Players</div>
+        <button class="miniBtn gold" id="addPlayerBtn" type="button">+ Add</button>
+      </div>
+      <div class="scrollBox" id="playerList" aria-label="Players list"></div>
+    </div>
   </div>
 </section>
 
@@ -217,46 +412,152 @@ button{
 <script>
 const landing = document.getElementById("landing");
 const players = document.getElementById("players");
+
 const emailInput = document.getElementById("email");
 const enterBtn = document.getElementById("enterBtn");
-const playerList = document.getElementById("playerList");
 
-let sessionPlayers = [];
+const playerList = document.getElementById("playerList");
+const gameList = document.getElementById("gameList");
+const addPlayerBtn = document.getElementById("addPlayerBtn");
+const addGameBtn = document.getElementById("addGameBtn");
+
+const LS_EMAIL = "ng_email";
+const LS_PLAYERS = "ng_players";
+const LS_GAMES = "ng_games";
 
 function showPlayers(){
   landing.classList.remove("active");
   players.classList.add("active");
+  // keep footer visible
+  window.scrollTo(0,0);
 }
 
-function addPlayer(email){
-  if(!email) return;
-  if(sessionPlayers.includes(email)) return;
-  if(sessionPlayers.length >= 8) return;
-
-  sessionPlayers.push(email);
-  renderPlayers();
+function isEmailLike(v){
+  // light validation only
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 }
+
+function loadList(key, fallback){
+  try{
+    const v = JSON.parse(localStorage.getItem(key) || "null");
+    return Array.isArray(v) ? v : fallback;
+  }catch{
+    return fallback;
+  }
+}
+
+function saveList(key, arr){
+  localStorage.setItem(key, JSON.stringify(arr));
+}
+
+let sessionPlayers = loadList(LS_PLAYERS, ["Steven","Jace","Brother"]);
+let sessionGames = loadList(LS_GAMES, ["Cricket","301","Around the Clock"]);
 
 function renderPlayers(){
   playerList.innerHTML = "";
-  sessionPlayers.forEach(e=>{
-    const div=document.createElement("div");
-    div.className="player";
-    div.textContent=e;
-    playerList.appendChild(div);
+  sessionPlayers.forEach((name, idx)=>{
+    const row = document.createElement("div");
+    row.className = "row";
+    const left = document.createElement("div");
+    left.className = "rowTitle";
+    left.textContent = name;
+
+    const right = document.createElement("div");
+    right.className = "pill";
+    right.textContent = idx===0 ? "Active" : "Tap to set";
+
+    row.appendChild(left);
+    row.appendChild(right);
+
+    row.addEventListener("click", ()=>{
+      // set active
+      if(idx===0) return;
+      const picked = sessionPlayers.splice(idx,1)[0];
+      sessionPlayers.unshift(picked);
+      saveList(LS_PLAYERS, sessionPlayers);
+      renderPlayers();
+    });
+
+    playerList.appendChild(row);
   });
+}
+
+function renderGames(){
+  gameList.innerHTML = "";
+  sessionGames.forEach((g)=>{
+    const row = document.createElement("div");
+    row.className = "row";
+    const left = document.createElement("div");
+    left.className = "rowTitle";
+    left.textContent = g;
+
+    const right = document.createElement("div");
+    right.className = "pill";
+    right.textContent = "Open";
+
+    row.appendChild(left);
+    row.appendChild(right);
+    gameList.appendChild(row);
+  });
+}
+
+function addPlayer(name){
+  const n = (name || "").trim();
+  if(!n) return;
+  if(sessionPlayers.includes(n)) return;
+  sessionPlayers.push(n);
+  saveList(LS_PLAYERS, sessionPlayers);
+  renderPlayers();
+}
+
+function addGame(name){
+  const n = (name || "").trim();
+  if(!n) return;
+  if(sessionGames.includes(n)) return;
+  sessionGames.push(n);
+  saveList(LS_GAMES, sessionGames);
+  renderGames();
 }
 
 enterBtn.onclick = ()=>{
   const email = emailInput.value.trim();
   if(!email) return;
-  addPlayer(email);
+  if(!isEmailLike(email)){
+    emailInput.focus();
+    emailInput.select?.();
+    return;
+  }
+  localStorage.setItem(LS_EMAIL, email);
+  // If email isn't already in players, add it at the end (optional)
+  if(!sessionPlayers.includes(email)){
+    sessionPlayers.push(email);
+    saveList(LS_PLAYERS, sessionPlayers);
+  }
+  renderGames();
+  renderPlayers();
   showPlayers();
 };
 
-emailInput.addEventListener("keydown",e=>{
+emailInput.addEventListener("keydown",(e)=>{
   if(e.key==="Enter") enterBtn.onclick();
 });
+
+addPlayerBtn?.addEventListener("click", ()=>{
+  const name = prompt("Add player name:");
+  addPlayer(name);
+});
+addGameBtn?.addEventListener("click", ()=>{
+  const name = prompt("Add game name:");
+  addGame(name);
+});
+
+// initial render if user already entered before
+renderGames();
+renderPlayers();
+if(localStorage.getItem(LS_EMAIL)){
+  // If you want to auto-skip landing after first sign-in, uncomment:
+  // showPlayers();
+}
 </script>
 
 </body>
