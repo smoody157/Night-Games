@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v720 (Online Sort + Brighter Dot)</title>
+  <title>Night Games v721 (Setup → Waiting Room)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -407,7 +407,7 @@
       border-radius: 14px;
     }
   
-    /* v720: header row + mini pill */
+    /* v721: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -418,7 +418,7 @@
     }
 
   
-    /* v720: session indicator */
+    /* v721: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -436,19 +436,19 @@
     }
 
   
-    /* v720 layout lock: micro vertical drop */
+    /* v721 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v720 layout lock adjustment: additional micro drop */
+    /* v721 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v720 ATW emoji: keep color + one-line */
+    /* v721 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -471,7 +471,7 @@
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v720</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v721</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -528,6 +528,25 @@
           <div class="sectionHead"><div class="title">Controls</div></div>
           <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
             <button class="pill" id="setupBackBtn" type="button">Back</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    
+    <section id="waiting" class="screen">
+      <div class="detailWrap">
+        <div class="panel">
+          <div class="sectionHead"><div class="title">Waiting Room</div></div>
+          <div class="detailBody" id="waitingBody">
+            <div style="opacity:.82;">Waiting room is installed. Wiring comes next.</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="sectionHead"><div class="title">Controls</div></div>
+          <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="pill" id="waitingBackBtn" type="button">Back</button>
           </div>
         </div>
       </div>
@@ -650,6 +669,9 @@
     const homeBtn = document.getElementById("homeBtn");
     const statusLine = document.getElementById("statusLine");
     const setup = document.getElementById("setup");
+    const waiting = document.getElementById("waiting");
+    const waitingBody = document.getElementById("waitingBody");
+    const waitingBackBtn = document.getElementById("waitingBackBtn");
     const setupBackBtn = document.getElementById("setupBackBtn");
     const lobbySetupBtn = document.getElementById("lobbySetupBtn");
     const lobby = document.getElementById("lobby");
@@ -664,6 +686,7 @@
       landing.classList.toggle("active", which==="landing");
       players.classList.toggle("active", which==="players");
       setup.classList.toggle("active", which==="setup");
+      waiting.classList.toggle("active", which==="waiting");
       lobby.classList.toggle("active", which==="lobby");
       detail.classList.toggle("active", which==="detail");
     }
@@ -737,6 +760,140 @@ function safeEmail(email){
       `).join("");
     }
 
+    
+    // v721: minimal session + setup → waiting room (does not touch login)
+    let activeSessionId = null;
+    let activeSession = null;
+
+    function newSessionId(){
+      return "sess_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+    }
+
+    async function createSessionForGame(game){
+      activeSessionId = newSessionId();
+      activeSession = {
+        id: activeSessionId,
+        game,
+        host: (currentEmail||"").toLowerCase(),
+        createdAt: Date.now(),
+        setup: { count: 1, emails: [(currentEmail||"").toLowerCase()].filter(Boolean) }
+      };
+      try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+    }
+
+    function _ensureCurrentInList(emails){
+      const me = (currentEmail||"").toLowerCase();
+      const set = new Set((emails||[]).map(x=>(x||"").toLowerCase()).filter(Boolean));
+      if(me) set.add(me);
+      return Array.from(set);
+    }
+
+    function renderSetupForGame(game){
+      const people = (lastPeople||[]).slice();
+      // ensure current user exists as a selectable option
+      const me = (currentEmail||"").toLowerCase();
+      if(me && !people.some(p => (p.email||"").toLowerCase()===me)){
+        people.unshift({ email: me, name: (me.split("@")[0]||"Me") });
+      }
+
+      const opts = people.map(p=>{
+        const em = (p.email||"").toLowerCase();
+        const nm = p.name || (em.split("@")[0]||em);
+        return `<label class="chip" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); margin:0 0 10px 0;">
+          <input type="checkbox" class="pickPlayer" value="${em}" style="transform:scale(1.1)"/>
+          <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:900;">${nm}</span>
+        </label>`;
+      }).join("");
+
+      setupBody.innerHTML = `
+        <div style="font-weight:1100; font-size:26px; margin-bottom:6px;">${game}</div>
+        <div style="opacity:.78; margin-bottom:14px;">Pick players, then Start.</div>
+
+        <div style="margin-bottom:10px; font-weight:900; opacity:.85;">Number of Players</div>
+        <select id="setupCount" class="pill" style="width:100%; padding:12px 14px; border-radius:14px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); color:#fff;">
+          ${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}">${n}</option>`).join("")}
+        </select>
+
+        <div style="margin:14px 0 10px; font-weight:900; opacity:.85;">Which Players</div>
+        <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
+          ${opts}
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
+          <button class="pill" id="setupStartBtn" type="button">Start</button>
+          <button class="pill" id="setupCancelBtn" type="button" style="opacity:.85;">Cancel</button>
+        </div>
+      `;
+
+      const countSel = document.getElementById("setupCount");
+      const startBtn = document.getElementById("setupStartBtn");
+      const cancelBtn = document.getElementById("setupCancelBtn");
+
+      // defaults
+      countSel.value = "1";
+      const checks = Array.from(document.querySelectorAll(".pickPlayer"));
+      // default select current user
+      checks.forEach(c=>{ if(c.value === me) c.checked = true; });
+
+      function enforce(){
+        const want = parseInt(countSel.value||"1",10) || 1;
+        const picked = checks.filter(c=>c.checked).map(c=>c.value);
+        // always keep me selected
+        const fixed = _ensureCurrentInList(picked);
+        // trim to count
+        const trimmed = fixed.slice(0, want);
+        checks.forEach(c=>{ c.checked = trimmed.includes(c.value); });
+      }
+
+      countSel.addEventListener("change", enforce);
+      checks.forEach(c=>c.addEventListener("change", enforce));
+
+      cancelBtn.addEventListener("click", ()=>{
+        show("players");
+      });
+
+      startBtn.addEventListener("click", ()=>{
+        enforce();
+        const want = parseInt(countSel.value||"1",10) || 1;
+        const picked = checks.filter(c=>c.checked).map(c=>c.value);
+        const emails = _ensureCurrentInList(picked).slice(0, want);
+
+        activeSession = activeSession || {};
+        activeSession.game = game;
+        activeSession.setup = { count: want, emails };
+
+        try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+        renderWaitingRoom();
+        show("waiting");
+      });
+    }
+
+    function renderWaitingRoom(){
+      const game = (activeSession && activeSession.game) ? activeSession.game : "Game";
+      const s = (activeSession && activeSession.setup) ? activeSession.setup : {emails:[],count:0};
+      const emails = (s.emails||[]).slice(0, s.count||s.emails.length);
+
+      const rows = emails.map(em=>{
+        const p = (lastPeople||[]).find(x => (x.email||"").toLowerCase()===String(em||"").toLowerCase());
+        const name = p ? (p.name||em.split("@")[0]||em) : (em.split("@")[0]||em);
+        const online = (p && isOnline(p)) || (String(em).toLowerCase()===(currentEmail||"").toLowerCase());
+        return `<div class="row">
+          <div class="left">
+            <span class="dot ${online ? "online" : ""}"></span>
+            <div class="label">${name}</div>
+          </div>
+          <div class="right" style="opacity:.75;">${online ? "online" : "offline"}</div>
+        </div>`;
+      }).join("");
+
+      waitingBody.innerHTML = `
+        <div style="font-weight:1100; font-size:26px; margin-bottom:6px;">${game}</div>
+        <div style="opacity:.78; margin-bottom:14px;">Waiting for invited players to join…</div>
+        <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
+      `;
+    }
+
+
     // Seed registry (only merges; harmless)
     const SEED = [
       { email: "stevewmoody@yahoo.com", name: "Steve Moody" },
@@ -762,7 +919,7 @@ function safeEmail(email){
 
 
     function renderPlayers(list){
-      // v720: float online players to top
+      // v721: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -811,7 +968,7 @@ function safeEmail(email){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v720: re-render to reorder online players immediately
+        // v721: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -900,7 +1057,7 @@ function safeEmail(email){
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v720 Multiplayer
+    // v721 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -968,8 +1125,8 @@ function safeEmail(email){
       if(action === "enter_game"){
         try{
           await createSessionForGame(value);
-          renderLobby();
-          show("lobby");
+          renderSetupForGame(value);
+          show("setup");
         }catch(e){
           alert("Session error: " + (e.message||e));
         }
@@ -1038,7 +1195,8 @@ function safeEmail(email){
 
       lobbyBackBtn.addEventListener("click", ()=> show("players"));
       lobbySetupBtn.addEventListener("click", ()=> show("setup"));
-      setupBackBtn.addEventListener("click", ()=> show("lobby"));
+      setupBackBtn.addEventListener("click", ()=> show("players"));
+      waitingBackBtn.addEventListener("click", ()=> show("setup"));
       lobbyStartBtn.addEventListener("click", ()=> startSession().catch(e=>alert(e.message||e)));
       lobbyEndBtn.addEventListener("click", ()=> endSession().catch(e=>alert(e.message||e)));
 
