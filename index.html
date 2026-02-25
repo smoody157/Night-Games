@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v730 (Glass Dropdowns)</title>
+  <title>Night Games v731 (Player Picker Dropdown)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -407,7 +407,7 @@
       border-radius: 14px;
     }
   
-    /* v730: header row + mini pill */
+    /* v731: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -418,7 +418,7 @@
     }
 
   
-    /* v730: session indicator */
+    /* v731: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -436,19 +436,19 @@
     }
 
   
-    /* v730 layout lock: micro vertical drop */
+    /* v731 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v730 layout lock adjustment: additional micro drop */
+    /* v731 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v730 ATW emoji: keep color + one-line */
+    /* v731 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -470,7 +470,7 @@
 
 
 
-    /* v730: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    /* v731: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
     #setup .detailWrap{
       top: clamp(150px, 18vh, 260px);
       bottom: max(80px, env(safe-area-inset-bottom));
@@ -485,7 +485,7 @@
 
 
 
-    /* v730: glass dropdowns (no white/yellow) */
+    /* v731: glass dropdowns (no white/yellow) */
     .glassSelect{
       width: 100%;
       padding: 14px 44px 14px 16px;
@@ -533,10 +533,88 @@
       border: 1px solid rgba(255,255,255,.16) !important;
     }
 
+
+
+    /* v731: player picker dropdown */
+    .glassBtn{
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.96);
+      font-weight: 1100;
+      font-size: 20px;
+      line-height: 1.1;
+      box-shadow: inset 0 0 18px rgba(255,255,255,.06), 0 0 18px rgba(255,255,255,.06);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .glassBtn .sub{ opacity:.72; font-weight:900; font-size:16px; }
+    .glassBtn:active{ transform: translateY(1px); opacity:.96; }
+    .pickerModal{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.58);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index: 9999;
+      padding: 18px;
+    }
+    .pickerCard{
+      width: min(520px, 100%);
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(20,20,24,.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px rgba(0,0,0,.35), inset 0 0 24px rgba(255,255,255,.06);
+      overflow:hidden;
+    }
+    .pickerHead{
+      padding: 14px 16px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .pickerHead .t{ font-weight:1200; font-size:18px; }
+    .pickerHead .c{ opacity:.75; font-weight:900; font-size:14px; }
+    .pickerBody{
+      max-height: 46vh;
+      overflow-y:auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 10px 12px;
+    }
+    .pickerRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      margin-bottom: 10px;
+    }
+    .pickerRow .nm{ font-weight:1100; }
+    .pickerRow .em{ opacity:.65; font-size:12px; font-weight:800; }
+    .pickerFoot{
+      padding: 12px 12px;
+      display:flex;
+      gap: 10px;
+      border-top: 1px solid rgba(255,255,255,.10);
+    }
+    .pickerFoot .pill{ flex:1; }
+
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v730</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v731</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -826,7 +904,7 @@ function safeEmail(email){
     }
 
     
-    // v730: minimal session + setup → waiting room (does not touch login)
+    // v731: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -881,9 +959,35 @@ function safeEmail(email){
         </select>
 
         <div style="margin:14px 0 10px; font-weight:900; opacity:.85;">Which Players</div>
-        <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
+        
+        <button type="button" id="openPlayerPicker" class="glassBtn">
+          <span>Select players</span>
+          <span class="sub" id="playerPickSummary">0 selected</span>
+        </button>
+        <div id="setupPlayersWrapHolder" style="display:none;">
+          <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
           ${opts}
         </div>
+        </div>
+
+        <!-- v731 player picker modal -->
+        <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
+          <div class="pickerCard">
+            <div class="pickerHead">
+              <div>
+                <div class="t">Pick Players</div>
+                <div class="c" id="pickerCountLabel">0 / 1 selected</div>
+              </div>
+              <button class="pill" id="pickerCloseTop" type="button" style="padding:10px 14px;">Close</button>
+            </div>
+            <div class="pickerBody" id="pickerBody"></div>
+            <div class="pickerFoot">
+              <button class="pill" id="pickerCancel" type="button" style="opacity:.85;">Cancel</button>
+              <button class="pill" id="pickerDone" type="button">Done</button>
+            </div>
+          </div>
+        </div>
+
 
         <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
           <button class="pill" id="setupStartBtn" type="button">Start</button>
@@ -898,6 +1002,110 @@ function safeEmail(email){
       // defaults
       countSel.value = "1";
       const checks = Array.from(document.querySelectorAll(".pickPlayer"));
+      // v731 picker wiring (dropdown-style player selector)
+      const openBtn = document.getElementById("openPlayerPicker");
+      const modal = document.getElementById("playerPickerModal");
+      const body = document.getElementById("pickerBody");
+      const doneBtn = document.getElementById("pickerDone");
+      const cancelBtn = document.getElementById("pickerCancel");
+      const closeTop = document.getElementById("pickerCloseTop");
+      const summary = document.getElementById("playerPickSummary");
+      const countLabel = document.getElementById("pickerCountLabel");
+
+      let snapshotSelected = new Set();
+      function getSelectedEmails(){
+        return checks.filter(c=>c.checked).map(c=>c.value);
+      }
+      function setSelectedEmails(set){
+        checks.forEach(c=>{ c.checked = set.has(c.value); });
+      }
+      function refreshSummary(){
+        const sel = getSelectedEmails();
+        summary.textContent = `${sel.length} selected`;
+      }
+      function refreshCountLabel(want){
+        const sel = getSelectedEmails().length;
+        countLabel.textContent = `${sel} / ${want} selected`;
+      }
+      function rebuildPicker(want){
+        body.innerHTML = "";
+        const sel = new Set(getSelectedEmails());
+        checks.forEach(c=>{
+          const email = c.value;
+          const label = c.closest("label");
+          const nm = label ? (label.querySelector("div")?.innerText || email) : email;
+          const row = document.createElement("div");
+          row.className = "pickerRow";
+          row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "pill";
+          btn.style.padding = "10px 12px";
+          btn.textContent = sel.has(email) ? "Selected" : "Select";
+          btn.addEventListener("click", ()=>{
+            const now = new Set(getSelectedEmails());
+            const isOn = now.has(email);
+            if(isOn){
+              now.delete(email);
+            }else{
+              if(now.size >= want){
+                // keep it simple: do nothing if at cap
+                ping && ping();
+                return;
+              }
+              now.add(email);
+            }
+            setSelectedEmails(now);
+            enforce();
+            rebuildPicker(want);
+          });
+          row.appendChild(btn);
+          body.appendChild(row);
+        });
+        refreshCountLabel(want);
+        refreshSummary();
+      }
+      function openPicker(want){
+        snapshotSelected = new Set(getSelectedEmails());
+        rebuildPicker(want);
+        modal.style.display = "flex";
+        modal.setAttribute("aria-hidden","false");
+      }
+      function closePicker(){
+        modal.style.display = "none";
+        modal.setAttribute("aria-hidden","true");
+      }
+      if(openBtn){
+        openBtn.addEventListener("click", ()=>{
+          const want = parseInt((document.getElementById("setupCount")?.value)||"1",10) || 1;
+          openPicker(want);
+        });
+      }
+      [cancelBtn, closeTop].forEach(b=> b && b.addEventListener("click", ()=>{
+        setSelectedEmails(snapshotSelected);
+        enforce();
+        refreshSummary();
+        closePicker();
+      }));
+      if(doneBtn){
+        doneBtn.addEventListener("click", ()=>{
+          closePicker();
+          refreshSummary();
+        });
+      }
+      if(modal){
+        modal.addEventListener("click", (e)=>{
+          if(e.target === modal){
+            setSelectedEmails(snapshotSelected);
+            enforce();
+            refreshSummary();
+            closePicker();
+          }
+        });
+      }
+      // keep summary current
+      refreshSummary();
+
       // default select current user
       checks.forEach(c=>{ if(c.value === me) c.checked = true; });
 
@@ -938,7 +1146,7 @@ function safeEmail(email){
     }
 
     
-    // v730: invites (in-app) — Join / No Thanks
+    // v731: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
@@ -1120,7 +1328,7 @@ function safeEmail(email){
 
 
     function renderPlayers(list){
-      // v730: float online players to top
+      // v731: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -1169,7 +1377,7 @@ function safeEmail(email){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v730: re-render to reorder online players immediately
+        // v731: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -1259,7 +1467,7 @@ function safeEmail(email){
       const db = getFirestore(app);
 
     
-      // v730: expose firebase handles for non-module code (prevents "db is not defined")
+      // v731: expose firebase handles for non-module code (prevents "db is not defined")
       window.ngFirebase = {
         app, auth, db,
         doc, setDoc, getDoc,
@@ -1267,7 +1475,7 @@ function safeEmail(email){
         serverTimestamp, query, where
       };
       window.db = db;
-// v730 Multiplayer
+// v731 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
