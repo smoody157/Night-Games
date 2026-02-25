@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v710 (Setup Save + Lobby Display)</title>
+  <title>Night Games v711 (Setup Save + Lobby Display FIX)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v710: header row + mini pill */
+    /* v711: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v710: session indicator */
+    /* v711: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -430,19 +430,19 @@
     }
 
   
-    /* v710 layout lock: micro vertical drop */
+    /* v711 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v710 layout lock adjustment: additional micro drop */
+    /* v711 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v710 ATW emoji: keep color + one-line */
+    /* v711 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -463,19 +463,21 @@
     }
 
 
-    /* v710 setup picker */
-    .pickRow{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 6px; border-bottom:1px solid rgba(255,255,255,.10); cursor:pointer;}
-    .pickRow .nm{font-weight:1000; letter-spacing:.6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .pickRow .em{opacity:.68; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .pickDot{width:14px; height:14px; border-radius:999px; border:1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.03); box-shadow: inset 0 2px 6px rgba(255,255,255,.12), inset 0 -8px 10px rgba(0,0,0,.5);}
-    .pickRow.sel .pickDot{border-color: rgba(90,255,170,.55); box-shadow: 0 0 14px rgba(90,255,170,.12), inset 0 2px 6px rgba(255,255,255,.12), inset 0 -8px 10px rgba(0,0,0,.5); background: rgba(90,255,170,.06);}
-    .setupTop{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 2px 14px;}
-    .setupTop .lbl{font-weight:1000; letter-spacing:.8px; text-transform:uppercase; opacity:.92;}
-    .setupTop input[type="range"]{width: 220px;}
+    /* v711 setup controls */
+    .setupRow{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 4px; border-bottom:1px solid rgba(255,255,255,.10); }
+    .setupLabel{ font-weight:1000; letter-spacing:.8px; text-transform:uppercase; opacity:.92; }
+    .countPill{ min-width:44px; text-align:center; }
+    input[type="range"].slider{ width: 220px; }
+    .pickRow{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 4px; border-bottom:1px solid rgba(255,255,255,.10); cursor:pointer; }
+    .checkDot{ width:14px; height:14px; border-radius:999px; border:1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.03);
+      box-shadow: inset 0 2px 6px rgba(255,255,255,.12), inset 0 -8px 10px rgba(0,0,0,.5); }
+    .pickRow.sel .checkDot{ border-color: rgba(90,255,170,.55); background: rgba(90,255,170,.06); box-shadow: 0 0 14px rgba(90,255,170,.12),
+      inset 0 2px 6px rgba(255,255,255,.12), inset 0 -8px 10px rgba(0,0,0,.5); }
+
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v710</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v711</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -532,6 +534,7 @@
           <div class="sectionHead"><div class="title">Controls</div></div>
           <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
             <button class="pill" id="setupBackBtn" type="button">Back</button>
+            <button class="pill" id="setupOkBtn" type="button">OK</button>
           </div>
         </div>
       </div>
@@ -653,7 +656,7 @@
     const backBtn = document.getElementById("backBtn");
     const homeBtn = document.getElementById("homeBtn");
     const statusLine = document.getElementById("statusLine");
-    // v710: visible error reporting (Safari-friendly)
+    // v711: visible error reporting (Safari-friendly)
     window.addEventListener("error", (ev)=>{
       try{ statusLine.textContent = "ERROR: " + (ev.message || "unknown"); }catch(e){}
     });
@@ -662,6 +665,7 @@
     });
     const setup = document.getElementById("setup");
     const setupBackBtn = document.getElementById("setupBackBtn");
+    const setupOkBtn = document.getElementById("setupOkBtn");
     const lobbySetupBtn = document.getElementById("lobbySetupBtn");
     const lobby = document.getElementById("lobby");
     const lobbyTitle = document.getElementById("lobbyTitle");
@@ -677,8 +681,6 @@
       setup.classList.toggle("active", which==="setup");
       lobby.classList.toggle("active", which==="lobby");
       detail.classList.toggle("active", which==="detail");
-    
-      if(which==="lobby"){ try{ renderLobbySetup(); }catch(e){} }
     }
     function openDetail(title, html){
       detailTitle.textContent = title;
@@ -766,115 +768,6 @@
     let presenceMap = new Map(); // id -> lastActiveMillis
 
     let lastPeople = []; // cached registry list for re-render on presence updates
-
-    // v710: Setup save + Lobby display state (additive only)
-    let roomSetup = { count: 1, emails: [] };
-    let setupDraft = { count: 1, emails: new Set() };
-    let setupDirty = false;
-
-    function normEmail(s){ return (s||"").trim().toLowerCase(); }
-
-    function renderSetupUI(){
-      if(!setup || !setup.classList.contains("active")) return;
-      const people = Array.isArray(lastPeople) ? lastPeople : [];
-      const count = Math.max(1, Math.min(8, parseInt(setupDraft.count||1,10) || 1));
-      setupDraft.count = count;
-
-      const rows = people.map(p=>{
-        const em = normEmail(p.email);
-        const sel = setupDraft.emails.has(em);
-        const nm = p.name || (em.split("@")[0]||"Player");
-        return `
-          <div class="pickRow ${sel?"sel":""}" data-pick-email="${em}">
-            <div style="min-width:0;">
-              <div class="nm">${nm}</div>
-              <div class="em">${em}</div>
-            </div>
-            <div class="pickDot"></div>
-          </div>
-        `;
-      }).join("");
-
-      setupBody.innerHTML = `
-        <div class="setupTop">
-          <div class="lbl">Players</div>
-          <div style="display:flex; align-items:center; gap:12px;">
-            <input id="setupCount" type="range" min="1" max="8" value="${count}"/>
-            <span class="pill" style="min-width:44px; justify-content:center;">${count}</span>
-          </div>
-        </div>
-        <div style="opacity:.78; font-size:12px; margin:0 2px 10px;">Tap players to select.</div>
-        <div>${rows || `<div style="opacity:.82;">No players registered yet.</div>`}</div>
-        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="pill" id="setupSaveBtn" type="button">OK</button>
-        </div>
-      `;
-
-      const slider = document.getElementById("setupCount");
-      slider.addEventListener("input", ()=>{
-        setupDraft.count = parseInt(slider.value||"1",10);
-        // trim selection if needed
-        const arr = Array.from(setupDraft.emails);
-        if(arr.length > setupDraft.count){
-          setupDraft.emails = new Set(arr.slice(0, setupDraft.count));
-        }
-        setupDirty = true;
-        renderSetupUI();
-      });
-
-      document.getElementById("setupSaveBtn").addEventListener("click", async ()=>{
-        await saveSetupToRoom();
-        show("lobby");
-      });
-    }
-
-    async function saveSetupToRoom(){
-      try{
-        const emails = Array.from(setupDraft.emails).slice(0, setupDraft.count);
-        roomSetup = { count: setupDraft.count, emails };
-        setupDirty = false;
-        // Save into the room doc so Lobby can show it immediately (no session required yet)
-        await setDoc(doc(db, "rooms", ROOM_ID), {
-          setup: { count: roomSetup.count, emails: roomSetup.emails, by: (currentEmail||""), updatedAt: serverTimestamp() }
-        }, { merge: true });
-        renderLobbySetup();
-      }catch(e){
-        alert(e.message || e);
-      }
-    }
-
-    function renderLobbySetup(){
-      if(!lobby || !lobby.classList.contains("active")) return;
-      const s = roomSetup || {count:1, emails:[]};
-      const names = (s.emails||[]).map(em=> (em.split("@")[0]||em)).filter(Boolean);
-      const line = names.length ? `<div style="margin-top:10px; opacity:.82; font-size:13px;">Selected (${s.count}): <b>${names.join(", ")}</b></div>`
-                               : `<div style="margin-top:10px; opacity:.82; font-size:13px;">Selected (${s.count}): <b>—</b></div>`;
-      // Preserve whatever is already in lobbyBody, just append/replace our block.
-      const base = (lobbyBody.getAttribute("data-base") || lobbyBody.innerHTML || "");
-      if(!lobbyBody.getAttribute("data-base")) lobbyBody.setAttribute("data-base", base);
-      const cleaned = base.replace(/<div id="lobbySetupLine"[\s\S]*?<\/div>/, "");
-      lobbyBody.innerHTML = cleaned + `<div id="lobbySetupLine">${line}</div>`;
-    }
-
-    function watchRoomSetup(){
-      try{
-        onSnapshot(doc(db, "rooms", ROOM_ID), (snap)=>{
-          const d = snap.data() || {};
-          const s = d.setup || {};
-          const count = Math.max(1, Math.min(8, parseInt(s.count||1,10) || 1));
-          const emails = Array.isArray(s.emails) ? s.emails.map(normEmail).filter(Boolean) : [];
-          roomSetup = { count, emails };
-          // keep draft aligned unless user is actively editing
-          if(!setupDirty){
-            setupDraft.count = roomSetup.count;
-            setupDraft.emails = new Set(roomSetup.emails.slice(0, roomSetup.count));
-          }
-          renderLobbySetup();
-          renderSetupUI();
-        });
-      }catch(e){}
-    }
-
 
 
     function renderPlayers(list){
@@ -996,7 +889,6 @@
       await startPresence(db);
       renderGames();
       watchData(db);
-        watchRoomSetup();
       show("players");
       statusLine.textContent = "Signed in.";
       setDbg("OK", dbgAuth.textContent, "connected", "none");
@@ -1008,7 +900,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v710 Multiplayer
+    // v711 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -1033,7 +925,22 @@
         if(e.key === "Enter"){ e.preventDefault(); onEnter(); }
       });
 
-          document.addEventListener("click", async (e)=>{
+          document.addEventListener("click", (e)=>{
+      // v711: pick handler for setup rows
+      const pick = e.target.closest && e.target.closest("[data-pick-email]");
+      if(pick && setup.classList.contains("active")){
+        const em = (pick.getAttribute("data-pick-email")||"").toLowerCase();
+        if(!em) return;
+        if(setupState.emails.has(em)) setupState.emails.delete(em);
+        else {
+          if(setupState.emails.size < setupState.count) setupState.emails.add(em);
+        }
+        renderSetupUI();
+        return;
+      }
+    });
+
+    document.addEventListener("click", async (e)=>{
       const b = e.target.closest(".pill");
       if(!b) return;
 
@@ -1145,30 +1052,9 @@
       homeBtn.addEventListener("click", ()=> show("landing"));
 
       lobbyBackBtn.addEventListener("click", ()=> show("players"));
-      lobbySetupBtn.addEventListener("click", ()=> { show("setup");
-        // default: select self if empty
-        if(setupDraft.emails.size===0 && currentEmail){ setupDraft.emails.add(normEmail(currentEmail)); }
-        renderSetupUI();
-      });
+      lobbySetupBtn.addEventListener("click", ()=>{ loadSetup(); renderSetupUI(); show("setup"); });
       setupBackBtn.addEventListener("click", ()=> show("lobby"));
-
-      // v710: pick row clicks
-      document.addEventListener("click", (e)=>{
-        const row = e.target.closest && e.target.closest("[data-pick-email]");
-        if(!row) return;
-        if(!setup.classList.contains("active")) return;
-        const em = normEmail(row.getAttribute("data-pick-email"));
-        if(!em) return;
-        if(setupDraft.emails.has(em)){
-          setupDraft.emails.delete(em);
-        }else{
-          if(setupDraft.emails.size < setupDraft.count){
-            setupDraft.emails.add(em);
-          }
-        }
-        setupDirty = true;
-        renderSetupUI();
-      });
+      setupOkBtn.addEventListener("click", ()=>{ saveSetup(); renderLobby(); show("lobby"); });
       lobbyStartBtn.addEventListener("click", ()=> startSession().catch(e=>alert(e.message||e)));
       lobbyEndBtn.addEventListener("click", ()=> endSession().catch(e=>alert(e.message||e)));
 
