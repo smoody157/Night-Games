@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v745  |  2026-02-25
+  NIGHT GAMES v746  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v745 (Uniform Buttons + Name/Email Picker)</title>
+  <title>Night Games v746 (VOICE+HEADER FIX)</title>
   <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -795,6 +795,60 @@ border: 1px solid rgba(255,255,255,.22);
 
 /* Prevent duplicated controls from stacking/overlapping inside setup body */
 #setup .panel .detailBody{ position: relative; }
+
+
+/* ===================== v746 HEADER BAR ===================== */
+#ngHeaderBar{
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  text-align: center;
+}
+#ngHeaderBar .ngHeaderTitle{
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 12px;
+  opacity: .95;
+}
+#ngHeaderBar .ngHeaderSub{
+  font-weight: 700;
+  font-size: 12px;
+  opacity: .75;
+}
+
+/* Make sure landing UI sits below the header */
+#landing .landingUI{
+  padding-top: 48px;
+}
+
+/* ===================== v746 GREEN ADVANCE BUTTONS ===================== */
+.btnAdvance, .btn-advance, .btnAdvanceGreen{
+  border: 1px solid rgba(120,255,170,.35) !important;
+  background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
+  box-shadow:
+    0 0 18px rgba(70,255,160,.18),
+    inset 0 0 18px rgba(60,255,160,.12) !important;
+}
+.btnAdvance:active, .btn-advance:active, .btnAdvanceGreen:active{
+  transform: translateY(1px) scale(0.99);
+  box-shadow:
+    0 0 10px rgba(70,255,160,.16),
+    inset 0 0 10px rgba(60,255,160,.10) !important;
+}
 </style>
 
 <script id="ngGuards_v737">
@@ -824,7 +878,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 </head>
 <body>
-<div id="ngVersionBadge">Night Games v745</div>
+<div id="ngHeaderBar"><span class="ngHeaderTitle">Night Games v746</span><span class="ngHeaderSub">Firebase</span></div>
 
 <!--
 ================================================================================
@@ -839,7 +893,6 @@ border: 1px solid rgba(255,255,255,.22);
   TIP: Use Ctrl/Cmd+F for the tags above to jump to the exact spot.
 ================================================================================
 -->
-<div class="buildBadge">Build <b>v742</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -984,131 +1037,111 @@ border: 1px solid rgba(255,255,255,.22);
 
   <script type="module">
 
-/* v745 VOICE */
-let NG_VOICE_ENABLED = true;
-let NG_VOICE_UNLOCKED = false;
-let NG_BOOT_QUEUED = true;
-const NG_BOOT_LINE = "Welcome to America’s Six. Bill Moody’s Limited Edition Night Games. Shoot well.";
 
-function ngGetBestVoice(){
-  try {
-    const voices = (window.speechSynthesis && window.speechSynthesis.getVoices) ? window.speechSynthesis.getVoices() : [];
-    if(!voices || !voices.length) return null;
-    const en = voices.filter(v => /^en/i.test(v.lang || ""));
-    const pool = en.length ? en : voices;
-    const preferNames = ["Samantha","Victoria","Ava","Allison","Karen","Moira","Tessa","Zira"];
-    for(const name of preferNames){
-      const v = pool.find(x => (x.name||"").toLowerCase().includes(name.toLowerCase()));
-      if(v) return v;
-    }
-    // fallback: first English voice
-    return pool[0] || null;
-  } catch(e) {
-    return null;
+/* v746 VOICE (Phase 4 finalized)
+   - iOS requires a user gesture before speech.
+   - We trigger on FIRST focus/tap of the email field.
+   - We speak the welcome line (NOT a generic prompt).
+   - Single voice module; no duplicate declarations.
+*/
+
+const NG_BUILD = "v746";
+const NG_WELCOME_LINE = "Welcome to America’s Six… Bill Moody’s Limited Edition Night Games. Shoot well.";
+
+const NGVoice = (function(){
+  const api = { enabled:true, unlocked:false, voice:null, queue:[] };
+
+  function getBestVoice(){
+    try {
+      const synth = window.speechSynthesis;
+      const voices = synth && synth.getVoices ? synth.getVoices() : [];
+      if(!voices || !voices.length) return null;
+      const en = voices.filter(v => /^en/i.test(v.lang||""));
+      const pool = en.length ? en : voices;
+      const preferNames = ["Samantha","Victoria","Ava","Allison","Karen","Moira","Tessa","Zira","Serena"];
+      for(const name of preferNames){
+        const v = pool.find(x => (x.name||"").toLowerCase().includes(name.toLowerCase()));
+        if(v) return v;
+      }
+      return pool[0] || null;
+    } catch(e){ return null; }
   }
-}
 
-/* =========================================================
-   VOICE (Phase 4) — iOS gesture-safe + less robotic
-   - iOS requires a user gesture before speech will play.
-   - We queue speech until the user taps/focuses the email box.
-   ========================================================= */
-
-const NG_VOICE = {
-  enabled: true,
-  unlocked: false,
-  voice: null,
-  queue: [],
-
-  init() {
-    if (!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined") {
-      this.enabled = false;
-      return;
+  function init(){
+    if(!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined"){
+      api.enabled = false; return;
     }
-    const pick = () => { try { this.voice = chooseBestVoice(); } catch(e) {} };
+    const pick = () => { api.voice = getBestVoice(); };
     pick();
-    try { window.speechSynthesis.onvoiceschanged = pick; } catch(e) {}
-  },
+    try { window.speechSynthesis.onvoiceschanged = pick; } catch(e){}
+  }
 
-  unlock() {
-    if (!this.enabled) return;
-    this.unlocked = true;
-    this.flush();
-  },
-
-  speak(text) {
-    if (!this.enabled || !text) return;
-    if (!this.unlocked) { this.queue.push(text); return; }
-
-    try { window.speechSynthesis.cancel(); } catch(e) {}
+  function speakNow(text){
+    if(!api.enabled || !text) return;
+    try { window.speechSynthesis.cancel(); } catch(e){}
     const u = new SpeechSynthesisUtterance(String(text));
-    if (this.voice) u.voice = this.voice;
-
-    // Less robotic: slightly slower + a touch of warmth.
-    u.rate = 0.97;
-    u.pitch = 1.08;
+    if(api.voice) u.voice = api.voice;
+    // Less monotone: slower + warmer, with natural pacing from punctuation/ellipsis.
+    u.rate = 0.92;
+    u.pitch = 1.06;
     u.volume = 1.0;
+    try { window.speechSynthesis.speak(u); } catch(e){}
+  }
 
-    try { window.speechSynthesis.speak(u); } catch(e) {}
-  },
-
-  speakSeq(lines, gapMs = 650) {
-    if (!Array.isArray(lines) || !lines.length) return;
+  function flush(){
+    if(!api.unlocked || !api.queue.length) return;
+    const q = api.queue.slice();
+    api.queue.length = 0;
+    // speak sequentially (non-blocking)
     let i = 0;
     const step = () => {
-      if (i >= lines.length) return;
-      this.speak(lines[i++]);
-      setTimeout(step, gapMs);
+      if(i>=q.length) return;
+      speakNow(q[i++]);
+      setTimeout(step, 750);
     };
     step();
-  },
-
-  flush() {
-    if (!this.unlocked || !this.queue.length) return;
-    const q = this.queue.slice();
-    this.queue.length = 0;
-    this.speakSeq(q, 700);
   }
-};
 
-const ngSpeak = (t) => NG_VOICE.speak(t);
-const ngSpeakSequence = (arr) => NG_VOICE.speakSeq(arr, 700);
+  function unlock(){
+    if(!api.enabled) return;
+    api.unlocked = true;
+    flush();
+  }
 
-window.ngSpeak = ngSpeak;
-window.ngSpeakSequence = ngSpeakSequence;
+  function speak(text){
+    if(!api.enabled || !text) return;
+    if(!api.unlocked){ api.queue.push(text); return; }
+    speakNow(text);
+  }
 
-NG_VOICE.init();
+  init();
+  return { api, unlock, speak };
+})();
 
-const NG_WELCOME =
-  "Welcome to America's Six, Bill Moody's Limited Edition Night Games. Shoot well.";
+window.ngSpeak = (t) => NGVoice.speak(t);
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Queue welcome; will play right after the first allowed gesture.
-  NG_VOICE.queue.push(NG_WELCOME);
+  const emailEl = document.getElementById("emailInput");
 
-  const emailEl =
-    document.getElementById("emailInput") ||
-    document.querySelector('input[type="email"]') ||
-    document.querySelector("input");
+  const bootOnce = () => {
+    NGVoice.unlock();
+    NGVoice.speak(NG_WELCOME_LINE);
+  };
 
-  const unlockOnce = () => NG_VOICE.unlock();
-
-  if (emailEl) {
-    // iOS gesture unlock: focus/tap the email field.
-    emailEl.addEventListener("focus", unlockOnce, { once: true });
-    emailEl.addEventListener("pointerdown", unlockOnce, { once: true });
-    emailEl.addEventListener("touchstart", unlockOnce, { once: true });
-
-    // Friendly prompt (plays once unlocked; otherwise queues).
-    emailEl.addEventListener("focus", () => ngSpeak("Enter your email."));
+  if(emailEl){
+    // Gesture unlock + welcome on first interaction with the email field
+    emailEl.addEventListener("focus", bootOnce, { once:true });
+    emailEl.addEventListener("pointerdown", bootOnce, { once:true });
+    emailEl.addEventListener("touchstart", bootOnce, { once:true });
   } else {
-    // Fallback: first tap anywhere unlocks.
-    window.addEventListener("pointerdown", unlockOnce, { once: true });
-    window.addEventListener("touchstart", unlockOnce, { once: true });
+    // Fallback: first tap anywhere
+    window.addEventListener("pointerdown", bootOnce, { once:true });
+    window.addEventListener("touchstart", bootOnce, { once:true });
   }
 });
 
 // END VOICE
+
 </script>
 
 <!-- =======================
