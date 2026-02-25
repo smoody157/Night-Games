@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v711 (Setup Save + Lobby Display FIX)</title>
+  <title>Night Games v712 (Fix createSessionForGame)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v711: header row + mini pill */
+    /* v712: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v711: session indicator */
+    /* v712: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -430,19 +430,19 @@
     }
 
   
-    /* v711 layout lock: micro vertical drop */
+    /* v712 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v711 layout lock adjustment: additional micro drop */
+    /* v712 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v711 ATW emoji: keep color + one-line */
+    /* v712 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -463,7 +463,7 @@
     }
 
 
-    /* v711 setup controls */
+    /* v712 setup controls */
     .setupRow{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 4px; border-bottom:1px solid rgba(255,255,255,.10); }
     .setupLabel{ font-weight:1000; letter-spacing:.8px; text-transform:uppercase; opacity:.92; }
     .countPill{ min-width:44px; text-align:center; }
@@ -477,7 +477,7 @@
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v711</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v712</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -656,7 +656,66 @@
     const backBtn = document.getElementById("backBtn");
     const homeBtn = document.getElementById("homeBtn");
     const statusLine = document.getElementById("statusLine");
-    // v711: visible error reporting (Safari-friendly)
+
+    // v712: required session stubs for Setup + Lobby (keeps existing Firebase wiring untouched)
+    // If your Firebase-backed versions exist later in the file, these will be replaced by those declarations.
+    if(typeof activeSession === "undefined"){ var activeSession = null; }
+    if(typeof activeSessionId === "undefined"){ var activeSessionId = null; }
+    if(typeof activeGame === "undefined"){ var activeGame = null; }
+    if(typeof activeHost === "undefined"){ var activeHost = null; }
+    if(typeof setupState === "undefined"){ var setupState = { count: 1, emails: new Set() }; }
+
+    function _lsKey(){
+      const em = (typeof currentEmail === "string" && currentEmail) ? currentEmail.toLowerCase() : "anon";
+      const g  = (activeGame || "none").toUpperCase();
+      return `ng_setup_${em}__${g}`;
+    }
+    function loadSetup(){
+      try{
+        const raw = localStorage.getItem(_lsKey());
+        if(!raw) return;
+        const o = JSON.parse(raw);
+        setupState.count = Math.max(1, Math.min(8, parseInt(o.count||1,10)));
+        setupState.emails = new Set((o.emails||[]).map(x=>String(x).toLowerCase()).filter(Boolean));
+      }catch(e){}
+    }
+    function saveSetup(){
+      try{
+        const payload = { count: setupState.count, emails: Array.from(setupState.emails).slice(0, setupState.count) };
+        localStorage.setItem(_lsKey(), JSON.stringify(payload));
+        if(activeSession){ activeSession.setup = payload; }
+      }catch(e){}
+    }
+
+    // Minimal, Safari-safe session creator used by the Enter flow
+    async function createSessionForGame(game){
+      activeGame = String(game||"").toUpperCase();
+      activeSessionId = String(Date.now());
+      activeHost = (typeof currentEmail === "string" && currentEmail) ? currentEmail.toLowerCase() : "anon";
+      activeSession = { id: activeSessionId, game: activeGame, host: activeHost, setup: null };
+      loadSetup();
+      if(activeSession){ activeSession.setup = { count: setupState.count, emails: Array.from(setupState.emails).slice(0, setupState.count) }; }
+      return activeSessionId;
+    }
+
+    function renderLobby(){
+      try{
+        const g = activeGame || "Game";
+        const s = (activeSession && activeSession.setup) ? activeSession.setup : null;
+        const picked = s ? (s.emails||[]) : [];
+        const pickedLine = picked.length ? `<div style="opacity:.78; font-size:12px; margin-top:10px;">Selected: <b>${picked.map(x=>x.split("@")[0]).join(", ")}</b></div>` : "";
+        if(typeof lobbyTitle !== "undefined" && lobbyTitle) lobbyTitle.textContent = `Lobby • ${g}`;
+        if(typeof lobbyBody !== "undefined" && lobbyBody){
+          lobbyBody.innerHTML = `
+            <div style="opacity:.82;">Session: <b>${activeSessionId||"—"}</b></div>
+            <div style="opacity:.82; margin-top:6px;">Players: <b>${s ? s.count : "—"}</b></div>
+            ${pickedLine}
+          `;
+        }
+      }catch(e){}
+    }
+
+    // v712: visible error reporting (Safari-friendly)
     window.addEventListener("error", (ev)=>{
       try{ statusLine.textContent = "ERROR: " + (ev.message || "unknown"); }catch(e){}
     });
@@ -900,7 +959,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v711 Multiplayer
+    // v712 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -926,7 +985,7 @@
       });
 
           document.addEventListener("click", (e)=>{
-      // v711: pick handler for setup rows
+      // v712: pick handler for setup rows
       const pick = e.target.closest && e.target.closest("[data-pick-email]");
       if(pick && setup.classList.contains("active")){
         const em = (pick.getAttribute("data-pick-email")||"").toLowerCase();
