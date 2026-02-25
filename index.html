@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v691 (Multiplayer Auto-Join)</title>
+  <title>Night Games v692 (Multiplayer Hotfix)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v691: header row + mini pill */
+    /* v692: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v691: session indicator */
+    /* v692: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -432,7 +432,7 @@
   </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v691</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v692</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -773,11 +773,121 @@
         return;
       }
 
+      // 4) Write user record (optional)
+      await setDoc(doc(db, "users", currentUid), {
+        email: currentEmail,
+        lastLogin: serverTimestamp()
+      }, { merge: true });
+
+      // 5) Presence + live listeners
+      try { presenceMap.set(safeEmail(currentEmail), Date.now()); } catch(e) {}
+      await startPresence(db);
+      renderGames();
+      watchData(db);
+      show("players");
+      statusLine.textContent = "Signed in.";
+      setDbg("OK", dbgAuth.textContent, "connected", "none");
+    }
+
+    // Start Firebase and wire handlers
+    try {
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+    // v692 Multiplayer
+    const ROOM_ID = "dart-room";
+    let activeSessionId = null;
+    let activeGame = null;
+    let activeHost = null;
+
+      setDbg("INIT", "ready", "ready", "none");
+
+      onAuthStateChanged(auth, (u)=>{
+        if(u) dbgAuth.textContent = "anon uid " + u.uid.slice(0,6) + "…";
+      });
+
+      function onEnter() {
+        signInFlow(auth, db, emailInput.value).catch((err)=>{
+          const msg = err?.code || err?.message || String(err);
+          statusLine.textContent = "Firebase error.";
+          setDbg("FAIL", dbgAuth.textContent || "—", "fail", msg);
+          alert("Firebase error: " + msg);
+        });
+      }
+      enterBtn.addEventListener("click", onEnter);
+      emailInput.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter"){ e.preventDefault(); onEnter(); }
+      });
+
+          document.addEventListener("click", async (e)=>{
+      const b = e.target.closest(".pill");
+      if(!b) return;
+
+      const action = b.dataset.action;
+      const value = b.dataset.value || "";
+
+      // Global rules list
+      if(action === "show_rules"){
+        const list = Object.entries(GAME_RULES).map(([k,v]) => `
+          <div style="margin: 0 0 14px 0;">
+            <div style="font-weight:1000; font-size:20px; margin-bottom:4px;">${k}</div>
+            <div style="opacity:.78; font-size:14px; line-height:1.45;">${v}</div>
+          </div>
+        `).join("");
+        openDetail("RULES", `<div>${list}</div>`);
+        return;
+      }
+
+      // Per-game rules
       if(action === "game_rules"){
         const txt = (GAME_RULES[value] || "Rules coming soon.");
         openDetail("RULES • " + value, `
           <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${value}</div>
           <div style="opacity:.82; font-size:14px; line-height:1.55;">${txt}</div>
+        `);
+        return;
+      }
+
+      // Enter game (multiplayer session)
+      if(action === "enter_game"){
+        try{
+          if(!activeSessionId){
+            await createSessionForGame(value);
+          }else{
+            await joinActiveSessionIfAny();
+          }
+        }catch(e){}
+
+        openDetail("ENTER " + value, `
+          <div style="opacity:.9; margin-bottom:10px;">Session:</div>
+          <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${activeSessionId ? activeSessionId : "—"}</div>
+          <div style="opacity:.75;">Room: ${ROOM_ID}</div>
+          <div style="opacity:.75; margin-top:10px;">Next: board screen + scoring.</div>
+        `);
+        return;
+      }
+
+      if(action === "game_history"){
+        openDetail("GAME HISTORY", `
+          <div style="font-weight:1000; font-size:26px; margin-bottom:6px;">${value}</div>
+          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
+        `);
+        return;
+      }
+
+      if(action === "player_stats"){
+        openDetail("PLAYER STATS", `
+          <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${value}</div>
+          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
+        `);
+        return;
+      }
+
+      if(action === "player_history"){
+        openDetail("PLAYER HISTORY", `
+          <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${value}</div>
+          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
         `);
         return;
       }
@@ -813,75 +923,7 @@
         openDetail("SESSION ENDED", `<div style="opacity:.85;">Session ended.</div>`);
         return;
       }
-
-      // 4) Write user record (optional)
-      await setDoc(doc(db, "users", currentUid), {
-        email: currentEmail,
-        lastLogin: serverTimestamp()
-      }, { merge: true });
-
-      // 5) Presence + live listeners
-      try { presenceMap.set(safeEmail(currentEmail), Date.now()); } catch(e) {}
-      await startPresence(db);
-      renderGames();
-      watchData(db);
-      show("players");
-      statusLine.textContent = "Signed in.";
-      setDbg("OK", dbgAuth.textContent, "connected", "none");
-    }
-
-    // Start Firebase and wire handlers
-    try {
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-
-    // v691 Multiplayer
-    const ROOM_ID = "dart-room";
-    let activeSessionId = null;
-    let activeGame = null;
-    let activeHost = null;
-
-      setDbg("INIT", "ready", "ready", "none");
-
-      onAuthStateChanged(auth, (u)=>{
-        if(u) dbgAuth.textContent = "anon uid " + u.uid.slice(0,6) + "…";
-      });
-
-      function onEnter() {
-        signInFlow(auth, db, emailInput.value).catch((err)=>{
-          const msg = err?.code || err?.message || String(err);
-          statusLine.textContent = "Firebase error.";
-          setDbg("FAIL", dbgAuth.textContent || "—", "fail", msg);
-          alert("Firebase error: " + msg);
-        });
-      }
-      enterBtn.addEventListener("click", onEnter);
-      emailInput.addEventListener("keydown", (e)=>{
-        if(e.key === "Enter"){ e.preventDefault(); onEnter(); }
-      });
-
-      document.addEventListener("click", async (e)=>{
-        const b = e.target.closest(".pill");
-        if(!b) return;
-        const action = b.dataset.action;
-        const value = b.dataset.value || "";
-        
-      if(action === "show_rules"){
-        const list = Object.entries(GAME_RULES).map(([k,v]) => `
-          <div style="margin: 0 0 14px 0;">
-            <div style="font-weight:1000; font-size:20px; margin-bottom:4px;">${k}</div>
-            <div style="opacity:.78; font-size:14px; line-height:1.45;">${v}</div>
-          </div>
-        `).join("");
-        openDetail("RULES", `<div>${list}</div>`);
-        return;
-      }
-if(action === "enter_game") openDetail("ENTER " + value, `<div style="font-weight:1000; font-size:34px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: board screen.</div>`);
-        if(action === "game_history") openDetail("GAME HISTORY", `<div style="font-weight:1000; font-size:26px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: pull history from Firestore.</div>`);
-        if(action === "player_stats") openDetail("PLAYER STATS", `<div style="font-weight:1000; font-size:22px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: pull stats from Firestore.</div>`);
-        if(action === "player_history") openDetail("PLAYER HISTORY", `<div style="font-weight:1000; font-size:22px;">${value}</div><div style="opacity:.75; margin-top:10px;">Next: pull history from Firestore.</div>`);
-      });
+    });
 
       backBtn.addEventListener("click", ()=> show("players"));
       homeBtn.addEventListener("click", ()=> show("landing"));
