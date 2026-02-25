@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v707 (Top3: Rules + Start/End + Lobby Selected)</title>
+  <title>Night Games v708 (Enter Fixed)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -401,7 +401,7 @@
       border-radius: 14px;
     }
   
-    /* v707: header row + mini pill */
+    /* v708: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +412,7 @@
     }
 
   
-    /* v707: session indicator */
+    /* v708: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -430,19 +430,19 @@
     }
 
   
-    /* v707 layout lock: micro vertical drop */
+    /* v708 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v707 layout lock adjustment: additional micro drop */
+    /* v708 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v707 ATW emoji: keep color + one-line */
+    /* v708 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -465,7 +465,7 @@
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v707</b> • Firebase</div>
+  <div class="buildBadge">Build <b>v708</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -878,7 +878,7 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v707 Multiplayer
+    // v708 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -905,7 +905,7 @@
 
           
     // =========================
-    // v707 ADD-ON (no removals)
+    // v708 ADD-ON (no removals)
     // Top 3 installs:
     // 1) Rules wired per game (adds Rules button beside each game)
     // 2) Start/End control (creates/starts/ends session)
@@ -1017,6 +1017,117 @@
     }
 
     // click selection inside setup screen (no new buttons)
+    
+    document.addEventListener("click", async (e)=>{
+      const b = e.target.closest(".pill");
+      if(!b) return;
+
+      const action = b.dataset.action;
+      const value = b.dataset.value || "";
+
+      if(action === "game_rules"){
+        const txt = (GAME_RULES[value] || "Rules coming soon.");
+        openDetail("RULES • " + value, `
+          <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${value}</div>
+          <div style="opacity:.82; font-size:14px; line-height:1.55;">${txt}</div>
+        `);
+        return;
+      }
+
+
+      // Global rules list
+      if(action === "show_rules"){
+        const list = Object.entries(GAME_RULES).map(([k,v]) => `
+          <div style="margin: 0 0 14px 0;">
+            <div style="font-weight:1000; font-size:20px; margin-bottom:4px;">${k}</div>
+            <div style="opacity:.78; font-size:14px; line-height:1.45;">${v}</div>
+          </div>
+        `).join("");
+        openDetail("RULES", `<div>${list}</div>`);
+        return;
+      }
+
+      // Per-game rules
+      if(action === "game_rules"){
+        const txt = (GAME_RULES[value] || "Rules coming soon.");
+        openDetail("RULES • " + value, `
+          <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${value}</div>
+          <div style="opacity:.82; font-size:14px; line-height:1.55;">${txt}</div>
+        `);
+        return;
+      }
+
+      // Enter game (multiplayer session)
+      if(action === "enter_game"){
+        try{
+          await createSessionForGame(value);
+          renderLobby();
+          show("lobby");
+        }catch(e){
+          alert("Session error: " + (e.message||e));
+        }
+        return;
+      }
+
+      if(action === "game_history"){
+        openDetail("GAME HISTORY", `
+          <div style="font-weight:1000; font-size:26px; margin-bottom:6px;">${value}</div>
+          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
+        `);
+        return;
+      }
+
+      if(action === "player_stats"){
+        openDetail("PLAYER STATS", `
+          <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${value}</div>
+          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
+        `);
+        return;
+      }
+
+      if(action === "player_history"){
+        openDetail("PLAYER HISTORY", `
+          <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${value}</div>
+          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
+        `);
+        return;
+      }
+
+      if(action === "show_session"){
+        if(!activeSessionId){
+          openDetail("SESSION", `<div style="opacity:.78;">No active session.</div>`);
+          return;
+        }
+        openDetail("SESSION • LIVE", `
+          <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${activeGame || "Game"}</div>
+          <div style="opacity:.82; font-size:14px; line-height:1.55;">
+            Room: <b>${ROOM_ID}</b><br/>
+            Session: <b>${activeSessionId}</b><br/>
+            Host: <b>${activeHost || "—"}</b>
+          </div>
+          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="pill" data-action="join_session" type="button">Join</button>
+            <button class="pill" data-action="end_session" type="button">End</button>
+          </div>
+        `);
+        return;
+      }
+
+      if(action === "join_session"){
+        try{ await joinActiveSessionIfAny(); }catch(e){}
+        openDetail("JOINED", `<div style="opacity:.85;">Joined session.</div>`);
+        return;
+      }
+
+      if(action === "end_session"){
+        try{ await endSession(); }catch(e){}
+        openDetail("SESSION ENDED", `<div style="opacity:.85;">Session ended.</div>`);
+        return;
+      }
+    });
+
+
+    // v708: setup picker clicks (non-blocking)
     document.addEventListener("click", (e)=>{
       const pick = e.target.closest && e.target.closest("[data-pick-email]");
       if(!pick) return;
