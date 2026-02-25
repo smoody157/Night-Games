@@ -1,21 +1,22 @@
 <!--
 ================================================================================
-  NIGHT GAMES v734    |    2026-02-25
+  NIGHT GAMES v737  |  2026-02-25
 ================================================================================
-  GOAL OF THIS BUILD:
-   - Enter stability (no changes to routing logic)
-   - Strong, obvious section labeling (scan at a glance)
-   - Error HUD stays (only appears on errors)
-   - Extra safety guards so random runtime errors don’t crash the app
+  MASTER CLEAN BUILD (STABILITY FIRST)
+  - Enter must work (email -> players) and must never regress.
+  - Game -> Setup must open.
+  - Setup Start must work (1 player + 2+ players).
 
-  QUICK SEARCH TAGS:
-   [EDIT_BG] [EDIT_LOGO] [EDIT_VERSION] [EDIT_COLORS] [EDIT_DROPDOWNS]
-   [SECTION_CONFIG] [SECTION_STATE] [SECTION_ROUTING] [SECTION_UI]
-   [SECTION_PLAYERS] [SECTION_GAMES] [SECTION_SETUP] [SECTION_WAITING]
-   [SECTION_FIREBASE] [SECTION_UTILS]
+  THIS BUILD CHANGES:
+  - NO behavior changes intended.
+  - Labels / section banners / edit notes only.
+  - Visible version badge added.
 
-  NOTE:
-   - If something is "maybe needed", it is kept and labeled as [KEEP_MAYBE].
+  QUICK JUMP (Ctrl/Cmd+F):
+    [EDIT_BG] [EDIT_LOGO] [EDIT_VERSION] [EDIT_COLORS] [EDIT_DROPDOWNS]
+    [SECTION_CONFIG] [SECTION_FIREBASE] [SECTION_STATE] [SECTION_ROUTING]
+    [SECTION_UI] [SECTION_PLAYERS] [SECTION_GAMES] [SECTION_SETUP]
+    [SECTION_WAITING] [SECTION_INVITES] [SECTION_UTILS] [SECTION_DEBUG]
 ================================================================================
 -->
 
@@ -24,7 +25,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v734 (Setup Fixed + Player Dropdown)</title>
+  <title>Night Games v737 (MASTER CLEAN)</title>
   <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -432,7 +433,7 @@
       border-radius: 14px;
     }
   
-    /* v734: header row + mini pill */
+    /* v737: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -443,7 +444,7 @@
     }
 
   
-    /* v734: session indicator */
+    /* v737: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -461,19 +462,19 @@
     }
 
   
-    /* v734 layout lock: micro vertical drop */
+    /* v737 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v734 layout lock adjustment: additional micro drop */
+    /* v737 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v734 ATW emoji: keep color + one-line */
+    /* v737 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -495,7 +496,7 @@
 
 
 
-    /* v734: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    /* v737: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
     #setup .detailWrap{
       top: clamp(150px, 18vh, 260px);
       bottom: max(80px, env(safe-area-inset-bottom));
@@ -510,7 +511,7 @@
 
 
 
-    /* v734: glass dropdowns (no white/yellow) */
+    /* v737: glass dropdowns (no white/yellow) */
     .glassSelect{
       width: 100%;
       padding: 14px 44px 14px 16px;
@@ -561,7 +562,7 @@
 
 
     /***********************
-     *  v734 ERROR HUD
+     *  v737 ERROR HUD
      *  - Appears only when an error occurs
      *  - Small, not in the way
      ***********************/
@@ -653,7 +654,7 @@
 /* =============================================================================
    SECTION_SETUP: PLAYER PICKER DROPDOWN  [SECTION_SETUP]
 ============================================================================= */
-/* v734: player picker dropdown */
+/* v737: player picker dropdown */
 .glassBtn{
   width: 100%;
   padding: 14px 16px;
@@ -728,9 +729,29 @@
   border-top: 1px solid rgba(255,255,255,.10);
 }
 .pickerFoot .pill{ flex:1; }
+
+/* =============================================================================
+   SECTION_UI: VERSION BADGE  [EDIT_VERSION]
+============================================================================= */
+#ngVersionBadge{
+  position: fixed;
+  left: 12px;
+  top: max(10px, env(safe-area-inset-top));
+  z-index: 99998;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(20,20,24,.58);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-weight: 1100;
+  font-size: 12px;
+  letter-spacing: .4px;
+  opacity: .92;
+}
 </style>
 
-<script id="ngGuards_v734">
+<script id="ngGuards_v737">
 /* =============================================================================
    SECTION_UTILS: SAFETY GUARDS  [SECTION_UTILS]
    - Prevents small errors from killing the whole app.
@@ -760,7 +781,7 @@
 
 <!--
 ================================================================================
-  EDIT NOTES (v734)
+  EDIT NOTES (v737)
 ================================================================================
   [EDIT_BG]       Background image / gradient choices
   [EDIT_LOGO]     Logo placement / size
@@ -771,7 +792,7 @@
   TIP: Use Ctrl/Cmd+F for the tags above to jump to the exact spot.
 ================================================================================
 -->
-<div class="buildBadge">Build <b>v734</b> • Firebase</div>
+<div class="buildBadge">Build <b>v737</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -949,6 +970,18 @@
    SECTION_FIREBASE  [SECTION_FIREBASE]
    - Firebase configuration lives here.
 ============================================================================= */
+
+/*
+================================================================================
+  CONFIG / CONSTANTS  [SECTION_CONFIG]
+================================================================================
+*/
+
+/*
+================================================================================
+  FIREBASE CONFIG  [SECTION_FIREBASE]
+================================================================================
+*/
 const firebaseConfig = {
       apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
       authDomain: "gamenightdarts-e7601.firebaseapp.com",
@@ -986,7 +1019,13 @@ const firebaseConfig = {
     const lobbyEndBtn = document.getElementById("lobbyEndBtn");
     const sessionBtn = document.getElementById("sessionBtn");
 
-    function show(which){
+    
+/*
+================================================================================
+  ROUTING / NAV  [SECTION_ROUTING]
+================================================================================
+*/
+function show(which){
       landing.classList.toggle("active", which==="landing");
       players.classList.toggle("active", which==="players");
       setup.classList.toggle("active", which==="setup");
@@ -1065,7 +1104,7 @@ function safeEmail(email){
     }
 
     
-    // v734: minimal session + setup → waiting room (does not touch login)
+    // v737: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -1093,7 +1132,13 @@ function safeEmail(email){
       return Array.from(set);
     }
 
-    function renderSetupForGame(game){
+    
+/*
+================================================================================
+  GAME SETUP  [SECTION_SETUP]
+================================================================================
+*/
+function renderSetupForGame(game){
       const people = (lastPeople||[]).slice();
       // ensure current user exists as a selectable option
       const me = (currentEmail||"").toLowerCase();
@@ -1130,7 +1175,7 @@ function safeEmail(email){
           </div>
         </div>
 
-        <!-- v734 player picker modal -->
+        <!-- v737 player picker modal -->
         <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
           <div class="pickerCard">
             <div class="pickerHead">
@@ -1161,7 +1206,7 @@ function safeEmail(email){
       // defaults
       countSel.value = "1";
       const checks = Array.from(document.querySelectorAll(".pickPlayer"));
-      // v734 picker wiring (dropdown-style player selector)
+      // v737 picker wiring (dropdown-style player selector)
       const openBtn = document.getElementById("openPlayerPicker");
       const modal = document.getElementById("playerPickerModal");
       const body = document.getElementById("pickerBody");
@@ -1285,7 +1330,7 @@ function safeEmail(email){
       });
 
       startBtn.addEventListener("click", async ()=>{
-        // v734: Stable start behavior (no broken/partial calls)
+        // v737: Stable start behavior (no broken/partial calls)
         enforce();
         const want = parseInt(countSel.value||"1",10) || 1;
         const picked = checks.filter(c=>c.).map(c=>c.value);
@@ -1303,14 +1348,20 @@ function safeEmail(email){
           try{ startGameFromSession && startGameFromSession(); }catch(e){}
         }else{
           show("waiting");
-          try{ await sendInvitesForSession(); }catch(e){}
+          try{ await 
+/*
+================================================================================
+  INVITES  [SECTION_INVITES]
+================================================================================
+*/
+sendInvitesForSession(); }catch(e){}
           try{ listenSessionInvites && listenSessionInvites(); }catch(e){}
         }
       });
 }
 
     
-    // v734: invites (in-app) — Join / No Thanks
+    // v737: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
@@ -1356,7 +1407,13 @@ function safeEmail(email){
               try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
       listenSessionInvites();
               listenSessionInvites();
-              renderWaitingRoom();
+              
+/*
+================================================================================
+  WAITING ROOM  [SECTION_WAITING]
+================================================================================
+*/
+renderWaitingRoom();
               show("waiting");
               closeDetail();
             }
@@ -1491,8 +1548,14 @@ function safeEmail(email){
     let lastPeople = []; // cached registry list for re-render on presence updates
 
 
-    function renderPlayers(list){
-      // v734: float online players to top
+    
+/*
+================================================================================
+  PLAYERS  [SECTION_PLAYERS]
+================================================================================
+*/
+function renderPlayers(list){
+      // v737: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -1541,7 +1604,7 @@ function safeEmail(email){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v734: re-render to reorder online players immediately
+        // v737: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -1631,7 +1694,7 @@ function safeEmail(email){
       const db = getFirestore(app);
 
     
-      // v734: expose firebase handles for non-module code (prevents "db is not defined")
+      // v737: expose firebase handles for non-module code (prevents "db is not defined")
       window.ngFirebase = {
         app, auth, db,
         doc, setDoc, getDoc,
@@ -1639,7 +1702,7 @@ function safeEmail(email){
         serverTimestamp, query, where
       };
       window.db = db;
-// v734 Multiplayer
+// v737 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -1651,7 +1714,13 @@ function safeEmail(email){
         if(u) dbgAuth.textContent = "anon uid " + u.uid.slice(0,6) + "…";
       });
 
-      function onEnter() {
+      
+/*
+================================================================================
+  ENTER / SIGN-IN ROUTING  [SECTION_ROUTING]
+================================================================================
+*/
+function onEnter() {
         signInFlow(auth, db, emailInput.value).catch((err)=>{
           const msg = err?.code || err?.message || String(err);
           statusLine.textContent = "Firebase error.";
@@ -1792,7 +1861,7 @@ function safeEmail(email){
   </script>
 
 <!-- =======================
-     v734 ERROR HUD (shows only on errors)
+     v737 ERROR HUD (shows only on errors)
      ======================= -->
 <div id="ngErrToast" aria-live="polite" aria-atomic="true">
   <div class="card">
@@ -1811,9 +1880,9 @@ function safeEmail(email){
 </div>
 
 
-<script id="ngErrorHud_v734">
+<script id="ngErrorHud_v737">
 /***********************
- *  v734: ERROR HUD + SAFE LOGGING
+ *  v737: ERROR HUD + SAFE LOGGING
  *  Purpose:
  *   - If a runtime error happens, show a small toast with details.
  *   - Does NOT block the UI and does NOT change game logic.
@@ -1880,7 +1949,7 @@ function safeEmail(email){
 </script>
 
 
-<script id="ngPatch_v734">
+<script id="ngPatch_v737">
 /* =============================================================================
    SECTION_ROUTING: HARDEN ENTER  [SECTION_ROUTING]
    - Wraps Enter click handler safely without changing logic.
