@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v740  |  2026-02-25
+  NIGHT GAMES v741  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v740 (MASTER CLEAN)</title>
+  <title>Night Games v741 (Uniform Buttons + Name/Email Picker)</title>
   <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -63,7 +63,7 @@
       color: rgba(255,255,255,.92);
       font-weight: 1000;
       letter-spacing: 1px;
-      font-size: 12px;
+      font-size: 13px;
       text-transform: uppercase;
       pointer-events: none;
       box-shadow: 0 10px 22px rgba(0,0,0,.55);
@@ -94,7 +94,7 @@
       -webkit-tap-highlight-color: transparent;
     }
     .dbgHead span{
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 1000;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -104,7 +104,7 @@
     .dbgBody{
       display:none;
       padding: 10px 12px 12px 12px;
-      font-size: 12px;
+      font-size: 13px;
       line-height: 1.4;
       opacity: .9;
     }
@@ -217,7 +217,7 @@
     .btn3d:active{ transform: translateY(2px) scale(.995); filter: var(--zShadowSoft); }
 
     .hint{
-      font-size: 12px;
+      font-size: 13px;
       opacity: .78;
       text-align:center;
       max-width: min(640px, 92vw);
@@ -355,12 +355,13 @@
     .actions{ display:flex; gap:8px; flex:0 0 auto; }
 
     .pill{
-      border: 1px solid rgba(255,255,255,.22);
+      /* v741 uniform button sizing */
+border: 1px solid rgba(255,255,255,.22);
       background: rgba(255,255,255,.03);
       color: rgba(255,255,255,.95);
       border-radius: 999px;
-      padding: 9px 11px;
-      font-size: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
       font-weight: 1000;
       letter-spacing: .8px;
       text-transform: uppercase;
@@ -425,7 +426,7 @@
       margin:0;
       white-space: pre-wrap;
       word-break: break-word;
-      font-size: 12px;
+      font-size: 13px;
       opacity: .9;
       background: rgba(0,0,0,.35);
       border: 1px solid rgba(255,255,255,.10);
@@ -433,7 +434,7 @@
       border-radius: 14px;
     }
   
-    /* v740: header row + mini pill */
+    /* v741: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -444,7 +445,7 @@
     }
 
   
-    /* v740: session indicator */
+    /* v741: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -462,19 +463,19 @@
     }
 
   
-    /* v740 layout lock: micro vertical drop */
+    /* v741 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v740 layout lock adjustment: additional micro drop */
+    /* v741 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v740 ATW emoji: keep color + one-line */
+    /* v741 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -496,7 +497,7 @@
 
 
 
-    /* v740: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    /* v741: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
     #setup .detailWrap{
       top: clamp(150px, 18vh, 260px);
       bottom: max(80px, env(safe-area-inset-bottom));
@@ -511,7 +512,7 @@
 
 
 
-    /* v740: glass dropdowns (no white/yellow) */
+    /* v741: glass dropdowns (no white/yellow) */
     .glassSelect{
       width: 100%;
       padding: 14px 44px 14px 16px;
@@ -562,7 +563,7 @@
 
 
     /***********************
-     *  v740 ERROR HUD
+     *  v741 ERROR HUD
      *  - Appears only when an error occurs
      *  - Small, not in the way
      ***********************/
@@ -616,13 +617,13 @@
       border-radius: 12px;
       padding: 8px 10px;
       font-weight: 1100;
-      font-size: 12px;
+      font-size: 13px;
       line-height: 1;
     }
     #ngErrToast .btn:active{ transform: translateY(1px); opacity:.96; }
     #ngErrToast .body{
       padding: 10px 12px 12px;
-      font-size: 12px;
+      font-size: 13px;
       line-height: 1.35;
       opacity: .90;
     }
@@ -654,7 +655,7 @@
 /* =============================================================================
    SECTION_SETUP: PLAYER PICKER DROPDOWN  [SECTION_SETUP]
 ============================================================================= */
-/* v740: player picker dropdown */
+/* v741: player picker dropdown */
 .glassBtn{
   width: 100%;
   padding: 14px 16px;
@@ -721,7 +722,7 @@
   margin-bottom: 10px;
 }
 .pickerRow .nm{ font-weight:1100; }
-.pickerRow .em{ opacity:.65; font-size:12px; font-weight:800; }
+.pickerRow .em{ opacity:.65; font-size: 13px; font-weight:800; }
 .pickerFoot{
   padding: 12px 12px;
   display:flex;
@@ -745,9 +746,25 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   font-weight: 1100;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: .4px;
   opacity: .92;
+}
+
+/* =============================================================================
+   SECTION_UI: FIELD LABELS (visual separation)  [EDIT_COLORS]
+============================================================================= */
+.fieldLabel{
+  display:inline-block;
+  padding: 8px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(120,190,255,.22);
+  background: rgba(40,120,220,.14);
+  color: rgba(225,245,255,.96);
+  font-weight: 1100;
+  letter-spacing: .4px;
+  margin: 0 0 10px 0;
+  box-shadow: inset 0 0 18px rgba(120,190,255,.08);
 }
 </style>
 
@@ -781,7 +798,7 @@
 
 <!--
 ================================================================================
-  EDIT NOTES (v740)
+  EDIT NOTES (v741)
 ================================================================================
   [EDIT_BG]       Background image / gradient choices
   [EDIT_LOGO]     Logo placement / size
@@ -792,7 +809,7 @@
   TIP: Use Ctrl/Cmd+F for the tags above to jump to the exact spot.
 ================================================================================
 -->
-<div class="buildBadge">Build <b>v740</b> • Firebase</div>
+<div class="buildBadge">Build <b>v741</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -1104,7 +1121,7 @@ function safeEmail(email){
     }
 
     
-    // v740: minimal session + setup → waiting room (does not touch login)
+    // v741: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -1159,12 +1176,12 @@ function renderSetupForGame(game){
         <div style="font-weight:1100; font-size:26px; margin-bottom:6px;">${game}</div>
         <div style="opacity:.78; margin-bottom:14px;">Pick players, then Start.</div>
 
-        <div style="margin-bottom:10px; font-weight:900; opacity:.85;">Number of Players</div>
+        <div class="fieldLabel">Number of Players</div>
         <select id="setupCount" class="glassSelect" class="glassSelect">
           ${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}">${n}</option>`).join("")}
         </select>
 
-        <div style="margin:14px 0 10px; font-weight:900; opacity:.85;">Which Players</div>
+        <div class="fieldLabel" style="margin-top:14px;">Which Players</div>
         <button type="button" id="openPlayerPicker" class="glassBtn">
           <span>Select players</span>
           <span class="sub" id="playerPickSummary">1 selected</span>
@@ -1175,7 +1192,7 @@ function renderSetupForGame(game){
           </div>
         </div>
 
-        <!-- v740 player picker modal -->
+        <!-- v741 player picker modal -->
         <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
           <div class="pickerCard">
             <div class="pickerHead">
@@ -1183,7 +1200,7 @@ function renderSetupForGame(game){
                 <div class="t">Pick Players</div>
                 <div class="c" id="pickerCountLabel">1 / 1 selected</div>
               </div>
-              <button class="pill" id="pickerCloseTop" type="button" style="padding:10px 14px;">Close</button>
+              <button class="pill" id="pickerCloseTop" type="button">Close</button>
             </div>
             <div class="pickerBody" id="pickerBody"></div>
             <div class="pickerFoot">
@@ -1206,7 +1223,7 @@ function renderSetupForGame(game){
       // defaults
       countSel.value = "1";
       const checks = Array.from(document.querySelectorAll(".pickPlayer"));
-      // v740 picker wiring (dropdown-style player selector)
+      // v741 picker wiring (dropdown-style player selector)
       const openBtn = document.getElementById("openPlayerPicker");
       const modal = document.getElementById("playerPickerModal");
       const body = document.getElementById("pickerBody");
@@ -1238,7 +1255,7 @@ function renderSetupForGame(game){
         checks.forEach(c=>{
           const email = c.value;
           const label = c.closest("label");
-          const nm = label ? (label.querySelector("div")?.innerText || email) : email;
+          const nm = label ? (label.querySelector("span")?.innerText || email) : email;
           const row = document.createElement("div");
           row.className = "pickerRow";
           row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
@@ -1330,7 +1347,7 @@ function renderSetupForGame(game){
       });
 
       startBtn.addEventListener("click", async ()=>{
-        // v740: Stable start behavior (no broken/partial calls)
+        // v741: Stable start behavior (no broken/partial calls)
         enforce();
         const want = parseInt(countSel.value||"1",10) || 1;
         const picked = checks.filter(c=>c.checked).map(c=>c.value);
@@ -1361,7 +1378,7 @@ sendInvitesForSession(); }catch(e){}
 }
 
     
-    // v740: invites (in-app) — Join / No Thanks
+    // v741: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
@@ -1555,7 +1572,7 @@ renderWaitingRoom();
 ================================================================================
 */
 function renderPlayers(list){
-      // v740: float online players to top
+      // v741: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -1604,7 +1621,7 @@ function renderPlayers(list){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v740: re-render to reorder online players immediately
+        // v741: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -1694,7 +1711,7 @@ function renderPlayers(list){
       const db = getFirestore(app);
 
     
-      // v740: expose firebase handles for non-module code (prevents "db is not defined")
+      // v741: expose firebase handles for non-module code (prevents "db is not defined")
       window.ngFirebase = {
         app, auth, db,
         doc, setDoc, getDoc,
@@ -1702,7 +1719,7 @@ function renderPlayers(list){
         serverTimestamp, query, where
       };
       window.db = db;
-// v740 Multiplayer
+// v741 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -1861,7 +1878,7 @@ function onEnter() {
   </script>
 
 <!-- =======================
-     v740 ERROR HUD (shows only on errors)
+     v741 ERROR HUD (shows only on errors)
      ======================= -->
 <div id="ngErrToast" aria-live="polite" aria-atomic="true">
   <div class="card">
@@ -1882,7 +1899,7 @@ function onEnter() {
 
 <script id="ngErrorHud_v737">
 /***********************
- *  v740: ERROR HUD + SAFE LOGGING
+ *  v741: ERROR HUD + SAFE LOGGING
  *  Purpose:
  *   - If a runtime error happens, show a small toast with details.
  *   - Does NOT block the UI and does NOT change game logic.
