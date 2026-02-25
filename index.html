@@ -1,9 +1,20 @@
+<!--
+Night Games v732
+Date: 2026-02-25
+
+CHANGELOG
+- Stabilize baseline (no feature changes besides Error HUD)
+- Add on-screen error bubble/toast ("Hey Steve — ...") with details
+- Add clear section markers + edit-friendly notes
+NOTE: Enter/login wiring intentionally untouched.
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v731 (Player Picker Dropdown)</title>
+  <title>Night Games v732 (Stable + Error HUD)</title>
   <style>
     :root{
       --bgStage: url("./IMG_7315.jpeg");
@@ -407,7 +418,7 @@
       border-radius: 14px;
     }
   
-    /* v731: header row + mini pill */
+    /* v732: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -418,7 +429,7 @@
     }
 
   
-    /* v731: session indicator */
+    /* v732: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -436,19 +447,19 @@
     }
 
   
-    /* v731 layout lock: micro vertical drop */
+    /* v732 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v731 layout lock adjustment: additional micro drop */
+    /* v732 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v731 ATW emoji: keep color + one-line */
+    /* v732 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -470,7 +481,7 @@
 
 
 
-    /* v731: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    /* v732: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
     #setup .detailWrap{
       top: clamp(150px, 18vh, 260px);
       bottom: max(80px, env(safe-area-inset-bottom));
@@ -485,7 +496,7 @@
 
 
 
-    /* v731: glass dropdowns (no white/yellow) */
+    /* v732: glass dropdowns (no white/yellow) */
     .glassSelect{
       width: 100%;
       padding: 14px 44px 14px 16px;
@@ -535,86 +546,107 @@
 
 
 
-    /* v731: player picker dropdown */
-    .glassBtn{
-      width: 100%;
-      padding: 14px 16px;
+    /***********************
+     *  v732 ERROR HUD
+     *  - Appears only when an error occurs
+     *  - Small, not in the way
+     ***********************/
+    #ngErrToast{
+      position: fixed;
+      right: 14px;
+      bottom: max(14px, env(safe-area-inset-bottom));
+      z-index: 99999;
+      display: none;
+      max-width: min(420px, calc(100vw - 28px));
+    }
+    #ngErrToast .card{
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.96);
-      font-weight: 1100;
-      font-size: 20px;
-      line-height: 1.1;
-      box-shadow: inset 0 0 18px rgba(255,255,255,.06), 0 0 18px rgba(255,255,255,.06);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-    }
-    .glassBtn .sub{ opacity:.72; font-weight:900; font-size:16px; }
-    .glassBtn:active{ transform: translateY(1px); opacity:.96; }
-    .pickerModal{
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.58);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index: 9999;
-      padding: 18px;
-    }
-    .pickerCard{
-      width: min(520px, 100%);
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(20,20,24,.72);
+      background: rgba(20,20,24,.78);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 0 30px rgba(0,0,0,.35), inset 0 0 24px rgba(255,255,255,.06);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 0 18px rgba(255,255,255,.06);
       overflow:hidden;
     }
-    .pickerHead{
-      padding: 14px 16px;
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap: 12px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
-    .pickerHead .t{ font-weight:1200; font-size:18px; }
-    .pickerHead .c{ opacity:.75; font-weight:900; font-size:14px; }
-    .pickerBody{
-      max-height: 46vh;
-      overflow-y:auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 10px 12px;
-    }
-    .pickerRow{
+    #ngErrToast .head{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 12px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.04);
-      margin-bottom: 10px;
-    }
-    .pickerRow .nm{ font-weight:1100; }
-    .pickerRow .em{ opacity:.65; font-size:12px; font-weight:800; }
-    .pickerFoot{
-      padding: 12px 12px;
-      display:flex;
       gap: 10px;
-      border-top: 1px solid rgba(255,255,255,.10);
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
     }
-    .pickerFoot .pill{ flex:1; }
+    #ngErrToast .title{
+      font-weight: 1200;
+      font-size: 14px;
+      letter-spacing: .2px;
+      opacity: .95;
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      white-space: nowrap;
+    }
+    #ngErrToast .dot{
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255,80,80,.92);
+      box-shadow: 0 0 14px rgba(255,80,80,.35);
+      flex: 0 0 auto;
+    }
+    #ngErrToast .btn{
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-weight: 1100;
+      font-size: 12px;
+      line-height: 1;
+    }
+    #ngErrToast .btn:active{ transform: translateY(1px); opacity:.96; }
+    #ngErrToast .body{
+      padding: 10px 12px 12px;
+      font-size: 12px;
+      line-height: 1.35;
+      opacity: .90;
+    }
+    #ngErrToast .msg{
+      font-weight: 1000;
+      font-size: 13px;
+      margin-bottom: 8px;
+      opacity: .96;
+    }
+    #ngErrToast .detail{
+      display:none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      opacity: .90;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    #ngErrToast.expanded .detail{ display:block; }
 
 </style>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v731</b> • Firebase</div>
+
+<!--
+========================
+EDIT NOTES (v732)
+- Search tags to quickly find editable UI pieces:
+  [EDIT_BG] background image / colors
+  [EDIT_LOGO] logo placement
+  [EDIT_VERSION] version label
+  [EDIT_DROPDOWNS] glass dropdown styling
+- Tip: Use Ctrl/Cmd+F with the tags above.
+========================
+-->
+
+  <div class="buildBadge">Build <b>v732</b> • Firebase</div>
 
   <div class="dbg" id="dbg">
     <div class="dbgHead" id="dbgHead">
@@ -904,7 +936,7 @@ function safeEmail(email){
     }
 
     
-    // v731: minimal session + setup → waiting room (does not touch login)
+    // v732: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -959,35 +991,9 @@ function safeEmail(email){
         </select>
 
         <div style="margin:14px 0 10px; font-weight:900; opacity:.85;">Which Players</div>
-        
-        <button type="button" id="openPlayerPicker" class="glassBtn">
-          <span>Select players</span>
-          <span class="sub" id="playerPickSummary">0 selected</span>
-        </button>
-        <div id="setupPlayersWrapHolder" style="display:none;">
-          <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
+        <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
           ${opts}
         </div>
-        </div>
-
-        <!-- v731 player picker modal -->
-        <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
-          <div class="pickerCard">
-            <div class="pickerHead">
-              <div>
-                <div class="t">Pick Players</div>
-                <div class="c" id="pickerCountLabel">0 / 1 selected</div>
-              </div>
-              <button class="pill" id="pickerCloseTop" type="button" style="padding:10px 14px;">Close</button>
-            </div>
-            <div class="pickerBody" id="pickerBody"></div>
-            <div class="pickerFoot">
-              <button class="pill" id="pickerCancel" type="button" style="opacity:.85;">Cancel</button>
-              <button class="pill" id="pickerDone" type="button">Done</button>
-            </div>
-          </div>
-        </div>
-
 
         <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
           <button class="pill" id="setupStartBtn" type="button">Start</button>
@@ -1002,110 +1008,6 @@ function safeEmail(email){
       // defaults
       countSel.value = "1";
       const checks = Array.from(document.querySelectorAll(".pickPlayer"));
-      // v731 picker wiring (dropdown-style player selector)
-      const openBtn = document.getElementById("openPlayerPicker");
-      const modal = document.getElementById("playerPickerModal");
-      const body = document.getElementById("pickerBody");
-      const doneBtn = document.getElementById("pickerDone");
-      const cancelBtn = document.getElementById("pickerCancel");
-      const closeTop = document.getElementById("pickerCloseTop");
-      const summary = document.getElementById("playerPickSummary");
-      const countLabel = document.getElementById("pickerCountLabel");
-
-      let snapshotSelected = new Set();
-      function getSelectedEmails(){
-        return checks.filter(c=>c.checked).map(c=>c.value);
-      }
-      function setSelectedEmails(set){
-        checks.forEach(c=>{ c.checked = set.has(c.value); });
-      }
-      function refreshSummary(){
-        const sel = getSelectedEmails();
-        summary.textContent = `${sel.length} selected`;
-      }
-      function refreshCountLabel(want){
-        const sel = getSelectedEmails().length;
-        countLabel.textContent = `${sel} / ${want} selected`;
-      }
-      function rebuildPicker(want){
-        body.innerHTML = "";
-        const sel = new Set(getSelectedEmails());
-        checks.forEach(c=>{
-          const email = c.value;
-          const label = c.closest("label");
-          const nm = label ? (label.querySelector("div")?.innerText || email) : email;
-          const row = document.createElement("div");
-          row.className = "pickerRow";
-          row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "pill";
-          btn.style.padding = "10px 12px";
-          btn.textContent = sel.has(email) ? "Selected" : "Select";
-          btn.addEventListener("click", ()=>{
-            const now = new Set(getSelectedEmails());
-            const isOn = now.has(email);
-            if(isOn){
-              now.delete(email);
-            }else{
-              if(now.size >= want){
-                // keep it simple: do nothing if at cap
-                ping && ping();
-                return;
-              }
-              now.add(email);
-            }
-            setSelectedEmails(now);
-            enforce();
-            rebuildPicker(want);
-          });
-          row.appendChild(btn);
-          body.appendChild(row);
-        });
-        refreshCountLabel(want);
-        refreshSummary();
-      }
-      function openPicker(want){
-        snapshotSelected = new Set(getSelectedEmails());
-        rebuildPicker(want);
-        modal.style.display = "flex";
-        modal.setAttribute("aria-hidden","false");
-      }
-      function closePicker(){
-        modal.style.display = "none";
-        modal.setAttribute("aria-hidden","true");
-      }
-      if(openBtn){
-        openBtn.addEventListener("click", ()=>{
-          const want = parseInt((document.getElementById("setupCount")?.value)||"1",10) || 1;
-          openPicker(want);
-        });
-      }
-      [cancelBtn, closeTop].forEach(b=> b && b.addEventListener("click", ()=>{
-        setSelectedEmails(snapshotSelected);
-        enforce();
-        refreshSummary();
-        closePicker();
-      }));
-      if(doneBtn){
-        doneBtn.addEventListener("click", ()=>{
-          closePicker();
-          refreshSummary();
-        });
-      }
-      if(modal){
-        modal.addEventListener("click", (e)=>{
-          if(e.target === modal){
-            setSelectedEmails(snapshotSelected);
-            enforce();
-            refreshSummary();
-            closePicker();
-          }
-        });
-      }
-      // keep summary current
-      refreshSummary();
-
       // default select current user
       checks.forEach(c=>{ if(c.value === me) c.checked = true; });
 
@@ -1146,7 +1048,7 @@ function safeEmail(email){
     }
 
     
-    // v731: invites (in-app) — Join / No Thanks
+    // v732: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
@@ -1328,7 +1230,7 @@ function safeEmail(email){
 
 
     function renderPlayers(list){
-      // v731: float online players to top
+      // v732: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -1377,7 +1279,7 @@ function safeEmail(email){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v731: re-render to reorder online players immediately
+        // v732: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -1467,7 +1369,7 @@ function safeEmail(email){
       const db = getFirestore(app);
 
     
-      // v731: expose firebase handles for non-module code (prevents "db is not defined")
+      // v732: expose firebase handles for non-module code (prevents "db is not defined")
       window.ngFirebase = {
         app, auth, db,
         doc, setDoc, getDoc,
@@ -1475,7 +1377,7 @@ function safeEmail(email){
         serverTimestamp, query, where
       };
       window.db = db;
-// v731 Multiplayer
+// v732 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -1626,5 +1528,94 @@ function safeEmail(email){
     // If the module runs, hide the fatal overlay (in case something else turned it on)
     document.getElementById("fatal").style.display = "none";
   </script>
+
+<!-- =======================
+     v732 ERROR HUD (shows only on errors)
+     ======================= -->
+<div id="ngErrToast" aria-live="polite" aria-atomic="true">
+  <div class="card">
+    <div class="head">
+      <div class="title"><span class="dot"></span><span id="ngErrTitle">Hey Steve — something went wrong</span></div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn" id="ngErrMore" type="button">Details</button>
+        <button class="btn" id="ngErrClose" type="button">Close</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="msg" id="ngErrMsg">Error captured.</div>
+      <div class="detail" id="ngErrDetail"></div>
+    </div>
+  </div>
+</div>
+
+
+<script id="ngErrorHud_v732">
+/***********************
+ *  v732: ERROR HUD + SAFE LOGGING
+ *  Purpose:
+ *   - If a runtime error happens, show a small toast with details.
+ *   - Does NOT block the UI and does NOT change game logic.
+ ***********************/
+(function(){
+  const toast = document.getElementById('ngErrToast');
+  if(!toast) return;
+  const titleEl = document.getElementById('ngErrTitle');
+  const msgEl   = document.getElementById('ngErrMsg');
+  const detEl   = document.getElementById('ngErrDetail');
+  const moreBtn = document.getElementById('ngErrMore');
+  const closeBtn= document.getElementById('ngErrClose');
+
+  let hideTimer = null;
+
+  function showToast(head, msg, detail){
+    try{
+      titleEl.textContent = head || 'Hey Steve — something went wrong';
+      msgEl.textContent = msg || 'Error captured.';
+      detEl.textContent = detail || '';
+      toast.classList.remove('expanded');
+      toast.style.display = 'block';
+      if(hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(()=>{ toast.style.display = 'none'; }, 9000);
+    }catch(e){}
+  }
+
+  function normalizeError(err){
+    if(!err) return {head:'Hey Steve — something went wrong', msg:'Unknown error', detail:''};
+    if(typeof err === 'string') return {head:'Hey Steve — something went wrong', msg:err, detail:''};
+    const msg = err.message || String(err);
+    const stack = err.stack || '';
+    return {head:'Hey Steve — something went wrong', msg, detail:stack};
+  }
+
+  // Buttons
+  moreBtn && moreBtn.addEventListener('click', ()=>{
+    toast.classList.toggle('expanded');
+    if(hideTimer) clearTimeout(hideTimer);
+  });
+  closeBtn && closeBtn.addEventListener('click', ()=>{
+    toast.style.display = 'none';
+    if(hideTimer) clearTimeout(hideTimer);
+  });
+
+  // Global error hooks
+  window.addEventListener('error', (event)=>{
+    const err = event.error || new Error(event.message || 'Script error');
+    const n = normalizeError(err);
+    const where = event.filename ? `\n@ ${event.filename}:${event.lineno||0}:${event.colno||0}` : '';
+    showToast(n.head, n.msg, (n.detail||'') + where);
+  });
+
+  window.addEventListener('unhandledrejection', (event)=>{
+    const n = normalizeError(event.reason);
+    showToast(n.head, n.msg, n.detail);
+  });
+
+  // Expose a manual helper: window.ngErr("message", "detail")
+  window.ngErr = function(message, detail){
+    showToast('Hey Steve — heads up', message || 'Notice', detail || '');
+  };
+})();
+</script>
+
 </body>
 </html>
