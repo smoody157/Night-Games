@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v836  |  2026-02-25
+  NIGHT GAMES v840  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,14 +25,14 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v836 (MASTER STABLE)</title>
+<title>Night Games v840 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/69CB8D2F-BF7B-4B22-8CA7-A9F607BEB74E.png");
+      --bgStage: url("./IMG_7315.jpeg");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -122,7 +122,7 @@
       content:"";
       position:absolute;
       inset:0;
-      background: radial-gradient(130% 110% at 50% 25%, rgba(0,0,0,0), rgba(0,0,0,.28) 60%, rgba(0,0,0,.58) 100%);
+      background: radial-gradient(130% 110% at 50% 25%, rgba(0,0,0,0), rgba(0,0,0,.22) 60%, rgba(0,0,0,.52) 100%);
       pointer-events:none;
     }
 
@@ -133,9 +133,9 @@
       transform:translateX(-50%);
       width: var(--uiW);
       max-width: var(--maxW);
-      top: clamp(485px, 58vh, 720px);
+      top: clamp(320px, 48vh, 590px);
       display:grid;
-      gap: 10px;
+      gap: 14px;
       justify-items:center;
       z-index:2;
     }
@@ -859,21 +859,6 @@ border: 1px solid rgba(255,255,255,.22);
 /* Make sure landing UI sits below the header */
 #landing .landingUI{ padding-top: 54px; }
 
-/* ===================== v768 GREEN ADVANCE BUTTONS ===================== */
-.btnAdvance, .btn-advance, .btnAdvanceGreen{
-  border: 1px solid rgba(120,255,170,.35) !important;
-  background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
-  box-shadow:
-    0 0 18px rgba(70,255,160,.18),
-    inset 0 0 18px rgba(60,255,160,.12) !important;
-}
-.btnAdvance:active, .btn-advance:active, .btnAdvanceGreen:active{
-  transform: translateY(1px) scale(0.99);
-  box-shadow:
-    0 0 10px rgba(70,255,160,.16),
-    inset 0 0 10px rgba(60,255,160,.10) !important;
-}
-
 /* ===================== v768 UI FIXES (requested) ===================== */
 /* Hide Lobby Setup button (requested) */
 #lobbySetupBtn{ display:none !important; }
@@ -906,16 +891,6 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v768 STABILIZE: REMOVE GREEN ADVANCE BUTTONS ===================== */
-.btnAdvance, .btn-advance, .btnAdvanceGreen{
-  border: 1px solid rgba(255,255,255,.22) !important;
-  background: rgba(255,255,255,.03) !important;
-  box-shadow:
-    inset 0 2px 6px rgba(255,255,255,.28),
-    inset 0 -10px 16px rgba(0,0,0,.55),
-    0 0 16px rgba(0,210,255,.08) !important;
-  filter: var(--zShadowSoft);
-}
 .btnAdvance:active, .btn-advance:active, .btnAdvanceGreen:active{
   transform: translateY(2px) scale(.99);
   filter: var(--zShadowSoft);
@@ -990,376 +965,37 @@ border: 1px solid rgba(255,255,255,.22);
       flex:1;
       text-align:center;
     }
-
-    /* ===================== v836 PRODUCTION VISUAL POLISH ===================== */
-    /* iOS viewport stability */
-    #app{ height: 100dvh; }
-    .screen{ height: 100dvh; }
-
-    /* Keep the hero art framed consistently */
-    .screen::before{
-      background-position: center top; /* keeps logo/hero area visible on tall phones */
-    }
-
-    /* Cinematic fade-in (landing only) */
-    #landing::before{
-      animation: ngLandingFade 900ms ease-out both;
-      will-change: opacity, transform;
-    }
-    @keyframes ngLandingFade{
-      from{ opacity: 0; transform: scale(1.02); }
-      to{ opacity: 1; transform: scale(1); }
-    }
-
-
-/* ===================== v836 HEADER: TEXT ONLY ===================== */
-#ngHeaderBar{
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  padding: 0 !important;
-  overflow: visible !important;
-}
-#ngHeaderBar::before{ display:none !important; }
-#ngHeaderBar > span{
-  text-shadow: 0 2px 14px rgba(0,0,0,.55);
-  opacity: .92;
-}
-
-
-/* ===================== v836 LANDING HINT + FOOTER ===================== */
-#landing .hint{
-  font-size: 12px;
-  opacity: .82;
-  margin-top: 2px;
-  text-shadow: 0 2px 14px rgba(0,0,0,.55);
-}
-
-
-#ngFooter{
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: max(10px, env(safe-area-inset-bottom));
-  z-index: 9999;
-  width: min(760px, 94vw);
-  text-align: center;
-  font-size: 12px;
-  letter-spacing: .2px;
-  opacity: .78;
-  text-shadow: 0 2px 14px rgba(0,0,0,.6);
-  pointer-events: none;
-}
-
-
-/* ===================== v836 STAGE-SIZED LANDING CONTROLS ===================== */
-:root{
-  --stageCtlW: min(460px, 78vw);
-  --stageCtlH: 66px;
-}
-#landing .field3d, #landing .btn3d{
-  width: var(--stageCtlW) !important;
-  height: var(--stageCtlH) !important;
-  border-radius: 20px !important;
-}
-#landing .landingUI{
-  /* slightly lower, but not too far */
-  top: clamp(430px, 54vh, 680px) !important;
-  gap: 12px !important;
-}
-#landing .hint{
-  max-width: var(--stageCtlW) !important;
-}
-
-
-/* ===================== v836 LANDING: REMOVE FULL-WIDTH CONTROLS ===================== */
-#landing .field3d, #landing .btn3d{
-  width: min(460px, 78vw) !important;   /* stage-sized */
-  height: 66px !important;
-  border-radius: 20px !important;
-}
-#landing .landingUI{
-  top: clamp(455px, 56vh, 695px) !important; /* slight lift from too-low */
-  gap: 12px !important;
-}
-#landing .hint, #ngFooter{
-  width: min(460px, 78vw) !important;
-}
-
-
-/* ===================== v836 LANDING OVERLAY (STAGE ART CONTROLS) =====================
-   - Removes the large glass controls entirely.
-   - Uses invisible overlays aligned to the artwork "email" and "ENTER" on the background.
-============================================================================= */
-#landing .landingOverlay{
-  position:absolute;
-  left:50%;
-  transform: translateX(-50%);
-  width: min(540px, 86vw);            /* stage-sized */
-  top: clamp(430px, 54vh, 675px);     /* tuned to sit on stage */
-  display:grid;
-  grid-template-rows: 66px 66px auto;
-  gap: 12px;
-  justify-items: stretch;
-  z-index: 3;
-}
-#landing #emailInput{
-  width:100%;
-  height:66px;
-  border: none;
-  outline: none;
-  background: transparent;            /* let artwork show */
-  color: rgba(255,255,255,.96);
-  font-size: 20px;
-  font-weight: 900;
-  letter-spacing: .6px;
-  text-align: center;
-  text-shadow: 0 2px 14px rgba(0,0,0,.65);
-  -webkit-appearance: none;
-  appearance: none;
-}
-#landing #emailInput::placeholder{
-  color: rgba(235,245,255,.62);
-}
-/* Kill iOS autofill paint */
-#landing #emailInput:-webkit-autofill,
-#landing #emailInput:-webkit-autofill:hover,
-#landing #emailInput:-webkit-autofill:focus,
-#landing #emailInput:-webkit-autofill:active{
-  -webkit-text-fill-color: rgba(255,255,255,.96) !important;
-  transition: background-color 99999s ease-out 0s;
-  box-shadow: 0 0 0px 1000px transparent inset !important;
-}
-
-/* ENTER overlay: invisible clickable area over the artwork button */
-#landing #enterBtn{
-  width:100%;
-  height:66px;
-  border: none;
-  background: transparent;
-  color: transparent;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Hint tuned */
-#landing .hint{
-  font-size: 12px;
-  opacity: .82;
-  text-align:center;
-  text-shadow: 0 2px 14px rgba(0,0,0,.55);
-}
-
-
-/* v836: disable legacy landingUI glass layout (no longer used) */
-#landing .landingUI{ display:none !important; }
-
-
-/* ===================== v836 LANDING: STAGE-SIZED CONTROLS (NO LONG BARS) ===================== */
-#landing .landingUI{
-  top: clamp(445px, 55vh, 690px) !important; /* slight nudge down from v826 but not too low */
-  gap: 12px !important;
-}
-#landing .field3d, #landing .btn3d{
-  width: min(460px, 78vw) !important;  /* stage-sized */
-  height: 66px !important;
-  border-radius: 20px !important;
-}
-#landing .hint{
-  max-width: min(460px, 78vw) !important;
-  font-size: 12px;
-  opacity: .82;
-  text-shadow: 0 2px 14px rgba(0,0,0,.55);
-}
-
-/* Strong iOS autofill suppression for demo */
-#landing #emailInput:-webkit-autofill,
-#landing #emailInput:-webkit-autofill:hover,
-#landing #emailInput:-webkit-autofill:focus,
-#landing #emailInput:-webkit-autofill:active{
-  -webkit-text-fill-color: rgba(255,255,255,.96) !important;
-  transition: background-color 99999s ease-out 0s;
-  -webkit-box-shadow: 0 0 0px 1000px var(--fieldFill) inset !important;
-  box-shadow: 0 0 0px 1000px var(--fieldFill) inset !important;
-}
-
-
-/* ===================== v836 LANDING REBUILD (MASTER-CANDIDATE) ===================== */
-#landing .landingStage{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  top: clamp(445px, 55vh, 690px);
-  display:grid;
-  gap: 12px;
-  justify-items: center;
-  z-index: 3;
-  width: min(460px, 78vw); /* enter width container */
-}
-
-/* Email slightly narrower than Enter (depth effect) */
-#landing .emailShell{
-  width: min(420px, 72vw);
-  height: 66px;
-  border-radius: 20px;
-  background: rgba(255,255,255,.035);
-  border: 1px solid rgba(255,255,255,.18);
-  box-shadow:
-    inset 0 2px 6px rgba(255,255,255,.45),
-    inset 0 -14px 22px rgba(0,0,0,.60),
-    0 0 18px rgba(0,210,255,.10);
-  overflow:hidden;
-  filter: var(--zShadow);
-  position: relative;
-}
-#landing .emailShell::before{
-  content:"";
-  position:absolute;
-  inset: 10px 12px auto 12px;
-  height: 16px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(255,255,255,.52), rgba(255,255,255,0));
-  opacity: .42;
-  pointer-events:none;
-}
-#landing #emailInput{
-  width:100%;
-  height:100%;
-  border:0;
-  outline:none;
-  background:transparent;
-  color: rgba(255,255,255,.95);
-  font-size: 18px;
-  letter-spacing: .6px;
-  padding: 0 20px;
-  box-sizing:border-box;
-  text-align:center;
-  -webkit-appearance:none;
-  appearance:none;
-}
-#landing #emailInput::placeholder{ color: rgba(235,245,255,.55); }
-
-/* Enter wider than email (stage effect) */
-#landing .enterShell{
-  width: 100%;
-  height: 66px;
-  border-radius: 20px;
-  cursor:pointer;
-  color: rgba(255,255,255,.96);
-  font-weight: 1000;
-  font-size: 26px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  background: rgba(255,255,255,.035);
-  border: 1px solid rgba(255,255,255,.18);
-  box-shadow:
-    inset 0 2px 6px rgba(255,255,255,.45),
-    inset 0 -14px 22px rgba(0,0,0,.60),
-    0 0 18px rgba(0,210,255,.10);
-  filter: var(--zShadow);
-}
-#landing .enterShell:active{ transform: translateY(2px) scale(.995); filter: var(--zShadowSoft); }
-
-/* Hint: slightly smaller + centered + always fits */
-#landing #statusLine{
-  font-size: 11px;
-  opacity: .82;
-  text-align:center;
-  line-height: 1.35;
-  max-width: 100%;
-}
-
-/* iOS autofill ghost suppression + hard clear */
-#landing #emailInput:-webkit-autofill,
-#landing #emailInput:-webkit-autofill:hover,
-#landing #emailInput:-webkit-autofill:focus,
-#landing #emailInput:-webkit-autofill:active{
-  -webkit-text-fill-color: rgba(255,255,255,.95) !important;
-  transition: background-color 99999s ease-out 0s;
-  -webkit-box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
-  box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
-  border-radius: 20px;
-}
-
-/* Header colors */
-#ngHeaderRight{ color: rgba(90,255,170,.95) !important; }         /* ONLINE green */
-.ngHeaderLeft{ color: rgba(120,190,255,.95) !important; }         /* Version/left label blue */
-
-/* v836 hide legacy landingUI */
-#landing .landingUI{ display:none !important; }
-
-
-/* v836: detail content scrolling (RULES + PLAYER STATS) */
-.detailWrap > .panel:first-child{
-  display:flex;
-  flex-direction:column;
-  height: 100%;
-  min-height: 0;
-}
-.detailBody{
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* v836: prevent browser autofill yellow on inputs */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active{
-  -webkit-text-fill-color: rgba(235,245,255,.96);
-  transition: background-color 5000s ease-in-out 0s;
-  box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
-}
-
-
-.ngVer{ color: rgba(120,190,255,.95) !important; } /* version blue */
-
-    /* ===================== v839 LANDING: WIRE OVER ART (NO DUPLICATE LOOK) ===================== */
-    /* Move the real (wired) controls onto the art slots */
-    #landing .landingUI{
-      top: auto !important;
-      bottom: max(88px, calc(env(safe-area-inset-bottom) + 78px)) !important;
-      gap: 10px !important;
-    }
-
-    /* Hide the hint line (the background art already includes footer text) */
-    #landing #statusLine{ display:none !important; }
-
-    /* Make the real field/button visually disappear so only the artwork is seen,
-       while keeping text/caret visible for typing and keeping the button clickable. */
-    #landing .field3d{
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      filter: none !important;
-      overflow: visible !important;
-    }
-    #landing .field3d::before{ display:none !important; }
-
-    #landing .field3d input{
-      text-align: center !important;
-      font-weight: 900;
-      font-size: 18px;
-      letter-spacing: .6px;
-      text-shadow: 0 2px 10px rgba(0,0,0,.85);
-    }
-
-    #landing .btn3d{
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      filter: none !important;
-      color: transparent !important;           /* hide duplicate ENTER text */
-      text-shadow: none !important;
-    }
-    #landing .btn3d::before{ display:none !important; }
-
 </style>
 <script id="ngGuards_v748">
+/* =============================================================================
+   SECTION_UTILS: SAFETY GUARDS  [SECTION_UTILS]
+   - Prevents small errors from killing the whole app.
+   - Does NOT change normal behavior when everything is working.
+============================================================
+    /* v840: detail content scrolling (RULES + PLAYER STATS) */
+    .detailWrap > .panel:first-child{
+      display:flex;
+      flex-direction:column;
+      height: 100%;
+      min-height: 0;
+    }
+    .detailBody{
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* v840: prevent browser autofill yellow on email field */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active{
+      -webkit-text-fill-color: rgba(235,245,255,.96);
+      transition: background-color 5000s ease-in-out 0s;
+      box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
+    }
+================= */
 (function(){
   // Safe wrapper for event handlers
   window.ngSafe = function(fn, label){
@@ -1380,7 +1016,7 @@ input:-webkit-autofill:active{
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v836</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v840</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1394,30 +1030,16 @@ input:-webkit-autofill:active{
   TIP: Use Ctrl/Cmd+F for the tags above to jump to the exact spot.
 ================================================================================
 -->
-<div class="dbg" id="dbg">
-<div class="dbgHead" id="dbgHead">
-<span>Debug <b id="dbgState">INIT</b></span>
-<span style="opacity:.7;"></span>
-</div>
-<div class="dbgBody" id="dbgBody">
-<div class="kv"><span>URL</span><code id="dbgUrl"></code></div>
-<div class="kv"><span>Auth</span><code id="dbgAuth"></code></div>
-<div class="kv"><span>Firestore</span><code id="dbgFs"></code></div>
-<div class="kv"><span>Last error</span><code class="warn" id="dbgErr">none</code></div>
-<div style="margin-top:8px; opacity:.8;">If anything fails on iPhone, this box tells us exactly what.</div>
-</div>
+
 </div>
 <div id="app">
 <section class="screen active" id="landing">
-<div class="landingStage">
-  <div class="emailShell">
-    <input id="emailInput" name="ng_email" autocomplete="new-password" inputmode="email" type="email"
-           placeholder="player@example.com" autocapitalize="none" autocorrect="off" spellcheck="false"/ style="text-align:center;">
-  </div>
-
-  <button class="enterShell btnAdvance" id="enterBtn" type="button">Enter</button>
-
-  <div class="hint" id="statusLine">Email-only sign-in (no password). Firebase stable build.</div>
+<div class="landingUI">
+<div class="field3d">
+<input autocomplete="email" id="emailInput" inputmode="email" placeholder="Enter your email" type="email"/>
+</div>
+<button class="btn3d btnAdvance" id="enterBtn" type="button">Enter</button>
+<div class="hint" id="statusLine">Email-only sign-in (no password). Firebase stable build.</div>
 </div>
 </section>
 <section class="screen" id="players">
@@ -1522,7 +1144,7 @@ input:-webkit-autofill:active{
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v836
+<script type="module">// Night Games Night Games v840
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1587,63 +1209,6 @@ const firebaseConfig = {
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
 
-    /* v836: hard-clear saved email ghosts on iOS */
-    (function(){
-      try{
-        const el = document.getElementById("emailInput");
-        if(!el) return;
-        function hardClear(){
-          const v = (el.value||"").trim();
-          if(v && v.includes("@")) el.value = "";
-          el.setAttribute("value","");
-        }
-        hardClear();
-        setTimeout(hardClear, 80);
-        setTimeout(hardClear, 220);
-        setTimeout(hardClear, 700);
-        el.addEventListener("focus", hardClear, {passive:true});
-        el.addEventListener("pointerdown", hardClear, {passive:true});
-      }catch(e){}
-    })();
-
-
-    /* v836: strong autofill clear (prevents saved email ghost text on iOS) */
-    (function(){
-      try{
-        const el = document.getElementById("emailInput");
-        if(!el) return;
-        function hardClear(){
-          // Clear both property + attribute to defeat iOS ghost autofill
-          el.value = "";
-          el.setAttribute("value","");
-        }
-        hardClear();
-        setTimeout(hardClear, 80);
-        setTimeout(hardClear, 220);
-        setTimeout(hardClear, 700);
-        el.addEventListener("focus", hardClear, {passive:true});
-        el.addEventListener("pointerdown", hardClear, {passive:true});
-      }catch(e){}
-    })();
-
-
-    /* v836: autofill-kill (iOS can prefill saved email visually). Clear a few times on load. */
-    (function(){
-      try{
-        const el = document.getElementById("emailInput");
-        if(!el) return;
-        function clearIfAutofilled(){
-          const v = (el.value||"").trim();
-          if(v && v.includes("@")) el.value = "";
-        }
-        clearIfAutofilled();
-        setTimeout(clearIfAutofilled, 120);
-        setTimeout(clearIfAutofilled, 320);
-        setTimeout(clearIfAutofilled, 800);
-      }catch(e){}
-    })();
-
-
     /* ===========================
        v768 INTRO AUDIO (REPO FILE)
        - Plays the repo-hosted intro audio (m4a) when user taps the email field.
@@ -1656,7 +1221,7 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a";
+        const INTRO_URL = "intro.m4a";
 
         const intro = new Audio(INTRO_URL);
         intro.preload = "auto";
@@ -1668,18 +1233,13 @@ const firebaseConfig = {
             if(p && p.catch) p.catch(()=>{});
           }catch(e){}
         }
+
         if(emailInput){
-          // v836: avoid iOS double-events; one debounced gesture
-          let __ngIntroLast = 0;
-          function playIntroOnce(){
-            const now = Date.now();
-            if(now - __ngIntroLast < 900) return;
-            __ngIntroLast = now;
-            playIntro();
-          }
-          emailInput.addEventListener("pointerdown", playIntroOnce, {passive:true});
-        }
-          emailInput.addEventListener("pointerdown", playIntroOnce, {passive:true});
+          // trusted gesture triggers playback on mobile
+          emailInput.addEventListener("pointerdown", playIntro, {passive:true});
+          emailInput.addEventListener("touchstart", playIntro, {passive:true});
+          emailInput.addEventListener("mousedown", playIntro, {passive:true});
+          emailInput.addEventListener("focus", playIntro, {passive:true});
         }
       }catch(e){}
     })();
@@ -1839,7 +1399,7 @@ function renderSetupForGame(game){
         const em = (p.email||"").toLowerCase();
         const nm = p.name || (em.split("@")[0]||em);
         return `<label class="chip" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); margin:0 0 10px 0;">
-          <input type="checkbox" class="pickPlayer" style="transform:scale(1.1)"/>
+          <input type="checkbox" class="pickPlayer" value="${em}" style="transform:scale(1.1)"/>
           <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:900;">${nm}</span>
         </label>`;
       }).join("");
@@ -1850,7 +1410,7 @@ function renderSetupForGame(game){
 
         <div class="fieldLabel">Number of Players</div>
         <select id="setupCount" class="glassSelect" class="glassSelect">
-          ${[1,2,3,4,5,6,7,8].map(n=>`<option>${n}</option>`).join("")}
+          ${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}">${n}</option>`).join("")}
         </select>
 
         <div class="fieldLabel" style="margin-top:14px;">Which Players</div>
@@ -2519,7 +2079,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v836)
+        // Player Stats Shell (v840)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
@@ -2796,8 +2356,5 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 })();
 </script>
-
-<div id="ngFooter">© The Dart Room. Night Games is owned by The Dart Room. All rights reserved.</div>
-
 </body>
 </html>
