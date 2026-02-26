@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v807  |  2026-02-25
+  NIGHT GAMES v808  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,11 +23,11 @@
 
 <html lang="en">
 <head>
-  <!-- BUILD_STAMP_v807 -->
+  <!-- BUILD_STAMP_v808 -->
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v807 (MASTER STABLE)</title>
+<title>Night Games v808 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -935,7 +935,7 @@ border: 1px solid rgba(255,255,255,.22);
       box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
     }
 
-/* v807: HOTSPOT MODE
+/* v808: HOTSPOT MODE
    Landing artwork already contains the visual email/button/footer.
    We hide the real UI visuals to prevent "double/stacked" footers,
    but keep them tappable so the app still works.
@@ -1066,7 +1066,7 @@ border: 1px solid rgba(255,255,255,.22);
 /* ================================================================ */
 
 
-/* ===================== v807 CLEAN LANDING + HEADER ===================== */
+/* ===================== v808 CLEAN LANDING + HEADER ===================== */
 /* Prevent background layers from eating taps */
 .screen::before,
 #landing::before{
@@ -1129,6 +1129,71 @@ border: 1px solid rgba(255,255,255,.22);
 }
 /* ====================================================================== */
 
+
+/* ===================== v808 FORCE OVERRIDES (FINAL WINS) ===================== */
+/* Kill header pill visuals entirely */
+#ngHeaderBar{
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+#ngHeaderBar::before,
+#ngHeaderBar::after{
+  display: none !important;
+  content: none !important;
+}
+
+/* Ensure background layers never block taps */
+.screen::before,
+#landing::before{
+  pointer-events: none !important;
+}
+
+/* Stage-fit landing controls (width + height) */
+:root{
+  --stageW: min(470px, 76vw) !important;
+  --ctlH: 54px !important;
+}
+#landing .landingUI{
+  width: var(--stageW) !important;
+  max-width: var(--stageW) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+#landing #emailInput,
+#landing #enterBtn{
+  width: 100% !important;
+  max-width: 100% !important;
+  height: var(--ctlH) !important;
+}
+#landing .field3d{
+  height: var(--ctlH) !important;
+}
+#landing .field3d input{
+  height: var(--ctlH) !important;
+  line-height: var(--ctlH) !important;
+  text-align: center !important;
+}
+#landing .field3d input::placeholder{
+  text-align: center !important;
+}
+/* Make ENTER label vertically centered in its button */
+#landing #enterBtn{
+  line-height: var(--ctlH) !important;
+}
+
+/* Optional: keep status line but align width */
+#landing #statusLine{
+  max-width: 100% !important;
+  text-align: center !important;
+}
+/* =========================================================================== */
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -1180,7 +1245,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v807</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v808</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1319,7 +1384,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v807
+<script type="module">// Night Games Night Games v808
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1385,13 +1450,23 @@ const firebaseConfig = {
     const emailInput = document.getElementById("emailInput");
 
     
-      // v807: clear any cached/autofilled email so placeholder shows
+      
+
+// v808: ensure we never show a stored email by default
+(function(){
+  const el = document.getElementById("emailInput");
+  if(!el) return;
+  try{ el.value = ""; }catch(e){}
+  el.addEventListener("focus", ()=>{ try{ el.value = ""; }catch(e){} }, {passive:true});
+})();
+
+// v808: clear any cached/autofilled email so placeholder shows
       if(emailInput && !window.__ngClearEmailOnce){
         window.__ngClearEmailOnce = true;
         try{ emailInput.value = ""; }catch(e){}
       }
 /* ===========================
-   v807 INTRO AUDIO (CLEAN)
+   v808 INTRO AUDIO (CLEAN)
    Plays assets/New Recording 2.m4a on any device when the email field is engaged.
    Must be synchronous inside a user gesture for iOS.
 =========================== */
@@ -2545,7 +2620,7 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 
-    <!-- Footer added in v807 -->
+    <!-- Footer added in v808 -->
     <footer style="position:fixed;bottom:10px;width:100%;text-align:center;font-size:12px;color:white;opacity:0.85;">
         Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.
     </footer>
