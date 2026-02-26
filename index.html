@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v800  |  2026-02-25
+  NIGHT GAMES v802  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v800 (MASTER STABLE)</title>
+<title>Night Games v802 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -933,9 +933,9 @@ border: 1px solid rgba(255,255,255,.22);
       box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
     }
 
-    /* v800: landing background swap only */
+    /* v802: landing background swap only */
 
-/* v800: HOTSPOT MODE
+/* v802: HOTSPOT MODE
    Landing artwork already contains the visual email/button/footer.
    We hide the real UI visuals to prevent "double/stacked" footers,
    but keep them tappable so the app still works.
@@ -954,11 +954,92 @@ border: 1px solid rgba(255,255,255,.22);
 #landing #statusLine{ display:none !important; }
 
 /* Remove the global header bar (many backgrounds already include this text) */
-#ngHeaderBar{ display:none !important; }
+
 /* If any build badge exists, hide it too */
 .buildBadge, #ngVersionBadge{ display:none !important; }
 
-/* v800: Landing uses the glass-stage artwork (repo root) */
+
+
+
+/* ===================== v802 HEADER POLISH ===================== */
+#ngHeaderBar{
+  background: rgba(20,20,24,.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+}
+#ngHeaderBar .ngHeaderLeft{
+  font-weight: 900;
+  letter-spacing: .06em;
+}
+#ngHeaderBar .ngHeaderCenter{
+  color: rgba(120,200,255,.95);
+  text-shadow:
+    0 0 10px rgba(120,200,255,.35),
+    0 0 22px rgba(0,210,255,.18);
+  font-weight: 900;
+}
+#ngHeaderRight{
+  color: rgba(60,255,160,.95);
+  text-shadow: 0 0 10px rgba(60,255,160,.35);
+  font-weight: 900;
+}
+/* =============================================================== */
+
+
+
+/* ===================== v802 LANDING HOTSPOTS =====================
+   Landing artwork includes the visual email/button/footer.
+   We keep real controls for functionality but hide visuals to avoid stacking.
+   Tune --tapEmailTop / --tapGap if alignment is off on a device.
+=================================================================== */
+:root{
+  --tapEmailTop: clamp(330px, 52vh, 610px);
+  --tapGap: 86px;
+}
+#landing .landingUI{
+  position:absolute;
+  inset:0;
+  left:0; top:0;
+  transform:none;
+  width:100%;
+  max-width:none;
+  display:block;
+  z-index:2;
+}
+#landing .field3d{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top: var(--tapEmailTop);
+  width: min(640px, 92vw);
+  height: 72px;
+  opacity: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+#landing .field3d::before{ display:none !important; }
+#landing #enterBtn{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top: calc(var(--tapEmailTop) + var(--tapGap));
+  width: min(640px, 92vw);
+  height: 72px;
+  opacity: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+#landing #enterBtn::before{ display:none !important; }
+/* footer/hint is already baked into the art */
+#landing #statusLine{ display:none !important; }
+
+/* Landing background uses glass-stage artwork A */
 #landing::before{ background-image: url('69CB8D2F-BF7B-4B22-8CA7-A9F607BEB74E.png') !important; background-size: cover !important; background-position: center !important; }
 
 </style>
@@ -1012,7 +1093,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v800</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v802</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1151,7 +1232,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v800
+<script type="module">// Night Games Night Games v802
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1228,15 +1309,41 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "intro.m4a";
+        const INTRO_CANDIDATES = [
+          "intro.m4a",
+          "ChatGPT recording is here.m4a",
+          "ChatGPT%20recording%20is%20here.m4a",
+          "chatgpt_recording_is_here.m4a",
+          "assets/intro.m4a",
+          "assets/ChatGPT%20recording%20is%20here.m4a"
+        ];
 
-        const intro = new Audio(INTRO_URL);
-        intro.preload = "auto";
+        let intro = null;
+        async function loadIntroAudio(){
+          if(intro) return intro;
+          for(const cand of INTRO_CANDIDATES){
+            const src = String(cand||"").trim();
+            if(!src) continue;
+            try{
+              // Quick existence check (same-origin on GitHub Pages)
+              const r = await fetch(src, {method:"HEAD"});
+              if(!r.ok) continue;
+              intro = new Audio(src);
+              intro.preload = "auto";
+              return intro;
+            }catch(e){ /* ignore */ }
+          }
+          // fallback: try first candidate even if HEAD fails
+          intro = new Audio((INTRO_CANDIDATES[0]||"intro.m4a"));
+          intro.preload = "auto";
+          return intro;
+        }
 
-        function playIntro(){
+        async function playIntro(){
           try{
-            intro.currentTime = 0;
-            const p = intro.play();
+            const a = await loadIntroAudio();
+            a.currentTime = 0;
+            const p = a.play();
             if(p && p.catch) p.catch(()=>{});
           }catch(e){}
         }
@@ -2372,7 +2479,7 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 
-    <!-- Footer added in v800 -->
+    <!-- Footer added in v802 -->
     <footer style="position:fixed;bottom:10px;width:100%;text-align:center;font-size:12px;color:white;opacity:0.85;">
         Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.
     </footer>
