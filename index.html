@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v809  |  2026-02-25
+  NIGHT GAMES v810  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,11 +23,11 @@
 
 <html lang="en">
 <head>
-  <!-- BUILD_STAMP_v809 -->
+  <!-- BUILD_STAMP_v810 -->
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v809 (MASTER STABLE)</title>
+<title>Night Games v810 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -935,7 +935,7 @@ border: 1px solid rgba(255,255,255,.22);
       box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
     }
 
-/* v809: HOTSPOT MODE
+/* v810: HOTSPOT MODE
    Landing artwork already contains the visual email/button/footer.
    We hide the real UI visuals to prevent "double/stacked" footers,
    but keep them tappable so the app still works.
@@ -1066,7 +1066,7 @@ border: 1px solid rgba(255,255,255,.22);
 /* ================================================================ */
 
 
-/* ===================== v809 CLEAN LANDING + HEADER ===================== */
+/* ===================== v810 CLEAN LANDING + HEADER ===================== */
 /* Prevent background layers from eating taps */
 .screen::before,
 #landing::before{
@@ -1130,7 +1130,7 @@ border: 1px solid rgba(255,255,255,.22);
 /* ====================================================================== */
 
 
-/* ===================== v809 FORCE OVERRIDES (FINAL WINS) ===================== */
+/* ===================== v810 FORCE OVERRIDES (FINAL WINS) ===================== */
 /* Kill header pill visuals entirely */
 #ngHeaderBar{
   background: transparent !important;
@@ -1194,6 +1194,56 @@ border: 1px solid rgba(255,255,255,.22);
 }
 /* =========================================================================== */
 
+
+/* ===================== v810 HARD FIX ===================== */
+/* Never let background layers block taps */
+html body .screen::before,
+html body #landing::before{
+  pointer-events: none !important;
+}
+
+/* Make sure landing UI sits above everything and can be tapped */
+html body #landing{
+  position: relative !important;
+}
+html body #landing .landingUI{
+  position: relative !important;
+  z-index: 50 !important;
+  width: min(460px, 76vw) !important;
+  max-width: min(460px, 76vw) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Force control sizing */
+html body #landing #emailInput,
+html body #landing #enterBtn{
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 52px !important;
+  min-height: 52px !important;
+}
+
+html body #landing #emailInput{
+  text-align: center !important;
+}
+html body #landing #emailInput::placeholder{
+  text-align: center !important;
+}
+
+/* Header pill already removed in v808; keep it off */
+html body #ngHeaderBar,
+html body #ngHeaderBar::before,
+html body #ngHeaderBar::after{
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+/* ========================================================= */
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -1245,7 +1295,19 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v809</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+
+<!-- BUILD_STAMP_v810 -->
+<div id="v810Badge" style="
+  position:fixed; left:10px; bottom:10px; z-index:99999;
+  padding:10px 12px; font: 800 14px/1.2 system-ui, -apple-system, Arial;
+  background: rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.25);
+  border-radius: 12px; color: rgba(255,255,255,.95);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+">
+  v810 LIVE ✓
+</div>
+
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v810</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1278,7 +1340,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div class="field3d">
 <input autocomplete="email" id="emailInput" inputmode="email" placeholder="youremail@here.com" type="email"/>
 </div>
-<button class="btn3d btnAdvance" id="enterBtn" type="button">ENTER</button>
+<button class="btn3d btnAdvance" id="enterBtn" type="button">Enter</button>
 <div class="hint" id="statusLine">Email-only sign-in (no password). Firebase stable build.</div>
 </div>
 </section>
@@ -1384,7 +1446,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v809
+<script type="module">// Night Games Night Games v810
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1452,7 +1514,7 @@ const firebaseConfig = {
     
       
 
-// v809: ensure we never show a stored email by default
+// v810: ensure we never show a stored email by default
 (function(){
   const el = document.getElementById("emailInput");
   if(!el) return;
@@ -1460,13 +1522,13 @@ const firebaseConfig = {
   el.addEventListener("focus", ()=>{ try{ el.value = ""; }catch(e){} }, {passive:true});
 })();
 
-// v809: clear any cached/autofilled email so placeholder shows
+// v810: clear any cached/autofilled email so placeholder shows
       if(emailInput && !window.__ngClearEmailOnce){
         window.__ngClearEmailOnce = true;
         try{ emailInput.value = ""; }catch(e){}
       }
 /* ===========================
-   v809 INTRO AUDIO (CLEAN)
+   v810 INTRO AUDIO (CLEAN)
    Plays assets/New Recording 2.m4a on any device when the email field is engaged.
    Must be synchronous inside a user gesture for iOS.
 =========================== */
@@ -1606,7 +1668,7 @@ function safeEmail(email){
         <div class="itemLine">
           <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? `<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>` : `<span class="glassText">${g}</span>`}</div></div>
           <div class="actions">
-            <button class="pill" data-action="enter_game" data-value="${g}">ENTER</button>
+            <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
             <button class="pill" data-action="game_rules" data-value="${g}">Rules</button>
             <button class="pill" data-action="game_history" data-value="${g}">History</button>
             
@@ -2197,10 +2259,7 @@ function renderPlayers(list){
 
     async function signInFlow(auth, db, email){
       currentEmail = (email||"").trim().toLowerCase();
-      if(!currentEmail){
-        statusLine.textContent = "Enter your email above.";
-        return;
-      }
+      if(!currentEmail) return;
 
       statusLine.textContent = "Signing in…";
       setDbg("AUTH", "starting…", "—", dbgErr.textContent || "none");
@@ -2623,10 +2682,66 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 
-    <!-- Footer added in v809 -->
+    <!-- Footer added in v810 -->
     <footer style="position:fixed;bottom:10px;width:100%;text-align:center;font-size:12px;color:white;opacity:0.85;">
         Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.
     </footer>
     
+
+<script>
+/* v810: Force landing controls + intro audio */
+(function(){
+  function $(id){ return document.getElementById(id); }
+
+  const INTRO_URL = "assets/New%20Recording%202.m4a";
+  const intro = new Audio(INTRO_URL);
+  intro.preload = "auto";
+  intro.volume = 1;
+
+  function playIntro(){
+    try{
+      intro.currentTime = 0;
+      const p = intro.play();
+      if(p && p.catch) p.catch(()=>{});
+    }catch(e){}
+  }
+
+  function applyLanding(){
+    const email = $("emailInput");
+    const enter = $("enterBtn");
+
+    if(email){
+      // clear any autofill/cached value
+      try{ email.value = ""; }catch(e){}
+      email.placeholder = "youremail@here.com";
+      email.style.textAlign = "center";
+      // extra inline sizing (wins if CSS is fought)
+      email.style.width = "100%";
+      email.style.maxWidth = "100%";
+      email.style.height = "52px";
+      // attach audio triggers
+      ["pointerdown","touchstart","mousedown","click","focus"].forEach(ev=>{
+        email.addEventListener(ev, playIntro, {passive:true});
+      });
+    }
+
+    if(enter){
+      // extra inline sizing
+      enter.style.width = "100%";
+      enter.style.maxWidth = "100%";
+      enter.style.height = "52px";
+      // play intro on enter as well (does not stop existing handlers)
+      enter.addEventListener("click", playIntro, {passive:true, capture:true});
+    }
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", applyLanding);
+  }else{
+    applyLanding();
+  }
+})();
+</script>
+
 </body>
 </html>
