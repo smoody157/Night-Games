@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v750  |  2026-02-25
+  NIGHT GAMES v752  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v750 (MASTER STABLE)</title>
+<title>Night Games v752 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -770,6 +770,14 @@ border: 1px solid rgba(255,255,255,.22);
   box-shadow: inset 0 0 18px rgba(120,190,255,.08);
 }
 
+.setupGameTitle{
+  font-weight: 1200;
+  font-size: 30px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 14px rgba(0,0,0,.65), 0 0 22px rgba(0,210,255,.18);
+}
 /* v748 ADVANCE BUTTONS + SETUP LAYOUT FIXES */
 .pill.btnAdvance, .btnAdvance, .btn-advance{
   border: 1px solid rgba(120,255,170,.35) !important;
@@ -861,6 +869,38 @@ border: 1px solid rgba(255,255,255,.22);
     0 0 10px rgba(70,255,160,.16),
     inset 0 0 10px rgba(60,255,160,.10) !important;
 }
+
+/* ===================== v752 UI FIXES (requested) ===================== */
+/* Hide Lobby Setup button (requested) */
+#lobbySetupBtn{ display:none !important; }
+
+/* Uniform pill buttons (size/shape) */
+.pill{
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+/* Prevent text from colliding into buttons in lists */
+.leftStack{ min-width: 0; }
+.glassText{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Picker rows: truncate long name/email, keep button fixed */
+.pickerRow > div{ min-width: 0; }
+.pickerRow .nm, .pickerRow .em{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -888,7 +928,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v750</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v752</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v748)
@@ -952,7 +992,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div class="sectionHead"><div class="title">Controls</div></div>
 <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
 <button class="pill" id="setupBackBtn" type="button">Back</button>
-<button class="pill btnAdvance" id="setupStartBtn" style="display:none;" type="button">Start Game</button>
+<button class="pill btnAdvance" id="setupStartBtn" type="button">Start Game</button>
 </div>
 </div>
 </div>
@@ -1027,7 +1067,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v750
+<script type="module">// Night Games Night Games v752
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1250,15 +1290,15 @@ function renderSetupForGame(game){
       }).join("");
 
       setupBody.innerHTML = `
-        <div style="font-weight:1100; font-size:26px; margin-bottom:6px;">${game}</div>
+        <div class="setupGameTitle">${game}</div>
         <div style="opacity:.78; margin-bottom:14px;">Pick players, then Start.</div>
 
-        <div style="margin-bottom:10px; font-weight:900; opacity:.85;">Number of Players</div>
+        <div class="fieldLabel">Number of Players</div>
         <select id="setupCount" class="glassSelect" class="glassSelect">
           ${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}">${n}</option>`).join("")}
         </select>
 
-        <div style="margin:14px 0 10px; font-weight:900; opacity:.85;">Which Players</div>
+        <div class="fieldLabel" style="margin-top:14px;">Which Players</div>
         <button type="button" id="openPlayerPicker" class="glassBtn">
           <span>Select players</span>
           <span class="sub" id="playerPickSummary">1 selected</span>
@@ -1288,13 +1328,14 @@ function renderSetupForGame(game){
         </div>
 
         <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
-          <button class="pill" id="setupStartBtn" type="button">Start</button>
+          <button class="pill" id="setupStartInlineBtn" type="button">Start</button>
           <button class="pill" id="setupCancelBtn" type="button" style="opacity:.85;">Cancel</button>
         </div>
       `;
 
       const countSel = document.getElementById("setupCount");
-      const startBtn = document.getElementById("setupStartBtn");
+      const startInlineBtn = document.getElementById("setupStartInlineBtn");
+      const startCtrlBtn = document.getElementById("setupStartBtn");
       const cancelBtn = document.getElementById("setupCancelBtn");
 
       // defaults
@@ -1332,7 +1373,7 @@ function renderSetupForGame(game){
         checks.forEach(c=>{
           const email = c.value;
           const label = c.closest("label");
-          const nm = label ? (label.querySelector("div")?.innerText || email) : email;
+          const nm = label ? ((label.querySelector("span")?.textContent||"").trim() || email) : email;
           const row = document.createElement("div");
           row.className = "pickerRow";
           row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
@@ -1423,7 +1464,7 @@ function renderSetupForGame(game){
         show("players");
       });
 
-      startBtn.addEventListener("click", async ()=>{
+      const doStart = async ()=>{
         // v740: Stable start behavior (no broken/partial calls)
         enforce();
         const want = parseInt(countSel.value||"1",10) || 1;
@@ -1451,7 +1492,11 @@ function renderSetupForGame(game){
 sendInvitesForSession(); }catch(e){}
           try{ listenSessionInvites && listenSessionInvites(); }catch(e){}
         }
-      });
+      };
+
+      // Inline + Controls Start buttons
+      if(startInlineBtn) startInlineBtn.addEventListener("click", doStart);
+      if(startCtrlBtn) startCtrlBtn.addEventListener("click", doStart);
 }
 
     
@@ -1611,7 +1656,7 @@ renderWaitingRoom();
       }).join("");
 
       waitingBody.innerHTML = `
-        <div style="font-weight:1100; font-size:26px; margin-bottom:6px;">${game}</div>
+        <div class="setupGameTitle">${game}</div>
         <div style="opacity:.78; margin-bottom:14px;">Waiting for invited players to join…</div>
         <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
       `;
