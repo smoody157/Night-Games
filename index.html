@@ -1645,7 +1645,7 @@ renderWaitingRoom();
         const lower = String(em||"").toLowerCase();
         const online = (p && isOnline(p)) || (lower===(currentEmail||"").toLowerCase());
         const status = (lower===(currentEmail||"").toLowerCase()) ? "host" : (inviteStatusCache.get(lower)||"pending");
-        const statusLabel = status==="accepted" ? "joined" : status==="declined" ? "no thanks" : status==="host" ? "host" : "invited";
+        const statusLabel = status==="accepted" ? "✓ joined" : status==="declined" ? "✕ declined" : status==="host" ? "host" : "invited";
         return `<div class="row">
           <div class="left">
             <span class="dot ${online ? "online" : ""}"></span>
