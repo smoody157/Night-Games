@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v768  |  2026-02-25
+  NIGHT GAMES v769  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v768 (MASTER STABLE)</title>
+<title>Night Games v769 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -991,7 +991,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v768</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v769</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1130,7 +1130,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v768
+<script type="module">// Night Games Night Games v769
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1316,12 +1316,12 @@ function safeEmail(email){
     const games = ["01","Cricket","Killer","Shanghai","ATW","Half It"];
 
     const GAME_RULES = {
-      "01": "Classic x01. Start at 301/501/701 etc (we'll add selector next). Lowest to zero wins (bust rules configurable).",
-      "Cricket": "20–15 + Bull. Close numbers then score. Team/solo rules configurable.",
-      "Killer": "Assign a number, get to killer, then knock others out. (We’ll match your house rules).",
-      "Shanghai": "Each round targets a number. Shanghai = single+double+triple in same round. (House rules).",
-      "ATW 🌍": "ATW: hit 1→20 (and bull if you want). Miss = move on / stay (house rules).",
-      "Half It": "Hit the called target each round or score is halved. (House rules)."
+      "01": "<b>Goal:</b> Reach exactly 0.<br><br>• Choose 301 / 501 / 701<br>• Subtract what you hit each turn (3 darts)<br>• Must land exactly on 0 to win<br>• If you go below 0 = bust (turn doesn’t count)<br><br><b>Options:</b><br>• <b>Single In / Single Out</b>: scoring starts immediately, any hit can finish<br>• <b>Single In / Double Out</b>: scoring starts immediately, must finish on a double<br>• <b>Double In / Double Out</b>: must hit a double to start scoring, must finish on a double",
+      "Cricket": "<b>Goal:</b> Close all numbers and be tied or ahead in points.<br><br>• Numbers: 15–20 + Bull<br>• Each number needs 3 hits to close (single=1, double=2, triple=3)<br>• After you close a number, extra hits score points until opponents close it<br>• First to close everything and be tied/ahead wins",
+      "Killer": "<b>Goal:</b> Become a Killer and knock everyone out.<br><br>• Each player gets a number<br>• Hit your <b>double</b> to become a Killer<br>• As a Killer, hit opponents’ doubles to take lives<br>• When a player runs out of lives, they’re out<br>• Last player standing wins",
+      "Shanghai": "<b>Goal:</b> Accuracy battle on the called number each round.<br><br>• Rounds go 1 → 20 (one number per round)<br>• Only the active number counts<br>• Scoring is accuracy-based:<br>&nbsp;&nbsp;– Single = 1 point<br>&nbsp;&nbsp;– Double = 2 points<br>&nbsp;&nbsp;– Triple = 3 points<br>• Highest total points wins<br><br><b>Optional (if enabled):</b> Hit single + double + triple of the active number in one turn = <b>Shanghai</b> (instant win)",
+      "ATW 🌍": "<b>Goal:</b> Be first to hit every number in order.<br><br>• Hit 1, then 2, then 3… up to 20 (and Bull if enabled)<br>• A hit on the correct number advances you to the next<br>• Misses don’t advance you<br>• First player to finish the sequence wins",
+      "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
     };
 
     function renderGames(){
