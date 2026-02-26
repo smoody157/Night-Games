@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v805  |  2026-02-25
+  NIGHT GAMES v806  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v805 (MASTER STABLE)</title>
+<title>Night Games v806 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -933,9 +933,9 @@ border: 1px solid rgba(255,255,255,.22);
       box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
     }
 
-    /* v805: landing background swap only */
+    /* v806: landing background swap only */
 
-/* v805: HOTSPOT MODE
+/* v806: HOTSPOT MODE
    Landing artwork already contains the visual email/button/footer.
    We hide the real UI visuals to prevent "double/stacked" footers,
    but keep them tappable so the app still works.
@@ -961,7 +961,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v805 HEADER POLISH ===================== */
+/* ===================== v806 HEADER POLISH ===================== */
 #ngHeaderBar{
   background: rgba(20,20,24,.45);
   backdrop-filter: blur(8px);
@@ -989,7 +989,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v805 LANDING HOTSPOTS =====================
+/* ===================== v806 LANDING HOTSPOTS =====================
    Landing artwork includes the visual email/button/footer.
    We keep real controls for functionality but hide visuals to avoid stacking.
    Tune --tapEmailTop / --tapGap if alignment is off on a device.
@@ -1044,7 +1044,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* v805: Landing button width matches the Night Games sign border */
+/* v806: Landing button width matches the Night Games sign border */
 :root{
   --landingBtnW: min(560px, 86vw);
 }
@@ -1058,7 +1058,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v805 STABILITY FIXES ===================== */
+/* ===================== v806 STABILITY FIXES ===================== */
 /* Ensure background layers never block taps/clicks */
 .screen::before,
 #landing::before{
@@ -1095,17 +1095,27 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v805 STAGE FIT (Landing Controls) ===================== */
-/* Make landing controls match the glass stage width and feel like an extension */
+/* ===================== v806 LANDING + HEADER FIX ===================== */
+/* Never let background pseudo-elements block taps */
+.screen::before,
+#landing::before{
+  pointer-events:none !important;
+  z-index:0;
+}
+.screen > *{
+  position:relative;
+  z-index:1;
+}
+
+/* Landing controls sized to match the glass stage */
 :root{
-  --stageW: min(480px, 78vw);     /* narrower than before */
-  --ctlH: 56px;                  /* shorter height */
+  --stageW: min(480px, 78vw);
+  --ctlH: 56px;
 }
 #landing .landingUI{
   width: var(--stageW) !important;
   max-width: var(--stageW) !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
+  margin: 0 auto !important;
 }
 #landing .field3d, #landing .btn3d{
   width: 100% !important;
@@ -1120,17 +1130,16 @@ border: 1px solid rgba(255,255,255,.22);
 #landing .field3d input::placeholder{
   text-align: center !important;
 }
-#landing #enterBtn{
-  height: var(--ctlH) !important;
+
+/* Remove the "pill/button" background behind the header text */
+#ngHeaderBar{
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-radius: 0 !important;
 }
-#landing #enterBtn span,
-#landing .btn3d{
-  font-size: 28px !important;
-  letter-spacing: .12em !important;
-}
-/* Keep hint aligned and not too wide */
-#landing .hint{ max-width: 100% !important; text-align:center !important; }
-/* =========================================================================== */
+/* ================================================================ */
 
 </style>
 <script id="ngGuards_v748">
@@ -1183,7 +1192,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v805</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v806</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1322,7 +1331,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v805
+<script type="module">// Night Games Night Games v806
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1388,10 +1397,10 @@ const firebaseConfig = {
     const emailInput = document.getElementById("emailInput");
 
     
-      // v805: clear any cached/autofilled email so placeholder shows
+      // v806: clear any cached/autofilled email so placeholder shows
       if(emailInput && !window.__ngClearEmailOnce){
         window.__ngClearEmailOnce = true;
-        try{ emailInput.value = \"\"; }catch(e){}
+        try{ emailInput.value = ""; }catch(e){}
       }
 /* ===========================
        v768 INTRO AUDIO (REPO FILE)
@@ -2568,7 +2577,7 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 
-    <!-- Footer added in v805 -->
+    <!-- Footer added in v806 -->
     <footer style="position:fixed;bottom:10px;width:100%;text-align:center;font-size:12px;color:white;opacity:0.85;">
         Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.
     </footer>
