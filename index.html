@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v851  |  2026-02-25
+  NIGHT GAMES v856  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,14 +25,14 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v851 (MASTER STABLE)</title>
+<title>Night Games v856 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/69CB8D2F-BF7B-4B22-8CA7-A9F607BEB74E.png?v=851");
+      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=856");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -991,7 +991,7 @@ border: 1px solid rgba(255,255,255,.22);
       text-align:center;
     }
 
-/* ===================== v851 TARGET LOOK (NO EXTRA IMAGES) ===================== */
+/* ===================== v856 TARGET LOOK (NO EXTRA IMAGES) ===================== */
 /* Header: remove pill */
 #ngHeaderBar{
   background: transparent !important;
@@ -1109,6 +1109,39 @@ border: 1px solid rgba(255,255,255,.22);
   letter-spacing:.2px;
 }
 
+
+/* ===================== v856 VISUAL TUNE ===================== */
+/* Subtle "lovin" for the background without changing the image file */
+.screen::before{
+  filter: contrast(1.06) saturate(1.12) brightness(0.96);
+}
+.screen::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(80% 60% at 50% 35%, rgba(0,0,0,.00), rgba(0,0,0,.40)),
+    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.55));
+}
+
+/* Header: text-only (no pill), Night Games gold, version blue, Online green */
+#ngHeaderBar{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+#ngHeaderBar::before{ display:none !important; }
+#ngHeaderBar .ngHeaderLeft{ font-weight: 1000; }
+#ngHeaderBar .ngTitle{ color:#d7b24a !important; font-weight:1000; }
+#ngHeaderBar .ngVer{ color: rgba(0,210,255,.95) !important; font-weight:1000; }
+#ngHeaderRight{ color: rgba(60,255,160,.98) !important; font-weight:1000; }
+
+/* Safety: hide any accidental visible HTML controls (wiring still works) */
+#landing input[type="email"], #landing button{ background: transparent !important; }
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -1116,7 +1149,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v851: detail content scrolling (RULES + PLAYER STATS) */
+    /* v856: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1130,7 +1163,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v851: prevent browser autofill yellow on email field */
+    /* v856: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1160,7 +1193,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v851</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v856</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1190,7 +1223,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v851: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v856: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1312,7 +1345,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v851
+<script type="module">// Night Games Night Games v856
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1376,7 +1409,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v851: email overlay text (install once)
+    // v856: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1406,7 +1439,7 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=851";
+        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=856";
 
         const intro = new Audio(INTRO_URL);
         intro.preload = "auto";
@@ -2264,7 +2297,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v851)
+        // Player Stats Shell (v856)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
