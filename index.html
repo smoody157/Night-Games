@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v830  |  2026-02-25
+  NIGHT GAMES v831  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v830 (MASTER STABLE)</title>
+<title>Night Games v831 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -991,7 +991,7 @@ border: 1px solid rgba(255,255,255,.22);
       text-align:center;
     }
 
-    /* ===================== v830 PRODUCTION VISUAL POLISH ===================== */
+    /* ===================== v831 PRODUCTION VISUAL POLISH ===================== */
     /* iOS viewport stability */
     #app{ height: 100dvh; }
     .screen{ height: 100dvh; }
@@ -1012,7 +1012,7 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
 
-/* ===================== v830 HEADER: TEXT ONLY ===================== */
+/* ===================== v831 HEADER: TEXT ONLY ===================== */
 #ngHeaderBar{
   background: transparent !important;
   border: none !important;
@@ -1029,7 +1029,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v830 LANDING HINT + FOOTER ===================== */
+/* ===================== v831 LANDING HINT + FOOTER ===================== */
 #landing .hint{
   font-size: 12px;
   opacity: .82;
@@ -1054,7 +1054,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v830 STAGE-SIZED LANDING CONTROLS ===================== */
+/* ===================== v831 STAGE-SIZED LANDING CONTROLS ===================== */
 :root{
   --stageCtlW: min(460px, 78vw);
   --stageCtlH: 66px;
@@ -1074,7 +1074,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v830 LANDING: REMOVE FULL-WIDTH CONTROLS ===================== */
+/* ===================== v831 LANDING: REMOVE FULL-WIDTH CONTROLS ===================== */
 #landing .field3d, #landing .btn3d{
   width: min(460px, 78vw) !important;   /* stage-sized */
   height: 66px !important;
@@ -1088,6 +1088,74 @@ border: 1px solid rgba(255,255,255,.22);
   width: min(460px, 78vw) !important;
 }
 
+
+/* ===================== v831 LANDING OVERLAY (STAGE ART CONTROLS) =====================
+   - Removes the large glass controls entirely.
+   - Uses invisible overlays aligned to the artwork "email" and "ENTER" on the background.
+============================================================================= */
+#landing .landingOverlay{
+  position:absolute;
+  left:50%;
+  transform: translateX(-50%);
+  width: min(540px, 86vw);            /* stage-sized */
+  top: clamp(430px, 54vh, 675px);     /* tuned to sit on stage */
+  display:grid;
+  grid-template-rows: 66px 66px auto;
+  gap: 12px;
+  justify-items: stretch;
+  z-index: 3;
+}
+#landing #emailInput{
+  width:100%;
+  height:66px;
+  border: none;
+  outline: none;
+  background: transparent;            /* let artwork show */
+  color: rgba(255,255,255,.96);
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: .6px;
+  text-align: center;
+  text-shadow: 0 2px 14px rgba(0,0,0,.65);
+  -webkit-appearance: none;
+  appearance: none;
+}
+#landing #emailInput::placeholder{
+  color: rgba(235,245,255,.62);
+}
+/* Kill iOS autofill paint */
+#landing #emailInput:-webkit-autofill,
+#landing #emailInput:-webkit-autofill:hover,
+#landing #emailInput:-webkit-autofill:focus,
+#landing #emailInput:-webkit-autofill:active{
+  -webkit-text-fill-color: rgba(255,255,255,.96) !important;
+  transition: background-color 99999s ease-out 0s;
+  box-shadow: 0 0 0px 1000px transparent inset !important;
+}
+
+/* ENTER overlay: invisible clickable area over the artwork button */
+#landing #enterBtn{
+  width:100%;
+  height:66px;
+  border: none;
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hint tuned */
+#landing .hint{
+  font-size: 12px;
+  opacity: .82;
+  text-align:center;
+  text-shadow: 0 2px 14px rgba(0,0,0,.55);
+}
+
+
+/* v831: disable legacy landingUI glass layout (no longer used) */
+#landing .landingUI{ display:none !important; }
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -1095,7 +1163,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v830: detail content scrolling (RULES + PLAYER STATS) */
+    /* v831: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1109,7 +1177,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v830: prevent browser autofill yellow on email field */
+    /* v831: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1139,7 +1207,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v830</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v831</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1168,15 +1236,11 @@ border: 1px solid rgba(255,255,255,.22);
 </div>
 <div id="app">
 <section class="screen active" id="landing">
-<div class="landingUI">
-<div class="field3d">
-
-<input id="emailInput" name="ng_email_field" autocomplete="new-password" inputmode="email" type="email" placeholder="player@example.com" style="text-align:center;" autocapitalize="none" autocorrect="off" spellcheck="false"/>
-</div>
-
-
-
-<button class="btn3d btnAdvance" id="enterBtn" type="button">Enter</button>
+<div class="landingOverlay">
+  <input id="emailInput" name="ng_email_field" autocomplete="new-password" inputmode="email" type="email"
+         placeholder="player@example.com" autocapitalize="none" autocorrect="off" spellcheck="false"/>
+  <button id="enterBtn" type="button" aria-label="Enter"></button>
+  <div class="hint" id="statusLine">Email-only sign-in (no password). Firebase stable build.</div>
 </div>
 </section>
 <section class="screen" id="players">
@@ -1281,7 +1345,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v830
+<script type="module">// Night Games Night Games v831
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1346,7 +1410,7 @@ const firebaseConfig = {
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
 
-    /* v830: strong autofill clear (prevents saved email ghost text on iOS) */
+    /* v831: strong autofill clear (prevents saved email ghost text on iOS) */
     (function(){
       try{
         const el = document.getElementById("emailInput");
@@ -1366,7 +1430,7 @@ const firebaseConfig = {
     })();
 
 
-    /* v830: autofill-kill (iOS can prefill saved email visually). Clear a few times on load. */
+    /* v831: autofill-kill (iOS can prefill saved email visually). Clear a few times on load. */
     (function(){
       try{
         const el = document.getElementById("emailInput");
@@ -1424,7 +1488,7 @@ const firebaseConfig = {
           }catch(e){}
         }
         if(emailInput){
-          // v830: iOS can fire multiple events (pointer+touch+focus). Use one debounced gesture.
+          // v831: iOS can fire multiple events (pointer+touch+focus). Use one debounced gesture.
           let __ngIntroLast = 0;
           function playIntroOnce(){
             const now = Date.now();
@@ -2272,7 +2336,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v830)
+        // Player Stats Shell (v831)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
