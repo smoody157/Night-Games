@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v857  |  2026-02-25
+  NIGHT GAMES v858  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v857 (MASTER STABLE)</title>
+<title>Night Games v858 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -991,7 +991,7 @@ border: 1px solid rgba(255,255,255,.22);
       text-align:center;
     }
 
-/* ===================== v857 TARGET LOOK (NO EXTRA IMAGES) ===================== */
+/* ===================== v858 TARGET LOOK (NO EXTRA IMAGES) ===================== */
 /* Header: remove pill */
 #ngHeaderBar{
   background: transparent !important;
@@ -1025,7 +1025,7 @@ border: 1px solid rgba(255,255,255,.22);
   transform:translateX(-50%);
   width:min(640px,92vw);
   max-width:640px;
-  bottom:max(150px, calc(env(safe-area-inset-bottom) + 138px));
+  bottom:max(110px, calc(env(safe-area-inset-bottom) + 98px));
   display:grid;
   gap:10px;
   z-index:5;
@@ -1110,7 +1110,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v857 PAD ALIGNMENT ===================== */
+/* ===================== v858 PAD ALIGNMENT ===================== */
 /* Make the invisible pads match the stage width and sit a little lower */
 :root{
   --padWidth: min(760px, 96vw);
@@ -1142,7 +1142,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v857: detail content scrolling (RULES + PLAYER STATS) */
+    /* v858: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1156,7 +1156,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v857: prevent browser autofill yellow on email field */
+    /* v858: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1186,7 +1186,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v857</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v858</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1216,7 +1216,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v857: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v858: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1338,7 +1338,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v857
+<script type="module">// Night Games Night Games v858
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1402,7 +1402,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v857: email overlay text (install once)
+    // v858: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1446,11 +1446,18 @@ const firebaseConfig = {
         }
 
         if(emailInput){
-          // trusted gesture triggers playback on mobile
-          emailInput.addEventListener("pointerdown", playIntro, {passive:true});
-          emailInput.addEventListener("touchstart", playIntro, {passive:true});
-          emailInput.addEventListener("mousedown", playIntro, {passive:true});
-          emailInput.addEventListener("focus", playIntro, {passive:true});
+          // v858: play intro ONLY once per interaction (prevents double audio on iOS)
+          let __ngIntroLast = 0;
+          function playIntroOnce(){
+            const now = Date.now();
+            if(now - __ngIntroLast < 600) return;
+            __ngIntroLast = now;
+            playIntro();
+          }
+          // Use a single primary gesture event
+          emailInput.addEventListener("pointerdown", playIntroOnce, {passive:true});
+          // Fallback for browsers without pointer events
+          emailInput.addEventListener("touchstart", playIntroOnce, {passive:true});
         }
       }catch(e){}
     })();
@@ -2290,7 +2297,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v857)
+        // Player Stats Shell (v858)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
