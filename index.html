@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v842  |  2026-02-25
+  NIGHT GAMES v843  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v842 (MASTER STABLE)</title>
+<title>Night Games v843 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -990,6 +990,78 @@ border: 1px solid rgba(255,255,255,.22);
       flex:1;
       text-align:center;
     }
+
+/* ===================== v843 HEADER TEXT ONLY ===================== */
+#ngHeaderBar{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+#ngHeaderBar .ngVer{ color: #3aa3ff !important; }
+#ngHeaderRight{ color: rgba(60,255,160,.98) !important; opacity: 1 !important; }
+
+
+/* ===================== v843 LANDING PAD WIRING (NO DUPES) =====================
+   Background image contains the artwork "controls".
+   We overlay ONE functional input + ONE functional enter button.
+=============================================================================== */
+#landing .landingPads{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width: min(640px, 92vw);
+  bottom: max(96px, calc(env(safe-area-inset-bottom) + 86px));
+  display:grid;
+  grid-template-rows: 72px 72px auto;
+  gap: 10px;
+  z-index: 3;
+}
+
+/* Email pad area */
+#landing .padEmail{ position:relative; height:72px; }
+
+/* Real input (invisible but interactive) */
+#landing #emailInput{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  border:0;
+  outline:none;
+  background:transparent;
+}
+
+/* What the user sees while typing (text only; no extra box) */
+#landing #emailEcho{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: .6px;
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 2px 12px rgba(0,0,0,.85), 0 0 18px rgba(0,0,0,.55);
+  pointer-events:none;
+  user-select:none;
+}
+
+/* Enter pad area (invisible click target; background already shows ENTER) */
+#landing #enterBtn{
+  width:100%;
+  height:72px;
+  border:0;
+  background:transparent;
+  color:transparent;
+  text-shadow:none;
+  opacity:0;
+  cursor:pointer;
+}
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -997,7 +1069,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v842: detail content scrolling (RULES + PLAYER STATS) */
+    /* v843: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1011,7 +1083,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v842: prevent browser autofill yellow on email field */
+    /* v843: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1041,7 +1113,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v842</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games <span class=\"ngVer\">v843</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1069,15 +1141,19 @@ border: 1px solid rgba(255,255,255,.22);
 </div>
 </div>
 <div id="app">
+
 <section class="screen active" id="landing">
-<div class="landingUI">
-<div class="field3d">
-<input autocomplete="email" id="emailInput" inputmode="email" placeholder="Enter your email" type="email"/>
-</div>
-<button class="btn3d btnAdvance" id="enterBtn" type="button">Enter</button>
-<div class="hint" id="statusLine">Email-only sign-in (no password). Firebase stable build.</div>
-</div>
+  <!-- v843: landing UI baked into background image; we keep only one functional wiring layer -->
+  <div class="landingPads">
+    <div class="padEmail">
+      <input autocomplete="email" id="emailInput" inputmode="email" placeholder="" type="email"/>
+      <div id="emailEcho"></div>
+    </div>
+    <button id="enterBtn" type="button" aria-label="Enter"></button>
+    <div class="hint" id="statusLine" style="display:none;"></div>
+  </div>
 </section>
+
 <section class="screen" id="players">
 <div class="hub">
 <div class="panel">
@@ -1180,7 +1256,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v842
+<script type="module">// Night Games Night Games v843
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1244,6 +1320,20 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
+    const emailEcho = document.getElementById("emailEcho");
+    function syncEmailEcho(){
+      try{
+        if(!emailEcho) return;
+        const v = (emailInput?.value || "").trim();
+        emailEcho.textContent = v ? v : "";
+      }catch(e){}
+    }
+    if(emailInput){
+      emailInput.addEventListener("input", syncEmailEcho, {passive:true});
+      emailInput.addEventListener("change", syncEmailEcho, {passive:true});
+      syncEmailEcho();
+    }
+
 
     /* ===========================
        v768 INTRO AUDIO (REPO FILE)
@@ -2115,7 +2205,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v842)
+        // Player Stats Shell (v843)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
