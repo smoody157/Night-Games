@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES A12  |  2026-02-25
+  NIGHT GAMES V813  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,11 +23,11 @@
 
 <html lang="en">
 <head>
-  <!-- BUILD_STAMP_A12 -->
+  <!-- BUILD_STAMP_v813 -->
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games A12 (MASTER STABLE)</title>
+<title>Night Games V813 (SINGLE-SET LANDING)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1235,6 +1235,81 @@ html body #landing::before{
 }
 /* ================================================================ */
 
+
+/* ===================== v813 SINGLE-SET LANDING ===================== */
+/* Goal: the background art already contains the glass email box + ENTER button.
+   So we make the HTML controls act like HOTSPOTS (no duplicate button art/text),
+   while keeping typed email visible on top of the art box. */
+
+/* Keep the landingUI sized/positioned under the stage */
+html body #landing .landingUI{
+  position: absolute !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  bottom: 118px !important;
+  width: min(520px, 86vw) !important;      /* stage-fit width */
+  max-width: min(520px, 86vw) !important;
+  z-index: 9999 !important;
+}
+
+/* Email field: remove duplicate glass styling, keep text visible */
+html body #landing .field3d{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+html body #landing #emailInput{
+  width: 100% !important;
+  height: 64px !important;                /* matches the art's email box height */
+  line-height: 64px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  text-align: center !important;
+  font-size: 22px !important;
+  color: rgba(255,255,255,.92) !important; /* visible typed email */
+  text-shadow: 0 0 10px rgba(0,0,0,.6) !important;
+  caret-color: rgba(255,255,255,.95) !important;
+}
+html body #landing #emailInput::placeholder{
+  color: rgba(220,230,255,.55) !important;
+  text-align: center !important;
+}
+
+/* ENTER button: hotspot only (no duplicate ENTER text/art) */
+html body #landing #enterBtn{
+  width: 100% !important;
+  height: 66px !important;                 /* matches the art's ENTER button height */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  margin-top: 10px !important;
+  padding: 0 !important;
+  color: transparent !important;
+}
+html body #landing #enterBtn span{
+  display: none !important;                /* remove duplicate ENTER label */
+}
+
+/* Hide status line visually (still available for debugging/accessibility if needed) */
+html body #landing #statusLine{
+  display: none !important;
+}
+
+/* Make sure no layer steals taps */
+html body .screen::before,
+html body #landing::before{
+  pointer-events: none !important;
+}
+/* ================================================================ */
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -1286,7 +1361,7 @@ html body #landing::before{
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games A12</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games V813</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (A12)
@@ -1437,7 +1512,7 @@ html body #landing::before{
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games A12
+<script type="module">// Night Games Night Games V813
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2729,6 +2804,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 })();
 /* ================================================================ */
+</script>
+
+
+<script>
+/* v813: clear Safari autofill + ensure intro audio triggers */
+(function(){
+  const email = document.getElementById("emailInput");
+  if(email){
+    try{ email.value=""; }catch(e){}
+    setTimeout(()=>{ try{ email.value=""; }catch(e){} }, 300);
+    setTimeout(()=>{ try{ email.value=""; }catch(e){} }, 1200);
+  }
+})();
 </script>
 
 </body>
