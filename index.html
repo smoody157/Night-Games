@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v802  |  2026-02-25
+  NIGHT GAMES v803  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v802 (MASTER STABLE)</title>
+<title>Night Games v803 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -933,9 +933,9 @@ border: 1px solid rgba(255,255,255,.22);
       box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
     }
 
-    /* v802: landing background swap only */
+    /* v803: landing background swap only */
 
-/* v802: HOTSPOT MODE
+/* v803: HOTSPOT MODE
    Landing artwork already contains the visual email/button/footer.
    We hide the real UI visuals to prevent "double/stacked" footers,
    but keep them tappable so the app still works.
@@ -961,7 +961,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v802 HEADER POLISH ===================== */
+/* ===================== v803 HEADER POLISH ===================== */
 #ngHeaderBar{
   background: rgba(20,20,24,.45);
   backdrop-filter: blur(8px);
@@ -989,7 +989,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v802 LANDING HOTSPOTS =====================
+/* ===================== v803 LANDING HOTSPOTS =====================
    Landing artwork includes the visual email/button/footer.
    We keep real controls for functionality but hide visuals to avoid stacking.
    Tune --tapEmailTop / --tapGap if alignment is off on a device.
@@ -1042,6 +1042,20 @@ border: 1px solid rgba(255,255,255,.22);
 /* Landing background uses glass-stage artwork A */
 #landing::before{ background-image: url('69CB8D2F-BF7B-4B22-8CA7-A9F607BEB74E.png') !important; background-size: cover !important; background-position: center !important; }
 
+
+
+/* v803: Landing button width matches the Night Games sign border */
+:root{
+  --landingBtnW: min(560px, 86vw);
+}
+#landing .field3d, #landing .btn3d{
+  width: var(--landingBtnW) !important;
+  max-width: var(--landingBtnW) !important;
+}
+#landing .hint{
+  max-width: var(--landingBtnW) !important;
+}
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -1093,7 +1107,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v802</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v803</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1232,7 +1246,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v802
+<script type="module">// Night Games Night Games v803
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1309,14 +1323,7 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_CANDIDATES = [
-          "intro.m4a",
-          "ChatGPT recording is here.m4a",
-          "ChatGPT%20recording%20is%20here.m4a",
-          "chatgpt_recording_is_here.m4a",
-          "assets/intro.m4a",
-          "assets/ChatGPT%20recording%20is%20here.m4a"
-        ];
+        const INTRO_CANDIDATES = ["New%20Recording%202.m4a", "New Recording 2.m4a", "intro.m4a", "assets/intro.m4a"];
 
         let intro = null;
         async function loadIntroAudio(){
@@ -2479,7 +2486,7 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 
-    <!-- Footer added in v802 -->
+    <!-- Footer added in v803 -->
     <footer style="position:fixed;bottom:10px;width:100%;text-align:center;font-size:12px;color:white;opacity:0.85;">
         Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.
     </footer>
