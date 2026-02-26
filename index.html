@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v769  |  2026-02-25
+  NIGHT GAMES v770  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v769 (MASTER STABLE)</title>
+<title>Night Games v770 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -964,6 +964,10 @@ border: 1px solid rgba(255,255,255,.22);
 .statusIcon.wait{ color: rgba(255,210,90,.95); }
 .statusIcon.no{ color: rgba(255,120,120,.95); }
 
+
+    /* v770: 3-button row (ENTER | RULES | HISTORY) — equal sizing */
+    .actions{ width:100%; }
+    .actions .pill{ flex:1; text-align:center; }
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -991,7 +995,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v769</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v770</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1130,7 +1134,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v769
+<script type="module">// Night Games Night Games v770
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1320,7 +1324,7 @@ function safeEmail(email){
       "Cricket": "<b>Goal:</b> Close all numbers and be tied or ahead in points.<br><br>• Numbers: 15–20 + Bull<br>• Each number needs 3 hits to close (single=1, double=2, triple=3)<br>• After you close a number, extra hits score points until opponents close it<br>• First to close everything and be tied/ahead wins",
       "Killer": "<b>Goal:</b> Become a Killer and knock everyone out.<br><br>• Each player gets a number<br>• Hit your <b>double</b> to become a Killer<br>• As a Killer, hit opponents’ doubles to take lives<br>• When a player runs out of lives, they’re out<br>• Last player standing wins",
       "Shanghai": "<b>Goal:</b> Accuracy battle on the called number each round.<br><br>• Rounds go 1 → 20 (one number per round)<br>• Only the active number counts<br>• Scoring is accuracy-based:<br>&nbsp;&nbsp;– Single = 1 point<br>&nbsp;&nbsp;– Double = 2 points<br>&nbsp;&nbsp;– Triple = 3 points<br>• Highest total points wins<br><br><b>Optional (if enabled):</b> Hit single + double + triple of the active number in one turn = <b>Shanghai</b> (instant win)",
-      "ATW 🌍": "<b>Goal:</b> Be first to hit every number in order.<br><br>• Hit 1, then 2, then 3… up to 20 (and Bull if enabled)<br>• A hit on the correct number advances you to the next<br>• Misses don’t advance you<br>• First player to finish the sequence wins",
+      "ATW": "<b>Goal:</b> Be first to hit every number in order.<br><br>• Hit 1, then 2, then 3… up to 20 (and Bull if enabled)<br>• A hit on the correct number advances you to the next<br>• Misses don’t advance you<br>• First player to finish the sequence wins",
       "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
     };
 
@@ -1330,6 +1334,7 @@ function safeEmail(email){
           <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? `<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>` : `<span class="glassText">${g}</span>`}</div></div>
           <div class="actions">
             <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
+            <button class="pill" data-action="game_rules" data-value="${g}">Rules</button>
             <button class="pill" data-action="game_history" data-value="${g}">History</button>
             
           </div>
