@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v840  |  2026-02-25
+  NIGHT GAMES v841  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v840 (MASTER STABLE)</title>
+<title>Night Games v841 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -859,6 +859,21 @@ border: 1px solid rgba(255,255,255,.22);
 /* Make sure landing UI sits below the header */
 #landing .landingUI{ padding-top: 54px; }
 
+/* ===================== v768 GREEN ADVANCE BUTTONS ===================== */
+.btnAdvance, .btn-advance, .btnAdvanceGreen{
+  border: 1px solid rgba(120,255,170,.35) !important;
+  background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
+  box-shadow:
+    0 0 18px rgba(70,255,160,.18),
+    inset 0 0 18px rgba(60,255,160,.12) !important;
+}
+.btnAdvance:active, .btn-advance:active, .btnAdvanceGreen:active{
+  transform: translateY(1px) scale(0.99);
+  box-shadow:
+    0 0 10px rgba(70,255,160,.16),
+    inset 0 0 10px rgba(60,255,160,.10) !important;
+}
+
 /* ===================== v768 UI FIXES (requested) ===================== */
 /* Hide Lobby Setup button (requested) */
 #lobbySetupBtn{ display:none !important; }
@@ -891,6 +906,16 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
+/* ===================== v768 STABILIZE: REMOVE GREEN ADVANCE BUTTONS ===================== */
+.btnAdvance, .btn-advance, .btnAdvanceGreen{
+  border: 1px solid rgba(255,255,255,.22) !important;
+  background: rgba(255,255,255,.03) !important;
+  box-shadow:
+    inset 0 2px 6px rgba(255,255,255,.28),
+    inset 0 -10px 16px rgba(0,0,0,.55),
+    0 0 16px rgba(0,210,255,.08) !important;
+  filter: var(--zShadowSoft);
+}
 .btnAdvance:active, .btn-advance:active, .btnAdvanceGreen:active{
   transform: translateY(2px) scale(.99);
   filter: var(--zShadowSoft);
@@ -972,7 +997,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v840: detail content scrolling (RULES + PLAYER STATS) */
+    /* v841: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -986,7 +1011,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v840: prevent browser autofill yellow on email field */
+    /* v841: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1016,7 +1041,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v840</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v841</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1030,7 +1055,18 @@ border: 1px solid rgba(255,255,255,.22);
   TIP: Use Ctrl/Cmd+F for the tags above to jump to the exact spot.
 ================================================================================
 -->
-
+<div class="dbg" id="dbg">
+<div class="dbgHead" id="dbgHead">
+<span>Debug <b id="dbgState">INIT</b></span>
+<span style="opacity:.7;"></span>
+</div>
+<div class="dbgBody" id="dbgBody">
+<div class="kv"><span>URL</span><code id="dbgUrl"></code></div>
+<div class="kv"><span>Auth</span><code id="dbgAuth"></code></div>
+<div class="kv"><span>Firestore</span><code id="dbgFs"></code></div>
+<div class="kv"><span>Last error</span><code class="warn" id="dbgErr">none</code></div>
+<div style="margin-top:8px; opacity:.8;">If anything fails on iPhone, this box tells us exactly what.</div>
+</div>
 </div>
 <div id="app">
 <section class="screen active" id="landing">
@@ -1144,7 +1180,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v840
+<script type="module">// Night Games Night Games v841
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2079,7 +2115,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v840)
+        // Player Stats Shell (v841)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
