@@ -1,11 +1,37 @@
-<!doctype html>
+<!--
+================================================================================
+  NIGHT GAMES v775  |  2026-02-25
+================================================================================
+  MASTER CLEAN BUILD (STABILITY FIRST)
+  - Enter must work (email -> players) and must never regress.
+  - Game -> Setup must open.
+  - Setup Start must work (1 player + 2+ players).
+
+  THIS BUILD CHANGES:
+  - NO behavior changes intended.
+  - Labels / section banners / edit notes only.
+  - Visible version badge added.
+
+  QUICK JUMP (Ctrl/Cmd+F):
+    [EDIT_BG] [EDIT_LOGO] [EDIT_VERSION] [EDIT_COLORS] [EDIT_DROPDOWNS]
+    [SECTION_CONFIG] [SECTION_FIREBASE] [SECTION_STATE] [SECTION_ROUTING]
+    [SECTION_UI] [SECTION_PLAYERS] [SECTION_GAMES] [SECTION_SETUP]
+    [SECTION_WAITING] [SECTION_INVITES] [SECTION_UTILS] [SECTION_DEBUG]
+================================================================================
+-->
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Night Games v704 (Stable Enter + Setup Screen)</title>
-  <style>
-    :root{
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Night Games v775 (MASTER STABLE)</title>
+<style>
+/* =============================================================================
+   SECTION: VISUAL THEME  [EDIT_COLORS]
+   - Keep theme styles grouped here.
+============================================================================= */
+:root{
       --bgStage: url("./IMG_7315.jpeg");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
@@ -37,7 +63,7 @@
       color: rgba(255,255,255,.92);
       font-weight: 1000;
       letter-spacing: 1px;
-      font-size: 12px;
+      font-size: 13px;
       text-transform: uppercase;
       pointer-events: none;
       box-shadow: 0 10px 22px rgba(0,0,0,.55);
@@ -45,18 +71,7 @@
     .buildBadge b{ color: rgba(0,210,255,.95); }
 
     /* Debug panel (toggle) */
-    .dbg{
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 9999;
-      background: rgba(0,0,0,.45);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 14px;
-      box-shadow: 0 10px 22px rgba(0,0,0,.45);
-      overflow:hidden;
-      max-width: min(340px, calc(100vw - 24px));
-    }
+    .dbg{ display:none; }
     .dbgHead{
       padding: 10px 12px;
       display:flex;
@@ -68,7 +83,7 @@
       -webkit-tap-highlight-color: transparent;
     }
     .dbgHead span{
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 1000;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -78,7 +93,7 @@
     .dbgBody{
       display:none;
       padding: 10px 12px 12px 12px;
-      font-size: 12px;
+      font-size: 13px;
       line-height: 1.4;
       opacity: .9;
     }
@@ -89,7 +104,8 @@
     .bad{ color: rgba(255,120,120,.95); }
     .ok{ color: rgba(90,255,170,.95); }
 
-    #app{ position:fixed; inset:0; }
+    #app{
+  padding-top: 72px; /* keep UI clear of header */ position:fixed; inset:0; }
     .screen{ position:absolute; inset:0; display:none; }
     .screen.active{ display:block; }
 
@@ -191,7 +207,7 @@
     .btn3d:active{ transform: translateY(2px) scale(.995); filter: var(--zShadowSoft); }
 
     .hint{
-      font-size: 12px;
+      font-size: 13px;
       opacity: .78;
       text-align:center;
       max-width: min(640px, 92vw);
@@ -239,10 +255,10 @@
       padding-bottom: 6px;
       width: 100%;
       background: linear-gradient(180deg,
-        rgba(210,245,255,.96) 0%,
-        rgba(90,210,255,.92) 35%,
-        rgba(235,250,255,.98) 70%,
-        rgba(120,225,255,.88) 100%);
+        rgba(255,228,170,.92) 0%,
+        rgba(255,170,70,.90) 40%,
+        rgba(255,242,210,.96) 72%,
+        rgba(255,190,95,.88) 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -296,7 +312,11 @@
       white-space: nowrap;
       overflow: visible;
       text-overflow: clip;
-      background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(210,245,255,.78) 40%, rgba(255,255,255,.92));
+      background: linear-gradient(180deg,
+        rgba(190,240,255,.94) 0%,
+        rgba(55,185,235,.90) 45%,
+        rgba(220,248,255,.96) 75%,
+        rgba(85,205,245,.88) 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -316,19 +336,26 @@
       flex: 0 0 auto;
     }
     .dot.online{
-      background: rgba(90,255,170,.92);
-      box-shadow: 0 0 10px rgba(90,255,170,.35), 0 0 0 1px rgba(90,255,170,.28);
+      background: rgba(60, 255, 160, .98);
+      box-shadow: 0 0 18px rgba(60,255,160,.75), 0 0 38px rgba(60,255,160,.30), 0 0 0 1px rgba(60,255,160,.45);
+      animation: onlinePulse 1.35s ease-in-out infinite;
+    }
+    @keyframes onlinePulse{
+      0%{ transform: scale(1); filter: brightness(1.0); }
+      50%{ transform: scale(1.15); filter: brightness(1.25); }
+      100%{ transform: scale(1); filter: brightness(1.0); }
     }
 
     .actions{ display:flex; gap:8px; flex:0 0 auto; }
 
     .pill{
-      border: 1px solid rgba(255,255,255,.22);
+      /* v768 uniform button sizing */
+border: 1px solid rgba(255,255,255,.22);
       background: rgba(255,255,255,.03);
       color: rgba(255,255,255,.95);
       border-radius: 999px;
-      padding: 9px 11px;
-      font-size: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
       font-weight: 1000;
       letter-spacing: .8px;
       text-transform: uppercase;
@@ -342,6 +369,19 @@
         0 0 16px rgba(0,210,255,.08);
       transition: transform .07s ease, filter .07s ease;
     }
+
+    /* [EDIT_BUTTONS] Advancement buttons = green glass "lit" */
+    .btnAdvance{
+      border: 1px solid rgba(120,255,170,.42) !important;
+      background: linear-gradient(180deg, rgba(70,255,150,.18), rgba(255,255,255,.06)) !important;
+      box-shadow: 0 0 0 1px rgba(70,255,150,.12) inset, 0 10px 22px rgba(0,0,0,.45);
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,.55));
+    }
+    .btnAdvance:active{
+      transform: translateY(1px) scale(.99);
+      box-shadow: 0 0 0 1px rgba(70,255,150,.14) inset, 0 6px 14px rgba(0,0,0,.55);
+    }
+
     .pill:active{
       transform: translateY(2px) scale(.99);
       filter: var(--zShadowSoft);
@@ -393,7 +433,7 @@
       margin:0;
       white-space: pre-wrap;
       word-break: break-word;
-      font-size: 12px;
+      font-size: 13px;
       opacity: .9;
       background: rgba(0,0,0,.35);
       border: 1px solid rgba(255,255,255,.10);
@@ -401,7 +441,7 @@
       border-radius: 14px;
     }
   
-    /* v704: header row + mini pill */
+    /* v768: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -412,7 +452,7 @@
     }
 
   
-    /* v704: session indicator */
+    /* v768: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -430,19 +470,19 @@
     }
 
   
-    /* v704 layout lock: micro vertical drop */
+    /* v768 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v704 layout lock adjustment: additional micro drop */
+    /* v768 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v704 ATW emoji: keep color + one-line */
+    /* v768 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -462,123 +502,676 @@
       filter: drop-shadow(0 0 10px rgba(120,200,255,.18));
     }
 
+
+
+    /* v768: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    #setup .detailWrap{
+      top: clamp(150px, 18vh, 260px);
+      bottom: max(80px, env(safe-area-inset-bottom));
+    }
+    /* Ensure list area can always finger-scroll */
+    #setup .list{
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+    }
+
+
+
+    /* v768: glass dropdowns (no white/yellow) */
+    .glassSelect{
+      width: 100%;
+      padding: 14px 44px 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.96);
+      font-weight: 1100;
+      font-size: 20px;
+      line-height: 1.1;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      box-shadow:
+        inset 0 0 18px rgba(255,255,255,.06),
+        0 0 18px rgba(255,255,255,.06);
+      background-image:
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02)),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath fill='rgba(255,255,255,0.85)' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-size: auto, 20px 20px;
+      background-position: 0 0, calc(100% - 14px) 50%;
+    }
+    .glassSelect:focus{
+      border-color: rgba(255,255,255,.24);
+      background: rgba(255,255,255,.08);
+      box-shadow:
+        0 0 0 2px rgba(255,255,255,.10),
+        inset 0 0 20px rgba(255,255,255,.08),
+        0 0 22px rgba(120,190,255,.10);
+    }
+
+    /* Keep iOS/Safari from forcing yellow/white fills on inputs */
+    input, textarea, select{
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+      caret-color: rgba(255,255,255,.95);
+    }
+    input:-webkit-autofill,
+    textarea:-webkit-autofill,
+    select:-webkit-autofill{
+      -webkit-text-fill-color: rgba(255,255,255,.96) !important;
+      transition: background-color 99999s ease-in-out 0s;
+      box-shadow: 0 0 0 1000px rgba(255,255,255,.06) inset !important;
+      border: 1px solid rgba(255,255,255,.16) !important;
+    }
+
+
+
+    /***********************
+     *  v768 ERROR HUD
+     *  - Appears only when an error occurs
+     *  - Small, not in the way
+     ***********************/
+    #ngErrToast{
+      position: fixed;
+      right: 14px;
+      bottom: max(14px, env(safe-area-inset-bottom));
+      z-index: 99999;
+      display: none;
+      max-width: min(420px, calc(100vw - 28px));
+    }
+    #ngErrToast .card{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(20,20,24,.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 0 18px rgba(255,255,255,.06);
+      overflow:hidden;
+    }
+    #ngErrToast .head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    #ngErrToast .title{
+      font-weight: 1200;
+      font-size: 14px;
+      letter-spacing: .2px;
+      opacity: .95;
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      white-space: nowrap;
+    }
+    #ngErrToast .dot{
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255,80,80,.92);
+      box-shadow: 0 0 14px rgba(255,80,80,.35);
+      flex: 0 0 auto;
+    }
+    #ngErrToast .btn{
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-weight: 1100;
+      font-size: 13px;
+      line-height: 1;
+    }
+    #ngErrToast .btn:active{ transform: translateY(1px); opacity:.96; }
+    #ngErrToast .body{
+      padding: 10px 12px 12px;
+      font-size: 13px;
+      line-height: 1.35;
+      opacity: .90;
+    }
+    #ngErrToast .msg{
+      font-weight: 1000;
+      font-size: 13px;
+      margin-bottom: 8px;
+      opacity: .96;
+    }
+    #ngErrToast .detail{
+      display:none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      opacity: .90;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    #ngErrToast.expanded .detail{ display:block; }
+
+
+/* =============================================================================
+   SECTION: EDITABLE COORDINATES  [EDIT_LOGO] [EDIT_BG] [EDIT_VERSION]
+   - If you want to move the logo or tweak offsets, search for these tags.
+============================================================================= */
+
+/* =============================================================================
+   SECTION_SETUP: PLAYER PICKER DROPDOWN  [SECTION_SETUP]
+============================================================================= */
+/* v768: player picker dropdown */
+.glassBtn{
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.96);
+  font-weight: 1100;
+  font-size: 20px;
+  line-height: 1.1;
+  box-shadow: inset 0 0 18px rgba(255,255,255,.06), 0 0 18px rgba(255,255,255,.06);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+}
+.glassBtn .sub{ opacity:.72; font-weight:900; font-size:16px; }
+.glassBtn:active{ transform: translateY(1px); opacity:.96; }
+.pickerModal{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.58);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index: 99999;
+  padding: 18px;
+}
+.pickerCard{
+  width: min(520px, 100%);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(20,20,24,.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 0 30px rgba(0,0,0,.35), inset 0 0 24px rgba(255,255,255,.06);
+  overflow:hidden;
+}
+.pickerHead{
+  padding: 14px 16px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+.pickerHead .t{ font-weight:1200; font-size:18px; }
+.pickerHead .c{ opacity:.75; font-weight:900; font-size:14px; }
+.pickerBody{
+  max-height: 46vh;
+  overflow-y:auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 12px;
+}
+.pickerRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+  margin-bottom: 10px;
+}
+.pickerRow .nm{ font-weight:1100; }
+.pickerRow .em{ opacity:.65; font-size: 13px; font-weight:800; }
+.pickerFoot{
+  padding: 12px 12px;
+  display:flex;
+  gap: 10px;
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+.pickerFoot .pill{ flex:1; }
+
+/* =============================================================================
+   SECTION_UI: VERSION BADGE  [EDIT_VERSION]
+============================================================================= */
+#ngVersionBadge{
+  position: fixed;
+  left: 12px;
+  top: max(10px, env(safe-area-inset-top));
+  z-index: 99998;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(20,20,24,.58);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-weight: 1100;
+  font-size: 13px;
+  letter-spacing: .4px;
+  opacity: .92;
+}
+
+/* =============================================================================
+   SECTION_UI: FIELD LABELS (visual separation)  [EDIT_COLORS]
+============================================================================= */
+.fieldLabel{
+  display:inline-block;
+  padding: 8px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(120,190,255,.22);
+  background: rgba(40,120,220,.14);
+  color: rgba(225,245,255,.96);
+  font-weight: 1100;
+  letter-spacing: .4px;
+  margin: 0 0 10px 0;
+  box-shadow: inset 0 0 18px rgba(120,190,255,.08);
+}
+
+.setupGameTitle{
+  font-weight: 1200;
+  font-size: 30px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 14px rgba(0,0,0,.65), 0 0 22px rgba(0,210,255,.18);
+}
+/* v768 ADVANCE BUTTONS + SETUP LAYOUT FIXES */
+.pill.btnAdvance, .btnAdvance, .btn-advance{
+  border: 1px solid rgba(120,255,170,.35) !important;
+  background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
+  box-shadow: 0 0 18px rgba(70,255,160,.18), inset 0 0 18px rgba(60,255,160,.12) !important;
+}
+.pill.btnAdvance:active, .btnAdvance:active, .btn-advance:active{
+  transform: translateY(1px) scale(0.99);
+  box-shadow: 0 0 10px rgba(70,255,160,.16), inset 0 0 10px rgba(60,255,160,.10) !important;
+}
+/* Make "advance" buttons readable */
+.pill.btnAdvance{ font-weight: 950; }
+
+/* Prevent duplicated controls from stacking/overlapping inside setup body */
+#setup .panel .detailBody{ position: relative; }
+
+
+/* ===================== v768 HEADER BAR (ONE ROW, NO WRAP) ===================== */
+#ngHeaderBar{
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: min(760px, 94vw);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: linear-gradient(180deg, rgba(12,28,56,.35), rgba(0,0,0,.22));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 28px rgba(0,0,0,.35);
+  overflow: hidden;
+}
+#ngHeaderBar::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:16px;
+  pointer-events:none;
+  background: radial-gradient(120px 80px at 18% 0%, rgba(70,170,255,.28), transparent 70%),
+              radial-gradient(140px 90px at 82% 0%, rgba(70,255,160,.22), transparent 72%),
+              linear-gradient(90deg, rgba(70,170,255,.12), rgba(70,255,160,.10));
+  mix-blend-mode: screen;
+}
+#ngHeaderBar > span{
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+  font-size: 13px;
+  letter-spacing: .2px;
+}
+.ngHeaderLeft{ font-weight: 700; }
+.ngHeaderCenter{ opacity: .95; }
+.ngHeaderRight{ opacity: .85; }
+#ngHeaderBar span{
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-weight: 900;
+  opacity: .92;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#ngHeaderBar .ngHeaderLeft{ flex: 0 0 auto; max-width: 45%; }
+#ngHeaderBar .ngHeaderCenter{ flex: 1 1 auto; opacity: .80; max-width: 40%; }
+#ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
+
+/* Make sure landing UI sits below the header */
+#landing .landingUI{ padding-top: 54px; }
+
+/* ===================== v768 GREEN ADVANCE BUTTONS ===================== */
+.btnAdvance, .btn-advance, .btnAdvanceGreen{
+  border: 1px solid rgba(120,255,170,.35) !important;
+  background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
+  box-shadow:
+    0 0 18px rgba(70,255,160,.18),
+    inset 0 0 18px rgba(60,255,160,.12) !important;
+}
+.btnAdvance:active, .btn-advance:active, .btnAdvanceGreen:active{
+  transform: translateY(1px) scale(0.99);
+  box-shadow:
+    0 0 10px rgba(70,255,160,.16),
+    inset 0 0 10px rgba(60,255,160,.10) !important;
+}
+
+/* ===================== v768 UI FIXES (requested) ===================== */
+/* Hide Lobby Setup button (requested) */
+#lobbySetupBtn{ display:none !important; }
+
+/* Uniform pill buttons (size/shape) */
+.pill{
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+/* Prevent text from colliding into buttons in lists */
+.leftStack{ min-width: 0; }
+.glassText{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Picker rows: truncate long name/email, keep button fixed */
+.pickerRow > div{ min-width: 0; }
+.pickerRow .nm, .pickerRow .em{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+
+/* ===================== v768 STABILIZE: REMOVE GREEN ADVANCE BUTTONS ===================== */
+.btnAdvance, .btn-advance, .btnAdvanceGreen{
+  border: 1px solid rgba(255,255,255,.22) !important;
+  background: rgba(255,255,255,.03) !important;
+  box-shadow:
+    inset 0 2px 6px rgba(255,255,255,.28),
+    inset 0 -10px 16px rgba(0,0,0,.55),
+    0 0 16px rgba(0,210,255,.08) !important;
+  filter: var(--zShadowSoft);
+}
+.btnAdvance:active, .btn-advance:active, .btnAdvanceGreen:active{
+  transform: translateY(2px) scale(.99);
+  filter: var(--zShadowSoft);
+}
+
+/* v768: move setup/waiting panels down slightly so the glass doesn't run into the logo */
+#setup .detailWrap, #waiting .detailWrap{
+  top: clamp(210px, 26vh, 340px);
+}
+
+/* v768: waiting room typography + centering */
+#waiting .detailBody{
+  text-align: center;
+}
+.waitRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+.waitLeft{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.waitName{
+  font-weight: 1050;
+  font-size: 20px;
+  letter-spacing: .2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.waitMeta{
+  opacity:.78;
+  font-weight:900;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.statusIcon{
+  width: 22px;
+  text-align:center;
+  font-size: 16px;
+  font-weight: 1100;
+}
+.statusIcon.ok{ color: rgba(90,255,170,.95); }
+.statusIcon.wait{ color: rgba(255,210,90,.95); }
+.statusIcon.no{ color: rgba(255,120,120,.95); }
+    .actions{ width:100%; }
+    .actions .pill{ flex:1; text-align:center; }
+
+    /* v771: Item lines show label ABOVE buttons (so game/player names are visible) */
+    .itemLine{
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      padding: 14px 6px;
+      border-bottom: 1px solid rgba(255,255,255,.18); /* slightly stronger divider */
+    }
+    .leftStack{
+      width: 100%;
+      justify-content: center;
+    }
+    .gameLabelWrap{ justify-content:center; width:100%; }
+    .actions{
+      width:100%;
+    }
+    .actions .pill{
+      flex:1;
+      text-align:center;
+    }
 </style>
+<script id="ngGuards_v748">
+/* =============================================================================
+   SECTION_UTILS: SAFETY GUARDS  [SECTION_UTILS]
+   - Prevents small errors from killing the whole app.
+   - Does NOT change normal behavior when everything is working.
+============================================================
+    /* v775: detail content scrolling (RULES + PLAYER STATS) */
+    .detailWrap > .panel:first-child{
+      display:flex;
+      flex-direction:column;
+      height: 100%;
+      min-height: 0;
+    }
+    .detailBody{
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* v775: prevent browser autofill yellow on email field */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active{
+      -webkit-text-fill-color: rgba(235,245,255,.96);
+      transition: background-color 5000s ease-in-out 0s;
+      box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
+    }
+================= */
+(function(){
+  // Safe wrapper for event handlers
+  window.ngSafe = function(fn, label){
+    return function(){
+      try { return fn.apply(this, arguments); }
+      catch (e) {
+        try {
+          if (window.ngErr) window.ngErr(label || "Handler error", e && (e.stack || e.message || String(e)));
+        } catch(_e){}
+      }
+    };
+  };
+
+  // Guard common DOM lookup usage
+  window.ng$ = function(sel){ return document.querySelector(sel); };
+  window.ngAll = function(sel){ return Array.from(document.querySelectorAll(sel)); };
+})();
+</script>
 </head>
 <body>
-  <div class="buildBadge">Build <b>v704</b> • Firebase</div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v775</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<!--
+================================================================================
+  EDIT NOTES (v768)
+================================================================================
+  [EDIT_BG]       Background image / gradient choices
+  [EDIT_LOGO]     Logo placement / size
+  [EDIT_VERSION]  Version label placement
+  [EDIT_DROPDOWNS]Glass dropdown styling
+  [EDIT_COLORS]   Color/opacity tweaks for glass
 
-  <div class="dbg" id="dbg">
-    <div class="dbgHead" id="dbgHead">
-      <span>Debug <b id="dbgState">INIT</b></span>
-      <span style="opacity:.7;">tap</span>
-    </div>
-    <div class="dbgBody" id="dbgBody">
-      <div class="kv"><span>URL</span><code id="dbgUrl"></code></div>
-      <div class="kv"><span>Auth</span><code id="dbgAuth"></code></div>
-      <div class="kv"><span>Firestore</span><code id="dbgFs"></code></div>
-      <div class="kv"><span>Last error</span><code id="dbgErr" class="warn">none</code></div>
-      <div style="margin-top:8px; opacity:.8;">If anything fails on iPhone, this box tells us exactly what.</div>
-    </div>
-  </div>
-
-  <div id="app">
-    <section id="landing" class="screen active">
-      <div class="landingUI">
-        <div class="field3d">
-          <input id="emailInput" type="email" placeholder="Enter your email" autocomplete="email" inputmode="email"/>
-        </div>
-        <button id="enterBtn" class="btn3d" type="button">Enter</button>
-        <div class="hint" id="statusLine">Email-only sign-in (no password). Firebase stable build.</div>
-      </div>
-    </section>
-
-    <section id="players" class="screen">
-      <div class="hub">
-        <div class="panel">
-          <div class="sectionHead headerRow">
-            <div class="title">Games</div>
-            <div style="display:flex; gap:10px; align-items:center;"><button class="pill pillMini sessionPill" id="sessionBtn" data-action="show_session" type="button" style="display:none;">Session</button></div>
-          </div>
-          <div class="list" id="gamesList"></div>
-        </div>
-        <div class="panel">
-          <div class="sectionHead"><div class="title">Players</div></div>
-          <div class="list" id="playersList"></div>
-        </div>
-      </div>
-    </section>
-
-    
-    
-    <section id="setup" class="screen">
-      <div class="detailWrap">
-        <div class="panel">
-          <div class="sectionHead"><div class="title">Setup</div></div>
-          <div class="detailBody" id="setupBody">
-            <div style="opacity:.82;">Setup screen is installed. Wiring comes next.</div>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="sectionHead"><div class="title">Controls</div></div>
-          <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
-            <button class="pill" id="setupBackBtn" type="button">Back</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
-    <section id="lobby" class="screen">
-      <div class="detailWrap">
-        <div class="panel">
-          <div class="sectionHead"><div class="title" id="lobbyTitle">Lobby</div></div>
-          <div class="detailBody" id="lobbyBody">Loading…</div>
-        </div>
-        <div class="panel">
-          <div class="sectionHead"><div class="title">Controls</div></div>
-          <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
-            <button class="pill" id="lobbyBackBtn" type="button">Back</button>
-            <button class="pill" id="lobbySetupBtn" type="button">Setup</button>
-            <button class="pill" id="lobbyStartBtn" type="button" style="display:none;">Start</button>
-            <button class="pill" id="lobbyEndBtn" type="button" style="display:none;">End</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-
-    <section id="detail" class="screen">
-      <div class="detailWrap">
-        <div class="panel">
-          <div class="sectionHead"><div class="title" id="detailTitle">Detail</div></div>
-          <div class="detailBody" id="detailBody">Loading…</div>
-        </div>
-        <div class="panel">
-          <div class="sectionHead"><div class="title">Navigation</div></div>
-          <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
-            <button class="pill" id="backBtn" type="button">Back</button>
-            <button class="pill" id="homeBtn" type="button">Home</button>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <div class="fatal" id="fatal">
-    <div class="card">
-      <h2>Firebase didn’t start</h2>
-      <p>This page uses Firebase modules. If you’re on a web link and still see this, the host is blocking module imports or Firebase is blocked.</p>
-      <pre id="fatalMsg">No details.</pre>
-    </div>
-  </div>
-
-  <script nomodule>
+  TIP: Use Ctrl/Cmd+F for the tags above to jump to the exact spot.
+================================================================================
+-->
+<div class="dbg" id="dbg">
+<div class="dbgHead" id="dbgHead">
+<span>Debug <b id="dbgState">INIT</b></span>
+<span style="opacity:.7;"></span>
+</div>
+<div class="dbgBody" id="dbgBody">
+<div class="kv"><span>URL</span><code id="dbgUrl"></code></div>
+<div class="kv"><span>Auth</span><code id="dbgAuth"></code></div>
+<div class="kv"><span>Firestore</span><code id="dbgFs"></code></div>
+<div class="kv"><span>Last error</span><code class="warn" id="dbgErr">none</code></div>
+<div style="margin-top:8px; opacity:.8;">If anything fails on iPhone, this box tells us exactly what.</div>
+</div>
+</div>
+<div id="app">
+<section class="screen active" id="landing">
+<div class="landingUI">
+<div class="field3d">
+<input autocomplete="email" id="emailInput" inputmode="email" placeholder="Enter your email" type="email"/>
+</div>
+<button class="btn3d btnAdvance" id="enterBtn" type="button">Enter</button>
+<div class="hint" id="statusLine">Email-only sign-in (no password). Firebase stable build.</div>
+</div>
+</section>
+<section class="screen" id="players">
+<div class="hub">
+<div class="panel">
+<div class="sectionHead headerRow">
+<div class="title">Games</div>
+<div style="display:flex; gap:10px; align-items:center;"><button class="pill pillMini sessionPill" data-action="show_session" id="sessionBtn" style="display:none;" type="button">Session</button></div>
+</div>
+<div class="list" id="gamesList"></div>
+</div>
+<div class="panel">
+<div class="sectionHead"><div class="title">Players</div></div>
+<div class="list" id="playersList"></div>
+</div>
+</div>
+</section>
+<section class="screen" id="setup">
+<div class="detailWrap">
+<div class="panel">
+<div class="sectionHead"><div class="title">Setup</div></div>
+<div class="detailBody" id="setupBody">
+<div style="opacity:.82;">Setup screen is installed. Wiring comes next.</div>
+</div>
+</div>
+<div class="panel">
+<div class="sectionHead"><div class="title">Controls</div></div>
+<div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
+<button class="pill" id="setupBackBtn" type="button">Back</button>
+<button class="pill btnAdvance" id="setupStartBtn" type="button">Start Game</button>
+</div>
+</div>
+</div>
+</section>
+<section class="screen" id="waiting">
+<div class="detailWrap">
+<div class="panel">
+<div class="sectionHead"><div class="title">Waiting Room</div></div>
+<div class="detailBody" id="waitingBody">
+<div style="opacity:.82;">Waiting room is installed. Wiring comes next.</div>
+</div>
+</div>
+<div class="panel">
+<div class="sectionHead"><div class="title">Controls</div></div>
+<div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
+<button class="pill" id="waitingBackBtn" type="button">Back</button>
+</div>
+</div>
+</div>
+</section>
+<section class="screen" id="lobby">
+<div class="detailWrap">
+<div class="panel">
+<div class="sectionHead"><div class="title" id="lobbyTitle">Lobby</div></div>
+<div class="detailBody" id="lobbyBody">Loading…</div>
+</div>
+<div class="panel">
+<div class="sectionHead"><div class="title">Controls</div></div>
+<div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
+<button class="pill" id="lobbyBackBtn" type="button">Back</button>
+<button class="pill" id="lobbySetupBtn" type="button">Setup</button>
+<button class="pill btnAdvance" id="lobbyStartBtn" style="display:none;" type="button">Start</button>
+<button class="pill" id="lobbyEndBtn" style="display:none;" type="button">End</button>
+</div>
+</div>
+</div>
+</section>
+<section class="screen" id="detail">
+<div class="detailWrap">
+<div class="panel">
+<div class="sectionHead"><div class="title" id="detailTitle">Detail</div></div>
+<div class="detailBody" id="detailBody">Loading…</div>
+</div>
+<div class="panel">
+<div class="sectionHead"><div class="title">Navigation</div></div>
+<div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
+<button class="pill" id="backBtn" type="button">Back</button>
+<button class="pill" id="homeBtn" type="button">Home</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+<div class="fatal" id="fatal">
+<div class="card">
+<h2>Firebase didn’t start</h2>
+<p>This page uses Firebase modules. If you’re on a web link and still see this, the host is blocking module imports or Firebase is blocked.</p>
+<pre id="fatalMsg">No details.</pre>
+</div>
+</div>
+<script nomodule="">
     // Very old browsers only
     document.getElementById("fatal").style.display = "flex";
     document.getElementById("fatalMsg").textContent = "Your browser doesn’t support ES Modules. Use a modern Safari/Chrome.";
   </script>
-
-  <script>
+<script>
     // Debug UI toggle
     (function(){
       const dbg = document.getElementById("dbg");
@@ -587,8 +1180,8 @@
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
+<script type="module">// Night Games Night Games v775
 
-  <script type="module">
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -596,7 +1189,7 @@
       getFirestore,
       doc, setDoc, getDoc,
       collection, onSnapshot,
-      serverTimestamp, query
+      serverTimestamp, query, where
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const dbgState = document.getElementById("dbgState");
@@ -620,7 +1213,23 @@
     }
 
     // ===== Config (from Steven) =====
-    const firebaseConfig = {
+    /* =============================================================================
+   SECTION_FIREBASE  [SECTION_FIREBASE]
+   - Firebase configuration lives here.
+============================================================================= */
+
+/*
+================================================================================
+  CONFIG / CONSTANTS  [SECTION_CONFIG]
+================================================================================
+*/
+
+/*
+================================================================================
+  FIREBASE CONFIG  [SECTION_FIREBASE]
+================================================================================
+*/
+const firebaseConfig = {
       apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
       authDomain: "gamenightdarts-e7601.firebaseapp.com",
       projectId: "gamenightdarts-e7601",
@@ -635,6 +1244,43 @@
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
+
+    /* ===========================
+       v768 INTRO AUDIO (REPO FILE)
+       - Plays the repo-hosted intro audio (m4a) when user taps the email field.
+       - Everyone hears it on their own device (same file, same voice).
+       - Uses normal HTML5 Audio (same mechanism as beeps), NOT SpeechSynthesis.
+       =========================== */
+    (function(){
+      try{
+        if(window.__ngIntroAudioInstalled) return;
+        window.__ngIntroAudioInstalled = true;
+
+        // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
+        const INTRO_URL = "intro.m4a";
+
+        const intro = new Audio(INTRO_URL);
+        intro.preload = "auto";
+
+        function playIntro(){
+          try{
+            intro.currentTime = 0;
+            const p = intro.play();
+            if(p && p.catch) p.catch(()=>{});
+          }catch(e){}
+        }
+
+        if(emailInput){
+          // trusted gesture triggers playback on mobile
+          emailInput.addEventListener("pointerdown", playIntro, {passive:true});
+          emailInput.addEventListener("touchstart", playIntro, {passive:true});
+          emailInput.addEventListener("mousedown", playIntro, {passive:true});
+          emailInput.addEventListener("focus", playIntro, {passive:true});
+        }
+      }catch(e){}
+    })();
+
+
     const enterBtn = document.getElementById("enterBtn");
     const gamesList = document.getElementById("gamesList");
     const playersList = document.getElementById("playersList");
@@ -644,6 +1290,9 @@
     const homeBtn = document.getElementById("homeBtn");
     const statusLine = document.getElementById("statusLine");
     const setup = document.getElementById("setup");
+    const waiting = document.getElementById("waiting");
+    const waitingBody = document.getElementById("waitingBody");
+    const waitingBackBtn = document.getElementById("waitingBackBtn");
     const setupBackBtn = document.getElementById("setupBackBtn");
     const lobbySetupBtn = document.getElementById("lobbySetupBtn");
     const lobby = document.getElementById("lobby");
@@ -654,10 +1303,17 @@
     const lobbyEndBtn = document.getElementById("lobbyEndBtn");
     const sessionBtn = document.getElementById("sessionBtn");
 
-    function show(which){
+    
+/*
+================================================================================
+  ROUTING / NAV  [SECTION_ROUTING]
+================================================================================
+*/
+function show(which){
       landing.classList.toggle("active", which==="landing");
       players.classList.toggle("active", which==="players");
       setup.classList.toggle("active", which==="setup");
+      waiting.classList.toggle("active", which==="waiting");
       lobby.classList.toggle("active", which==="lobby");
       detail.classList.toggle("active", which==="detail");
     }
@@ -696,19 +1352,26 @@
       clickSound();
     }, {passive:true});
 
-    function safeEmail(email){
+    
+    function isOnline(p){
+      const id = safeEmail(p.email);
+      const last = presenceMap.get(id) || 0;
+      return (p.email || "").toLowerCase() === (currentEmail || "").toLowerCase() || ((Date.now() - last) < 25000);
+    }
+
+function safeEmail(email){
       return (email||"").toLowerCase().replaceAll(".", "(dot)").replaceAll("@","(at)");
     }
 
     const games = ["01","Cricket","Killer","Shanghai","ATW","Half It"];
 
     const GAME_RULES = {
-      "01": "Classic x01. Start at 301/501/701 etc (we'll add selector next). Lowest to zero wins (bust rules configurable).",
-      "Cricket": "20–15 + Bull. Close numbers then score. Team/solo rules configurable.",
-      "Killer": "Assign a number, get to killer, then knock others out. (We’ll match your house rules).",
-      "Shanghai": "Each round targets a number. Shanghai = single+double+triple in same round. (House rules).",
-      "ATW 🌍": "ATW: hit 1→20 (and bull if you want). Miss = move on / stay (house rules).",
-      "Half It": "Hit the called target each round or score is halved. (House rules)."
+      "01": "<b>Goal:</b> Reach exactly 0.<br><br>• Choose 301 / 501 / 701<br>• Subtract what you hit each turn (3 darts)<br>• Must land exactly on 0 to win<br>• If you go below 0 = bust (turn doesn’t count)<br><br><b>Options:</b><br>• <b>Single In / Single Out</b>: scoring starts immediately, any hit can finish<br>• <b>Single In / Double Out</b>: scoring starts immediately, must finish on a double<br>• <b>Double In / Double Out</b>: must hit a double to start scoring, must finish on a double",
+      "Cricket": "<b>Goal:</b> Close all numbers and be tied or ahead in points.<br><br>• Numbers: 15–20 + Bull<br>• Each number needs 3 hits to close (single=1, double=2, triple=3)<br>• After you close a number, extra hits score points until opponents close it<br>• First to close everything and be tied/ahead wins",
+      "Killer": "<b>Goal:</b> Become a Killer and knock everyone out.<br><br>• Each player gets a number<br>• Hit your <b>double</b> to become a Killer<br>• As a Killer, hit opponents’ doubles to take lives<br>• When a player runs out of lives, they’re out<br>• Last player standing wins",
+      "Shanghai": "<b>Goal:</b> Accuracy battle on the called number each round.<br><br>• Rounds go 1 → 20 (one number per round)<br>• Only the active number counts<br>• Scoring is accuracy-based:<br>&nbsp;&nbsp;– Single = 1 point<br>&nbsp;&nbsp;– Double = 2 points<br>&nbsp;&nbsp;– Triple = 3 points<br>• Highest total points wins<br><br><b>Optional (if enabled):</b> Hit single + double + triple of the active number in one turn = <b>Shanghai</b> (instant win)",
+      "ATW": "<b>Goal:</b> Be first to hit every number in order.<br><br>• Hit 1, then 2, then 3… up to 20 (and Bull if enabled)<br>• A hit on the correct number advances you to the next<br>• Misses don’t advance you<br>• First player to finish the sequence wins",
+      "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
     };
 
     function renderGames(){
@@ -717,12 +1380,471 @@
           <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? `<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>` : `<span class="glassText">${g}</span>`}</div></div>
           <div class="actions">
             <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
+            <button class="pill" data-action="game_rules" data-value="${g}">Rules</button>
             <button class="pill" data-action="game_history" data-value="${g}">History</button>
             
           </div>
         </div>
       `).join("");
     }
+
+    
+    // v768: minimal session + setup → waiting room (does not touch login)
+    let activeSessionId = null;
+    let activeSession = null;
+
+    function newSessionId(){
+      return "sess_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+    }
+
+    async function createSessionForGame(game){
+      activeSessionId = newSessionId();
+      activeSession = {
+        id: activeSessionId,
+        game,
+        host: (currentEmail||"").toLowerCase(),
+        createdAt: Date.now(),
+        setup: { count: 1, emails: [(currentEmail||"").toLowerCase()].filter(Boolean) }
+      };
+      try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+      listenSessionInvites();
+    }
+
+    function _ensureCurrentInList(emails){
+      const me = (currentEmail||"").toLowerCase();
+      const set = new Set((emails||[]).map(x=>(x||"").toLowerCase()).filter(Boolean));
+      if(me) set.add(me);
+      return Array.from(set);
+    }
+
+    
+/*
+================================================================================
+  GAME SETUP  [SECTION_SETUP]
+================================================================================
+*/
+function renderSetupForGame(game){
+      const people = (lastPeople||[]).slice();
+      // ensure current user exists as a selectable option
+      const me = (currentEmail||"").toLowerCase();
+      if(me && !people.some(p => (p.email||"").toLowerCase()===me)){
+        people.unshift({ email: me, name: (me.split("@")[0]||"Me") });
+      }
+
+      const opts = people.map(p=>{
+        const em = (p.email||"").toLowerCase();
+        const nm = p.name || (em.split("@")[0]||em);
+        return `<label class="chip" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); margin:0 0 10px 0;">
+          <input type="checkbox" class="pickPlayer" value="${em}" style="transform:scale(1.1)"/>
+          <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:900;">${nm}</span>
+        </label>`;
+      }).join("");
+
+      setupBody.innerHTML = `
+        <div class="setupGameTitle">${game}</div>
+        <div style="opacity:.78; margin-bottom:14px;">Pick players, then Start.</div>
+
+        <div class="fieldLabel">Number of Players</div>
+        <select id="setupCount" class="glassSelect" class="glassSelect">
+          ${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}">${n}</option>`).join("")}
+        </select>
+
+        <div class="fieldLabel" style="margin-top:14px;">Which Players</div>
+        <button type="button" id="openPlayerPicker" class="glassBtn">
+          <span>Select players</span>
+          <span class="sub" id="playerPickSummary">1 selected</span>
+        </button>
+        <div id="setupPlayersWrapHolder" style="display:none;">
+          <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
+            ${opts}
+          </div>
+        </div>
+
+        <!-- v768 player picker modal -->
+        <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
+          <div class="pickerCard">
+            <div class="pickerHead">
+              <div>
+                <div class="t">Pick Players</div>
+                <div class="c" id="pickerCountLabel">1 / 1 selected</div>
+              </div>
+              <button class="pill" id="pickerCloseTop" type="button" style="padding:10px 14px;">Close</button>
+            </div>
+            <div class="pickerBody" id="pickerBody"></div>
+            <div class="pickerFoot">
+              <button class="pill" id="pickerCancel" type="button" style="opacity:.85;">Cancel</button>
+              <button class="pill" id="pickerDone" type="button">Done</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
+          <button class="pill" id="setupStartInlineBtn" type="button">Start</button>
+          <button class="pill" id="setupCancelBtn" type="button" style="opacity:.85;">Cancel</button>
+        </div>
+      `;
+
+      const countSel = document.getElementById("setupCount");
+      const startInlineBtn = document.getElementById("setupStartInlineBtn");
+      const startCtrlBtn = document.getElementById("setupStartBtn");
+      const cancelBtn = document.getElementById("setupCancelBtn");
+
+      // defaults
+      countSel.value = "1";
+      const checks = Array.from(document.querySelectorAll(".pickPlayer"));
+      // v768 picker wiring (dropdown-style player selector)
+      const openBtn = document.getElementById("openPlayerPicker");
+      const modal = document.getElementById("playerPickerModal");
+      const body = document.getElementById("pickerBody");
+      const doneBtn = document.getElementById("pickerDone");
+      const pickerCancelBtn = document.getElementById("pickerCancel");
+      const closeTop = document.getElementById("pickerCloseTop");
+      const summary = document.getElementById("playerPickSummary");
+      const countLabel = document.getElementById("pickerCountLabel");
+
+      let snapshotSelected = new Set();
+
+      function getSelectedEmails(){
+        return checks.filter(c=>c.checked).map(c=>c.value);
+      }
+      function setSelectedEmails(set){
+        checks.forEach(c=>{ c.checked = set.has(c.value); });
+      }
+      function refreshSummary(){
+        const sel = getSelectedEmails();
+        summary.textContent = `${sel.length} selected`;
+      }
+      function refreshCountLabel(want){
+        const sel = getSelectedEmails().length;
+        countLabel.textContent = `${sel} / ${want} selected`;
+      }
+      function rebuildPicker(want){
+        body.innerHTML = "";
+        const sel = new Set(getSelectedEmails());
+        checks.forEach(c=>{
+          const email = c.value;
+          const label = c.closest("label");
+          const nm = label ? ((label.querySelector("span")?.textContent||"").trim() || email) : email;
+          const row = document.createElement("div");
+          row.className = "pickerRow";
+          row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "pill";
+          btn.style.padding = "10px 12px";
+          btn.textContent = sel.has(email) ? "Selected" : "Select";
+          btn.addEventListener("click", ()=>{
+            const now = new Set(getSelectedEmails());
+            const isOn = now.has(email);
+            if(isOn){
+              now.delete(email);
+            }else{
+              if(now.size >= want){
+                try{ ping && ping(); }catch(e){}
+                return;
+              }
+              now.add(email);
+            }
+            setSelectedEmails(now);
+            enforce();
+            rebuildPicker(want);
+          });
+          row.appendChild(btn);
+          body.appendChild(row);
+        });
+        refreshCountLabel(want);
+        refreshSummary();
+      }
+      function openPicker(want){
+        snapshotSelected = new Set(getSelectedEmails());
+        rebuildPicker(want);
+        modal.style.display = "flex";
+        modal.setAttribute("aria-hidden","false");
+      }
+      function closePicker(){
+        modal.style.display = "none";
+        modal.setAttribute("aria-hidden","true");
+      }
+      if(openBtn){
+        openBtn.addEventListener("click", ()=>{
+          const want = parseInt((document.getElementById("setupCount")?.value)||"1",10) || 1;
+          openPicker(want);
+        });
+      }
+      [pickerCancelBtn, closeTop].forEach(b=> b && b.addEventListener("click", ()=>{
+        setSelectedEmails(snapshotSelected);
+        enforce();
+        refreshSummary();
+        closePicker();
+      }));
+      if(doneBtn){
+        doneBtn.addEventListener("click", ()=>{
+          closePicker();
+          refreshSummary();
+        });
+      }
+      if(modal){
+        modal.addEventListener("click", (e)=>{
+          if(e.target === modal){
+            setSelectedEmails(snapshotSelected);
+            enforce();
+            refreshSummary();
+            closePicker();
+          }
+        });
+      }
+      refreshSummary();
+
+      // default select current user
+      checks.forEach(c=>{ if(c.value === me) c.checked = true; });
+
+      function enforce(){
+        const want = parseInt(countSel.value||"1",10) || 1;
+        const picked = checks.filter(c=>c.checked).map(c=>c.value);
+        // always keep me selected
+        const fixed = _ensureCurrentInList(picked);
+        // trim to count
+        const trimmed = fixed.slice(0, want);
+        checks.forEach(c=>{ c.checked = trimmed.includes(c.value); });
+      }
+
+      countSel.addEventListener("change", enforce);
+      checks.forEach(c=>c.addEventListener("change", enforce));
+
+      cancelBtn.addEventListener("click", ()=>{
+        show("players");
+      });
+
+      const doStart = async ()=>{
+        // v768: Stable start behavior (no broken/partial calls)
+        enforce();
+        const want = parseInt(countSel.value||"1",10) || 1;
+        const picked = checks.filter(c=>c.checked).map(c=>c.value);
+        const emails = _ensureCurrentInList(picked).slice(0, want);
+
+        activeSession = activeSession || {};
+        activeSession.game = game;
+        activeSession.setup = { count: want, emails };
+
+        try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+
+        // If solo -> go straight in. If multiplayer -> go to waiting room.
+        if(want <= 1){
+          show("waiting");
+          try{ startGameFromSession && startGameFromSession(); }catch(e){}
+        }else{
+          show("waiting");
+          try{ await 
+/*
+================================================================================
+  INVITES  [SECTION_INVITES]
+================================================================================
+*/
+sendInvitesForSession(); }catch(e){}
+          try{ listenSessionInvites && listenSessionInvites(); }catch(e){}
+        }
+      };
+
+      // Inline + Controls Start buttons
+      if(startInlineBtn) startInlineBtn.addEventListener("click", doStart);
+      if(startCtrlBtn) startCtrlBtn.addEventListener("click", doStart);
+}
+
+    
+    // v768: invites (in-app) — Join / No Thanks
+    let invitesUnsub = null;
+    function listenForInvites(){
+      try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
+      invitesUnsub = null;
+      const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
+      if(!db2 || !currentEmail) return;
+      const me = (currentEmail||"").toLowerCase();
+      const invRef = collection(db2, "invites");
+      const qInv = query(invRef, where("to", "==", me), where("status", "==", "pending"));
+      invitesUnsub = onSnapshot(qInv, (snap)=>{
+        if(!snap || snap.empty) return;
+        // take newest pending invite
+        const docSnap = snap.docs[0];
+        const inv = docSnap.data() || {};
+        const from = inv.from || "Host";
+        const game = inv.game || "Game";
+        const sessionId = inv.sessionId || null;
+        const invited = Array.isArray(inv.invited) ? inv.invited : [];
+        const count = inv.count || invited.length || 1;
+
+        openDetail("INVITE", `
+          <div style="font-weight:1100; font-size:22px; margin-bottom:10px;">${from} invited you</div>
+          <div style="opacity:.82; margin-bottom:14px;">Game: <b>${game}</b></div>
+          <div style="opacity:.78; margin-bottom:14px;">Join this room?</div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="pill" id="invJoinBtn" type="button">Join</button>
+            <button class="pill" id="invNoBtn" type="button" style="opacity:.85;">No Thanks</button>
+          </div>
+        `);
+
+        const joinBtn = document.getElementById("invJoinBtn");
+        const noBtn = document.getElementById("invNoBtn");
+
+        if(joinBtn){
+          joinBtn.addEventListener("click", async ()=>{
+            try{
+              await setDoc(doc(db2, "invites", docSnap.id), { status:"accepted", respondedAt: serverTimestamp() }, { merge:true });
+            }catch(e){ alert(e.message||e); }
+            // set local session + go waiting
+            if(sessionId){
+              activeSessionId = sessionId;
+              activeSession = { id: sessionId, game, host: inv.fromEmail||inv.from||"", setup:{ count, emails: invited } };
+              try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+      listenSessionInvites();
+              listenSessionInvites();
+              
+/*
+================================================================================
+  WAITING ROOM  [SECTION_WAITING]
+================================================================================
+*/
+renderWaitingRoom();
+              show("waiting");
+              closeDetail();
+            }
+          });
+        }
+        if(noBtn){
+          noBtn.addEventListener("click", async ()=>{
+            try{
+              await setDoc(doc(db2, "invites", docSnap.id), { status:"declined", respondedAt: serverTimestamp() }, { merge:true });
+            }catch(e){ alert(e.message||e); }
+            closeDetail();
+          });
+        }
+      });
+    }
+
+    async function sendInvitesForSession(){
+      if(!db || !activeSessionId || !activeSession || !activeSession.setup) return;
+      const hostEmail = (currentEmail||"").toLowerCase();
+      const hostName = (lastPeople||[]).find(p => (p.email||"").toLowerCase()===hostEmail)?.name || (hostEmail.split("@")[0]||"Host");
+      const game = activeSession.game || "Game";
+      const invited = (activeSession.setup.emails||[]).map(x=>(x||"").toLowerCase()).filter(Boolean);
+      const count = activeSession.setup.count || invited.length || 1;
+
+      // create/merge session doc (meta)
+      try{
+        await setDoc(doc(db2, "sessions", activeSessionId), {
+          sessionId: activeSessionId,
+          game,
+          host: hostEmail,
+          hostName,
+          invited,
+          count,
+          createdAt: serverTimestamp()
+        }, { merge:true });
+      }catch(e){ /* non-fatal */ }
+
+      // create invite docs for non-host
+      const others = invited.filter(em => em !== hostEmail);
+      for(const to of others){
+        const invId = `${activeSessionId}_${safeEmail(to)}`;
+        await setDoc(doc(db2, "invites", invId), {
+          sessionId: activeSessionId,
+          game,
+          from: hostName,
+          fromEmail: hostEmail,
+          to,
+          invited,
+          count,
+          status: "pending",
+          createdAt: serverTimestamp()
+        }, { merge:true });
+      }
+    }
+
+    let inviteStatusCache = new Map();
+    let sessionInvitesUnsub = null;
+    function listenSessionInvites(){
+      try{ if(sessionInvitesUnsub) sessionInvitesUnsub(); }catch(e){}
+      sessionInvitesUnsub = null;
+      const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
+      if(!db2 || !activeSessionId) return;
+      const invRef = collection(db2, "invites");
+      const qSess = query(invRef, where("sessionId","==", activeSessionId));
+      sessionInvitesUnsub = onSnapshot(qSess, (snap)=>{
+        inviteStatusCache = new Map();
+        try{
+          snap.docs.forEach(d=>{
+            const v = d.data()||{};
+            if(v.to) inviteStatusCache.set(String(v.to).toLowerCase(), v.status||"pending");
+          });
+        }catch(e){}
+
+        // refresh waiting room statuses when invites change
+        if(waiting && waiting.classList.contains("active")){
+          renderWaitingRoom();
+        }
+      });
+    }
+
+
+    function renderWaitingRoom(){
+      const game = (activeSession && activeSession.game) ? activeSession.game : "Game";
+      const s = (activeSession && activeSession.setup) ? activeSession.setup : {emails:[],count:0};
+      const emails = (s.emails||[]).slice(0, s.count||s.emails.length);
+
+      const rows = emails.map(em=>{
+        const p = (lastPeople||[]).find(x => (x.email||"").toLowerCase()===String(em||"").toLowerCase());
+        const name = p ? (p.name||em.split("@")[0]||em) : (em.split("@")[0]||em);
+        const lower = String(em||"").toLowerCase();
+        const online = (p && isOnline(p)) || (lower===(currentEmail||"").toLowerCase());
+        const status = (lower===(currentEmail||"").toLowerCase()) ? "host" : (inviteStatusCache.get(lower)||"pending");
+        const statusLabel = status==="accepted" ? "joined" : status==="declined" ? "declined" : status==="host" ? "host" : "invited";
+        const icon = status==="accepted" || status==="host" ? "✔" : status==="declined" ? "✖" : "⌛";
+        const iconClass = status==="accepted" || status==="host" ? "ok" : status==="declined" ? "no" : "wait";
+        return `<div class="waitRow">
+          <div class="waitLeft">
+            <span class="dot ${online ? "online" : ""}"></span>
+            <div class="waitName">${name}</div>
+          </div>
+          <div class="waitMeta"><span class="statusIcon ${iconClass}">${icon}</span> ${statusLabel} • ${online ? "online" : "offline"}</div>
+        </div>`;
+      }).join("");
+
+      waitingBody.innerHTML = `
+        <div class="setupGameTitle">${game}</div>
+        <div style="opacity:.78; margin-bottom:14px;">Waiting for invited players to join…</div>
+        <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
+      `;
+
+      // v768: auto-start when the last invited player has joined (host only)
+      try{
+        const me = (currentEmail||"").toLowerCase();
+        const isHost = me && activeSession && (activeSession.host||"").toLowerCase()===me;
+        const want = (s.count||emails.length||0);
+        if(isHost && want>0 && emails.length){
+          let joined = 0;
+          let anyDeclined = false;
+          for(const em of emails){
+            const lowerEm = String(em||"").toLowerCase();
+            if(lowerEm===me){ joined++; continue; }
+            const st = inviteStatusCache.get(lowerEm) || "pending";
+            if(st==="accepted") joined++;
+            if(st==="declined") anyDeclined = true;
+          }
+          if(!anyDeclined && joined>=want){
+            if(window.ngAutoStartedSessionId !== activeSessionId){
+              window.ngAutoStartedSessionId = activeSessionId;
+              // If a real game runner exists, use it. Otherwise move forward to Lobby.
+              try{ startGameFromSession && startGameFromSession(); return; }catch(e){}
+              try{
+                lobbyTitle.textContent = (activeSession.game||"Game") + " • LIVE";
+                lobbyBody.innerHTML = "<div style='font-weight:1100; font-size:22px; margin-bottom:10px;'>All players joined.</div><div style='opacity:.82;'>Starting game…</div>";
+                show("lobby");
+              }catch(e){}
+            }
+          }
+        }
+      }catch(e){}
+    }
+
 
     // Seed registry (only merges; harmless)
     const SEED = [
@@ -748,11 +1870,22 @@
     let lastPeople = []; // cached registry list for re-render on presence updates
 
 
-    function renderPlayers(list){
-      playersList.innerHTML = list.map(p => {
+    
+/*
+================================================================================
+  PLAYERS  [SECTION_PLAYERS]
+================================================================================
+*/
+function renderPlayers(list){
+      // v768: float online players to top
+      const sorted = (list||[]).slice().sort((a,b)=>{
+        const ao = isOnline(a), bo = isOnline(b);
+        if(ao !== bo) return ao ? -1 : 1;
+        return (a.name||"").localeCompare(b.name||"");
+      });
+      playersList.innerHTML = sorted.map(p => {
         const id = safeEmail(p.email);
-        const last = presenceMap.get(id) || 0;
-        const online = (p.email || "").toLowerCase() === (currentEmail || "").toLowerCase() || ((Date.now() - last) < 25000);
+        const online = isOnline(p);
         return `
           <div class="itemLine">
             <div class="leftStack">
@@ -793,7 +1926,11 @@
           m.set(d.id, ms);
         });
         presenceMap = m;
-      }, (err)=>{
+        // v768: re-render to reorder online players immediately
+        if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
+          renderPlayers(lastPeople);
+        }
+}, (err)=>{
         setDbg("FAIL", dbgAuth.textContent || "—", "presence fail", err.code || err.message || String(err));
       });
 
@@ -878,7 +2015,16 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
-    // v704 Multiplayer
+    
+      // v768: expose firebase handles for non-module code (prevents "db is not defined")
+      window.ngFirebase = {
+        app, auth, db,
+        doc, setDoc, getDoc,
+        collection, onSnapshot,
+        serverTimestamp, query, where
+      };
+      window.db = db;
+// v768 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -890,7 +2036,13 @@
         if(u) dbgAuth.textContent = "anon uid " + u.uid.slice(0,6) + "…";
       });
 
-      function onEnter() {
+      
+/*
+================================================================================
+  ENTER / SIGN-IN ROUTING  [SECTION_ROUTING]
+================================================================================
+*/
+function onEnter() {
         signInFlow(auth, db, emailInput.value).catch((err)=>{
           const msg = err?.code || err?.message || String(err);
           statusLine.textContent = "Firebase error.";
@@ -946,8 +2098,8 @@
       if(action === "enter_game"){
         try{
           await createSessionForGame(value);
-          renderLobby();
-          show("lobby");
+          renderSetupForGame(value);
+          show("setup");
         }catch(e){
           alert("Session error: " + (e.message||e));
         }
@@ -963,14 +2115,32 @@
       }
 
       if(action === "player_stats"){
+        // Player Stats Shell (v775)
+        const whoEmail = String(value || "").toLowerCase();
+        const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
+        const whoName = (who && who.name) ? who.name : value;
+
+        const rows = (games || ["01","Cricket","Killer","Shanghai","ATW","Half It"]).map(g => `
+          <div style="
+            display:flex; justify-content:space-between; align-items:center;
+            padding:12px 12px; border-radius:14px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.12);
+            margin-bottom:10px;">
+            <div style="font-weight:900; letter-spacing:.3px;">${g}</div>
+            <div style="opacity:.78; font-weight:800;">Player Stats</div>
+          </div>
+        `).join("");
+
         openDetail("PLAYER STATS", `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${value}</div>
-          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
+          <div class="glassText" style="font-weight:1000; font-size:22px; margin-bottom:10px;">${whoName}</div>
+          <div style="opacity:.72; margin-bottom:14px;">Select a game to view stats. (We’ll add stats one game at a time.)</div>
+          ${rows}
         `);
         return;
       }
 
-      if(action === "player_history"){
+if(action === "player_history"){
         openDetail("PLAYER HISTORY", `
           <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${value}</div>
           <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
@@ -1016,7 +2186,8 @@
 
       lobbyBackBtn.addEventListener("click", ()=> show("players"));
       lobbySetupBtn.addEventListener("click", ()=> show("setup"));
-      setupBackBtn.addEventListener("click", ()=> show("lobby"));
+      setupBackBtn.addEventListener("click", ()=> show("players"));
+      waitingBackBtn.addEventListener("click", ()=> show("setup"));
       lobbyStartBtn.addEventListener("click", ()=> startSession().catch(e=>alert(e.message||e)));
       lobbyEndBtn.addEventListener("click", ()=> endSession().catch(e=>alert(e.message||e)));
 
@@ -1027,6 +2198,199 @@
 
     // If the module runs, hide the fatal overlay (in case something else turned it on)
     document.getElementById("fatal").style.display = "none";
-  </script>
+  </script><script>
+
+
+/* v768 VOICE (Phase 4 finalized)
+   - iOS requires a user gesture before speech.
+   - We trigger on FIRST focus/tap of the email field.
+   - We speak the welcome line (NOT a generic prompt).
+   - Single voice module; no duplicate declarations.
+*/
+
+const NG_BUILD = "v768";
+const NG_WELCOME_LINE = "Welcome to America's Number Six — Bill Moody's Limited Edition Game Night. Shoot well. Let's play some darts!";
+
+const NGVoice = (function(){
+  const api = { enabled:true, unlocked:false, voice:null, queue:[] };
+
+  function getBestVoice(){
+    try {
+      const synth = window.speechSynthesis;
+      const voices = synth && synth.getVoices ? synth.getVoices() : [];
+      if(!voices || !voices.length) return null;
+      const en = voices.filter(v => /^en/i.test(v.lang||""));
+      const pool = en.length ? en : voices;
+      const preferNames = ["Alex","Daniel","Matthew","Fred","Tom","Aaron","Bruce","Ralph","Junior","Arthur","Eddy","Reed"];
+      for(const name of preferNames){
+        const v = pool.find(x => (x.name||"").toLowerCase().includes(name.toLowerCase()));
+        if(v) return v;
+      }
+      return pool[0] || null;
+    } catch(e){ return null; }
+  }
+
+  function init(){
+    if(!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined"){
+      api.enabled = false; return;
+    }
+    const pick = () => { api.voice = getBestVoice(); };
+    pick();
+    try { window.speechSynthesis.onvoiceschanged = pick; } catch(e){}
+  }
+
+  function speakNow(text){
+    if(!api.enabled || !text) return;
+    try { window.speechSynthesis.cancel(); } catch(e){}
+    const u = new SpeechSynthesisUtterance(String(text));
+    if(api.voice) u.voice = api.voice;
+    // v768: announcer delivery (male-leaning voice, energetic pace)
+    u.rate = 1.04;
+    u.pitch = 0.86;
+    u.volume = 1.0;
+    try { window.speechSynthesis.speak(u); } catch(e){}
+  }
+
+  function flush(){
+    if(!api.unlocked || !api.queue.length) return;
+    const q = api.queue.slice();
+    api.queue.length = 0;
+    // speak sequentially (non-blocking)
+    let i = 0;
+    const step = () => {
+      if(i>=q.length) return;
+      speakNow(q[i++]);
+      setTimeout(step, 750);
+    };
+    step();
+  }
+
+  function unlock(){
+    if(!api.enabled) return;
+    api.unlocked = true;
+    flush();
+  }
+
+  function speak(text){
+    if(!api.enabled || !text) return;
+    if(!api.unlocked){ api.queue.push(text); return; }
+    speakNow(text);
+  }
+
+  init();
+  return { api, unlock, speak };
+})();
+
+window.ngSpeak = (t) => NGVoice.speak(t);
+
+document.addEventListener("DOMContentLoaded", () => {
+  const emailEl = document.getElementById("emailInput");
+
+  const bootOnce = () => {
+    NGVoice.unlock();
+    NGVoice.speak(NG_WELCOME_LINE);
+  };
+
+  if(emailEl){
+    // Gesture unlock + welcome on first interaction with the email field
+    emailEl.addEventListener("focus", bootOnce, { once:true });
+    emailEl.addEventListener("pointerdown", bootOnce, { once:true });
+    emailEl.addEventListener("touchstart", bootOnce, { once:true });
+  } else {
+    // Fallback: first tap anywhere
+    window.addEventListener("pointerdown", bootOnce, { once:true });
+    window.addEventListener("touchstart", bootOnce, { once:true });
+  }
+});
+
+// END VOICE
+
+</script>
+<!-- =======================
+     v768 ERROR HUD (shows only on errors)
+     ======================= -->
+<div aria-atomic="true" aria-live="polite" id="ngErrToast">
+<div class="card">
+<div class="head">
+<div class="title"><span class="dot"></span><span id="ngErrTitle">Hey Steve — something went wrong</span></div>
+<div style="display:flex; gap:8px;">
+<button class="btn" id="ngErrMore" type="button">Details</button>
+<button class="btn" id="ngErrClose" type="button">Close</button>
+</div>
+</div>
+<div class="body">
+<div class="msg" id="ngErrMsg">Error captured.</div>
+<div class="detail" id="ngErrDetail"></div>
+</div>
+</div>
+</div>
+<script id="ngErrorHud_v748">
+/***********************
+ *  v768: ERROR HUD + SAFE LOGGING
+ *  Purpose:
+ *   - If a runtime error happens, show a small toast with details.
+ *   - Does NOT block the UI and does NOT change game logic.
+ ***********************/
+(function(){
+  if(window.__NG_ERRHUD__) return; window.__NG_ERRHUD__=true;
+  const toast = document.getElementById('ngErrToast');
+  if(!toast) return;
+  const titleEl = document.getElementById('ngErrTitle');
+  const msgEl   = document.getElementById('ngErrMsg');
+  const detEl   = document.getElementById('ngErrDetail');
+  const moreBtn = document.getElementById('ngErrMore');
+  const closeBtn= document.getElementById('ngErrClose');
+
+  let hideTimer = null;
+
+  function showToast(head, msg, detail){
+    try{
+      titleEl.textContent = head || 'Hey Steve — something went wrong';
+      msgEl.textContent = msg || 'Error captured.';
+      detEl.textContent = detail || '';
+      toast.classList.remove('expanded');
+      toast.style.display = 'block';
+      if(hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(()=>{ toast.style.display = 'none'; }, 9000);
+    }catch(e){}
+  }
+
+  function normalizeError(err){
+    if(!err) return {head:'Hey Steve — something went wrong', msg:'Unknown error', detail:''};
+    if(typeof err === 'string') return {head:'Hey Steve — something went wrong', msg:err, detail:''};
+    const msg = err.message || String(err);
+    const stack = err.stack || '';
+    return {head:'Hey Steve — something went wrong', msg, detail:stack};
+  }
+
+  // Buttons
+  moreBtn && moreBtn.addEventListener('click', ()=>{
+    toast.classList.toggle('expanded');
+    if(hideTimer) clearTimeout(hideTimer);
+  });
+  closeBtn && closeBtn.addEventListener('click', ()=>{
+    toast.style.display = 'none';
+    if(hideTimer) clearTimeout(hideTimer);
+  });
+
+  // Global error hooks
+  window.addEventListener('error', (event)=>{
+    const err = event.error || new Error(event.message || 'Script error');
+    const n = normalizeError(err);
+    const where = event.filename ? `\n@ ${event.filename}:${event.lineno||0}:${event.colno||0}` : '';
+    showToast(n.head, n.msg, (n.detail||'') + where);
+  });
+
+  window.addEventListener('unhandledrejection', (event)=>{
+    const n = normalizeError(event.reason);
+    showToast(n.head, n.msg, n.detail);
+  });
+
+  // Expose a manual helper: window.ngErr("message", "detail")
+  window.ngErr = function(message, detail){
+    showToast('Hey Steve — heads up', message || 'Notice', detail || '');
+  };
+})();
+</script>
 </body>
 </html>
