@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v850  |  2026-02-25
+  NIGHT GAMES v851  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,14 +25,14 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v850 (MASTER STABLE)</title>
+<title>Night Games v851 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7315.jpeg?v=850");
+      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/69CB8D2F-BF7B-4B22-8CA7-A9F607BEB74E.png?v=851");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -991,8 +991,8 @@ border: 1px solid rgba(255,255,255,.22);
       text-align:center;
     }
 
-/* ===================== v850 HEADER + LANDING (UP TO DATE) ===================== */
-/* Header: remove pill, keep text only */
+/* ===================== v851 TARGET LOOK (NO EXTRA IMAGES) ===================== */
+/* Header: remove pill */
 #ngHeaderBar{
   background: transparent !important;
   border: none !important;
@@ -1002,30 +1002,30 @@ border: 1px solid rgba(255,255,255,.22);
 }
 #ngHeaderBar::before{ display:none !important; }
 #ngHeaderBar .ngTitle{
-  color: #d7b24a !important; /* gold like logo */
+  color: #d7b24a !important;
   font-weight: 1000;
   letter-spacing: .4px;
   text-shadow: 0 2px 10px rgba(0,0,0,.75);
 }
 #ngHeaderBar .ngVer{
-  color: rgba(0,210,255,.95) !important; /* blue version */
+  color: rgba(0,210,255,.95) !important;
   font-weight: 1000;
   text-shadow: 0 2px 10px rgba(0,0,0,.75);
 }
 #ngHeaderBar .ngOnline, #ngHeaderRight{
-  color: rgba(60,255,160,.98) !important; /* green online */
+  color: rgba(60,255,160,.98) !important;
   font-weight: 1000;
   text-shadow: 0 2px 10px rgba(0,0,0,.75);
 }
 
-/* Landing pads (wired overlays) */
+/* Landing pads positioned to match the artwork's email & enter fields */
 #landing #landingPads{
   position:absolute;
   left:50%;
   transform:translateX(-50%);
   width:min(640px,92vw);
   max-width:640px;
-  bottom:max(150px, calc(env(safe-area-inset-bottom) + 138px)); /* above footer */
+  bottom:max(150px, calc(env(safe-area-inset-bottom) + 138px));
   display:grid;
   gap:10px;
   z-index:5;
@@ -1038,8 +1038,6 @@ border: 1px solid rgba(255,255,255,.22);
   height:64px;
   pointer-events:auto;
 }
-
-/* Invisible real input */
 #landing #emailInput{
   position:absolute;
   inset:0;
@@ -1052,8 +1050,6 @@ border: 1px solid rgba(255,255,255,.22);
   color:transparent;
   caret-color:transparent;
 }
-
-/* Visible centered dummy/typed email */
 #landing #emailEcho{
   position:absolute;
   inset:0;
@@ -1069,8 +1065,6 @@ border: 1px solid rgba(255,255,255,.22);
   pointer-events:none;
   user-select:none;
 }
-
-/* Invisible clickable overlay for ENTER */
 #landing #enterBtn{
   height:72px;
   border:0;
@@ -1081,16 +1075,16 @@ border: 1px solid rgba(255,255,255,.22);
   cursor:pointer;
 }
 
-/* Small hint only */
-#landing .landingHintSmall{
+/* Single hint line */
+#landing .landingHint{
   text-align:center;
   font-size:12px;
   font-weight:900;
-  opacity:.82;
+  opacity:.86;
   pointer-events:none;
 }
 
-/* Footer at bottom */
+/* Footer */
 #landing #landingFoot{
   position:absolute;
   left:50%;
@@ -1100,19 +1094,6 @@ border: 1px solid rgba(255,255,255,.22);
   text-align:center;
   z-index:6;
   pointer-events:none;
-}
-#landing .designerLine{
-  font-size: 12px;
-  font-weight: 900;
-  opacity: .82;
-  margin-bottom: 8px;
-}
-#landing .designerBadge{
-  display:block;
-  margin: 0 auto 10px auto;
-  width: min(320px, 78vw);
-  height: auto;
-  opacity: .98;
 }
 #landing .landingFooter{
   font-size:12px;
@@ -1128,11 +1109,6 @@ border: 1px solid rgba(255,255,255,.22);
   letter-spacing:.2px;
 }
 
-/* subtle focus cue */
-#landing #emailPad:focus-within #emailEcho{
-  text-shadow:0 2px 12px rgba(0,0,0,.85), 0 0 22px rgba(0,210,255,.18);
-}
-
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -1140,7 +1116,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v850: detail content scrolling (RULES + PLAYER STATS) */
+    /* v851: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1154,7 +1130,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v850: prevent browser autofill yellow on email field */
+    /* v851: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1184,7 +1160,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v850</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v851</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1214,7 +1190,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v850: artwork-first landing; ONLY wired overlays (no duplicate UI) -->
+  <!-- v851: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1223,14 +1199,12 @@ border: 1px solid rgba(255,255,255,.22);
 
     <button id="enterBtn" type="button" aria-label="Enter"></button>
 
-    <!-- Small hint only (big hint removed) -->
-    <div class="landingHintSmall" id="statusLine">Tap your email, then press ENTER.</div>
+    <!-- Keep ONLY one hint line (matches artwork intent) -->
+    <div class="landingHint" id="statusLine">Email-only sign-in (no password). Firebase stable build.</div>
   </div>
 
-  <!-- Footer at the foot -->
+  <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="designerLine" id="designerLine">Designed by Steve’s Graphic Designs</div>
-    <img class="designerBadge" id="designerBadge" src="https://raw.githubusercontent.com/smoody157/Night-Games/main/69CB8D2F-BF7B-4B22-8CA7-A9F607BEB74E.jpeg?v=850" alt="Steve's Graphic Designs badge"/>
     <div class="landingFooter" id="landingFooter">Night Games is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
     <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games</div>
   </div>
@@ -1338,7 +1312,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v850
+<script type="module">// Night Games Night Games v851
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1402,7 +1376,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v850: show dummy/typed email on artwork pad (install once)
+    // v851: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1432,7 +1406,7 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=850";
+        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=851";
 
         const intro = new Audio(INTRO_URL);
         intro.preload = "auto";
@@ -2290,7 +2264,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v850)
+        // Player Stats Shell (v851)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
