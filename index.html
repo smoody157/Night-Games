@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v827  |  2026-02-25
+  NIGHT GAMES v828  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v827 (MASTER STABLE)</title>
+<title>Night Games v828 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -991,7 +991,7 @@ border: 1px solid rgba(255,255,255,.22);
       text-align:center;
     }
 
-    /* ===================== v827 PRODUCTION VISUAL POLISH ===================== */
+    /* ===================== v828 PRODUCTION VISUAL POLISH ===================== */
     /* iOS viewport stability */
     #app{ height: 100dvh; }
     .screen{ height: 100dvh; }
@@ -1012,7 +1012,7 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
 
-/* ===================== v827 HEADER: TEXT ONLY ===================== */
+/* ===================== v828 HEADER: TEXT ONLY ===================== */
 #ngHeaderBar{
   background: transparent !important;
   border: none !important;
@@ -1029,7 +1029,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v827 LANDING HINT + FOOTER ===================== */
+/* ===================== v828 LANDING HINT + FOOTER ===================== */
 #landing .hint{
   font-size: 12px;
   opacity: .82;
@@ -1060,7 +1060,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v827: detail content scrolling (RULES + PLAYER STATS) */
+    /* v828: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1074,7 +1074,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v827: prevent browser autofill yellow on email field */
+    /* v828: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1104,7 +1104,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v827</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v828</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1135,10 +1135,13 @@ border: 1px solid rgba(255,255,255,.22);
 <section class="screen active" id="landing">
 <div class="landingUI">
 <div class="field3d">
+
 <input id="emailInput" name="ng_email" autocomplete="new-password" inputmode="email" type="email" placeholder="player@example.com" style="text-align:center;" autocapitalize="none" autocorrect="off" spellcheck="false"/>
 </div>
-<button class="btn3d btnAdvance" id="enterBtn" type="button">Enter</button>
 
+
+
+<button class="btn3d btnAdvance" id="enterBtn" type="button">Enter</button>
 </div>
 </section>
 <section class="screen" id="players">
@@ -1243,7 +1246,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v827
+<script type="module">// Night Games Night Games v828
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1308,7 +1311,7 @@ const firebaseConfig = {
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
 
-    /* v827: autofill-kill (iOS can prefill saved email visually). Clear a few times on load. */
+    /* v828: autofill-kill (iOS can prefill saved email visually). Clear a few times on load. */
     (function(){
       try{
         const el = document.getElementById("emailInput");
@@ -1366,11 +1369,15 @@ const firebaseConfig = {
           }catch(e){}
         }
         if(emailInput){
-          // trusted gesture triggers playback on mobile
-          emailInput.addEventListener("pointerdown", playIntro, {passive:true});
-          emailInput.addEventListener("touchstart", playIntro, {passive:true});
-          emailInput.addEventListener("mousedown", playIntro, {passive:true});
-          emailInput.addEventListener("focus", playIntro, {passive:true});
+          // v828: iOS can fire multiple events (pointer+touch+focus). Use one debounced gesture.
+          let __ngIntroLast = 0;
+          function playIntroOnce(){
+            const now = Date.now();
+            if(now - __ngIntroLast < 900) return; // debounce
+            __ngIntroLast = now;
+            playIntro();
+          }
+          emailInput.addEventListener("pointerdown", playIntroOnce, {passive:true});
         }
       }catch(e){}
     })();
@@ -2210,7 +2217,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v827)
+        // Player Stats Shell (v828)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
