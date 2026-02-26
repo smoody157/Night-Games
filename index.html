@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v777  |  2026-02-25
+  NIGHT GAMES v778  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v777 (MASTER STABLE)</title>
+<title>Night Games v778 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -991,33 +991,22 @@ border: 1px solid rgba(255,255,255,.22);
       text-align:center;
     }
 
-    /* v777 GLOBAL DETAIL SCROLL SYSTEM */
-    #detail{
-      position:fixed;
-      inset:0;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-    }
+    /* v778: SAFE detail scrolling (Rules / Player Stats / any openDetail content) */
     .detailWrap{
-      flex:1;
-      min-height:0;
-      display:flex;
-      flex-direction:column;
+      height: 100%;
+      min-height: 0;
     }
-    .detailWrap > .panel{
-      flex:1;
-      min-height:0;
+    .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
-      overflow:hidden;
+      height: 100%;
+      min-height: 0;
     }
     .detailBody{
-      flex:1;
-      min-height:0;
-      overflow-y:auto;
-      -webkit-overflow-scrolling:touch;
-      padding-right:4px;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 </style>
 <script id="ngGuards_v748">
@@ -1070,7 +1059,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v777</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v778</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1209,7 +1198,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v777
+<script type="module">// Night Games Night Games v778
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
