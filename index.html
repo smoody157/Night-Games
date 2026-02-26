@@ -25,14 +25,14 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v797 (MASTER STABLE)</title>
+<title>Night Games v797 (STABLE CLEAN)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("./assets/69CB8D2F-BF7B-4B22-8CA7-A9F607BEB74E.png");
+      --bgStage: url("./IMG_7315.jpeg");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -180,21 +180,7 @@
       appearance:none;
     }
     .field3d input::placeholder{ color: rgba(235,245,255,.55); }
-
-    /* iOS Safari yellow autofill kill */
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    input:-webkit-autofill:active {
-      -webkit-text-fill-color: rgba(255,255,255,.95) !important;
-      caret-color: rgba(255,255,255,.95);
-      transition: background-color 99999s ease-out 0s;
-      -webkit-box-shadow: 0 0 0px 1000px var(--fieldFill) inset !important;
-      box-shadow: 0 0 0px 1000px var(--fieldFill) inset !important;
-      border-radius: 22px;
-    }
-
-    .btn3d{
+.btn3d{
       cursor:pointer;
       color: rgba(255,255,255,.96);
       font-weight: 1000;
@@ -369,20 +355,7 @@ border: 1px solid rgba(255,255,255,.22);
         0 0 16px rgba(0,210,255,.08);
       transition: transform .07s ease, filter .07s ease;
     }
-
-    /* [EDIT_BUTTONS] Advancement buttons = green glass "lit" */
-    .btnAdvance{
-      border: 1px solid rgba(120,255,170,.42) !important;
-      background: linear-gradient(180deg, rgba(70,255,150,.18), rgba(255,255,255,.06)) !important;
-      box-shadow: 0 0 0 1px rgba(70,255,150,.12) inset, 0 10px 22px rgba(0,0,0,.45);
-      filter: drop-shadow(0 10px 22px rgba(0,0,0,.55));
-    }
-    .btnAdvance:active{
-      transform: translateY(1px) scale(.99);
-      box-shadow: 0 0 0 1px rgba(70,255,150,.14) inset, 0 6px 14px rgba(0,0,0,.55);
-    }
-
-    .pill:active{
+.pill:active{
       transform: translateY(2px) scale(.99);
       filter: var(--zShadowSoft);
     }
@@ -468,21 +441,9 @@ border: 1px solid rgba(255,255,255,.22);
         inset 0 -10px 16px rgba(0,0,0,.55),
         0 0 16px rgba(90,255,170,.12);
     }
-
-  
     /* v768 layout lock: micro vertical drop */
-    .appWrap, .screen, .landing, .players {
-        transform: translateY(20px);
-    }
-
-
-    /* v768 layout lock adjustment: additional micro drop */
-    .appWrap, .screen, .landing, .players {
-        transform: translateY(20px);
-    }
-
-
-    /* v768 ATW emoji: keep color + one-line */
+    .appWrap, .screen, .landing, .players { transform: translateY(20px); }
+/* v768 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -782,19 +743,6 @@ border: 1px solid rgba(255,255,255,.22);
   text-transform: uppercase;
   text-shadow: 0 2px 14px rgba(0,0,0,.65), 0 0 22px rgba(0,210,255,.18);
 }
-/* v768 ADVANCE BUTTONS + SETUP LAYOUT FIXES */
-.pill.btnAdvance, .btnAdvance, .btn-advance{
-  border: 1px solid rgba(120,255,170,.35) !important;
-  background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
-  box-shadow: 0 0 18px rgba(70,255,160,.18), inset 0 0 18px rgba(60,255,160,.12) !important;
-}
-.pill.btnAdvance:active, .btnAdvance:active, .btn-advance:active{
-  transform: translateY(1px) scale(0.99);
-  box-shadow: 0 0 10px rgba(70,255,160,.16), inset 0 0 10px rgba(60,255,160,.10) !important;
-}
-/* Make "advance" buttons readable */
-.pill.btnAdvance{ font-weight: 950; }
-
 /* Prevent duplicated controls from stacking/overlapping inside setup body */
 #setup .panel .detailBody{ position: relative; }
 
@@ -858,22 +806,6 @@ border: 1px solid rgba(255,255,255,.22);
 
 /* Make sure landing UI sits below the header */
 #landing .landingUI{ padding-top: 54px; }
-
-/* ===================== v768 GREEN ADVANCE BUTTONS ===================== */
-.btnAdvance, .btn-advance, .btnAdvanceGreen{
-  border: 1px solid rgba(120,255,170,.35) !important;
-  background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
-  box-shadow:
-    0 0 18px rgba(70,255,160,.18),
-    inset 0 0 18px rgba(60,255,160,.12) !important;
-}
-.btnAdvance:active, .btn-advance:active, .btnAdvanceGreen:active{
-  transform: translateY(1px) scale(0.99);
-  box-shadow:
-    0 0 10px rgba(70,255,160,.16),
-    inset 0 0 10px rgba(60,255,160,.10) !important;
-}
-
 /* ===================== v768 UI FIXES (requested) ===================== */
 /* Hide Lobby Setup button (requested) */
 #lobbySetupBtn{ display:none !important; }
@@ -1002,11 +934,6 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
     /* v797: landing background swap only */
-    #landing{ background-image: url('69CB8D2F-BF7B-4B22-8CA7-A9F607BEB74E.png') !important; background-size: cover; background-position: center; }
-    
-/* v797: landing background override (works with .screen::before) */
-#landing::before{ background-image: url('./assets/69CB8D2F-BF7B-4B22-8CA7-A9F607BEB74E.png') !important; }
-
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
