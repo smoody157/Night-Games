@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v758 (MASTER STABLE)</title>
+<title>Night Games v759 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -795,7 +795,7 @@ border: 1px solid rgba(255,255,255,.22);
 #setup .panel .detailBody{ position: relative; }
 
 
-/* ===================== v758 HEADER BAR (ONE ROW, NO WRAP) ===================== */
+/* ===================== v759 HEADER BAR (ONE ROW, NO WRAP) ===================== */
 #ngHeaderBar{
   position: fixed;
   top: max(10px, env(safe-area-inset-top));
@@ -902,7 +902,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v758 STABILIZE: REMOVE GREEN ADVANCE BUTTONS ===================== */
+/* ===================== v759 STABILIZE: REMOVE GREEN ADVANCE BUTTONS ===================== */
 .btnAdvance, .btn-advance, .btnAdvanceGreen{
   border: 1px solid rgba(255,255,255,.22) !important;
   background: rgba(255,255,255,.03) !important;
@@ -917,12 +917,12 @@ border: 1px solid rgba(255,255,255,.22);
   filter: var(--zShadowSoft);
 }
 
-/* v758: move setup/waiting panels down slightly so the glass doesn't run into the logo */
+/* v759: move setup/waiting panels down slightly so the glass doesn't run into the logo */
 #setup .detailWrap, #waiting .detailWrap{
   top: clamp(210px, 26vh, 340px);
 }
 
-/* v758: waiting room typography + centering */
+/* v759: waiting room typography + centering */
 #waiting .detailBody{
   text-align: center;
 }
@@ -965,7 +965,7 @@ border: 1px solid rgba(255,255,255,.22);
 .statusIcon.no{ color: rgba(255,120,120,.95); }
 
 
-/* ===================== v758: REMOVE GREEN ADVANCE BUTTONS (back to clear) ===================== */
+/* ===================== v759: REMOVE GREEN ADVANCE BUTTONS (back to clear) ===================== */
 .btnAdvance, .btn-advance, .btnAdvanceGreen, .pill.btnAdvance, .btn3d.btnAdvance{
   border: 1px solid rgba(255,255,255,.22) !important;
   background: rgba(255,255,255,.03) !important;
@@ -1007,7 +1007,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v758</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v759</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v748)
@@ -1146,7 +1146,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v758
+<script type="module">// Night Games Night Games v759
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1210,6 +1210,77 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
+
+    /* =============================================================================
+       v759 INTRO VOICE (UK ANNOUNCER) — PLAY ON EMAIL FIELD TAP
+       - Must trigger on tapping the email field (while user types)
+       - Must be reliable on iPhone: use pointerdown/touchstart (trusted gesture)
+       - Plays once per page load
+    ============================================================================= */
+    let ngIntroPlayed = false;
+    const NG_INTRO_LINE = "Welcome to America’s Number Six — Bill Moody’s Limited Edition Game Night. Shoot well. Let’s play some darts!";
+    function ngPickVoiceUK(){
+      try{
+        const synth = window.speechSynthesis;
+        if(!synth || !synth.getVoices) return null;
+        const voices = synth.getVoices() || [];
+        const lower = (s)=>String(s||"").toLowerCase();
+        if(!voices.length) return null;
+
+        // Prefer en-GB voices first
+        let pool = voices.filter(v => lower(v.lang).startsWith("en-gb"));
+        if(!pool.length) pool = voices.filter(v => lower(v.lang).startsWith("en"));
+
+        // Prefer male-leaning names where available (device dependent)
+        const pref = ["daniel","george","oliver","harry","james","thomas","male"];
+        function score(v){
+          const nm = lower(v.name);
+          let sc = 0;
+          if(lower(v.lang).startsWith("en-gb")) sc += 50;
+          if(pref.some(p=>nm.includes(p))) sc += 25;
+          if(nm.includes("premium") || nm.includes("enhanced") || nm.includes("neural")) sc += 5;
+          return sc;
+        }
+        pool.sort((a,b)=>score(b)-score(a));
+        return pool[0] || null;
+      }catch(e){ return null; }
+    }
+    function ngSpeakIntroFromGesture(){
+      if(ngIntroPlayed) return;
+      ngIntroPlayed = true;
+      try{
+        const synth = window.speechSynthesis;
+        if(!synth) return;
+        try{ synth.cancel(); }catch(_e){}
+        const u = new SpeechSynthesisUtterance(NG_INTRO_LINE);
+        // Hint UK accent
+        u.lang = "en-GB";
+        // Announcer-ish delivery
+        u.rate = 1.02;
+        u.pitch = 0.92;
+        u.volume = 1.0;
+
+        // Attempt to pick a UK voice if available right now
+        const v = ngPickVoiceUK();
+        if(v) u.voice = v;
+
+        synth.speak(u);
+      }catch(e){}
+    }
+    // iPhone/Safari reliability: fire on pointerdown/touchstart (trusted gesture)
+    function ngBindIntro(){
+      if(!emailInput) return;
+      const fire = ()=>ngSpeakIntroFromGesture();
+      emailInput.addEventListener("pointerdown", fire, {passive:true});
+      emailInput.addEventListener("touchstart", fire, {passive:true});
+      emailInput.addEventListener("mousedown", fire, {passive:true});
+      // Fallback: first focus (some browsers)
+      emailInput.addEventListener("focus", fire, {passive:true});
+      // Prime voices list (non-blocking)
+      try{ window.speechSynthesis && window.speechSynthesis.getVoices && window.speechSynthesis.getVoices(); }catch(_e){}
+    }
+    ngBindIntro();
+
     const enterBtn = document.getElementById("enterBtn");
     const gamesList = document.getElementById("gamesList");
     const playersList = document.getElementById("playersList");
@@ -1742,7 +1813,7 @@ renderWaitingRoom();
         <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
       `;
 
-      // v758: auto-start when the last invited player has joined (host only)
+      // v759: auto-start when the last invited player has joined (host only)
       try{
         const me = (currentEmail||"").toLowerCase();
         const isHost = me && activeSession && (activeSession.host||"").toLowerCase()===me;
@@ -1971,7 +2042,7 @@ function renderPlayers(list){
 ================================================================================
 */
 function onEnter() {
-        try{ if(window.NGVoice){ window.NGVoice.unlock(); } window.__ngVoiceWantSpeak = true; }catch(e){}
+        try{ if(window.NGVoice){ window.NGVoice.unlock(); } window.__ngVoiceWantSpeak = false; }catch(e){}
         signInFlow(auth, db, emailInput.value).then(()=>{
           try{ window.dispatchEvent(new Event("ng_login_success")); }catch(e){}
         }).catch((err)=>{
@@ -2114,14 +2185,14 @@ function onEnter() {
   </script><script>
 
 
-/* v758 VOICE (Phase 4 finalized)
+/* v759 VOICE (Phase 4 finalized)
    - iOS requires a user gesture before speech.
    - We trigger on FIRST focus/tap of the email field.
    - We speak the welcome line (NOT a generic prompt).
    - Single voice module; no duplicate declarations.
 */
 
-const NG_BUILD = "v758";
+const NG_BUILD = "v759";
 const NG_WELCOME_LINE = "Welcome to America's Number Six — Bill Moody's Limited Edition Game Night. Shoot well. Let's play some darts!";
 
 const NGVoice = (function(){
@@ -2159,7 +2230,7 @@ const NGVoice = (function(){
     try { window.speechSynthesis.cancel(); } catch(e){}
     const u = new SpeechSynthesisUtterance(String(text));
     if(api.voice) u.voice = api.voice;
-    // v758: announcer delivery (male-leaning voice, energetic pace)
+    // v759: announcer delivery (male-leaning voice, energetic pace)
     u.rate = 1.04;
     u.pitch = 0.86;
     u.volume = 1.0;
@@ -2201,7 +2272,7 @@ window.ngSpeak = (t) => NGVoice.speak(t);
 document.addEventListener("DOMContentLoaded", () => {
   const emailEl = document.getElementById("emailInput");
 
-/* v758: Everyone hears the intro when they sign in.
+/* v759: Everyone hears the intro when they sign in.
    - We unlock speech on the Enter click (user gesture).
    - After signInFlow completes, the module dispatches 'ng_login_success'.
    - We speak once per login on each device.
