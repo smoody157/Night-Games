@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v760  |  2026-02-25
+  NIGHT GAMES v764  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v760 (MASTER STABLE)</title>
+<title>Night Games v764 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -345,7 +345,7 @@
     .actions{ display:flex; gap:8px; flex:0 0 auto; }
 
     .pill{
-      /* v748 uniform button sizing */
+      /* v764 uniform button sizing */
 border: 1px solid rgba(255,255,255,.22);
       background: rgba(255,255,255,.03);
       color: rgba(255,255,255,.95);
@@ -437,7 +437,7 @@ border: 1px solid rgba(255,255,255,.22);
       border-radius: 14px;
     }
   
-    /* v748: header row + mini pill */
+    /* v764: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -448,7 +448,7 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
   
-    /* v748: session indicator */
+    /* v764: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -466,19 +466,19 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
   
-    /* v748 layout lock: micro vertical drop */
+    /* v764 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v748 layout lock adjustment: additional micro drop */
+    /* v764 layout lock adjustment: additional micro drop */
     .appWrap, .screen, .landing, .players {
         transform: translateY(20px);
     }
 
 
-    /* v748 ATW emoji: keep color + one-line */
+    /* v764 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -500,7 +500,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-    /* v748: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    /* v764: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
     #setup .detailWrap{
       top: clamp(150px, 18vh, 260px);
       bottom: max(80px, env(safe-area-inset-bottom));
@@ -515,7 +515,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-    /* v748: glass dropdowns (no white/yellow) */
+    /* v764: glass dropdowns (no white/yellow) */
     .glassSelect{
       width: 100%;
       padding: 14px 44px 14px 16px;
@@ -566,7 +566,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
     /***********************
-     *  v748 ERROR HUD
+     *  v764 ERROR HUD
      *  - Appears only when an error occurs
      *  - Small, not in the way
      ***********************/
@@ -658,7 +658,7 @@ border: 1px solid rgba(255,255,255,.22);
 /* =============================================================================
    SECTION_SETUP: PLAYER PICKER DROPDOWN  [SECTION_SETUP]
 ============================================================================= */
-/* v748: player picker dropdown */
+/* v764: player picker dropdown */
 .glassBtn{
   width: 100%;
   padding: 14px 16px;
@@ -778,7 +778,7 @@ border: 1px solid rgba(255,255,255,.22);
   text-transform: uppercase;
   text-shadow: 0 2px 14px rgba(0,0,0,.65), 0 0 22px rgba(0,210,255,.18);
 }
-/* v748 ADVANCE BUTTONS + SETUP LAYOUT FIXES */
+/* v764 ADVANCE BUTTONS + SETUP LAYOUT FIXES */
 .pill.btnAdvance, .btnAdvance, .btn-advance{
   border: 1px solid rgba(120,255,170,.35) !important;
   background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
@@ -795,7 +795,7 @@ border: 1px solid rgba(255,255,255,.22);
 #setup .panel .detailBody{ position: relative; }
 
 
-/* ===================== v759 HEADER BAR (ONE ROW, NO WRAP) ===================== */
+/* ===================== v764 HEADER BAR (ONE ROW, NO WRAP) ===================== */
 #ngHeaderBar{
   position: fixed;
   top: max(10px, env(safe-area-inset-top));
@@ -855,7 +855,7 @@ border: 1px solid rgba(255,255,255,.22);
 /* Make sure landing UI sits below the header */
 #landing .landingUI{ padding-top: 54px; }
 
-/* ===================== v748 GREEN ADVANCE BUTTONS ===================== */
+/* ===================== v764 GREEN ADVANCE BUTTONS ===================== */
 .btnAdvance, .btn-advance, .btnAdvanceGreen{
   border: 1px solid rgba(120,255,170,.35) !important;
   background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
@@ -870,7 +870,7 @@ border: 1px solid rgba(255,255,255,.22);
     inset 0 0 10px rgba(60,255,160,.10) !important;
 }
 
-/* ===================== v752 UI FIXES (requested) ===================== */
+/* ===================== v764 UI FIXES (requested) ===================== */
 /* Hide Lobby Setup button (requested) */
 #lobbySetupBtn{ display:none !important; }
 
@@ -902,7 +902,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v759 STABILIZE: REMOVE GREEN ADVANCE BUTTONS ===================== */
+/* ===================== v764 STABILIZE: REMOVE GREEN ADVANCE BUTTONS ===================== */
 .btnAdvance, .btn-advance, .btnAdvanceGreen{
   border: 1px solid rgba(255,255,255,.22) !important;
   background: rgba(255,255,255,.03) !important;
@@ -917,12 +917,12 @@ border: 1px solid rgba(255,255,255,.22);
   filter: var(--zShadowSoft);
 }
 
-/* v759: move setup/waiting panels down slightly so the glass doesn't run into the logo */
+/* v764: move setup/waiting panels down slightly so the glass doesn't run into the logo */
 #setup .detailWrap, #waiting .detailWrap{
   top: clamp(210px, 26vh, 340px);
 }
 
-/* v759: waiting room typography + centering */
+/* v764: waiting room typography + centering */
 #waiting .detailBody{
   text-align: center;
 }
@@ -965,7 +965,7 @@ border: 1px solid rgba(255,255,255,.22);
 .statusIcon.no{ color: rgba(255,120,120,.95); }
 
 
-/* ===================== v759: REMOVE GREEN ADVANCE BUTTONS (back to clear) ===================== */
+/* ===================== v764: REMOVE GREEN ADVANCE BUTTONS (back to clear) ===================== */
 .btnAdvance, .btn-advance, .btnAdvanceGreen, .pill.btnAdvance, .btn3d.btnAdvance{
   border: 1px solid rgba(255,255,255,.22) !important;
   background: rgba(255,255,255,.03) !important;
@@ -1007,10 +1007,10 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v760</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v764</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
-  EDIT NOTES (v748)
+  EDIT NOTES (v764)
 ================================================================================
   [EDIT_BG]       Background image / gradient choices
   [EDIT_LOGO]     Logo placement / size
@@ -1146,7 +1146,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v760
+<script type="module">// Night Games Night Games v764
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1205,7 +1205,7 @@ const firebaseConfig = {
       measurementId: "G-LQEHF02ZVR"
     };
 
-    const NG_VERSION = "v760";
+    const NG_VERSION = "v764";
 
     // Keep header version in sync
     try{
@@ -1218,34 +1218,9 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v763 CLEAN INTRO VOICE — TAP EMAIL FIELD
-    function playIntroVoiceOnce(){
-        if(window.__introPlayed) return;
-        window.__introPlayed = true;
-
-        try{
-            const line = "Welcome to America’s Number Six — Bill Moody’s Limited Edition Game Night. Shoot well. Let’s play some darts!";
-            const u = new SpeechSynthesisUtterance(line);
-            u.lang = "en-GB";
-            u.rate = 1.0;
-            u.pitch = 0.9;
-            u.volume = 1;
-
-            speechSynthesis.cancel();
-            speechSynthesis.speak(u);
-        }catch(e){}
-    }
-
-    if(emailInput){
-        emailInput.addEventListener("pointerdown", playIntroVoiceOnce);
-        emailInput.addEventListener("touchstart", playIntroVoiceOnce);
-        emailInput.addEventListener("mousedown", playIntroVoiceOnce);
-        emailInput.addEventListener("focus", playIntroVoiceOnce);
-    }
-
 
     /* =============================================================================
-       v760 INTRO VOICE (UK MALE ANNOUNCER) — TAP EMAIL FIELD TO PLAY
+       v764 INTRO VOICE (UK MALE ANNOUNCER) — TAP EMAIL FIELD TO PLAY
        - Everyone hears it on their own device when they tap the email field.
        - MUST be triggered by a trusted gesture (pointerdown/touchstart).
        - Retries briefly until voices are available (Safari/iOS quirk).
@@ -1255,35 +1230,75 @@ const firebaseConfig = {
     let ngIntroPlayed = false;
     let ngIntroArmed = false;
 
-    function 
+    function ngPickUkMaleVoice(voices){
+      const lower = (s)=>String(s||"").toLowerCase();
+      const prefNames = ["daniel","george","oliver","harry","james","thomas","male"];
+      let pool = (voices||[]).filter(v => lower(v.lang).startsWith("en-gb"));
+      if(!pool.length) pool = (voices||[]).filter(v => lower(v.lang).startsWith("en"));
+      if(!pool.length) pool = (voices||[]);
+
+      function score(v){
+        const nm = lower(v.name);
+        let sc = 0;
+        if(lower(v.lang).startsWith("en-gb")) sc += 50;
+        if(prefNames.some(p=>nm.includes(p))) sc += 25;
+        if(nm.includes("premium") || nm.includes("enhanced") || nm.includes("neural")) sc += 5;
+        return sc;
+      }
       pool.sort((a,b)=>score(b)-score(a));
       return pool[0] || null;
     }
 
-    function catch(_e){}
+    function ngTrySpeakIntro(){
+      if(ngIntroPlayed) return true;
+      try{
+        const synth = window.speechSynthesis;
+        if(!synth) return false;
+
+        // Ensure voices are loaded
+        const voices = (synth.getVoices && synth.getVoices()) ? synth.getVoices() : [];
+        if(!voices || !voices.length) return false;
+
+        try{ synth.cancel(); }catch(_e){}
         const u = new SpeechSynthesisUtterance(NG_INTRO_LINE);
         u.lang = "en-GB";
         u.rate = 1.02;
         u.pitch = 0.92;
         u.volume = 1.0;
 
-        const v = catch(e){
+        const v = ngPickUkMaleVoice(voices);
+        if(v) u.voice = v;
+
+        synth.speak(u);
+        ngIntroPlayed = true;
+        return true;
+      }catch(e){
         return false;
       }
     }
 
-    function catch(_e){}
+    function ngSpeakIntroFromGesture(){
+      if(ngIntroPlayed || ngIntroArmed) return;
+      ngIntroArmed = true;
+
+      // Prime voices (some browsers populate after first call)
+      try{ window.speechSynthesis && window.speechSynthesis.getVoices && window.speechSynthesis.getVoices(); }catch(_e){}
 
       // Retry loop (max ~1.2s)
       const startedAt = Date.now();
       const timer = setInterval(()=>{
-        const ok = 
+        const ok = ngTrySpeakIntro();
+        if(ok || (Date.now()-startedAt) > 1200){
+          clearInterval(timer);
+          ngIntroArmed = false;
+        }
       }, 120);
     }
 
     function ngBindIntro(){
       if(!emailInput) return;
-      const fire = ()=>);
+      const fire = ()=>ngSpeakIntroFromGesture();
+      emailInput.addEventListener("pointerdown", fire, {passive:true});
       emailInput.addEventListener("touchstart", fire, {passive:true});
       emailInput.addEventListener("mousedown", fire, {passive:true});
       // fallback
@@ -1291,69 +1306,6 @@ const firebaseConfig = {
     }
     ngBindIntro();
 
-
-    /* =============================================================================
-       v759 INTRO VOICE (UK ANNOUNCER) — PLAY ON EMAIL FIELD TAP
-       - Must trigger on tapping the email field (while user types)
-       - Must be reliable on iPhone: use pointerdown/touchstart (trusted gesture)
-       - Plays once per page load
-    ============================================================================= */
-    let ngIntroPlayed = false;
-    const NG_INTRO_LINE = "Welcome to America’s Number Six — Bill Moody’s Limited Edition Game Night. Shoot well. Let’s play some darts!";
-    function ngPickVoiceUK(){
-      try{
-        const synth = window.speechSynthesis;
-        if(!synth || !synth.getVoices) return null;
-        const voices = synth.getVoices() || [];
-        const lower = (s)=>String(s||"").toLowerCase();
-        if(!voices.length) return null;
-
-        // Prefer en-GB voices first
-        let pool = voices.filter(v => lower(v.lang).startsWith("en-gb"));
-        if(!pool.length) pool = voices.filter(v => lower(v.lang).startsWith("en"));
-
-        // Prefer male-leaning names where available (device dependent)
-        const pref = ["daniel","george","oliver","harry","james","thomas","male"];
-        function score(v){
-          const nm = lower(v.name);
-          let sc = 0;
-          if(lower(v.lang).startsWith("en-gb")) sc += 50;
-          if(pref.some(p=>nm.includes(p))) sc += 25;
-          if(nm.includes("premium") || nm.includes("enhanced") || nm.includes("neural")) sc += 5;
-          return sc;
-        }
-        pool.sort((a,b)=>score(b)-score(a));
-        return pool[0] || null;
-      }catch(e){ return null; }
-    }
-    function catch(_e){}
-        const u = new SpeechSynthesisUtterance(NG_INTRO_LINE);
-        // Hint UK accent
-        u.lang = "en-GB";
-        // Announcer-ish delivery
-        u.rate = 1.02;
-        u.pitch = 0.92;
-        u.volume = 1.0;
-
-        // Attempt to pick a UK voice if available right now
-        const v = ngPickVoiceUK();
-        if(v) u.voice = v;
-
-        synth.speak(u);
-      }catch(e){}
-    }
-    // iPhone/Safari reliability: fire on pointerdown/touchstart (trusted gesture)
-    function ngBindIntro(){
-      if(!emailInput) return;
-      const fire = ()=>);
-      emailInput.addEventListener("touchstart", fire, {passive:true});
-      emailInput.addEventListener("mousedown", fire, {passive:true});
-      // Fallback: first focus (some browsers)
-      emailInput.addEventListener("focus", fire, {passive:true});
-      // Prime voices list (non-blocking)
-      try{ window.speechSynthesis && window.speechSynthesis.getVoices && window.speechSynthesis.getVoices(); }catch(_e){}
-    }
-    ngBindIntro();
 
     const enterBtn = document.getElementById("enterBtn");
     const gamesList = document.getElementById("gamesList");
@@ -1462,7 +1414,7 @@ function safeEmail(email){
     }
 
     
-    // v740: minimal session + setup → waiting room (does not touch login)
+    // v764: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -1533,7 +1485,7 @@ function renderSetupForGame(game){
           </div>
         </div>
 
-        <!-- v740 player picker modal -->
+        <!-- v764 player picker modal -->
         <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
           <div class="pickerCard">
             <div class="pickerHead">
@@ -1565,7 +1517,7 @@ function renderSetupForGame(game){
       // defaults
       countSel.value = "1";
       const checks = Array.from(document.querySelectorAll(".pickPlayer"));
-      // v740 picker wiring (dropdown-style player selector)
+      // v764 picker wiring (dropdown-style player selector)
       const openBtn = document.getElementById("openPlayerPicker");
       const modal = document.getElementById("playerPickerModal");
       const body = document.getElementById("pickerBody");
@@ -1689,7 +1641,7 @@ function renderSetupForGame(game){
       });
 
       const doStart = async ()=>{
-        // v740: Stable start behavior (no broken/partial calls)
+        // v764: Stable start behavior (no broken/partial calls)
         enforce();
         const want = parseInt(countSel.value||"1",10) || 1;
         const picked = checks.filter(c=>c.checked).map(c=>c.value);
@@ -1724,7 +1676,7 @@ sendInvitesForSession(); }catch(e){}
 }
 
     
-    // v740: invites (in-app) — Join / No Thanks
+    // v764: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
@@ -1887,7 +1839,7 @@ renderWaitingRoom();
         <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
       `;
 
-      // v759: auto-start when the last invited player has joined (host only)
+      // v764: auto-start when the last invited player has joined (host only)
       try{
         const me = (currentEmail||"").toLowerCase();
         const isHost = me && activeSession && (activeSession.host||"").toLowerCase()===me;
@@ -1950,7 +1902,7 @@ renderWaitingRoom();
 ================================================================================
 */
 function renderPlayers(list){
-      // v740: float online players to top
+      // v764: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -1999,7 +1951,7 @@ function renderPlayers(list){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v740: re-render to reorder online players immediately
+        // v764: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -2089,7 +2041,7 @@ function renderPlayers(list){
       const db = getFirestore(app);
 
     
-      // v740: expose firebase handles for non-module code (prevents "db is not defined")
+      // v764: expose firebase handles for non-module code (prevents "db is not defined")
       window.ngFirebase = {
         app, auth, db,
         doc, setDoc, getDoc,
@@ -2097,7 +2049,7 @@ function renderPlayers(list){
         serverTimestamp, query, where
       };
       window.db = db;
-// v740 Multiplayer
+// v764 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -2259,14 +2211,14 @@ function onEnter() {
   </script><script>
 
 
-/* v759 VOICE (Phase 4 finalized)
+/* v764 VOICE (Phase 4 finalized)
    - iOS requires a user gesture before speech.
    - We trigger on FIRST focus/tap of the email field.
    - We speak the welcome line (NOT a generic prompt).
    - Single voice module; no duplicate declarations.
 */
 
-const NG_BUILD = "v759";
+const NG_BUILD = "v764";
 const NG_WELCOME_LINE = "Welcome to America's Number Six — Bill Moody's Limited Edition Game Night. Shoot well. Let's play some darts!";
 
 const NGVoice = (function(){
@@ -2304,7 +2256,7 @@ const NGVoice = (function(){
     try { window.speechSynthesis.cancel(); } catch(e){}
     const u = new SpeechSynthesisUtterance(String(text));
     if(api.voice) u.voice = api.voice;
-    // v759: announcer delivery (male-leaning voice, energetic pace)
+    // v764: announcer delivery (male-leaning voice, energetic pace)
     u.rate = 1.04;
     u.pitch = 0.86;
     u.volume = 1.0;
@@ -2346,7 +2298,7 @@ window.ngSpeak = (t) => NGVoice.speak(t);
 document.addEventListener("DOMContentLoaded", () => {
   const emailEl = document.getElementById("emailInput");
 
-/* v759: Everyone hears the intro when they sign in.
+/* v764: Everyone hears the intro when they sign in.
    - We unlock speech on the Enter click (user gesture).
    - After signInFlow completes, the module dispatches 'ng_login_success'.
    - We speak once per login on each device.
@@ -2367,7 +2319,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </script>
 <!-- =======================
-     v748 ERROR HUD (shows only on errors)
+     v764 ERROR HUD (shows only on errors)
      ======================= -->
 <div aria-atomic="true" aria-live="polite" id="ngErrToast">
 <div class="card">
@@ -2386,7 +2338,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>
 <script id="ngErrorHud_v748">
 /***********************
- *  v748: ERROR HUD + SAFE LOGGING
+ *  v764: ERROR HUD + SAFE LOGGING
  *  Purpose:
  *   - If a runtime error happens, show a small toast with details.
  *   - Does NOT block the UI and does NOT change game logic.
