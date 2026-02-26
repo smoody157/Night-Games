@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v774  |  2026-02-25
+  NIGHT GAMES v775  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v774 (MASTER STABLE)</title>
+<title>Night Games v775 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -990,27 +990,37 @@ border: 1px solid rgba(255,255,255,.22);
       flex:1;
       text-align:center;
     }
-
-    /* v774: allow RULES / detail content to scroll */
-    .detailWrap > .panel:first-child{
-      display:flex;
-      flex-direction:column;
-      height: 100%;
-      min-height: 0;
-    }
-    .detailWrap > .panel:first-child .detailBody{
-      flex: 1;
-      min-height: 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
    SECTION_UTILS: SAFETY GUARDS  [SECTION_UTILS]
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
-============================================================================= */
+============================================================
+    /* v775: detail content scrolling (RULES + PLAYER STATS) */
+    .detailWrap > .panel:first-child{
+      display:flex;
+      flex-direction:column;
+      height: 100%;
+      min-height: 0;
+    }
+    .detailBody{
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* v775: prevent browser autofill yellow on email field */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active{
+      -webkit-text-fill-color: rgba(235,245,255,.96);
+      transition: background-color 5000s ease-in-out 0s;
+      box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
+    }
+================= */
 (function(){
   // Safe wrapper for event handlers
   window.ngSafe = function(fn, label){
@@ -1031,7 +1041,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v774</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v775</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1170,7 +1180,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v774
+<script type="module">// Night Games Night Games v775
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2105,9 +2115,11 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v773)
-        // - Keep it simple: list games, each with "Player Stats"
-        // - We'll fill in real stats per game later, one game at a time.
+        // Player Stats Shell (v775)
+        const whoEmail = String(value || "").toLowerCase();
+        const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
+        const whoName = (who && who.name) ? who.name : value;
+
         const rows = (games || ["01","Cricket","Killer","Shanghai","ATW","Half It"]).map(g => `
           <div style="
             display:flex; justify-content:space-between; align-items:center;
@@ -2121,14 +2133,14 @@ function onEnter() {
         `).join("");
 
         openDetail("PLAYER STATS", `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:10px;">${value}</div>
+          <div class="glassText" style="font-weight:1000; font-size:22px; margin-bottom:10px;">${whoName}</div>
           <div style="opacity:.72; margin-bottom:14px;">Select a game to view stats. (We’ll add stats one game at a time.)</div>
           ${rows}
         `);
         return;
       }
 
-      if(action === "player_history"){
+if(action === "player_history"){
         openDetail("PLAYER HISTORY", `
           <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${value}</div>
           <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
