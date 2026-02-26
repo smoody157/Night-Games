@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v752  |  2026-02-25
+  NIGHT GAMES v755  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v752 (MASTER STABLE)</title>
+<title>Night Games v755 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -232,6 +232,7 @@
     }
 
     .panel{
+  max-height: 520px; /* shortened under logo */
       position:relative;
       border-radius: 22px;
       background: rgba(255,255,255,.03);
@@ -502,7 +503,13 @@ border: 1px solid rgba(255,255,255,.22);
 
     /* v748: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
     #setup .detailWrap{
-      top: clamp(150px, 18vh, 260px);
+      top: clamp(360px, 46vh, 560px);
+      bottom: max(80px, env(safe-area-inset-bottom));
+    }
+
+    /* v755: Waiting room positioning to clear logo and center content */
+    #waiting .detailWrap{
+      top: clamp(360px, 46vh, 560px);
       bottom: max(80px, env(safe-area-inset-bottom));
     }
     /* Ensure list area can always finger-scroll */
@@ -870,7 +877,7 @@ border: 1px solid rgba(255,255,255,.22);
     inset 0 0 10px rgba(60,255,160,.10) !important;
 }
 
-/* ===================== v752 UI FIXES (requested) ===================== */
+/* ===================== v755 UI FIXES (requested) ===================== */
 /* Hide Lobby Setup button (requested) */
 #lobbySetupBtn{ display:none !important; }
 
@@ -928,7 +935,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v752</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v755</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v748)
@@ -1023,7 +1030,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div class="sectionHead"><div class="title">Controls</div></div>
 <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
 <button class="pill" id="lobbyBackBtn" type="button">Back</button>
-<button class="pill" id="lobbySetupBtn" type="button">Setup</button>
+<button class="pill" id="lobbySetupBtn" type="button" style="display:none;">Setup</button>
 <button class="pill btnAdvance" id="lobbyStartBtn" style="display:none;" type="button">Start</button>
 <button class="pill" id="lobbyEndBtn" style="display:none;" type="button">End</button>
 </div>
@@ -1067,7 +1074,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v752
+<script type="module">// Night Games Night Games v755
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1227,7 +1234,7 @@ function safeEmail(email){
     function renderGames(){
       gamesList.innerHTML = games.map(g => `
         <div class="itemLine">
-          <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? `<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>` : `<span class="glassText">${g}</span>`}</div></div>
+          <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? `<span class="glassText" style="text-align:center; display:block; width:100%;">ATW</span><span class="emojiGlobe">🌎</span>` : `<span class="glassText" style="text-align:center; display:block; width:100%;">${g}</span>`}</div></div>
           <div class="actions">
             <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
             <button class="pill" data-action="game_history" data-value="${g}">History</button>
@@ -1291,7 +1298,7 @@ function renderSetupForGame(game){
 
       setupBody.innerHTML = `
         <div class="setupGameTitle">${game}</div>
-        <div style="opacity:.78; margin-bottom:14px;">Pick players, then Start.</div>
+        <div style="opacity:.78; margin-bottom:14px; text-align:center;">Pick players, then Start.</div>
 
         <div class="fieldLabel">Number of Players</div>
         <select id="setupCount" class="glassSelect" class="glassSelect">
@@ -1553,6 +1560,9 @@ sendInvitesForSession(); }catch(e){}
 ================================================================================
 */
 renderWaitingRoom();
+          ngMaybeAutoStart();
+
+
               show("waiting");
               closeDetail();
             }
@@ -1609,6 +1619,25 @@ renderWaitingRoom();
     }
 
     let inviteStatusCache = new Map();
+
+    // v755: host-only auto-start when last invited joins
+    function ngMaybeAutoStart(){
+      try{
+        if(!activeSession || !activeSession.setup) return;
+        const total = activeSession.setup.count || 0;
+        if(total <= 1) return;
+        const hostEmail = String(activeSession.host || currentEmail || "").toLowerCase();
+        const me = String(currentEmail || "").toLowerCase();
+        if(!me || !hostEmail || me !== hostEmail) return;
+
+        const accepted = Array.from(inviteStatusCache.values()).filter(v=>v==="accepted").length;
+        const joined = accepted + 1; // include host
+        if(joined >= total){
+          startGameFromSession && startGameFromSession();
+        }
+      }catch(e){}
+    }
+
     let sessionInvitesUnsub = null;
     function listenSessionInvites(){
       try{ if(sessionInvitesUnsub) sessionInvitesUnsub(); }catch(e){}
@@ -1629,6 +1658,9 @@ renderWaitingRoom();
         // refresh waiting room statuses when invites change
         if(waiting && waiting.classList.contains("active")){
           renderWaitingRoom();
+          ngMaybeAutoStart();
+
+
         }
       });
     }
@@ -1645,20 +1677,22 @@ renderWaitingRoom();
         const lower = String(em||"").toLowerCase();
         const online = (p && isOnline(p)) || (lower===(currentEmail||"").toLowerCase());
         const status = (lower===(currentEmail||"").toLowerCase()) ? "host" : (inviteStatusCache.get(lower)||"pending");
-        const statusLabel = status==="accepted" ? "✓ joined" : status==="declined" ? "✕ declined" : status==="host" ? "host" : "invited";
-        return `<div class="row">
-          <div class="left">
-            <span class="dot ${online ? "online" : ""}"></span>
-            <div class="label">${name}</div>
-          </div>
-          <div class="right" style="opacity:.75;">${statusLabel} • ${online ? "online" : "offline"}</div>
-        </div>`;
+        const statusIcon = status==="accepted" ? "✅" : status==="declined" ? "✖️" : status==="host" ? "✅" : "⏳";
+        const statusText = status==="accepted" ? "joined" : status==="declined" ? "declined" : status==="host" ? "host" : "invited";
+        return `<div class="row" style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 0;">
+  <div class="left" style="display:flex; align-items:center; gap:10px; min-width:0;">
+    <span class="dot ${online ? "online" : ""}"></span>
+    <span class="wIcon" style="font-size:16px; width:18px; text-align:center;">${statusIcon}</span>
+    <div class="label" style="font-weight:1100; font-size:18px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${name}</div>
+  </div>
+  <div class="right" style="opacity:.75; font-weight:900; font-size:14px; white-space:nowrap;">${statusText} • ${online ? "online" : "offline"}</div>
+</div>`;
       }).join("");
 
       waitingBody.innerHTML = `
         <div class="setupGameTitle">${game}</div>
-        <div style="opacity:.78; margin-bottom:14px;">Waiting for invited players to join…</div>
-        <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
+        <div style="opacity:.78; margin-bottom:14px; text-align:center;">Waiting for invited players to join…</div>
+        <div style="margin-top:10px;">${rows || `<div style="opacity:.78; text-align:center;">No players selected.</div>`}</div>
       `;
     }
 
@@ -1707,7 +1741,7 @@ function renderPlayers(list){
           <div class="itemLine">
             <div class="leftStack">
               <span class="dot ${online ? "online" : ""}"></span>
-              <span class="glassText">${p.name}</span>
+              <span class="glassText" style="text-align:center; display:block; width:100%;">${p.name}</span>
             </div>
             <div class="actions">
               <button class="pill" data-action="player_stats" data-value="${p.email}">Stats</button>
