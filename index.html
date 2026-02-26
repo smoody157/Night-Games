@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v803  |  2026-02-25
+  NIGHT GAMES v804  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v803 (MASTER STABLE)</title>
+<title>Night Games v804 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -933,9 +933,9 @@ border: 1px solid rgba(255,255,255,.22);
       box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
     }
 
-    /* v803: landing background swap only */
+    /* v804: landing background swap only */
 
-/* v803: HOTSPOT MODE
+/* v804: HOTSPOT MODE
    Landing artwork already contains the visual email/button/footer.
    We hide the real UI visuals to prevent "double/stacked" footers,
    but keep them tappable so the app still works.
@@ -961,7 +961,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v803 HEADER POLISH ===================== */
+/* ===================== v804 HEADER POLISH ===================== */
 #ngHeaderBar{
   background: rgba(20,20,24,.45);
   backdrop-filter: blur(8px);
@@ -989,7 +989,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v803 LANDING HOTSPOTS =====================
+/* ===================== v804 LANDING HOTSPOTS =====================
    Landing artwork includes the visual email/button/footer.
    We keep real controls for functionality but hide visuals to avoid stacking.
    Tune --tapEmailTop / --tapGap if alignment is off on a device.
@@ -1044,7 +1044,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* v803: Landing button width matches the Night Games sign border */
+/* v804: Landing button width matches the Night Games sign border */
 :root{
   --landingBtnW: min(560px, 86vw);
 }
@@ -1055,6 +1055,43 @@ border: 1px solid rgba(255,255,255,.22);
 #landing .hint{
   max-width: var(--landingBtnW) !important;
 }
+
+
+
+/* ===================== v804 STABILITY FIXES ===================== */
+/* Ensure background layers never block taps/clicks */
+.screen::before,
+#landing::before{
+  pointer-events:none !important;
+  z-index:0;
+}
+.screen > *{
+  position:relative;
+  z-index:1;
+}
+
+/* Landing: constrain button/input width to match the stage */
+:root{
+  --stageW: min(520px, 82vw);
+}
+#landing .landingUI{
+  width: var(--stageW) !important;
+  max-width: var(--stageW) !important;
+}
+#landing .field3d, #landing .btn3d{
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Header: remove pill/background so it's just floating text */
+#ngHeaderBar{
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+/* =============================================================== */
 
 </style>
 <script id="ngGuards_v748">
@@ -1107,7 +1144,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v803</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v804</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1246,7 +1283,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v803
+<script type="module">// Night Games Night Games v804
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2486,7 +2523,7 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 
-    <!-- Footer added in v803 -->
+    <!-- Footer added in v804 -->
     <footer style="position:fixed;bottom:10px;width:100%;text-align:center;font-size:12px;color:white;opacity:0.85;">
         Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.
     </footer>
