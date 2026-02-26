@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v775  |  2026-02-25
+  NIGHT GAMES v824  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v775 (MASTER STABLE)</title>
+<title>Night Games v824 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -122,7 +122,7 @@
       content:"";
       position:absolute;
       inset:0;
-      background: radial-gradient(130% 110% at 50% 25%, rgba(0,0,0,0), rgba(0,0,0,.22) 60%, rgba(0,0,0,.52) 100%);
+      background: radial-gradient(130% 110% at 50% 25%, rgba(0,0,0,0), rgba(0,0,0,.28) 60%, rgba(0,0,0,.58) 100%);
       pointer-events:none;
     }
 
@@ -990,6 +990,27 @@ border: 1px solid rgba(255,255,255,.22);
       flex:1;
       text-align:center;
     }
+
+    /* ===================== v824 PRODUCTION VISUAL POLISH ===================== */
+    /* iOS viewport stability */
+    #app{ height: 100dvh; }
+    .screen{ height: 100dvh; }
+
+    /* Keep the hero art framed consistently */
+    .screen::before{
+      background-position: center top; /* keeps logo/hero area visible on tall phones */
+    }
+
+    /* Cinematic fade-in (landing only) */
+    #landing::before{
+      animation: ngLandingFade 900ms ease-out both;
+      will-change: opacity, transform;
+    }
+    @keyframes ngLandingFade{
+      from{ opacity: 0; transform: scale(1.02); }
+      to{ opacity: 1; transform: scale(1); }
+    }
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -997,7 +1018,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v775: detail content scrolling (RULES + PLAYER STATS) */
+    /* v824: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1011,7 +1032,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v775: prevent browser autofill yellow on email field */
+    /* v824: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1041,7 +1062,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v775</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v824</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1180,7 +1201,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v775
+<script type="module">// Night Games Night Games v824
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1257,19 +1278,34 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "intro.m4a";
+        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a";
 
         const intro = new Audio(INTRO_URL);
         intro.preload = "auto";
 
         function playIntro(){
           try{
+            // If it's already playing, don't restart it on every tap/focus
+            if(!intro.paused && intro.currentTime > 0.35) return;
+
+            // Start from the beginning with a gentle fade-in
             intro.currentTime = 0;
+            intro.volume = 0;
+
             const p = intro.play();
             if(p && p.catch) p.catch(()=>{});
+
+            const start = performance.now();
+            const dur = 900; // ms fade-in
+            function step(now){
+              const t = Math.min(1, (now - start) / dur);
+              // smoothstep ramp
+              intro.volume = Math.min(1, t*t*(3 - 2*t));
+              if(t < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
           }catch(e){}
         }
-
         if(emailInput){
           // trusted gesture triggers playback on mobile
           emailInput.addEventListener("pointerdown", playIntro, {passive:true});
@@ -2115,7 +2151,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v775)
+        // Player Stats Shell (v824)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
