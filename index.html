@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v843  |  2026-02-25
+  NIGHT GAMES v844  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,14 +25,14 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v843 (MASTER STABLE)</title>
+<title>Night Games v844 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/69CB8D2F-BF7B-4B22-8CA7-A9F607BEB74E.png");
+      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/69CB8D2F-BF7B-4B22-8CA7-A9F607BEB74E.png?v=844");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -991,7 +991,7 @@ border: 1px solid rgba(255,255,255,.22);
       text-align:center;
     }
 
-/* ===================== v843 HEADER FINAL (TEXT ONLY) ===================== */
+/* ===================== v844 HEADER FINAL (TEXT ONLY) ===================== */
 #ngHeaderBar{
   background: transparent !important;
   border: none !important;
@@ -1005,7 +1005,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderRight{ color: rgba(60,255,160,.98) !important; font-weight:1000; }
 
 
-/* ===================== v843 LANDING FINAL (NO DUPLICATES) ===================== */
+/* ===================== v844 LANDING FINAL (NO DUPLICATES) ===================== */
 #landing #landingPads{
   position:absolute;
   left:50%;
@@ -1107,7 +1107,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v843: detail content scrolling (RULES + PLAYER STATS) */
+    /* v844: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1121,7 +1121,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v843: prevent browser autofill yellow on email field */
+    /* v844: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1151,7 +1151,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games <span class="ngVer">v843</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games <span class="ngVer">v844</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1181,7 +1181,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v843: background contains the visible pads/buttons; we wire invisible overlays -->
+  <!-- v844: background contains the visible pads/buttons; we wire invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com"/>
@@ -1301,7 +1301,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v843
+<script type="module">// Night Games Night Games v844
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1365,7 +1365,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v843: show dummy/typed email centered on the artwork pad (single-install)
+    // v844: show dummy/typed email centered on the artwork pad (single-install)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEcho = document.getElementById("emailEcho");
@@ -1395,7 +1395,7 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a";
+        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=844";
 
         const intro = new Audio(INTRO_URL);
         intro.preload = "auto";
@@ -2253,7 +2253,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v843)
+        // Player Stats Shell (v844)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
