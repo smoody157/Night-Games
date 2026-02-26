@@ -991,79 +991,7 @@ border: 1px solid rgba(255,255,255,.22);
       text-align:center;
     }
 
-/* ===================== v843 HEADER TEXT ONLY ===================== */
-#ngHeaderBar{
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-#ngHeaderBar .ngVer{ color: #3aa3ff !important; }
-#ngHeaderRight{ color: rgba(60,255,160,.98) !important; opacity: 1 !important; }
-
-
-/* ===================== v843 LANDING PAD WIRING (NO DUPES) =====================
-   Background image contains the artwork "controls".
-   We overlay ONE functional input + ONE functional enter button.
-=============================================================================== */
-#landing .landingPads{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  width: min(640px, 92vw);
-  bottom: max(96px, calc(env(safe-area-inset-bottom) + 86px));
-  display:grid;
-  grid-template-rows: 72px 72px auto;
-  gap: 10px;
-  z-index: 3;
-}
-
-/* Email pad area */
-#landing .padEmail{ position:relative; height:72px; }
-
-/* Real input (invisible but interactive) */
-#landing #emailInput{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  opacity:0;
-  border:0;
-  outline:none;
-  background:transparent;
-}
-
-/* What the user sees while typing (text only; no extra box) */
-#landing #emailEcho{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: .6px;
-  color: rgba(255,255,255,.92);
-  text-shadow: 0 2px 12px rgba(0,0,0,.85), 0 0 18px rgba(0,0,0,.55);
-  pointer-events:none;
-  user-select:none;
-}
-
-/* Enter pad area (invisible click target; background already shows ENTER) */
-#landing #enterBtn{
-  width:100%;
-  height:72px;
-  border:0;
-  background:transparent;
-  color:transparent;
-  text-shadow:none;
-  opacity:0;
-  cursor:pointer;
-}
-
-
-/* ===================== v843 HEADER FINAL ===================== */
+/* ===================== v843 HEADER FINAL (TEXT ONLY) ===================== */
 #ngHeaderBar{
   background: transparent !important;
   border: none !important;
@@ -1073,12 +1001,11 @@ border: 1px solid rgba(255,255,255,.22);
   padding: 0 !important;
 }
 #ngHeaderBar::before{ display:none !important; }
-#ngHeaderBar span{ text-shadow: 0 2px 10px rgba(0,0,0,.75); }
-#ngHeaderBar .ngVer{ color: rgba(0,210,255,.95) !important; }
-#ngHeaderRight{ color: rgba(60,255,160,.98) !important; }
+#ngHeaderBar .ngVer{ color: rgba(0,210,255,.95) !important; font-weight:1000; }
+#ngHeaderRight{ color: rgba(60,255,160,.98) !important; font-weight:1000; }
 
 
-/* ===================== v843 LANDING PADS FINAL ===================== */
+/* ===================== v843 LANDING FINAL (NO DUPLICATES) ===================== */
 #landing #landingPads{
   position:absolute;
   left:50%;
@@ -1090,21 +1017,23 @@ border: 1px solid rgba(255,255,255,.22);
   gap: 10px;
   justify-items: stretch;
   z-index: 5;
-  pointer-events: none; /* children will opt-in */
+  pointer-events: none; /* children opt-in */
 }
 
+/* Email pad slightly smaller than Enter pad */
 #landing #emailPad{
   position: relative;
-  height: 64px; /* slightly smaller than ENTER */
+  height: 64px;          /* slightly smaller than enter */
   pointer-events: auto;
 }
 
+/* Invisible real input: captures typing + focus (for audio trigger) */
 #landing #emailInput{
   position:absolute;
   inset:0;
   width:100%;
   height:100%;
-  opacity: 0; /* invisible but interactive */
+  opacity: 0;
   border:0;
   outline:none;
   background:transparent;
@@ -1112,14 +1041,16 @@ border: 1px solid rgba(255,255,255,.22);
   caret-color: transparent;
 }
 
+/* Visible centered dummy/typed email */
 #landing #emailEcho{
   position:absolute;
   inset:0;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size: 17px; /* slightly smaller than ENTER label area */
-  font-weight: 950;
+  text-align:center;
+  font-size: 17px;
+  font-weight: 1000;
   letter-spacing: .6px;
   color: rgba(255,255,255,.95);
   text-shadow: 0 2px 12px rgba(0,0,0,.85), 0 0 18px rgba(0,0,0,.55);
@@ -1127,43 +1058,44 @@ border: 1px solid rgba(255,255,255,.22);
   user-select:none;
 }
 
+/* Invisible click target for ENTER (must remain clickable) */
 #landing #enterBtn{
   height: 72px;
   border: 0;
   background: transparent;
   border-radius: 22px;
-  cursor:pointer;
-  opacity: 0; /* fully invisible */
-  pointer-events: auto; /* IMPORTANT: clickable */
+  opacity: 0;           /* invisible */
+  pointer-events: auto; /* clickable */
+  cursor: pointer;
 }
 
+/* Hint + footer stack */
 #landing .landingHint{
   text-align:center;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 900;
   opacity: .86;
-  letter-spacing: .2px;
+  line-height: 1.25;
   pointer-events:none;
 }
-
 #landing .landingFooter{
   text-align:center;
   font-size: 12px;
-  font-weight: 750;
+  font-weight: 800;
   opacity: .78;
+  line-height: 1.25;
   pointer-events:none;
 }
-
 #landing .landingCopy{
   text-align:center;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 800;
   opacity: .62;
   letter-spacing: .2px;
   pointer-events:none;
 }
 
-/* small focus cue */
+/* subtle focus cue */
 #landing #emailPad:focus-within #emailEcho{
   text-shadow: 0 2px 12px rgba(0,0,0,.85), 0 0 22px rgba(0,210,255,.18);
 }
@@ -1248,25 +1180,24 @@ border: 1px solid rgba(255,255,255,.22);
 </div>
 <div id="app">
 
-
 <section class="screen active" id="landing">
-  <!-- v843: Pads wired to background artwork (NO visible duplicate controls) -->
+  <!-- v843: background contains the visible pads/buttons; we wire invisible overlays -->
   <div id="landingPads">
-    <div class="padEmail" id="emailPad">
-      <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" />
+    <div id="emailPad" class="padEmail">
+      <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com"/>
       <div id="emailEcho">player@example.com</div>
     </div>
 
-    <!-- Invisible clickable overlay aligned to artwork ENTER button -->
     <button id="enterBtn" type="button" aria-label="Enter"></button>
 
-    <!-- Hint/footer text (centered, smaller) -->
+    <!-- Hint text (small) -->
     <div class="landingHint" id="statusLine">Email-only sign-in (no password). Firebase stable build.</div>
-    <div class="landingFooter" id="landingFooter">Enter your email to join Night Games.</div>
-    <div class="landingCopy" id="landingCopy">© Night Games • All rights reserved.</div>
+    <!-- Footer (longer; not the hint) -->
+    <div class="landingFooter" id="landingFooter">Night Games is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+    <!-- Copyright (smallest) -->
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games</div>
   </div>
 </section>
-
 
 <section class="screen" id="players">
 <div class="hub">
@@ -1434,32 +1365,21 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v843: keep dummy/typed email visible on the artwork pad
-    const emailEcho = document.getElementById("emailEcho");
-    function syncEmailEcho_v843(){
-      try{
-        const v = (emailInput?.value || "").trim();
-        if(emailEcho) emailEcho.textContent = v ? v : "player@example.com";
-      }catch(e){}
-    }
-    if(emailInput){
-      emailInput.addEventListener("input", syncEmailEcho_v843, {passive:true});
-      emailInput.addEventListener("change", syncEmailEcho_v843, {passive:true});
-      syncEmailEcho_v843();
-    }
-
-    const emailEcho = document.getElementById("emailEcho");
-    function syncEmailEcho(){
-      try{
-        if(!emailEcho) return;
-        const v = (emailInput?.value || "").trim();
-        emailEcho.textContent = v ? v : "";
-      }catch(e){}
-    }
-    if(emailInput){
-      emailInput.addEventListener("input", syncEmailEcho, {passive:true});
-      emailInput.addEventListener("change", syncEmailEcho, {passive:true});
-      syncEmailEcho();
+    // v843: show dummy/typed email centered on the artwork pad (single-install)
+    if(!window.__ngEchoInstalled){
+      window.__ngEchoInstalled = true;
+      const emailEcho = document.getElementById("emailEcho");
+      function syncEmailEcho(){
+        try{
+          const v = (emailInput?.value || "").trim();
+          if(emailEcho) emailEcho.textContent = v ? v : "player@example.com";
+        }catch(e){}
+      }
+      if(emailInput){
+        emailInput.addEventListener("input", syncEmailEcho, {passive:true});
+        emailInput.addEventListener("change", syncEmailEcho, {passive:true});
+        syncEmailEcho();
+      }
     }
 
 
@@ -1475,7 +1395,7 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "intro.m4a";
+        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a";
 
         const intro = new Audio(INTRO_URL);
         intro.preload = "auto";
