@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v825  |  2026-02-25
+  NIGHT GAMES v826  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v825 (MASTER STABLE)</title>
+<title>Night Games v826 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -133,9 +133,9 @@
       transform:translateX(-50%);
       width: var(--uiW);
       max-width: var(--maxW);
-      top: clamp(520px, 62vh, 760px);
+      top: clamp(460px, 56vh, 700px);
       display:grid;
-      gap: 14px;
+      gap: 10px;
       justify-items:center;
       z-index:2;
     }
@@ -991,7 +991,7 @@ border: 1px solid rgba(255,255,255,.22);
       text-align:center;
     }
 
-    /* ===================== v825 PRODUCTION VISUAL POLISH ===================== */
+    /* ===================== v826 PRODUCTION VISUAL POLISH ===================== */
     /* iOS viewport stability */
     #app{ height: 100dvh; }
     .screen{ height: 100dvh; }
@@ -1011,6 +1011,48 @@ border: 1px solid rgba(255,255,255,.22);
       to{ opacity: 1; transform: scale(1); }
     }
 
+
+/* ===================== v826 HEADER: TEXT ONLY ===================== */
+#ngHeaderBar{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+#ngHeaderBar::before{ display:none !important; }
+#ngHeaderBar > span{
+  text-shadow: 0 2px 14px rgba(0,0,0,.55);
+  opacity: .92;
+}
+
+
+/* ===================== v826 LANDING HINT + FOOTER ===================== */
+#landing .hint{
+  font-size: 12px;
+  opacity: .82;
+  margin-top: 2px;
+  text-shadow: 0 2px 14px rgba(0,0,0,.55);
+}
+
+
+#ngFooter{
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: max(10px, env(safe-area-inset-bottom));
+  z-index: 9999;
+  width: min(760px, 94vw);
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: .2px;
+  opacity: .78;
+  text-shadow: 0 2px 14px rgba(0,0,0,.6);
+  pointer-events: none;
+}
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -1018,7 +1060,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v825: detail content scrolling (RULES + PLAYER STATS) */
+    /* v826: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1032,7 +1074,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v825: prevent browser autofill yellow on email field */
+    /* v826: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1062,7 +1104,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v825</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v826</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1093,7 +1135,7 @@ border: 1px solid rgba(255,255,255,.22);
 <section class="screen active" id="landing">
 <div class="landingUI">
 <div class="field3d">
-<input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" style="text-align:center;"/>
+<input autocomplete="off" id="emailInput" inputmode="email" type="email" placeholder="player@example.com" style="text-align:center;" autocapitalize="none" autocorrect="off" spellcheck="false"/>
 </div>
 <button class="btn3d btnAdvance" id="enterBtn" type="button">Enter</button>
 
@@ -1201,7 +1243,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v825
+<script type="module">// Night Games Night Games v826
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2151,7 +2193,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v825)
+        // Player Stats Shell (v826)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
@@ -2428,5 +2470,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 })();
 </script>
+
+<div id="ngFooter">© The Dart Room. Night Games is owned by The Dart Room. All rights reserved.</div>
+
 </body>
 </html>
