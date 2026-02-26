@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v811  |  2026-02-25
+  NIGHT GAMES A12  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,11 +23,11 @@
 
 <html lang="en">
 <head>
-  <!-- BUILD_STAMP_v811 -->
+  <!-- BUILD_STAMP_A12 -->
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v811 (MASTER STABLE)</title>
+<title>Night Games A12 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -337,7 +337,7 @@
     .actions{ display:flex; gap:8px; flex:0 0 auto; }
 
     .pill{
-      /* v768 uniform button sizing */
+      /* A12 uniform button sizing */
 border: 1px solid rgba(255,255,255,.22);
       background: rgba(255,255,255,.03);
       color: rgba(255,255,255,.95);
@@ -416,7 +416,7 @@ border: 1px solid rgba(255,255,255,.22);
       border-radius: 14px;
     }
   
-    /* v768: header row + mini pill */
+    /* A12: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
     .pillMini{
       padding: 8px 12px;
@@ -427,7 +427,7 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
   
-    /* v768: session indicator */
+    /* A12: session indicator */
     .sessionPill{
       padding: 8px 12px;
       font-size: 11px;
@@ -443,9 +443,9 @@ border: 1px solid rgba(255,255,255,.22);
         inset 0 -10px 16px rgba(0,0,0,.55),
         0 0 16px rgba(90,255,170,.12);
     }
-    /* v768 layout lock: micro vertical drop */
+    /* A12 layout lock: micro vertical drop */
     .appWrap, .screen, .landing, .players { transform: translateY(20px); }
-/* v768 ATW emoji: keep color + one-line */
+/* A12 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
       align-items:center;
@@ -467,7 +467,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-    /* v768: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    /* A12: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
     #setup .detailWrap{
       top: clamp(150px, 18vh, 260px);
       bottom: max(80px, env(safe-area-inset-bottom));
@@ -482,7 +482,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-    /* v768: glass dropdowns (no white/yellow) */
+    /* A12: glass dropdowns (no white/yellow) */
     .glassSelect{
       width: 100%;
       padding: 14px 44px 14px 16px;
@@ -533,7 +533,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
     /***********************
-     *  v768 ERROR HUD
+     *  A12 ERROR HUD
      *  - Appears only when an error occurs
      *  - Small, not in the way
      ***********************/
@@ -625,7 +625,7 @@ border: 1px solid rgba(255,255,255,.22);
 /* =============================================================================
    SECTION_SETUP: PLAYER PICKER DROPDOWN  [SECTION_SETUP]
 ============================================================================= */
-/* v768: player picker dropdown */
+/* A12: player picker dropdown */
 .glassBtn{
   width: 100%;
   padding: 14px 16px;
@@ -749,7 +749,7 @@ border: 1px solid rgba(255,255,255,.22);
 #setup .panel .detailBody{ position: relative; }
 
 
-/* ===================== v768 HEADER BAR (ONE ROW, NO WRAP) ===================== */
+/* ===================== A12 HEADER BAR (ONE ROW, NO WRAP) ===================== */
 #ngHeaderBar{
   position: fixed;
   top: max(10px, env(safe-area-inset-top));
@@ -808,7 +808,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 /* Make sure landing UI sits below the header */
 #landing .landingUI{ padding-top: 54px; }
-/* ===================== v768 UI FIXES (requested) ===================== */
+/* ===================== A12 UI FIXES (requested) ===================== */
 /* Hide Lobby Setup button (requested) */
 #lobbySetupBtn{ display:none !important; }
 
@@ -840,7 +840,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v768 STABILIZE: REMOVE GREEN ADVANCE BUTTONS ===================== */
+/* ===================== A12 STABILIZE: REMOVE GREEN ADVANCE BUTTONS ===================== */
 .btnAdvance, .btn-advance, .btnAdvanceGreen{
   border: 1px solid rgba(255,255,255,.22) !important;
   background: rgba(255,255,255,.03) !important;
@@ -855,12 +855,12 @@ border: 1px solid rgba(255,255,255,.22);
   filter: var(--zShadowSoft);
 }
 
-/* v768: move setup/waiting panels down slightly so the glass doesn't run into the logo */
+/* A12: move setup/waiting panels down slightly so the glass doesn't run into the logo */
 #setup .detailWrap, #waiting .detailWrap{
   top: clamp(210px, 26vh, 340px);
 }
 
-/* v768: waiting room typography + centering */
+/* A12: waiting room typography + centering */
 #waiting .detailBody{
   text-align: center;
 }
@@ -904,7 +904,7 @@ border: 1px solid rgba(255,255,255,.22);
     .actions{ width:100%; }
     .actions .pill{ flex:1; text-align:center; }
 
-    /* v771: Item lines show label ABOVE buttons (so game/player names are visible) */
+    /* A12: Item lines show label ABOVE buttons (so game/player names are visible) */
     .itemLine{
       flex-direction: column;
       align-items: stretch;
@@ -925,7 +925,7 @@ border: 1px solid rgba(255,255,255,.22);
       text-align:center;
     }
 
-    /* v780: prevent browser autofill yellow on email field */
+    /* A12: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -935,24 +935,12 @@ border: 1px solid rgba(255,255,255,.22);
       box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
     }
 
-/* v811: HOTSPOT MODE
+/* A12: HOTSPOT MODE
    Landing artwork already contains the visual email/button/footer.
    We hide the real UI visuals to prevent "double/stacked" footers,
    but keep them tappable so the app still works.
 */
-#landing .field3d,
-#landing #enterBtn{
-  opacity: 0 !important;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  filter: none !important;
-}
-#landing .field3d::before,
-#landing #enterBtn::before{ display:none !important; }
 /* Hide the hint/footer text (art already has it) */
-#landing #statusLine{ display:none !important; }
-
 /* Remove the global header bar (many backgrounds already include this text) */
 
 /* If any build badge exists, hide it too */
@@ -966,8 +954,6 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 /* footer/hint is already baked into the art */
-#landing #statusLine{ display:none !important; }
-
 /* Landing background uses glass-stage artwork A */
 #landing::before{ background-image: url('69CB8D2F-BF7B-4B22-8CA7-A9F607BEB74E.png') !important; background-size: cover !important; background-position: center !important; }
 
@@ -1066,7 +1052,7 @@ border: 1px solid rgba(255,255,255,.22);
 /* ================================================================ */
 
 
-/* ===================== v811 CLEAN LANDING + HEADER ===================== */
+/* ===================== A12 CLEAN LANDING + HEADER ===================== */
 /* Prevent background layers from eating taps */
 .screen::before,
 #landing::before{
@@ -1130,7 +1116,7 @@ border: 1px solid rgba(255,255,255,.22);
 /* ====================================================================== */
 
 
-/* ===================== v811 FORCE OVERRIDES (FINAL WINS) ===================== */
+/* ===================== A12 FORCE OVERRIDES (FINAL WINS) ===================== */
 /* Kill header pill visuals entirely */
 #ngHeaderBar{
   background: transparent !important;
@@ -1195,95 +1181,59 @@ border: 1px solid rgba(255,255,255,.22);
 /* =========================================================================== */
 
 
-/* ===================== v811 HARD FIX ===================== */
-/* Never let background layers block taps */
-html body .screen::before,
-html body #landing::before{
-  pointer-events: none !important;
-}
-
-/* Make sure landing UI sits above everything and can be tapped */
-html body #landing{
-  position: relative !important;
-}
+/* ===================== A12 CLEAN LANDING RESET ===================== */
 html body #landing .landingUI{
-  position: relative !important;
-  z-index: 50 !important;
-  width: min(460px, 76vw) !important;
-  max-width: min(460px, 76vw) !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* Force control sizing */
-html body #landing #emailInput,
-html body #landing #enterBtn{
-  width: 100% !important;
-  max-width: 100% !important;
-  height: 52px !important;
-  min-height: 52px !important;
-}
-
-html body #landing #emailInput{
-  text-align: center !important;
-}
-html body #landing #emailInput::placeholder{
-  text-align: center !important;
-}
-
-/* Header pill already removed in v808; keep it off */
-html body #ngHeaderBar,
-html body #ngHeaderBar::before,
-html body #ngHeaderBar::after{
-  background: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-/* ========================================================= */
-
-
-/* ===================== v811 LANDING UI RESTORE ===================== */
-/* Some legacy rules may be hiding the landing controls. Force them visible. */
-html body #landing .landingUI{
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 14px !important;
   position: absolute !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   bottom: 110px !important;
   top: auto !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
+  width: min(460px, 76vw) !important;          /* stage-fit width */
+  max-width: min(460px, 76vw) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
   z-index: 9999 !important;
-}
-html body #landing .field3d,
-html body #landing .btn3d,
-html body #landing #emailInput,
-html body #landing #enterBtn{
-  display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
 }
-html body #landing .field3d{
-  background: rgba(255,255,255,.08) !important;
-  border: 1px solid rgba(255,255,255,.18) !important;
+
+html body #landing .field3d,
+html body #landing #enterBtn,
+html body #landing .btn3d{
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 52px !important;                    /* shorter height */
+  min-height: 52px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
-html body #landing #enterBtn{
-  background: rgba(255,255,255,.10) !important;
-  border: 1px solid rgba(255,255,255,.18) !important;
+
+html body #landing #emailInput{
+  width: 100% !important;
+  height: 52px !important;
+  line-height: 52px !important;
+  text-align: center !important;
+  font-size: 18px !important;
 }
-/* Ensure landing background image doesn't cover the whole screen due to sizing bugs */
+
+html body #landing #emailInput::placeholder{
+  text-align: center !important;
+}
+
+html body #landing #statusLine{
+  min-height: 18px;
+  text-align: center;
+}
+
+/* Never let background layers steal taps */
+html body .screen::before,
 html body #landing::before{
-  background-size: cover !important;
-  background-position: center !important;
+  pointer-events: none !important;
 }
-/* =============================================================== */
+/* ================================================================ */
 
 </style>
 <script id="ngGuards_v748">
@@ -1292,7 +1242,7 @@ html body #landing::before{
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v775: detail content scrolling (RULES + PLAYER STATS) */
+    /* A12: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1306,7 +1256,7 @@ html body #landing::before{
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v775: prevent browser autofill yellow on email field */
+    /* A12: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1336,22 +1286,10 @@ html body #landing::before{
 </script>
 </head>
 <body>
-
-<!-- BUILD_STAMP_v811 -->
-<div id="v810Badge" style="
-  position:fixed; left:10px; bottom:10px; z-index:99999;
-  padding:10px 12px; font: 800 14px/1.2 system-ui, -apple-system, Arial;
-  background: rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.25);
-  border-radius: 12px; color: rgba(255,255,255,.95);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-">
-  v811 LIVE ✓
-</div>
-
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v811</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games A12</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
-  EDIT NOTES (v768)
+  EDIT NOTES (A12)
 ================================================================================
   [EDIT_BG]       Background image / gradient choices
   [EDIT_LOGO]     Logo placement / size
@@ -1377,13 +1315,25 @@ html body #landing::before{
 </div>
 <div id="app">
 <section class="screen active" id="landing">
-<div class="landingUI">
-<div class="field3d">
-<input autocomplete="email" id="emailInput" inputmode="email" placeholder="youremail@here.com" type="email"/>
-</div>
-<button class="btn3d btnAdvance" id="enterBtn" type="button">Enter</button>
-<div class="hint" id="statusLine">Email-only sign-in (no password). Firebase stable build.</div>
-</div>
+  <div class="landingUI" aria-label="Landing controls">
+    <div class="field3d">
+      <input
+        id="emailInput"
+        type="email"
+        inputmode="email"
+        autocomplete="off"
+        autocapitalize="none"
+        spellcheck="false"
+        placeholder="youremail@here.com"
+      />
+    </div>
+
+    <button class="btn3d" id="enterBtn" type="button">
+      <span>ENTER</span>
+    </button>
+
+    <div id="statusLine" class="hint" aria-live="polite"></div>
+  </div>
 </section>
 <section class="screen" id="players">
 <div class="hub">
@@ -1487,7 +1437,7 @@ html body #landing::before{
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v811
+<script type="module">// Night Games Night Games A12
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1555,7 +1505,7 @@ const firebaseConfig = {
     
       
 
-// v811: ensure we never show a stored email by default
+// A12: ensure we never show a stored email by default
 (function(){
   const el = document.getElementById("emailInput");
   if(!el) return;
@@ -1563,13 +1513,13 @@ const firebaseConfig = {
   el.addEventListener("focus", ()=>{ try{ el.value = ""; }catch(e){} }, {passive:true});
 })();
 
-// v811: clear any cached/autofilled email so placeholder shows
+// A12: clear any cached/autofilled email so placeholder shows
       if(emailInput && !window.__ngClearEmailOnce){
         window.__ngClearEmailOnce = true;
         try{ emailInput.value = ""; }catch(e){}
       }
 /* ===========================
-   v811 INTRO AUDIO (CLEAN)
+   A12 INTRO AUDIO (CLEAN)
    Plays assets/New Recording 2.m4a on any device when the email field is engaged.
    Must be synchronous inside a user gesture for iOS.
 =========================== */
@@ -1719,7 +1669,7 @@ function safeEmail(email){
     }
 
     
-    // v768: minimal session + setup → waiting room (does not touch login)
+    // A12: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
 
@@ -1790,7 +1740,7 @@ function renderSetupForGame(game){
           </div>
         </div>
 
-        <!-- v768 player picker modal -->
+        <!-- A12 player picker modal -->
         <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
           <div class="pickerCard">
             <div class="pickerHead">
@@ -1822,7 +1772,7 @@ function renderSetupForGame(game){
       // defaults
       countSel.value = "1";
       const checks = Array.from(document.querySelectorAll(".pickPlayer"));
-      // v768 picker wiring (dropdown-style player selector)
+      // A12 picker wiring (dropdown-style player selector)
       const openBtn = document.getElementById("openPlayerPicker");
       const modal = document.getElementById("playerPickerModal");
       const body = document.getElementById("pickerBody");
@@ -1946,7 +1896,7 @@ function renderSetupForGame(game){
       });
 
       const doStart = async ()=>{
-        // v768: Stable start behavior (no broken/partial calls)
+        // A12: Stable start behavior (no broken/partial calls)
         enforce();
         const want = parseInt(countSel.value||"1",10) || 1;
         const picked = checks.filter(c=>c.checked).map(c=>c.value);
@@ -1981,7 +1931,7 @@ sendInvitesForSession(); }catch(e){}
 }
 
     
-    // v768: invites (in-app) — Join / No Thanks
+    // A12: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
@@ -2144,7 +2094,7 @@ renderWaitingRoom();
         <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
       `;
 
-      // v768: auto-start when the last invited player has joined (host only)
+      // A12: auto-start when the last invited player has joined (host only)
       try{
         const me = (currentEmail||"").toLowerCase();
         const isHost = me && activeSession && (activeSession.host||"").toLowerCase()===me;
@@ -2207,7 +2157,7 @@ renderWaitingRoom();
 ================================================================================
 */
 function renderPlayers(list){
-      // v768: float online players to top
+      // A12: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
         const ao = isOnline(a), bo = isOnline(b);
         if(ao !== bo) return ao ? -1 : 1;
@@ -2256,7 +2206,7 @@ function renderPlayers(list){
           m.set(d.id, ms);
         });
         presenceMap = m;
-        // v768: re-render to reorder online players immediately
+        // A12: re-render to reorder online players immediately
         if(typeof lastPeople !== "undefined" && Array.isArray(lastPeople) && lastPeople.length){
           renderPlayers(lastPeople);
         }
@@ -2346,7 +2296,7 @@ function renderPlayers(list){
       const db = getFirestore(app);
 
     
-      // v768: expose firebase handles for non-module code (prevents "db is not defined")
+      // A12: expose firebase handles for non-module code (prevents "db is not defined")
       window.ngFirebase = {
         app, auth, db,
         doc, setDoc, getDoc,
@@ -2354,7 +2304,7 @@ function renderPlayers(list){
         serverTimestamp, query, where
       };
       window.db = db;
-// v768 Multiplayer
+// A12 Multiplayer
     const ROOM_ID = "dart-room";
     let activeSessionId = null;
     let activeGame = null;
@@ -2445,7 +2395,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v775)
+        // Player Stats Shell (A12)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
@@ -2531,14 +2481,14 @@ if(action === "player_history"){
   </script><script>
 
 
-/* v768 VOICE (Phase 4 finalized)
+/* A12 VOICE (Phase 4 finalized)
    - iOS requires a user gesture before speech.
    - We trigger on FIRST focus/tap of the email field.
    - We speak the welcome line (NOT a generic prompt).
    - Single voice module; no duplicate declarations.
 */
 
-const NG_BUILD = "v768";
+const NG_BUILD = "A12";
 const NG_WELCOME_LINE = "Welcome to America's Number Six — Bill Moody's Limited Edition Game Night. Shoot well. Let's play some darts!";
 
 const NGVoice = (function(){
@@ -2574,7 +2524,7 @@ const NGVoice = (function(){
     try { window.speechSynthesis.cancel(); } catch(e){}
     const u = new SpeechSynthesisUtterance(String(text));
     if(api.voice) u.voice = api.voice;
-    // v768: announcer delivery (male-leaning voice, energetic pace)
+    // A12: announcer delivery (male-leaning voice, energetic pace)
     u.rate = 1.04;
     u.pitch = 0.86;
     u.volume = 1.0;
@@ -2637,7 +2587,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </script>
 <!-- =======================
-     v768 ERROR HUD (shows only on errors)
+     A12 ERROR HUD (shows only on errors)
      ======================= -->
 <div aria-atomic="true" aria-live="polite" id="ngErrToast">
 <div class="card">
@@ -2656,7 +2606,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>
 <script id="ngErrorHud_v748">
 /***********************
- *  v768: ERROR HUD + SAFE LOGGING
+ *  A12: ERROR HUD + SAFE LOGGING
  *  Purpose:
  *   - If a runtime error happens, show a small toast with details.
  *   - Does NOT block the UI and does NOT change game logic.
@@ -2723,19 +2673,26 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 </script>
 
-    <!-- Footer added in v811 -->
+    <!-- Footer added in A12 -->
     <footer style="position:fixed;bottom:10px;width:100%;text-align:center;font-size:12px;color:white;opacity:0.85;">
         Night Games is owned by The Dart Room. © 2026 The Dart Room. All rights reserved.
     </footer>
     
 
 <script>
-/* v811: Force landing controls + intro audio */
+/* ===================== A12 INTRO + LANDING HOOKS ===================== */
 (function(){
-  function $(id){ return document.getElementById(id); }
+  const email = document.getElementById("emailInput");
+  const enter = document.getElementById("enterBtn");
+  const status = document.getElementById("statusLine");
 
-  const INTRO_URL = "assets/New%20Recording%202.m4a";
-  const intro = new Audio(INTRO_URL);
+  if(email){
+    try{ email.value = ""; }catch(e){}
+    email.placeholder = "youremail@here.com";
+  }
+
+  // Intro audio (assets folder)
+  const intro = new Audio("assets/New%20Recording%202.m4a");
   intro.preload = "auto";
   intro.volume = 1;
 
@@ -2747,41 +2704,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }catch(e){}
   }
 
-  function applyLanding(){
-    const email = $("emailInput");
-    const enter = $("enterBtn");
-
-    if(email){
-      // clear any autofill/cached value
-      try{ email.value = ""; }catch(e){}
-      email.placeholder = "youremail@here.com";
-      email.style.textAlign = "center";
-      // extra inline sizing (wins if CSS is fought)
-      email.style.width = "100%";
-      email.style.maxWidth = "100%";
-      email.style.height = "52px";
-      // attach audio triggers
-      ["pointerdown","touchstart","mousedown","click","focus"].forEach(ev=>{
-        email.addEventListener(ev, playIntro, {passive:true});
-      });
-    }
-
-    if(enter){
-      // extra inline sizing
-      enter.style.width = "100%";
-      enter.style.maxWidth = "100%";
-      enter.style.height = "52px";
-      // play intro on enter as well (does not stop existing handlers)
-      enter.addEventListener("click", playIntro, {passive:true, capture:true});
-    }
+  // Play intro when user engages the email field (iOS-safe)
+  if(email){
+    ["pointerdown","touchstart","mousedown","click","focus"].forEach(ev => {
+      email.addEventListener(ev, playIntro, {passive:true});
+    });
   }
 
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", applyLanding);
-  }else{
-    applyLanding();
+  // Also play intro on ENTER click
+  if(enter){
+    enter.addEventListener("click", playIntro, {passive:true, capture:true});
+  }
+
+  // If the existing app handler doesn't fire because email is empty, show feedback (doesn't block).
+  if(enter && status){
+    enter.addEventListener("click", function(){
+      const v = (email && email.value || "").trim();
+      if(!v){
+        status.textContent = "Enter your email above.";
+      } else {
+        status.textContent = "";
+      }
+    });
   }
 })();
+/* ================================================================ */
 </script>
 
 </body>
