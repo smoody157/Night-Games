@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v752  |  2026-02-25
+  NIGHT GAMES v760  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v759 (MASTER STABLE)</title>
+<title>Night Games v760 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1007,7 +1007,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v759</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft">Night Games v760</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v748)
@@ -1146,7 +1146,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v759
+<script type="module">// Night Games Night Games v760
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1205,11 +1205,107 @@ const firebaseConfig = {
       measurementId: "G-LQEHF02ZVR"
     };
 
+    const NG_VERSION = "v760";
+
+    // Keep header version in sync
+    try{
+      const hl = document.querySelector("#ngHeaderBar .ngHeaderLeft");
+      if(hl) hl.textContent = "Night Games " + NG_VERSION;
+    }catch(e){}
+
     // ===== UI refs =====
     const landing = document.getElementById("landing");
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
+
+    /* =============================================================================
+       v760 INTRO VOICE (UK MALE ANNOUNCER) — TAP EMAIL FIELD TO PLAY
+       - Everyone hears it on their own device when they tap the email field.
+       - MUST be triggered by a trusted gesture (pointerdown/touchstart).
+       - Retries briefly until voices are available (Safari/iOS quirk).
+       - Plays once per page load (won't spam).
+    ============================================================================= */
+    const NG_INTRO_LINE = "Welcome to America’s Number Six — Bill Moody’s Limited Edition Game Night. Shoot well. Let’s play some darts!";
+    let ngIntroPlayed = false;
+    let ngIntroArmed = false;
+
+    function ngPickUkMaleVoice(voices){
+      const lower = (s)=>String(s||"").toLowerCase();
+      const prefNames = ["daniel","george","oliver","harry","james","thomas","male"];
+      let pool = (voices||[]).filter(v => lower(v.lang).startsWith("en-gb"));
+      if(!pool.length) pool = (voices||[]).filter(v => lower(v.lang).startsWith("en"));
+      if(!pool.length) pool = (voices||[]);
+
+      function score(v){
+        const nm = lower(v.name);
+        let sc = 0;
+        if(lower(v.lang).startsWith("en-gb")) sc += 50;
+        if(prefNames.some(p=>nm.includes(p))) sc += 25;
+        if(nm.includes("premium") || nm.includes("enhanced") || nm.includes("neural")) sc += 5;
+        return sc;
+      }
+      pool.sort((a,b)=>score(b)-score(a));
+      return pool[0] || null;
+    }
+
+    function ngTrySpeakIntro(){
+      if(ngIntroPlayed) return true;
+      try{
+        const synth = window.speechSynthesis;
+        if(!synth) return false;
+
+        // Ensure voices are loaded
+        const voices = (synth.getVoices && synth.getVoices()) ? synth.getVoices() : [];
+        if(!voices || !voices.length) return false;
+
+        try{ synth.cancel(); }catch(_e){}
+        const u = new SpeechSynthesisUtterance(NG_INTRO_LINE);
+        u.lang = "en-GB";
+        u.rate = 1.02;
+        u.pitch = 0.92;
+        u.volume = 1.0;
+
+        const v = ngPickUkMaleVoice(voices);
+        if(v) u.voice = v;
+
+        synth.speak(u);
+        ngIntroPlayed = true;
+        return true;
+      }catch(e){
+        return false;
+      }
+    }
+
+    function ngSpeakIntroFromGesture(){
+      if(ngIntroPlayed || ngIntroArmed) return;
+      ngIntroArmed = true;
+
+      // Prime voices (some browsers populate after first call)
+      try{ window.speechSynthesis && window.speechSynthesis.getVoices && window.speechSynthesis.getVoices(); }catch(_e){}
+
+      // Retry loop (max ~1.2s)
+      const startedAt = Date.now();
+      const timer = setInterval(()=>{
+        const ok = ngTrySpeakIntro();
+        if(ok || (Date.now()-startedAt) > 1200){
+          clearInterval(timer);
+          ngIntroArmed = false;
+        }
+      }, 120);
+    }
+
+    function ngBindIntro(){
+      if(!emailInput) return;
+      const fire = ()=>ngSpeakIntroFromGesture();
+      emailInput.addEventListener("pointerdown", fire, {passive:true});
+      emailInput.addEventListener("touchstart", fire, {passive:true});
+      emailInput.addEventListener("mousedown", fire, {passive:true});
+      // fallback
+      emailInput.addEventListener("focus", fire, {passive:true});
+    }
+    ngBindIntro();
+
 
     /* =============================================================================
        v759 INTRO VOICE (UK ANNOUNCER) — PLAY ON EMAIL FIELD TAP
