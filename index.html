@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v880  |  2026-02-25
+  NIGHT GAMES v879  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,14 +25,14 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v880 (MASTER STABLE)</title>
+<title>Night Games v879 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=869");
+      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=879");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -1185,7 +1185,7 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
 
-/* remove the old outline styling from v880 */
+/* remove the old outline styling from v879 */
 #landing #emailPad{ outline: none !important; }
 #landing #enterBtn{ outline: none !important; opacity: 1 !important; }
 
@@ -1384,7 +1384,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v880 FINAL POLISH ===================== */
+/* ===================== v879 FINAL POLISH ===================== */
 :root{
   --ngEnterH: 64px;
   --ngEmailH: 52px;          /* tiny bit smaller */
@@ -1440,7 +1440,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v880 PLAYERS READABILITY + ROW LAYOUT ===================== */
+/* ===================== v879 PLAYERS READABILITY + ROW LAYOUT ===================== */
 
 /* Move BOTH panels down slightly (harder to read when too high) */
 #players .hub{
@@ -1489,7 +1489,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v880 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
+/* ===================== v879 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1532,7 +1532,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v880 RULES SCROLL FIX (GRID/FLEX) ===================== */
+/* ===================== v879 RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1584,31 +1584,48 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* Player stats detail formatting */
-.statGroupTitle{
-  font-weight:900;
-  letter-spacing:.06em;
-  opacity:.85;
-  margin:14px 6px 8px 6px;
-  text-transform:uppercase;
-  font-size:13px;
+/* ===================== v879 PLAYER STATS UI ===================== */
+#detail .statScroll{
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 6px;
 }
-.statRow{
+#detail .statSection{
+  margin: 14px 0 16px;
+}
+#detail .statSectionTitle{
+  font-weight: 1000;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  font-size: 12px;
+  opacity: .85;
+  margin-bottom: 8px;
+}
+#detail .statRow{
   display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:10px 12px;
-  border-radius:16px;
-  margin:8px 6px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.10);
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.12);
+  margin-bottom: 10px;
 }
-.statLabel{font-weight:800;}
-.statValue{font-weight:900;}
-.statDesc{
-  opacity:.75;
-  font-size:12px;
-  margin: -4px 12px 10px 12px;
+#detail .statLabel{
+  font-weight: 1000;
+}
+#detail .statHelp{
+  font-weight: 800;
+  opacity: .70;
+  font-size: 12px;
+  margin-top: 4px;
+}
+#detail .statVal{
+  font-weight: 1100;
+  min-width: 54px;
+  text-align: right;
+  opacity: .95;
 }
 
 </style>
@@ -1618,6 +1635,30 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
+    /* v879: detail content scrolling (RULES + PLAYER STATS) */
+    .detailWrap > .panel:first-child{
+      display:flex;
+      flex-direction:column;
+      height: 100%;
+      min-height: 0;
+    }
+    .detailBody{
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* v879: prevent browser autofill yellow on email field */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active{
+      -webkit-text-fill-color: rgba(235,245,255,.96);
+      transition: background-color 5000s ease-in-out 0s;
+      box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
+    }
+================= */
 (function(){
   // Safe wrapper for event handlers
   window.ngSafe = function(fn, label){
@@ -1638,7 +1679,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v880</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v879</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1668,7 +1709,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v880: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v879: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1791,7 +1832,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v880
+<script type="module">// Night Games Night Games v879
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1855,7 +1896,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v880: email overlay text (install once)
+    // v879: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1885,7 +1926,7 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=869";
+        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=879";
 
         const intro = new Audio(INTRO_URL);
         intro.preload = "auto";
@@ -1899,7 +1940,7 @@ const firebaseConfig = {
         }
 
         if(emailInput){
-          // v880: single, non-duplicated intro audio trigger (no stacked listeners)
+          // v879: single, non-duplicated intro audio trigger (no stacked listeners)
           let __ngIntroLast = 0;
           function playIntroOnce(){
             const now = Date.now();
@@ -2006,171 +2047,6 @@ function safeEmail(email){
     }
 
     const games = ["01","Cricket","Killer","Shanghai","ATW","Half It"];
-  // ===== Player Stats (templates + local storage) =====
-  const STAT_TEMPLATES = {
-    "01": [
-      { group: "Basics", stats: [
-        { key:"gamesPlayed", label:"Games played", desc:"How many 01 matches you’ve played." },
-        { key:"gamesWon", label:"Games won", desc:"How many 01 matches you’ve won." },
-        { key:"winPct", label:"Win %", desc:"Wins ÷ games played." }
-      ]},
-      { group: "Scoring", stats: [
-        { key:"threeDartAvg", label:"3‑dart average", desc:"Average points per 3 darts." },
-        { key:"s100", label:"100+ turns", desc:"Turns scoring 100 or more." },
-        { key:"s140", label:"140+ turns", desc:"Turns scoring 140 or more." },
-        { key:"s180", label:"180s", desc:"Number of 180s hit." }
-      ]},
-      { group: "Checkout", stats: [
-        { key:"checkoutPct", label:"Checkout %", desc:"Successful checkouts ÷ checkout attempts." },
-        { key:"highestCheckout", label:"Highest checkout", desc:"Best checkout you’ve finished." }
-      ]}
-    ],
-    "cricket": [
-      { group: "Basics", stats: [
-        { key:"gamesPlayed", label:"Games played", desc:"How many Cricket matches you’ve played." },
-        { key:"gamesWon", label:"Games won", desc:"How many Cricket matches you’ve won." },
-        { key:"winPct", label:"Win %", desc:"Wins ÷ games played." }
-      ]},
-      { group: "Marks", stats: [
-        { key:"mpr", label:"Marks per round (MPR)", desc:"Average marks scored per 3 darts." },
-        { key:"totalMarks", label:"Total marks", desc:"Total marks hit across all matches." },
-        { key:"bestMarksRound", label:"Best marks in a round", desc:"Most marks hit in a single turn." }
-      ]},
-      { group: "Points", stats: [
-        { key:"totalPoints", label:"Total points", desc:"Extra points scored after closing numbers." },
-        { key:"bestPointsRound", label:"Best points in a round", desc:"Most points scored in one turn." }
-      ]},
-      { group: "Extras", stats: [
-        { key:"bullsHit", label:"Bulls hit", desc:"Total bull marks hit (single + double bull)." },
-        { key:"closeFirst", label:"Numbers closed first", desc:"How often you closed a number before opponents." }
-      ]}
-    ],
-    "killer": [
-      { group: "Basics", stats: [
-        { key:"gamesPlayed", label:"Games played", desc:"How many Killer matches you’ve played." },
-        { key:"gamesWon", label:"Games won", desc:"How many Killer matches you’ve won." },
-        { key:"winPct", label:"Win %", desc:"Wins ÷ games played." }
-      ]},
-      { group: "Action", stats: [
-        { key:"kills", label:"Kills", desc:"How many opponents you’ve eliminated." },
-        { key:"deaths", label:"Deaths", desc:"How many times you were eliminated." },
-        { key:"hitsGiven", label:"Hits given", desc:"Successful hits you landed on opponents." },
-        { key:"hitsTaken", label:"Hits taken", desc:"Successful hits landed on you." }
-      ]}
-    ],
-    "shanghai": [
-      { group: "Basics", stats: [
-        { key:"gamesPlayed", label:"Games played", desc:"How many Shanghai matches you’ve played." },
-        { key:"gamesWon", label:"Games won", desc:"How many Shanghai matches you’ve won." },
-        { key:"winPct", label:"Win %", desc:"Wins ÷ games played." }
-      ]},
-      { group: "Scoring", stats: [
-        { key:"totalPoints", label:"Total points", desc:"Total points (S=1, D=2, T=3; Shanghai bonus +5)." },
-        { key:"avgPointsRound", label:"Avg points / round", desc:"Average points scored per round." },
-        { key:"bestRound", label:"Best round points", desc:"Most points scored in a single round." }
-      ]},
-      { group: "Hits", stats: [
-        { key:"singles", label:"Singles hit", desc:"Number of singles hit." },
-        { key:"doubles", label:"Doubles hit", desc:"Number of doubles hit." },
-        { key:"triples", label:"Triples hit", desc:"Number of triples hit." },
-        { key:"shanghais", label:"Shanghais made", desc:"Single + double + triple on the same number (bonus +5)." }
-      ]}
-    ],
-    "atw": [
-      { group: "Basics", stats: [
-        { key:"gamesPlayed", label:"Games played", desc:"How many Around the World matches you’ve played." },
-        { key:"gamesWon", label:"Games won", desc:"How many Around the World matches you’ve won." },
-        { key:"winPct", label:"Win %", desc:"Wins ÷ games played." }
-      ]},
-      { group: "Speed", stats: [
-        { key:"avgDarts", label:"Avg darts to finish", desc:"Average darts needed to complete the game." },
-        { key:"bestFinish", label:"Best finish (fewest darts)", desc:"Fastest completion by darts thrown." }
-      ]}
-    ],
-    "halfit": [
-      { group: "Basics", stats: [
-        { key:"gamesPlayed", label:"Games played", desc:"How many Half‑It matches you’ve played." },
-        { key:"gamesWon", label:"Games won", desc:"How many Half‑It matches you’ve won." },
-        { key:"winPct", label:"Win %", desc:"Wins ÷ games played." }
-      ]},
-      { group: "Scoring", stats: [
-        { key:"totalScore", label:"Total score", desc:"Total points scored across matches." },
-        { key:"avgScoreRound", label:"Avg score / round", desc:"Average points scored per round." },
-        { key:"bestRound", label:"Best round score", desc:"Highest score in a single round." },
-        { key:"halvedCount", label:"Halved count", desc:"How many times your score was halved." }
-      ]}
-    ]
-  };
-
-  const STATS_STORE_KEY = "ng_player_stats_v1";
-  function loadStatsStore(){
-    try { return JSON.parse(localStorage.getItem(STATS_STORE_KEY) || "{}"); } catch(e){ return {}; }
-  }
-  function saveStatsStore(store){
-    localStorage.setItem(STATS_STORE_KEY, JSON.stringify(store));
-  }
-  function ensurePlayerGameStats(store, playerId, gameId){
-    store[playerId] = store[playerId] || {};
-    store[playerId][gameId] = store[playerId][gameId] || {};
-    const template = STAT_TEMPLATES[gameId] || [];
-    template.forEach(g => g.stats.forEach(s => {
-      if (store[playerId][gameId][s.key] === undefined) store[playerId][gameId][s.key] = 0;
-    }));
-    return store[playerId][gameId];
-  }
-
-  let currentStatsPlayer = null; // {id,name}
-  function openPlayerStatsPicker(playerId, playerName){
-    currentStatsPlayer = { id: playerId, name: playerName };
-    const body = `
-      <div style="font-weight:900; margin-bottom:12px;">${playerName}</div>
-      <div class="list">
-        ${games.map(g => `
-          <div class="row">
-            <div class="rowTitle">${g.label}</div>
-            <button class="pill small" data-action="player_stats_game" data-game="${g.id}">Player Stats</button>
-          </div>
-        `).join("")}
-      </div>
-    `;
-    openDetail("PLAYER STATS", body);
-  }
-
-  function openPlayerGameStats(gameId){
-    if (!currentStatsPlayer) return;
-    const gameLabel = (games.find(g => g.id === gameId) || {label: gameId}).label;
-
-    const store = loadStatsStore();
-    const values = ensurePlayerGameStats(store, currentStatsPlayer.id, gameId);
-    saveStatsStore(store);
-
-    const template = STAT_TEMPLATES[gameId] || [];
-    const statsHtml = template.map(group => {
-      const groupTitle = `<div class="statGroupTitle">${group.group}</div>`;
-      const rows = group.stats.map(s => `
-        <div class="statRow">
-          <div class="statLabel">${s.label}</div>
-          <div class="statValue">${values[s.key] ?? 0}</div>
-        </div>
-        <div class="statDesc">${s.desc || ""}</div>
-      `).join("");
-      return groupTitle + rows;
-    }).join("");
-
-    const body = `
-      <div style="font-weight:900; margin-bottom:6px;">${currentStatsPlayer.name}</div>
-      <div style="opacity:.85; margin-bottom:12px;">${gameLabel}</div>
-      <div class="list" style="max-height:52vh;">
-        ${statsHtml || `<div style="opacity:.85; padding:12px;">No stats template found for this game yet.</div>`}
-      </div>
-      <div style="opacity:.8; font-size:12px; margin-top:10px;">
-        These values start at 0. Once game engines are connected, they’ll auto‑fill.
-      </div>
-    `;
-    openDetail("PLAYER STATS", body);
-  }
-  // ===== /Player Stats =====
-
 
     const GAME_RULES = {
       "01": "<b>Goal:</b> Reach exactly 0.<br><br>• Choose 301 / 501 / 701<br>• Subtract what you hit each turn (3 darts)<br>• Must land exactly on 0 to win<br>• If you go below 0 = bust (turn doesn’t count)<br><br><b>Options:</b><br>• <b>Single In / Single Out</b>: scoring starts immediately, any hit can finish<br>• <b>Single In / Double Out</b>: scoring starts immediately, must finish on a double<br>• <b>Double In / Double Out</b>: must hit a double to start scoring, must finish on a double",
@@ -2180,6 +2056,129 @@ function safeEmail(email){
       "ATW": "<b>Goal:</b> Be first to hit every number in order.<br><br>• Hit 1, then 2, then 3… up to 20 (and Bull if enabled)<br>• A hit on the correct number advances you to the next<br>• Misses don’t advance you<br>• First player to finish the sequence wins",
       "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
     };
+
+    // ===================== PLAYER STAT TEMPLATES (v879) =====================
+    // Locked stat sets (values start at 0; game engines will increment later).
+    const PLAYER_STAT_TEMPLATES = {
+      "01": {
+        "Core": [
+          ["gamesPlayed", "Games Played", "Total 01 games played"],
+          ["gamesWon", "Games Won", "Total 01 wins"],
+          ["winPct", "Win %", "Win percentage in 01"]
+        ],
+        "Scoring": [
+          ["threeDartAvg", "3-Dart Average", "Average score per turn"],
+          ["tons100", "100+ Scores", "Turns scoring 100 or more"],
+          ["scores140", "140+ Scores", "Turns scoring 140 or more"],
+          ["scores180", "180s", "Perfect 3-dart scores"]
+        ],
+        "Finishing": [
+          ["checkoutPct", "Checkout %", "How often you finish when given the chance"],
+          ["highestCheckout", "Highest Checkout", "Highest score finished in one turn"]
+        ]
+      },
+      "Cricket": {
+        "Core": [
+          ["gamesPlayed", "Games Played", "Total Cricket games played"],
+          ["gamesWon", "Games Won", "Total Cricket wins"],
+          ["winPct", "Win %", "Win percentage in Cricket"]
+        ],
+        "Marks": [
+          ["totalMarks", "Total Marks", "Total hits on 15–20 and Bull"],
+          ["marksPerRound", "Marks Per Round", "Average marks per turn"],
+          ["closedFirst", "Closed First", "Times you closed before opponent"]
+        ],
+        "Scoring": [
+          ["totalPoints", "Total Points", "Points scored after closing numbers"],
+          ["highestRound", "Highest Round", "Most points scored in one turn"]
+        ],
+        "Bull": [
+          ["totalBulls", "Total Bulls", "Total bull hits"],
+          ["doubleBulls", "Double Bulls", "Inner bull hits"]
+        ]
+      },
+      "Around the World": {
+        "Core": [
+          ["gamesPlayed", "Games Played", "Total games played"],
+          ["gamesWon", "Games Won", "Total wins"],
+          ["winPct", "Win %", "Win percentage"]
+        ],
+        "Progress": [
+          ["fastestTurns", "Fastest Completion", "Fewest turns to finish"],
+          ["avgTurns", "Average Turns", "Average turns to finish"],
+          ["bestStreak", "Best Streak", "Most numbers hit in a row"]
+        ],
+        "Accuracy": [
+          ["targetsHit", "Targets Hit", "Total correct targets hit"],
+          ["missCount", "Miss Count", "Total missed darts"]
+        ]
+      },
+      "Killer": {
+        "Core": [
+          ["gamesPlayed", "Games Played", "Total games played"],
+          ["gamesWon", "Games Won", "Total wins"],
+          ["winPct", "Win %", "Win percentage"]
+        ],
+        "Survival": [
+          ["elimsMade", "Eliminations", "Players you eliminated"],
+          ["timesElim", "Times Eliminated", "Times you got eliminated"]
+        ],
+        "Accuracy": [
+          ["targetHits", "Target Hits", "Hits on assigned targets"],
+          ["doublesHit", "Doubles Hit", "Total doubles landed"]
+        ]
+      },
+      "Shanghai": {
+        "Core": [
+          ["gamesPlayed", "Games Played", "Total games played"],
+          ["gamesWon", "Games Won", "Total wins"],
+          ["winPct", "Win %", "Win percentage"]
+        ],
+        "Accuracy": [
+          ["singlesHit", "Singles Hit", "Total singles landed"],
+          ["doublesHit", "Doubles Hit", "Total doubles landed"],
+          ["triplesHit", "Triples Hit", "Total triples landed"],
+          ["shanghaiHits", "Shanghai Hits", "Single+Double+Triple in one round (+5 bonus)"]
+        ],
+        "Performance": [
+          ["totalPoints", "Total Points", "Total points earned (1/2/3 + bonuses)"],
+          ["avgPerRound", "Avg Points/Round", "Average points per round"],
+          ["highestRound", "Highest Round", "Most points in one round"]
+        ]
+      },
+      "Half It": {
+        "Core": [
+          ["gamesPlayed", "Games Played", "Total games played"],
+          ["gamesWon", "Games Won", "Total wins"],
+          ["winPct", "Win %", "Win percentage"]
+        ],
+        "Accuracy": [
+          ["successRounds", "Successful Rounds", "Rounds where target was hit"],
+          ["failedRounds", "Failed Rounds", "Rounds where target was missed"],
+          ["successRate", "Success Rate", "Successful rounds percentage"]
+        ],
+        "Scoring": [
+          ["totalPoints", "Total Points", "Total points scored"],
+          ["highestRound", "Highest Round", "Most points in one round"],
+          ["avgPerGame", "Avg Points/Game", "Average points per game"]
+        ],
+        "Discipline": [
+          ["timesHalved", "Times Halved", "How many times score was halved"],
+          ["largestDrop", "Largest Drop", "Biggest single loss from a halve"]
+        ]
+      }
+    };
+
+    function statKey(email, game, key){
+      return `ng_stat::${String(email||"").toLowerCase()}::${String(game||"")}::${String(key||"")}`;
+    }
+    function getStat(email, game, key){
+      const v = localStorage.getItem(statKey(email, game, key));
+      return (v === null || v === undefined || v === "") ? 0 : v;
+    }
+    // ===============================================================
+
+
 
     function renderGames(){
       gamesList.innerHTML = games.map(g => `
@@ -2911,17 +2910,77 @@ function onEnter() {
         return;
       }
 
-      if(if (action === "player_stats") {
-        const pid = btn.dataset.player || "";
-        const pname = btn.dataset.value || "Player";
-        openPlayerStatsPicker(pid, pname);
+      if(action === "player_stats"){
+        // Player Stats Shell (v879)
+        const whoEmail = String(value || "").toLowerCase();
+        const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
+        const whoName = (who && who.name) ? who.name : (whoEmail ? whoEmail.split("@")[0] : "Player");
+
+        const gameList = (games || ["01","Cricket","Killer","Shanghai","Around the World","Half It"]);
+
+        const rows = gameList.map(g => `
+          <button type="button" class="pill" data-action="player_stats_game" data-value="${whoEmail}||${g}" style="
+            width:100%; display:flex; justify-content:space-between; align-items:center;
+            padding:14px 14px; border-radius:16px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.12);
+            margin-bottom:10px;">
+            <div style="font-weight:1000; letter-spacing:.4px;">${g}</div>
+            <div style="opacity:.78; font-weight:900;">View</div>
+          </button>
+        `).join("");
+
+        openDetail("PLAYER STATS", `
+          <div class="glassText" style="font-weight:1000; font-size:22px; margin-bottom:10px;">${whoName}</div>
+          <div style="opacity:.72; margin-bottom:14px;">Select a game.</div>
+          <div class="statScroll">${rows}</div>
+        `);
+        return;
+
+      if(action === "player_stats_game"){
+        const raw = String(value || "");
+        const parts = raw.split("||");
+        const whoEmail = String(parts[0] || "").toLowerCase();
+        const gameName = String(parts[1] || "").trim();
+
+        const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
+        const whoName = (who && who.name) ? who.name : (whoEmail ? whoEmail.split("@")[0] : "Player");
+
+        const tpl = PLAYER_STAT_TEMPLATES[gameName] || null;
+        if(!tpl){
+          openDetail("STATS • " + gameName, `<div style="opacity:.75; font-weight:900;">No stat template yet.</div>`);
+          return;
+        }
+
+        const sections = Object.keys(tpl).map(sectionName => {
+          const rows = tpl[sectionName].map(([key,label,help]) => {
+            const val = getStat(whoEmail, gameName, key);
+            return `
+              <div class="statRow">
+                <div class="statLeft">
+                  <div class="statLabel">${label}</div>
+                  <div class="statHelp">${help}</div>
+                </div>
+                <div class="statVal">${val}</div>
+              </div>
+            `;
+          }).join("");
+          return `
+            <div class="statSection">
+              <div class="statSectionTitle">${sectionName}</div>
+              ${rows}
+            </div>
+          `;
+        }).join("");
+
+        openDetail("STATS • " + gameName, `
+          <div class="glassText" style="font-weight:1000; font-size:22px; margin-bottom:10px;">${whoName}</div>
+          <div style="opacity:.72; margin-bottom:14px;">${gameName}</div>
+          <div class="statScroll">${sections}</div>
+        `);
         return;
       }
 
-if (action === "player_stats_game") {
-        const gameId = btn.dataset.game;
-        openPlayerGameStats(gameId);
-        return;
       }
 
 if(action === "player_history"){
