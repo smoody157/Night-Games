@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v891  |  2026-02-25
+  NIGHT GAMES v892  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v891 (MASTER STABLE)</title>
+<title>Night Games v892 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1185,7 +1185,7 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
 
-/* remove the old outline styling from v891 */
+/* remove the old outline styling from v892 */
 #landing #emailPad{ outline: none !important; }
 #landing #enterBtn{ outline: none !important; opacity: 1 !important; }
 
@@ -1384,7 +1384,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v891 FINAL POLISH ===================== */
+/* ===================== v892 FINAL POLISH ===================== */
 :root{
   --ngEnterH: 64px;
   --ngEmailH: 52px;          /* tiny bit smaller */
@@ -1440,7 +1440,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v891 PLAYERS READABILITY + ROW LAYOUT ===================== */
+/* ===================== v892 PLAYERS READABILITY + ROW LAYOUT ===================== */
 
 /* Move BOTH panels down slightly (harder to read when too high) */
 #players .hub{
@@ -1489,7 +1489,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v891 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
+/* ===================== v892 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1532,7 +1532,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v891 RULES SCROLL FIX (GRID/FLEX) ===================== */
+/* ===================== v892 RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1584,7 +1584,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v891 PLAYER STATS UI ===================== */
+/* ===================== v892 PLAYER STATS UI ===================== */
 #detail .statScroll{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
@@ -1656,7 +1656,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v891</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v892</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1686,7 +1686,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v891: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v892: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1809,7 +1809,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v891
+<script type="module">// Night Games Night Games v892
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1873,7 +1873,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v891: email overlay text (install once)
+    // v892: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1917,7 +1917,7 @@ const firebaseConfig = {
         }
 
         if(emailInput){
-          // v891: single, non-duplicated intro audio trigger (no stacked listeners)
+          // v892: single, non-duplicated intro audio trigger (no stacked listeners)
           let __ngIntroLast = 0;
           function playIntroOnce(){
             const now = Date.now();
@@ -2034,7 +2034,7 @@ function safeEmail(email){
       "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
     };
 
-    // ===================== PLAYER STAT TEMPLATES (v891) =====================
+    // ===================== PLAYER STAT TEMPLATES (v892) =====================
     // Locked stat sets (values start at 0; game engines will increment later).
     const PLAYER_STAT_TEMPLATES = {
       "01": {
@@ -2888,7 +2888,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v891)
+        // Player Stats Shell (v892)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : (whoEmail ? whoEmail.split("@")[0] : "Player");
@@ -2961,9 +2961,7 @@ function onEnter() {
         return;
       }
 
-      }
-
-if(action === "player_history"){
+      if(action === "player_history"){
         openDetail("PLAYER HISTORY", `
           <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${value}</div>
           <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
