@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v915  |  2026-02-27
+  NIGHT GAMES v916  |  2026-02-27
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v915 STABILITY SWEEP =====================
+<!-- ===================== v916 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,7 +32,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v915 (MASTER STABLE)</title>
+<title>Night Games v916 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1660,14 +1660,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v915 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v916 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v915: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v916: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1692,7 +1692,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v915 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v916 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1701,8 +1701,8 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v915 HEADER PLAYER NAME ===================== */
-#ngHeaderBar .ngUserWelcome{
+/* ===================== v916 HEADER PLAYER NAME ===================== */
+#ngHeaderBar .ngHeaderPlayer{
   position: relative;
   z-index: 1;
   flex: 1 1 auto;
@@ -1726,7 +1726,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v915 GLOBAL FOOTER ===================== */
+/* ===================== v916 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1742,7 +1742,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v915 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v916 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1765,7 +1765,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v915 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v916 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1781,84 +1781,51 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* ===================== v915 USER STRIP (NAME + SIGN OUT) ===================== */
+/* ===================== v916 USER STRIP (WELCOME + UPDATE) ===================== */
 #ngUserStrip{
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  top: calc(max(10px, env(safe-area-inset-top)) + 52px);
-  z-index: 9999;
+  top: calc(max(10px, env(safe-area-inset-top)) + 56px);
+  z-index: 9998;
   width: min(760px, 94vw);
   display:flex;
   align-items:center;
   justify-content: space-between;
   gap: 10px;
-  padding: 6px 10px;
-  border-radius: 14px;
+  padding: 6px 12px;
+  border-radius: 16px;
   border: 1px solid rgba(255,255,255,.14);
   background: rgba(255,255,255,.05);
   backdrop-filter: blur(10px) saturate(115%);
   -webkit-backdrop-filter: blur(10px) saturate(115%);
   box-shadow: 0 10px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.22);
+  overflow:hidden;
 }
-#ngUserStrip .ngUserLeft{ width: 54px; } /* balances the Sign Out button */
 #ngUserWelcome{
   flex: 1 1 auto;
   text-align: center;
-  font-weight: 1100;
+  font-weight: 1200;
   letter-spacing: .08em;
   text-transform: uppercase;
-  font-size: 14px;
-  color: rgba(90,255,170,.96);
-  text-shadow: 0 2px 12px rgba(0,0,0,.65);
+  font-size: 15px;
+  color: rgba(60,255,160,.98);
+  text-shadow: 0 2px 12px rgba(0,0,0,.70), 0 0 18px rgba(60,255,160,.18);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 8px;
 }
-#ngUserStrip .ngLogoutBtn{
+.ngUpdateBtn{
   height: 34px;
   padding: 8px 12px;
   font-size: 11px;
   letter-spacing: 1px;
+  opacity: .94;
 }
-
-/* Give room for the user strip */
-#app{ padding-top: 118px !important; }
-#landing #app{ padding-top: 72px !important; } /* landing uses its own layout */
-/* ===================== v915 PICKER FROST ===================== */
-.pickerCard{
-  backdrop-filter: blur(12px) saturate(120%);
-  -webkit-backdrop-filter: blur(12px) saturate(120%);
-  box-shadow: 0 14px 34px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.22) !important;
-}
-.pickerRow{
-  background: rgba(255,255,255,.06) !important;
-  border: 1px solid rgba(255,255,255,.14) !important;
-}
-/* ===================== v915 DETAIL BUTTON UNIFORM ===================== */
-#detail .detailBody .pill{
-  height: 44px;
-  padding: 12px 16px;
-  font-size: 13px;
-}
-#detail .detailBody{
-  align-items: stretch;
-}
-#detail .detailBody .pill{
-  flex: 1 1 140px;
-  text-align:center;
-}
-/* ===================== v915 CENTER WELCOME ===================== */
-/* Clean override (last wins) */
-#ngUserStrip{
-  position: fixed;
-  overflow: hidden;
-}
-#ngUserWelcome{
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70%;
-  pointer-events: none;
-}
-#ngUserStrip{ position: fixed; }
+/* Room for header + user strip */
+#app{ padding-top: 126px !important; }
+#landing #app{ padding-top: 80px !important; }
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -1910,11 +1877,16 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v915</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  </div>
+<div id="ngHeaderBar">
+  <div class="ngTopRow">
+    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v916</span></span>
+    <span class="ngHeaderCenter">Firebase • Firestore</span>
+    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>
+  </div>
+</div>
 <div id="ngUserStrip" style="display:none;">
-  <div class="ngUserLeft"></div>
-  <div class="ngUserCenter" id="ngUserWelcome">WELCOME</div>
-  <button type="button" class="pill pillMini ngLogoutBtn" id="ngLogoutBtn" style="display:none;">Sign Out</button>
+  <span id="ngUserWelcome" class="ngUserWelcome">WELCOME</span>
+  <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
 </div>
 <!--
 ================================================================================
@@ -2049,6 +2021,20 @@ border: 1px solid rgba(255,255,255,.22);
 </div>
 <div class="globalFooter" id="globalFooter">Night Games is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
+<!-- ===================== v916 PLAYER PICKER MODAL ===================== -->
+<div class="pickerModal" id="playerPickerModal">
+  <div class="pickerCard">
+    <div class="pickerHead">
+      <div class="t" id="pickerTitle">Select Players</div>
+      <div class="s" id="pickerSub">Pick players for this game</div>
+    </div>
+    <div class="pickerBody" id="pickerBody"></div>
+    <div class="pickerFoot">
+      <button type="button" class="pill pillMini" id="pickerCancelBtn">Cancel</button>
+      <button type="button" class="pill btnAdvance" id="pickerOkBtn">OK</button>
+    </div>
+  </div>
+</div>
 <div class="fatal" id="fatal">
 <div class="card">
 <h2>Firebase didn’t start</h2>
@@ -2070,7 +2056,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v915
+<script type="module">// Night Games Night Games v916
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2100,28 +2086,7 @@ border: 1px solid rgba(255,255,255,.22);
       fatal.style.display = "flex";
       fatalMsg.textContent = msg + (err ? ("\n\n" + (err.stack||err.message||String(err))) : "");
       setDbg("FAIL", "—", "—", msg);
-    // ===== User banner helpers =====
-function ngPrettyNameFromEmail(email){
-  if(!email) return "";
-  const local = String(email).split("@")[0] || "";
-  const cleaned = local.replace(/[._-]+/g, " ").replace(/\s+/g, " ").trim();
-  return cleaned.split(" ").filter(Boolean).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(" ");
-}
-function ngSetWelcome(email){
-  const strip = document.getElementById("ngUserStrip");
-  const w = document.getElementById("ngUserWelcome");
-  if(!strip || !w) return;
-  const nm = ngPrettyNameFromEmail(email);
-  w.textContent = nm ? (`WELCOME, ${nm}`) : "WELCOME";
-  w.title = email || "";
-}
-function ngShowUserStrip(show){
-  const strip = document.getElementById("ngUserStrip");
-  if(!strip) return;
-  strip.style.display = show ? "flex" : "none";
-}
-
-}
+    }
 
     // ===== Config (from Steven) =====
     /* =============================================================================
@@ -2165,11 +2130,11 @@ try{
   }
 }catch(e){}
 
-    const ngUserWelcome = document.getElementById("ngUserWelcome");
+    const ngHeaderPlayer = document.getElementById("ngHeaderPlayer");
     const globalFooter = document.getElementById("globalFooter");
 
 
-    // v915: preload saved email for this device (Bill + anyone who signed in before)
+    // v916: preload saved email for this device (Bill + anyone who signed in before)
     try{
       const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim();
       if(savedEmail && emailInput){
@@ -2279,6 +2244,12 @@ try{
     const enterBtn = document.getElementById("enterBtn");
     const gamesList = document.getElementById("gamesList");
     const playersList = document.getElementById("playersList");
+    const setupBody = document.getElementById("setupBody");
+
+    // ===== v916 Master Game List (single source of truth) =====
+    const games = ["01","Cricket","Killer","Shanghai","Around the World","Half It"];
+
+
     const detailTitle = document.getElementById("detailTitle");
     const detailBody = document.getElementById("detailBody");
     const backBtn = document.getElementById("backBtn");
@@ -2307,12 +2278,8 @@ try{
 function show(which){
       landing.classList.toggle("active", which==="landing");
 
-      // Global footer off on landing (landing already has its own footer)
+      // v916: global footer off on landing (landing already has its own footer)
       try{ if(globalFooter) globalFooter.style.display = (which==="landing") ? "none" : "block"; }catch(e){}
-
-      // User strip hidden on landing, visible elsewhere (if signed in)
-      try{ if(which==="landing") ngShowUserStrip(false); else ngShowUserStrip(true); }catch(e){}
-
       players.classList.toggle("active", which==="players");
       setup.classList.toggle("active", which==="setup");
       waiting.classList.toggle("active", which==="waiting");
@@ -2366,8 +2333,23 @@ function safeEmail(email){
     }
 
 
-    // v915: header player label (friendly + centered)
-    function setHeaderPlayerLabel(email){
+    // v916: header player label (friendly + centered)
+    function ngShowUserStrip(show){
+  try{
+    const s = document.getElementById("ngUserStrip");
+    if(!s) return;
+    s.style.display = show ? "flex" : "none";
+  }catch(e){}
+}
+function ngShowUpdate(show){
+  try{
+    const b = document.getElementById("ngUpdateBtn");
+    if(!b) return;
+    b.style.display = show ? "inline-flex" : "none";
+  }catch(e){}
+}
+
+function setHeaderPlayerLabel(email){
   try{ ngSetHeaderNameFromEmail(email); }catch(e){}
 }
 
@@ -2597,9 +2579,9 @@ function ngSetHeaderNameFromEmail(email){
     }
     const base = e.split("@")[0].replace(/[._-]+/g," ").trim();
     const nice = base.split(" ").filter(Boolean).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(" ");
-    el.textContent = nice || e;
+    el.textContent = "WELCOME, " + (nice || "PLAYER");
     el.title = e;
-  }catch(_e){}
+  }catch(e){}
 }
 function ngShowLogout(show){
   try{
@@ -2616,24 +2598,6 @@ let currentEmail = null;
     let lastPeople = []; // cached registry list for re-render on presence updates
 
 
-
-/* 
-================================================================================
-  GAMES  [SECTION_GAMES]
-================================================================================
-*/
-function renderGames(){
-  gamesList.innerHTML = games.map(g => `
-    <div class="itemLine">
-      <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? `<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>` : `<span class="glassText">${g}</span>`}</div></div>
-      <div class="actions">
-        <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
-        <button class="pill" data-action="game_rules" data-value="${g}">Rules</button>
-        <button class="pill" data-action="game_history" data-value="${g}">History</button>
-      </div>
-    </div>
-  `).join("");
-}
 
 /*
 ================================================================================
@@ -2665,7 +2629,218 @@ function renderPlayers(list){
       }).join("");
     }
 
-    function watchData(db){
+    // ===================== v916 RENDER / SETUP WIRING (MASTER) =====================
+let currentGame = null;
+let setupSelectedEmails = [];
+let setupPlayerCount = 1;
+let setup01Start = "501";
+let setup01Mode = "SI_SO";
+
+function renderGames(){
+  try{
+    if(!gamesList) return;
+    gamesList.innerHTML = games.map(g => `
+      <div class="row">
+        <div class="leftStack">
+          <div class="nm">${g}</div>
+          <div class="em" style="opacity:.72;">Tap to configure</div>
+        </div>
+        <div class="rightStack" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+          <button type="button" class="pill pillMini" data-action="game_rules" data-value="${g}">Rules</button>
+          <button type="button" class="pill pillMini" data-action="game_history" data-value="${g}">History</button>
+          <button type="button" class="pill btnAdvance" data-action="enter_game" data-value="${g}">Play</button>
+        </div>
+      </div>
+    `).join("");
+  }catch(e){}
+}
+
+async function createSessionForGame(game){
+  currentGame = game;
+  // Multiplayer sessions come later. For now, keep local "session" stable.
+  try{ window.ngSession = { game, createdAt: Date.now(), host: currentEmail||"" }; }catch(e){}
+}
+
+function openPlayerPicker(title, count, preSelected){
+  return new Promise((resolve)=>{
+    const modal = document.getElementById("playerPickerModal");
+    const body = document.getElementById("pickerBody");
+    const t = document.getElementById("pickerTitle");
+    const s = document.getElementById("pickerSub");
+    const ok = document.getElementById("pickerOkBtn");
+    const cancel = document.getElementById("pickerCancelBtn");
+    if(!modal || !body || !ok || !cancel){
+      resolve(preSelected || []);
+      return;
+    }
+    t.textContent = title || "Select Players";
+    s.textContent = "Pick " + count + " player" + (count===1?"":"s");
+    const people = Array.isArray(lastPeople) ? lastPeople.slice() : [];
+    const selected = new Set((preSelected||[]).map(x=>String(x).toLowerCase()));
+    body.innerHTML = people.map(p=>{
+      const em = String(p.email||"").toLowerCase();
+      const nm = String(p.name|| (em? em.split("@")[0] : "Player"));
+      const on = selected.has(em);
+      return `<button type="button" class="pickerRow ${on?'on':''}" data-email="${em}">
+                <div style="min-width:0;">
+                  <div class="nm" style="font-weight:1000;">${nm}</div>
+                  <div class="em" style="opacity:.78; font-size:12px;">${em}</div>
+                </div>
+                <div class="pill pillMini">${on?'Selected':'Tap'}</div>
+              </button>`;
+    }).join("");
+    function repaint(){
+      [...body.querySelectorAll(".pickerRow")].forEach(r=>{
+        const em = r.getAttribute("data-email")||"";
+        const on = selected.has(em);
+        r.classList.toggle("on", on);
+        const pill = r.querySelector(".pill");
+        if(pill) pill.textContent = on ? "Selected" : "Tap";
+      });
+    }
+    body.onclick = (ev)=>{
+      const row = ev.target.closest(".pickerRow");
+      if(!row) return;
+      const em = (row.getAttribute("data-email")||"").toLowerCase();
+      if(!em) return;
+      if(selected.has(em)) selected.delete(em);
+      else{
+        if(selected.size >= count) return; // enforce limit
+        selected.add(em);
+      }
+      repaint();
+    };
+    function close(ans){
+      modal.style.display="none";
+      body.onclick = null;
+      ok.onclick = null;
+      cancel.onclick = null;
+      resolve(ans);
+    }
+    cancel.onclick = ()=> close(preSelected||[]);
+    ok.onclick = ()=> close([...selected]);
+    modal.style.display="flex";
+  });
+}
+
+function renderSetupForGame(game){
+  try{
+    currentGame = game;
+    if(!setupBody) return;
+    setupSelectedEmails = [];
+    setupPlayerCount = 1;
+    // base layout
+    const people = Array.isArray(lastPeople) ? lastPeople.slice() : [];
+    function nameFor(em){
+      const p = people.find(x=>String(x.email||"").toLowerCase()===String(em||"").toLowerCase());
+      return p ? (p.name||em) : em;
+    }
+
+    const countOpts = [1,2,3,4].map(n=>`<option value="${n}">${n}</option>`).join("");
+    // game-specific options (after players)
+    let extra = "";
+    if(game==="01"){
+      extra = `
+        <div class="field">
+          <div class="lbl">Starting Score</div>
+          <select id="setup01Start" class="select">
+            <option value="301">301</option>
+            <option value="501" selected>501</option>
+            <option value="701">701</option>
+          </select>
+        </div>
+        <div class="field">
+          <div class="lbl">In / Out</div>
+          <select id="setup01Mode" class="select">
+            <option value="DI_DO">Double In / Double Out</option>
+            <option value="SI_DO">Single In / Double Out</option>
+            <option value="SI_SO" selected>Single In / Single Out</option>
+            <option value="DI_SO">Double In / Single Out</option>
+          </select>
+        </div>
+      `;
+    }
+
+    setupBody.innerHTML = `
+      <div class="field">
+        <div class="lbl">Number of Players</div>
+        <select id="setupPlayerCount" class="select">${countOpts}</select>
+      </div>
+
+      <div class="field">
+        <div class="lbl">Which Players</div>
+        <button type="button" class="pill" id="setupPickPlayersBtn">Select Players</button>
+        <div id="setupPlayersChosen" style="margin-top:8px; opacity:.82; font-weight:900;">None selected</div>
+      </div>
+
+      ${extra}
+
+      <div class="actions" style="display:flex; gap:12px; margin-top: 12px;">
+        <button type="button" class="pill" id="setupBackBtn">Back</button>
+        <button type="button" class="pill btnAdvance" id="setupStartBtn2">Start</button>
+      </div>
+    `;
+
+    const countSel = document.getElementById("setupPlayerCount");
+    const pickBtn = document.getElementById("setupPickPlayersBtn");
+    const chosen = document.getElementById("setupPlayersChosen");
+    const back = document.getElementById("setupBackBtn");
+    const start = document.getElementById("setupStartBtn2");
+
+    function refreshChosen(){
+      const names = setupSelectedEmails.map(e=>nameFor(e));
+      chosen.textContent = names.length ? names.join(", ") : "None selected";
+    }
+
+    countSel.addEventListener("change", ()=>{
+      setupPlayerCount = parseInt(countSel.value||"1",10) || 1;
+      // trim if needed
+      setupSelectedEmails = setupSelectedEmails.slice(0, setupPlayerCount);
+      refreshChosen();
+    });
+
+    pickBtn.addEventListener("click", async ()=>{
+      setupPlayerCount = parseInt(countSel.value||"1",10) || 1;
+      const sel = await openPlayerPicker("Select Players", setupPlayerCount, setupSelectedEmails);
+      setupSelectedEmails = sel.slice(0, setupPlayerCount);
+      refreshChosen();
+    });
+
+    back.addEventListener("click", ()=>{ show("players"); });
+
+    start.addEventListener("click", ()=>{
+      // capture 01 options if applicable
+      if(game==="01"){
+        const ss = document.getElementById("setup01Start");
+        const md = document.getElementById("setup01Mode");
+        setup01Start = ss ? ss.value : "501";
+        setup01Mode = md ? md.value : "SI_SO";
+      }
+      // Basic validation
+      if(setupSelectedEmails.length !== setupPlayerCount){
+        alert("Please select " + setupPlayerCount + " player(s).");
+        return;
+      }
+      // Placeholder: start local game routing
+      try{
+        window.ngActiveGame = {
+          game,
+          count: setupPlayerCount,
+          players: setupSelectedEmails.slice(),
+          startScore: setup01Start,
+          mode: setup01Mode
+        };
+      }catch(e){}
+      alert("Game start wired. Next step: connect engine for " + game + ".");
+    });
+
+    refreshChosen();
+  }catch(e){
+    alert("Setup error: " + (e.message||e));
+  }
+}
+
+function watchData(db){
       // registry
       onSnapshot(query(collection(db, "registry")), (snap)=>{
         const people = snap.docs.map(d => d.data()).filter(x=>x && x.email && x.name);
@@ -2767,7 +2942,7 @@ function renderPlayers(list){
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v915: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      // v916: remember last successful email on THIS device/browser (Bill garage iPad use-case)
       try{ localStorage.setItem("ng_saved_email", currentEmail); }catch(e){}
 
       // 5) Presence + live listeners
@@ -2786,9 +2961,23 @@ function renderPlayers(list){
       const auth = getAuth(app);
       window.ngAuth = auth;
       try{
-        const lo = document.getElementById('ngLogoutBtn');
-        if(lo){ lo.addEventListener('click', async ()=>{
-          try{ await signOut(auth); }catch(e){}
+  const up = document.getElementById('ngUpdateBtn');
+  if(up){
+    up.addEventListener('click', async ()=>{
+      // Update = sign out (so it resets) + cache-bust reload to pull latest
+      try{ await signOut(auth); }catch(e){}
+      try{ ngShowUpdate(false); }catch(e){}
+      try{ ngShowUserStrip(false); }catch(e){}
+      try{
+        const url = new URL(location.href);
+        url.searchParams.set("v", String(Date.now()));
+        location.replace(url.toString());
+      }catch(e){
+        location.reload(true);
+      }
+    });
+  }
+}catch(e){}
           try{ ngShowLogout(false); }catch(e){}
           try{ show && show('landing'); }catch(e){}
         }); }
