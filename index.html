@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v908  |  2026-02-27
+  NIGHT GAMES v909  |  2026-02-27
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v908 STABILITY SWEEP =====================
+<!-- ===================== v909 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,7 +32,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v908 (MASTER STABLE)</title>
+<title>Night Games v909 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1456,12 +1456,12 @@ border: 1px solid rgba(255,255,255,.22);
 
 /* Make panels easier to read (slightly darker glass + blur) */
 #players .panel{
-  background: rgba(0,0,0,.30) !important;
+  background: rgba(255,255,255,.06) !important;
   border: 1px solid rgba(255,255,255,.14) !important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.20),
-    inset 0 -18px 28px rgba(0,0,0,.55),
-    0 18px 38px rgba(0,0,0,.30) !important;
+    inset 0 -18px 28px rgba(0,0,0,.32),
+    0 18px 38px rgba(0,0,0,.22) !important;
   backdrop-filter: blur(10px) saturate(115%);
   -webkit-backdrop-filter: blur(10px) saturate(115%);
 }
@@ -1504,8 +1504,8 @@ border: 1px solid rgba(255,255,255,.22);
   border: 1px solid rgba(255,255,255,.14) !important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.20),
-    inset 0 -18px 28px rgba(0,0,0,.55),
-    0 18px 38px rgba(0,0,0,.30) !important;
+    inset 0 -18px 28px rgba(0,0,0,.32),
+    0 18px 38px rgba(0,0,0,.22) !important;
   backdrop-filter: blur(10px) saturate(115%);
   -webkit-backdrop-filter: blur(10px) saturate(115%);
 }
@@ -1547,8 +1547,8 @@ border: 1px solid rgba(255,255,255,.22);
   border: 1px solid rgba(255,255,255,.14) !important;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.20),
-    inset 0 -18px 28px rgba(0,0,0,.55),
-    0 18px 38px rgba(0,0,0,.30) !important;
+    inset 0 -18px 28px rgba(0,0,0,.32),
+    0 18px 38px rgba(0,0,0,.22) !important;
   backdrop-filter: blur(10px) saturate(115%);
   -webkit-backdrop-filter: blur(10px) saturate(115%);
 }
@@ -1636,14 +1636,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v908 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v909 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v908: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v909: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1668,12 +1668,59 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v908 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v909 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
 }
 #detail .detailBody{ box-sizing: border-box; }
+
+
+
+/* ===================== v909 HEADER PLAYER NAME ===================== */
+#ngHeaderBar .ngHeaderPlayer{
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  font-weight: 1000;
+  color: rgba(60,255,160,.98);
+  text-shadow: 0 2px 12px rgba(0,0,0,.75), 0 0 18px rgba(60,255,160,.18);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 40%;
+}
+
+/* Center/Right widths tuned for 4-span header */
+#ngHeaderBar .ngHeaderLeft{ flex: 0 0 auto; max-width: 35%; }
+#ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
+#ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
+
+/* ===================== v909 GLOBAL FOOTER ===================== */
+.globalFooter{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(env(safe-area-inset-bottom) + 10px);
+  text-align: center;
+  font-weight: 900;
+  font-size: 12px;
+  opacity: .86;
+  text-shadow: 0 2px 14px rgba(0,0,0,.65);
+  pointer-events: none;
+  padding: 0 12px;
+  z-index: 9990;
+}
+
+/* ===================== v909 BUTTON SIZING BY CATEGORY ===================== */
+.pill{ height: 44px; }
+.pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
+.pill.pillMini{ height: 34px; }
 
 </style>
 <script id="ngGuards_v748">
@@ -1726,7 +1773,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v908</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v909</span></span><span class="ngHeaderPlayer" id="ngHeaderPlayer">WELCOME</span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1858,6 +1905,8 @@ border: 1px solid rgba(255,255,255,.22);
 <div class="detailFooter" id="detailFooter">Night Games is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 </section>
 </div>
+<div class="globalFooter" id="globalFooter">Night Games is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+
 <div class="fatal" id="fatal">
 <div class="card">
 <h2>Firebase didn’t start</h2>
@@ -1879,7 +1928,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v908
+<script type="module">// Night Games Night Games v909
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1943,11 +1992,16 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
+    const ngHeaderPlayer = document.getElementById("ngHeaderPlayer");
+    const globalFooter = document.getElementById("globalFooter");
 
-    // v908: preload saved email for this device (Bill + anyone who signed in before)
+
+    // v909: preload saved email for this device (Bill + anyone who signed in before)
     try{
       const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim();
       if(savedEmail && emailInput){
+        setHeaderPlayerLabel(savedEmail);
+
         emailInput.value = savedEmail;
       }
     }catch(e){}
@@ -2079,6 +2133,9 @@ const firebaseConfig = {
 */
 function show(which){
       landing.classList.toggle("active", which==="landing");
+
+      // v909: global footer off on landing (landing already has its own footer)
+      try{ if(globalFooter) globalFooter.style.display = (which==="landing") ? "none" : "block"; }catch(e){}
       players.classList.toggle("active", which==="players");
       setup.classList.toggle("active", which==="setup");
       waiting.classList.toggle("active", which==="waiting");
@@ -2129,6 +2186,21 @@ function show(which){
 
 function safeEmail(email){
       return (email||"").toLowerCase().replaceAll(".", "(dot)").replaceAll("@","(at)");
+    }
+
+
+    // v909: header player label (friendly + centered)
+    function setHeaderPlayerLabel(email){
+      try{
+        if(!ngHeaderPlayer) return;
+        const em = (email||"").trim();
+        if(!em){ ngHeaderPlayer.textContent = "WELCOME"; return; }
+        let base = em.split("@")[0] || em;
+        base = base.replace(/[._-]+/g," ").trim();
+        // Title-case
+        base = base.split(" ").filter(Boolean).map(s=> s.charAt(0).toUpperCase()+s.slice(1)).join(" ");
+        ngHeaderPlayer.textContent = base || em;
+      }catch(e){}
     }
 
     const games = ["01","Cricket","Killer","Shanghai","ATW","Half It"];
@@ -2990,6 +3062,8 @@ function renderPlayers(list){
 
     async function signInFlow(auth, db, email){
       currentEmail = (email||"").trim().toLowerCase();
+      setHeaderPlayerLabel(currentEmail);
+
       if(!currentEmail) return;
 
       statusLine.textContent = "Signing in…";
@@ -3019,7 +3093,7 @@ function renderPlayers(list){
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v908: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      // v909: remember last successful email on THIS device/browser (Bill garage iPad use-case)
       try{ localStorage.setItem("ng_saved_email", currentEmail); }catch(e){}
 
       // 5) Presence + live listeners
