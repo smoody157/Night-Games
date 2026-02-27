@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v917  |  2026-02-27
+  NIGHT GAMES v919  |  2026-02-27
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v917 STABILITY SWEEP =====================
+<!-- ===================== v919 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,7 +32,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v917 (MASTER STABLE)</title>
+<title>Night Games v919 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -843,7 +843,7 @@ border: 1px solid rgba(255,255,255,.22);
   padding: 2px 0 0;
 }
 .ngBottomLeft{ flex: 0 0 auto; width: 1px; }
-.ngUpdateBtn{
+.ngLogoutBtn{
   height: 34px;
   padding: 8px 12px;
   font-size: 11px;
@@ -1660,14 +1660,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v917 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v919 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v917: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v919: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1692,7 +1692,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v917 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v919 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1701,7 +1701,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v917 HEADER PLAYER NAME ===================== */
+/* ===================== v919 HEADER PLAYER NAME ===================== */
 #ngHeaderBar .ngHeaderPlayer{
   position: relative;
   z-index: 1;
@@ -1726,7 +1726,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v917 GLOBAL FOOTER ===================== */
+/* ===================== v919 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1742,7 +1742,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v917 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v919 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1765,7 +1765,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v917 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v919 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1781,62 +1781,17 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* =============================================================================
-   v917 MASTER ORGANIZATION: UI CONSISTENCY + READABILITY (NO VISUAL REDESIGN)
-   ============================================================================= */
-
-/* --- Header bottom row: true centered welcome text, update button right --- */
+/* ===================== v919 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
 #ngHeaderPlayer{
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  width: 70%;
-  text-align: center;
-  font-weight: 1100;
-  letter-spacing: .10em;
-  text-transform: uppercase;
-  font-size: 14px;
-  color: rgba(90,255,170,.96);
-  text-shadow: 0 2px 12px rgba(0,0,0,.65);
+  max-width: 70%;
   pointer-events: none;
 }
-#ngUpdateBtn{
-  height: 34px;
-  padding: 8px 12px;
-  font-size: 11px;
-  letter-spacing: 1px;
-}
+.ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
-/* --- Frost: picker + detail panels match main glass tone (avoid dark modal) --- */
-.pickerCard{
-  background: rgba(255,255,255,.06) !important;
-  border: 1px solid rgba(255,255,255,.14) !important;
-  box-shadow: 0 14px 34px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.22) !important;
-  backdrop-filter: blur(12px) saturate(120%);
-  -webkit-backdrop-filter: blur(12px) saturate(120%);
-}
-.pickerRow{
-  background: rgba(255,255,255,.06) !important;
-  border: 1px solid rgba(255,255,255,.14) !important;
-}
-#detail .panel{
-  background: rgba(255,255,255,.06) !important;
-}
-
-/* --- Uniform buttons in detail/stats bodies --- */
-#detail .detailBody .pill{
-  height: 44px;
-  padding: 12px 16px;
-  font-size: 13px;
-}
-.statGameBtn{
-  height: 52px;
-  padding: 12px 14px;
-  display:flex;
-  justify-content: space-between;
-  align-items: center;
-}
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -1888,7 +1843,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v917</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title="">WELCOME</span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v919</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title="">WELCOME</span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2043,7 +1998,18 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v917
+<script type="module">
+/*
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          🎮 NIGHT GAMES v919                               ║
+║                     MASTER REWIRE (NO DUPES)                               ║
+║  - UI LOOK/FEEL preserved                                                   ║
+║  - Clean game registry + setup engine                                       ║
+║  - Update button forces latest build                                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+*/
+
+// Night Games Night Games v919
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2076,63 +2042,7 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
     // ===== Config (from Steven) =====
-    /*
-================================================================================
-  🎮 NIGHT GAMES v917 — NEW MASTER (ONE-WIRE)
-  - Built from v911 baseline
-  - No patch stacking: single authoritative wiring path
-  - Goals: functional parity through intended v916 + structural cleanliness
-================================================================================
-*/
-
-/*
-================================================================================
-  🧱 GLOBALS / CONFIG  [SECTION_CORE]
-================================================================================
-*/
-
-// Canonical game list (single source of truth)
-const games = ["01","Cricket","Killer","Shanghai","Around the World","Half It"];
-
-// App globals (single declarations; no shadowing)
-let activeSession = null;
-let lastPeople = [];
-let currentEmail = "";
-let currentName = "";
-
-/*
-================================================================================
-  🧰 SMALL UTILS  [SECTION_UTILS]
-================================================================================
-*/
-function ngPrettyNameFromEmail(email){
-  if(!email) return "";
-  const local = String(email).split("@")[0] || "";
-  const cleaned = local.replace(/[._-]+/g, " ").replace(/\s+/g, " ").trim();
-  return cleaned.split(" ").filter(Boolean).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(" ");
-}
-function ngSetHeaderPlayer(email){
-  const el = document.getElementById("ngHeaderPlayer");
-  if(!el) return;
-  const nm = ngPrettyNameFromEmail(email);
-  el.textContent = nm ? `WELCOME, ${nm}` : "WELCOME";
-  el.title = email || "";
-}
-function ngShowUpdate(show){
-  const btn = document.getElementById("ngUpdateBtn");
-  if(btn) btn.style.display = show ? "inline-flex" : "none";
-}
-function ngHardReload(){
-  try{
-    const url = new URL(window.location.href);
-    url.searchParams.set("v", String(Date.now()));
-    window.location.replace(url.toString());
-  }catch(e){
-    try{ window.location.reload(true); }catch(_e){ window.location.reload(); }
-  }
-}
-
-/* =============================================================================
+    /* =============================================================================
    SECTION_FIREBASE  [SECTION_FIREBASE]
    - Firebase configuration lives here.
 ============================================================================= */
@@ -2163,26 +2073,11 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-// Remembered email (per-device)
-try{
-  const saved = localStorage.getItem(rememberedEmailKey);
-  if(saved){
-    emailInput.value = saved;
-    try{ emailEcho.textContent = saved; }catch(e){}
-    try{ setHeaderPlayerLabel(saved); }catch(e){}
-  }
-}catch(e){}
 
-    const ngHeaderPlayer = document.getElementById("ngHeaderPlayer");
-    const globalFooter = document.getElementById("globalFooter");
-
-
-    // v917: preload saved email for this device (Bill + anyone who signed in before)
+    // v919: preload saved email for this device (Bill + anyone who signed in before)
     try{
       const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim();
       if(savedEmail && emailInput){
-        setHeaderPlayerLabel(savedEmail);
-
         emailInput.value = savedEmail;
       }
     }catch(e){}
@@ -2291,7 +2186,33 @@ try{
     const detailBody = document.getElementById("detailBody");
     const backBtn = document.getElementById("backBtn");
     const homeBtn = document.getElementById("homeBtn");
-    const statusLine = document.getElementById("statusLine");
+    const statusLine = document.getElementById("statusLine");/* ============================================================
+   🧍 USER STRIP (WELCOME + UPDATE)
+   ============================================================ */
+const ngHeaderPlayer = document.getElementById("ngHeaderPlayer");
+const ngUpdateBtn = document.getElementById("ngUpdateBtn");
+function prettyNameFromEmail(email){
+  if(!email) return "";
+  const local = String(email).split("@")[0] || "";
+  const cleaned = local.replace(/[._-]+/g, " ").replace(/\s+/g, " ").trim();
+  return cleaned.split(" ").filter(Boolean).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(" ");
+}
+function setHeaderPlayerLabel(email){
+  try{
+    if(!ngHeaderPlayer) return;
+    const nm = prettyNameFromEmail(email);
+    ngHeaderPlayer.textContent = nm ? (`WELCOME, ${nm}`) : "WELCOME";
+    ngHeaderPlayer.title = email || "";
+  }catch(e){}
+}
+async function doUpdate(auth){
+  // Update = sign out + hard reload w/ cache-bust so device fetches latest hosted version
+  try{ if(auth) await signOut(auth); }catch(e){}
+  try{ localStorage.setItem("ng_force_reload", String(Date.now())); }catch(e){}
+  const baseUrl = location.origin + location.pathname;
+  location.replace(baseUrl + "?v=" + Date.now());
+}
+
     const setup = document.getElementById("setup");
     const waiting = document.getElementById("waiting");
     const waitingBody = document.getElementById("waitingBody");
@@ -2314,9 +2235,6 @@ try{
 */
 function show(which){
       landing.classList.toggle("active", which==="landing");
-
-      // v917: global footer off on landing (landing already has its own footer)
-      try{ if(globalFooter) globalFooter.style.display = (which==="landing") ? "none" : "block"; }catch(e){}
       players.classList.toggle("active", which==="players");
       setup.classList.toggle("active", which==="setup");
       waiting.classList.toggle("active", which==="waiting");
@@ -2369,12 +2287,549 @@ function safeEmail(email){
       return (email||"").toLowerCase().replaceAll(".", "(dot)").replaceAll("@","(at)");
     }
 
+    const games = ["01","Cricket","Killer","Shanghai","ATW","Half It"];
 
-    // v917: header player label (friendly + centered)
-    function setHeaderPlayerLabel(email){
-  try{ ngSetHeaderNameFromEmail(email); }catch(e){}
+    const GAME_RULES = {
+      "01": "<b>Goal:</b> Reach exactly 0.<br><br>• Choose 301 / 501 / 701<br>• Subtract what you hit each turn (3 darts)<br>• Must land exactly on 0 to win<br>• If you go below 0 = bust (turn doesn’t count)<br><br><b>Options:</b><br>• <b>Single In / Single Out</b>: scoring starts immediately, any hit can finish<br>• <b>Single In / Double Out</b>: scoring starts immediately, must finish on a double<br>• <b>Double In / Double Out</b>: must hit a double to start scoring, must finish on a double",
+      "Cricket": "<b>Goal:</b> Close all numbers and be tied or ahead in points.<br><br>• Numbers: 15–20 + Bull<br>• Each number needs 3 hits to close (single=1, double=2, triple=3)<br>• After you close a number, extra hits score points until opponents close it<br>• First to close everything and be tied/ahead wins",
+      "Killer": "<b>Goal:</b> Become a Killer and knock everyone out.<br><br>• Each player gets a number<br>• Hit your <b>double</b> to become a Killer<br>• As a Killer, hit opponents’ doubles to take lives<br>• When a player runs out of lives, they’re out<br>• Last player standing wins",
+      "Shanghai": "<b>Goal:</b> Accuracy battle on the called number each round.<br><br>• Rounds go 1 → 20 (one number per round)<br>• Only the active number counts<br>• Scoring is accuracy-based:<br>&nbsp;&nbsp;– Single = 1 point<br>&nbsp;&nbsp;– Double = 2 points<br>&nbsp;&nbsp;– Triple = 3 points<br>• Highest total points wins<br><br><b>Optional (if enabled):</b> Hit single + double + triple of the active number in one turn = <b>Shanghai</b> (instant win)",
+      "ATW": "<b>Goal:</b> Be first to hit every number in order.<br><br>• Hit 1, then 2, then 3… up to 20 (and Bull if enabled)<br>• A hit on the correct number advances you to the next<br>• Misses don’t advance you<br>• First player to finish the sequence wins",
+      "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
+    };
+
+    // ===================== PLAYER STAT TEMPLATES (v906) =====================
+    // Locked stat sets (values start at 0; game engines will increment later).
+    const PLAYER_STAT_TEMPLATES = {
+      "01": {
+        "Core": [
+          ["gamesPlayed", "Games Played", "Total 01 games played"],
+          ["gamesWon", "Games Won", "Total 01 wins"],
+          ["winPct", "Win %", "Win percentage in 01"]
+        ],
+        "Scoring": [
+          ["threeDartAvg", "3-Dart Average", "Average score per turn"],
+          ["tons100", "100+ Scores", "Turns scoring 100 or more"],
+          ["scores140", "140+ Scores", "Turns scoring 140 or more"],
+          ["scores180", "180s", "Perfect 3-dart scores"]
+        ],
+        "Finishing": [
+          ["checkoutPct", "Checkout %", "How often you finish when given the chance"],
+          ["highestCheckout", "Highest Checkout", "Highest score finished in one turn"]
+        ]
+      },
+      "Cricket": {
+        "Core": [
+          ["gamesPlayed", "Games Played", "Total Cricket games played"],
+          ["gamesWon", "Games Won", "Total Cricket wins"],
+          ["winPct", "Win %", "Win percentage in Cricket"]
+        ],
+        "Marks": [
+          ["totalMarks", "Total Marks", "Total hits on 15–20 and Bull"],
+          ["marksPerRound", "Marks Per Round", "Average marks per turn"],
+          ["closedFirst", "Closed First", "Times you closed before opponent"]
+        ],
+        "Scoring": [
+          ["totalPoints", "Total Points", "Points scored after closing numbers"],
+          ["highestRound", "Highest Round", "Most points scored in one turn"]
+        ],
+        "Bull": [
+          ["totalBulls", "Total Bulls", "Total bull hits"],
+          ["doubleBulls", "Double Bulls", "Inner bull hits"]
+        ]
+      },
+      "Around the World": {
+        "Core": [
+          ["gamesPlayed", "Games Played", "Total games played"],
+          ["gamesWon", "Games Won", "Total wins"],
+          ["winPct", "Win %", "Win percentage"]
+        ],
+        "Progress": [
+          ["fastestTurns", "Fastest Completion", "Fewest turns to finish"],
+          ["avgTurns", "Average Turns", "Average turns to finish"],
+          ["bestStreak", "Best Streak", "Most numbers hit in a row"]
+        ],
+        "Accuracy": [
+          ["targetsHit", "Targets Hit", "Total correct targets hit"],
+          ["missCount", "Miss Count", "Total missed darts"]
+        ]
+      },
+      "Killer": {
+        "Core": [
+          ["gamesPlayed", "Games Played", "Total games played"],
+          ["gamesWon", "Games Won", "Total wins"],
+          ["winPct", "Win %", "Win percentage"]
+        ],
+        "Survival": [
+          ["elimsMade", "Eliminations", "Players you eliminated"],
+          ["timesElim", "Times Eliminated", "Times you got eliminated"]
+        ],
+        "Accuracy": [
+          ["targetHits", "Target Hits", "Hits on assigned targets"],
+          ["doublesHit", "Doubles Hit", "Total doubles landed"]
+        ]
+      },
+      "Shanghai": {
+        "Core": [
+          ["gamesPlayed", "Games Played", "Total games played"],
+          ["gamesWon", "Games Won", "Total wins"],
+          ["winPct", "Win %", "Win percentage"]
+        ],
+        "Accuracy": [
+          ["singlesHit", "Singles Hit", "Total singles landed"],
+          ["doublesHit", "Doubles Hit", "Total doubles landed"],
+          ["triplesHit", "Triples Hit", "Total triples landed"],
+          ["shanghaiHits", "Shanghai Hits", "Single+Double+Triple in one round (+5 bonus)"]
+        ],
+        "Performance": [
+          ["totalPoints", "Total Points", "Total points earned (1/2/3 + bonuses)"],
+          ["avgPerRound", "Avg Points/Round", "Average points per round"],
+          ["highestRound", "Highest Round", "Most points in one round"]
+        ]
+      },
+      "Half It": {
+        "Core": [
+          ["gamesPlayed", "Games Played", "Total games played"],
+          ["gamesWon", "Games Won", "Total wins"],
+          ["winPct", "Win %", "Win percentage"]
+        ],
+        "Accuracy": [
+          ["successRounds", "Successful Rounds", "Rounds where target was hit"],
+          ["failedRounds", "Failed Rounds", "Rounds where target was missed"],
+          ["successRate", "Success Rate", "Successful rounds percentage"]
+        ],
+        "Scoring": [
+          ["totalPoints", "Total Points", "Total points scored"],
+          ["highestRound", "Highest Round", "Most points in one round"],
+          ["avgPerGame", "Avg Points/Game", "Average points per game"]
+        ],
+        "Discipline": [
+          ["timesHalved", "Times Halved", "How many times score was halved"],
+          ["largestDrop", "Largest Drop", "Biggest single loss from a halve"]
+        ]
+      }
+    };
+
+    // ===================== v906 01 STATS ACCUMULATION HELPERS =====================
+    // This does NOT change any UI or routing.
+    // Call record01Result(...) when a 01 game ends to accumulate player stats.
+    function _statKey(playerEmail, gameName, key){
+      return `ng_stats__${playerEmail}__${gameName}__${key}`;
+    }
+    function _getNumStat(playerEmail, gameName, key){
+      try{
+        const v = localStorage.getItem(_statKey(playerEmail, gameName, key));
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 0;
+      }catch(e){ return 0; }
+    }
+    function _setNumStat(playerEmail, gameName, key, val){
+      try{ localStorage.setItem(_statKey(playerEmail, gameName, key), String(Math.max(0, Math.floor(val*1000)/1000))); }catch(e){}
+    }
+    function _incNumStat(playerEmail, gameName, key, delta){
+      const cur = _getNumStat(playerEmail, gameName, key);
+      _setNumStat(playerEmail, gameName, key, cur + (Number(delta)||0));
+    }
+    function _recalcWinPct(playerEmail, gameName){
+      const gp = _getNumStat(playerEmail, gameName, "games_played");
+      const gw = _getNumStat(playerEmail, gameName, "games_won");
+      const pct = gp>0 ? Math.round((gw/gp)*1000)/10 : 0; // one decimal
+      _setNumStat(playerEmail, gameName, "win_pct", pct);
+    }
+
+    // turnScores: array of per-turn totals (0..180), one entry per 3-dart turn for that player
+    // checkouts: array of checkout values that player finished on (e.g., 40 for D20)
+    function record01Result({ playersEmails, winnerEmail, turnScoresByPlayer, checkoutsByPlayer } = {}){
+      const gameName = "01";
+      const players = (playersEmails||[]).map(e=>String(e||"").toLowerCase()).filter(Boolean);
+      if(!players.length) return;
+
+      const winner = String(winnerEmail||"").toLowerCase();
+
+      players.forEach(p=>{
+        // games played / won / win%
+        _incNumStat(p, gameName, "games_played", 1);
+        if(winner && p===winner) _incNumStat(p, gameName, "games_won", 1);
+        _recalcWinPct(p, gameName);
+
+        const turns = (turnScoresByPlayer && turnScoresByPlayer[p]) ? turnScoresByPlayer[p] : [];
+        const scores = Array.isArray(turns) ? turns.map(x=>Number(x)||0) : [];
+        // 100+/140+/180 counts
+        _incNumStat(p, gameName, "tons_100", scores.filter(x=>x>=100).length);
+        _incNumStat(p, gameName, "scores_140", scores.filter(x=>x>=140).length);
+        _incNumStat(p, gameName, "scores_180", scores.filter(x=>x>=180).length);
+
+        // 3-dart average: store running total points + total turns, derive avg on read
+        // We'll keep: three_dart_total_points, three_dart_total_turns, and set three_dart_avg for display.
+        const totPtsKey = "three_dart_total_points";
+        const totTrnKey = "three_dart_total_turns";
+        const curPts = _getNumStat(p, gameName, totPtsKey);
+        const curTrn = _getNumStat(p, gameName, totTrnKey);
+        const addPts = scores.reduce((a,b)=>a+b,0);
+        const addTrn = scores.length;
+        _setNumStat(p, gameName, totPtsKey, curPts + addPts);
+        _setNumStat(p, gameName, totTrnKey, curTrn + addTrn);
+        const newPts = curPts + addPts;
+        const newTrn = curTrn + addTrn;
+        const avg = newTrn>0 ? Math.round((newPts/newTrn)*1000)/1000 : 0;
+        _setNumStat(p, gameName, "three_dart_avg", avg);
+
+        // finishing: checkout % and highest checkout
+        // We'll keep: checkout_attempts, checkout_made. You can increment attempts from engine later.
+        // For now, if a player has a checkout recorded, count it as made.
+        const checkouts = (checkoutsByPlayer && checkoutsByPlayer[p]) ? checkoutsByPlayer[p] : [];
+        const outs = Array.isArray(checkouts) ? checkouts.map(x=>Number(x)||0).filter(x=>x>0) : [];
+        if(outs.length){
+          _incNumStat(p, gameName, "checkout_made", outs.length);
+          const curHigh = _getNumStat(p, gameName, "highest_checkout");
+          _setNumStat(p, gameName, "highest_checkout", Math.max(curHigh, Math.max(...outs)));
+        }
+        // checkout % display (made/attempts). attempts may be 0 until engine wires it.
+        const made = _getNumStat(p, gameName, "checkout_made");
+        const att  = _getNumStat(p, gameName, "checkout_attempts");
+        const cpct = att>0 ? Math.round((made/att)*1000)/10 : 0;
+        _setNumStat(p, gameName, "checkout_pct", cpct);
+      });
+    }
+    // =================== END v906 HELPERS ===================
+
+
+    function statKey(email, game, key){
+      return `ng_stat::${String(email||"").toLowerCase()}::${String(game||"")}::${String(key||"")}`;
+    }
+    function getStat(email, game, key){
+      const v = localStorage.getItem(statKey(email, game, key));
+      return (v === null || v === undefined || v === "") ? 0 : v;
+    }
+    // ===============================================================
+
+
+
+    function renderGames(){
+      gamesList.innerHTML = games.map(g => `
+        <div class="itemLine">
+          <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? `<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>` : `<span class="glassText">${g}</span>`}</div></div>
+          <div class="actions">
+            <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
+            <button class="pill" data-action="game_rules" data-value="${g}">Rules</button>
+            <button class="pill" data-action="game_history" data-value="${g}">History</button>
+
+          </div>
+        </div>
+      `).join("");
+    }
+
+
+    // v768: minimal session + setup → waiting room (does not touch login)
+    let activeSessionId = null;
+    let activeSession = null;
+
+    function newSessionId(){
+      return "sess_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+    }
+
+    async function createSessionForGame(game){
+      activeSessionId = newSessionId();
+      activeSession = {
+        id: activeSessionId,
+        game,
+        host: (currentEmail||"").toLowerCase(),
+        createdAt: Date.now(),
+        setup: { count: 1, emails: [(currentEmail||"").toLowerCase()].filter(Boolean) }
+      };
+      try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+      listenSessionInvites();
+    }
+
+    function _ensureCurrentInList(emails){
+      const me = (currentEmail||"").toLowerCase();
+      const set = new Set((emails||[]).map(x=>(x||"").toLowerCase()).filter(Boolean));
+      if(me) set.add(me);
+      return Array.from(set);
+    }
+
+
+/*
+================================================================================
+  GAME SETUP  [SECTION_SETUP]
+================================================================================
+*/
+function renderSetupForGame(game){
+      const people = (lastPeople||[]).slice();
+      // ensure current user exists as a selectable option
+      const me = (currentEmail||"").toLowerCase();
+      if(me && !people.some(p => (p.email||"").toLowerCase()===me)){
+        people.unshift({ email: me, name: (me.split("@")[0]||"Me") });
+      }
+
+      const opts = people.map(p=>{
+        const em = (p.email||"").toLowerCase();
+        const nm = p.name || (em.split("@")[0]||em);
+        return `<label class="chip" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); margin:0 0 10px 0;">
+          <input type="checkbox" class="pickPlayer" value="${em}" style="transform:scale(1.1)"/>
+          <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:900;">${nm}</span>
+        </label>`;
+      }).join("");
+
+      setupBody.innerHTML = `
+        <div class="setupGameTitle">${game}</div>
+        <div style="opacity:.78; margin-bottom:14px;">Pick players, then Start.</div>
+        ${game==="01" ? `
+        <div class="fieldLabel" style="margin-top:6px;">01 Game</div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div style="flex:1; min-width:180px;">
+            <div class="fieldLabel" style="margin-top:0;">Starting Score</div>
+            <select id="setup01Start" class="glassSelect">
+              <option value="301">301</option>
+              <option value="501" selected>501</option>
+              <option value="701">701</option>
+            </select>
+          </div>
+          <div style="flex:1; min-width:220px;">
+            <div class="fieldLabel" style="margin-top:0;">In / Out</div>
+            <select id="setup01InOut" class="glassSelect">
+              <option value="SI_SO" selected>Single In / Single Out</option>
+              <option value="DI_SO">Double In / Single Out</option>
+              <option value="DI_DO">Double In / Double Out</option>
+              <option value="SI_DO">Single In / Double Out</option>
+            </select>
+          </div>
+        </div>
+        <div style="opacity:.72; margin-top:8px; line-height:1.3;">
+          <b>Note:</b> Double Out means you must finish on a double. Double In means you must start scoring with a double.
+        </div>
+        ` : ``}
+
+
+        <div class="fieldLabel">Number of Players</div>
+        <select id="setupCount" class="glassSelect" class="glassSelect">
+          ${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}">${n}</option>`).join("")}
+        </select>
+
+        <div class="fieldLabel" style="margin-top:14px;">Which Players</div>
+        <button type="button" id="openPlayerPicker" class="glassBtn">
+          <span>Select players</span>
+          <span class="sub" id="playerPickSummary">1 selected</span>
+        </button>
+        <div id="setupPlayersWrapHolder" style="display:none;">
+          <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
+            ${opts}
+          </div>
+        </div>
+
+        <!-- v768 player picker modal -->
+        <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
+          <div class="pickerCard">
+            <div class="pickerHead">
+              <div>
+                <div class="t">Pick Players</div>
+                <div class="c" id="pickerCountLabel">1 / 1 selected</div>
+              </div>
+              <button class="pill" id="pickerCloseTop" type="button" style="padding:10px 14px;">Close</button>
+            </div>
+            <div class="pickerBody" id="pickerBody"></div>
+            <div class="pickerFoot">
+              <button class="pill" id="pickerCancel" type="button" style="opacity:.85;">Cancel</button>
+              <button class="pill" id="pickerDone" type="button">Done</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
+          <button class="pill" id="setupStartInlineBtn" type="button">Start</button>
+          <button class="pill" id="setupCancelBtn" type="button" style="opacity:.85;">Cancel</button>
+        </div>
+      `;
+
+      const countSel = document.getElementById("setupCount");
+      const startInlineBtn = document.getElementById("setupStartInlineBtn");
+      const startCtrlBtn = document.getElementById("setupStartBtn");
+      const cancelBtn = document.getElementById("setupCancelBtn");
+      // v906: 01 setup defaults
+      const setup01Start = document.getElementById("setup01Start");
+      const setup01InOut = document.getElementById("setup01InOut");
+      if(game === "01"){
+        if(setup01Start && !setup01Start.value) setup01Start.value = "501";
+        if(setup01InOut && !setup01InOut.value) setup01InOut.value = "SI_SO";
+      }
+
+
+      // defaults
+      countSel.value = "1";
+      const checks = Array.from(document.querySelectorAll(".pickPlayer"));
+      // v768 picker wiring (dropdown-style player selector)
+      const openBtn = document.getElementById("openPlayerPicker");
+      const modal = document.getElementById("playerPickerModal");
+      const body = document.getElementById("pickerBody");
+      const doneBtn = document.getElementById("pickerDone");
+      const pickerCancelBtn = document.getElementById("pickerCancel");
+      const closeTop = document.getElementById("pickerCloseTop");
+      const summary = document.getElementById("playerPickSummary");
+      const countLabel = document.getElementById("pickerCountLabel");
+
+      let snapshotSelected = new Set();
+
+      function getSelectedEmails(){
+        return checks.filter(c=>c.checked).map(c=>c.value);
+      }
+      function setSelectedEmails(set){
+        checks.forEach(c=>{ c.checked = set.has(c.value); });
+      }
+      function refreshSummary(){
+        const sel = getSelectedEmails();
+        summary.textContent = `${sel.length} selected`;
+      }
+      function refreshCountLabel(want){
+        const sel = getSelectedEmails().length;
+        countLabel.textContent = `${sel} / ${want} selected`;
+      }
+      function rebuildPicker(want){
+        body.innerHTML = "";
+        const sel = new Set(getSelectedEmails());
+        checks.forEach(c=>{
+          const email = c.value;
+          const label = c.closest("label");
+          const nm = label ? ((label.querySelector("span")?.textContent||"").trim() || email) : email;
+          const row = document.createElement("div");
+          row.className = "pickerRow";
+          row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "pill";
+          btn.style.padding = "10px 12px";
+          btn.textContent = sel.has(email) ? "Selected" : "Select";
+          btn.addEventListener("click", ()=>{
+            const now = new Set(getSelectedEmails());
+            const isOn = now.has(email);
+            if(isOn){
+              now.delete(email);
+            }else{
+              if(now.size >= want){
+                try{ ping && ping(); }catch(e){}
+                return;
+              }
+              now.add(email);
+            }
+            setSelectedEmails(now);
+            enforce();
+            rebuildPicker(want);
+          });
+          row.appendChild(btn);
+          body.appendChild(row);
+        });
+        refreshCountLabel(want);
+        refreshSummary();
+      }
+      function openPicker(want){
+        snapshotSelected = new Set(getSelectedEmails());
+        rebuildPicker(want);
+        modal.style.display = "flex";
+        modal.setAttribute("aria-hidden","false");
+      }
+      function closePicker(){
+        modal.style.display = "none";
+        modal.setAttribute("aria-hidden","true");
+      }
+      if(openBtn){
+        openBtn.addEventListener("click", ()=>{
+          const want = parseInt((document.getElementById("setupCount")?.value)||"1",10) || 1;
+          openPicker(want);
+        });
+      }
+      [pickerCancelBtn, closeTop].forEach(b=> b && b.addEventListener("click", ()=>{
+        setSelectedEmails(snapshotSelected);
+        enforce();
+        refreshSummary();
+        closePicker();
+      }));
+      if(doneBtn){
+        doneBtn.addEventListener("click", ()=>{
+          closePicker();
+          refreshSummary();
+        });
+      }
+      if(modal){
+        modal.addEventListener("click", (e)=>{
+          if(e.target === modal){
+            setSelectedEmails(snapshotSelected);
+            enforce();
+            refreshSummary();
+            closePicker();
+          }
+        });
+      }
+      refreshSummary();
+
+      // default select current user
+      checks.forEach(c=>{ if(c.value === me) c.checked = true; });
+
+      function enforce(){
+        const want = parseInt(countSel.value||"1",10) || 1;
+        const picked = checks.filter(c=>c.checked).map(c=>c.value);
+        // always keep me selected
+        const fixed = _ensureCurrentInList(picked);
+        // trim to count
+        const trimmed = fixed.slice(0, want);
+        checks.forEach(c=>{ c.checked = trimmed.includes(c.value); });
+      }
+
+      countSel.addEventListener("change", ()=>{
+        enforce();
+        const want = parseInt(countSel.value||"1",10) || 1;
+        refreshSummary();
+        refreshCountLabel(want);
+        if(modal && modal.style.display === "flex"){
+          rebuildPicker(want);
+        }
+      });
+      checks.forEach(c=>c.addEventListener("change", enforce));
+
+      cancelBtn.addEventListener("click", ()=>{
+        show("players");
+      });
+
+      const doStart = async ()=>{
+        // v768: Stable start behavior (no broken/partial calls)
+        enforce();
+        const want = parseInt(countSel.value||"1",10) || 1;
+        const picked = checks.filter(c=>c.checked).map(c=>c.value);
+        const emails = _ensureCurrentInList(picked).slice(0, want);
+
+        activeSession = activeSession || {};
+        activeSession.game = game;
+        activeSession.setup = { count: want, emails };activeSession.setup = { count: want, emails };
+        // v906: 01 rule options captured for engine
+        if(game === "01"){
+          const startScore = parseInt((document.getElementById("setup01Start")?.value)||"501",10) || 501;
+          const inOut = (document.getElementById("setup01InOut")?.value)||"SI_SO";
+          activeSession.setup.startScore = startScore;
+          activeSession.setup.inOut = inOut;
+        }
+
+
+        try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+
+        // If solo -> go straight in. If multiplayer -> go to waiting room.
+        if(want <= 1){
+          show("waiting");
+          try{ startGameFromSession && startGameFromSession(); }catch(e){}
+        }else{
+          show("waiting");
+          try{ await
+/*
+================================================================================
+  INVITES  [SECTION_INVITES]
+================================================================================
+*/
+sendInvitesForSession(); }catch(e){}
+          try{ listenSessionInvites && listenSessionInvites(); }catch(e){}
+        }
+      };
+
+      // Inline + Controls Start buttons
+      if(startInlineBtn) startInlineBtn.addEventListener("click", doStart);
+      if(startCtrlBtn) startCtrlBtn.addEventListener("click", doStart);
 }
-
 
 
     // v768: invites (in-app) — Join / No Thanks
@@ -2588,31 +3043,7 @@ renderWaitingRoom();
       }
     }
 
-    let rememberedEmailKey = "ng_saved_email_v1";
-function ngSetHeaderNameFromEmail(email){
-  try{
-    const el = document.getElementById("ngHeaderPlayer");
-    if(!el) return;
-    const e = String(email||"").trim();
-    if(!e){
-      el.textContent = "WELCOME";
-      el.title = "";
-      return;
-    }
-    const base = e.split("@")[0].replace(/[._-]+/g," ").trim();
-    const nice = base.split(" ").filter(Boolean).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(" ");
-    el.textContent = nice || e;
-    el.title = e;
-  }catch(_e){}
-}
-function ngShowUpdate(show){
-  try{
-    const b = document.getElementById("ngUpdateBtn");
-    if(!b) return;
-    b.style.display = show ? "inline-flex" : "none";
-  }catch(_e){}
-}
-let currentEmail = null;
+    let currentEmail = null;
     let currentUid = null;
     let presenceTimer = null;
     let presenceMap = new Map(); // id -> lastActiveMillis
@@ -2626,27 +3057,6 @@ let currentEmail = null;
   PLAYERS  [SECTION_PLAYERS]
 ================================================================================
 */
-/*
-================================================================================
-  🎮 GAME LIST RENDER  [SECTION_GAMES]
-================================================================================
-*/
-function renderGames(){
-  if(!gamesList) return;
-  gamesList.innerHTML = games.map(g=>{
-    return `
-      <div class="itemLine">
-        <div class="leftStack">
-          <span class="glassText" style="font-weight:1000;">${g}</span>
-        </div>
-        <div class="actions">
-          <button class="pill" data-action="open_game_setup" data-value="${g}">Setup</button>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
 function renderPlayers(list){
       // v768: float online players to top
       const sorted = (list||[]).slice().sort((a,b)=>{
@@ -2741,10 +3151,6 @@ function renderPlayers(list){
 
     async function signInFlow(auth, db, email){
       currentEmail = (email||"").trim().toLowerCase();
-      setHeaderPlayerLabel(currentEmail);
-      try{ localStorage.setItem(rememberedEmailKey, currentEmail); }catch(e){}
-      try{ ngShowUpdate(true); }catch(e){}
-
       if(!currentEmail) return;
 
       statusLine.textContent = "Signing in…";
@@ -2774,8 +3180,11 @@ function renderPlayers(list){
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v917: remember last successful email on THIS device/browser (Bill garage iPad use-case)
-      try{ localStorage.setItem("ng_saved_email", currentEmail); }catch(e){}
+      // v919: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      try{ localStorage.setItem("ng_saved_email", currentEmail); 
+          try{ setHeaderPlayerLabel(email); }catch(e){}
+          try{ if(ngUpdateBtn) ngUpdateBtn.style.display = 'inline-flex'; }catch(e){}
+}catch(e){}
 
       // 5) Presence + live listeners
       try { presenceMap.set(safeEmail(currentEmail), Date.now()); } catch(e) {}
@@ -2784,10 +3193,6 @@ function renderPlayers(list){
       watchData(db);
       show("players");
       statusLine.textContent = "Signed in.";
-      try{ currentEmail = (emailInput.value||"").trim(); }catch(e){}
-      try{ ngSetHeaderPlayer(currentEmail); }catch(e){}
-      try{ ngShowUpdate(true); }catch(e){}
-      try{ if(currentEmail) localStorage.setItem('ng_saved_email', currentEmail); }catch(e){}
       setDbg("OK", dbgAuth.textContent, "connected", "none");
     }
 
@@ -2795,15 +3200,6 @@ function renderPlayers(list){
     try {
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
-      window.ngAuth = auth;
-      try{
-        const lo = document.getElementById('ngUpdateBtn');
-      if(lo){ lo.addEventListener('click', async ()=>{
-        try{ await signOut(auth); }catch(e){}
-        try{ ngShowUpdate(false); }catch(e){}
-        try{ ngHardReload(); }catch(e){}
-      }); }
-      catch(e){}
       const db = getFirestore(app);
 
 
@@ -2825,7 +3221,6 @@ function renderPlayers(list){
 
       onAuthStateChanged(auth, (u)=>{
         if(u) dbgAuth.textContent = "anon uid " + u.uid.slice(0,6) + "…";
-        if(!u){ try{ ngShowUpdate(false); }catch(e){} }
       });
 
 
@@ -2908,7 +3303,15 @@ function onEnter() {
           : ["01","Cricket","Killer","Shanghai","Around the World","Half It"];
 
         const rows = gameList.map(g => `
-          <button type="button" class="pill statGameBtn" data-action="player_stats_game" data-value="${whoEmail}||${g}"><div style="font-weight:1000; letter-spacing:.4px;">${g}</div><div class="r">View</div></button>
+          <button type="button" class="pill" data-action="player_stats_game" data-value="${whoEmail}||${g}" style="
+            width:100%; display:flex; justify-content:space-between; align-items:center;
+            padding:14px 14px; border-radius:16px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.12);
+            margin-bottom:10px;">
+            <div style="font-weight:1000; letter-spacing:.4px;">${g}</div>
+            <div style="opacity:.78; font-weight:900;">View</div>
+          </button>
         `).join("");
 
         openDetail("PLAYER STATS", `
@@ -3021,7 +3424,8 @@ function onEnter() {
 
     // If the module runs, hide the fatal overlay (in case something else turned it on)
     document.getElementById("fatal").style.display = "none";
-  </script><script>
+  
+</script><script>
 
 
 
