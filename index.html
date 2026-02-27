@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v906  |  2026-02-27
+  NIGHT GAMES v907  |  2026-02-27
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v906 STABILITY SWEEP =====================
+<!-- ===================== v907 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,14 +32,14 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v906 (MASTER STABLE)</title>
+<title>Night Games v907 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=905");
+      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=907");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -1636,11 +1636,25 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v906 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v907 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+/* v907: setup scroll reliability (grid/flex fix like Detail screen) */
+#setup .detailWrap > .panel:first-child{
+  display:flex;
+  flex-direction: column;
+  min-height: 0;
+}
+#setup #setupBody{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 6px;
 }
 /* Keep setup readable while preserving background */
 #setup .panel, #players .panel, #games .panel{
@@ -1704,7 +1718,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v906</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v907</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1737,7 +1751,7 @@ border: 1px solid rgba(255,255,255,.22);
   <!-- v906: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
-      <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
+      <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder=""/>
       <div id="emailEcho">player@example.com</div>
     </div>
 
@@ -1857,7 +1871,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v906
+<script type="module">// Night Games Night Games v907
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1921,6 +1935,14 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
+
+    // v907: preload saved email for this device (Bill + anyone who signed in before)
+    try{
+      const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim();
+      if(savedEmail && emailInput){
+        emailInput.value = savedEmail;
+      }
+    }catch(e){}
     // v906: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
@@ -1984,20 +2006,36 @@ const firebaseConfig = {
           // Use ONE event type (prevents double-play on iOS)
           const EVT = (window.PointerEvent ? "pointerdown" : "touchstart");
           const DUMMY_EMAIL = "player@example.com";
-          function clearEmailOnFirstTouch(){
+
+          function clearEmailAndFocus(){
             try{
               if(!emailInput) return;
-              if(emailInput.dataset && emailInput.dataset.ngTouched === "1") return;
-              if(emailInput.dataset) emailInput.dataset.ngTouched = "1";
+
+              // If a saved email exists, do NOT auto-clear (this enables Bill's "tap ENTER and go")
+              let saved = "";
+              try{ saved = (localStorage.getItem("ng_saved_email")||"").trim().toLowerCase(); }catch(e){}
               const v = (emailInput.value || "").trim();
-              if(!v || v.toLowerCase() === DUMMY_EMAIL){
-                emailInput.value = "";
-                try{ emailInput.dispatchEvent(new Event("input", {bubbles:true})); }catch(e){}
+
+              if(!saved){
+                // Clear only if it's empty or still the dummy value (no user should have to highlight/delete)
+                if(!v || v.toLowerCase() === DUMMY_EMAIL){
+                  emailInput.value = "";
+                  try{ emailInput.dispatchEvent(new Event("input", {bubbles:true})); }catch(e){}
+                }
               }
+
               try{ emailInput.focus({preventScroll:true}); }catch(e){ try{ emailInput.focus(); }catch(_e){} }
             }catch(e){}
           }
-          emailInput.addEventListener(EVT, ()=>{ clearEmailOnFirstTouch(); playIntroOnce(); }, { passive:true });
+
+          // Bind to BOTH the invisible input and the visible pad container (more reliable on iOS)
+          const emailPadEl = document.getElementById("emailPad");
+          function onEmailTouch(){
+            clearEmailAndFocus();
+            playIntroOnce();
+          }
+          try{ emailInput.addEventListener(EVT, onEmailTouch, { passive:true }); }catch(e){}
+          try{ if(emailPadEl) emailPadEl.addEventListener(EVT, onEmailTouch, { passive:true }); }catch(e){}
         }
       }catch(e){}
     })();
@@ -2977,6 +3015,9 @@ function renderPlayers(list){
         email: currentEmail,
         lastLogin: serverTimestamp()
       }, { merge: true });
+
+      // v907: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      try{ localStorage.setItem("ng_saved_email", currentEmail); }catch(e){}
 
       // 5) Presence + live listeners
       try { presenceMap.set(safeEmail(currentEmail), Date.now()); } catch(e) {}
