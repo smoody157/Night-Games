@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v896  |  2026-02-25
+  NIGHT GAMES v897  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v896 (MASTER STABLE)</title>
+<title>Night Games v897 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1185,7 +1185,7 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
 
-/* remove the old outline styling from v896 */
+/* remove the old outline styling from v897 */
 #landing #emailPad{ outline: none !important; }
 #landing #enterBtn{ outline: none !important; opacity: 1 !important; }
 
@@ -1384,7 +1384,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v896 FINAL POLISH ===================== */
+/* ===================== v897 FINAL POLISH ===================== */
 :root{
   --ngEnterH: 64px;
   --ngEmailH: 52px;          /* tiny bit smaller */
@@ -1440,7 +1440,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v896 PLAYERS READABILITY + ROW LAYOUT ===================== */
+/* ===================== v897 PLAYERS READABILITY + ROW LAYOUT ===================== */
 
 /* Move BOTH panels down slightly (harder to read when too high) */
 #players .hub{
@@ -1489,7 +1489,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v896 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
+/* ===================== v897 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1532,7 +1532,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v896 RULES SCROLL FIX (GRID/FLEX) ===================== */
+/* ===================== v897 RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1584,7 +1584,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v896 PLAYER STATS UI ===================== */
+/* ===================== v897 PLAYER STATS UI ===================== */
 #detail .statScroll{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
@@ -1634,31 +1634,7 @@ border: 1px solid rgba(255,255,255,.22);
    SECTION_UTILS: SAFETY GUARDS  [SECTION_UTILS]
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
-============================================================
-    /* v896: detail content scrolling (RULES + PLAYER STATS) */
-    .detailWrap > .panel:first-child{
-      display:flex;
-      flex-direction:column;
-      height: 100%;
-      min-height: 0;
-    }
-    .detailBody{
-      flex: 1;
-      min-height: 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* v896: prevent browser autofill yellow on email field */
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    input:-webkit-autofill:active{
-      -webkit-text-fill-color: rgba(235,245,255,.96);
-      transition: background-color 5000s ease-in-out 0s;
-      box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
-    }
-================= */
+============================================================================= */
 (function(){
   // Safe wrapper for event handlers
   window.ngSafe = function(fn, label){
@@ -1673,13 +1649,13 @@ border: 1px solid rgba(255,255,255,.22);
   };
 
   // Guard common DOM lookup usage
-  window.ng$ = function(sel){ return document.querySelector(sel); };
+  window.ngQ = function(sel){ return document.querySelector(sel); };
   window.ngAll = function(sel){ return Array.from(document.querySelectorAll(sel)); };
 })();
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v896</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v897</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1709,7 +1685,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v896: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v897: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1832,7 +1808,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v896
+<script type="module">// Night Games Night Games v897
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1896,7 +1872,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v896: email overlay text (install once)
+    // v897: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1940,7 +1916,7 @@ const firebaseConfig = {
         }
 
         if(emailInput){
-          // v896: single, non-duplicated intro audio trigger (no stacked listeners)
+          // v897: single, non-duplicated intro audio trigger (no stacked listeners)
           let __ngIntroLast = 0;
           function playIntroOnce(){
             const now = Date.now();
@@ -2057,7 +2033,7 @@ function safeEmail(email){
       "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
     };
 
-    // ===================== PLAYER STAT TEMPLATES (v896) =====================
+    // ===================== PLAYER STAT TEMPLATES (v897) =====================
     // Locked stat sets (values start at 0; game engines will increment later).
     const PLAYER_STAT_TEMPLATES = {
       "01": {
@@ -2911,7 +2887,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v896)
+        // Player Stats Shell (v897)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : (whoEmail ? whoEmail.split("@")[0] : "Player");
