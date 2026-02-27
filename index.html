@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v879  |  2026-02-25
+  NIGHT GAMES v880  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,14 +25,14 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v879 (MASTER STABLE)</title>
+<title>Night Games v880 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=879");
+      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=880");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -1185,7 +1185,7 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
 
-/* remove the old outline styling from v879 */
+/* remove the old outline styling from v880 */
 #landing #emailPad{ outline: none !important; }
 #landing #enterBtn{ outline: none !important; opacity: 1 !important; }
 
@@ -1384,7 +1384,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v879 FINAL POLISH ===================== */
+/* ===================== v880 FINAL POLISH ===================== */
 :root{
   --ngEnterH: 64px;
   --ngEmailH: 52px;          /* tiny bit smaller */
@@ -1440,7 +1440,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v879 PLAYERS READABILITY + ROW LAYOUT ===================== */
+/* ===================== v880 PLAYERS READABILITY + ROW LAYOUT ===================== */
 
 /* Move BOTH panels down slightly (harder to read when too high) */
 #players .hub{
@@ -1489,7 +1489,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v879 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
+/* ===================== v880 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1532,7 +1532,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v879 RULES SCROLL FIX (GRID/FLEX) ===================== */
+/* ===================== v880 RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1584,7 +1584,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v879 PLAYER STATS UI ===================== */
+/* ===================== v880 PLAYER STATS UI ===================== */
 #detail .statScroll{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
@@ -1635,7 +1635,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v879: detail content scrolling (RULES + PLAYER STATS) */
+    /* v880: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1649,7 +1649,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v879: prevent browser autofill yellow on email field */
+    /* v880: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1679,7 +1679,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v879</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v880</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1709,7 +1709,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v879: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v880: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1832,7 +1832,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v879
+<script type="module">// Night Games Night Games v880
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1896,7 +1896,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v879: email overlay text (install once)
+    // v880: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1926,7 +1926,7 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=879";
+        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=880";
 
         const intro = new Audio(INTRO_URL);
         intro.preload = "auto";
@@ -1940,7 +1940,7 @@ const firebaseConfig = {
         }
 
         if(emailInput){
-          // v879: single, non-duplicated intro audio trigger (no stacked listeners)
+          // v880: single, non-duplicated intro audio trigger (no stacked listeners)
           let __ngIntroLast = 0;
           function playIntroOnce(){
             const now = Date.now();
@@ -2057,7 +2057,7 @@ function safeEmail(email){
       "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
     };
 
-    // ===================== PLAYER STAT TEMPLATES (v879) =====================
+    // ===================== PLAYER STAT TEMPLATES (v880) =====================
     // Locked stat sets (values start at 0; game engines will increment later).
     const PLAYER_STAT_TEMPLATES = {
       "01": {
@@ -2911,7 +2911,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v879)
+        // Player Stats Shell (v880)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : (whoEmail ? whoEmail.split("@")[0] : "Player");
@@ -2936,6 +2936,7 @@ function onEnter() {
           <div class="statScroll">${rows}</div>
         `);
         return;
+      }
 
       if(action === "player_stats_game"){
         const raw = String(value || "");
