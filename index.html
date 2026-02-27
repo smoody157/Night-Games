@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v869  |  2026-02-25
+  NIGHT GAMES v880  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v869 (MASTER STABLE)</title>
+<title>Night Games v880 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1185,7 +1185,7 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
 
-/* remove the old outline styling from v869 */
+/* remove the old outline styling from v880 */
 #landing #emailPad{ outline: none !important; }
 #landing #enterBtn{ outline: none !important; opacity: 1 !important; }
 
@@ -1384,7 +1384,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v869 FINAL POLISH ===================== */
+/* ===================== v880 FINAL POLISH ===================== */
 :root{
   --ngEnterH: 64px;
   --ngEmailH: 52px;          /* tiny bit smaller */
@@ -1440,7 +1440,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v869 PLAYERS READABILITY + ROW LAYOUT ===================== */
+/* ===================== v880 PLAYERS READABILITY + ROW LAYOUT ===================== */
 
 /* Move BOTH panels down slightly (harder to read when too high) */
 #players .hub{
@@ -1489,7 +1489,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v869 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
+/* ===================== v880 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1532,7 +1532,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v869 RULES SCROLL FIX (GRID/FLEX) ===================== */
+/* ===================== v880 RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1618,30 +1618,6 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v869: detail content scrolling (RULES + PLAYER STATS) */
-    .detailWrap > .panel:first-child{
-      display:flex;
-      flex-direction:column;
-      height: 100%;
-      min-height: 0;
-    }
-    .detailBody{
-      flex: 1;
-      min-height: 0;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* v869: prevent browser autofill yellow on email field */
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    input:-webkit-autofill:active{
-      -webkit-text-fill-color: rgba(235,245,255,.96);
-      transition: background-color 5000s ease-in-out 0s;
-      box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
-    }
-================= */
 (function(){
   // Safe wrapper for event handlers
   window.ngSafe = function(fn, label){
@@ -1662,7 +1638,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v869</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v880</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1692,7 +1668,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v869: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v880: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1815,7 +1791,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v869
+<script type="module">// Night Games Night Games v880
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1879,7 +1855,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v869: email overlay text (install once)
+    // v880: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1923,7 +1899,7 @@ const firebaseConfig = {
         }
 
         if(emailInput){
-          // v869: single, non-duplicated intro audio trigger (no stacked listeners)
+          // v880: single, non-duplicated intro audio trigger (no stacked listeners)
           let __ngIntroLast = 0;
           function playIntroOnce(){
             const now = Date.now();
