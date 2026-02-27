@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v913  |  2026-02-27
+  NIGHT GAMES v914  |  2026-02-27
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v913 STABILITY SWEEP =====================
+<!-- ===================== v914 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,7 +32,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v913 (MASTER STABLE)</title>
+<title>Night Games v914 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1660,14 +1660,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v913 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v914 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v913: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v914: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1692,7 +1692,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v913 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v914 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1701,7 +1701,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v913 HEADER PLAYER NAME ===================== */
+/* ===================== v914 HEADER PLAYER NAME ===================== */
 #ngHeaderBar .ngUserWelcome{
   position: relative;
   z-index: 1;
@@ -1726,7 +1726,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v913 GLOBAL FOOTER ===================== */
+/* ===================== v914 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1742,7 +1742,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v913 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v914 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1765,7 +1765,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v913 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v914 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1781,7 +1781,7 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* ===================== v913 USER STRIP (NAME + SIGN OUT) ===================== */
+/* ===================== v914 USER STRIP (NAME + SIGN OUT) ===================== */
 #ngUserStrip{
   position: fixed;
   left: 50%;
@@ -1822,7 +1822,7 @@ border: 1px solid rgba(255,255,255,.22);
 /* Give room for the user strip */
 #app{ padding-top: 118px !important; }
 #landing #app{ padding-top: 72px !important; } /* landing uses its own layout */
-/* ===================== v913 PICKER FROST ===================== */
+/* ===================== v914 PICKER FROST ===================== */
 .pickerCard{
   backdrop-filter: blur(12px) saturate(120%);
   -webkit-backdrop-filter: blur(12px) saturate(120%);
@@ -1832,7 +1832,7 @@ border: 1px solid rgba(255,255,255,.22);
   background: rgba(255,255,255,.06) !important;
   border: 1px solid rgba(255,255,255,.14) !important;
 }
-/* ===================== v913 DETAIL BUTTON UNIFORM ===================== */
+/* ===================== v914 DETAIL BUTTON UNIFORM ===================== */
 #detail .detailBody .pill{
   height: 44px;
   padding: 12px 16px;
@@ -1845,7 +1845,7 @@ border: 1px solid rgba(255,255,255,.22);
   flex: 1 1 140px;
   text-align:center;
 }
-/* ===================== v913 CENTER WELCOME ===================== */
+/* ===================== v914 CENTER WELCOME ===================== */
 /* Clean override (last wins) */
 #ngUserStrip{
   position: fixed;
@@ -1910,7 +1910,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v913</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  </div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v914</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  </div>
 <div id="ngUserStrip" style="display:none;">
   <div class="ngUserLeft"></div>
   <div class="ngUserCenter" id="ngUserWelcome">WELCOME</div>
@@ -2070,7 +2070,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v913
+<script type="module">// Night Games Night Games v914
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2169,7 +2169,7 @@ try{
     const globalFooter = document.getElementById("globalFooter");
 
 
-    // v913: preload saved email for this device (Bill + anyone who signed in before)
+    // v914: preload saved email for this device (Bill + anyone who signed in before)
     try{
       const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim();
       if(savedEmail && emailInput){
@@ -2319,8 +2319,6 @@ function show(which){
       lobby.classList.toggle("active", which==="lobby");
       detail.classList.toggle("active", which==="detail");
     }
-    function openDetail(title, html){");
-    }
     function openDetail(title, html){
       detailTitle.textContent = title;
       detailBody.innerHTML = html;
@@ -2368,7 +2366,7 @@ function safeEmail(email){
     }
 
 
-    // v913: header player label (friendly + centered)
+    // v914: header player label (friendly + centered)
     function setHeaderPlayerLabel(email){
   try{ ngSetHeaderNameFromEmail(email); }catch(e){}
 }
@@ -2751,7 +2749,7 @@ function renderPlayers(list){
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v913: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      // v914: remember last successful email on THIS device/browser (Bill garage iPad use-case)
       try{ localStorage.setItem("ng_saved_email", currentEmail); }catch(e){}
 
       // 5) Presence + live listeners
