@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v899  |  2026-02-25
+  NIGHT GAMES v900  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v899 STABILITY SWEEP =====================
+<!-- ===================== v900 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,14 +32,14 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v899 (MASTER STABLE)</title>
+<title>Night Games v900 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=899");
+      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=900");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -1192,7 +1192,7 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
 
-/* remove the old outline styling from v899 */
+/* remove the old outline styling from v900 */
 #landing #emailPad{ outline: none !important; }
 #landing #enterBtn{ outline: none !important; opacity: 1 !important; }
 
@@ -1391,7 +1391,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v899 FINAL POLISH ===================== */
+/* ===================== v900 FINAL POLISH ===================== */
 :root{
   --ngEnterH: 64px;
   --ngEmailH: 52px;          /* tiny bit smaller */
@@ -1447,7 +1447,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v899 PLAYERS READABILITY + ROW LAYOUT ===================== */
+/* ===================== v900 PLAYERS READABILITY + ROW LAYOUT ===================== */
 
 /* Move BOTH panels down slightly (harder to read when too high) */
 #players .hub{
@@ -1496,7 +1496,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v899 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
+/* ===================== v900 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1539,7 +1539,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v899 RULES SCROLL FIX (GRID/FLEX) ===================== */
+/* ===================== v900 RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1591,7 +1591,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v899 PLAYER STATS UI ===================== */
+/* ===================== v900 PLAYER STATS UI ===================== */
 #detail .statScroll{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
@@ -1642,7 +1642,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v899: detail content scrolling (RULES + PLAYER STATS) */
+    /* v900: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1656,7 +1656,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v899: prevent browser autofill yellow on email field */
+    /* v900: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1686,7 +1686,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v899</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v900</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1716,7 +1716,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v899: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v900: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1839,7 +1839,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v899
+<script type="module">// Night Games Night Games v900
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1903,7 +1903,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v899: email overlay text (install once)
+    // v900: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1933,7 +1933,7 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=899";
+        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=900";
 
         const intro = new Audio(INTRO_URL);
         intro.preload = "auto";
@@ -1947,7 +1947,7 @@ const firebaseConfig = {
         }
 
         if(emailInput){
-          // v899: single, non-duplicated intro audio trigger (no stacked listeners)
+          // v900: single, non-duplicated intro audio trigger (no stacked listeners)
           let __ngIntroLast = 0;
           function playIntroOnce(){
             const now = Date.now();
@@ -2064,7 +2064,7 @@ function safeEmail(email){
       "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
     };
 
-    // ===================== PLAYER STAT TEMPLATES (v899) =====================
+    // ===================== PLAYER STAT TEMPLATES (v900) =====================
     // Locked stat sets (values start at 0; game engines will increment later).
     const PLAYER_STAT_TEMPLATES = {
       "01": {
@@ -2175,6 +2175,90 @@ function safeEmail(email){
         ]
       }
     };
+
+    // ===================== v900 01 STATS ACCUMULATION HELPERS =====================
+    // This does NOT change any UI or routing.
+    // Call record01Result(...) when a 01 game ends to accumulate player stats.
+    function _statKey(playerEmail, gameName, key){
+      return `ng_stats__${playerEmail}__${gameName}__${key}`;
+    }
+    function _getNumStat(playerEmail, gameName, key){
+      try{
+        const v = localStorage.getItem(_statKey(playerEmail, gameName, key));
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 0;
+      }catch(e){ return 0; }
+    }
+    function _setNumStat(playerEmail, gameName, key, val){
+      try{ localStorage.setItem(_statKey(playerEmail, gameName, key), String(Math.max(0, Math.floor(val*1000)/1000))); }catch(e){}
+    }
+    function _incNumStat(playerEmail, gameName, key, delta){
+      const cur = _getNumStat(playerEmail, gameName, key);
+      _setNumStat(playerEmail, gameName, key, cur + (Number(delta)||0));
+    }
+    function _recalcWinPct(playerEmail, gameName){
+      const gp = _getNumStat(playerEmail, gameName, "games_played");
+      const gw = _getNumStat(playerEmail, gameName, "games_won");
+      const pct = gp>0 ? Math.round((gw/gp)*1000)/10 : 0; // one decimal
+      _setNumStat(playerEmail, gameName, "win_pct", pct);
+    }
+
+    // turnScores: array of per-turn totals (0..180), one entry per 3-dart turn for that player
+    // checkouts: array of checkout values that player finished on (e.g., 40 for D20)
+    function record01Result({ playersEmails, winnerEmail, turnScoresByPlayer, checkoutsByPlayer } = {}){
+      const gameName = "01";
+      const players = (playersEmails||[]).map(e=>String(e||"").toLowerCase()).filter(Boolean);
+      if(!players.length) return;
+
+      const winner = String(winnerEmail||"").toLowerCase();
+
+      players.forEach(p=>{
+        // games played / won / win%
+        _incNumStat(p, gameName, "games_played", 1);
+        if(winner && p===winner) _incNumStat(p, gameName, "games_won", 1);
+        _recalcWinPct(p, gameName);
+
+        const turns = (turnScoresByPlayer && turnScoresByPlayer[p]) ? turnScoresByPlayer[p] : [];
+        const scores = Array.isArray(turns) ? turns.map(x=>Number(x)||0) : [];
+        // 100+/140+/180 counts
+        _incNumStat(p, gameName, "tons_100", scores.filter(x=>x>=100).length);
+        _incNumStat(p, gameName, "scores_140", scores.filter(x=>x>=140).length);
+        _incNumStat(p, gameName, "scores_180", scores.filter(x=>x>=180).length);
+
+        // 3-dart average: store running total points + total turns, derive avg on read
+        // We'll keep: three_dart_total_points, three_dart_total_turns, and set three_dart_avg for display.
+        const totPtsKey = "three_dart_total_points";
+        const totTrnKey = "three_dart_total_turns";
+        const curPts = _getNumStat(p, gameName, totPtsKey);
+        const curTrn = _getNumStat(p, gameName, totTrnKey);
+        const addPts = scores.reduce((a,b)=>a+b,0);
+        const addTrn = scores.length;
+        _setNumStat(p, gameName, totPtsKey, curPts + addPts);
+        _setNumStat(p, gameName, totTrnKey, curTrn + addTrn);
+        const newPts = curPts + addPts;
+        const newTrn = curTrn + addTrn;
+        const avg = newTrn>0 ? Math.round((newPts/newTrn)*1000)/1000 : 0;
+        _setNumStat(p, gameName, "three_dart_avg", avg);
+
+        // finishing: checkout % and highest checkout
+        // We'll keep: checkout_attempts, checkout_made. You can increment attempts from engine later.
+        // For now, if a player has a checkout recorded, count it as made.
+        const checkouts = (checkoutsByPlayer && checkoutsByPlayer[p]) ? checkoutsByPlayer[p] : [];
+        const outs = Array.isArray(checkouts) ? checkouts.map(x=>Number(x)||0).filter(x=>x>0) : [];
+        if(outs.length){
+          _incNumStat(p, gameName, "checkout_made", outs.length);
+          const curHigh = _getNumStat(p, gameName, "highest_checkout");
+          _setNumStat(p, gameName, "highest_checkout", Math.max(curHigh, Math.max(...outs)));
+        }
+        // checkout % display (made/attempts). attempts may be 0 until engine wires it.
+        const made = _getNumStat(p, gameName, "checkout_made");
+        const att  = _getNumStat(p, gameName, "checkout_attempts");
+        const cpct = att>0 ? Math.round((made/att)*1000)/10 : 0;
+        _setNumStat(p, gameName, "checkout_pct", cpct);
+      });
+    }
+    // =================== END v900 HELPERS ===================
+
 
     function statKey(email, game, key){
       return `ng_stat::${String(email||"").toLowerCase()}::${String(game||"")}::${String(key||"")}`;
@@ -2918,7 +3002,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v899)
+        // Player Stats Shell (v900)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : (whoEmail ? whoEmail.split("@")[0] : "Player");
