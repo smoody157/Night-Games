@@ -1583,6 +1583,34 @@ border: 1px solid rgba(255,255,255,.22);
   padding: 0 12px;
 }
 
+
+/* Player stats detail formatting */
+.statGroupTitle{
+  font-weight:900;
+  letter-spacing:.06em;
+  opacity:.85;
+  margin:14px 6px 8px 6px;
+  text-transform:uppercase;
+  font-size:13px;
+}
+.statRow{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:16px;
+  margin:8px 6px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+.statLabel{font-weight:800;}
+.statValue{font-weight:900;}
+.statDesc{
+  opacity:.75;
+  font-size:12px;
+  margin: -4px 12px 10px 12px;
+}
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -2002,6 +2030,171 @@ function safeEmail(email){
     }
 
     const games = ["01","Cricket","Killer","Shanghai","ATW","Half It"];
+  // ===== Player Stats (templates + local storage) =====
+  const STAT_TEMPLATES = {
+    "01": [
+      { group: "Basics", stats: [
+        { key:"gamesPlayed", label:"Games played", desc:"How many 01 matches you’ve played." },
+        { key:"gamesWon", label:"Games won", desc:"How many 01 matches you’ve won." },
+        { key:"winPct", label:"Win %", desc:"Wins ÷ games played." }
+      ]},
+      { group: "Scoring", stats: [
+        { key:"threeDartAvg", label:"3‑dart average", desc:"Average points per 3 darts." },
+        { key:"s100", label:"100+ turns", desc:"Turns scoring 100 or more." },
+        { key:"s140", label:"140+ turns", desc:"Turns scoring 140 or more." },
+        { key:"s180", label:"180s", desc:"Number of 180s hit." }
+      ]},
+      { group: "Checkout", stats: [
+        { key:"checkoutPct", label:"Checkout %", desc:"Successful checkouts ÷ checkout attempts." },
+        { key:"highestCheckout", label:"Highest checkout", desc:"Best checkout you’ve finished." }
+      ]}
+    ],
+    "cricket": [
+      { group: "Basics", stats: [
+        { key:"gamesPlayed", label:"Games played", desc:"How many Cricket matches you’ve played." },
+        { key:"gamesWon", label:"Games won", desc:"How many Cricket matches you’ve won." },
+        { key:"winPct", label:"Win %", desc:"Wins ÷ games played." }
+      ]},
+      { group: "Marks", stats: [
+        { key:"mpr", label:"Marks per round (MPR)", desc:"Average marks scored per 3 darts." },
+        { key:"totalMarks", label:"Total marks", desc:"Total marks hit across all matches." },
+        { key:"bestMarksRound", label:"Best marks in a round", desc:"Most marks hit in a single turn." }
+      ]},
+      { group: "Points", stats: [
+        { key:"totalPoints", label:"Total points", desc:"Extra points scored after closing numbers." },
+        { key:"bestPointsRound", label:"Best points in a round", desc:"Most points scored in one turn." }
+      ]},
+      { group: "Extras", stats: [
+        { key:"bullsHit", label:"Bulls hit", desc:"Total bull marks hit (single + double bull)." },
+        { key:"closeFirst", label:"Numbers closed first", desc:"How often you closed a number before opponents." }
+      ]}
+    ],
+    "killer": [
+      { group: "Basics", stats: [
+        { key:"gamesPlayed", label:"Games played", desc:"How many Killer matches you’ve played." },
+        { key:"gamesWon", label:"Games won", desc:"How many Killer matches you’ve won." },
+        { key:"winPct", label:"Win %", desc:"Wins ÷ games played." }
+      ]},
+      { group: "Action", stats: [
+        { key:"kills", label:"Kills", desc:"How many opponents you’ve eliminated." },
+        { key:"deaths", label:"Deaths", desc:"How many times you were eliminated." },
+        { key:"hitsGiven", label:"Hits given", desc:"Successful hits you landed on opponents." },
+        { key:"hitsTaken", label:"Hits taken", desc:"Successful hits landed on you." }
+      ]}
+    ],
+    "shanghai": [
+      { group: "Basics", stats: [
+        { key:"gamesPlayed", label:"Games played", desc:"How many Shanghai matches you’ve played." },
+        { key:"gamesWon", label:"Games won", desc:"How many Shanghai matches you’ve won." },
+        { key:"winPct", label:"Win %", desc:"Wins ÷ games played." }
+      ]},
+      { group: "Scoring", stats: [
+        { key:"totalPoints", label:"Total points", desc:"Total points (S=1, D=2, T=3; Shanghai bonus +5)." },
+        { key:"avgPointsRound", label:"Avg points / round", desc:"Average points scored per round." },
+        { key:"bestRound", label:"Best round points", desc:"Most points scored in a single round." }
+      ]},
+      { group: "Hits", stats: [
+        { key:"singles", label:"Singles hit", desc:"Number of singles hit." },
+        { key:"doubles", label:"Doubles hit", desc:"Number of doubles hit." },
+        { key:"triples", label:"Triples hit", desc:"Number of triples hit." },
+        { key:"shanghais", label:"Shanghais made", desc:"Single + double + triple on the same number (bonus +5)." }
+      ]}
+    ],
+    "atw": [
+      { group: "Basics", stats: [
+        { key:"gamesPlayed", label:"Games played", desc:"How many Around the World matches you’ve played." },
+        { key:"gamesWon", label:"Games won", desc:"How many Around the World matches you’ve won." },
+        { key:"winPct", label:"Win %", desc:"Wins ÷ games played." }
+      ]},
+      { group: "Speed", stats: [
+        { key:"avgDarts", label:"Avg darts to finish", desc:"Average darts needed to complete the game." },
+        { key:"bestFinish", label:"Best finish (fewest darts)", desc:"Fastest completion by darts thrown." }
+      ]}
+    ],
+    "halfit": [
+      { group: "Basics", stats: [
+        { key:"gamesPlayed", label:"Games played", desc:"How many Half‑It matches you’ve played." },
+        { key:"gamesWon", label:"Games won", desc:"How many Half‑It matches you’ve won." },
+        { key:"winPct", label:"Win %", desc:"Wins ÷ games played." }
+      ]},
+      { group: "Scoring", stats: [
+        { key:"totalScore", label:"Total score", desc:"Total points scored across matches." },
+        { key:"avgScoreRound", label:"Avg score / round", desc:"Average points scored per round." },
+        { key:"bestRound", label:"Best round score", desc:"Highest score in a single round." },
+        { key:"halvedCount", label:"Halved count", desc:"How many times your score was halved." }
+      ]}
+    ]
+  };
+
+  const STATS_STORE_KEY = "ng_player_stats_v1";
+  function loadStatsStore(){
+    try { return JSON.parse(localStorage.getItem(STATS_STORE_KEY) || "{}"); } catch(e){ return {}; }
+  }
+  function saveStatsStore(store){
+    localStorage.setItem(STATS_STORE_KEY, JSON.stringify(store));
+  }
+  function ensurePlayerGameStats(store, playerId, gameId){
+    store[playerId] = store[playerId] || {};
+    store[playerId][gameId] = store[playerId][gameId] || {};
+    const template = STAT_TEMPLATES[gameId] || [];
+    template.forEach(g => g.stats.forEach(s => {
+      if (store[playerId][gameId][s.key] === undefined) store[playerId][gameId][s.key] = 0;
+    }));
+    return store[playerId][gameId];
+  }
+
+  let currentStatsPlayer = null; // {id,name}
+  function openPlayerStatsPicker(playerId, playerName){
+    currentStatsPlayer = { id: playerId, name: playerName };
+    const body = `
+      <div style="font-weight:900; margin-bottom:12px;">${playerName}</div>
+      <div class="list">
+        ${games.map(g => `
+          <div class="row">
+            <div class="rowTitle">${g.label}</div>
+            <button class="pill small" data-action="player_stats_game" data-game="${g.id}">Player Stats</button>
+          </div>
+        `).join("")}
+      </div>
+    `;
+    openDetail("PLAYER STATS", body);
+  }
+
+  function openPlayerGameStats(gameId){
+    if (!currentStatsPlayer) return;
+    const gameLabel = (games.find(g => g.id === gameId) || {label: gameId}).label;
+
+    const store = loadStatsStore();
+    const values = ensurePlayerGameStats(store, currentStatsPlayer.id, gameId);
+    saveStatsStore(store);
+
+    const template = STAT_TEMPLATES[gameId] || [];
+    const statsHtml = template.map(group => {
+      const groupTitle = `<div class="statGroupTitle">${group.group}</div>`;
+      const rows = group.stats.map(s => `
+        <div class="statRow">
+          <div class="statLabel">${s.label}</div>
+          <div class="statValue">${values[s.key] ?? 0}</div>
+        </div>
+        <div class="statDesc">${s.desc || ""}</div>
+      `).join("");
+      return groupTitle + rows;
+    }).join("");
+
+    const body = `
+      <div style="font-weight:900; margin-bottom:6px;">${currentStatsPlayer.name}</div>
+      <div style="opacity:.85; margin-bottom:12px;">${gameLabel}</div>
+      <div class="list" style="max-height:52vh;">
+        ${statsHtml || `<div style="opacity:.85; padding:12px;">No stats template found for this game yet.</div>`}
+      </div>
+      <div style="opacity:.8; font-size:12px; margin-top:10px;">
+        These values start at 0. Once game engines are connected, they’ll auto‑fill.
+      </div>
+    `;
+    openDetail("PLAYER STATS", body);
+  }
+  // ===== /Player Stats =====
+
 
     const GAME_RULES = {
       "01": "<b>Goal:</b> Reach exactly 0.<br><br>• Choose 301 / 501 / 701<br>• Subtract what you hit each turn (3 darts)<br>• Must land exactly on 0 to win<br>• If you go below 0 = bust (turn doesn’t count)<br><br><b>Options:</b><br>• <b>Single In / Single Out</b>: scoring starts immediately, any hit can finish<br>• <b>Single In / Double Out</b>: scoring starts immediately, must finish on a double<br>• <b>Double In / Double Out</b>: must hit a double to start scoring, must finish on a double",
@@ -2742,29 +2935,16 @@ function onEnter() {
         return;
       }
 
-      if(action === "player_stats"){
-        // Player Stats Shell (v869)
-        const whoEmail = String(value || "").toLowerCase();
-        const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
-        const whoName = (who && who.name) ? who.name : value;
+      if(if (action === "player_stats") {
+        const pid = btn.dataset.player || "";
+        const pname = btn.dataset.value || "Player";
+        openPlayerStatsPicker(pid, pname);
+        return;
+      }
 
-        const rows = (games || ["01","Cricket","Killer","Shanghai","ATW","Half It"]).map(g => `
-          <div style="
-            display:flex; justify-content:space-between; align-items:center;
-            padding:12px 12px; border-radius:14px;
-            background: rgba(255,255,255,.04);
-            border: 1px solid rgba(255,255,255,.12);
-            margin-bottom:10px;">
-            <div style="font-weight:900; letter-spacing:.3px;">${g}</div>
-            <div style="opacity:.78; font-weight:800;">Player Stats</div>
-          </div>
-        `).join("");
-
-        openDetail("PLAYER STATS", `
-          <div class="glassText" style="font-weight:1000; font-size:22px; margin-bottom:10px;">${whoName}</div>
-          <div style="opacity:.72; margin-bottom:14px;">Select a game to view stats. (We’ll add stats one game at a time.)</div>
-          ${rows}
-        `);
+if (action === "player_stats_game") {
+        const gameId = btn.dataset.game;
+        openPlayerGameStats(gameId);
         return;
       }
 
