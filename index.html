@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v911  |  2026-02-27
+  NIGHT GAMES v913  |  2026-02-27
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v911 STABILITY SWEEP =====================
+<!-- ===================== v913 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,7 +32,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v911 (MASTER STABLE)</title>
+<title>Night Games v913 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1660,14 +1660,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v911 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v913 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v911: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v913: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1692,7 +1692,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v911 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v913 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1701,8 +1701,8 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v911 HEADER PLAYER NAME ===================== */
-#ngHeaderBar .ngHeaderPlayer{
+/* ===================== v913 HEADER PLAYER NAME ===================== */
+#ngHeaderBar .ngUserWelcome{
   position: relative;
   z-index: 1;
   flex: 1 1 auto;
@@ -1726,7 +1726,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v911 GLOBAL FOOTER ===================== */
+/* ===================== v913 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1742,7 +1742,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v911 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v913 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1765,7 +1765,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v911 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v913 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1781,6 +1781,84 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
+/* ===================== v913 USER STRIP (NAME + SIGN OUT) ===================== */
+#ngUserStrip{
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(max(10px, env(safe-area-inset-top)) + 52px);
+  z-index: 9999;
+  width: min(760px, 94vw);
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.05);
+  backdrop-filter: blur(10px) saturate(115%);
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
+  box-shadow: 0 10px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.22);
+}
+#ngUserStrip .ngUserLeft{ width: 54px; } /* balances the Sign Out button */
+#ngUserWelcome{
+  flex: 1 1 auto;
+  text-align: center;
+  font-weight: 1100;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-size: 14px;
+  color: rgba(90,255,170,.96);
+  text-shadow: 0 2px 12px rgba(0,0,0,.65);
+}
+#ngUserStrip .ngLogoutBtn{
+  height: 34px;
+  padding: 8px 12px;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+/* Give room for the user strip */
+#app{ padding-top: 118px !important; }
+#landing #app{ padding-top: 72px !important; } /* landing uses its own layout */
+/* ===================== v913 PICKER FROST ===================== */
+.pickerCard{
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  box-shadow: 0 14px 34px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.22) !important;
+}
+.pickerRow{
+  background: rgba(255,255,255,.06) !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
+}
+/* ===================== v913 DETAIL BUTTON UNIFORM ===================== */
+#detail .detailBody .pill{
+  height: 44px;
+  padding: 12px 16px;
+  font-size: 13px;
+}
+#detail .detailBody{
+  align-items: stretch;
+}
+#detail .detailBody .pill{
+  flex: 1 1 140px;
+  text-align:center;
+}
+/* ===================== v913 CENTER WELCOME ===================== */
+/* Clean override (last wins) */
+#ngUserStrip{
+  position: fixed;
+  overflow: hidden;
+}
+#ngUserWelcome{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  pointer-events: none;
+}
+#ngUserStrip{ position: fixed; }
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -1832,7 +1910,12 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v911</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title="">WELCOME</span>    <button type="button" class="pill pillMini ngLogoutBtn" id="ngLogoutBtn" style="display:none;">Sign Out</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v913</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  </div>
+<div id="ngUserStrip" style="display:none;">
+  <div class="ngUserLeft"></div>
+  <div class="ngUserCenter" id="ngUserWelcome">WELCOME</div>
+  <button type="button" class="pill pillMini ngLogoutBtn" id="ngLogoutBtn" style="display:none;">Sign Out</button>
+</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1987,11 +2070,11 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v911
+<script type="module">// Night Games Night Games v913
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
     import {
       getFirestore,
       doc, setDoc, getDoc,
@@ -2017,7 +2100,28 @@ border: 1px solid rgba(255,255,255,.22);
       fatal.style.display = "flex";
       fatalMsg.textContent = msg + (err ? ("\n\n" + (err.stack||err.message||String(err))) : "");
       setDbg("FAIL", "—", "—", msg);
-    }
+    // ===== User banner helpers =====
+function ngPrettyNameFromEmail(email){
+  if(!email) return "";
+  const local = String(email).split("@")[0] || "";
+  const cleaned = local.replace(/[._-]+/g, " ").replace(/\s+/g, " ").trim();
+  return cleaned.split(" ").filter(Boolean).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(" ");
+}
+function ngSetWelcome(email){
+  const strip = document.getElementById("ngUserStrip");
+  const w = document.getElementById("ngUserWelcome");
+  if(!strip || !w) return;
+  const nm = ngPrettyNameFromEmail(email);
+  w.textContent = nm ? (`WELCOME, ${nm}`) : "WELCOME";
+  w.title = email || "";
+}
+function ngShowUserStrip(show){
+  const strip = document.getElementById("ngUserStrip");
+  if(!strip) return;
+  strip.style.display = show ? "flex" : "none";
+}
+
+}
 
     // ===== Config (from Steven) =====
     /* =============================================================================
@@ -2061,11 +2165,11 @@ try{
   }
 }catch(e){}
 
-    const ngHeaderPlayer = document.getElementById("ngHeaderPlayer");
+    const ngUserWelcome = document.getElementById("ngUserWelcome");
     const globalFooter = document.getElementById("globalFooter");
 
 
-    // v911: preload saved email for this device (Bill + anyone who signed in before)
+    // v913: preload saved email for this device (Bill + anyone who signed in before)
     try{
       const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim();
       if(savedEmail && emailInput){
@@ -2203,13 +2307,19 @@ try{
 function show(which){
       landing.classList.toggle("active", which==="landing");
 
-      // v911: global footer off on landing (landing already has its own footer)
+      // Global footer off on landing (landing already has its own footer)
       try{ if(globalFooter) globalFooter.style.display = (which==="landing") ? "none" : "block"; }catch(e){}
+
+      // User strip hidden on landing, visible elsewhere (if signed in)
+      try{ if(which==="landing") ngShowUserStrip(false); else ngShowUserStrip(true); }catch(e){}
+
       players.classList.toggle("active", which==="players");
       setup.classList.toggle("active", which==="setup");
       waiting.classList.toggle("active", which==="waiting");
       lobby.classList.toggle("active", which==="lobby");
       detail.classList.toggle("active", which==="detail");
+    }
+    function openDetail(title, html){");
     }
     function openDetail(title, html){
       detailTitle.textContent = title;
@@ -2258,7 +2368,7 @@ function safeEmail(email){
     }
 
 
-    // v911: header player label (friendly + centered)
+    // v913: header player label (friendly + centered)
     function setHeaderPlayerLabel(email){
   try{ ngSetHeaderNameFromEmail(email); }catch(e){}
 }
@@ -2479,7 +2589,7 @@ renderWaitingRoom();
     let rememberedEmailKey = "ng_saved_email_v1";
 function ngSetHeaderNameFromEmail(email){
   try{
-    const el = document.getElementById("ngHeaderPlayer");
+    const el = document.getElementById("ngUserWelcome");
     if(!el) return;
     const e = String(email||"").trim();
     if(!e){
@@ -2641,7 +2751,7 @@ function renderPlayers(list){
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v911: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      // v913: remember last successful email on THIS device/browser (Bill garage iPad use-case)
       try{ localStorage.setItem("ng_saved_email", currentEmail); }catch(e){}
 
       // 5) Presence + live listeners
