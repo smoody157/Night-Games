@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v920  |  2026-02-27
+  NIGHT GAMES v921  |  2026-02-27
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v920 STABILITY SWEEP =====================
+<!-- ===================== v921 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,7 +32,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v920 (MASTER STABLE)</title>
+<title>Night Games v921 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1660,14 +1660,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v920 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v921 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v920: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v921: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1692,7 +1692,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v920 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v921 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1701,7 +1701,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v920 HEADER PLAYER NAME ===================== */
+/* ===================== v921 HEADER PLAYER NAME ===================== */
 #ngHeaderBar .ngHeaderPlayer{
   position: relative;
   z-index: 1;
@@ -1726,7 +1726,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v920 GLOBAL FOOTER ===================== */
+/* ===================== v921 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1742,7 +1742,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v920 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v921 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1765,7 +1765,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v920 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v921 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1781,7 +1781,7 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* ===================== v920 HEADER STRIP CENTERING ===================== */
+/* ===================== v921 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
 #ngHeaderPlayer{
   position: absolute;
@@ -1793,7 +1793,7 @@ border: 1px solid rgba(255,255,255,.22);
 .ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
 /* =============================================================================
-   SECTION: v920 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
+   SECTION: v921 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
    - No layout redesign. Pure alignment + typography polish.
 ============================================================================= */
 #ngHeaderBar .ngHeaderCenter{
@@ -1813,21 +1813,22 @@ border: 1px solid rgba(255,255,255,.22);
   width: 92px;
 }
 
-/* Player name (center) — green glass / beveled */
+/* Player name (center) — glass text (no box) */
 #ngHeaderPlayer{
   font-size: 18px !important;
   font-weight: 1100 !important;
   letter-spacing: .6px !important;
   text-transform: none !important;
-  padding: 4px 10px;
-  border-radius: 12px;
-  border: 1px solid rgba(90,255,170,.22);
-  background: linear-gradient(180deg, rgba(120,255,190,.22), rgba(20,70,45,.10));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 10px 22px rgba(0,0,0,.24);
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+
+  /* Glassy text finish */
   color: rgba(90,255,170,.98) !important;
   text-shadow:
     0 1px 0 rgba(0,0,0,.55),
-    0 0 10px rgba(90,255,170,.22);
+    0 0 12px rgba(90,255,170,.22);
 }
 
 </style>
@@ -1881,7 +1882,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v920</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v921</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2039,7 +2040,7 @@ border: 1px solid rgba(255,255,255,.22);
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v920                               ║
+║                          🎮 NIGHT GAMES v921                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2047,7 +2048,7 @@ border: 1px solid rgba(255,255,255,.22);
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v920
+// Night Games Night Games v921
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2112,7 +2113,7 @@ const firebaseConfig = {
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
 
-    // v920: preload saved email for this device (Bill + anyone who signed in before)
+    // v921: preload saved email for this device (Bill + anyone who signed in before)
     try{
       const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim();
       if(savedEmail && emailInput){
@@ -2178,6 +2179,9 @@ const firebaseConfig = {
               if(p && p.catch) p.catch(()=>{});
             }catch(e){}
           }
+
+          // Expose one unified intro trigger for other entry points (Enter / click)
+          try{ window.ngTriggerIntro = playIntroOnce; }catch(e){}
 
           // Use ONE event type (prevents double-play on iOS)
           const EVT = (window.PointerEvent ? "pointerdown" : "touchstart");
@@ -2248,8 +2252,25 @@ function setHeaderPlayerLabel(email){
   }catch(e){}
 }
 async function doUpdate(auth){
-  // Update = sign out + hard reload w/ cache-bust so device fetches latest hosted version
+  // Update = sign out + aggressive cache-bust reload so device fetches latest hosted version
   try{ if(auth) await signOut(auth); }catch(e){}
+
+  // Keep remembered email (ng_saved_email) intact on purpose.
+
+  // Clear SW + CacheStorage if present (best-effort; safe if unsupported)
+  try{
+    if('serviceWorker' in navigator){
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r => r.unregister()));
+    }
+  }catch(e){}
+  try{
+    if('caches' in window){
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    }
+  }catch(e){}
+
   try{ localStorage.setItem("ng_force_reload", String(Date.now())); }catch(e){}
   const baseUrl = location.origin + location.pathname;
   location.replace(baseUrl + "?v=" + Date.now());
@@ -3222,7 +3243,7 @@ function renderPlayers(list){
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v920: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      // v921: remember last successful email on THIS device/browser (Bill garage iPad use-case)
       try{ localStorage.setItem("ng_saved_email", currentEmail); 
           try{ setHeaderPlayerLabel(email); }catch(e){}
           try{ if(ngUpdateBtn) ngUpdateBtn.style.display = 'inline-flex'; }catch(e){}
@@ -3290,6 +3311,13 @@ function onEnter() {
 
       const action = b.dataset.action;
       const value = b.dataset.value || "";
+
+
+// Update button (top-right)
+if(b && b.id === "ngUpdateBtn"){
+  try{ await doUpdate(auth); }catch(_e){}
+  return;
+}
 
       if(action === "game_rules"){
         const txt = (GAME_RULES[value] || "Rules coming soon.");
