@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v905  |  2026-02-27
+  NIGHT GAMES v906  |  2026-02-27
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v905 STABILITY SWEEP =====================
+<!-- ===================== v906 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,7 +32,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v905 (MASTER STABLE)</title>
+<title>Night Games v906 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1192,7 +1192,7 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
 
-/* remove the old outline styling from v905 */
+/* remove the old outline styling from v906 */
 #landing #emailPad{ outline: none !important; }
 #landing #enterBtn{ outline: none !important; opacity: 1 !important; }
 
@@ -1391,7 +1391,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v905 FINAL POLISH ===================== */
+/* ===================== v906 FINAL POLISH ===================== */
 :root{
   --ngEnterH: 64px;
   --ngEmailH: 52px;          /* tiny bit smaller */
@@ -1447,7 +1447,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v905 PLAYERS READABILITY + ROW LAYOUT ===================== */
+/* ===================== v906 PLAYERS READABILITY + ROW LAYOUT ===================== */
 
 /* Move BOTH panels down slightly (harder to read when too high) */
 #players .hub{
@@ -1496,7 +1496,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v905 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
+/* ===================== v906 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1539,7 +1539,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v905 RULES SCROLL FIX (GRID/FLEX) ===================== */
+/* ===================== v906 RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1591,7 +1591,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v905 PLAYER STATS UI ===================== */
+/* ===================== v906 PLAYER STATS UI ===================== */
 #detail .statScroll{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
@@ -1636,7 +1636,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v905 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v906 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
@@ -1660,7 +1660,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v905: detail content scrolling (RULES + PLAYER STATS) */
+    /* v906: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1674,7 +1674,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v905: prevent browser autofill yellow on email field */
+    /* v906: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1704,7 +1704,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v905</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v906</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1734,7 +1734,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v905: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v906: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1857,7 +1857,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v905
+<script type="module">// Night Games Night Games v906
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1921,7 +1921,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v905: email overlay text (install once)
+    // v906: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1965,7 +1965,7 @@ const firebaseConfig = {
         }
 
         if(emailInput){
-          // v905: single, non-duplicated intro audio trigger (no stacked listeners)
+          // v906: single, non-duplicated intro audio trigger (no stacked listeners)
           let __ngIntroLast = 0;
           function playIntroOnce(){
             const now = Date.now();
@@ -1983,7 +1983,21 @@ const firebaseConfig = {
 
           // Use ONE event type (prevents double-play on iOS)
           const EVT = (window.PointerEvent ? "pointerdown" : "touchstart");
-          emailInput.addEventListener(EVT, playIntroOnce, { passive:true });
+          const DUMMY_EMAIL = "player@example.com";
+          function clearEmailOnFirstTouch(){
+            try{
+              if(!emailInput) return;
+              if(emailInput.dataset && emailInput.dataset.ngTouched === "1") return;
+              if(emailInput.dataset) emailInput.dataset.ngTouched = "1";
+              const v = (emailInput.value || "").trim();
+              if(!v || v.toLowerCase() === DUMMY_EMAIL){
+                emailInput.value = "";
+                try{ emailInput.dispatchEvent(new Event("input", {bubbles:true})); }catch(e){}
+              }
+              try{ emailInput.focus({preventScroll:true}); }catch(e){ try{ emailInput.focus(); }catch(_e){} }
+            }catch(e){}
+          }
+          emailInput.addEventListener(EVT, ()=>{ clearEmailOnFirstTouch(); playIntroOnce(); }, { passive:true });
         }
       }catch(e){}
     })();
@@ -2082,7 +2096,7 @@ function safeEmail(email){
       "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
     };
 
-    // ===================== PLAYER STAT TEMPLATES (v905) =====================
+    // ===================== PLAYER STAT TEMPLATES (v906) =====================
     // Locked stat sets (values start at 0; game engines will increment later).
     const PLAYER_STAT_TEMPLATES = {
       "01": {
@@ -2194,7 +2208,7 @@ function safeEmail(email){
       }
     };
 
-    // ===================== v905 01 STATS ACCUMULATION HELPERS =====================
+    // ===================== v906 01 STATS ACCUMULATION HELPERS =====================
     // This does NOT change any UI or routing.
     // Call record01Result(...) when a 01 game ends to accumulate player stats.
     function _statKey(playerEmail, gameName, key){
@@ -2275,7 +2289,7 @@ function safeEmail(email){
         _setNumStat(p, gameName, "checkout_pct", cpct);
       });
     }
-    // =================== END v905 HELPERS ===================
+    // =================== END v906 HELPERS ===================
 
 
     function statKey(email, game, key){
@@ -2429,7 +2443,7 @@ function renderSetupForGame(game){
       const startInlineBtn = document.getElementById("setupStartInlineBtn");
       const startCtrlBtn = document.getElementById("setupStartBtn");
       const cancelBtn = document.getElementById("setupCancelBtn");
-      // v905: 01 setup defaults
+      // v906: 01 setup defaults
       const setup01Start = document.getElementById("setup01Start");
       const setup01InOut = document.getElementById("setup01InOut");
       if(game === "01"){
@@ -2582,7 +2596,7 @@ function renderSetupForGame(game){
         activeSession = activeSession || {};
         activeSession.game = game;
         activeSession.setup = { count: want, emails };activeSession.setup = { count: want, emails };
-        // v905: 01 rule options captured for engine
+        // v906: 01 rule options captured for engine
         if(game === "01"){
           const startScore = parseInt((document.getElementById("setup01Start")?.value)||"501",10) || 501;
           const inOut = (document.getElementById("setup01InOut")?.value)||"SI_SO";
@@ -3070,7 +3084,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v905)
+        // Player Stats Shell (v906)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : (whoEmail ? whoEmail.split("@")[0] : "Player");
