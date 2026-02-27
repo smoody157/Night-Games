@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v863  |  2026-02-25
+  NIGHT GAMES v865  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,14 +25,14 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v863 (MASTER STABLE)</title>
+<title>Night Games v865 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=863");
+      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=865");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -991,7 +991,7 @@ border: 1px solid rgba(255,255,255,.22);
       text-align:center;
     }
 
-/* ===================== v863 TARGET LOOK (NO EXTRA IMAGES) ===================== */
+/* ===================== v865 TARGET LOOK (NO EXTRA IMAGES) ===================== */
 /* Header: remove pill */
 #ngHeaderBar{
   background: transparent !important;
@@ -1110,7 +1110,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v863 PAD ALIGNMENT ===================== */
+/* ===================== v865 PAD ALIGNMENT ===================== */
 /* Make the invisible pads match the stage width and sit a little lower */
 :root{
   --padWidth: min(760px, 96vw);
@@ -1136,7 +1136,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v863 ALIGN + CLEAR PADS ===================== */
+/* ===================== v865 ALIGN + CLEAR PADS ===================== */
 /* Move the white email text + hint down together */
 :root{ --ngTextDrop: 28px; } /* tweak if needed */
 #landing #emailEcho,
@@ -1158,7 +1158,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v863 GLASS PADS + ALIGN ===================== */
+/* ===================== v865 GLASS PADS + ALIGN ===================== */
 :root{
   --ngPadsRadius: 26px;
   --ngPadH: 74px;
@@ -1189,7 +1189,7 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
 
-/* remove the old outline styling from v863 */
+/* remove the old outline styling from v865 */
 #landing #emailPad{ outline: none !important; }
 #landing #enterBtn{ outline: none !important; opacity: 1 !important; }
 
@@ -1237,7 +1237,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v863 TUNE GLASS (SMALLER + CLEARER + UP) ===================== */
+/* ===================== v865 TUNE GLASS (SMALLER + CLEARER + UP) ===================== */
 :root{
   --ngPadsRadius: 22px;
   --ngPadH: 64px;
@@ -1291,7 +1291,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v863 SIMPLE MOVE + CLEAR ===================== */
+/* ===================== v865 SIMPLE MOVE + CLEAR ===================== */
 
 /* Move pads UP slightly */
 #landing #landingPads{
@@ -1311,6 +1311,86 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(6px);
 }
 
+
+/* ===================== v865 GLASS FINAL (EMAIL UP + SMALLER, CLEAR) ===================== */
+:root{
+  --ngEnterH: 64px;
+  --ngEmailH: 58px;       /* slightly smaller */
+  --ngPadW: 92%;
+  --ngPadR: 22px;
+  --ngGap: 14px;
+  --ngEmailLift: -6px;    /* move email pad up a touch */
+}
+
+/* Pad stack position (leave overall where it is) */
+#landing #landingPads{
+  gap: var(--ngGap) !important;
+}
+
+/* Common glass look: crystal clear, shiny, beveled */
+#landing #emailPad,
+#landing #enterBtn{
+  width: var(--ngPadW) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  border-radius: var(--ngPadR) !important;
+  position: relative !important;
+  overflow: hidden !important;
+
+  background: rgba(255,255,255,0.03) !important;   /* clear, not frosted */
+  border: 1px solid rgba(255,255,255,0.55) !important;
+  box-shadow:
+    0 10px 26px rgba(0,0,0,0.26),
+    inset 0 2px 10px rgba(255,255,255,0.55),
+    inset 0 -2px 8px rgba(255,255,255,0.14),
+    inset 1px 0 0 rgba(255,255,255,0.18),
+    inset -1px 0 0 rgba(255,255,255,0.18) !important;
+
+  backdrop-filter: blur(5px) saturate(115%);
+  -webkit-backdrop-filter: blur(5px) saturate(115%);
+}
+
+/* Beveled sparkle highlight */
+#landing #emailPad::before,
+#landing #enterBtn::before{
+  content:"";
+  position:absolute;
+  left:-15%;
+  top:-55%;
+  width:130%;
+  height:90%;
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.22) 32%,
+    rgba(255,255,255,0.06) 52%,
+    rgba(255,255,255,0) 76%);
+  transform: rotate(10deg);
+  pointer-events:none;
+  mix-blend-mode: screen;
+}
+#landing #emailPad::after,
+#landing #enterBtn::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: var(--ngPadR);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.10);
+  pointer-events:none;
+}
+
+/* Sizes */
+#landing #enterBtn{ height: var(--ngEnterH) !important; }
+#landing #emailPad{ height: var(--ngEmailH) !important; transform: translateY(var(--ngEmailLift)) !important; }
+
+/* Keep email text centered inside the email pad */
+#landing #emailEcho{ font-size: 17px !important; }
+
+/* Keep ENTER text readable if present */
+#landing #enterBtn .enterText{
+  font-size: 24px !important;
+  transform: translate(-50%,-62%) !important;
+}
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -1318,7 +1398,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v863: detail content scrolling (RULES + PLAYER STATS) */
+    /* v865: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1332,7 +1412,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v863: prevent browser autofill yellow on email field */
+    /* v865: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1362,7 +1442,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v863</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v865</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1392,7 +1472,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v863: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v865: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1513,7 +1593,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v863
+<script type="module">// Night Games Night Games v865
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1577,7 +1657,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v863: email overlay text (install once)
+    // v865: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1607,7 +1687,7 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=863";
+        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=865";
 
         const intro = new Audio(INTRO_URL);
         intro.preload = "auto";
@@ -1621,18 +1701,25 @@ const firebaseConfig = {
         }
 
         if(emailInput){
-          // v863: play intro ONLY once per interaction (prevents double audio on iOS)
+          // v865: single, non-duplicated intro audio trigger (no stacked listeners)
           let __ngIntroLast = 0;
           function playIntroOnce(){
             const now = Date.now();
-            if(now - __ngIntroLast < 600) return;
+            if(now - __ngIntroLast < 700) return; // debounce
             __ngIntroLast = now;
-            playIntro();
+            try{
+              if(!intro.paused){ intro.pause(); }
+              intro.currentTime = 0;
+            }catch(e){}
+            try{
+              const p = intro.play();
+              if(p && p.catch) p.catch(()=>{});
+            }catch(e){}
           }
-          // Use a single primary gesture event
-          emailInput.addEventListener("pointerdown", playIntroOnce, {passive:true});
-          // Fallback for browsers without pointer events
-          emailInput.addEventListener("touchstart", playIntroOnce, {passive:true});
+
+          // Use ONE event type (prevents double-play on iOS)
+          const EVT = (window.PointerEvent ? "pointerdown" : "touchstart");
+          emailInput.addEventListener(EVT, playIntroOnce, { passive:true });
         }
       }catch(e){}
     })();
@@ -2472,7 +2559,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v863)
+        // Player Stats Shell (v865)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
@@ -2558,109 +2645,7 @@ if(action === "player_history"){
   </script><script>
 
 
-/* v768 VOICE (Phase 4 finalized)
-   - iOS requires a user gesture before speech.
-   - We trigger on FIRST focus/tap of the email field.
-   - We speak the welcome line (NOT a generic prompt).
-   - Single voice module; no duplicate declarations.
-*/
 
-const NG_BUILD = "v768";
-const NG_WELCOME_LINE = "Welcome to America's Number Six — Bill Moody's Limited Edition Game Night. Shoot well. Let's play some darts!";
-
-const NGVoice = (function(){
-  const api = { enabled:true, unlocked:false, voice:null, queue:[] };
-
-  function getBestVoice(){
-    try {
-      const synth = window.speechSynthesis;
-      const voices = synth && synth.getVoices ? synth.getVoices() : [];
-      if(!voices || !voices.length) return null;
-      const en = voices.filter(v => /^en/i.test(v.lang||""));
-      const pool = en.length ? en : voices;
-      const preferNames = ["Alex","Daniel","Matthew","Fred","Tom","Aaron","Bruce","Ralph","Junior","Arthur","Eddy","Reed"];
-      for(const name of preferNames){
-        const v = pool.find(x => (x.name||"").toLowerCase().includes(name.toLowerCase()));
-        if(v) return v;
-      }
-      return pool[0] || null;
-    } catch(e){ return null; }
-  }
-
-  function init(){
-    if(!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance === "undefined"){
-      api.enabled = false; return;
-    }
-    const pick = () => { api.voice = getBestVoice(); };
-    pick();
-    try { window.speechSynthesis.onvoiceschanged = pick; } catch(e){}
-  }
-
-  function speakNow(text){
-    if(!api.enabled || !text) return;
-    try { window.speechSynthesis.cancel(); } catch(e){}
-    const u = new SpeechSynthesisUtterance(String(text));
-    if(api.voice) u.voice = api.voice;
-    // v768: announcer delivery (male-leaning voice, energetic pace)
-    u.rate = 1.04;
-    u.pitch = 0.86;
-    u.volume = 1.0;
-    try { window.speechSynthesis.speak(u); } catch(e){}
-  }
-
-  function flush(){
-    if(!api.unlocked || !api.queue.length) return;
-    const q = api.queue.slice();
-    api.queue.length = 0;
-    // speak sequentially (non-blocking)
-    let i = 0;
-    const step = () => {
-      if(i>=q.length) return;
-      speakNow(q[i++]);
-      setTimeout(step, 750);
-    };
-    step();
-  }
-
-  function unlock(){
-    if(!api.enabled) return;
-    api.unlocked = true;
-    flush();
-  }
-
-  function speak(text){
-    if(!api.enabled || !text) return;
-    if(!api.unlocked){ api.queue.push(text); return; }
-    speakNow(text);
-  }
-
-  init();
-  return { api, unlock, speak };
-})();
-
-window.ngSpeak = (t) => NGVoice.speak(t);
-
-document.addEventListener("DOMContentLoaded", () => {
-  const emailEl = document.getElementById("emailInput");
-
-  const bootOnce = () => {
-    NGVoice.unlock();
-    NGVoice.speak(NG_WELCOME_LINE);
-  };
-
-  if(emailEl){
-    // Gesture unlock + welcome on first interaction with the email field
-    emailEl.addEventListener("focus", bootOnce, { once:true });
-    emailEl.addEventListener("pointerdown", bootOnce, { once:true });
-    emailEl.addEventListener("touchstart", bootOnce, { once:true });
-  } else {
-    // Fallback: first tap anywhere
-    window.addEventListener("pointerdown", bootOnce, { once:true });
-    window.addEventListener("touchstart", bootOnce, { once:true });
-  }
-});
-
-// END VOICE
 
 </script>
 <!-- =======================
