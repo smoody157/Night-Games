@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v902  |  2026-02-25
+  NIGHT GAMES v903  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v902 STABILITY SWEEP =====================
+<!-- ===================== v903 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,14 +32,14 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v902 (MASTER STABLE)</title>
+<title>Night Games v903 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=902");
+      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=903");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -1192,7 +1192,7 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
 
-/* remove the old outline styling from v902 */
+/* remove the old outline styling from v903 */
 #landing #emailPad{ outline: none !important; }
 #landing #enterBtn{ outline: none !important; opacity: 1 !important; }
 
@@ -1391,7 +1391,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v902 FINAL POLISH ===================== */
+/* ===================== v903 FINAL POLISH ===================== */
 :root{
   --ngEnterH: 64px;
   --ngEmailH: 52px;          /* tiny bit smaller */
@@ -1447,7 +1447,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v902 PLAYERS READABILITY + ROW LAYOUT ===================== */
+/* ===================== v903 PLAYERS READABILITY + ROW LAYOUT ===================== */
 
 /* Move BOTH panels down slightly (harder to read when too high) */
 #players .hub{
@@ -1496,7 +1496,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v902 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
+/* ===================== v903 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1539,7 +1539,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v902 RULES SCROLL FIX (GRID/FLEX) ===================== */
+/* ===================== v903 RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1591,7 +1591,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v902 PLAYER STATS UI ===================== */
+/* ===================== v903 PLAYER STATS UI ===================== */
 #detail .statScroll{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
@@ -1636,7 +1636,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v902 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v903 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
@@ -1660,7 +1660,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v902: detail content scrolling (RULES + PLAYER STATS) */
+    /* v903: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1674,7 +1674,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v902: prevent browser autofill yellow on email field */
+    /* v903: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1704,7 +1704,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v902</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v903</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1734,7 +1734,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v902: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v903: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1857,7 +1857,7 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v902
+<script type="module">// Night Games Night Games v903
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -1921,7 +1921,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v902: email overlay text (install once)
+    // v903: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1951,7 +1951,7 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=902";
+        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=903";
 
         const intro = new Audio(INTRO_URL);
         intro.preload = "auto";
@@ -1965,7 +1965,7 @@ const firebaseConfig = {
         }
 
         if(emailInput){
-          // v902: single, non-duplicated intro audio trigger (no stacked listeners)
+          // v903: single, non-duplicated intro audio trigger (no stacked listeners)
           let __ngIntroLast = 0;
           function playIntroOnce(){
             const now = Date.now();
@@ -2082,7 +2082,7 @@ function safeEmail(email){
       "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
     };
 
-    // ===================== PLAYER STAT TEMPLATES (v902) =====================
+    // ===================== PLAYER STAT TEMPLATES (v903) =====================
     // Locked stat sets (values start at 0; game engines will increment later).
     const PLAYER_STAT_TEMPLATES = {
       "01": {
@@ -2194,7 +2194,7 @@ function safeEmail(email){
       }
     };
 
-    // ===================== v902 01 STATS ACCUMULATION HELPERS =====================
+    // ===================== v903 01 STATS ACCUMULATION HELPERS =====================
     // This does NOT change any UI or routing.
     // Call record01Result(...) when a 01 game ends to accumulate player stats.
     function _statKey(playerEmail, gameName, key){
@@ -2275,7 +2275,7 @@ function safeEmail(email){
         _setNumStat(p, gameName, "checkout_pct", cpct);
       });
     }
-    // =================== END v902 HELPERS ===================
+    // =================== END v903 HELPERS ===================
 
 
     function statKey(email, game, key){
@@ -2358,31 +2358,8 @@ function renderSetupForGame(game){
       setupBody.innerHTML = `
         <div class="setupGameTitle">${game}</div>
         <div style="opacity:.78; margin-bottom:14px;">Pick players, then Start.</div>
-        ${game==="01" ? `
-        <div class="fieldLabel" style="margin-top:6px;">01 Game</div>
-        <div style="display:flex; gap:12px; flex-wrap:wrap;">
-          <div style="flex:1; min-width:180px;">
-            <div class="fieldLabel" style="margin-top:0;">Starting Score</div>
-            <select id="setup01Start" class="glassSelect">
-              <option value="301">301</option>
-              <option value="501" selected>501</option>
-              <option value="701">701</option>
-            </select>
-          </div>
-          <div style="flex:1; min-width:220px;">
-            <div class="fieldLabel" style="margin-top:0;">In / Out</div>
-            <select id="setup01InOut" class="glassSelect">
-              <option value="SI_SO" selected>Straight In / Straight Out</option>
-              <option value="DI_SO">Double In / Straight Out</option>
-              <option value="DI_DO">Double In / Double Out</option>
-              <option value="SI_DO">Straight In / Double Out</option>
-            </select>
-          </div>
-        </div>
-        <div style="opacity:.72; margin-top:8px; line-height:1.3;">
-          <b>Note:</b> Double Out means you must finish on a double. Double In means you must start scoring with a double.
-        </div>
-        ` : ``}
+        
+
 
 
         <div class="fieldLabel">Number of Players</div>
@@ -2419,6 +2396,35 @@ function renderSetupForGame(game){
           </div>
         </div>
 
+
+
+        <!-- 01 options (moved below player selection for clarity) -->
+        ${game==="01" ? `
+        <div class="fieldLabel" style="margin-top:6px;">01 Game</div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div style="flex:1; min-width:180px;">
+            <div class="fieldLabel" style="margin-top:0;">Starting Score</div>
+            <select id="setup01Start" class="glassSelect">
+              <option value="301">301</option>
+              <option value="501" selected>501</option>
+              <option value="701">701</option>
+            </select>
+          </div>
+          <div style="flex:1; min-width:220px;">
+            <div class="fieldLabel" style="margin-top:0;">In / Out</div>
+            <select id="setup01InOut" class="glassSelect">
+              <option value="SI_SO" selected>Straight In / Straight Out</option>
+              <option value="DI_SO">Double In / Straight Out</option>
+              <option value="DI_DO">Double In / Double Out</option>
+              <option value="SI_DO">Straight In / Double Out</option>
+            </select>
+          </div>
+        </div>
+        <div style="opacity:.72; margin-top:8px; line-height:1.3;">
+          <b>Note:</b> Double Out means you must finish on a double. Double In means you must start scoring with a double.
+        </div>
+        ` : ``}
+
         <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
           <button class="pill" id="setupStartInlineBtn" type="button">Start</button>
           <button class="pill" id="setupCancelBtn" type="button" style="opacity:.85;">Cancel</button>
@@ -2429,7 +2435,7 @@ function renderSetupForGame(game){
       const startInlineBtn = document.getElementById("setupStartInlineBtn");
       const startCtrlBtn = document.getElementById("setupStartBtn");
       const cancelBtn = document.getElementById("setupCancelBtn");
-      // v902: 01 setup defaults
+      // v903: 01 setup defaults
       const setup01Start = document.getElementById("setup01Start");
       const setup01InOut = document.getElementById("setup01InOut");
       if(game === "01"){
@@ -2574,7 +2580,7 @@ function renderSetupForGame(game){
         activeSession = activeSession || {};
         activeSession.game = game;
         activeSession.setup = { count: want, emails };activeSession.setup = { count: want, emails };
-        // v902: 01 rule options captured for engine
+        // v903: 01 rule options captured for engine
         if(game === "01"){
           const startScore = parseInt((document.getElementById("setup01Start")?.value)||"501",10) || 501;
           const inOut = (document.getElementById("setup01InOut")?.value)||"SI_SO";
@@ -3062,7 +3068,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v902)
+        // Player Stats Shell (v903)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : (whoEmail ? whoEmail.split("@")[0] : "Player");
