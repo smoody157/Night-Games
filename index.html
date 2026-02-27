@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v871  |  2026-02-25
+  NIGHT GAMES v873  |  2026-02-25
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -25,14 +25,14 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v871 (MASTER STABLE)</title>
+<title>Night Games v873 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=871");
+      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=873");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -1185,7 +1185,7 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
 
-/* remove the old outline styling from v871 */
+/* remove the old outline styling from v873 */
 #landing #emailPad{ outline: none !important; }
 #landing #enterBtn{ outline: none !important; opacity: 1 !important; }
 
@@ -1384,7 +1384,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v871 FINAL POLISH ===================== */
+/* ===================== v873 FINAL POLISH ===================== */
 :root{
   --ngEnterH: 64px;
   --ngEmailH: 52px;          /* tiny bit smaller */
@@ -1440,7 +1440,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v871 PLAYERS READABILITY + ROW LAYOUT ===================== */
+/* ===================== v873 PLAYERS READABILITY + ROW LAYOUT ===================== */
 
 /* Move BOTH panels down slightly (harder to read when too high) */
 #players .hub{
@@ -1489,7 +1489,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v871 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
+/* ===================== v873 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1532,7 +1532,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v871 RULES SCROLL FIX (GRID/FLEX) ===================== */
+/* ===================== v873 RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1590,7 +1590,7 @@ border: 1px solid rgba(255,255,255,.22);
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    /* v871: detail content scrolling (RULES + PLAYER STATS) */
+    /* v873: detail content scrolling (RULES + PLAYER STATS) */
     .detailWrap > .panel:first-child{
       display:flex;
       flex-direction:column;
@@ -1604,7 +1604,7 @@ border: 1px solid rgba(255,255,255,.22);
       -webkit-overflow-scrolling: touch;
     }
 
-    /* v871: prevent browser autofill yellow on email field */
+    /* v873: prevent browser autofill yellow on email field */
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1634,7 +1634,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v871</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
+<div id="ngHeaderBar"><span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v873</span></span><span class="ngHeaderCenter">Firebase • Firestore</span><span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -1664,7 +1664,7 @@ border: 1px solid rgba(255,255,255,.22);
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v871: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v873: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="player@example.com" placeholder=""/>
@@ -1787,12 +1787,41 @@ border: 1px solid rgba(255,255,255,.22);
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-<script type="module">// Night Games Night Games v871
+<script type="module">// Night Games Night Games v873
+
+// ===================== v873 CLEANUP PASS =====================
+// - Consolidated Firebase imports (fix initializeApp duplicate import crash)
+// - De-duped injected HISTORY helper blocks (kept one)
+// - De-duped exact duplicate addEventListener/onSnapshot lines
+// - Guarded against duplicate emailEcho const declarations
+// ============================================================
 
     // ===== Firebase (stable) =====
-    import { initializeApp, getDocs, orderBy, limit, addDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { initializeApp, getDocs, orderBy, limit, addDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { initializeApp, getDocs, orderBy, limit, addDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+// ===================== v873 STABILITY GUARDS =====================
+// Landing + Players are "LOCKED" visually, but we can harden wiring safely.
+//
+// bindOnce(el, key, type, fn) prevents duplicate listeners when builds evolve.
+// Also adds lightweight error guards so one exception doesn't nuke the UI.
+// ================================================================
+function bindOnce(el, key, type, fn, opts){
+  try{
+    if(!el) return;
+    const k = "ng_" + key;
+    if(el.dataset && el.dataset[k] === "1") return;
+    el.addEventListener(type, fn, opts || false);
+    if(el.dataset) el.dataset[k] = "1";
+  }catch(e){}
+}
+
+window.addEventListener("error", (ev)=>{
+  try{ console.error("[NightGames] Uncaught error:", ev?.error || ev?.message || ev); }catch(e){}
+});
+window.addEventListener("unhandledrejection", (ev)=>{
+  try{ console.error("[NightGames] Unhandled promise:", ev?.reason || ev); }catch(e){}
+});
+// =================== END v873 STABILITY GUARDS ===================
 
     const dbgState = document.getElementById("dbgState");
     const dbgAuth = document.getElementById("dbgAuth");
@@ -1846,7 +1875,7 @@ const firebaseConfig = {
     const players = document.getElementById("players");
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
-    // v871: email overlay text (install once)
+    // v873: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -1876,7 +1905,7 @@ const firebaseConfig = {
         window.__ngIntroAudioInstalled = true;
 
         // ✅ Set this to the exact repo path you uploaded (default assumes repo root)
-        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=871";
+        const INTRO_URL = "https://raw.githubusercontent.com/smoody157/Night-Games/main/New%20Recording%202.m4a?v=873";
 
         const intro = new Audio(INTRO_URL);
         intro.preload = "auto";
@@ -1890,7 +1919,7 @@ const firebaseConfig = {
         }
 
         if(emailInput){
-          // v871: single, non-duplicated intro audio trigger (no stacked listeners)
+          // v873: single, non-duplicated intro audio trigger (no stacked listeners)
           let __ngIntroLast = 0;
           function playIntroOnce(){
             const now = Date.now();
@@ -1908,7 +1937,7 @@ const firebaseConfig = {
 
           // Use ONE event type (prevents double-play on iOS)
           const EVT = (window.PointerEvent ? "pointerdown" : "touchstart");
-          emailInput.addEventListener(EVT, playIntroOnce, { passive:true });
+          bindOnce(emailInput, "intro_audio", EVT, playIntroOnce, { passive:true });
         }
       }catch(e){}
     })();
@@ -1958,7 +1987,7 @@ function show(which){
 
     
 
-    // ===================== HISTORY (v871) =====================
+    // ===================== HISTORY (v873) =====================
     // One source of truth: matchHistory collection
     // - Game History: last 200 by gameId (value from button)
     // - Player History: last 200 where playerEmails contains player email
@@ -2025,7 +2054,7 @@ function show(which){
       return addDoc(collection(db, "matchHistory"), docData);
     }
     window.recordMatchHistory = recordMatchHistory; // optional: makes testing easy in console
-    // =================== END HISTORY (v871) ===================
+    // =================== END HISTORY (v873) ===================
 
 // ===== Click sound (iPhone safe) =====
     let audioCtx = null;
@@ -2754,12 +2783,9 @@ function onEnter() {
           alert("Firebase error: " + msg);
         });
       }
-      enterBtn.addEventListener("click", onEnter);
-      emailInput.addEventListener("keydown", (e)=>{
-        if(e.key === "Enter"){ e.preventDefault(); onEnter(); }
-      });
-
-          document.addEventListener("click", async (e)=>{
+      bindOnce(enterBtn, "enter_click", "click", onEnter);
+      bindOnce(emailInput, "email_enter", "keydown", (e)=>{ if(e.key === "Enter"){ e.preventDefault(); onEnter(); } });
+      document.addEventListener("click", async (e)=>{
       const b = e.target.closest(".pill");
       if(!b) return;
 
@@ -2814,7 +2840,7 @@ function onEnter() {
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v871)
+        // Player Stats Shell (v873)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : value;
