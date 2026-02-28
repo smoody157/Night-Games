@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v934  |  2026-02-28
+  NIGHT GAMES v935  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v934 STABILITY SWEEP =====================
+<!-- ===================== v935 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,7 +32,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v934 (MASTER STABLE)</title>
+<title>Night Games v935 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1660,14 +1660,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v934 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v935 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v934: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v935: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1692,7 +1692,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v934 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v935 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1701,7 +1701,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v934 HEADER PLAYER NAME ===================== */
+/* ===================== v935 HEADER PLAYER NAME ===================== */
 #ngHeaderBar .ngHeaderPlayer{
   position: relative;
   z-index: 1;
@@ -1726,7 +1726,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v934 GLOBAL FOOTER ===================== */
+/* ===================== v935 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1742,7 +1742,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v934 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v935 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1765,7 +1765,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v934 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v935 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1781,7 +1781,7 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* ===================== v934 HEADER STRIP CENTERING ===================== */
+/* ===================== v935 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
 #ngHeaderPlayer{
   position: absolute;
@@ -1793,7 +1793,7 @@ border: 1px solid rgba(255,255,255,.22);
 .ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
 /* =============================================================================
-   SECTION: v934 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
+   SECTION: v935 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
    - No layout redesign. Pure alignment + typography polish.
 ============================================================================= */
 #ngHeaderBar .ngHeaderCenter{
@@ -1832,7 +1832,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   SECTION: v934 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
+   SECTION: v935 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1861,7 +1861,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v934: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
+   v935: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1887,6 +1887,40 @@ border: 1px solid rgba(255,255,255,.22);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+}
+
+/* =============================================================================
+   v935: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
+   1) iPad overlap: push hub down on tablet widths
+   2) Firebase • Firestore: side-by-side, centered, readable (no clipping)
+   3) Default view: show 2 full rows (reduce row height slightly)
+   4) Inline Start: intentionally kept (consistent across games)
+   5) Setup entry error: guarded in JS below
+============================================================================= */
+
+/* Header center: readable, no clipping/ellipsis */
+#ngHeaderBar .ngHeaderCenter{
+  font-size: 11px !important;
+  letter-spacing: .03em !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+#ngHeaderBar > span.ngHeaderCenter{
+  overflow: visible !important;
+}
+
+/* iPad/tablet: avoid hub creeping into logo */
+@media (min-width: 760px){
+  .hub{
+    top: clamp(270px, 26vh, 380px) !important;
+  }
+}
+
+/* Two full items by default: slightly smaller rows */
+.itemLine{
+  padding: 10px 6px !important;
+  line-height: 1.25 !important;
 }
 
 </style>
@@ -1940,7 +1974,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v934</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v935</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2099,7 +2133,7 @@ border: 1px solid rgba(255,255,255,.22);
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v934                               ║
+║                          🎮 NIGHT GAMES v935                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2107,7 +2141,7 @@ border: 1px solid rgba(255,255,255,.22);
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v934
+// Night Games Night Games v935
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2172,7 +2206,7 @@ const firebaseConfig = {
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
 
-    // v934: preload saved email for this device (Bill + anyone who signed in before)
+    // v935: preload saved email for this device (Bill + anyone who signed in before)
     try{
       const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim();
       if(savedEmail && emailInput){
@@ -2694,6 +2728,9 @@ function safeEmail(email){
 ================================================================================
 */
 function renderSetupForGame(game){
+      if(!game) return;
+      if(typeof setupBody === 'undefined' || !setupBody){ console.warn('setupBody missing'); return; }
+
       const people = (lastPeople||[]).slice();
       // ensure current user exists as a selectable option
       const me = (currentEmail||"").toLowerCase();
@@ -3316,7 +3353,7 @@ if(!regSnap.exists()) {
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v934: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      // v935: remember last successful email on THIS device/browser (Bill garage iPad use-case)
       try{ localStorage.setItem("ng_saved_email", currentEmail); 
           try{ setHeaderPlayerLabel(email); }catch(e){}
           try{ if(ngUpdateBtn) ngUpdateBtn.style.display = 'inline-flex'; }catch(e){}
@@ -3426,10 +3463,11 @@ if(b && b.id === "ngUpdateBtn"){
       if(action === "enter_game"){
         try{
           await createSessionForGame(value);
-          renderSetupForGame(value);
+          try{ renderSetupForGame(value); }catch(err){ throw err; }
           show("setup");
         }catch(e){
-          alert("Session error: " + (e.message||e));
+          console.error(e);
+          alert("Setup error: " + (e && (e.message||e) ? (e.message||e) : e));
         }
         return;
       }
