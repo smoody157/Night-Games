@@ -1783,13 +1783,26 @@ border: 1px solid rgba(255,255,255,.22);
 
 /* ===================== v921 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
+
 #ngHeaderPlayer{
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 70%;
-  pointer-events: none;
+  font-size: 20px !important;
+  font-weight: 1200 !important;
+  letter-spacing: .8px !important;
+  text-align: center !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+
+  background: linear-gradient(180deg, #a8ffda 0%, #42e695 40%, #0f9b8e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.6),
+    0 0 14px rgba(80,255,180,.35);
 }
+
 .ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
 /* =============================================================================
@@ -2638,7 +2651,7 @@ function renderSetupForGame(game){
         <div class="setupGameTitle">${game}</div>
         <div style="opacity:.78; margin-bottom:14px;">Pick players, then Start.</div>
         ${game==="01" ? `
-        <div class="fieldLabel" style="margin-top:6px;">01 Game</div>
+        <div class="fieldLabel" style="margin-top:6px;"></div>
         <div style="display:flex; gap:12px; flex-wrap:wrap;">
           <div style="flex:1; min-width:180px;">
             <div class="fieldLabel" style="margin-top:0;">Starting Score</div>
@@ -3309,7 +3322,14 @@ function onEnter() {
       const b = e.target.closest(".pill");
       if(!b) return;
 
-      const action = b.dataset.action;
+      
+const action = b.dataset.action;
+
+if(action === "home"){
+  showScreen("games");
+  return;
+}
+
       const value = b.dataset.value || "";
 
 
