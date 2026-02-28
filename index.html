@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v1019  |  2026-02-28
+  NIGHT GAMES v1023  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -47,7 +47,7 @@ THIS BUILD CHANGES:
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v1019 (MASTER STABLE)</title>
+<title>Night Games v1023 (MASTER STABLE)</title>
 <style>
 
 
@@ -2563,7 +2563,7 @@ html, body{
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v1019                               ║
+║                          🎮 NIGHT GAMES v1023                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2571,7 +2571,7 @@ html, body{
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v1019
+// Night Games Night Games v1023
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -3330,17 +3330,19 @@ function startPracticeSession(){
     if(lobbyTitle) lobbyTitle.textContent = (activeSession?.game||"Game") + " • PRACTICE";
     if(lobbyBody)  lobbyBody.innerHTML =
       "<div style='font-weight:1200; font-size:22px; margin-bottom:10px;'>Practice ready.</div>" +
-      "<div style='opacity:.82; margin-bottom:12px;'>Press <b>Begin</b> to start your practice game. Stats are not recorded.</div>";
+      "<div style='opacity:.82; margin-bottom:12px;'>Practice started.</div>" +
+      "<div style='opacity:.82; margin-bottom:12px;'>Stats are not recorded.</div>";
   }catch(e){}
-  // Configure controls for practice
-  try{
-    const b = document.getElementById("lobbyStartBtn");
-    if(b){
-      b.style.display = "inline-flex";
-      b.textContent = "Start";
-    }
-  }catch(e){}
+  try{ show('lobby'); }catch(e){}
+  try{ startPracticeGame && startPracticeGame(); }catch(e){}
+  // Ensure practice controls
+  try{ const b=document.getElementById('lobbyStartBtn'); if(b){ b.style.display='none'; } }catch(e){}
+  try{ const inv=document.getElementById('lobbyInviteBtn'); if(inv){ inv.style.display='none'; } }catch(e){}
+  try{ const rnd=document.getElementById('lobbyRandomizeBtn'); if(rnd){ rnd.style.display='none'; } }catch(e){}
   try{ renderLobby && renderLobby(); }catch(e){}
+}
+
+// v1019: Render the in-matchnderLobby && renderLobby(); }catch(e){}
 }
 
 // v1019: Render the in-match "game room" (Lobby) consistently for PRACTICE + LIVE
@@ -3352,6 +3354,16 @@ function renderLobby(){
 
     const game = (activeSession && activeSession.game) ? activeSession.game : "Game";
     const isPractice = !!(activeSession && activeSession.practice);
+
+    // Control buttons (single path)
+    try{
+      const invBtn = document.getElementById('lobbyInviteBtn');
+      if(invBtn) invBtn.style.display = (!isPractice && emails.length>1) ? 'inline-flex' : 'none';
+    }catch(e){}
+    try{
+      const startBtn = document.getElementById('lobbyStartBtn');
+      if(startBtn) startBtn.style.display = isPractice ? 'none' : 'inline-flex';
+    }catch(e){}
 
     // Title
     if(lobbyTitle){
@@ -3905,7 +3917,16 @@ function enforce(){
         activeSession = activeSession || {};
         activeSession.game = game;
         activeSession.setup = { count: want, emails };
-        // v1019: SOLO practice auto-start (no waiting, no randomizer, no stats)
+        // capture 01/301/501 options before start (used by engine)
+        try{
+          if(typeof needsDartsOpts !== "undefined" && needsDartsOpts){
+            const startScore = parseInt((document.getElementById(scoreId)?.value)||"501",10) || 501;
+            const inOut = (document.getElementById(inOutId)?.value)||"SI_SO";
+            activeSession.setup.startScore = startScore;
+            activeSession.setup.inOut = inOut;
+          }
+        }catch(e){}
+        // SOLO practice auto-start (no waiting, no randomizer UI, no stats)
         if(want <= 1){
           try{ activeSession.practice = true; activeSession.started = true; }catch(e){}
           try{ localStorage.setItem('ng_active_session', JSON.stringify(activeSession)); }catch(e){}
@@ -3913,19 +3934,15 @@ function enforce(){
           try{ startPracticeGame && startPracticeGame(); }catch(e){}
           return;
         }
-        // v1019: MULTIPLAYER start — create session, send invites, then waiting
+        // MULTIPLAYER start — create session, send invites, then waiting
         try{ activeSession.practice = false; }catch(e){}
         try{ localStorage.setItem('ng_active_session', JSON.stringify(activeSession)); }catch(e){}
         try{ await startSession(); }catch(e){}
         try{ show('waiting'); }catch(e){}
         try{ setInviteStatus && setInviteStatus('Sending invites…', false); }catch(e){}
         try{ await sendInvitesForSession(); setInviteStatus && setInviteStatus('Invites sent.', true); }catch(e){ setInviteStatus && setInviteStatus('Invite failed.', false); }
-        return;
-        // v1019: 01/301 rule options captured for engine
-        if(needsDartsOpts){
-          const startScore = parseInt((document.getElementById(scoreId)?.value)||"501",10) || 501;
-          const inOut = (document.getElementById(inOutId)?.value)||"SI_SO";
-          activeSession.setup.startScore = startScore;
+        // (options captured above)
+        activeSession.setup.startScore = startScore;
           activeSession.setup.inOut = inOut;
         }
 
@@ -4675,10 +4692,7 @@ if(b && b.id === "ngUpdateBtn"){
       setupHomeBtn && setupHomeBtn.addEventListener("click", ()=> show("players"));
       // Cancel returns to Lobby
       setupBackBtn && setupBackBtn.addEventListener("click", ()=> show("lobby"));
-      setupStartGameBtn && setupStartGameBtn.addEventListener("click", ()=>{
-        try{ show("lobby"); }catch(e){}
-        try{ setTimeout(()=>{ lobbyStartBtn && lobbyStartBtn.click(); }, 50); }catch(e){}
-      });
+      setupStartGameBtn && setupStartGameBtn.addEventListener("click", ()=>{ try{ if(window.__ngDoStart){ window.__ngDoStart(); } }catch(e){} });
       waitingBackBtn.addEventListener("click", ()=> show("setup"));
       lobbyStartBtn.addEventListener("click", ()=>{
         try{ if(window.__ngDoStart){ window.__ngDoStart(); return; } }catch(e){}
