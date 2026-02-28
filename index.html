@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v951  |  2026-02-28
+  NIGHT GAMES v952  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v951 STABILITY SWEEP =====================
+<!-- ===================== v952 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,14 +32,16 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v951 (MULTISYNC)</title>
+<title>Night Games v952 (MASTER STABLE)</title>
 <style>
+
+
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("IMG_7390.jpeg");
+      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=907");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -1660,14 +1662,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v951 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v952 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v951: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v952: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1692,7 +1694,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v951 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v952 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1701,7 +1703,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v951 HEADER PLAYER NAME ===================== */
+/* ===================== v952 HEADER PLAYER NAME ===================== */
 #ngHeaderBar .ngHeaderPlayer{
   position: relative;
   z-index: 1;
@@ -1726,7 +1728,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v951 GLOBAL FOOTER ===================== */
+/* ===================== v952 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1742,7 +1744,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v951 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v952 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1765,7 +1767,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v951 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v952 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1781,7 +1783,7 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* ===================== v951 HEADER STRIP CENTERING ===================== */
+/* ===================== v952 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
 #ngHeaderPlayer{
   position: absolute;
@@ -1793,7 +1795,7 @@ border: 1px solid rgba(255,255,255,.22);
 .ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
 /* =============================================================================
-   SECTION: v951 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
+   SECTION: v952 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
    - No layout redesign. Pure alignment + typography polish.
 ============================================================================= */
 #ngHeaderBar .ngHeaderCenter{
@@ -1832,7 +1834,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   SECTION: v951 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
+   SECTION: v952 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1861,7 +1863,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v951: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
+   v952: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1890,7 +1892,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v951: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
+   v952: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
    1) iPad overlap: push hub down on tablet widths
    2) Firebase • Firestore: side-by-side, centered, readable (no clipping)
    3) Default view: show 2 full rows (reduce row height slightly)
@@ -1924,7 +1926,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v951: Player Page Name (premium)
+   v952: Player Page Name (premium)
 ============================================================================= */
 .playerPageName{
   width:100%;
@@ -1946,14 +1948,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v951: Leaderboard button under Players area (skinny + wide)
+   v952: Leaderboard button under Players area (skinny + wide)
 ============================================================================= */
 .leaderboardSlot{ display:flex; justify-content:center; margin: 14px 0 8px 0; }
 .ngWideBtn{ min-width: 260px; padding: 9px 18px !important; letter-spacing: .14em; }
 @media (min-width:760px){ .ngWideBtn{ min-width: 360px; } }
 
 /* =============================================================================
-   v951: Player Name + Leaderboard placement (Players screen)
+   v952: Player Name + Leaderboard placement (Players screen)
 ============================================================================= */
 .playerPageName{
   width: 100%;
@@ -1988,25 +1990,85 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v951: Waiting room start banner
+   v952: Authoritative Scroll System (ALL SCREENS)
+   Goal: Every list/panel that needs scrolling scrolls reliably (iOS safe),
+         while the app shell stays locked (no page-bounce).
 ============================================================================= */
-.startBanner{
-  margin: 10px 0 14px 0;
-  padding: 12px 14px;
-  border-radius: 16px;
-  background: linear-gradient(180deg, rgba(30,60,70,.55) 0%, rgba(10,25,30,.35) 100%);
-  border: 1px solid rgba(140,255,220,.28);
-  box-shadow: 0 14px 28px rgba(0,0,0,.35);
+
+/* Keep the app shell locked; scrolling happens inside panels/lists. */
+html, body{
+  height: 100%;
+  overflow: hidden;
 }
-.startBannerTitle{
-  font-weight: 1200;
-  letter-spacing: .08em;
-  font-size: 18px;
-  margin-bottom: 4px;
+
+/* Prevent a parent overflow rule from killing child scroll. */
+.screen,
+.detailWrap,
+.panel{
+  min-height: 0; /* critical for overflow inside flex/grid */
 }
-.startBannerSub{
-  opacity: .82;
-  letter-spacing: .04em;
+
+/* Standard scroll containers */
+.list,
+.detailBody,
+#gamesList,
+#playersList,
+#setupBody,
+#waitingBody,
+#lobbyBody,
+#detailBody,
+#leaderboardBody,
+#randomizerBody{
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+/* If any list is inside a panel, ensure it can actually take the height. */
+.panel .detailBody,
+.panel .list{
+  min-height: 0;
+}
+
+/* Safety: avoid accidental scroll disable via pointer-events */
+.list *,
+.detailBody *{
+  pointer-events: auto;
+}
+
+/* =============================================================================
+   v952: Critical scroll restore for Setup/Waiting + controls alignment
+============================================================================= */
+#setupBody, #waitingBody{
+  max-height: calc(100vh - 320px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#playersList, #gamesList, #setupBody .list, #waitingBody .list{
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.controlsRow3{
+  display:flex;
+  gap:12px;
+  align-items:stretch;
+}
+.controlsRow3 > .pill{
+  flex: 1 1 0;
+}
+.controlsRow3 > .pill.btnAdvance{
+  flex: 1.15 1 0;
+}
+.leaderboardSlot{
+  padding: 10px 0 14px 0;
+  display:flex;
+  justify-content:center;
+}
+#leaderboardBtn{
+  width: min(92%, 520px);
+  padding: 10px 14px;
+  font-size: 16px;
 }
 
 </style>
@@ -2060,7 +2122,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v951</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v952</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2119,18 +2181,17 @@ border: 1px solid rgba(255,255,255,.22);
 </div>
 <div class="panel">
 <div class="sectionHead"><div class="title">Players</div></div>
+<div id="playerPageName" class="playerPageName"></div>
 <div class="list" id="playersList"></div>
 
 </div>
 </div>
 <div class="leaderboardSlot">
-  <button class="pill btnAdvance ngWideBtn" data-action="open_leaderboard" data-value="all">LEADERBOARD</button>
+<button class="pill btnAdvance" id="leaderboardBtn" data-action="show_leaderboard" type="button">Leaderboard</button>
 </div>
 </section>
 <section class="screen" id="setup">
 <div class="detailWrap">
-<div id="playerPageName" class="playerPageName"></div>
-
 <div class="panel">
 <div class="sectionHead"><div class="title">Setup</div></div>
 <div class="detailBody" id="setupBody">
@@ -2223,7 +2284,7 @@ border: 1px solid rgba(255,255,255,.22);
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v951                               ║
+║                          🎮 NIGHT GAMES v952                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2231,7 +2292,7 @@ border: 1px solid rgba(255,255,255,.22);
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v951
+// Night Games Night Games v952
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2296,7 +2357,7 @@ const firebaseConfig = {
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
 
-    // v951: preload saved email for this device (Bill + anyone who signed in before)
+    // v952: preload saved email for this device (Bill + anyone who signed in before)
     try{
   const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim().toLowerCase();
   if(savedEmail && savedEmail === BILL_EMAIL){
@@ -2516,7 +2577,7 @@ function show(which){
 
 
 /* =============================================================================
-   RANDOMIZER (v951)  [SECTION_RANDOMIZER]
+   RANDOMIZER (v952)  [SECTION_RANDOMIZER]
    - Turn order randomizer (any game)
    - Killer numbers (1–20 unique)
 ============================================================================= */
@@ -2858,89 +2919,7 @@ try{ emailInput.value = DUMMY_EMAIL; }catch(e){}
 
 
     // v768: minimal session + setup → waiting room (does not touch login)
-    
-
-// v951: Real-time session sync (Firestore doc per session)
-let sessionDocUnsub = null;
-let sessionDocCache = null;
-let ngStartLatch = null; // prevents repeated transitions
-
-async function upsertSessionDoc(partial){
-  const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
-  if(!db2 || !activeSessionId) return;
-  try{
-    await setDoc(doc(db2, "sessions", activeSessionId), partial || {}, { merge:true });
-  }catch(e){}
-}
-
-async function joinSessionDoc(){
-  const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
-  const me = (currentEmail||"").toLowerCase();
-  if(!db2 || !activeSessionId || !me) return;
-  try{
-    const ref = doc(db2, "sessions", activeSessionId);
-    const snap = await getDoc(ref);
-    const cur = snap.exists() ? (snap.data()||{}) : {};
-    const joined = Array.isArray(cur.joined) ? cur.joined.map(x=>String(x||"").toLowerCase()) : [];
-    if(!joined.includes(me)) joined.push(me);
-    await setDoc(ref, { joined, lastJoinAt: serverTimestamp() }, { merge:true });
-  }catch(e){}
-}
-
-function listenSessionDoc(){
-  try{ if(sessionDocUnsub) sessionDocUnsub(); }catch(e){}
-  sessionDocUnsub = null;
-  sessionDocCache = null;
-  ngStartLatch = null;
-  const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
-  if(!db2 || !activeSessionId) return;
-  const ref = doc(db2, "sessions", activeSessionId);
-  sessionDocUnsub = onSnapshot(ref, (snap)=>{
-    if(!snap || !snap.exists()) return;
-    sessionDocCache = snap.data() || {};
-    // If we are in waiting room and session is ready, show banner + transition together
-    try{
-      if(sessionDocCache.status === "ready" || sessionDocCache.status === "active"){
-        if(ngStartLatch === activeSessionId) return;
-        ngStartLatch = activeSessionId;
-        showStartBannerAndLaunch();
-      }
-    }catch(e){}
-  });
-}
-
-function showStartBannerAndLaunch(){
-  // show on waiting screen if available, else just route
-  try{
-    const msg = document.getElementById("waitingStartBanner");
-    if(msg){
-      msg.style.display = "block";
-    }else{
-      // inject lightweight banner
-      const wrap = document.createElement("div");
-      wrap.id = "waitingStartBanner";
-      wrap.className = "startBanner";
-      wrap.innerHTML = "<div class='startBannerTitle'>All players have arrived</div><div class='startBannerSub'>Starting game…</div>";
-      try{ waitingBody && waitingBody.prepend(wrap); }catch(e){}
-    }
-  }catch(e){}
-  // delay a beat so everyone sees it
-  setTimeout(()=>{
-    try{
-      // Prefer real runner if present
-      if(typeof startGameFromSession === "function"){
-        startGameFromSession();
-        return;
-      }
-    }catch(e){}
-    try{
-      lobbyTitle.textContent = (activeSession && activeSession.game ? activeSession.game : "Game") + " • LIVE";
-      lobbyBody.innerHTML = "<div style='font-weight:1100; font-size:22px; margin-bottom:10px;'>Game starting…</div><div style='opacity:.82;'>All players joined.</div>";
-      show("lobby");
-    }catch(e){}
-  }, 1400);
-}
-let activeSessionId = null;
+    let activeSessionId = null;
     let activeSession = null;
 
     function newSessionId(){
@@ -2958,21 +2937,6 @@ let activeSessionId = null;
       };
       try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
       listenSessionInvites();
-      // v951: create session doc
-      try{
-        await upsertSessionDoc({
-          id: activeSessionId,
-          game,
-          host: (currentEmail||"").toLowerCase(),
-          setup: activeSession.setup,
-          emails: activeSession.setup?.emails || [],
-          count: activeSession.setup?.count || 1,
-          joined: [(currentEmail||"").toLowerCase()].filter(Boolean),
-          status: "waiting",
-          createdAt: serverTimestamp()
-        });
-        listenSessionDoc();
-      }catch(e){}
     }
 
     function _ensureCurrentInList(emails){
@@ -3211,8 +3175,6 @@ function renderSetupForGame(game){
         activeSession = activeSession || {};
         activeSession.game = game;
         activeSession.setup = { count: want, emails };
-        // v951: sync setup to session doc
-        try{ await upsertSessionDoc({ setup: activeSession.setup, emails, count: want, status:"waiting" }); }catch(e){}
         // v906: 01 rule options captured for engine
         if(game === "01"){
           const startScore = parseInt((document.getElementById("setup01Start")?.value)||"501",10) || 501;
@@ -3302,9 +3264,6 @@ sendInvitesForSession(); }catch(e){}
 renderWaitingRoom();
               show("waiting");
               closeDetail();
-              // v951: join session + listen for ready
-              try{ await joinSessionDoc(); }catch(e){}
-              try{ listenSessionDoc(); }catch(e){}
             }
           });
         }
@@ -3619,7 +3578,7 @@ if(!regSnap.exists()) {
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v951: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      // v952: remember last successful email on THIS device/browser (Bill garage iPad use-case)
       try{ persistEmailAfterLogin(currentEmail);
 try{ setHeaderPlayerLabel(email); }catch(e){}
           try{ if(ngUpdateBtn) ngUpdateBtn.style.display = 'inline-flex'; }catch(e){}
