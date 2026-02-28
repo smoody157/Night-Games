@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v958  |  2026-02-28
+  NIGHT GAMES v959  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v958 STABILITY SWEEP =====================
+<!-- ===================== v959 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -43,7 +43,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v958 (MASTER STABLE)</title>
+<title>Night Games v959 (MASTER STABLE)</title>
 <style>
 
 
@@ -532,7 +532,7 @@ border: 1px solid rgba(255,255,255,.22);
       touch-action: pan-y;
     }
 
-    /* v958: Ensure setup + waiting bodies can scroll (iOS safe in flex/grid) */
+    /* v959: Ensure setup + waiting bodies can scroll (iOS safe in flex/grid) */
     #setup .detailWrap, #waiting .detailWrap{ min-height: 0; }
     #setup .panel, #waiting .panel{ min-height: 0; display:flex; flex-direction:column; }
     #setup .detailBody, #waiting .detailBody{
@@ -1674,14 +1674,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v958 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v959 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v958: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v959: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1706,7 +1706,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v958 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v959 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1715,7 +1715,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v958 HEADER PLAYER NAME ===================== */
+/* ===================== v959 HEADER PLAYER NAME ===================== */
 #ngHeaderBar .ngHeaderPlayer{
   position: relative;
   z-index: 1;
@@ -1740,7 +1740,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v958 GLOBAL FOOTER ===================== */
+/* ===================== v959 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1756,7 +1756,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v958 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v959 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1779,7 +1779,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v958 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v959 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1795,7 +1795,7 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* ===================== v958 HEADER STRIP CENTERING ===================== */
+/* ===================== v959 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
 #ngHeaderPlayer{
   position: absolute;
@@ -1807,7 +1807,7 @@ border: 1px solid rgba(255,255,255,.22);
 .ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
 /* =============================================================================
-   SECTION: v958 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
+   SECTION: v959 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
    - No layout redesign. Pure alignment + typography polish.
 ============================================================================= */
 #ngHeaderBar .ngHeaderCenter{
@@ -1846,7 +1846,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   SECTION: v958 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
+   SECTION: v959 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1875,7 +1875,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v958: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
+   v959: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1904,7 +1904,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v958: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
+   v959: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
    1) iPad overlap: push hub down on tablet widths
    2) Firebase • Firestore: side-by-side, centered, readable (no clipping)
    3) Default view: show 2 full rows (reduce row height slightly)
@@ -1938,7 +1938,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v958: Player Page Name (premium)
+   v959: Player Page Name (premium)
 ============================================================================= */
 .playerPageName{
   width:100%;
@@ -1960,14 +1960,16 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v958: Leaderboard button under Players area (skinny + wide)
+   v959: Leaderboard button under Players area (skinny + wide)
 ============================================================================= */
 .leaderboardSlot{ display:flex; justify-content:center; margin: 14px 0 8px 0; }
+#players .hub{ grid-template-rows: 1fr 1fr auto; }
+
 .ngWideBtn{ min-width: 260px; padding: 9px 18px !important; letter-spacing: .14em; }
 @media (min-width:760px){ .ngWideBtn{ min-width: 360px; } }
 
 /* =============================================================================
-   v958: Player Name + Leaderboard placement (Players screen)
+   v959: Player Name + Leaderboard placement (Players screen)
 ============================================================================= */
 .playerPageName{
   width: 100%;
@@ -2002,7 +2004,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v958: Authoritative Scroll System (ALL SCREENS)
+   v959: Authoritative Scroll System (ALL SCREENS)
    Goal: Every list/panel that needs scrolling scrolls reliably (iOS safe),
          while the app shell stays locked (no page-bounce).
 ============================================================================= */
@@ -2050,7 +2052,7 @@ html, body{
 }
 
 /* =============================================================================
-   v958: Critical scroll restore for Setup/Waiting + controls alignment
+   v959: Critical scroll restore for Setup/Waiting + controls alignment
 ============================================================================= */
 #setupBody, #waitingBody{
   max-height: calc(100vh - 320px);
@@ -2136,7 +2138,7 @@ html, body{
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v958</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v959</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2197,15 +2199,14 @@ html, body{
 <div class="sectionHead"><div class="title">Players</div></div>
 <div class="list" id="playersList"></div>
 </div>
-</div>
-
-<!-- v958: Player name moved to the old leaderboard slot location -->
-<div id="playerPageName" class="playerPageName"></div>
-
-<!-- v958: Leaderboard moved below Players area (outside panels) -->
 <div class="leaderboardSlot" style="margin:10px 0 6px 0;">
 <button class="pill" id="leaderboardBtn" data-action="show_leaderboard" type="button">Leaderboard</button>
 </div>
+
+</div>
+
+<!-- v959: Player name moved to the old leaderboard slot location -->
+<div id="playerPageName" class="playerPageName"></div>
 
 </section>
 <section class="screen" id="setup">
@@ -2302,7 +2303,7 @@ html, body{
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v958                               ║
+║                          🎮 NIGHT GAMES v959                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2310,7 +2311,7 @@ html, body{
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v958
+// Night Games Night Games v959
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2375,7 +2376,7 @@ const firebaseConfig = {
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
 
-    // v958: email field defaults (no highlight/delete)
+    // v959: email field defaults (no highlight/delete)
     try{
       const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim().toLowerCase();
       const isBill = (savedEmail && savedEmail === BILL_EMAIL);
@@ -2413,7 +2414,7 @@ const firebaseConfig = {
 
 
     /* ===========================
-       v958 AUDIO CONTROLLER (SINGLE PLAYER)
+       v959 AUDIO CONTROLLER (SINGLE PLAYER)
        - One Audio element for ALL one-shot sounds (intro + waiting-room slam).
        - Email touch: starts intro + clears dummy instantly.
        =========================== */
@@ -2591,7 +2592,7 @@ function show(which){
 
 
 /* =============================================================================
-   RANDOMIZER (v958)  [SECTION_RANDOMIZER]
+   RANDOMIZER (v959)  [SECTION_RANDOMIZER]
    - Turn order randomizer (any game)
    - Killer numbers (1–20 unique)
 ============================================================================= */
@@ -2986,7 +2987,12 @@ function renderSetupForGame(game){
         </label>`;
       }).join("");
 
-      setupBody.innerHTML = `
+            const needsDartsOpts = (game === "01" || game === "301");
+      const scoreId = (game === "301") ? "setup301Start" : "setup01Start";
+      const inOutId  = (game === "301") ? "setup301InOut" : "setup01InOut";
+      const scoreLabel = (game === "301") ? "301 Start Score" : "01 Start Score";
+
+setupBody.innerHTML = `
         <div class="setupGameTitle">${game}</div>
         <div style="opacity:.78; margin-bottom:14px;">Pick players, then use Controls.</div>
         
@@ -3008,16 +3014,16 @@ function renderSetupForGame(game){
           </div>
         
 
-${ (game === "01") ? `
-<div class="fieldLabel" style="margin-top:14px;">01 Start Score</div>
-<select id="setup01Start" class="glassSelect">
+${ needsDartsOpts ? `
+<div class="fieldLabel" style="margin-top:14px;">${scoreLabel}</div>
+<select id="${scoreId}" class="glassSelect">
   <option value="301">301</option>
   <option value="501" selected>501</option>
   <option value="701">701</option>
 </select>
 
 <div class="fieldLabel" style="margin-top:14px;">In / Out</div>
-<select id="setup01InOut" class="glassSelect">
+<select id="${inOutId}" class="glassSelect">
   <option value="DI_DO">Double In / Double Out</option>
   <option value="SI_DO">Single In / Double Out</option>
   <option value="SI_SO" selected>Single In / Single Out</option>
@@ -3054,16 +3060,15 @@ ${ (game === "01") ? `
       const startInlineBtn = document.getElementById("setupStartInlineBtn");
       const startCtrlBtn = document.getElementById("setupStartBtn");
       const cancelBtn = document.getElementById("setupCancelBtn");
-      // v906: 01 setup defaults
-      const setup01Start = document.getElementById("setup01Start");
-      const setup01InOut = document.getElementById("setup01InOut");
-      if(game === "01"){
-        if(setup01Start && !setup01Start.value) setup01Start.value = "501";
-        if(setup01InOut && !setup01InOut.value) setup01InOut.value = "SI_SO";
+      // v906: 01/301 setup defaults
+      const setupScoreSel = document.getElementById(scoreId);
+      const setupInOutSel = document.getElementById(inOutId);
+      if(needsDartsOpts){
+        if(setupScoreSel && !setupScoreSel.value) setupScoreSel.value = "501";
+        if(setupInOutSel && !setupInOutSel.value) setupInOutSel.value = "SI_SO";
       }
 
-
-      // defaults
+// defaults
       countSel.value = "1";
       const checks = Array.from(document.querySelectorAll(".pickPlayer"));
       // v768 picker wiring (dropdown-style player selector)
@@ -3207,16 +3212,15 @@ ${ (game === "01") ? `
         activeSession = activeSession || {};
         activeSession.game = game;
         activeSession.setup = { count: want, emails };
-        // v906: 01 rule options captured for engine
-        if(game === "01"){
-          const startScore = parseInt((document.getElementById("setup01Start")?.value)||"501",10) || 501;
-          const inOut = (document.getElementById("setup01InOut")?.value)||"SI_SO";
+        // v906: 01/301 rule options captured for engine
+        if(needsDartsOpts){
+          const startScore = parseInt((document.getElementById(scoreId)?.value)||"501",10) || 501;
+          const inOut = (document.getElementById(inOutId)?.value)||"SI_SO";
           activeSession.setup.startScore = startScore;
           activeSession.setup.inOut = inOut;
         }
 
-
-        try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
 
         // If solo -> go straight in. If multiplayer -> go to waiting room.
         if(want <= 1){
@@ -3404,7 +3408,7 @@ renderWaitingRoom();
         <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
       `;
 
-      // v958: waiting-room completion overlay (created once)
+      // v959: waiting-room completion overlay (created once)
       if(!window.__ngWaitOverlay){
         window.__ngWaitOverlay = document.createElement("div");
         window.__ngWaitOverlay.id = "ngWaitOverlay";
@@ -3446,7 +3450,7 @@ renderWaitingRoom();
         }catch(e){}
       }
 
-      // v958: auto-start when the last invited player has joined (host only)
+      // v959: auto-start when the last invited player has joined (host only)
       try{
         const me = (currentEmail||"").toLowerCase();
         const isHost = me && activeSession && (activeSession.host||"").toLowerCase()===me;
@@ -3464,7 +3468,7 @@ renderWaitingRoom();
           if(!anyDeclined && joined>=want){
             if(window.ngAutoStartedSessionId !== activeSessionId){
               window.ngAutoStartedSessionId = activeSessionId;
-              // v958: show completion message + sound, then transition
+              // v959: show completion message + sound, then transition
               try{ __ngRunWaitCompleteTransition(); }catch(e){} 
               return;
             }
@@ -3648,7 +3652,7 @@ if(!regSnap.exists()) {
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v958: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      // v959: remember last successful email on THIS device/browser (Bill garage iPad use-case)
       try{ persistEmailAfterLogin(currentEmail);
 try{ setHeaderPlayerLabel(email); }catch(e){}
           try{ if(ngUpdateBtn) ngUpdateBtn.style.display = 'inline-flex'; }catch(e){}
