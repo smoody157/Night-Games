@@ -488,12 +488,6 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
 
-    /* v768 layout lock adjustment: additional micro drop */
-    .appWrap, .screen, .landing, .players {
-        transform: translateY(20px);
-    }
-
-
     /* v768 ATW emoji: keep color + one-line */
     .gameLabelWrap{
       display:flex;
@@ -816,7 +810,7 @@ border: 1px solid rgba(255,255,255,.22);
   box-shadow: 0 0 10px rgba(70,255,160,.16), inset 0 0 10px rgba(60,255,160,.10) !important;
 }
 /* Make "advance" buttons readable */
-.pill.btnAdvance{ font-weight: 950; }
+
 
 /* Prevent duplicated controls from stacking/overlapping inside setup body */
 #setup .panel .detailBody{ position: relative; }
@@ -904,19 +898,7 @@ border: 1px solid rgba(255,255,255,.22);
 #landing .landingUI{ padding-top: 54px; }
 
 /* ===================== v768 GREEN ADVANCE BUTTONS ===================== */
-.btnAdvance, .btn-advance, .btnAdvanceGreen{
-  border: 1px solid rgba(120,255,170,.35) !important;
-  background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
-  box-shadow:
-    0 0 18px rgba(70,255,160,.18),
-    inset 0 0 18px rgba(60,255,160,.12) !important;
-}
-.btnAdvance:active, .btn-advance:active, .btnAdvanceGreen:active{
-  transform: translateY(1px) scale(0.99);
-  box-shadow:
-    0 0 10px rgba(70,255,160,.16),
-    inset 0 0 10px rgba(60,255,160,.10) !important;
-}
+
 
 /* ===================== v768 UI FIXES (requested) ===================== */
 /* Hide Lobby Setup button (requested) */
@@ -1062,25 +1044,10 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* Landing pads positioned to match the artwork's email & enter fields */
-#landing #landingPads{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(640px,92vw);
-  max-width:640px;
-  bottom:max(70px, calc(env(safe-area-inset-bottom) + 60px));
-  display:grid;
-  gap:10px;
-  z-index:5;
-  pointer-events:none;
-}
+
 
 /* Email pad slightly smaller than ENTER */
-#landing #emailPad{
-  position:relative;
-  height:64px;
-  pointer-events:auto;
-}
+
 #landing #emailInput{
   position:absolute;
   inset:0;
@@ -1093,30 +1060,7 @@ border: 1px solid rgba(255,255,255,.22);
   color:transparent;
   caret-color:transparent;
 }
-#landing #emailEcho{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:17px;
-  font-weight:1000;
-  letter-spacing:.6px;
-  color:rgba(255,255,255,.95);
-  text-shadow:0 2px 12px rgba(0,0,0,.85), 0 0 18px rgba(0,0,0,.55);
-  pointer-events:none;
-  user-select:none;
-}
-#landing #enterBtn{
-  height:72px;
-  border:0;
-  background:transparent;
-  border-radius:22px;
-  opacity:0;
-  pointer-events:auto;
-  cursor:pointer;
-}
+
 
 /* Single hint line */
 #landing .landingHint{
@@ -1154,237 +1098,73 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 /* Make the invisible pads match the stage width and sit a little lower */
-:root{
-  --padWidth: min(760px, 96vw);
-  --padsBottom: max(180px, calc(env(safe-area-inset-bottom) + 168px));
-  --emailH: 62px;
-  --enterH: 78px;
-}
-#landing #landingPads{
-  width: var(--padWidth) !important;
-  bottom: var(--padsBottom) !important;
-  gap: 12px !important;
-}
-#landing #emailPad{
-  height: var(--emailH) !important;
-}
-#landing #enterBtn{
-  width: 100% !important;
-  height: var(--enterH) !important;
-  border-radius: 28px !important;
-}
-#landing #emailEcho{
-  font-size: 18px !important;
-}
+
+
+
 
 
 /* Move the white email text + hint down together */
-:root{ --ngTextDrop: 28px; } /* tweak if needed */
+ /* tweak if needed */
 #landing #emailEcho,
 #landing #statusLine{
   transform: translateX(-50%) translateY(var(--ngTextDrop)) !important;
 }
 
 /* Show clear (semi-transparent) pads so you can see/align them */
-#landing #emailPad{
-  outline: 2px solid rgba(255,255,255,.28) !important;
-  background: rgba(255,255,255,.06) !important;
-  border-radius: 22px !important;
-}
-#landing #enterBtn{
-  opacity: 1 !important;
-  outline: 2px solid rgba(255,255,255,.28) !important;
-  background: rgba(255,255,255,.05) !important;
-  border-radius: 22px !important;
-}
 
-
-:root{
-  --ngPadsRadius: 26px;
-  --ngPadH: 74px;
-  --ngPadGap: 12px;
-}
 
 /* Same size + stage width */
-#landing #landingPads{
-  gap: var(--ngPadGap) !important;
-}
+
 #landing #emailPad,
-#landing #enterBtn{
-  width: 100% !important;
-  height: var(--ngPadH) !important;
-  border-radius: var(--ngPadsRadius) !important;
-}
+
 
 /* Crystal-clear glass look */
 #landing #emailPad,
-#landing #enterBtn{
-  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06)) !important;
-  border: 1px solid rgba(255,255,255,.28) !important;
-  box-shadow:
-    0 12px 34px rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.40),
-    inset 0 -1px 0 rgba(255,255,255,.16) !important;
-  backdrop-filter: blur(10px) saturate(120%);
-  -webkit-backdrop-filter: blur(10px) saturate(120%);
-}
+
 
 /* remove the old outline styling from v906 */
-#landing #emailPad{ outline: none !important; }
-#landing #enterBtn{ outline: none !important; opacity: 1 !important; }
+
 
 /* Keep email text centered INSIDE top pad */
-#landing #emailEcho{
-  transform: translateY(0px) !important;
-  font-size: 18px !important;
-}
+
 
 /* Put hint INSIDE the enter pad, under ENTER */
-#landing #enterBtn{
-  position: relative;
-  padding: 0 !important;
-}
-#landing #enterBtn .enterText{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform: translate(-50%,-62%);
-  font-size: 28px;
-  font-weight: 1000;
-  letter-spacing: 2px;
-  color: rgba(255,255,255,.92);
-  text-shadow: 0 2px 14px rgba(0,0,0,.55);
-  pointer-events:none;
-}
-#landing #enterBtn .enterSub{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform: translate(-50%, 30%);
-  width: 92%;
-  text-align:center;
-  font-size: 12px;
-  font-weight: 900;
-  opacity: .86;
-  color: rgba(255,255,255,.88);
-  text-shadow: 0 2px 12px rgba(0,0,0,.55);
-  pointer-events:none;
-}
+
 
 /* Nudge email+enter group down a touch more without breaking footer */
-#landing #landingPads{
-  bottom:max(58px, calc(env(safe-area-inset-bottom) + 48px)) !important;
-}
 
-
-:root{
-  --ngPadsRadius: 22px;
-  --ngPadH: 64px;
-  --ngPadGap: 10px;
-  --ngPadW: 92%;
-}
 
 /* Move pad stack UP a bit (increase bottom) */
-#landing #landingPads{
-  bottom:max(78px, calc(env(safe-area-inset-bottom) + 70px)) !important;
-}
+
 
 /* Smaller width + consistent sizing */
 #landing #emailPad,
-#landing #enterBtn{
-  width: var(--ngPadW) !important;
-  height: var(--ngPadH) !important;
-  border-radius: var(--ngPadsRadius) !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
-}
+
 
 /* Crystal-clear beveled glass (no tint) */
 #landing #emailPad,
-#landing #enterBtn{
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.035)) !important;
-  border: 1px solid rgba(255,255,255,.34) !important;
-  box-shadow:
-    0 10px 28px rgba(0,0,0,.28),
-    inset 0 1px 0 rgba(255,255,255,.55),
-    inset 0 -1px 0 rgba(255,255,255,.18),
-    inset 1px 0 0 rgba(255,255,255,.18),
-    inset -1px 0 0 rgba(255,255,255,.18) !important;
-  backdrop-filter: blur(8px) saturate(110%);
-  -webkit-backdrop-filter: blur(8px) saturate(110%);
-}
+
 
 /* Keep email text centered inside top pad */
-#landing #emailEcho{
-  font-size: 17px !important;
-}
+
 
 /* ENTER + subtext scale down slightly to fit smaller pad */
-#landing #enterBtn .enterText{
-  font-size: 24px !important;
-  transform: translate(-50%,-64%) !important;
-}
-#landing #enterBtn .enterSub{
-  font-size: 11px !important;
-  transform: translate(-50%, 36%) !important;
-}
+
 
 
 /* Move pads UP slightly */
-#landing #landingPads{
-  bottom:max(110px, calc(env(safe-area-inset-bottom) + 95px)) !important;
-}
+
 
 /* Crystal clear glass (no color tint at all) */
 #landing #emailPad,
-#landing #enterBtn{
-  background: rgba(255,255,255,0.04) !important;
-  border: 1px solid rgba(255,255,255,0.55) !important;
-  box-shadow:
-    0 8px 22px rgba(0,0,0,.25),
-    inset 0 2px 6px rgba(255,255,255,.55),
-    inset 0 -2px 6px rgba(255,255,255,.15);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
 
-
-:root{
-  --ngEnterH: 64px;
-  --ngEmailH: 58px;       /* slightly smaller */
-  --ngPadW: 92%;
-  --ngPadR: 22px;
-  --ngGap: 14px;
-  --ngEmailLift: -6px;    /* move email pad up a touch */
-}
 
 /* Pad stack position (leave overall where it is) */
-#landing #landingPads{
-  gap: var(--ngGap) !important;
-}
+
 
 /* Common glass look: crystal clear, shiny, beveled */
 #landing #emailPad,
-#landing #enterBtn{
-  width: var(--ngPadW) !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
-  border-radius: var(--ngPadR) !important;
-  position: relative !important;
-  overflow: hidden !important;
 
-  background: rgba(255,255,255,0.03) !important;   /* clear, not frosted */
-  border: 1px solid rgba(255,255,255,0.55) !important;
-  box-shadow:
-    0 10px 26px rgba(0,0,0,0.26),
-    inset 0 2px 10px rgba(255,255,255,0.55),
-    inset 0 -2px 8px rgba(255,255,255,0.14),
-    inset 1px 0 0 rgba(255,255,255,0.18),
-    inset -1px 0 0 rgba(255,255,255,0.18) !important;
-
-  backdrop-filter: blur(5px) saturate(115%);
-  -webkit-backdrop-filter: blur(5px) saturate(115%);
-}
 
 /* Beveled sparkle highlight */
 #landing #emailPad::before,
@@ -1415,8 +1195,8 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* Sizes */
-#landing #enterBtn{ height: var(--ngEnterH) !important; }
-#landing #emailPad{ height: var(--ngEmailH) !important; transform: translateY(var(--ngEmailLift)) !important; }
+
+
 
 /* Keep email text centered inside the email pad */
 #landing #emailEcho{ font-size: 17px !important; }
@@ -1445,9 +1225,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* ENTER button reference */
-#landing #enterBtn{
-  height: var(--ngEnterH) !important;
-}
+
 
 /* Email smaller + slightly higher */
 #landing #emailPad{
@@ -1796,13 +1574,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 /* ===================== v954 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
-#ngHeaderPlayer{
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: 70%;
-  pointer-events: none;
-}
+
 .ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
 /* =============================================================================
@@ -1827,73 +1599,20 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* Player name (center) — glass text (no box) */
-#ngHeaderPlayer{
-  font-size: 18px !important;
-  font-weight: 1100 !important;
-  letter-spacing: .6px !important;
-  text-transform: none !important;
-  padding: 0 !important;
-  border: none !important;
-  background: none !important;
-  box-shadow: none !important;
 
-  /* Glassy text finish */
-  color: rgba(90,255,170,.98) !important;
-  text-shadow:
-    0 1px 0 rgba(0,0,0,.55),
-    0 0 12px rgba(90,255,170,.22);
-}
 
 /* =============================================================================
    SECTION: v954 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
 ============================================================================= */
-#ngHeaderPlayer{
-  display:block;
-  width:100%;
-  text-align:center !important;
-  font-size: 20px !important;
-  font-weight: 1200 !important;
-  letter-spacing: .85px !important;
-  line-height: 1.1;
-  padding: 0 !important;
-  margin: 0 auto !important;
-  border: none !important;
-  background: none !important;
-  box-shadow: none !important;
-  color: rgba(180,255,230,.98) !important;
-  text-shadow:
-    0 1px 0 rgba(0,0,0,.62),
-    0 0 14px rgba(80,255,180,.32);
-}
+
 @supports (-webkit-background-clip: text){
-  #ngHeaderPlayer{
-    background: linear-gradient(180deg, rgba(210,255,240,1) 0%, rgba(90,255,190,.98) 45%, rgba(25,185,160,.98) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+
 }
 
 /* =============================================================================
    v954: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
 ============================================================================= */
-#ngHeaderPlayer{
-  display:block;
-  width:100%;
-  text-align:center !important;
-  font-size: 20px !important;
-  font-weight: 1200 !important;
-  letter-spacing: .9px !important;
-  line-height: 1.1;
-  padding: 0 !important;
-  margin: 0 auto !important;
-  border: none !important;
-  background: none !important;
-  box-shadow: none !important;
-  color: rgba(220,255,245,.98) !important;
-  text-shadow:
-    0 1px 0 rgba(0,0,0,.62),
-    0 0 14px rgba(80,255,180,.32);
-}
+
 @supports (-webkit-background-clip: text){
   #ngHeaderPlayer{
     background: linear-gradient(180deg, rgba(235,255,248,1) 0%, rgba(110,255,200,.98) 48%, rgba(25,185,160,.98) 100%);
