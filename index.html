@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v1023  |  2026-02-28
+  NIGHT GAMES v1024  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -47,7 +47,7 @@ THIS BUILD CHANGES:
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v1023 (MASTER STABLE)</title>
+<title>Night Games v1024 (PARSERFIX STABLE)</title>
 <style>
 
 
@@ -2563,7 +2563,7 @@ html, body{
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v1023                               ║
+║                          🎮 NIGHT GAMES v1024                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2571,7 +2571,7 @@ html, body{
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v1023
+// Night Games Night Games v1019
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2663,7 +2663,7 @@ const firebaseConfig = {
       const emailEchoEl = document.getElementById("emailEcho");
       function syncEmailEcho(){
         try{
-          const v = (emailInput?.value || "").trim();
+          const v = ((emailInput && emailInput.value) || "").trim();
           if(emailEchoEl) emailEchoEl.textContent = v ? v : "player@example.com";
         }catch(e){}
       }
@@ -3327,22 +3327,20 @@ function startPracticeSession(){
   try{
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody  = document.getElementById("lobbyBody");
-    if(lobbyTitle) lobbyTitle.textContent = (activeSession?.game||"Game") + " • PRACTICE";
+    if(lobbyTitle) lobbyTitle.textContent = ((activeSession && activeSession.game)||"Game") + " • PRACTICE";
     if(lobbyBody)  lobbyBody.innerHTML =
       "<div style='font-weight:1200; font-size:22px; margin-bottom:10px;'>Practice ready.</div>" +
-      "<div style='opacity:.82; margin-bottom:12px;'>Practice started.</div>" +
-      "<div style='opacity:.82; margin-bottom:12px;'>Stats are not recorded.</div>";
+      "<div style='opacity:.82; margin-bottom:12px;'>Press <b>Begin</b> to start your practice game. Stats are not recorded.</div>";
   }catch(e){}
-  try{ show('lobby'); }catch(e){}
-  try{ startPracticeGame && startPracticeGame(); }catch(e){}
-  // Ensure practice controls
-  try{ const b=document.getElementById('lobbyStartBtn'); if(b){ b.style.display='none'; } }catch(e){}
-  try{ const inv=document.getElementById('lobbyInviteBtn'); if(inv){ inv.style.display='none'; } }catch(e){}
-  try{ const rnd=document.getElementById('lobbyRandomizeBtn'); if(rnd){ rnd.style.display='none'; } }catch(e){}
+  // Configure controls for practice
+  try{
+    const b = document.getElementById("lobbyStartBtn");
+    if(b){
+      b.style.display = "inline-flex";
+      b.textContent = "Start";
+    }
+  }catch(e){}
   try{ renderLobby && renderLobby(); }catch(e){}
-}
-
-// v1019: Render the in-matchnderLobby && renderLobby(); }catch(e){}
 }
 
 // v1019: Render the in-match "game room" (Lobby) consistently for PRACTICE + LIVE
@@ -3354,16 +3352,6 @@ function renderLobby(){
 
     const game = (activeSession && activeSession.game) ? activeSession.game : "Game";
     const isPractice = !!(activeSession && activeSession.practice);
-
-    // Control buttons (single path)
-    try{
-      const invBtn = document.getElementById('lobbyInviteBtn');
-      if(invBtn) invBtn.style.display = (!isPractice && emails.length>1) ? 'inline-flex' : 'none';
-    }catch(e){}
-    try{
-      const startBtn = document.getElementById('lobbyStartBtn');
-      if(startBtn) startBtn.style.display = isPractice ? 'none' : 'inline-flex';
-    }catch(e){}
 
     // Title
     if(lobbyTitle){
@@ -3436,7 +3424,7 @@ function startPracticeGame(){
   try{
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody  = document.getElementById("lobbyBody");
-    if(lobbyTitle) lobbyTitle.textContent = (activeSession?.game||"Game") + " • PRACTICE";
+    if(lobbyTitle) lobbyTitle.textContent = ((activeSession && activeSession.game)||"Game") + " • PRACTICE";
     if(lobbyBody)  lobbyBody.innerHTML =
       "<div style='font-weight:1200; font-size:22px; margin-bottom:10px;'>Practice started.</div>" +
       "<div style='opacity:.82;'>Game is running (practice mode). Stats are not recorded.</div>";
@@ -3457,7 +3445,7 @@ async function startSession(){
   try{
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody = document.getElementById("lobbyBody");
-    if(lobbyTitle) lobbyTitle.textContent = (activeSession?.game||"Game") + " • LIVE";
+    if(lobbyTitle) lobbyTitle.textContent = ((activeSession && activeSession.game)||"Game") + " • LIVE";
     if(lobbyBody) lobbyBody.innerHTML = "<div style='font-weight:1100; font-size:22px; margin-bottom:10px;'>Starting…</div><div style='opacity:.82;'>Game is live.</div>";
     try{ setTimeout(()=>{ renderLobby && renderLobby(); }, 600); }catch(e){}
   }catch(e){}
@@ -3560,7 +3548,7 @@ function watchSessionDoc(){
         const order = r.order || [];
         const nums = r.killerNumbers || {};
         // Simple shared "spin": cycle through names for 1.8s, then reveal result (deterministic + stored)
-        const labels = order.length ? order : (activeSession?.setup?.emails||[]);
+        const labels = order.length ? order : ((activeSession && activeSession.setup && activeSession.setup.emails) || []);
         let t0 = Date.now();
         let tick = 0;
         await new Promise(resolve=>{
@@ -3589,7 +3577,7 @@ function watchSessionDoc(){
             <div style="text-align:left; font-weight:1000; line-height:1.55;">${rows||""}</div>`;
         }
         // Mark done (host only)
-        if((activeSession?.host||"").toLowerCase() === (currentEmail||"").toLowerCase()){
+        if(((activeSession && activeSession.host)||"").toLowerCase() === (currentEmail||"").toLowerCase()){
           try{
             await setDoc(doc(db2, "sessions", activeSessionId), { randomizer: Object.assign({}, r, { state:"done", doneAt: serverTimestamp() }) }, { merge:true });
         try{ watchSessionDoc(); }catch(e){}
@@ -3605,14 +3593,14 @@ function watchSessionDoc(){
       const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
       try{
         if(!activeSessionId || !db2) return;
-        const host = (activeSession?.host||"").toLowerCase();
+        const host = ((activeSession && activeSession.host)||"").toLowerCase();
         const me = (currentEmail||"").toLowerCase();
         if(host !== me) return;
-        if(activeSession?.randomizer?.state === "running") return;
-        const emails = (activeSession?.setup?.emails || []).map(x=>String(x||"").toLowerCase()).filter(Boolean);
+        if((activeSession && activeSession.randomizer && activeSession.randomizer.state) === "running") return;
+        const emails = ((activeSession && activeSession.setup && activeSession.setup.emails) || []).map(x=>String(x||"").toLowerCase()).filter(Boolean);
         const seed = Date.now() & 0xffffffff;
         const order = seededShuffle(emails, seed);
-        const isKiller = ((activeSession?.game)||"").toLowerCase() === "killer";
+        const isKiller = (((activeSession && activeSession.game))||"").toLowerCase() === "killer";
         let killerNumbers = null;
         if(isKiller){
           const nums = seededShuffle(Array.from({length:20},(_,i)=>i+1), seed ^ 0x9e3779b9);
@@ -3792,7 +3780,7 @@ ${ needsDartsOpts ? `
         checks.forEach(c=>{
           const email = c.value;
           const label = c.closest("label");
-          const nm = label ? ((label.querySelector("span")?.textContent||"").trim() || email) : email;
+          const nm = label ? (((label.querySelector("span") ? label.querySelector("span").textContent : "")||"").trim() || email) : email;
           const row = document.createElement("div");
           row.className = "pickerRow";
           row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
@@ -3837,7 +3825,7 @@ ${ needsDartsOpts ? `
       }
       if(openBtn){
         openBtn.addEventListener("click", ()=>{
-          const want = parseInt((document.getElementById("setupCount")?.value)||"1",10) || 1;
+          const want = parseInt(((document.getElementById("setupCount") ? document.getElementById("setupCount").value : "") )||"1",10) || 1;
           openPicker(want);
         });
       }
@@ -3917,16 +3905,7 @@ function enforce(){
         activeSession = activeSession || {};
         activeSession.game = game;
         activeSession.setup = { count: want, emails };
-        // capture 01/301/501 options before start (used by engine)
-        try{
-          if(typeof needsDartsOpts !== "undefined" && needsDartsOpts){
-            const startScore = parseInt((document.getElementById(scoreId)?.value)||"501",10) || 501;
-            const inOut = (document.getElementById(inOutId)?.value)||"SI_SO";
-            activeSession.setup.startScore = startScore;
-            activeSession.setup.inOut = inOut;
-          }
-        }catch(e){}
-        // SOLO practice auto-start (no waiting, no randomizer UI, no stats)
+        // v1019: SOLO practice auto-start (no waiting, no randomizer, no stats)
         if(want <= 1){
           try{ activeSession.practice = true; activeSession.started = true; }catch(e){}
           try{ localStorage.setItem('ng_active_session', JSON.stringify(activeSession)); }catch(e){}
@@ -3934,15 +3913,19 @@ function enforce(){
           try{ startPracticeGame && startPracticeGame(); }catch(e){}
           return;
         }
-        // MULTIPLAYER start — create session, send invites, then waiting
+        // v1019: MULTIPLAYER start — create session, send invites, then waiting
         try{ activeSession.practice = false; }catch(e){}
         try{ localStorage.setItem('ng_active_session', JSON.stringify(activeSession)); }catch(e){}
         try{ await startSession(); }catch(e){}
         try{ show('waiting'); }catch(e){}
         try{ setInviteStatus && setInviteStatus('Sending invites…', false); }catch(e){}
         try{ await sendInvitesForSession(); setInviteStatus && setInviteStatus('Invites sent.', true); }catch(e){ setInviteStatus && setInviteStatus('Invite failed.', false); }
-        // (options captured above)
-        activeSession.setup.startScore = startScore;
+        return;
+        // v1019: 01/301 rule options captured for engine
+        if(needsDartsOpts){
+          const startScore = parseInt(((document.getElementById(scoreId) ? document.getElementById(scoreId).value : "") )||"501",10) || 501;
+          const inOut = ((document.getElementById(inOutId) ? document.getElementById(inOutId).value : "") )||"SI_SO";
+          activeSession.setup.startScore = startScore;
           activeSession.setup.inOut = inOut;
         }
 
@@ -4087,7 +4070,7 @@ async function sendInvitesForSession(){
       const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
       if(!db2 || !activeSessionId || !activeSession || !activeSession.setup) return;
       const hostEmail = (currentEmail||"").toLowerCase();
-      const hostName = (lastPeople||[]).find(p => (p.email||"").toLowerCase()===hostEmail)?.name || (hostEmail.split("@")[0]||"Host");
+      const hostName = (()=>{ const __p=(lastPeople||[]).find(p => (p.email||"").toLowerCase()===hostEmail); return (__p && __p.name) ? __p.name : ""; })() || (hostEmail.split("@")[0]||"Host");
       const game = activeSession.game || "Game";
       const invited = (activeSession.setup.emails||[]).map(x=>(x||"").toLowerCase()).filter(Boolean);
       const count = activeSession.setup.count || invited.length || 1;
@@ -4482,7 +4465,7 @@ try{ setHeaderPlayerLabel(email); }catch(e){}
 */
 function onEnter() {
         signInFlow(auth, db, emailInput.value).catch((err)=>{
-          const msg = err?.code || err?.message || String(err);
+          const msg = (err && err.code) || (err && err.message) || String(err);
           statusLine.textContent = "Firebase error.";
           setDbg("FAIL", dbgAuth.textContent || "—", "fail", msg);
           alert("Firebase error: " + msg);
@@ -4692,7 +4675,10 @@ if(b && b.id === "ngUpdateBtn"){
       setupHomeBtn && setupHomeBtn.addEventListener("click", ()=> show("players"));
       // Cancel returns to Lobby
       setupBackBtn && setupBackBtn.addEventListener("click", ()=> show("lobby"));
-      setupStartGameBtn && setupStartGameBtn.addEventListener("click", ()=>{ try{ if(window.__ngDoStart){ window.__ngDoStart(); } }catch(e){} });
+      setupStartGameBtn && setupStartGameBtn.addEventListener("click", ()=>{
+        try{ show("lobby"); }catch(e){}
+        try{ setTimeout(()=>{ lobbyStartBtn && lobbyStartBtn.click(); }, 50); }catch(e){}
+      });
       waitingBackBtn.addEventListener("click", ()=> show("setup"));
       lobbyStartBtn.addEventListener("click", ()=>{
         try{ if(window.__ngDoStart){ window.__ngDoStart(); return; } }catch(e){}
