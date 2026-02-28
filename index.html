@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v962  |  2026-02-28
+  NIGHT GAMES v965  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v962 STABILITY SWEEP =====================
+<!-- ===================== v965 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -43,7 +43,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v962 (MASTER STABLE)</title>
+<title>Night Games v965 (MASTER STABLE)</title>
 <style>
 
 
@@ -532,7 +532,7 @@ border: 1px solid rgba(255,255,255,.22);
       touch-action: pan-y;
     }
 
-    /* v962: Ensure setup + waiting bodies can scroll (iOS safe in flex/grid) */
+    /* v965: Ensure setup + waiting bodies can scroll (iOS safe in flex/grid) */
     #setup .detailWrap, #waiting .detailWrap{ min-height: 0; }
     #setup .panel, #waiting .panel{ min-height: 0; display:flex; flex-direction:column; }
     #setup .detailBody, #waiting .detailBody{
@@ -1674,14 +1674,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v962 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v965 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v962: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v965: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1706,7 +1706,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v962 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v965 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1715,7 +1715,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v962 HEADER PLAYER NAME ===================== */
+/* ===================== v965 HEADER PLAYER NAME ===================== */
 #ngHeaderBar .ngHeaderPlayer{
   position: relative;
   z-index: 1;
@@ -1740,7 +1740,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v962 GLOBAL FOOTER ===================== */
+/* ===================== v965 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1756,7 +1756,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v962 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v965 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1779,7 +1779,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v962 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v965 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1795,7 +1795,7 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* ===================== v962 HEADER STRIP CENTERING ===================== */
+/* ===================== v965 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
 #ngHeaderPlayer{
   position: absolute;
@@ -1807,7 +1807,7 @@ border: 1px solid rgba(255,255,255,.22);
 .ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
 /* =============================================================================
-   SECTION: v962 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
+   SECTION: v965 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
    - No layout redesign. Pure alignment + typography polish.
 ============================================================================= */
 #ngHeaderBar .ngHeaderCenter{
@@ -1846,7 +1846,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   SECTION: v962 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
+   SECTION: v965 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1875,7 +1875,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v962: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
+   v965: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1904,7 +1904,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v962: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
+   v965: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
    1) iPad overlap: push hub down on tablet widths
    2) Firebase • Firestore: side-by-side, centered, readable (no clipping)
    3) Default view: show 2 full rows (reduce row height slightly)
@@ -1938,7 +1938,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v962: Player Page Name (premium)
+   v965: Player Page Name (premium)
 ============================================================================= */
 .playerPageName{
   width:100%;
@@ -1960,7 +1960,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v962: Leaderboard button under Players area (skinny + wide)
+   v965: Leaderboard button under Players area (skinny + wide)
 ============================================================================= */
 .leaderboardSlot{ display:flex; justify-content:center; margin: 14px 0 8px 0; }
 #players .hub{ grid-template-rows: 1fr 1fr auto; }
@@ -1969,7 +1969,7 @@ border: 1px solid rgba(255,255,255,.22);
 @media (min-width:760px){ .ngWideBtn{ min-width: 360px; } }
 
 /* =============================================================================
-   v962: Player Name + Leaderboard placement (Players screen)
+   v965: Player Name + Leaderboard placement (Players screen)
 ============================================================================= */
 .playerPageName{
   width: 100%;
@@ -2004,7 +2004,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v962: Authoritative Scroll System (ALL SCREENS)
+   v965: Authoritative Scroll System (ALL SCREENS)
    Goal: Every list/panel that needs scrolling scrolls reliably (iOS safe),
          while the app shell stays locked (no page-bounce).
 ============================================================================= */
@@ -2052,7 +2052,7 @@ html, body{
 }
 
 /* =============================================================================
-   v962: Critical scroll restore for Setup/Waiting + controls alignment
+   v965: Critical scroll restore for Setup/Waiting + controls alignment
 ============================================================================= */
 #setupBody, #waitingBody{
   max-height: calc(100vh - 320px);
@@ -2089,7 +2089,7 @@ html, body{
 
 
 /* =============================================================================
-   v962: GLOBAL FROST PASS (ALL SUBPAGES)
+   v965: GLOBAL FROST PASS (ALL SUBPAGES)
    Goal: Ensure every major panel has consistent frosted-glass look across screens,
          including Waiting Room, Lobby, Leaderboard, Randomizer, Detail/Stats.
    Notes: No behavior changes; visual-only.
@@ -2193,7 +2193,7 @@ html, body{
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v962</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v965</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2260,7 +2260,7 @@ html, body{
 
 </div>
 
-<!-- v962: Player name moved to the old leaderboard slot location -->
+<!-- v965: Player name moved to the old leaderboard slot location -->
 <div id="playerPageName" class="playerPageName"></div>
 
 </section>
@@ -2310,6 +2310,7 @@ html, body{
 <button class="pill" id="lobbyBackBtn" type="button">Back</button>
 <button class="pill" id="lobbySetupBtn" type="button">Setup</button>
 <button class="pill btnAdvance" id="lobbyStartBtn" type="button">Start</button>
+<button class="pill" id="lobbyRandomizeBtn" type="button" style="display:none;">Randomize</button>
 <button class="pill" id="lobbyEndBtn" type="button">End</button>
 </div>
 </div>
@@ -2358,7 +2359,7 @@ html, body{
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v962                               ║
+║                          🎮 NIGHT GAMES v965                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2366,7 +2367,7 @@ html, body{
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v962
+// Night Games Night Games v965
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2433,7 +2434,7 @@ const firebaseConfig = {
     const randomizer = document.getElementById("randomizer");
     const emailInput = document.getElementById("emailInput");
 
-    // v962: email field defaults (no highlight/delete)
+    // v965: email field defaults (no highlight/delete)
     try{
       const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim().toLowerCase();
       const isBill = (savedEmail && savedEmail === BILL_EMAIL);
@@ -2471,7 +2472,7 @@ const firebaseConfig = {
 
 
     /* ===========================
-       v962 AUDIO CONTROLLER (SINGLE PLAYER)
+       v965 AUDIO CONTROLLER (SINGLE PLAYER)
        - One Audio element for ALL one-shot sounds (intro + waiting-room slam).
        - Email touch: starts intro + clears dummy instantly.
        =========================== */
@@ -2500,6 +2501,21 @@ const firebaseConfig = {
 
         window.ngAudio = {
           introStarted: false,
+          unlock(){
+            try{
+              const AC = window.AudioContext || window.webkitAudioContext;
+              if(!AC) return;
+              if(!window.__ngAC) window.__ngAC = new AC();
+              const ac = window.__ngAC;
+              if(ac.state === "suspended") ac.resume();
+              // silent buffer tick to fully unlock on iOS
+              const buf = ac.createBuffer(1, 1, 22050);
+              const src = ac.createBufferSource();
+              src.buffer = buf;
+              src.connect(ac.destination);
+              if(src.start) src.start(0);
+            }catch(e){}
+          },
           playIntro(){ playUrl(INTRO_URL); },
           playSlam(){ playUrl(SLAM_URL); }
         };
@@ -2526,7 +2542,8 @@ const firebaseConfig = {
               try{ emailInput.focus(); }catch(e){}
 
               if(emailEchoEl) emailEchoEl.style.opacity = "0";
-              try{ window.ngAudio.playIntro(); window.ngAudio.introStarted = true; }catch(e){}
+              try{ try{ window.ngAudio.unlock && window.ngAudio.unlock(); }catch(e){}
+              window.ngAudio.playIntro(); window.ngAudio.introStarted = true; }catch(e){}
             }catch(e){}
           }
           // Use one event type to prevent double-fire on iOS
@@ -2661,7 +2678,7 @@ function show(which){
 
 
 /* =============================================================================
-   RANDOMIZER (v962)  [SECTION_RANDOMIZER]
+   RANDOMIZER (v965)  [SECTION_RANDOMIZER]
    - Turn order randomizer (any game)
    - Killer numbers (1–20 unique)
 ============================================================================= */
@@ -3005,6 +3022,151 @@ try{ emailInput.value = DUMMY_EMAIL; }catch(e){}
     // v768: minimal session + setup → waiting room (does not touch login)
     let activeSessionId = null;
     let activeSession = null;
+
+    // v965: Session watcher (sync randomizer + lobby state to all clients)
+    let __ngSessionUnsub = null;
+    function watchSessionDoc(){
+      try{ if(__ngSessionUnsub){ __ngSessionUnsub(); __ngSessionUnsub=null; } }catch(e){}
+      try{
+        if(!db2 || !activeSessionId) return;
+        __ngSessionUnsub = onSnapshot(doc(db2, "sessions", activeSessionId), (snap)=>{
+          try{
+            if(!snap.exists()) return;
+            const data = snap.data() || {};
+            activeSession = Object.assign(activeSession||{}, data);
+            try{
+              const b = document.getElementById("lobbyRandomizeBtn");
+              if(b){
+                const isHost = ((data.host||"").toLowerCase() === (currentEmail||"").toLowerCase());
+                b.style.display = isHost ? "inline-flex" : "none";
+              }
+            }catch(e){}
+
+            // Randomizer sync: when running, show randomizer screen and animate to stored results
+            if(data.randomizer && data.randomizer.state === "running"){
+              try{ show("randomizer"); }catch(e){}
+              try{ runSyncedRandomizer(data.randomizer); }catch(e){}
+            }
+            // Auto-return after done
+            if(data.randomizer && data.randomizer.state === "done"){
+              try{ show("lobby"); }catch(e){}
+              try{ renderLobby && renderLobby(); }catch(e){}
+            }
+          }catch(e){}
+        });
+      }catch(e){}
+    }
+
+    // v965: deterministic shuffle using seed (so everyone sees same order)
+    function seededShuffle(arr, seed){
+      const a = arr.slice();
+      let x = (seed>>>0) || 1;
+      function rnd(){
+        // xorshift32
+        x ^= x << 13; x >>>= 0;
+        x ^= x >> 17; x >>>= 0;
+        x ^= x << 5;  x >>>= 0;
+        return (x>>>0) / 4294967296;
+      }
+      for(let i=a.length-1;i>0;i--){
+        const j = Math.floor(rnd()*(i+1));
+        const t=a[i]; a[i]=a[j]; a[j]=t;
+      }
+      return a;
+    }
+
+    // v965: animate randomizer UI for everyone (uses stored results)
+    let __ngRandRunning = false;
+    async function runSyncedRandomizer(r){
+      if(__ngRandRunning) return;
+      __ngRandRunning = true;
+      try{
+        const body = document.getElementById("randomizerBody");
+        if(body){
+          const title = (activeSession && activeSession.game) ? activeSession.game : "Game";
+          body.innerHTML = `
+            <div style="text-align:center; font-weight:1200; font-size:22px; margin-bottom:10px; letter-spacing:.08em; text-transform:uppercase;">Randomizing</div>
+            <div id="randStage" style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;"></div>
+            <div style="text-align:center; opacity:.8; margin-top:10px;">Please wait…</div>
+          `;
+        }
+        const stage = document.getElementById("randStage");
+        const isKiller = ((activeSession && activeSession.game)||"").toLowerCase() === "killer";
+        const orderBox = document.createElement("div");
+        orderBox.style.cssText = "width:min(320px,92vw); border-radius:18px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:12px 12px; text-align:center;";
+        const numBox = document.createElement("div");
+        numBox.style.cssText = orderBox.style.cssText;
+        if(stage){
+          stage.appendChild(orderBox);
+          if(isKiller) stage.appendChild(numBox);
+        }
+        const order = r.order || [];
+        const nums = r.killerNumbers || {};
+        // Simple shared "spin": cycle through names for 1.8s, then reveal result (deterministic + stored)
+        const labels = order.length ? order : (activeSession?.setup?.emails||[]);
+        let t0 = Date.now();
+        let tick = 0;
+        await new Promise(resolve=>{
+          const timer = setInterval(()=>{
+            tick++;
+            const idx = tick % Math.max(1, labels.length);
+            const cur = labels[idx] || "";
+            orderBox.innerHTML = `<div style="font-weight:1100; opacity:.85; margin-bottom:8px;">Shooter Order</div><div style="font-size:26px; font-weight:1200; letter-spacing:.04em;">${cur}</div>`;
+            if(isKiller){
+              const shownNum = (idx%20)+1;
+              numBox.innerHTML = `<div style="font-weight:1100; opacity:.85; margin-bottom:8px;">Killer Numbers</div><div style="font-size:26px; font-weight:1200; letter-spacing:.04em;">${shownNum}</div>`;
+            }
+            if(Date.now()-t0 > 1800){
+              clearInterval(timer);
+              resolve();
+            }
+          }, 120);
+        });
+        // Reveal final
+        orderBox.innerHTML = `<div style="font-weight:1100; opacity:.85; margin-bottom:8px;">Shooter Order</div>
+          <div style="text-align:left; font-weight:1000; line-height:1.55;">${order.map((x,i)=>`${i+1}. ${x}`).join("<br>")}</div>`;
+        if(isKiller){
+          const rows = Object.keys(nums).map(k=>({p:k,n:nums[k]})).sort((a,b)=>a.n-b.n)
+            .map(o=>`${o.n}. ${o.p}`).join("<br>");
+          numBox.innerHTML = `<div style="font-weight:1100; opacity:.85; margin-bottom:8px;">Killer Numbers</div>
+            <div style="text-align:left; font-weight:1000; line-height:1.55;">${rows||""}</div>`;
+        }
+        // Mark done (host only)
+        if((activeSession?.host||"").toLowerCase() === (currentEmail||"").toLowerCase()){
+          try{
+            await setDoc(doc(db2, "sessions", activeSessionId), { randomizer: Object.assign({}, r, { state:"done", doneAt: serverTimestamp() }) }, { merge:true });
+        try{ watchSessionDoc(); }catch(e){}
+
+          }catch(e){}
+        }
+      }finally{
+        __ngRandRunning = false;
+      }
+    }
+
+    async function hostTriggerRandomizer(){
+      try{
+        if(!activeSessionId || !db2) return;
+        const host = (activeSession?.host||"").toLowerCase();
+        const me = (currentEmail||"").toLowerCase();
+        if(host !== me) return;
+        if(activeSession?.randomizer?.state === "running") return;
+        const emails = (activeSession?.setup?.emails || []).map(x=>String(x||"").toLowerCase()).filter(Boolean);
+        const seed = Date.now() & 0xffffffff;
+        const order = seededShuffle(emails, seed);
+        const isKiller = ((activeSession?.game)||"").toLowerCase() === "killer";
+        let killerNumbers = null;
+        if(isKiller){
+          const nums = seededShuffle(Array.from({length:20},(_,i)=>i+1), seed ^ 0x9e3779b9);
+          killerNumbers = {};
+          order.forEach((em,i)=>{ killerNumbers[em] = nums[i % nums.length]; });
+        }
+        const payload = { 
+          randomizer: { state:"running", startedAt: serverTimestamp(), seed, order, killerNumbers, kind: isKiller ? "killer_dual" : "order_only" }
+        };
+        await setDoc(doc(db2, "sessions", activeSessionId), payload, { merge:true });
+      }catch(e){}
+    }
 
     function newSessionId(){
       return "sess_" + Date.now() + "_" + Math.random().toString(16).slice(2);
@@ -3357,6 +3519,8 @@ sendInvitesForSession(); }catch(e){}
             // set local session + go waiting
             if(sessionId){
               activeSessionId = sessionId;
+              try{ watchSessionDoc(); }catch(e){}
+
               activeSession = { id: sessionId, game, host: inv.fromEmail||inv.from||"", setup:{ count, emails: invited } };
               try{ localStorage.setItem("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
       listenSessionInvites();
@@ -3478,7 +3642,7 @@ renderWaitingRoom();
         <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
       `;
 
-      // v962: waiting-room completion overlay (created once)
+      // v965: waiting-room completion overlay (created once)
       if(!window.__ngWaitOverlay){
         window.__ngWaitOverlay = document.createElement("div");
         window.__ngWaitOverlay.id = "ngWaitOverlay";
@@ -3520,7 +3684,7 @@ renderWaitingRoom();
         }catch(e){}
       }
 
-      // v962: auto-start when the last invited player has joined (host only)
+      // v965: auto-start when the last invited player has joined (host only)
       try{
         const me = (currentEmail||"").toLowerCase();
         const isHost = me && activeSession && (activeSession.host||"").toLowerCase()===me;
@@ -3538,7 +3702,7 @@ renderWaitingRoom();
           if(!anyDeclined && joined>=want){
             if(window.ngAutoStartedSessionId !== activeSessionId){
               window.ngAutoStartedSessionId = activeSessionId;
-              // v962: show completion message + sound, then transition
+              // v965: show completion message + sound, then transition
               try{ __ngRunWaitCompleteTransition(); }catch(e){} 
               return;
             }
@@ -3722,7 +3886,7 @@ if(!regSnap.exists()) {
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v962: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      // v965: remember last successful email on THIS device/browser (Bill garage iPad use-case)
       try{ persistEmailAfterLogin(currentEmail);
 try{ setHeaderPlayerLabel(email); }catch(e){}
           try{ if(ngUpdateBtn) ngUpdateBtn.style.display = 'inline-flex'; }catch(e){}
@@ -4060,6 +4224,13 @@ if(b && b.id === "ngUpdateBtn"){
     toast.classList.toggle('expanded');
     if(hideTimer) clearTimeout(hideTimer);
   });
+
+      const lobbyRandomizeBtn = document.getElementById("lobbyRandomizeBtn");
+      if(lobbyRandomizeBtn){
+        lobbyRandomizeBtn.addEventListener("click", async ()=>{
+          try{ await hostTriggerRandomizer(); }catch(e){}
+        });
+      }
   closeBtn && closeBtn.addEventListener('click', ()=>{
     toast.style.display = 'none';
     if(hideTimer) clearTimeout(hideTimer);
