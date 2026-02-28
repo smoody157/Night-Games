@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v943  |  2026-02-28
+  NIGHT GAMES v944  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v943 STABILITY SWEEP =====================
+<!-- ===================== v944 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,7 +32,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v943 (MASTER STABLE)</title>
+<title>Night Games v944 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1660,14 +1660,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v943 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v944 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v943: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v944: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1692,7 +1692,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v943 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v944 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1701,7 +1701,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v943 HEADER PLAYER NAME ===================== */
+/* ===================== v944 HEADER PLAYER NAME ===================== */
 #ngHeaderBar .ngHeaderPlayer{
   position: relative;
   z-index: 1;
@@ -1726,7 +1726,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v943 GLOBAL FOOTER ===================== */
+/* ===================== v944 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1742,7 +1742,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v943 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v944 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1765,7 +1765,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v943 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v944 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1781,7 +1781,7 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* ===================== v943 HEADER STRIP CENTERING ===================== */
+/* ===================== v944 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
 #ngHeaderPlayer{
   position: absolute;
@@ -1793,7 +1793,7 @@ border: 1px solid rgba(255,255,255,.22);
 .ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
 /* =============================================================================
-   SECTION: v943 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
+   SECTION: v944 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
    - No layout redesign. Pure alignment + typography polish.
 ============================================================================= */
 #ngHeaderBar .ngHeaderCenter{
@@ -1832,7 +1832,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   SECTION: v943 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
+   SECTION: v944 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1861,7 +1861,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v943: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
+   v944: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1890,7 +1890,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v943: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
+   v944: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
    1) iPad overlap: push hub down on tablet widths
    2) Firebase • Firestore: side-by-side, centered, readable (no clipping)
    3) Default view: show 2 full rows (reduce row height slightly)
@@ -1924,7 +1924,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v943: Player Page Name (premium)
+   v944: Player Page Name (premium)
 ============================================================================= */
 .playerPageName{
   width:100%;
@@ -1946,11 +1946,48 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v943: Leaderboard button under Players area (skinny + wide)
+   v944: Leaderboard button under Players area (skinny + wide)
 ============================================================================= */
 .leaderboardSlot{ display:flex; justify-content:center; margin: 14px 0 8px 0; }
 .ngWideBtn{ min-width: 260px; padding: 9px 18px !important; letter-spacing: .14em; }
 @media (min-width:760px){ .ngWideBtn{ min-width: 360px; } }
+
+/* =============================================================================
+   v944: Player Name + Leaderboard placement (Players screen)
+============================================================================= */
+.playerPageName{
+  width: 100%;
+  text-align: center;
+  margin: 10px auto 8px auto;
+  font-size: 22px;
+  font-weight: 1200;
+  letter-spacing: .10em;
+  line-height: 1.15;
+  color: rgba(220,255,245,.98);
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.62),
+    0 0 16px rgba(80,255,180,.34);
+}
+@supports (-webkit-background-clip: text){
+  .playerPageName{
+    background: linear-gradient(180deg, rgba(245,255,250,1) 0%, rgba(120,255,205,.98) 52%, rgba(25,185,160,.98) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+.leaderboardSlot{
+  display:flex;
+  justify-content:center;
+  margin: 14px 0 8px 0;
+}
+.ngWideBtn{
+  min-width: 250px;
+  padding: 9px 18px !important;
+  letter-spacing: .14em;
+}
+@media (min-width: 760px){
+  .ngWideBtn{ min-width: 360px; }
+}
 
 </style>
 <script id="ngGuards_v748">
@@ -2003,7 +2040,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v943</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v944</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2067,12 +2104,17 @@ border: 1px solid rgba(255,255,255,.22);
 </div>
 </div>
 
+
+<!-- Leaderboard button under Players section (v944) -->
 <div class="leaderboardSlot">
-  <button class="pill btnAdvance ngWideBtn" data-action="open_leaderboard" data-value="all">LEADERBOARD</button>
+  <button class="pill btnAdvance ngWideBtn" id="leaderboardBtn" type="button">LEADERBOARD</button>
 </div>
 </section>
 <section class="screen" id="setup">
 <div class="detailWrap">
+<!-- Player Name (v944) -->
+<div id="playerPageName" class="playerPageName"></div>
+
 <div class="panel">
 <div class="sectionHead"><div class="title">Setup</div></div>
 <div class="detailBody" id="setupBody">
@@ -2165,7 +2207,7 @@ border: 1px solid rgba(255,255,255,.22);
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v943                               ║
+║                          🎮 NIGHT GAMES v944                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2173,7 +2215,7 @@ border: 1px solid rgba(255,255,255,.22);
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v943
+// Night Games Night Games v944
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2238,7 +2280,7 @@ const firebaseConfig = {
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
 
-    // v943: preload saved email for this device (Bill + anyone who signed in before)
+    // v944: preload saved email for this device (Bill + anyone who signed in before)
     try{
   const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim().toLowerCase();
   if(savedEmail && savedEmail === BILL_EMAIL){
@@ -2418,6 +2460,7 @@ async function doUpdate(auth){
     const setupBackBtn = document.getElementById("setupBackBtn");
     const lobbySetupBtn = document.getElementById("lobbySetupBtn");
     const lobby = document.getElementById("lobby");
+    const leaderboard = document.getElementById("leaderboard");
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody = document.getElementById("lobbyBody");
     const lobbyBackBtn = document.getElementById("lobbyBackBtn");
@@ -2429,14 +2472,13 @@ async function doUpdate(auth){
 /*
 ================================================================================
   ROUTING / NAV  [SECTION_ROUTING]
-================================================================================
-*/
-function show(which){
+====================function show(which){
       landing.classList.toggle("active", which==="landing");
       players.classList.toggle("active", which==="players");
       setup.classList.toggle("active", which==="setup");
       waiting.classList.toggle("active", which==="waiting");
       lobby.classList.toggle("active", which==="lobby");
+      leaderboard.classList.toggle("active", which==="leaderboard");
       detail.classList.toggle("active", which==="detail");
 
       // Footer visibility (prevents stacked/duplicate footers)
@@ -2458,7 +2500,7 @@ function show(which){
 
 
 /* =============================================================================
-   RANDOMIZER (v943)  [SECTION_RANDOMIZER]
+   RANDOMIZER (v944)  [SECTION_RANDOMIZER]
    - Turn order randomizer (any game)
    - Killer numbers (1–20 unique)
 ============================================================================= */
@@ -2471,6 +2513,10 @@ function spinText(el, finalHtml){
     el.innerHTML = `<div style="opacity:.7;">Spinning… ${chars[Math.floor(Math.random()*chars.length)]}${chars[Math.floor(Math.random()*chars.length)]}${chars[Math.floor(Math.random()*chars.length)]}</div>`;
     if(t > 12){
       clearInterval(iv);
+      el.innerHTML = finalHtml;
+    }
+  }, 70);
+}rInterval(iv);
       el.innerHTML = finalHtml;
     }
   }, 70);
@@ -2538,6 +2584,19 @@ function randomizeKillerNumbers(){
     document.addEventListener("pointerdown", (e)=>{
       const b = e.target.closest("button");
       if(!b) return;
+
+if(b.id === "leaderboardBtn"){
+  try{ show("leaderboard"); }catch(e){}
+  return;
+}
+if(b.id === "leaderboardBackBtn"){
+  try{ show("players"); }catch(e){}
+  return;
+}
+if(b.id === "leaderboardHomeBtn"){
+  try{ show("games"); }catch(e){}
+  return;
+}
       clickSound();
     }, {passive:true});
 
@@ -3459,7 +3518,7 @@ if(!regSnap.exists()) {
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v943: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      // v944: remember last successful email on THIS device/browser (Bill garage iPad use-case)
       try{ persistEmailAfterLogin(currentEmail);
 try{ setHeaderPlayerLabel(email); }catch(e){}
           try{ if(ngUpdateBtn) ngUpdateBtn.style.display = 'inline-flex'; }catch(e){}
