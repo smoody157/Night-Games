@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v933  |  2026-02-28
+  NIGHT GAMES v934  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v933 STABILITY SWEEP =====================
+<!-- ===================== v934 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -32,7 +32,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v933 (MASTER STABLE)</title>
+<title>Night Games v934 (MASTER STABLE)</title>
 <style>
 /* =============================================================================
    SECTION: VISUAL THEME  [EDIT_COLORS]
@@ -1660,14 +1660,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v933 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v934 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v933: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v934: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1692,7 +1692,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v933 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v934 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1701,7 +1701,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v933 HEADER PLAYER NAME ===================== */
+/* ===================== v934 HEADER PLAYER NAME ===================== */
 #ngHeaderBar .ngHeaderPlayer{
   position: relative;
   z-index: 1;
@@ -1726,7 +1726,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v933 GLOBAL FOOTER ===================== */
+/* ===================== v934 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1742,7 +1742,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v933 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v934 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1765,7 +1765,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v933 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v934 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1781,7 +1781,7 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* ===================== v933 HEADER STRIP CENTERING ===================== */
+/* ===================== v934 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
 #ngHeaderPlayer{
   position: absolute;
@@ -1793,7 +1793,7 @@ border: 1px solid rgba(255,255,255,.22);
 .ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
 /* =============================================================================
-   SECTION: v933 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
+   SECTION: v934 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
    - No layout redesign. Pure alignment + typography polish.
 ============================================================================= */
 #ngHeaderBar .ngHeaderCenter{
@@ -1832,7 +1832,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   SECTION: v933 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
+   SECTION: v934 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1861,51 +1861,32 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   PASS 1 (v933): LAYOUT-ONLY STABILIZATION
-   - iPad: prevent hub overlap into Night Games logo
-   - Header center: Firebase • Firestore side-by-side, readable, centered
-   - Default view: show 2 full rows in Games/Players lists (avoid half-cut items)
-   NOTE: No JS changes in this pass.
+   v934: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
 ============================================================================= */
-
-/* Header center: keep in one line, readable */
-#ngHeaderBar .ngHeaderCenter{
-  font-size: 11px !important;
-  letter-spacing: .03em !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  max-width: none !important;
-  text-align: center !important;
+#ngHeaderPlayer{
+  display:block;
+  width:100%;
+  text-align:center !important;
+  font-size: 20px !important;
+  font-weight: 1200 !important;
+  letter-spacing: .9px !important;
+  line-height: 1.1;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  color: rgba(220,255,245,.98) !important;
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.62),
+    0 0 14px rgba(80,255,180,.32);
 }
-
-/* Slightly tighten center label to fit small widths */
-@media (max-width: 420px){
-  #ngHeaderBar .ngHeaderCenter{ font-size: 10px !important; }
-}
-
-/* Online alignment over Update button */
-#ngHeaderRight{
-  width: 92px;
-  text-align: center;
-  display: inline-block;
-}
-#ngUpdateBtn{ width:92px; }
-
-/* iPad/tablet: give header/logo breathing room */
-@media (min-width: 760px){
-  .hub{
-    top: clamp(255px, 22vh, 340px) !important;
+@supports (-webkit-background-clip: text){
+  #ngHeaderPlayer{
+    background: linear-gradient(180deg, rgba(235,255,248,1) 0%, rgba(110,255,200,.98) 48%, rgba(25,185,160,.98) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
-}
-
-/* Lists: ensure 2 full rows appear (reduce per-row height slightly) */
-.itemLine{
-  padding: 10px 6px !important;
-  line-height: 1.25 !important;
-}
-.list{
-  padding: 8px 12px 12px 12px !important;
 }
 
 </style>
@@ -1959,7 +1940,7 @@ border: 1px solid rgba(255,255,255,.22);
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v933</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v934</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2118,7 +2099,7 @@ border: 1px solid rgba(255,255,255,.22);
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v933                               ║
+║                          🎮 NIGHT GAMES v934                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2126,7 +2107,7 @@ border: 1px solid rgba(255,255,255,.22);
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v933
+// Night Games Night Games v934
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2191,7 +2172,7 @@ const firebaseConfig = {
     const detail = document.getElementById("detail");
     const emailInput = document.getElementById("emailInput");
 
-    // v933: preload saved email for this device (Bill + anyone who signed in before)
+    // v934: preload saved email for this device (Bill + anyone who signed in before)
     try{
       const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim();
       if(savedEmail && emailInput){
@@ -2264,6 +2245,7 @@ const firebaseConfig = {
           // Use ONE event type (prevents double-play on iOS)
           const EVT = (window.PointerEvent ? "pointerdown" : "touchstart");
           const DUMMY_EMAIL = "player@example.com";
+          const BILL_EMAIL = "wmoody7931@aol.com";
 
           function clearEmailAndFocus(){
             try{
@@ -2321,12 +2303,17 @@ function prettyNameFromEmail(email){
   // first + last only (no middle initials)
   return parts[0] + " " + parts[parts.length - 1];
 }
-function setHeaderPlayerLabel(email){
+function setHeaderPlayerLabel(email, explicitName){
   try{
     if(!ngHeaderPlayer) return;
-    const nm = prettyNameFromEmail(email);
+    const em = (email||"").trim().toLowerCase();
+    let nm = (explicitName||"").trim();
+    if(!nm && em){
+      const who = (lastPeople || []).find(p => p && (p.email||"").toLowerCase() === em);
+      nm = (who && who.name) ? who.name : "";
+    }
     ngHeaderPlayer.textContent = nm || "";
-    ngHeaderPlayer.title = email || "";
+    ngHeaderPlayer.title = em || "";
   }catch(e){}
 }
 async function doUpdate(auth){
@@ -2707,8 +2694,6 @@ function safeEmail(email){
 ================================================================================
 */
 function renderSetupForGame(game){
-  if(!game){ return; }
-
       const people = (lastPeople||[]).slice();
       // ensure current user exists as a selectable option
       const me = (currentEmail||"").toLowerCase();
@@ -3296,13 +3281,34 @@ function renderPlayers(list){
 
       // 3) Verify registration
       const regRef = doc(db, "registry", safeEmail(currentEmail));
-      const regSnap = await getDoc(regRef);
-      if(!regSnap.exists()) {
-        statusLine.textContent = "Not registered.";
-        setDbg("FAIL", dbgAuth.textContent, "registry miss", "not registered: " + currentEmail);
-        alert("Email not registered yet.");
-        return;
-      }
+const regSnap = await getDoc(regRef);
+
+// If not registered, collect the player's name and create the registry entry.
+if(!regSnap.exists()) {
+  statusLine.textContent = "New player…";
+  setDbg("AUTH", dbgAuth.textContent, "new player", "collect name");
+  const entered = prompt("Welcome! Please enter your name:", "");
+  const name = (entered||"").trim();
+  if(!name){
+    statusLine.textContent = "Name required.";
+    setDbg("FAIL", dbgAuth.textContent, "name missing", currentEmail);
+    alert("Name is required to register.");
+    return;
+  }
+  await setDoc(regRef, {
+    email: currentEmail,
+    name: name,
+    createdAt: serverTimestamp()
+  }, { merge: true });
+
+  // Refresh local cache so header render can use it immediately.
+  try{ lastPeople = [...(lastPeople||[]).filter(p => p && (p.email||"").toLowerCase() !== currentEmail), {email: currentEmail, name}]; }catch(e){}
+  try{ setHeaderPlayerLabel(currentEmail, name); }catch(e){}
+} else {
+  // Registered: render stored name
+  const data = regSnap.data() || {};
+  try{ setHeaderPlayerLabel(currentEmail, data.name || ""); }catch(e){}
+}
 
       // 4) Write user record (optional)
       await setDoc(doc(db, "users", currentUid), {
@@ -3310,7 +3316,7 @@ function renderPlayers(list){
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v933: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      // v934: remember last successful email on THIS device/browser (Bill garage iPad use-case)
       try{ localStorage.setItem("ng_saved_email", currentEmail); 
           try{ setHeaderPlayerLabel(email); }catch(e){}
           try{ if(ngUpdateBtn) ngUpdateBtn.style.display = 'inline-flex'; }catch(e){}
@@ -3350,14 +3356,16 @@ function renderPlayers(list){
       setDbg("INIT", "ready", "ready", "none");
 
       onAuthStateChanged(auth, (u)=>{
-        if(u){
-          dbgAuth.textContent = "anon uid " + u.uid.slice(0,6) + "…";
-          const em = (u.email || (u.providerData && u.providerData[0] && u.providerData[0].email) || localStorage.getItem("ng_saved_email") || "");
-          try{ setHeaderPlayerLabel(em); }catch(e){}
-        }else{
-          try{ setHeaderPlayerLabel(localStorage.getItem("ng_saved_email") || ""); }catch(e){}
-        }
-      });
+  try{
+    if(u) dbgAuth.textContent = "anon uid " + u.uid.slice(0,6) + "…";
+    const saved = (localStorage.getItem("ng_saved_email") || "").trim().toLowerCase();
+    // Only prefill and label from saved email if it's Bill
+    if(saved && saved === "wmoody7931@aol.com"){
+      try{ emailInput.value = saved; }catch(e){}
+      try{ setHeaderPlayerLabel(saved); }catch(e){}
+    }
+  }catch(e){}
+});
 
 
 /*
@@ -3381,13 +3389,6 @@ function onEnter() {
           document.addEventListener("click", async (e)=>{
       const b = e.target.closest(".pill");
       if(!b) return;
-
-
-// Setup Controls: Home
-if(b.id === "setupHomeBtn"){
-  try{ show("games"); }catch(e){}
-  return;
-}
 
       const action = b.dataset.action;
       const value = b.dataset.value || "";
