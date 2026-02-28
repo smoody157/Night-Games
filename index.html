@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v970  |  2026-02-28
+  NIGHT GAMES v967  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -23,7 +23,7 @@
 
 <html lang="en">
 <head>
-<!-- ===================== v970 STABILITY SWEEP =====================
+<!-- ===================== v967 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -43,7 +43,7 @@
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v970 (MASTER STABLE)</title>
+<title>Night Games v967 (MASTER STABLE)</title>
 <style>
 
 
@@ -532,7 +532,7 @@ border: 1px solid rgba(255,255,255,.22);
       touch-action: pan-y;
     }
 
-    /* v970: Ensure setup + waiting bodies can scroll (iOS safe in flex/grid) */
+    /* v967: Ensure setup + waiting bodies can scroll (iOS safe in flex/grid) */
     #setup .detailWrap, #waiting .detailWrap{ min-height: 0; }
     #setup .panel, #waiting .panel{ min-height: 0; display:flex; flex-direction:column; }
     #setup .detailBody, #waiting .detailBody{
@@ -1010,8 +1010,7 @@ border: 1px solid rgba(255,255,255,.22);
   font-weight: 1100;
 }
 .statusIcon.ok{ color: rgba(90,255,170,.95); }
-.statusIcon.wait{ color: rgba(90,255,170,.98); text-shadow: 0 0 12px rgba(90,255,170,.55); }
-    .statusIcon.wait{ filter: drop-shadow(0 0 10px rgba(90,255,170,.45)); }
+.statusIcon.wait{ color: rgba(255,210,90,.95); }
 .statusIcon.no{ color: rgba(255,120,120,.95); }
     .actions{ width:100%; }
     .actions .pill{ flex:1; text-align:center; }
@@ -1675,14 +1674,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v970 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v967 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v970: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v967: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1707,7 +1706,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v970 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v967 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1716,7 +1715,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v970 HEADER PLAYER NAME ===================== */
+/* ===================== v967 HEADER PLAYER NAME ===================== */
 #ngHeaderBar .ngHeaderPlayer{
   position: relative;
   z-index: 1;
@@ -1741,7 +1740,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v970 GLOBAL FOOTER ===================== */
+/* ===================== v967 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1757,7 +1756,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v970 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v967 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1780,7 +1779,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v970 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v967 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1796,7 +1795,7 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* ===================== v970 HEADER STRIP CENTERING ===================== */
+/* ===================== v967 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
 #ngHeaderPlayer{
   position: absolute;
@@ -1808,7 +1807,7 @@ border: 1px solid rgba(255,255,255,.22);
 .ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
 /* =============================================================================
-   SECTION: v970 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
+   SECTION: v967 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
    - No layout redesign. Pure alignment + typography polish.
 ============================================================================= */
 #ngHeaderBar .ngHeaderCenter{
@@ -1847,7 +1846,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   SECTION: v970 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
+   SECTION: v967 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1876,7 +1875,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v970: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
+   v967: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1905,7 +1904,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v970: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
+   v967: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
    1) iPad overlap: push hub down on tablet widths
    2) Firebase • Firestore: side-by-side, centered, readable (no clipping)
    3) Default view: show 2 full rows (reduce row height slightly)
@@ -1939,7 +1938,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v970: Player Page Name (premium)
+   v967: Player Page Name (premium)
 ============================================================================= */
 .playerPageName{
   width:100%;
@@ -1961,7 +1960,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v970: Leaderboard button under Players area (skinny + wide)
+   v967: Leaderboard button under Players area (skinny + wide)
 ============================================================================= */
 .leaderboardSlot{ display:flex; justify-content:center; margin: 14px 0 8px 0; }
 #players .hub{ grid-template-rows: 1fr 1fr auto; }
@@ -1970,7 +1969,7 @@ border: 1px solid rgba(255,255,255,.22);
 @media (min-width:760px){ .ngWideBtn{ min-width: 360px; } }
 
 /* =============================================================================
-   v970: Player Name + Leaderboard placement (Players screen)
+   v967: Player Name + Leaderboard placement (Players screen)
 ============================================================================= */
 .playerPageName{
   width: 100%;
@@ -2005,7 +2004,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v970: Authoritative Scroll System (ALL SCREENS)
+   v967: Authoritative Scroll System (ALL SCREENS)
    Goal: Every list/panel that needs scrolling scrolls reliably (iOS safe),
          while the app shell stays locked (no page-bounce).
 ============================================================================= */
@@ -2053,7 +2052,7 @@ html, body{
 }
 
 /* =============================================================================
-   v970: Critical scroll restore for Setup/Waiting + controls alignment
+   v967: Critical scroll restore for Setup/Waiting + controls alignment
 ============================================================================= */
 #setupBody, #waitingBody{
   max-height: calc(100vh - 320px);
@@ -2090,7 +2089,7 @@ html, body{
 
 
 /* =============================================================================
-   v970: GLOBAL FROST PASS (ALL SUBPAGES)
+   v967: GLOBAL FROST PASS (ALL SUBPAGES)
    Goal: Ensure every major panel has consistent frosted-glass look across screens,
          including Waiting Room, Lobby, Leaderboard, Randomizer, Detail/Stats.
    Notes: No behavior changes; visual-only.
@@ -2145,7 +2144,7 @@ html, body{
 
 
 
-/* ===================== v970: LEADERBOARD SCROLL FIX =====================
+/* ===================== v967: LEADERBOARD SCROLL FIX =====================
    Make the first panel a flex column so #leaderboardBody can scroll reliably (iOS grid/flex safe).
 ======================================================================= */
 #leaderboard .detailWrap > .panel:first-child{
@@ -2163,7 +2162,7 @@ html, body{
   padding-right: 6px;
 }
 
-/* ===================== v970 VISUAL CONSISTENCY PASS =====================
+/* ===================== v967 VISUAL CONSISTENCY PASS =====================
    - Player Stats / Detail panels: match frosted glass style
    - Waiting Room panels: match frosted glass style
    - Waiting indicators: green + glow for ALL waiting players
@@ -2207,26 +2206,6 @@ html, body{
   width:0; height:0;
 }
 
-
-
-/* v970: Force consistent frosted glass across key screens (Waiting, Detail/Stats, Leaderboard) */
-#waiting .panel, #detail .panel, #leaderboard .panel{
-  background: rgba(255,255,255,.06) !important;
-  border: 1px solid rgba(255,255,255,.14) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.20),
-    inset 0 -18px 28px rgba(0,0,0,.32),
-    0 18px 38px rgba(0,0,0,.22) !important;
-  backdrop-filter: blur(10px) saturate(115%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(115%) !important;
-}
-
-/* v970: Leaderboard body scroll */
-#leaderboard #leaderboardBody{
-  max-height: calc(100vh - 260px);
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -2278,7 +2257,7 @@ html, body{
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v970</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v967</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2345,7 +2324,7 @@ html, body{
 
 </div>
 
-<!-- v970: Player name moved to the old leaderboard slot location -->
+<!-- v967: Player name moved to the old leaderboard slot location -->
 <div id="playerPageName" class="playerPageName"></div>
 
 </section>
@@ -2444,7 +2423,7 @@ html, body{
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v970                               ║
+║                          🎮 NIGHT GAMES v967                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2452,7 +2431,7 @@ html, body{
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v970
+// Night Games Night Games v967
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2519,7 +2498,7 @@ const firebaseConfig = {
     const randomizer = document.getElementById("randomizer");
     const emailInput = document.getElementById("emailInput");
 
-    // v970: email field defaults (no highlight/delete)
+    // v967: email field defaults (no highlight/delete)
     try{
       const savedEmail = (localStorage.getItem("ng_saved_email")||"").trim().toLowerCase();
       const isBill = (savedEmail && savedEmail === BILL_EMAIL);
@@ -2557,7 +2536,7 @@ const firebaseConfig = {
 
 
     /* ===========================
-       v970 AUDIO CONTROLLER (SINGLE PLAYER)
+       v967 AUDIO CONTROLLER (SINGLE PLAYER)
        - One Audio element for ALL one-shot sounds (intro + waiting-room slam).
        - Email touch: starts intro + clears dummy instantly.
        =========================== */
@@ -2742,8 +2721,6 @@ function show(which){
       lobby.classList.toggle("active", which==="lobby");
       detail.classList.toggle("active", which==="detail");
       if(typeof leaderboard!=="undefined" && leaderboard) leaderboard.classList.toggle("active", which==="leaderboard");
-      if(which==="leaderboard") try{ renderLeaderboard(); }catch(e){}
-
       if(typeof randomizer!=="undefined" && randomizer) randomizer.classList.toggle("active", which==="randomizer");
 
       // Footer visibility (prevents stacked/duplicate footers)
@@ -2765,7 +2742,7 @@ function show(which){
 
 
 /* =============================================================================
-   RANDOMIZER (v970)  [SECTION_RANDOMIZER]
+   RANDOMIZER (v967)  [SECTION_RANDOMIZER]
    - Turn order randomizer (any game)
    - Killer numbers (1–20 unique)
 ============================================================================= */
@@ -2874,34 +2851,6 @@ try{ emailInput.value = DUMMY_EMAIL; }catch(e){}
 
 
     const games = ["01","Cricket","Killer","Shanghai","ATW","Half It"];
-
-
-    // v970: Leaderboard list should reflect the full game catalog (not hardcoded to 3).
-    function renderLeaderboard(){
-      try{
-        const host = document.getElementById("leaderboardList");
-        if(!host) return;
-        host.innerHTML = "";
-        (games||[]).forEach(g=>{
-          const wrap = document.createElement("div");
-          wrap.style.marginTop = "14px";
-          const title = document.createElement("div");
-          title.className = "glassText";
-          title.style.fontWeight = "1100";
-          title.textContent = g;
-          const line1 = document.createElement("div");
-          line1.style.opacity = ".85";
-          line1.textContent = "• Most Wins: —";
-          const line2 = document.createElement("div");
-          line2.style.opacity = ".85";
-          line2.textContent = "• Best: —";
-          wrap.appendChild(title);
-          wrap.appendChild(line1);
-          wrap.appendChild(line2);
-          host.appendChild(wrap);
-        });
-      }catch(e){}
-    }
 
     const GAME_RULES = {
       "01": "<b>Goal:</b> Reach exactly 0.<br><br>• Choose 301 / 501 / 701<br>• Subtract what you hit each turn (3 darts)<br>• Must land exactly on 0 to win<br>• If you go below 0 = bust (turn doesn’t count)<br><br><b>Options:</b><br>• <b>Single In / Single Out</b>: scoring starts immediately, any hit can finish<br>• <b>Single In / Double Out</b>: scoring starts immediately, must finish on a double<br>• <b>Double In / Double Out</b>: must hit a double to start scoring, must finish on a double",
@@ -3138,7 +3087,7 @@ try{ emailInput.value = DUMMY_EMAIL; }catch(e){}
     let activeSessionId = null;
     let activeSession = null;
 
-    // v970: Session watcher (sync randomizer + lobby state to all clients)
+    // v967: Session watcher (sync randomizer + lobby state to all clients)
     let __ngSessionUnsub = null;
     function watchSessionDoc(){
       try{ if(__ngSessionUnsub){ __ngSessionUnsub(); __ngSessionUnsub=null; } }catch(e){}
@@ -3172,7 +3121,7 @@ try{ emailInput.value = DUMMY_EMAIL; }catch(e){}
       }catch(e){}
     }
 
-    // v970: deterministic shuffle using seed (so everyone sees same order)
+    // v967: deterministic shuffle using seed (so everyone sees same order)
     function seededShuffle(arr, seed){
       const a = arr.slice();
       let x = (seed>>>0) || 1;
@@ -3190,7 +3139,7 @@ try{ emailInput.value = DUMMY_EMAIL; }catch(e){}
       return a;
     }
 
-    // v970: animate randomizer UI for everyone (uses stored results)
+    // v967: animate randomizer UI for everyone (uses stored results)
     let __ngRandRunning = false;
     async function runSyncedRandomizer(r){
       if(__ngRandRunning) return;
@@ -3757,7 +3706,7 @@ renderWaitingRoom();
         <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
       `;
 
-      // v970: waiting-room completion overlay (created once)
+      // v967: waiting-room completion overlay (created once)
       if(!window.__ngWaitOverlay){
         window.__ngWaitOverlay = document.createElement("div");
         window.__ngWaitOverlay.id = "ngWaitOverlay";
@@ -3799,7 +3748,7 @@ renderWaitingRoom();
         }catch(e){}
       }
 
-      // v970: auto-start when the last invited player has joined (host only)
+      // v967: auto-start when the last invited player has joined (host only)
       try{
         const me = (currentEmail||"").toLowerCase();
         const isHost = me && activeSession && (activeSession.host||"").toLowerCase()===me;
@@ -3817,7 +3766,7 @@ renderWaitingRoom();
           if(!anyDeclined && joined>=want){
             if(window.ngAutoStartedSessionId !== activeSessionId){
               window.ngAutoStartedSessionId = activeSessionId;
-              // v970: show completion message + sound, then transition
+              // v967: show completion message + sound, then transition
               try{ __ngRunWaitCompleteTransition(); }catch(e){} 
               return;
             }
@@ -4001,7 +3950,7 @@ if(!regSnap.exists()) {
         lastLogin: serverTimestamp()
       }, { merge: true });
 
-      // v970: remember last successful email on THIS device/browser (Bill garage iPad use-case)
+      // v967: remember last successful email on THIS device/browser (Bill garage iPad use-case)
       try{ persistEmailAfterLogin(currentEmail);
 try{ setHeaderPlayerLabel(email); }catch(e){}
           try{ if(ngUpdateBtn) ngUpdateBtn.style.display = 'inline-flex'; }catch(e){}
@@ -4376,9 +4325,22 @@ if(b && b.id === "ngUpdateBtn"){
       <div class="sectionHead"><div class="title">Leaderboard</div></div>
       <div class="detailBody" id="leaderboardBody">
         <div style="opacity:.85; line-height:1.5;">
-          <div style="font-weight:1100; margin-bottom:8px;">Top Leaders</div>
-          <div style="opacity:.85; margin-bottom:12px;">(Stats wiring in progress — this list should show every game.)</div>
-          <div id="leaderboardList"></div>
+          <div style="font-weight:1100; margin-bottom:8px;">Top Leaders (placeholder)</div>
+          <div style="opacity:.85;">We’ll wire real stats per game once scoring engines are finalized.</div>
+          <div style="margin-top:14px;">
+            <div class="glassText" style="font-weight:1100;">01</div>
+            <div style="opacity:.85;">• Most Wins: —</div>
+            <div style="opacity:.85;">• Best Avg: —</div>
+          </div>
+          <div style="margin-top:14px;">
+            <div class="glassText" style="font-weight:1100;">Cricket</div>
+            <div style="opacity:.85;">• Most Wins: —</div>
+            <div style="opacity:.85;">• Most Marks: —</div>
+          </div>
+          <div style="margin-top:14px;">
+            <div class="glassText" style="font-weight:1100;">Killer</div>
+            <div style="opacity:.85;">• Most Wins: —</div>
+          </div>
         </div>
       </div>
     </div>
