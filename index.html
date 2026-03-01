@@ -1,19 +1,18 @@
-/* ===================== NIGHT GAMES v1083 (GOLD MASTER) ===================== */
 <!--
 ================================================================================
-  NIGHT GAMES |  2026-02-28
+  NIGHT GAMES v1071  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
   - Game -> Setup must open.
   - Setup Start must work (1 player + 2+ players).
 
-  CHANGES:
+  v1071 CHANGES:
   - Fixed JS parse error (removed stray '});' that broke load).
   - No other behavior changes.
 
 THIS BUILD CHANGES:
-  - Behavior change: rollback to stable ngLogError-only handling to restore connectivity; no feature changes..
+  - NO behavior changes intended.
   - Labels / section banners / edit notes only.
   - Visible version badge added.
 
@@ -21,7 +20,7 @@ THIS BUILD CHANGES:
     [EDIT_BG] [EDIT_LOGO] [EDIT_VERSION] [EDIT_COLORS] [EDIT_DROPDOWNS]
     [SECTION_CONFIG] [SECTION_FIREBASE] [SECTION_STATE] [SECTION_ROUTING]
 
-/* === : MULTIPLAYER FLOW & SYNC (STEP 3) === */
+/* === v1071: MULTIPLAYER FLOW & SYNC (STEP 3) === */
 
 
     [SECTION_UI] [SECTION_PLAYERS] [SECTION_GAMES] [SECTION_SETUP]
@@ -30,7 +29,7 @@ THIS BUILD CHANGES:
 -->
 <!-- =============================================================================
  NIGHT GAMES — BUILD BRIEF (DO NOT DELETE)
- Version: v1083 (GOLD MASTER)
+ Version: v1071
  Date: 2026-02-28
  Goal: 100% complete, forward-only. No patch layers. No rollback.
 
@@ -327,7 +326,20 @@ border: 1px solid rgba(255,255,255,.22);
         0 0 16px rgba(0,210,255,.08);
       transition: transform .07s ease, filter .07s ease;
     }
-.pill:active{
+
+    /* [EDIT_BUTTONS] Advancement buttons = green glass "lit" */
+    .btnAdvance{
+      border: 1px solid rgba(120,255,170,.42) !important;
+      background: linear-gradient(180deg, rgba(70,255,150,.18), rgba(255,255,255,.06)) !important;
+      box-shadow: 0 0 0 1px rgba(70,255,150,.12) inset, 0 10px 22px rgba(0,0,0,.45);
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,.55));
+    }
+    .btnAdvance:active{
+      transform: translateY(1px) scale(.99);
+      box-shadow: 0 0 0 1px rgba(70,255,150,.14) inset, 0 6px 14px rgba(0,0,0,.55);
+    }
+
+    .pill:active{
       transform: translateY(2px) scale(.99);
       filter: var(--zShadowSoft);
     }
@@ -453,9 +465,9 @@ border: 1px solid rgba(255,255,255,.22);
       touch-action: pan-y;
     }
 
-    /* : Ensure setup + waiting bodies can scroll (iOS safe in flex/grid) */
+    /* v1071: Ensure setup + waiting bodies can scroll (iOS safe in flex/grid) */
     #setup .detailWrap, #waiting .detailWrap{ min-height: 0; }
-
+    #setup 
     #setup .detailBody, #waiting .detailBody{
       min-height: 0;
       overflow-y: auto;
@@ -667,11 +679,24 @@ border: 1px solid rgba(255,255,255,.22);
   text-transform: uppercase;
   text-shadow: 0 2px 14px rgba(0,0,0,.65), 0 0 22px rgba(0,210,255,.18);
 }
+/* v768 ADVANCE BUTTONS + SETUP LAYOUT FIXES */
+.pill.btnAdvance, .btnAdvance, .btn-advance{
+  border: 1px solid rgba(120,255,170,.35) !important;
+  background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
+  box-shadow: 0 0 18px rgba(70,255,160,.18), inset 0 0 18px rgba(60,255,160,.12) !important;
+}
+.pill.btnAdvance:active, .btnAdvance:active, .btn-advance:active{
+  transform: translateY(1px) scale(0.99);
+  box-shadow: 0 0 10px rgba(70,255,160,.16), inset 0 0 10px rgba(60,255,160,.10) !important;
+}
 /* Make "advance" buttons readable */
 .pill
 
 /* Prevent duplicated controls from stacking/overlapping inside setup body */
+#setup 
 
+
+/* ===================== v768 HEADER BAR (ONE ROW, NO WRAP) ===================== */
 #ngHeaderBar{
   position: fixed;
   top: max(10px, env(safe-area-inset-top));
@@ -750,7 +775,23 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
 /* Make sure landing UI sits below the header */
-#landing .landingUI{ }
+#landing .landingUI{ padding-top: 54px; }
+
+/* ===================== v768 GREEN ADVANCE BUTTONS ===================== */
+.btnAdvance, .btn-advance, .btnAdvanceGreen{
+  border: 1px solid rgba(120,255,170,.35) !important;
+  background: linear-gradient(180deg, rgba(60,255,160,.22), rgba(20,120,70,.18)) !important;
+  box-shadow:
+    0 0 18px rgba(70,255,160,.18),
+    inset 0 0 18px rgba(60,255,160,.12) !important;
+}
+.btnAdvance:active, .btn-advance:active, .btnAdvanceGreen:active{
+  transform: translateY(1px) scale(0.99);
+  box-shadow:
+    0 0 10px rgba(70,255,160,.16),
+    inset 0 0 10px rgba(60,255,160,.10) !important;
+}
+
 /* ===================== v768 UI FIXES (requested) ===================== */
 /* Hide Lobby Setup button (requested) */
 /* Uniform pill buttons (size/shape) */
@@ -775,6 +816,23 @@ border: 1px solid rgba(255,255,255,.22);
   text-overflow: ellipsis;
   max-width: 100%;
 }
+
+
+/* ===================== v768 STABILIZE: REMOVE GREEN ADVANCE BUTTONS ===================== */
+.btnAdvance, .btn-advance, .btnAdvanceGreen{
+  border: 1px solid rgba(255,255,255,.22) !important;
+  background: rgba(255,255,255,.03) !important;
+  box-shadow:
+    inset 0 2px 6px rgba(255,255,255,.28),
+    inset 0 -10px 16px rgba(0,0,0,.55),
+    0 0 16px rgba(0,210,255,.08) !important;
+  filter: var(--zShadowSoft);
+}
+.btnAdvance:active, .btn-advance:active, .btnAdvanceGreen:active{
+  transform: translateY(2px) scale(.99);
+  filter: var(--zShadowSoft);
+}
+
 /* v768: move setup/waiting panels down slightly so the glass doesn't run into the logo */
 #setup .detailWrap, #waiting .detailWrap{
   top: clamp(210px, 26vh, 340px);
@@ -1030,7 +1088,7 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
 
-/* remove the old outline styling from */
+/* remove the old outline styling from v1071 */
 #landing #emailPad{ outline: none !important; }
 #landing #enterBtn{ outline: none !important; opacity: 1 !important; }
 
@@ -1217,7 +1275,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== FINAL POLISH ===================== */
+/* ===================== v1071 FINAL POLISH ===================== */
 
 
 /* Slightly increase spacing control */
@@ -1265,7 +1323,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== PLAYERS READABILITY + ROW LAYOUT ===================== */
+/* ===================== v1071 PLAYERS READABILITY + ROW LAYOUT ===================== */
 
 /* Move BOTH panels down slightly (harder to read when too high) */
 #players .hub{
@@ -1303,7 +1361,7 @@ border: 1px solid rgba(255,255,255,.22);
 #players 
 
 
-/* ===================== DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
+/* ===================== v1071 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail 
@@ -1337,7 +1395,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== RULES SCROLL FIX (GRID/FLEX) ===================== */
+/* ===================== v1071 RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail 
@@ -1370,7 +1428,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== PLAYER STATS UI ===================== */
+/* ===================== v1071 PLAYER STATS UI ===================== */
 #detail .statScroll{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
@@ -1415,23 +1473,31 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v1071 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* : setup scroll reliability (grid/flex fix like Detail screen) */
+/* v1071: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > 
+#setup #setupBody{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 6px;
+}
 /* Keep setup readable while preserving background */
-
+#setup 
+/* Improve text readability lightly */
 #setup .detailBody, #setup .detailBody *{
   text-shadow: 0 1px 2px rgba(0,0,0,.55);
 }
 
 
-/* ===================== DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v1071 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1440,7 +1506,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== HEADER PLAYER NAME ===================== */
+/* ===================== v1071 HEADER PLAYER NAME ===================== */
 #ngHeaderBar .ngHeaderPlayer{
   position: relative;
   z-index: 1;
@@ -1465,7 +1531,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== GLOBAL FOOTER ===================== */
+/* ===================== v1071 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1481,7 +1547,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v1071 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill
 .pill.pillMini{ height: 34px; }
@@ -1504,7 +1570,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== RESPONSIVE STAGE FIT ===================== */
+/* ===================== v1071 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1520,7 +1586,7 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* ===================== HEADER STRIP CENTERING ===================== */
+/* ===================== v1071 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
 #ngHeaderPlayer{
   position: absolute;
@@ -1532,7 +1598,7 @@ border: 1px solid rgba(255,255,255,.22);
 .ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
 /* =============================================================================
-   SECTION: HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
+   SECTION: v1071 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
    - No layout redesign. Pure alignment + typography polish.
 ============================================================================= */
 #ngHeaderBar .ngHeaderCenter{
@@ -1571,7 +1637,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   SECTION: PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
+   SECTION: v1071 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1600,7 +1666,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   : PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
+   v1071: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1629,7 +1695,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   : STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
+   v1071: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
    1) iPad overlap: push hub down on tablet widths
    2) Firebase • Firestore: side-by-side, centered, readable (no clipping)
    3) Default view: show 2 full rows (reduce row height slightly)
@@ -1663,7 +1729,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   : Player Page Name (premium)
+   v1071: Player Page Name (premium)
 ============================================================================= */
 .playerPageName{
   width:100%;
@@ -1685,7 +1751,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   : Leaderboard button under Players area (skinny + wide)
+   v1071: Leaderboard button under Players area (skinny + wide)
 ============================================================================= */
 .leaderboardSlot{ display:flex; justify-content:center; margin: 14px 0 8px 0; }
 #players .hub{ grid-template-rows: 1fr 1fr auto; }
@@ -1694,7 +1760,7 @@ border: 1px solid rgba(255,255,255,.22);
 @media (min-width:760px){ .ngWideBtn{ min-width: 360px; } }
 
 /* =============================================================================
-   : Player Name + Leaderboard placement (Players screen)
+   v1071: Player Name + Leaderboard placement (Players screen)
 ============================================================================= */
 .playerPageName{
   width: 100%;
@@ -1729,7 +1795,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   : Authoritative Scroll System (ALL SCREENS)
+   v1071: Authoritative Scroll System (ALL SCREENS)
    Goal: Every list/panel that needs scrolling scrolls reliably (iOS safe),
          while the app shell stays locked (no page-bounce).
 ============================================================================= */
@@ -1772,7 +1838,7 @@ html, body{
 }
 
 /* =============================================================================
-   : Critical scroll restore for Setup/Waiting + controls alignment
+   v1071: Critical scroll restore for Setup/Waiting + controls alignment
 ============================================================================= */
 #setupBody, #waitingBody{
   max-height: calc(100vh - 320px);
@@ -1788,7 +1854,7 @@ html, body{
   gap:12px;
   align-items:stretch;
 }
-/* : Setup Control Panel button shape + sizing (match app buttons; no pill-end circles) */
+/* v1071: Setup Control Panel button shape + sizing (match app buttons; no pill-end circles) */
 .controlsRow3 > .cpBtn{
   border-radius: 14px; /* override .pill 999px */
 }
@@ -1813,7 +1879,7 @@ html, body{
 
 
 /* =============================================================================
-   : GLOBAL FROST PASS (ALL SUBPAGES)
+   v1071: GLOBAL FROST PASS (ALL SUBPAGES)
    Goal: Ensure every major panel has consistent frosted-glass look across screens,
          including Waiting Room, Lobby, Leaderboard, Randomizer, Detail/Stats.
    Notes: No behavior changes; visual-only.
@@ -1845,7 +1911,7 @@ html, body{
 
 
 
-/* ===================== : LEADERBOARD SCROLL FIX =====================
+/* ===================== v1071: LEADERBOARD SCROLL FIX =====================
    Make the first panel a flex column so #leaderboardBody can scroll reliably (iOS grid/flex safe).
 ======================================================================= */
 #leaderboard .detailWrap > 
@@ -1859,7 +1925,7 @@ html, body{
   padding-right: 6px;
 }
 
-/* ===================== VISUAL CONSISTENCY PASS =====================
+/* ===================== v1071 VISUAL CONSISTENCY PASS =====================
    - Player Stats / Detail panels: match frosted glass style
    - Waiting Room panels: match frosted glass style
    - Waiting indicators: green + glow for ALL waiting players
@@ -1884,11 +1950,11 @@ html, body{
 
 
 /* =============================================================================
-   : FORCE FROST GLASS ON ALL SUBPAGES (stats/detail/waiting/leaderboard/etc.)
+   v1071: FORCE FROST GLASS ON ALL SUBPAGES (stats/detail/waiting/leaderboard/etc.)
 ============================================================================= */
 #detail 
 
-/* : Waiting-room joined checkmarks MUST glow green (ok + wait) */
+/* v1071: Waiting-room joined checkmarks MUST glow green (ok + wait) */
 .statusIcon.ok,
 .statusIcon.wait{
   color: rgba(90,255,170,.98) !important;
@@ -1898,7 +1964,7 @@ html, body{
 
 
 /* =============================================================================
-   : FINAL VISUAL CONSISTENCY
+   v1071: FINAL VISUAL CONSISTENCY
    - Waiting status checkmark must glow GREEN
    - Frosted glass across Waiting / Leaderboard / Player Stats panels
 ============================================================================= */
@@ -1927,7 +1993,7 @@ html, body{
 
 
 /* =============================================================================
-   : FINAL VISUAL CONSISTENCY (NO LOGIC CHANGES)
+   v1071: FINAL VISUAL CONSISTENCY (NO LOGIC CHANGES)
    - Player Stats/Detail + Waiting + Leaderboard + Randomizer match main frosted panels
    - Waiting status icons (including "wait") glow green
 ============================================================================= */
@@ -1943,10 +2009,10 @@ html, body{
 }
 
 
-/* : randomizer is automatic (no control panel button) */
+/* v1071: randomizer is automatic (no control panel button) */
 #lobbyRandomizeBtn{ display:none !important; }
 
-/* : make main content panels scrollable on mobile */
+/* v1071: make main content panels scrollable on mobile */
 #lobby #lobbyBody{
   max-height: 52vh !important;
   overflow-y: auto !important;
@@ -1977,17 +2043,17 @@ html, body{
       box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
     }
 
-/* : Remove duplicate Setup START buttons (Controls panel only) */
+/* v1071: Remove duplicate Setup START buttons (Controls panel only) */
 #setupStartBtn, #setupStartInlineBtn{ display:none !important; }
 
-/* : responsive spacing — prevent content panels overlapping header/logo */
+/* v1071: responsive spacing — prevent content panels overlapping header/logo */
 
 #appMain{ padding-top: calc(var(--headerH) + env(safe-area-inset-top)) !important; }
 @media (min-width: 768px){
   
 }
 
-/* : Invite button feedback */
+/* v1071: Invite button feedback */
 #lobbyInviteBtn.inviteActive{
   animation: ngInvitePulse 0.9s ease-in-out infinite alternate;
 }
@@ -2000,22 +2066,22 @@ html, body{
   text-shadow: 0 0 12px rgba(90,255,170,.35), 0 0 26px rgba(90,255,170,.18);
 }
 
-/* : Consolidation — single control path */
+/* v1071: Consolidation — single control path */
 #setupStartBtn, #setupStartInlineBtn, #lobbyBackBtn{ display:none !important; }
 
-/* : CONTROL PANEL VISIBILITY */
+/* v1071: CONTROL PANEL VISIBILITY */
 .controlsRow, .controls, #lobbyControls, #lobbyFooter, #globalFooter { pointer-events: auto !important; }
 button.pill { pointer-events: auto !important; }
 
 
 
-/* : CONTROL PANEL THEME */
+/* v1071: CONTROL PANEL THEME */
 .pill
 #lobbyInviteBtn{ background: rgba(43,108,255,0.90) !important; color:#fff !important; }
 
 #setupInviteBtn{ background: rgba(43,108,255,0.90) !important; color:#fff !important; }
 
-/* : Prevent button text overflow on small screens */
+/* v1071: Prevent button text overflow on small screens */
 button.pill{
   font-size: 14px;
   line-height: 1.1;
@@ -2023,7 +2089,7 @@ button.pill{
 }
 
 
-/* ===================== PASS 2 (CSS) : CANONICAL PANEL + SCROLL ===================== */
+/* ===================== PASS 2 (CSS) v1071: CANONICAL PANEL + SCROLL ===================== */
 :root{
   --ng-panel-bg: rgba(255,255,255,0.08);
   --ng-panel-brd: rgba(255,255,255,0.15);
@@ -2061,27 +2127,11 @@ button, .btn, .pill{
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.btnAdvance:active, .btn-advance:active{ transform: translateY(1px); }
 
-
-/* ===================== CANONICAL .btnAdvance (LIT GREEN) ===================== */
-.btnAdvance, .btn-advance{
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background: rgba(0, 255, 128, 0.14);
-  border: 1px solid rgba(0, 255, 160, 0.35);
-  color: #eafff4;
-  border-radius: 999px;
-  padding: 10px 16px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  box-shadow: 0 0 18px rgba(0, 255, 140, 0.22);
-}
-.btnAdvance:active, .btn-advance:active{ transform: translateY(1px); }
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== FLAT LOGGER ===================== */
+/* ===================== v1071 FLAT LOGGER ===================== */
 const NG_DEBUG = false;
 
 function ngLogError(label, err){
@@ -2097,36 +2147,15 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1082 MASTER REPORTER ===================== */
-window.ngErr = (label, e) => {
-  console.warn(`[${label}]`, e);
-  if(typeof ngLogError === "function") ngLogError(label, e);
-};
 
 
-/* ===================== SAFE ERROR WRAPPER ===================== */
-function ngHandleError(label, e){
-  try{
-    if(typeof ngLogError === "function"){
-      try{ ngLogError(label, e); }catch(_le){ console.error(label, e); }
-    }else{
-      console.error(label, e);
-    }
-  }catch(_fatal){
-    try{ console.error(label, e); }catch(_ignore){}
-  }
-}
+
+/* ===================== PASS 3 (JS) v1071: DEBUG + ERROR LOGGING ===================== */
 
 
 
 
-
-/* ===================== PASS 3 (JS) : DEBUG + ERROR LOGGING ===================== */
-
-
-
-
-/* === : GLOBAL EXECUTION GUARD (STEP 4) === */
+/* === v1071: GLOBAL EXECUTION GUARD (STEP 4) === */
 function ngGuard(label, fn){
   try{
     return fn();
@@ -2172,7 +2201,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v1071</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2202,7 +2231,7 @@ function ngGuard(label, fn){
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- : target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v1071: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder=""/>
@@ -2239,7 +2268,7 @@ function ngGuard(label, fn){
 
 </div>
 
-<!-- : Player name moved to the old leaderboard slot location -->
+<!-- v1071: Player name moved to the old leaderboard slot location -->
 <div id="playerPageName" class="playerPageName"></div>
 
 </section>
@@ -2389,7 +2418,7 @@ window.ngLastError = "none";
 
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES ║
+║                          🎮 NIGHT GAMES v1071                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2397,36 +2426,12 @@ window.ngLastError = "none";
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// ===== STORAGE SAFETY (iOS Safari Private Mode) =====
+// ===== v1071 STORAGE SAFETY (iOS Safari Private Mode) =====
 // In iOS/Safari Private Browsing, localStorage/IndexedDB can throw "The operation is not supported."
 // Never let storage errors crash the app.
 const ngLSGet = (k)=>{ try{ return localStorage.getItem(k); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return null; } };
-
-// ===== Firebase Config Guard (v1083) =====
-// If any required Firebase config field is missing, keep the UI alive in "offline mode"
-// instead of throwing during initializeApp().
-function ngValidateFirebaseConfig(cfg){
-  try{
-    if(!cfg || typeof cfg !== "object") return false;
-    const req = ["apiKey","authDomain","projectId","appId"];
-    for(const k of req){
-      const v = (cfg[k]||"").trim();
-      if(!v) return false;
-    }
-    return true;
-  }catch(e){ return false; }
-}
-const __ngHasFirebaseConfig = ngValidateFirebaseConfig(firebaseConfig);
-if(!__ngHasFirebaseConfig){
-  try{
-    setDbg("FAIL", "—", "no-config", "Firebase config missing");
-    statusLine && (statusLine.textContent = "Offline mode (missing Firebase config).");
-  }catch(_e){}
-}
-
-
 const ngLSSet = (k,v)=>{ try{ localStorage.setItem(k, String(v)); return true; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return false; } };
@@ -2443,7 +2448,7 @@ const NG_STORE = {
   remove: ngLSRemove
 };
 
-// Night Games 
+// Night Games v1071
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { initializeAuth, signInAnonymously, onAuthStateChanged, signOut, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
     import {
@@ -2509,7 +2514,7 @@ const firebaseConfig = {
     const randomizer = document.getElementById("randomizer");
     const emailInput = document.getElementById("emailInput");
 
-    // : email field defaults (no highlight/delete)
+    // v1071: email field defaults (no highlight/delete)
     try{
       const savedEmail = (ngLSGet("ng_saved_email")||"").trim().toLowerCase();
       const isBill = (savedEmail && savedEmail === BILL_EMAIL);
@@ -2532,7 +2537,7 @@ const firebaseConfig = {
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
-    // : email overlay text (install once)
+    // v1071: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -2555,7 +2560,7 @@ const firebaseConfig = {
 
 
     /* ===========================
-       AUDIO CONTROLLER (SINGLE PLAYER)
+       v1071 AUDIO CONTROLLER (SINGLE PLAYER)
        - One Audio element for ALL one-shot sounds (intro + waiting-room slam).
        - Email touch: starts intro + clears dummy instantly.
        =========================== */
@@ -2912,7 +2917,7 @@ function show(which){
 
 
 /* =============================================================================
-   RANDOMIZER ()  [SECTION_RANDOMIZER]
+   RANDOMIZER (v1071)  [SECTION_RANDOMIZER]
    - Turn order randomizer (any game)
    - Killer numbers (1–20 unique)
 ============================================================================= */
@@ -3178,7 +3183,7 @@ function persistEmailAfterLogin(email){
       "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
     };
     /* =============================================================================
-       LEADERBOARD LIST ()
+       LEADERBOARD LIST (v1071)
        - Show all games defined in GAME_RULES (keeps UI in sync with game list)
        - Placeholder stats until engines finalize
     ============================================================================= */
@@ -3218,7 +3223,7 @@ function persistEmailAfterLogin(email){
     }
 
 
-    // ===================== PLAYER STAT TEMPLATES () =====================
+    // ===================== PLAYER STAT TEMPLATES (v1071) =====================
     // Locked stat sets (values start at 0; game engines will increment later).
     const PLAYER_STAT_TEMPLATES = {
       "01": {
@@ -3330,7 +3335,7 @@ function persistEmailAfterLogin(email){
       }
     };
 
-    // ===================== 01 STATS ACCUMULATION HELPERS =====================
+    // ===================== v1071 01 STATS ACCUMULATION HELPERS =====================
     // This does NOT change any UI or routing.
     // Call record01Result(...) when a 01 game ends to accumulate player stats.
     function _statKey(playerEmail, gameName, key){
@@ -3427,7 +3432,7 @@ function persistEmailAfterLogin(email){
         _setNumStat(p, gameName, "checkout_pct", cpct);
       });
     }
-    // =================== END HELPERS ===================
+    // =================== END v1071 HELPERS ===================
 
 
     function statKey(email, game, key){
@@ -3460,11 +3465,11 @@ function persistEmailAfterLogin(email){
     let activeSessionId = null;
     let activeSession = null;
 
-    // : Session watcher (sync randomizer + lobby state to all clients)
+    // v1071: Session watcher (sync randomizer + lobby state to all clients)
     let __ngSessionUnsub = null;
-    // : Session controls (fix missing startSession/endSession + keep flow stable)
-// : PRACTICE start (solo) — no Firebase writes, no LIVE banner
-// : PRACTICE start (solo) — no Firebase writes, no LIVE banner
+    // v1071: Session controls (fix missing startSession/endSession + keep flow stable)
+// v1071: PRACTICE start (solo) — no Firebase writes, no LIVE banner
+// v1071: PRACTICE start (solo) — no Firebase writes, no LIVE banner
 function startPracticeSession(){
   try{ if(!activeSession) activeSession = {}; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
@@ -3522,7 +3527,7 @@ function startPracticeSession(){
 }
 }
 
-// : Render the in-match "game room" (Lobby) consistently for PRACTICE + LIVE
+// v1071: Render the in-match "game room" (Lobby) consistently for PRACTICE + LIVE
 function renderLobby(){
   try{
     const lobbyTitle = document.getElementById("lobbyTitle");
@@ -3598,7 +3603,7 @@ function renderLobby(){
 }
 }
 
-// : begin practice gameplay (solo) — local only
+// v1071: begin practice gameplay (solo) — local only
 function startPracticeGame(){
   try{ if(!activeSession) activeSession = {}; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
@@ -3652,7 +3657,7 @@ try{ renderLobby && renderLobby(); }catch(e){
 
 async function startSession(){
 
-  // === : GAME ENGINE INTEGRATION (Step 2) ===
+  // === v1071: GAME ENGINE INTEGRATION (Step 2) ===
   try{
     const gameId = activeSession && activeSession.gameId;
 
@@ -3727,7 +3732,7 @@ async function endSession(){
 }
 }
 
-// : Fallback if a game engine hook isn't present yet
+// v1071: Fallback if a game engine hook isn't present yet
 function startGameFromSession(){
   try{ startSession && startSession(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
@@ -3801,7 +3806,7 @@ function watchSessionDoc(){
 }
     }
 
-    // : deterministic shuffle using seed (so everyone sees same order)
+    // v1071: deterministic shuffle using seed (so everyone sees same order)
     function seededShuffle(arr, seed){
       const a = arr.slice();
       let x = (seed>>>0) || 1;
@@ -3819,7 +3824,7 @@ function watchSessionDoc(){
       return a;
     }
 
-    // : animate randomizer UI for everyone (uses stored results)
+    // v1071: animate randomizer UI for everyone (uses stored results)
     let __ngRandRunning = false;
     async function runSyncedRandomizer(r){
       if(__ngRandRunning) return;
@@ -4052,7 +4057,7 @@ ${ needsDartsOpts ? `
       const startInlineBtn = document.getElementById("setupStartInlineBtn");
       const startCtrlBtn = document.getElementById("setupStartBtn");
       const cancelBtn = document.getElementById("setupCancelBtn");
-      // : 01/301 setup defaults
+      // v1071: 01/301 setup defaults
       const setupScoreSel = document.getElementById(scoreId);
       const setupInOutSel = document.getElementById(inOutId);
       if(needsDartsOpts){
@@ -4133,7 +4138,7 @@ ${ needsDartsOpts ? `
           body.appendChild(row);
         });
         refreshCountLabel(want);
-        // : invite button visibility
+        // v1071: invite button visibility
         try{ const ib=document.getElementById('lobbyInviteBtn'); if(ib) ib.style.display = (want>=2?'inline-flex':'none'); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
@@ -4185,7 +4190,7 @@ ${ needsDartsOpts ? `
       checks.forEach(c=>{ if(c.value === me) c.checked = true; });
 
       
-// : dynamic header height -> CSS var so panels never overlap logo
+// v1071: dynamic header height -> CSS var so panels never overlap logo
 function setHeaderHeightVar(){
   try{
     const header = document.getElementById("header") || document.querySelector(".header") || document.querySelector("#topHeader");
@@ -4230,13 +4235,13 @@ function enforce(){
       });
 
       const doStart = async ()=>{
-        // : make Lobby START work even before Setup START is pressed
+        // v1071: make Lobby START work even before Setup START is pressed
         try{ window.__ngDoStart = doStart; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
-        // : expose start handler so Lobby START uses same path
+        // v1071: expose start handler so Lobby START uses same path
         try{ window.__ngDoStart = doStart; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
@@ -4251,7 +4256,7 @@ function enforce(){
         activeSession = activeSession || {};
         activeSession.game = game;
         activeSession.setup = { count: want, emails };
-        // : Selection only — Start Game / Invite buttons control flow
+        // v1071: Selection only — Start Game / Invite buttons control flow
         try{ activeSession.practice = (want <= 1); activeSession.started = false; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
@@ -4268,7 +4273,7 @@ function enforce(){
 }
 }
 
-        // : 01/301 rule options captured for engine
+        // v1071: 01/301 rule options captured for engine
         if(needsDartsOpts){
           const startScore = parseInt((document.getElementById(scoreId)?.value)||"501",10) || 501;
           const inOut = (document.getElementById(inOutId)?.value)||"SI_SO";
@@ -4319,7 +4324,7 @@ try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
         }else{
           show("waiting");
 
-// : ensure session id exists BEFORE sending invites
+// v1071: ensure session id exists BEFORE sending invites
 try{
   if(!activeSessionId){
     activeSessionId = newSessionId();
@@ -4381,7 +4386,7 @@ await sendInvitesForSession(); }catch(e){
         const inv = docSnap.data() || {};
         const from = inv.from || "Host";
 
-// : optional system notification (best-effort)
+// v1071: optional system notification (best-effort)
 try{
   if("Notification" in window){
     if(Notification.permission === "default"){
@@ -4583,7 +4588,7 @@ async function sendInvitesForSession(){
         <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
       `;
 
-      // : waiting-room completion overlay (created once)
+      // v1071: waiting-room completion overlay (created once)
       if(!window.__ngWaitOverlay){
         window.__ngWaitOverlay = document.createElement("div");
         window.__ngWaitOverlay.id = "ngWaitOverlay";
@@ -4659,7 +4664,7 @@ async function sendInvitesForSession(){
 }
       }
 
-      // : auto-start when the last invited player has joined (host only)
+      // v1071: auto-start when the last invited player has joined (host only)
       try{
         const me = (currentEmail||"").toLowerCase();
         const isHost = me && activeSession && (activeSession.host||"").toLowerCase()===me;
@@ -4677,7 +4682,7 @@ async function sendInvitesForSession(){
           if(!anyDeclined && joined>=want){
             if(window.ngAutoStartedSessionId !== activeSessionId){
               window.ngAutoStartedSessionId = activeSessionId;
-              // : show completion message + sound, then transition
+              // v1071: show completion message + sound, then transition
               try{ __ngRunWaitCompleteTransition(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
@@ -4713,7 +4718,7 @@ async function sendInvitesForSession(){
 
     let currentEmail = null;
 
-// : configurable admin email (optional). Set localStorage ng_bill_email to enable special prefills.
+// v1071: configurable admin email (optional). Set localStorage ng_bill_email to enable special prefills.
 const BILL_EMAIL = (ngLSGet("ng_bill_email") || "").trim().toLowerCase();
 const DUMMY_EMAIL = "";
     let currentUid = null;
@@ -4809,7 +4814,7 @@ function renderPlayers(list){
     }
 
     async function signInFlow(auth, db, email){
-      // : instrumented sign-in to pinpoint NotSupportedError source (no patch layering)
+      // v1071: instrumented sign-in to pinpoint NotSupportedError source (no patch layering)
       currentEmail = (email||"").trim().toLowerCase();
       if(!currentEmail) return;
 
@@ -4967,10 +4972,9 @@ function renderPlayers(list){
 
     // Start Firebase and wire handlers
     try {
-      if(!__ngHasFirebaseConfig){ throw new Error("Missing Firebase config"); }
       const app = initializeApp(firebaseConfig);
       const auth = initializeAuth(app, { persistence: inMemoryPersistence });
-      // : Auth uses in-memory persistence at init to avoid Safari NotSupportedError.
+      // v1071: Auth uses in-memory persistence at init to avoid Safari NotSupportedError.
 
       // Firestore must NEVER be allowed to crash UI on iOS/Safari.
       // Use in-memory cache only. If Firestore cannot initialize, continue in UI-only mode.
@@ -5057,7 +5061,7 @@ function renderPlayers(list){
 
 
 
-/* : INVITE FLOW (IN-APP) */
+/* v1071: INVITE FLOW (IN-APP) */
 async function sendInvite(){
   // In-app invite: writes a pending invite record for opponents and routes to Waiting Room.
   try{
@@ -5122,8 +5126,7 @@ async function sendInvite(){
     }
 
         // Start listening for accepts
-    try{ if(typeof listenForJoins === "function") if(typeof show==="function") show("waiting");
-    await listenForJoins(sessionId); }catch(_e){
+    try{ if(typeof listenForJoins === "function") await listenForJoins(sessionId); }catch(_e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
@@ -5143,11 +5146,11 @@ async function sendInvite(){
 
 
 
-/* : CONTROL PANEL HARD-LOCK (ADDED) */
-/* : SETUP CONTROL PANEL HARD-LOCK (USER SPEC) */
+/* v1071: CONTROL PANEL HARD-LOCK (ADDED) */
+/* v1071: SETUP CONTROL PANEL HARD-LOCK (USER SPEC) */
 
 
-/* ===================== PASS 4 (MP) : 2-DEVICE INVITE → JOIN → START → END ===================== */
+/* ===================== PASS 4 (MP) v1071: 2-DEVICE INVITE → JOIN → START → END ===================== */
 // Lightweight invite UI (no dependency on existing modal system)
 function ngShowInvitePrompt(inviteId, data){
   try{
@@ -5207,7 +5210,8 @@ async function listenForIncomingInvites(){
 // Host-side: watch invites for this session and auto-start when all accepted
 async function listenForJoins(sessionId){
   try{
-if(typeof db === "undefined" || typeof query !== "function" || typeof collection !== "function" || typeof where !== "function" || typeof onSnapshot !== "function"){
+    if(!sessionId) return;
+    if(typeof db === "undefined" || typeof query !== "function" || typeof collection !== "function" || typeof where !== "function" || typeof onSnapshot !== "function"){
       return;
     }
     const expected = (window.activeSession && (window.activeSession.invitedEmails || window.activeSession.invited || [])) || [];
@@ -5252,7 +5256,7 @@ try{ listenForIncomingInvites(); }catch(e){ ngLogError("StartInviteListener", e)
 
 
 
-/* ===================== PASS 3 (JS) : SINGLE CONTROL ROUTER ===================== */
+/* ===================== PASS 3 (JS) v1071: SINGLE CONTROL ROUTER ===================== */
 function ngRouteClick(e){
   const btn = e.target.closest("button");
   if(!btn) return;
@@ -5302,16 +5306,17 @@ document.addEventListener("click", ngRouteClick, true);
 
 
 
-/* ===================== FREEZE =====================
+/* ===================== FREEZE v1071 =====================
    After PASS 4 is verified on 2 devices, treat this build as structurally frozen.
    Only increment versions for new features or explicit refactors.
 =========================================================== */
 
 
-/* ===================== WAITING ROOM SYNC ===================== */
+/* ===================== v1071 WAITING ROOM SYNC ===================== */
 async function listenForSessionStart(sessionId){
   try{
-if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="function") return;
+    if(!sessionId) return;
+    if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="function") return;
 
     const ref = doc(db,"sessions",sessionId);
     onSnapshot(ref,(snap)=>{
@@ -5323,7 +5328,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
   }catch(e){ if(typeof ngLogError==="function") ngLogError("WaitingSync",e); }
 }
 
-/* ===================== GAME ENGINE CORE ===================== */
+/* ===================== v1071 GAME ENGINE CORE ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
@@ -5352,7 +5357,7 @@ function runGameEngine(session){
   }catch(e){ if(typeof ngLogError==="function") ngLogError("GameEngine",e); }
 }
 
-/* ===================== LOCAL PRACTICE ===================== */
+/* ===================== v1071 LOCAL PRACTICE ===================== */
 function launchLocalGame(){
   try{
     const session = window.activeSession || {};
@@ -5365,31 +5370,23 @@ function launchLocalGame(){
   }catch(e){ if(typeof ngLogError==="function") ngLogError("LocalGame",e); }
 }
 
-/* ===================== SESSION SCORE SYNC ===================== */
+/* ===================== v1071 SESSION SCORE SYNC ===================== */
 async function updateSession(sessionId, payload){
   try{
-    if(!sessionId) return;
-if(typeof db==="undefined"||typeof doc!=="function"||typeof updateDoc!=="function") return;
+    if(typeof db==="undefined"||typeof doc!=="function"||typeof updateDoc!=="function") return;
     await updateDoc(doc(db,"sessions",sessionId), payload);
-  }catch(e){
-    if(typeof ngLogError==="function") ngLogError("updateSession", e);
-    else console.error("updateSession", e);
-  }
+  }catch(e){ if(typeof ngLogError==="function") ngLogError("UpdateSession",e); }
 }
 
-/* ===================== LOBBY START ===================== */
+/* ===================== v1071 LOBBY START ===================== */
 async function hostStartGame(sessionId){
   try{
-    if(!sessionId) return;
-if(typeof db==="undefined"||typeof doc!=="function"||typeof updateDoc!=="function") return;
+    if(typeof db==="undefined"||typeof doc!=="function"||typeof updateDoc!=="function") return;
     await updateDoc(doc(db,"sessions",sessionId), { started:true });
-  }catch(e){
-    if(typeof ngLogError==="function") ngLogError("hostStartGame", e);
-    else console.error("hostStartGame", e);
-  }
+  }catch(e){ if(typeof ngLogError==="function") ngLogError("HostStart",e); }
 }
 
-/* ===================== UPDATE BUTTON ===================== */
+/* ===================== v1071 UPDATE BUTTON ===================== */
 function ngUpdateBtn(){
   try{
     localStorage.clear();
@@ -5398,7 +5395,7 @@ function ngUpdateBtn(){
 }
 
 
-/* ===================== FINAL FREEZE =====================
+/* ===================== v1071 FINAL FREEZE =====================
    Production Build - Structural Edits Locked
 ============================================================== */
 
