@@ -1,4 +1,4 @@
-/* ===================== NIGHT GAMES v1081 (PRODUCTION BUILD) ===================== */
+/* ===================== NIGHT GAMES v1082 (PRODUCTION BUILD) ===================== */
 <!--
 ================================================================================
   NIGHT GAMES |  2026-02-28
@@ -2097,7 +2097,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1081 MASTER REPORTER ===================== */
+/* ===================== v1082 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -5343,6 +5343,7 @@ function launchLocalGame(){
 /* ===================== SESSION SCORE SYNC ===================== */
 async function updateSession(sessionId, payload){
   try{
+    if(!sessionId) return;
 if(typeof db==="undefined"||typeof doc!=="function"||typeof updateDoc!=="function") return;
     await updateDoc(doc(db,"sessions",sessionId), payload);
   }catch(e){
@@ -5354,6 +5355,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof updateDoc!=="functio
 /* ===================== LOBBY START ===================== */
 async function hostStartGame(sessionId){
   try{
+    if(!sessionId) return;
 if(typeof db==="undefined"||typeof doc!=="function"||typeof updateDoc!=="function") return;
     await updateDoc(doc(db,"sessions",sessionId), { started:true });
   }catch(e){
