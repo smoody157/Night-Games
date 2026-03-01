@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v1053  |  2026-02-28
+  NIGHT GAMES v1055  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -2388,6 +2388,48 @@ button.pill { pointer-events: auto !important; }
   window.ng$ = function(sel){ return document.querySelector(sel); };
   window.ngAll = function(sel){ return Array.from(document.querySelectorAll(sel)); };
 })();
+
+
+/* === AUTHORITATIVE CONTROL FIX v1055 (INTERNAL) === */
+document.addEventListener("click", function(e){
+  const btn = e.target.closest("button");
+  if(!btn) return;
+
+  // NAVIGATION
+  if(btn.id === "setupHomeBtn" || btn.id === "setupBackBtn" || btn.id === "homeBtn"){
+    if(typeof show === "function") show("players");
+    return;
+  }
+
+  // INVITE
+  if(btn.id === "lobbyInviteBtn"){
+    if(typeof sendInvite === "function") sendInvite();
+    return;
+  }
+
+  // START (Correct ID)
+  if(btn.id === "lobbyStartBtn"){
+
+    if(typeof activeSession !== 'undefined' && activeSession.gameId){
+      const gId = activeSession.gameId;
+      if(gId === 'cricket' && typeof initCricket === "function") initCricket();
+      else if(gId === 'killer' && typeof initKiller === "function") initKiller();
+      else if(typeof initStandardScoreboard === "function") initStandardScoreboard();
+    }
+
+    if(typeof startSession === "function") startSession();
+    if(typeof show === "function") show("game_screen");
+    return;
+  }
+
+  // END
+  if(btn.id === "gameEndBtn"){
+    if(typeof show === "function") show("setup");
+    return;
+  }
+
+}, true);
+
 </script>
 </head>
 <body>
@@ -5041,44 +5083,3 @@ waitingBackBtn.addEventListener("click", ()=> show("setup"));
 /* === CONTROL PANEL HARD-LOCK v1052 === */
 
 
-/* === AUTHORITATIVE CONTROL FIX v1053 === */
-document.addEventListener("click", function(e){
-  const btn = e.target.closest("button");
-  if(!btn) return;
-
-  // HOME / BACK
-  if(btn.id === "setupHomeBtn" || btn.id === "setupBackBtn"){
-    if(typeof show === "function") show("players");
-    return;
-  }
-
-  // INVITE (Multiplayer)
-  if(btn.id === "lobbyInviteBtn"){
-    if(typeof sendInvite === "function") sendInvite();
-    return;
-  }
-
-  // START (Correct ID)
-  if(btn.id === "lobbyStartBtn"){
-
-    // Step 2: Game Engine Integration
-    if(typeof activeSession !== 'undefined' && activeSession.gameId){
-      const gId = activeSession.gameId;
-
-      if(gId === 'cricket' && typeof initCricket === "function") initCricket();
-      else if(gId === 'killer' && typeof initKiller === "function") initKiller();
-      else if(typeof initStandardScoreboard === "function") initStandardScoreboard();
-    }
-
-    if(typeof startSession === "function") startSession();
-    if(typeof show === "function") show("game_screen");
-    return;
-  }
-
-  // END BUTTON
-  if(btn.id === "gameEndBtn"){
-    if(typeof show === "function") show("setup");
-    return;
-  }
-
-}, true);
