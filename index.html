@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v104426-03-01
+  NIGHT GAMES v1044  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -2352,6 +2352,12 @@ html, body{
 .controlsRow, .controls, #lobbyControls, #lobbyFooter, #globalFooter { pointer-events: auto !important; }
 button.pill { pointer-events: auto !important; }
 
+
+
+/* v1044: CONTROL PANEL THEME */
+.pill.btnAdvance{ background: rgba(255,255,255,0.12) !important; color: inherit !important; box-shadow: none !important; }
+#lobbyInviteBtn{ background: rgba(43,108,255,0.90) !important; color:#fff !important; }
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -2496,7 +2502,6 @@ button.pill { pointer-events: auto !important; }
 <div class="panel">
 <div class="sectionHead"><div class="title">Controls</div></div>
 <div class="detailBody" style="display:flex; gap:12px; flex-wrap:wrap;">
-<button class="pill" id="lobbySetupBtn" type="button">Setup</button>
 <button class="pill" id="lobbyInviteBtn" type="button">INVITE</button>
       <button class="pill btnAdvance" id="lobbyStartBtn" type="button">Start</button>
 <button class="pill" id="lobbyRandomizeBtn" type="button" style="display:none;">Randomize</button>
@@ -4976,9 +4981,7 @@ if(b && b.id === "ngUpdateBtn"){
     <div class="panel">
       <div class="sectionHead"><div class="title">Controls</div></div>
       <div class="controlsRow">
-        <button class="pill" id="randomizerBackBtn" type="button">Back</button>
-        <button class="pill btnAdvance" id="randomizerContinueBtn" type="button">Continue</button>
-      </div>
+        </div>
     </div>
   </div>
 </section>
@@ -5080,11 +5083,6 @@ if(b && b.id === "ngUpdateBtn"){
         try{ location.reload(); }catch(_){}
         break;
 
-      
-      case "lobbySetupBtn":
-        if(callIf("show","setup")===null) callIf("showPage","setup");
-        break;
-
       case "lobbyBackBtn":
         if(callIf("show","players")===null) callIf("showPage","players");
         break;
@@ -5107,11 +5105,6 @@ if(b && b.id === "ngUpdateBtn"){
         }
         break;
 
-      
-      case "lobbyRandomizeBtn":
-        if(callIf("show","randomizer")===null) callIf("showPage","randomizer");
-        break;
-
       case "lobbyEndBtn":
         if(callIf("endSession")===null && callIf("endGame")===null){
           console.log("[NG] End/Cancel clicked (no handler found)");
@@ -5121,6 +5114,78 @@ if(b && b.id === "ngUpdateBtn"){
     }
   }, true);
 })();
+
+
+
+/* v1044: INVITE FLOW (IN-APP) */
+async function sendInvite(){
+  // In-app invite: writes a pending invite record for opponents and routes to Waiting Room.
+  try{
+    const fromName = (document.getElementById("ngHeaderPlayer")?.textContent || "").trim() || "Someone";
+    const gameName = (document.querySelector(".gameLabel.active")?.textContent || document.getElementById("activeGameName")?.textContent || "").trim() || "Night Game";
+    // Try to find selected opponent list from common globals; fall back to prompt.
+    let opponents = [];
+    try{
+      if(Array.isArray(window.selectedOpponents)) opponents = window.selectedOpponents.slice();
+      else if(window.activeSession && Array.isArray(window.activeSession?.players)) opponents = window.activeSession.players.slice();
+      else if(Array.isArray(window.lastPeople)) opponents = window.lastPeople.slice();
+    }catch(_e){}
+    // Remove self if present (by name)
+    opponents = opponents.filter(x => (x||"").trim() && (x||"").trim() !== fromName);
+
+    if(opponents.length === 0){
+      const raw = prompt("Invite who? (comma-separated emails or names)", "");
+      if(raw) opponents = raw.split(",").map(s=>s.trim()).filter(Boolean);
+    }
+    if(opponents.length === 0){ alert("No opponents selected."); return; }
+
+    const sessionId = window.activeSessionId || window.currentSessionId || window.sessionId || (window.activeSession && window.activeSession.id) || null;
+    if(!sessionId){ console.log("[INVITE] No sessionId found"); }
+
+    // Firestore write (if available)
+    if(typeof window.db !== "undefined" && typeof collection === "function" && typeof addDoc === "function"){
+      const invCol = collection(db, "invites");
+      const payloadBase = {
+        sessionId: sessionId || null,
+        gameName,
+        fromName,
+        createdAt: (typeof serverTimestamp === "function") ? serverTimestamp() : new Date(),
+        status: "pending"
+      };
+      for(const to of opponents){
+        try{
+          await addDoc(invCol, {...payloadBase, to});
+        }catch(e){ console.log("[INVITE] addDoc failed", e); }
+      }
+      // Optional: mark session as waiting / store invite list
+      try{
+        if(sessionId && typeof doc === "function" && typeof updateDoc === "function"){
+          await updateDoc(doc(db,"sessions",sessionId), {
+            invited: opponents,
+            inviteStatus: "pending",
+            inviteUpdatedAt: payloadBase.createdAt
+          });
+        }
+      }catch(e){ console.log("[INVITE] session update failed", e); }
+    } else {
+      console.log("[INVITE] Firestore helpers not available; invite not persisted.");
+    }
+
+    // Route to Waiting Room
+    try{ if(typeof show === "function") show("waiting"); else if(typeof showPage === "function") showPage("waiting"); }catch(_e){}
+    alert(fromName + " challenged you to a game of " + gameName + ". (Invite sent)");
+  }catch(e){ console.log("[INVITE] error", e); alert("Invite failed: " + (e?.message||e)); }
+}
+
+
+
+/* v1044: CONTROL PANEL HARD-LOCK (ADDED) */
+document.addEventListener("click", function(e){
+  const btn = e.target.closest("button");
+  if(!btn) return;
+  if(btn.id === "lobbyInviteBtn"){ if(typeof sendInvite==="function") sendInvite(); }
+  if(btn.id === "lobbyStartBtn"){ if(window.__ngDoStart) window.__ngDoStart(); else if(typeof startGame==="function") startGame(); }
+}, true);
 
 </script>
 
