@@ -2348,9 +2348,9 @@ html, body{
 /* v1039: Consolidation — single control path */
 #setupStartBtn, #setupStartInlineBtn, #lobbyBackBtn{ display:none !important; }
 
-/* v1042: Control panel consistency */
-.pill.btnAdvance{ background: rgba(255,255,255,0.12) !important; color: inherit !important; box-shadow: none !important; }
-#lobbyInviteBtn{ background: rgba(43,108,255,0.90) !important; color:#fff !important; }
+/* v1043: CONTROL PANEL VISIBILITY */
+.controlsRow, .controls, #lobbyControls, #lobbyFooter, #globalFooter { pointer-events: auto !important; }
+button.pill { pointer-events: auto !important; }
 
 </style>
 <script id="ngGuards_v748">
@@ -2651,14 +2651,6 @@ const NG_STORE = {
    - Firebase configuration lives here.
 ============================================================================= */
 
-
-// v1042: default START stub so Lobby Start always responds
-try{ window.__ngDoStart = window.__ngDoStart || (function(){
-  return function(){
-    try{ alert("Select a game and complete Setup first."); }catch(e){}
-    try{ if(typeof show==="function") show("setup"); }catch(e){}
-  };
-})(); }catch(e){}
 /*
 ================================================================================
   CONFIG / CONSTANTS  [SECTION_CONFIG]
@@ -4797,13 +4789,9 @@ if(b && b.id === "ngUpdateBtn"){
       });
       waitingBackBtn.addEventListener("click", ()=> show("setup"));
       lobbyStartBtn.addEventListener("click", ()=>{
-        try{
-          if(window.__ngDoStart){ window.__ngDoStart(); return; }
-        }catch(e){}
-        try{ alert("Start is not ready yet. Please select a game and complete Setup."); }catch(e){}
-        try{ show("setup"); }catch(e){}
+        try{ if(window.__ngDoStart){ window.__ngDoStart(); return; } }catch(e){}
       });
-lobbyEndBtn.addEventListener("click", ()=> endSession().catch(e=>alert(e.message||e)));
+      lobbyEndBtn.addEventListener("click", ()=> endSession().catch(e=>alert(e.message||e)));
 
 
     } catch (err) {
@@ -5072,6 +5060,58 @@ lobbyEndBtn.addEventListener("click", ()=> endSession().catch(e=>alert(e.message
     bind();
   }
 })();
+
+
+/* v1043: CONTROL PANEL HARD-LOCK */
+(function(){
+  function callIf(fnName, ...args){
+    try{
+      const fn = (typeof window[fnName]==="function") ? window[fnName] : null;
+      return fn ? fn(...args) : null;
+    }catch(e){ console.log("[NG]", fnName, "ERR", e); return null; }
+  }
+
+  document.addEventListener("click", function(e){
+    const btn = e.target.closest("button");
+    if(!btn) return;
+
+    switch(btn.id){
+      case "ngUpdateBtn":
+        try{ location.reload(); }catch(_){}
+        break;
+
+      case "lobbyBackBtn":
+        if(callIf("show","players")===null) callIf("showPage","players");
+        break;
+
+      case "lobbyInviteBtn":
+        // Prefer existing invite handlers
+        if(callIf("sendInvite")===null && callIf("inviteSelectedPlayers")===null){
+          console.log("[NG] Invite clicked (no handler found)");
+          try{ alert("Invite clicked. (Invite handler not found.)"); }catch(_){}
+        }
+        break;
+
+      case "lobbyStartBtn":
+        // Prefer your real start handler if present
+        if(window.__ngDoStart){ try{ window.__ngDoStart(); return; }catch(_){} }
+        if(callIf("startGame")===null && callIf("startSelectedGame")===null){
+          console.log("[NG] Start clicked (no handler found)");
+          try{ alert("Select a game and complete Setup first."); }catch(_){}
+          callIf("show","setup"); callIf("showPage","setup");
+        }
+        break;
+
+      case "lobbyEndBtn":
+        if(callIf("endSession")===null && callIf("endGame")===null){
+          console.log("[NG] End/Cancel clicked (no handler found)");
+          try{ alert("End/Cancel clicked. (Handler not found.)"); }catch(_){}
+        }
+        break;
+    }
+  }, true);
+})();
+
 </script>
 
 </body>
