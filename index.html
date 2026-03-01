@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- NIGHT GAMES v1096 -->
+<!-- NIGHT GAMES v1098 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>:root vars) • COMPONENTS (
@@ -2075,8 +2075,82 @@ function ngGuard(label, fn){
 </script>
 </head>
 <body>
+<script>
+  (function(){
+    window.__ngClassicRan = true;
+    var el = document.getElementById("dbgState");
+    if(el) el.textContent = "Classic script ran (non-module)";
+  })();
+</script>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1096</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<script>
+  (function(){
+    // Fallback loader: if ES modules are blocked, load Firebase compat SDK and attempt init so the app can run.
+    function addScript(src, cb){
+      var s=document.createElement('script');
+      s.src=src; s.defer=true;
+      s.onload=function(){ cb && cb(); };
+      s.onerror=function(){ window.ngFirebaseStatus = "FALLBACK_SCRIPT_LOAD_FAILED: "+src; };
+      document.head.appendChild(s);
+    }
+
+    function safeText(id, txt){
+      var el=document.getElementById(id);
+      if(el) el.textContent = txt;
+    }
+
+    window.ngBuild = "v1098";
+    window.ngFirebaseStatus = window.ngFirebaseStatus || "BOOTING";
+
+    // After a short delay, if module probe hasn't run, try compat fallback.
+    setTimeout(function(){
+      if(window.__ngModuleProbeRan) return; // modules OK
+      window.ngFirebaseStatus = "MODULES_BLOCKED: USING_COMPAT_FALLBACK";
+      safeText("dbgState", "Modules blocked — using compat fallback");
+      safeText("dbgAuth", "auth: fallback starting");
+      safeText("dbgFs", "firestore: fallback starting");
+
+      // Load compat SDKs
+      addScript("https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js", function(){
+        addScript("https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js", function(){
+          addScript("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js", async function(){
+            try{
+              // Attempt to read firebaseConfig from global if present (some builds expose it), else parse from inline text (best-effort).
+              var cfg = window.firebaseConfig || window.__firebaseConfig;
+              if(!cfg){
+                // As a fallback, look for a JSON-like config embedded in the page (very conservative)
+                cfg = null;
+              }
+              if(!cfg){
+                window.ngFirebaseStatus = "FALLBACK_NO_CONFIG";
+                safeText("dbgErr", "Fallback: firebaseConfig not found on window");
+                return;
+              }
+              firebase.initializeApp(cfg);
+              var auth = firebase.auth();
+              var db = firebase.firestore();
+              window.ngFirebase = firebase;
+              window.ngAuth = auth;
+              window.db = db;
+              window.ngFirebaseStatus = "FALLBACK_FIRESTORE_READY";
+              safeText("dbgState", "Firebase OK (compat fallback)");
+              safeText("dbgAuth", "auth: ready (compat)");
+              safeText("dbgFs", "firestore: ready (compat)");
+              safeText("dbgErr", "none");
+              try { await auth.signInAnonymously(); } catch(e){}
+            }catch(e){
+              window.ngFirebaseStatus = "FALLBACK_INIT_FAILED: " + (e && (e.message||e.code)||String(e));
+              safeText("dbgErr", window.ngFirebaseStatus);
+            }
+          });
+        });
+      });
+    }, 1200);
+  })();
+</script>
+
+
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1098</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2120,7 +2194,7 @@ function ngGuard(label, fn){
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1096</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1098</div>
   </div>
 </section>
 
@@ -2216,7 +2290,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1096is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1098is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2288,6 +2362,10 @@ function ngGuard(label, fn){
   });
 })();
 </script>
+<script type="module">
+  window.__ngModuleProbeRan = true;
+  const el = document.getElementById("dbgAuth") || document.getElementById("dbgState");
+  if(el) el.textContent = (el.id === "dbgAuth") ? "Module probe ran" : "Module probe ran (no dbgAuth)";</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { initializeAuth, signInAnonymously, onAuthStateChanged, signOut, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -4290,7 +4368,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1096Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1098Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
