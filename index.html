@@ -2096,6 +2096,12 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
+/* ===================== v1080 MASTER REPORTER ===================== */
+window.ngErr = (label, e) => {
+  console.warn(`[${label}]`, e);
+  if(typeof ngLogError === "function") ngLogError(label, e);
+};
+
 
 /* ===================== SAFE ERROR WRAPPER ===================== */
 function ngHandleError(label, e){
