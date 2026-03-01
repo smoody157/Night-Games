@@ -2347,6 +2347,23 @@ html, body{
 
 /* v1039: Consolidation — single control path */
 #setupStartBtn, #setupStartInlineBtn, #lobbyBackBtn{ display:none !important; }
+
+/* =========================
+   CONTROL PANEL BUTTON TUNE
+   ========================= */
+.btnAdvance{
+  border: 1px solid rgba(255,255,255,.22) !important;
+  background: rgba(255,255,255,.03) !important;
+  color: rgba(255,255,255,.95) !important;
+  box-shadow: none !important;
+  font-weight: 800;
+}
+#lobbyInviteBtn{
+  border: 1px solid rgba(90,150,255,.55) !important;
+  background: rgba(43,108,255,.75) !important;
+  color: #fff !important;
+}
+
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -4590,7 +4607,83 @@ document.addEventListener("click", async (e)=>{
 // Update button (top-right)
 if(b && b.id === "ngUpdateBtn"){
   try{ await doUpdate(auth); }catch(_e){}
-  return;
+  
+
+// ==========================
+// CONTROL PANEL + NAV WIRING
+// ==========================
+if(b){
+  switch(b.id){
+
+    // Lobby controls
+    case "lobbySetupBtn":
+      try{ show("setup"); }catch(_e){}
+      return;
+
+    case "lobbyInviteBtn":
+      try{
+        if(typeof sendInvitesForSession === "function"){ sendInvitesForSession(); }
+        else if(typeof sendInvites === "function"){ sendInvites(); }
+      }catch(_e){}
+      return;
+
+    case "lobbyStartBtn":
+      try{
+        if(typeof startSession === "function"){ await startSession(); }
+        else if(typeof startGame === "function"){ startGame(); }
+      }catch(_e){}
+      return;
+
+    case "lobbyEndBtn":
+      try{ if(typeof endSession === "function"){ await endSession(); } }catch(_e){}
+      return;
+
+    // Navigation panel (Detail)
+    case "backBtn":
+      try{ show("players"); }catch(_e){}
+      return;
+
+    case "homeBtn":
+      try{ show("landing"); }catch(_e){}
+      return;
+
+    // Leaderboard
+    case "leaderboardBackBtn":
+      try{ show("players"); }catch(_e){}
+      return;
+
+    case "leaderboardHomeBtn":
+      try{ show("landing"); }catch(_e){}
+      return;
+
+    // Randomizer
+    case "randomizerBackBtn":
+      try{ show("players"); }catch(_e){}
+      return;
+
+    case "randomizerContinueBtn":
+      try{ show("games"); }catch(_e){}
+      return;
+
+    case "randOrderBtn":
+      try{ if(typeof randomizeTurnOrder === "function"){ randomizeTurnOrder(); } }catch(_e){}
+      return;
+
+    case "randOrderClearBtn":
+      try{ if(typeof clearTurnOrder === "function"){ clearTurnOrder(); } }catch(_e){}
+      return;
+
+    case "randKillerBtn":
+      try{ if(typeof randomizeKillerNumbers === "function"){ randomizeKillerNumbers(); } }catch(_e){}
+      return;
+
+    case "randKillerClearBtn":
+      try{ if(typeof clearKillerNumbers === "function"){ clearKillerNumbers(); } }catch(_e){}
+      return;
+  }
+}
+
+return;
 }
 
       if(action === "game_rules"){
