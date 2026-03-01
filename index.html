@@ -1,4 +1,4 @@
-/* ===================== NIGHT GAMES v1085 (PRODUCTION BUILD) ===================== */
+/* ===================== NIGHT GAMES v1086 (PRODUCTION BUILD) ===================== */
 <!--
 ================================================================================
   NIGHT GAMES |  2026-02-28
@@ -30,7 +30,7 @@ THIS BUILD CHANGES:
 -->
 <!-- =============================================================================
  NIGHT GAMES — BUILD BRIEF (DO NOT DELETE)
- Version: v1085 (01 ENGINE COMPLETE)
+ Version: v1086 (FIREBASE CONNECT FIX)
  Goal: 100% complete, forward-only. No patch layers. No rollback.
 
  RULES (GUARDRAILS)
@@ -2080,6 +2080,20 @@ button, .btn, .pill{
 </style>
 <script id="ngGuards_v748">
 
+/* ===================== v1086 FIREBASE CONFIG GUARD (NO 404) ===================== */
+function ngValidateFirebaseConfig(firebaseConfig){
+  const missing = [];
+  if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
+  else{
+    if(!firebaseConfig.apiKey) missing.push("apiKey");
+    if(!firebaseConfig.authDomain) missing.push("authDomain");
+    if(!firebaseConfig.projectId) missing.push("projectId");
+  }
+  return missing;
+}
+
+
+
 /* ===================== FLAT LOGGER ===================== */
 const NG_DEBUG = false;
 
@@ -2096,7 +2110,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1085 MASTER REPORTER ===================== */
+/* ===================== v1086 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -2440,7 +2454,7 @@ const NG_STORE = {
       if(err) dbgErr.textContent = err;
     }
 
-    // ===================== v1085 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1086 FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -5336,7 +5350,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1085 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1086 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
