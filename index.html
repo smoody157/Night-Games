@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v1051  |  2026-02-28
+  NIGHT GAMES v1052  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -5317,3 +5317,40 @@ document.addEventListener("click", function(e){
 
 </body>
 </html>
+
+
+/* === CONTROL PANEL HARD-LOCK v1052 === */
+document.addEventListener("click", function(e){
+  const btn = e.target.closest("button");
+  if(!btn) return;
+
+  // HOME
+  if(btn.id === "setupHomeBtn"){
+    if(typeof show === "function") show("players");
+    return;
+  }
+
+  // INVITE (Multiplayer only)
+  if(btn.id === "lobbyInviteBtn"){
+    if(typeof sendInvite === "function") sendInvite();
+    return;
+  }
+
+  // START GAME
+  if(btn.id === "setupStartGameBtn"){
+    if(typeof startSession === "function") startSession();
+    return;
+  }
+
+  // RESET / BACK
+  if(btn.id === "setupResetBtn" || btn.id === "setupBackBtn"){
+    if(typeof show === "function") show("setup");
+    return;
+  }
+
+  // END BUTTON
+  if(btn.id === "gameEndBtn"){
+    if(typeof show === "function") show("setup");
+    return;
+  }
+});
