@@ -1,4 +1,4 @@
-/* ===================== NIGHT GAMES v1082 (PRODUCTION BUILD) ===================== */
+/* ===================== NIGHT GAMES v1083 (GOLD MASTER) ===================== */
 <!--
 ================================================================================
   NIGHT GAMES |  2026-02-28
@@ -30,7 +30,7 @@ THIS BUILD CHANGES:
 -->
 <!-- =============================================================================
  NIGHT GAMES — BUILD BRIEF (DO NOT DELETE)
- Version: 
+ Version: v1083 (GOLD MASTER)
  Date: 2026-02-28
  Goal: 100% complete, forward-only. No patch layers. No rollback.
 
@@ -2403,6 +2403,30 @@ window.ngLastError = "none";
 const ngLSGet = (k)=>{ try{ return localStorage.getItem(k); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return null; } };
+
+// ===== Firebase Config Guard (v1083) =====
+// If any required Firebase config field is missing, keep the UI alive in "offline mode"
+// instead of throwing during initializeApp().
+function ngValidateFirebaseConfig(cfg){
+  try{
+    if(!cfg || typeof cfg !== "object") return false;
+    const req = ["apiKey","authDomain","projectId","appId"];
+    for(const k of req){
+      const v = (cfg[k]||"").trim();
+      if(!v) return false;
+    }
+    return true;
+  }catch(e){ return false; }
+}
+const __ngHasFirebaseConfig = ngValidateFirebaseConfig(firebaseConfig);
+if(!__ngHasFirebaseConfig){
+  try{
+    setDbg("FAIL", "—", "no-config", "Firebase config missing");
+    statusLine && (statusLine.textContent = "Offline mode (missing Firebase config).");
+  }catch(_e){}
+}
+
+
 const ngLSSet = (k,v)=>{ try{ localStorage.setItem(k, String(v)); return true; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return false; } };
@@ -4943,6 +4967,7 @@ function renderPlayers(list){
 
     // Start Firebase and wire handlers
     try {
+      if(!__ngHasFirebaseConfig){ throw new Error("Missing Firebase config"); }
       const app = initializeApp(firebaseConfig);
       const auth = initializeAuth(app, { persistence: inMemoryPersistence });
       // : Auth uses in-memory persistence at init to avoid Safari NotSupportedError.
