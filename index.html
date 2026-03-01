@@ -1,4 +1,4 @@
-/* ===================== NIGHT GAMES v1084 (PRODUCTION BUILD) ===================== */
+/* ===================== NIGHT GAMES v1085 (PRODUCTION BUILD) ===================== */
 <!--
 ================================================================================
   NIGHT GAMES |  2026-02-28
@@ -30,7 +30,7 @@ THIS BUILD CHANGES:
 -->
 <!-- =============================================================================
  NIGHT GAMES — BUILD BRIEF (DO NOT DELETE)
- Version: v1084 (01 ENGINE COMPLETE)
+ Version: v1085 (01 ENGINE COMPLETE)
  Goal: 100% complete, forward-only. No patch layers. No rollback.
 
  RULES (GUARDRAILS)
@@ -2096,7 +2096,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1084 MASTER REPORTER ===================== */
+/* ===================== v1085 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -2440,6 +2440,38 @@ const NG_STORE = {
       if(err) dbgErr.textContent = err;
     }
 
+    // ===================== v1085 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    async function ngFirebaseSelfTest(db, auth){
+      try{
+        if(!db){
+          setDbg("WARN","firestore","db=null","Firestore init failed (db is null)");
+          return;
+        }
+        // Verify auth state
+        const email = (auth && auth.currentUser && auth.currentUser.email) ? auth.currentUser.email : "(anon)";
+        setDbg("OK","auth","signed-in", email);
+
+        // Ping doc write/read to detect rules / permission issues
+        try{
+          const pingRef = doc(db, "_ng", "ping");
+          await setDoc(pingRef, { t: serverTimestamp(), by: email }, { merge:true });
+          const snap = await getDoc(pingRef);
+          setDbg("OK","firestore","rw-ok", snap.exists() ? "ping ok" : "ping missing");
+        }catch(e){
+          const code = e && (e.code || e.name) ? (e.code || e.name) : "error";
+          const msg = e && e.message ? e.message : String(e);
+          setDbg("FAIL","firestore", code, msg);
+          // Common causes: permission-denied, unavailable, failed-precondition
+          if(statusLine){
+            statusLine.textContent = "Firestore blocked: " + code;
+          }
+        }
+      }catch(e){
+        try{ console.error("ngFirebaseSelfTest", e);}catch(_){}
+      }
+    }
+
+
     const fatal = document.getElementById("fatal");
     const fatalMsg = document.getElementById("fatalMsg");
     function failHard(msg, err){
@@ -2466,27 +2498,15 @@ const NG_STORE = {
   FIREBASE CONFIG  [SECTION_FIREBASE]
 ================================================================================
 */
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-  projectId: "gamenightdarts-e7601",
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-  messagingSenderId: "270045452251",
-  appId: "1:270045452251:web:393956ce18b43316e939fe",
-  measurementId: "G-LQEHF02ZVR"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+      apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
+      authDomain: "gamenightdarts-e7601.firebaseapp.com",
+      projectId: "gamenightdarts-e7601",
+      storageBucket: "gamenightdarts-e7601.firebasestorage.app",
+      messagingSenderId: "270045452251",
+      appId: "1:270045452251:web:393956ce18b43316e939fe",
+      measurementId: "G-LQEHF02ZVR"
+    };
 
     // ===== UI refs =====
     const landing = document.getElementById("landing");
@@ -4950,6 +4970,7 @@ function renderPlayers(list){
       show("players");
       statusLine.textContent = "Signed in.";
       setDbg("OK", "auth", "connected", "none");
+      try{ if(typeof ngFirebaseSelfTest==="function") ngFirebaseSelfTest(db, auth); }catch(e){ console.error(e); }
     }
 
     // Start Firebase and wire handlers
@@ -4964,10 +4985,14 @@ function renderPlayers(list){
       try{
         db = initializeFirestore(app, { localCache: memoryLocalCache() });
       }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-
-        
-        db = null;
+        try{ console.warn("Firestore init (initializeFirestore) failed, falling back to getFirestore:", e); }catch(_){}
+        try{
+          // Fallback: basic Firestore instance without custom cache
+          db = getFirestore(app);
+        }catch(e2){
+          db = null;
+          try{ console.error("Firestore fallback failed:", e2); }catch(_){}
+        }
       }
 
 
@@ -5311,7 +5336,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1084 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1085 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
@@ -5435,4 +5460,3 @@ function ngUpdateBtn(){
 
 </body>
 </html>
-
