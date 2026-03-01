@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v1024  |  2026-02-28
+  NIGHT GAMES v1020  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -47,7 +47,7 @@ THIS BUILD CHANGES:
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v1024 (PARSERFIX STABLE)</title>
+<title>Night Games v1020 (MASTER STABLE)</title>
 <style>
 
 
@@ -2563,7 +2563,7 @@ html, body{
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v1024                               ║
+║                          🎮 NIGHT GAMES v1020                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2571,7 +2571,7 @@ html, body{
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v1019
+// Night Games Night Games v1020
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2663,7 +2663,7 @@ const firebaseConfig = {
       const emailEchoEl = document.getElementById("emailEcho");
       function syncEmailEcho(){
         try{
-          const v = ((emailInput && emailInput.value) || "").trim();
+          const v = (emailInput?.value || "").trim();
           if(emailEchoEl) emailEchoEl.textContent = v ? v : "player@example.com";
         }catch(e){}
       }
@@ -3327,7 +3327,7 @@ function startPracticeSession(){
   try{
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody  = document.getElementById("lobbyBody");
-    if(lobbyTitle) lobbyTitle.textContent = ((activeSession && activeSession.game)||"Game") + " • PRACTICE";
+    if(lobbyTitle) lobbyTitle.textContent = (activeSession?.game||"Game") + " • PRACTICE";
     if(lobbyBody)  lobbyBody.innerHTML =
       "<div style='font-weight:1200; font-size:22px; margin-bottom:10px;'>Practice ready.</div>" +
       "<div style='opacity:.82; margin-bottom:12px;'>Press <b>Begin</b> to start your practice game. Stats are not recorded.</div>";
@@ -3424,7 +3424,7 @@ function startPracticeGame(){
   try{
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody  = document.getElementById("lobbyBody");
-    if(lobbyTitle) lobbyTitle.textContent = ((activeSession && activeSession.game)||"Game") + " • PRACTICE";
+    if(lobbyTitle) lobbyTitle.textContent = (activeSession?.game||"Game") + " • PRACTICE";
     if(lobbyBody)  lobbyBody.innerHTML =
       "<div style='font-weight:1200; font-size:22px; margin-bottom:10px;'>Practice started.</div>" +
       "<div style='opacity:.82;'>Game is running (practice mode). Stats are not recorded.</div>";
@@ -3445,7 +3445,7 @@ async function startSession(){
   try{
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody = document.getElementById("lobbyBody");
-    if(lobbyTitle) lobbyTitle.textContent = ((activeSession && activeSession.game)||"Game") + " • LIVE";
+    if(lobbyTitle) lobbyTitle.textContent = (activeSession?.game||"Game") + " • LIVE";
     if(lobbyBody) lobbyBody.innerHTML = "<div style='font-weight:1100; font-size:22px; margin-bottom:10px;'>Starting…</div><div style='opacity:.82;'>Game is live.</div>";
     try{ setTimeout(()=>{ renderLobby && renderLobby(); }, 600); }catch(e){}
   }catch(e){}
@@ -3548,7 +3548,7 @@ function watchSessionDoc(){
         const order = r.order || [];
         const nums = r.killerNumbers || {};
         // Simple shared "spin": cycle through names for 1.8s, then reveal result (deterministic + stored)
-        const labels = order.length ? order : ((activeSession && activeSession.setup && activeSession.setup.emails) || []);
+        const labels = order.length ? order : (activeSession?.setup?.emails||[]);
         let t0 = Date.now();
         let tick = 0;
         await new Promise(resolve=>{
@@ -3577,7 +3577,7 @@ function watchSessionDoc(){
             <div style="text-align:left; font-weight:1000; line-height:1.55;">${rows||""}</div>`;
         }
         // Mark done (host only)
-        if(((activeSession && activeSession.host)||"").toLowerCase() === (currentEmail||"").toLowerCase()){
+        if((activeSession?.host||"").toLowerCase() === (currentEmail||"").toLowerCase()){
           try{
             await setDoc(doc(db2, "sessions", activeSessionId), { randomizer: Object.assign({}, r, { state:"done", doneAt: serverTimestamp() }) }, { merge:true });
         try{ watchSessionDoc(); }catch(e){}
@@ -3593,14 +3593,14 @@ function watchSessionDoc(){
       const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
       try{
         if(!activeSessionId || !db2) return;
-        const host = ((activeSession && activeSession.host)||"").toLowerCase();
+        const host = (activeSession?.host||"").toLowerCase();
         const me = (currentEmail||"").toLowerCase();
         if(host !== me) return;
-        if((activeSession && activeSession.randomizer && activeSession.randomizer.state) === "running") return;
-        const emails = ((activeSession && activeSession.setup && activeSession.setup.emails) || []).map(x=>String(x||"").toLowerCase()).filter(Boolean);
+        if(activeSession?.randomizer?.state === "running") return;
+        const emails = (activeSession?.setup?.emails || []).map(x=>String(x||"").toLowerCase()).filter(Boolean);
         const seed = Date.now() & 0xffffffff;
         const order = seededShuffle(emails, seed);
-        const isKiller = (((activeSession && activeSession.game))||"").toLowerCase() === "killer";
+        const isKiller = ((activeSession?.game)||"").toLowerCase() === "killer";
         let killerNumbers = null;
         if(isKiller){
           const nums = seededShuffle(Array.from({length:20},(_,i)=>i+1), seed ^ 0x9e3779b9);
@@ -3780,7 +3780,7 @@ ${ needsDartsOpts ? `
         checks.forEach(c=>{
           const email = c.value;
           const label = c.closest("label");
-          const nm = label ? (((label.querySelector("span") ? label.querySelector("span").textContent : "")||"").trim() || email) : email;
+          const nm = label ? ((label.querySelector("span")?.textContent||"").trim() || email) : email;
           const row = document.createElement("div");
           row.className = "pickerRow";
           row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
@@ -3825,7 +3825,7 @@ ${ needsDartsOpts ? `
       }
       if(openBtn){
         openBtn.addEventListener("click", ()=>{
-          const want = parseInt(((document.getElementById("setupCount") ? document.getElementById("setupCount").value : "") )||"1",10) || 1;
+          const want = parseInt((document.getElementById("setupCount")?.value)||"1",10) || 1;
           openPicker(want);
         });
       }
@@ -3923,8 +3923,8 @@ function enforce(){
         return;
         // v1019: 01/301 rule options captured for engine
         if(needsDartsOpts){
-          const startScore = parseInt(((document.getElementById(scoreId) ? document.getElementById(scoreId).value : "") )||"501",10) || 501;
-          const inOut = ((document.getElementById(inOutId) ? document.getElementById(inOutId).value : "") )||"SI_SO";
+          const startScore = parseInt((document.getElementById(scoreId)?.value)||"501",10) || 501;
+          const inOut = (document.getElementById(inOutId)?.value)||"SI_SO";
           activeSession.setup.startScore = startScore;
           activeSession.setup.inOut = inOut;
         }
@@ -4070,7 +4070,7 @@ async function sendInvitesForSession(){
       const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
       if(!db2 || !activeSessionId || !activeSession || !activeSession.setup) return;
       const hostEmail = (currentEmail||"").toLowerCase();
-      const hostName = (()=>{ const __p=(lastPeople||[]).find(p => (p.email||"").toLowerCase()===hostEmail); return (__p && __p.name) ? __p.name : ""; })() || (hostEmail.split("@")[0]||"Host");
+      const hostName = (lastPeople||[]).find(p => (p.email||"").toLowerCase()===hostEmail)?.name || (hostEmail.split("@")[0]||"Host");
       const game = activeSession.game || "Game";
       const invited = (activeSession.setup.emails||[]).map(x=>(x||"").toLowerCase()).filter(Boolean);
       const count = activeSession.setup.count || invited.length || 1;
@@ -4465,7 +4465,7 @@ try{ setHeaderPlayerLabel(email); }catch(e){}
 */
 function onEnter() {
         signInFlow(auth, db, emailInput.value).catch((err)=>{
-          const msg = (err && err.code) || (err && err.message) || String(err);
+          const msg = err?.code || err?.message || String(err);
           statusLine.textContent = "Firebase error.";
           setDbg("FAIL", dbgAuth.textContent || "—", "fail", msg);
           alert("Firebase error: " + msg);
@@ -4922,6 +4922,282 @@ if(b && b.id === "ngUpdateBtn"){
   }else{
     bind();
   }
+})();
+
+/* =============================================================================
+   v1020 MULTIPLAYER STABILIZATION PATCH (DROP-IN)
+   Goals:
+   - Lobby START always works (no dependency on __ngDoStart being set)
+   - Multiplayer "pregame" creates/updates a session doc with started:false
+   - INVITE always writes invite docs + keeps session meta in sync
+   - All clients listen for invites (pending) and for session started/ended
+   - Host START flips started:true (and all clients route)
+   - END flips ended:true (and all clients return home)
+   ========================================================================== */
+
+import {
+  addDoc, updateDoc, deleteDoc, arrayUnion
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const NG_BUILD = "v1020-MP-STABLE";
+try{ window.NG_BUILD = NG_BUILD; }catch(e){}
+
+function _ngDb(){
+  return (window.db) || (window.ngFirebase && window.ngFirebase.db) || null;
+}
+function _ngAuth(){
+  return (window.auth) || (window.ngFirebase && window.ngFirebase.auth) || null;
+}
+function _ngUserEmail(){
+  // App uses typed email as identity; keep it consistent.
+  return String((window.currentEmail || currentEmail || "")).toLowerCase().trim();
+}
+function _ngToast(msg){
+  try{
+    if(window.ngErrToast){
+      window.ngErrToast(msg);
+      return;
+    }
+  }catch(e){}
+  try{ alert(msg); }catch(e){}
+}
+
+function _ngMakeSessionId(){
+  try{ return "ng_" + crypto.randomUUID(); }catch(e){}
+  return "ng_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+}
+
+async function ngEnsureSessionDoc(){
+  const db2 = _ngDb();
+  const email = _ngUserEmail();
+  if(!db2){ _ngToast("Firestore not ready."); return null; }
+  if(!email){ _ngToast("Enter your email first."); return null; }
+
+  // Ensure we have an activeSession + game selected
+  try{ if(!activeSession) activeSession = {}; }catch(e){}
+  const game = (activeSession && activeSession.game) ? activeSession.game : (window.activeGame || "Game");
+
+  // Ensure a sessionId exists
+  if(!activeSessionId){
+    activeSessionId = _ngMakeSessionId();
+  }
+
+  // Ensure setup exists (count/emails). If missing, default to host only.
+  try{
+    if(!activeSession.setup) activeSession.setup = {};
+    if(!Array.isArray(activeSession.setup.emails) || !activeSession.setup.emails.length){
+      activeSession.setup.emails = [email];
+    }else{
+      const list = activeSession.setup.emails.map(x=>String(x||"").toLowerCase()).filter(Boolean);
+      if(!list.includes(email)) list.unshift(email);
+      activeSession.setup.emails = list;
+    }
+    if(!activeSession.setup.count){
+      activeSession.setup.count = Math.max(1, activeSession.setup.emails.length);
+    }
+  }catch(e){}
+
+  const invited = (activeSession.setup.emails||[]).map(x=>String(x||"").toLowerCase()).filter(Boolean);
+  const count = Number(activeSession.setup.count||invited.length||1);
+
+  // Derive host name from people list if available
+  let hostName = (email.split("@")[0]||"Host");
+  try{
+    const p = (window.lastPeople || lastPeople || []).find(pp => (pp.email||"").toLowerCase()===email);
+    if(p && p.name) hostName = p.name;
+  }catch(e){}
+
+  // Create/merge session doc in a stable shape
+  try{
+    await setDoc(doc(db2, "sessions", activeSessionId), {
+      sessionId: activeSessionId,
+      game,
+      host: email,
+      hostName,
+      invited,
+      count,
+      started: false,
+      ended: false,
+      createdAt: serverTimestamp()
+    }, { merge:true });
+  }catch(e){
+    _ngToast("Failed to create session: " + (e.message||e));
+    return null;
+  }
+
+  try{
+    activeSession.id = activeSessionId;
+    activeSession.game = game;
+    activeSession.practice = false;
+    activeSession.started = false;
+    localStorage.setItem("ng_active_session", JSON.stringify(activeSession));
+  }catch(e){}
+  return activeSessionId;
+}
+
+async function ngSendInvites(){
+  const db2 = _ngDb();
+  const email = _ngUserEmail();
+  if(!db2) return;
+  if(!activeSession || !activeSession.setup){ _ngToast("Open Setup and pick players first."); return; }
+
+  const sid = await ngEnsureSessionDoc();
+  if(!sid) return;
+
+  const invited = (activeSession.setup.emails||[]).map(x=>String(x||"").toLowerCase()).filter(Boolean);
+  const others = invited.filter(em=>em && em!==email);
+
+  // Write invite docs (pending)
+  for(const to of others){
+    const invId = `${sid}_${safeEmail(to)}`;
+    await setDoc(doc(db2, "invites", invId), {
+      sessionId: sid,
+      game: activeSession.game || "Game",
+      from: (email.split("@")[0]||"Host"),
+      fromEmail: email,
+      to,
+      invited,
+      count: Number(activeSession.setup.count||invited.length||1),
+      status: "pending",
+      createdAt: serverTimestamp()
+    }, { merge:true });
+  }
+  try{ setInviteStatus && setInviteStatus("Invites sent.", true); }catch(e){}
+}
+
+async function ngStartLive(){
+  const db2 = _ngDb();
+  if(!db2 || !activeSessionId){ _ngToast("No active session. Use Setup first."); return; }
+  try{
+    await setDoc(doc(db2, "sessions", activeSessionId), {
+      started: true,
+      startedAt: serverTimestamp(),
+      ended: false
+    }, { merge:true });
+  }catch(e){
+    _ngToast("Start failed: " + (e.message||e));
+    return;
+  }
+  // Keep UI consistent
+  try{ show("lobby"); }catch(e){}
+}
+
+async function ngEndLive(){
+  const db2 = _ngDb();
+  if(!db2 || !activeSessionId){ try{ show("players"); }catch(e){} return; }
+  try{
+    await setDoc(doc(db2, "sessions", activeSessionId), {
+      ended: true,
+      endedAt: serverTimestamp()
+    }, { merge:true });
+  }catch(e){}
+  try{
+    localStorage.removeItem("ng_active_session");
+  }catch(e){}
+  try{
+    activeSessionId = null;
+    activeSession = null;
+  }catch(e){}
+  try{ show("players"); }catch(e){}
+}
+
+// Ensure invite listener is always running for the logged-in email
+function ngBootInviteListener(){
+  try{ listenForInvites && listenForInvites(); }catch(e){}
+}
+
+// Ensure session watcher routes all clients when host starts/ends
+function ngBootSessionWatcher(){
+  try{ watchSessionDoc && watchSessionDoc(); }catch(e){}
+}
+
+// Rewire lobby buttons so they ALWAYS work
+function ngBindLobbyButtons(){
+  const startBtn = document.getElementById("lobbyStartBtn");
+  const invBtn   = document.getElementById("lobbyInviteBtn");
+  const endBtn   = document.getElementById("lobbyEndBtn");
+
+  if(startBtn){
+    startBtn.onclick = async ()=>{
+      // If Setup start handler exists and we're not in a multiplayer pregame yet,
+      // let it run (it will populate activeSession.setup).
+      try{
+        const want = Number(activeSession?.setup?.count||0);
+        // If multiplayer session already staged, START means go LIVE
+        if(activeSessionId && want>1){
+          await ngStartLive();
+          return;
+        }
+      }catch(e){}
+
+      // If __ngDoStart exists, run it (it picks players, sets setup)
+      try{
+        if(window.__ngDoStart){
+          await window.__ngDoStart();
+          // After setup start, we expect to be in waiting (pregame). If not, stage it now.
+          const want2 = Number(activeSession?.setup?.count||0);
+          if(want2>1 && !activeSessionId){
+            await ngEnsureSessionDoc();
+            await ngSendInvites();
+            try{ show("waiting"); }catch(e){}
+          }
+          return;
+        }
+      }catch(e){}
+
+      // Fallback: if setup exists, stage session + invites; else ask to use Setup.
+      const want3 = Number(activeSession?.setup?.count||0);
+      if(want3>1){
+        await ngEnsureSessionDoc();
+        await ngSendInvites();
+        try{ show("waiting"); }catch(e){}
+        return;
+      }
+      _ngToast("Open Setup and select players to start.");
+    };
+  }
+
+  if(invBtn){
+    invBtn.onclick = async ()=>{
+      try{ invBtn.classList.add("inviteActive"); }catch(e){}
+      try{ setInviteStatus && setInviteStatus("Sending invites…", false); }catch(e){}
+      try{ show("waiting"); }catch(e){}
+      try{ await ngSendInvites(); }catch(e){ _ngToast("Invite failed: " + (e.message||e)); }
+      try{ setTimeout(()=>invBtn.classList.remove("inviteActive"), 1200); }catch(e){}
+    };
+  }
+
+  if(endBtn){
+    endBtn.onclick = async ()=>{ await ngEndLive(); };
+  }
+}
+
+// Boot once Firebase is up and we have an email identity
+(function ngMultiplayerStabilizeBoot(){
+  try{
+    // expose build
+    const headCenter = document.getElementById("dbgFs");
+    if(headCenter && String(headCenter.textContent||"").includes("OK")){
+      // no-op
+    }
+  }catch(e){}
+
+  // Bind immediately; handlers are guarded
+  try{ ngBindLobbyButtons(); }catch(e){}
+
+  // Start listeners when email identity appears
+  const tick = setInterval(()=>{
+    try{
+      const em = _ngUserEmail();
+      const db2 = _ngDb();
+      if(em && db2){
+        clearInterval(tick);
+        ngBootInviteListener();
+        ngBootSessionWatcher();
+        ngBindLobbyButtons();
+      }
+    }catch(e){}
+  }, 350);
 })();
 </script>
 
