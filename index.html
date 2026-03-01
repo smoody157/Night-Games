@@ -1,4 +1,4 @@
-/* ===================== NIGHT GAMES v1083 (GOLD MASTER) ===================== */
+/* ===================== NIGHT GAMES v1084 (PRODUCTION BUILD) ===================== */
 <!--
 ================================================================================
   NIGHT GAMES |  2026-02-28
@@ -30,8 +30,7 @@ THIS BUILD CHANGES:
 -->
 <!-- =============================================================================
  NIGHT GAMES — BUILD BRIEF (DO NOT DELETE)
- Version: v1083 (GOLD MASTER)
- Date: 2026-02-28
+ Version: v1084 (01 ENGINE COMPLETE)
  Goal: 100% complete, forward-only. No patch layers. No rollback.
 
  RULES (GUARDRAILS)
@@ -2097,7 +2096,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1082 MASTER REPORTER ===================== */
+/* ===================== v1084 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -2403,30 +2402,6 @@ window.ngLastError = "none";
 const ngLSGet = (k)=>{ try{ return localStorage.getItem(k); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return null; } };
-
-// ===== Firebase Config Guard (v1083) =====
-// If any required Firebase config field is missing, keep the UI alive in "offline mode"
-// instead of throwing during initializeApp().
-function ngValidateFirebaseConfig(cfg){
-  try{
-    if(!cfg || typeof cfg !== "object") return false;
-    const req = ["apiKey","authDomain","projectId","appId"];
-    for(const k of req){
-      const v = (cfg[k]||"").trim();
-      if(!v) return false;
-    }
-    return true;
-  }catch(e){ return false; }
-}
-const __ngHasFirebaseConfig = ngValidateFirebaseConfig(firebaseConfig);
-if(!__ngHasFirebaseConfig){
-  try{
-    setDbg("FAIL", "—", "no-config", "Firebase config missing");
-    statusLine && (statusLine.textContent = "Offline mode (missing Firebase config).");
-  }catch(_e){}
-}
-
-
 const ngLSSet = (k,v)=>{ try{ localStorage.setItem(k, String(v)); return true; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return false; } };
@@ -4967,7 +4942,6 @@ function renderPlayers(list){
 
     // Start Firebase and wire handlers
     try {
-      if(!__ngHasFirebaseConfig){ throw new Error("Missing Firebase config"); }
       const app = initializeApp(firebaseConfig);
       const auth = initializeAuth(app, { persistence: inMemoryPersistence });
       // : Auth uses in-memory persistence at init to avoid Safari NotSupportedError.
@@ -5324,33 +5298,76 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 }
 
 /* ===================== GAME ENGINE CORE ===================== */
+
+/* ===================== v1084 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
 
     const players = session.setup?.emails || [];
+    if(!players.length) return;
+
+    // Default start score
+    const startScore = session.startScore || 501;
+    if(!session.score) session.score = {};
+    players.forEach(p=>{
+      if(typeof session.score[p] !== "number") session.score[p] = startScore;
+    });
+
     let turnIndex = session.turnIndex || 0;
+    let dartsThisTurn = 0;
+    let turnStartScore = session.score[players[turnIndex]];
 
     function nextTurn(){
+      dartsThisTurn = 0;
       turnIndex = (turnIndex + 1) % players.length;
       session.turnIndex = turnIndex;
+      turnStartScore = session.score[players[turnIndex]];
     }
 
-    function score01(dartValue){
-      if(typeof session.score !== "object") session.score = {};
+    function score01(dartValue, isDouble=false){
       const current = players[turnIndex];
-      session.score[current] = (session.score[current] || session.startScore || 501) - dartValue;
+      if(typeof dartValue !== "number") return;
 
-      if(session.score[current] === 0){
-        if(typeof record01Result==="function") record01Result(current);
-      } else {
+      dartsThisTurn++;
+      session.score[current] -= dartValue;
+
+      const newScore = session.score[current];
+
+      // Bust conditions
+      if(newScore < 0 || newScore === 1 || (newScore === 0 && !isDouble)){
+        session.score[current] = turnStartScore;
+        nextTurn();
+        return;
+      }
+
+      // Win condition (double out)
+      if(newScore === 0 && isDouble){
+        if(typeof record01Result === "function"){
+          record01Result(current);
+        }
+        session.winner = current;
+        session.ended = true;
+        return;
+      }
+
+      // End turn after 3 darts
+      if(dartsThisTurn >= 3){
         nextTurn();
       }
     }
 
-    session.engine = { nextTurn, score01 };
-  }catch(e){ if(typeof ngLogError==="function") ngLogError("GameEngine",e); }
+    session.engine = {
+      score: score01,
+      nextTurn
+    };
+
+  }catch(e){
+    if(typeof ngLogError==="function") ngLogError("01Engine", e);
+    else console.error("01Engine", e);
+  }
 }
+
 
 /* ===================== LOCAL PRACTICE ===================== */
 function launchLocalGame(){
