@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v1021  |  2026-02-28
+  NIGHT GAMES v1022  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -47,7 +47,7 @@ THIS BUILD CHANGES:
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v1021 (MASTER STABLE)</title>
+<title>Night Games v1022 (MASTER STABLE)</title>
 <style>
 
 
@@ -56,7 +56,7 @@ THIS BUILD CHANGES:
    - Keep theme styles grouped here.
 ============================================================================= */
 :root{
-      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg?v=907");
+      --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg");
       --maxW: 760px;
       --uiW: min(var(--maxW), calc(100vw - 24px));
       --txt: rgba(245,250,255,.94);
@@ -2563,7 +2563,7 @@ html, body{
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v1021                               ║
+║                          🎮 NIGHT GAMES v1022                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2571,7 +2571,7 @@ html, body{
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v1021
+// Night Games Night Games v1022
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -2579,10 +2579,10 @@ html, body{
     import {
       getFirestore,
       doc, setDoc, getDoc,
-      collection, onSnapshot,
-      serverTimestamp, query, where
+      collection, query, where, onSnapshot,
+      addDoc, updateDoc, deleteDoc, arrayUnion,
+      serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
     const dbgState = document.getElementById("dbgState");
     const dbgAuth = document.getElementById("dbgAuth");
     const dbgFs = document.getElementById("dbgFs");
@@ -4935,13 +4935,7 @@ if(b && b.id === "ngUpdateBtn"){
    - END flips ended:true (and all clients return home)
    ========================================================================== */
 
-import {
-  doc, collection, query, where, onSnapshot,
-  addDoc, setDoc, updateDoc, deleteDoc, arrayUnion,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-const NG_BUILD = "v1021-MP-STABLE";
+const NG_BUILD = "v1022-MP-STABLE";
 try{ window.NG_BUILD = NG_BUILD; }catch(e){}
 
 function _ngDb(){
