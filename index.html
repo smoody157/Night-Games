@@ -2358,6 +2358,7 @@ button.pill { pointer-events: auto !important; }
 .pill.btnAdvance{ background: rgba(255,255,255,0.12) !important; color: inherit !important; box-shadow: none !important; }
 #lobbyInviteBtn{ background: rgba(43,108,255,0.90) !important; color:#fff !important; }
 
+#setupInviteBtn{ background: rgba(43,108,255,0.90) !important; color:#fff !important; }
 </style>
 <script id="ngGuards_v748">
 /* =============================================================================
@@ -2464,7 +2465,7 @@ button.pill { pointer-events: auto !important; }
 <div class="panel">
 <div class="sectionHead"><div class="title">Setup</div></div>
 <div class="detailBody" id="setupBody">
-<div style="opacity:.82;">Setup screen is installed. Wiring comes next.</div>
+<div style="opacity:.82;">Select opponents, then Start Game (or Invite to Waiting Room).</div>
 </div>
 </div>
 <div class="panel">
@@ -2472,6 +2473,7 @@ button.pill { pointer-events: auto !important; }
 <div class="controlsRow controlsRow3">
   <button class="pill" id="setupHomeBtn" type="button">Home</button>
 <button class="pill btnAdvance" id="setupStartGameBtn" type="button">Start Game</button>
+<button class="pill" id="setupInviteBtn" type="button">Invite</button>
 <button class="pill" id="setupBackBtn" type="button">Cancel</button>
 </div>
 </div>
@@ -2929,7 +2931,8 @@ async function doUpdate(auth){
     const waitingBackBtn = document.getElementById("waitingBackBtn");
     const setupBackBtn = document.getElementById("setupBackBtn");
     const setupStartGameBtn = document.getElementById("setupStartGameBtn");
-    const lobbySetupBtn = document.getElementById("lobbySetupBtn");
+        const setupInviteBtn = document.getElementById("setupInviteBtn");
+const lobbySetupBtn = document.getElementById("lobbySetupBtn");
     const lobby = document.getElementById("lobby");
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody = document.getElementById("lobbyBody");
@@ -4786,13 +4789,25 @@ if(b && b.id === "ngUpdateBtn"){
         try{ setTimeout(()=>{ lobbyInviteBtn.classList.remove("inviteActive"); }, 1800); }catch(e){}
       });
       setupHomeBtn && setupHomeBtn.addEventListener("click", ()=> show("players"));
-      // Cancel returns to Lobby
-      setupBackBtn && setupBackBtn.addEventListener("click", ()=> show("lobby"));
-      setupStartGameBtn && setupStartGameBtn.addEventListener("click", ()=>{
-        try{ show("lobby"); }catch(e){}
-        try{ setTimeout(()=>{ lobbyStartBtn && lobbyStartBtn.click(); }, 50); }catch(e){}
+            setupInviteBtn && setupInviteBtn.addEventListener("click", async ()=>{
+        try{ setInviteStatus("Sending invites…", false); }catch(e){}
+        try{ show("waiting"); }catch(e){}
+        try{ await sendInvitesForSession(); setInviteStatus("Invites sent.", true); }catch(e){ setInviteStatus("Invite failed.", false); }
       });
-      waitingBackBtn.addEventListener("click", ()=> show("setup"));
+// Cancel returns to Lobby
+      setupBackBtn && setupBackBtn.addEventListener("click", ()=> show("players"));
+setupStartGameBtn && setupStartGameBtn.addEventListener("click", async ()=>{
+        try{
+          const isPractice = !!(activeSession && (activeSession.practice || (activeSession.setup && activeSession.setup.practice)));
+          if(isPractice){
+            if(typeof startPracticeSession === "function") await startPracticeSession();
+          }else{
+            if(typeof startSession === "function") await startSession();
+          }
+        }catch(e){}
+        try{ show("lobby"); }catch(e){}
+      });
+waitingBackBtn.addEventListener("click", ()=> show("setup"));
       lobbyStartBtn.addEventListener("click", ()=>{
         try{ if(window.__ngDoStart){ window.__ngDoStart(); return; } }catch(e){}
       });
