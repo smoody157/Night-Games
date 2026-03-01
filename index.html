@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v1020  |  2026-02-28
+  NIGHT GAMES v1021  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -47,7 +47,7 @@ THIS BUILD CHANGES:
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v1020 (MASTER STABLE)</title>
+<title>Night Games v1021 (MASTER STABLE)</title>
 <style>
 
 
@@ -2563,7 +2563,7 @@ html, body{
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v1020                               ║
+║                          🎮 NIGHT GAMES v1021                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2571,7 +2571,7 @@ html, body{
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// Night Games Night Games v1020
+// Night Games Night Games v1021
 
     // ===== Firebase (stable) =====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -4936,10 +4936,12 @@ if(b && b.id === "ngUpdateBtn"){
    ========================================================================== */
 
 import {
-  addDoc, updateDoc, deleteDoc, arrayUnion
+  doc, collection, query, where, onSnapshot,
+  addDoc, setDoc, updateDoc, deleteDoc, arrayUnion,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-const NG_BUILD = "v1020-MP-STABLE";
+const NG_BUILD = "v1021-MP-STABLE";
 try{ window.NG_BUILD = NG_BUILD; }catch(e){}
 
 function _ngDb(){
