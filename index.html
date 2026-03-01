@@ -1,6 +1,6 @@
 <!--
 ================================================================================
-  NIGHT GAMES v1052  |  2026-02-28
+  NIGHT GAMES v1053  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
@@ -4649,183 +4649,7 @@ window.ngEnter = async function(email){
   }
 };
 // NOTE: listeners are attached in a small non-module fallback script so ENTER works even if module fails.
-document.addEventListener("click", async (e)=>{
-      const b = e.target.closest(".pill");
-      if(!b) return;
-
-      const action = b.dataset.action;
-      const value = b.dataset.value || "";
-
-
-// Update button (top-right)
-if(b && b.id === "ngUpdateBtn"){
-  try{ await doUpdate(auth); }catch(_e){}
-  return;
-}
-
-      if(action === "game_rules"){
-        const txt = (GAME_RULES[value] || "Rules coming soon.");
-        openDetail("RULES • " + value, `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${value}</div>
-          <div style="opacity:.82; font-size:14px; line-height:1.55;">${txt}</div>
-        `);
-        return;
-      }
-
-
-      // Global rules list
-      if(action === "show_rules"){
-        const list = Object.entries(GAME_RULES).map(([k,v]) => `
-          <div style="margin: 0 0 14px 0;">
-            <div style="font-weight:1000; font-size:20px; margin-bottom:4px;">${k}</div>
-            <div style="opacity:.78; font-size:14px; line-height:1.45;">${v}</div>
-          </div>
-        `).join("");
-        openDetail("RULES", `<div>${list}</div>`);
-        return;
-      }
-
-      // Enter game (multiplayer session)
-      if(action === "enter_game"){
-        try{
-          await createSessionForGame(value);
-          try{ renderSetupForGame(value); }catch(err){ throw err; }
-          show("setup");
-        }catch(e){
-          console.error(e);
-          alert("Setup error: " + (e && (e.message||e) ? (e.message||e) : e));
-        }
-        return;
-      }
-
-      if(action === "game_history"){
-        openDetail("GAME HISTORY", `
-          <div style="font-weight:1000; font-size:26px; margin-bottom:6px;">${value}</div>
-          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
-        `);
-        return;
-      }
-
-      if(action === "player_stats"){
-        // Player Stats Shell (v1051)
-        const whoEmail = String(value || "").toLowerCase();
-        const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
-        const whoName = (who && who.name) ? who.name : (whoEmail ? whoEmail.split("@")[0] : "Player");
-
-        // Use your game list if available, otherwise fallback to the 6 games
-        const gameList = (Array.isArray(games) && games.length)
-          ? games
-          : ["01","Cricket","Killer","Shanghai","Around the World","Half It"];
-
-        const rows = gameList.map(g => `
-          <button type="button" class="pill" data-action="player_stats_game" data-value="${whoEmail}||${g}" style="
-            width:100%; display:flex; justify-content:space-between; align-items:center;
-            padding:14px 14px; border-radius:16px;
-            background: rgba(255,255,255,.04);
-            border: 1px solid rgba(255,255,255,.12);
-            margin-bottom:10px;">
-            <div style="font-weight:1000; letter-spacing:.4px;">${g}</div>
-            <div style="opacity:.78; font-weight:900;">View</div>
-          </button>
-        `).join("");
-
-        openDetail("PLAYER STATS", `
-          <div class="glassText" style="font-weight:1000; font-size:22px; margin-bottom:10px;">${whoName}</div>
-          <div style="opacity:.72; margin-bottom:14px;">Select a game.</div>
-          <div class="statScroll">${rows}</div>
-        `);
-        return;
-      }
-
-      if(action === "player_stats_game"){
-        const raw = String(value || "");
-        const parts = raw.split("||");
-        const whoEmail = String(parts[0] || "").toLowerCase();
-        const gameName = String(parts[1] || "").trim();
-
-        const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
-        const whoName = (who && who.name) ? who.name : (whoEmail ? whoEmail.split("@")[0] : "Player");
-
-        const tpl = PLAYER_STAT_TEMPLATES[gameName] || null;
-        if(!tpl){
-          openDetail("STATS • " + gameName, `<div style="opacity:.75; font-weight:900;">No stat template yet.</div>`);
-          return;
-        }
-
-        const sections = Object.keys(tpl).map(sectionName => {
-          const rows = tpl[sectionName].map(([key,label,help]) => {
-            const val = getStat(whoEmail, gameName, key);
-            return `
-              <div class="statRow">
-                <div class="statLeft">
-                  <div class="statLabel">${label}</div>
-                  <div class="statHelp">${help}</div>
-                </div>
-                <div class="statVal">${val}</div>
-              </div>
-            `;
-          }).join("");
-          return `
-            <div class="statSection">
-              <div class="statSectionTitle">${sectionName}</div>
-              ${rows}
-            </div>
-          `;
-        }).join("");
-
-        openDetail("STATS • " + gameName, `
-          <div class="glassText" style="font-weight:1000; font-size:22px; margin-bottom:10px;">${whoName}</div>
-          <div style="opacity:.72; margin-bottom:14px;">${gameName}</div>
-          <div class="statScroll">${sections}</div>
-        `);
-        return;
-      }
-
-      if(action === "player_history"){
-        // Show player NAME (not email) everywhere except the registry list.
-        const who = (lastPeople || []).find(p => p && p.email === value);
-        const whoName = (who && who.name) ? who.name : (prettyNameFromEmail(value) || "Player");
-        openDetail("PLAYER HISTORY", `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:6px;">${whoName}</div>
-          <div style="opacity:.75;">Placeholder. Next we’ll pull from Firestore.</div>
-        `);
-        return;
-      }
-
-      if(action === "show_session"){
-        if(!activeSessionId){
-          openDetail("SESSION", `<div style="opacity:.78;">No active session.</div>`);
-          return;
-        }
-        openDetail("SESSION • LIVE", `
-          <div style="font-weight:1000; font-size:22px; margin-bottom:8px;">${activeGame || "Game"}</div>
-          <div style="opacity:.82; font-size:14px; line-height:1.55;">
-            Room: <b>${ROOM_ID}</b><br/>
-            Session: <b>${activeSessionId}</b><br/>
-            Host: <b>${activeHost || "—"}</b>
-          </div>
-          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="pill" data-action="join_session" type="button">Join</button>
-            <button class="pill" data-action="end_session" type="button">End</button>
-          </div>
-        `);
-        return;
-      }
-
-      if(action === "join_session"){
-        try{ await joinActiveSessionIfAny(); }catch(e){}
-        openDetail("JOINED", `<div style="opacity:.85;">Joined session.</div>`);
-        return;
-      }
-
-      if(action === "end_session"){
-        try{ await endSession(); }catch(e){}
-        openDetail("SESSION ENDED", `<div style="opacity:.85;">Session ended.</div>`);
-        return;
-      }
-    });
-
-      backBtn.addEventListener("click", ()=> show("players"));
+backBtn.addEventListener("click", ()=> show("players"));
       homeBtn.addEventListener("click", ()=> show("landing"));
 
       // Leaderboard wiring (Players -> Leaderboard, and back)
@@ -5183,88 +5007,7 @@ waitingBackBtn.addEventListener("click", ()=> show("setup"));
     }catch(e){ console.log("[NG]", fnName, "ERR", e); return null; }
   }
 
-  document.addEventListener("click", function(e){
-    const btn = e.target.closest("button");
-    if(!btn) return;
-
-    switch(btn.id){
-      case "ngUpdateBtn":
-        try{ location.reload(); }catch(_){}
-        break;
-
-      case "lobbyBackBtn":
-        if(callIf("show","players")===null) callIf("showPage","players");
-        break;
-
-      case "lobbyInviteBtn":
-        // Prefer existing invite handlers
-        if(callIf("sendInvite")===null && callIf("inviteSelectedPlayers")===null){
-          console.log("[NG] Invite clicked (no handler found)");
-          try{ alert("Invite clicked. (Invite handler not found.)"); }catch(_){}
-        }
-        break;
-
-      case "lobbyStartBtn":
-        // Prefer your real start handler if present
-        if(window.__ngDoStart){ try{ window.__ngDoStart(); return; }catch(_){} }
-        if(callIf("startGame")===null && callIf("startSelectedGame")===null){
-          console.log("[NG] Start clicked (no handler found)");
-          try{ alert("Select a game and complete Setup first."); }catch(_){}
-          callIf("show","setup"); callIf("showPage","setup");
-        }
-        break;
-
-      case "lobbyEndBtn":
-        if(callIf("endSession")===null && callIf("endGame")===null){
-          console.log("[NG] End/Cancel clicked (no handler found)");
-          try{ alert("End/Cancel clicked. (Handler not found.)"); }catch(_){}
-        }
-        break;
-    }
-  }, true);
-})();
-
-
-
-/* v1051: INVITE FLOW (IN-APP) */
-async function sendInvite(){
-  // In-app invite: writes a pending invite record for opponents and routes to Waiting Room.
-  try{
-    const fromName = (document.getElementById("ngHeaderPlayer")?.textContent || "").trim() || "Someone";
-    const gameName = (document.querySelector(".gameLabel.active")?.textContent || document.getElementById("activeGameName")?.textContent || "").trim() || "Night Game";
-    // Try to find selected opponent list from common globals; fall back to prompt.
-    let opponents = [];
-    try{
-      if(Array.isArray(window.selectedOpponents)) opponents = window.selectedOpponents.slice();
-      else if(window.activeSession && Array.isArray(window.activeSession?.players)) opponents = window.activeSession.players.slice();
-      else if(Array.isArray(window.lastPeople)) opponents = window.lastPeople.slice();
-    }catch(_e){}
-    // Remove self if present (by name)
-    opponents = opponents.filter(x => (x||"").trim() && (x||"").trim() !== fromName);
-
-    if(opponents.length === 0){
-      const raw = prompt("Invite who? (comma-separated emails or names)", "");
-      if(raw) opponents = raw.split(",").map(s=>s.trim()).filter(Boolean);
-    }
-    if(opponents.length === 0){ alert("No opponents selected."); return; }
-
-    const sessionId = window.activeSessionId || window.currentSessionId || window.sessionId || (window.activeSession && window.activeSession.id) || null;
-    if(!sessionId){ console.log("[INVITE] No sessionId found"); }
-
-    // Firestore write (if available)
-    if(typeof window.db !== "undefined" && typeof collection === "function" && typeof addDoc === "function"){
-      const invCol = collection(db, "invites");
-      const payloadBase = {
-        sessionId: sessionId || null,
-        gameName,
-        fromName,
-        createdAt: (typeof serverTimestamp === "function") ? serverTimestamp() : new Date(),
-        status: "pending"
-      };
-      for(const to of opponents){
-        try{
-          await addDoc(invCol, {...payloadBase, to});
-        }catch(e){ console.log("[INVITE] addDoc failed", e); }
+  }catch(e){ console.log("[INVITE] addDoc failed", e); }
       }
       // Optional: mark session as waiting / store invite list
       try{
@@ -5289,30 +5032,6 @@ async function sendInvite(){
 
 
 /* v1051: CONTROL PANEL HARD-LOCK (ADDED) */
-document.addEventListener("click", function(e){
-  const btn = e.target.closest("button");
-  if(!btn) return;
-  if(btn.id === "lobbyInviteBtn"){ if(typeof sendInvite==="function") sendInvite(); }
-  if(btn.id === "lobbyStartBtn"){ if(window.__ngDoStart) window.__ngDoStart(); else if(typeof startGame==="function") startGame(); }
-}, true);
-
-
-/* v1051: SETUP CONTROL PANEL HARD-LOCK (USER SPEC) */
-document.addEventListener("click", function(e){
-  const btn = e.target.closest("button");
-  if(!btn) return;
-  
-  if(btn.id === "lobbyInviteBtn"){ 
-    if(typeof sendInvite === "function") sendInvite(); 
-  }
-  if(btn.id === "setupStartGameBtn"){ 
-    if(typeof startSession === "function") startSession(); 
-  }
-  if(btn.id === "setupHomeBtn" || btn.id === "setupBackBtn"){
-    if(typeof show === "function") show("players");
-  }
-});
-
 </script>
 
 </body>
@@ -5320,31 +5039,39 @@ document.addEventListener("click", function(e){
 
 
 /* === CONTROL PANEL HARD-LOCK v1052 === */
+
+
+/* === AUTHORITATIVE CONTROL FIX v1053 === */
 document.addEventListener("click", function(e){
   const btn = e.target.closest("button");
   if(!btn) return;
 
-  // HOME
-  if(btn.id === "setupHomeBtn"){
+  // HOME / BACK
+  if(btn.id === "setupHomeBtn" || btn.id === "setupBackBtn"){
     if(typeof show === "function") show("players");
     return;
   }
 
-  // INVITE (Multiplayer only)
+  // INVITE (Multiplayer)
   if(btn.id === "lobbyInviteBtn"){
     if(typeof sendInvite === "function") sendInvite();
     return;
   }
 
-  // START GAME
-  if(btn.id === "setupStartGameBtn"){
-    if(typeof startSession === "function") startSession();
-    return;
-  }
+  // START (Correct ID)
+  if(btn.id === "lobbyStartBtn"){
 
-  // RESET / BACK
-  if(btn.id === "setupResetBtn" || btn.id === "setupBackBtn"){
-    if(typeof show === "function") show("setup");
+    // Step 2: Game Engine Integration
+    if(typeof activeSession !== 'undefined' && activeSession.gameId){
+      const gId = activeSession.gameId;
+
+      if(gId === 'cricket' && typeof initCricket === "function") initCricket();
+      else if(gId === 'killer' && typeof initKiller === "function") initKiller();
+      else if(typeof initStandardScoreboard === "function") initStandardScoreboard();
+    }
+
+    if(typeof startSession === "function") startSession();
+    if(typeof show === "function") show("game_screen");
     return;
   }
 
@@ -5353,4 +5080,5 @@ document.addEventListener("click", function(e){
     if(typeof show === "function") show("setup");
     return;
   }
-});
+
+}, true);
