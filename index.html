@@ -1,13 +1,13 @@
 <!--
 ================================================================================
-  NIGHT GAMES v1062  |  2026-02-28
+  NIGHT GAMES v1065  |  2026-02-28
 ================================================================================
   MASTER CLEAN BUILD (STABILITY FIRST)
   - Enter must work (email -> players) and must never regress.
   - Game -> Setup must open.
   - Setup Start must work (1 player + 2+ players).
 
-  v1062 CHANGES:
+  v1065 CHANGES:
   - Fixed JS parse error (removed stray '});' that broke load).
   - No other behavior changes.
 
@@ -19,13 +19,41 @@ THIS BUILD CHANGES:
   QUICK JUMP (Ctrl/Cmd+F):
     [EDIT_BG] [EDIT_LOGO] [EDIT_VERSION] [EDIT_COLORS] [EDIT_DROPDOWNS]
     [SECTION_CONFIG] [SECTION_FIREBASE] [SECTION_STATE] [SECTION_ROUTING]
+
+/* === v1065: MULTIPLAYER FLOW & SYNC (STEP 3) === */
+async function listenForJoins(sessionId) {
+  try{
+    if(!sessionId) return;
+    if(typeof db === "undefined" || typeof query !== "function" || typeof collection !== "function" || typeof where !== "function" || typeof onSnapshot !== "function"){
+      console.log("[SYNC] Firestore listeners not available");
+      return;
+    }
+    const q = query(collection(db, "invites"), where("sessionId", "==", sessionId));
+    onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        const data = change.doc.data() || {};
+        if (data.status === "accepted") {
+          const key = data.fromEmail || data.toEmail || data.to || data.email;
+          if(!key) return;
+          const playerEl = document.getElementById(key);
+          if(playerEl) playerEl.classList.add("ready-glow");
+        }
+      });
+    });
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+
+    console.log("[SYNC] listenForJoins error", e);
+  }
+}
+
     [SECTION_UI] [SECTION_PLAYERS] [SECTION_GAMES] [SECTION_SETUP]
     [SECTION_WAITING] [SECTION_INVITES] [SECTION_UTILS] [SECTION_DEBUG]
 ================================================================================
 -->
 <!-- =============================================================================
  NIGHT GAMES — BUILD BRIEF (DO NOT DELETE)
- Version: v1062
+ Version: v1065
  Date: 2026-02-28
  Goal: 100% complete, forward-only. No patch layers. No rollback.
 
@@ -54,7 +82,7 @@ THIS BUILD CHANGES:
 
 <html lang="en">
 <head>
-<!-- ===================== v1062 STABILITY SWEEP =====================
+<!-- ===================== v1065 STABILITY SWEEP =====================
      - NO UI/layout changes
      - NO wiring changes
      - Only whitespace cleanup + version bump
@@ -74,7 +102,7 @@ THIS BUILD CHANGES:
 
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Night Games v1062</title>
+<title>Night Games v1065</title>
 <style>
 
 
@@ -567,7 +595,7 @@ border: 1px solid rgba(255,255,255,.22);
       touch-action: pan-y;
     }
 
-    /* v1062: Ensure setup + waiting bodies can scroll (iOS safe in flex/grid) */
+    /* v1065: Ensure setup + waiting bodies can scroll (iOS safe in flex/grid) */
     #setup .detailWrap, #waiting .detailWrap{ min-height: 0; }
     #setup .panel, #waiting .panel{ min-height: 0; display:flex; flex-direction:column; }
     #setup .detailBody, #waiting .detailBody{
@@ -1239,7 +1267,7 @@ border: 1px solid rgba(255,255,255,.22);
   -webkit-backdrop-filter: blur(10px) saturate(120%);
 }
 
-/* remove the old outline styling from v1062 */
+/* remove the old outline styling from v1065 */
 #landing #emailPad{ outline: none !important; }
 #landing #enterBtn{ outline: none !important; opacity: 1 !important; }
 
@@ -1426,7 +1454,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v1062 FINAL POLISH ===================== */
+/* ===================== v1065 FINAL POLISH ===================== */
 
 
 /* Slightly increase spacing control */
@@ -1474,7 +1502,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v1062 PLAYERS READABILITY + ROW LAYOUT ===================== */
+/* ===================== v1065 PLAYERS READABILITY + ROW LAYOUT ===================== */
 
 /* Move BOTH panels down slightly (harder to read when too high) */
 #players .hub{
@@ -1523,7 +1551,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v1062 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
+/* ===================== v1065 DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1566,7 +1594,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v1062 RULES SCROLL FIX (GRID/FLEX) ===================== */
+/* ===================== v1065 RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
 #detail .panel{
@@ -1618,7 +1646,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v1062 PLAYER STATS UI ===================== */
+/* ===================== v1065 PLAYER STATS UI ===================== */
 #detail .statScroll{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
@@ -1663,14 +1691,14 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v1062 SETUP SCROLL + LIGHT FROST ===================== */
+/* ===================== v1065 SETUP SCROLL + LIGHT FROST ===================== */
 #setup .detailBody{
   max-height: calc(100vh - 260px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* v1062: setup scroll reliability (grid/flex fix like Detail screen) */
+/* v1065: setup scroll reliability (grid/flex fix like Detail screen) */
 #setup .detailWrap > .panel:first-child{
   display:flex;
   flex-direction: column;
@@ -1695,7 +1723,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 
-/* ===================== v1062 DETAIL BUTTON UNIFORMITY ===================== */
+/* ===================== v1065 DETAIL BUTTON UNIFORMITY ===================== */
 #detail .pill{
   height: 44px;
   padding: 12px 16px !important;
@@ -1704,7 +1732,7 @@ border: 1px solid rgba(255,255,255,.22);
 
 
 
-/* ===================== v1062 HEADER PLAYER NAME ===================== */
+/* ===================== v1065 HEADER PLAYER NAME ===================== */
 #ngHeaderBar .ngHeaderPlayer{
   position: relative;
   z-index: 1;
@@ -1729,7 +1757,7 @@ border: 1px solid rgba(255,255,255,.22);
 #ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
 #ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
 
-/* ===================== v1062 GLOBAL FOOTER ===================== */
+/* ===================== v1065 GLOBAL FOOTER ===================== */
 .globalFooter{
   position: fixed;
   left: 0;
@@ -1745,7 +1773,7 @@ border: 1px solid rgba(255,255,255,.22);
   z-index: 9990;
 }
 
-/* ===================== v1062 BUTTON SIZING BY CATEGORY ===================== */
+/* ===================== v1065 BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
 .pill.btnAdvance{ height: 50px; font-size: 14px; letter-spacing: 1px; }
 .pill.pillMini{ height: 34px; }
@@ -1768,7 +1796,7 @@ border: 1px solid rgba(255,255,255,.22);
 #detail .detailBody .actions .pill{ flex:1; }
 
 
-/* ===================== v1062 RESPONSIVE STAGE FIT ===================== */
+/* ===================== v1065 RESPONSIVE STAGE FIT ===================== */
 /* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
 @media (min-aspect-ratio: 4/3){
   .screen::before{
@@ -1784,7 +1812,7 @@ border: 1px solid rgba(255,255,255,.22);
   }
 }
 
-/* ===================== v1062 HEADER STRIP CENTERING ===================== */
+/* ===================== v1065 HEADER STRIP CENTERING ===================== */
 .ngBottomRow{ position: relative; }
 #ngHeaderPlayer{
   position: absolute;
@@ -1796,7 +1824,7 @@ border: 1px solid rgba(255,255,255,.22);
 .ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
 
 /* =============================================================================
-   SECTION: v1062 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
+   SECTION: v1065 HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
    - No layout redesign. Pure alignment + typography polish.
 ============================================================================= */
 #ngHeaderBar .ngHeaderCenter{
@@ -1835,7 +1863,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   SECTION: v1062 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
+   SECTION: v1065 PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1864,7 +1892,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v1062: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
+   v1065: PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
 ============================================================================= */
 #ngHeaderPlayer{
   display:block;
@@ -1893,7 +1921,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v1062: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
+   v1065: STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
    1) iPad overlap: push hub down on tablet widths
    2) Firebase • Firestore: side-by-side, centered, readable (no clipping)
    3) Default view: show 2 full rows (reduce row height slightly)
@@ -1927,7 +1955,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v1062: Player Page Name (premium)
+   v1065: Player Page Name (premium)
 ============================================================================= */
 .playerPageName{
   width:100%;
@@ -1949,7 +1977,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v1062: Leaderboard button under Players area (skinny + wide)
+   v1065: Leaderboard button under Players area (skinny + wide)
 ============================================================================= */
 .leaderboardSlot{ display:flex; justify-content:center; margin: 14px 0 8px 0; }
 #players .hub{ grid-template-rows: 1fr 1fr auto; }
@@ -1958,7 +1986,7 @@ border: 1px solid rgba(255,255,255,.22);
 @media (min-width:760px){ .ngWideBtn{ min-width: 360px; } }
 
 /* =============================================================================
-   v1062: Player Name + Leaderboard placement (Players screen)
+   v1065: Player Name + Leaderboard placement (Players screen)
 ============================================================================= */
 .playerPageName{
   width: 100%;
@@ -1993,7 +2021,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* =============================================================================
-   v1062: Authoritative Scroll System (ALL SCREENS)
+   v1065: Authoritative Scroll System (ALL SCREENS)
    Goal: Every list/panel that needs scrolling scrolls reliably (iOS safe),
          while the app shell stays locked (no page-bounce).
 ============================================================================= */
@@ -2041,7 +2069,7 @@ html, body{
 }
 
 /* =============================================================================
-   v1062: Critical scroll restore for Setup/Waiting + controls alignment
+   v1065: Critical scroll restore for Setup/Waiting + controls alignment
 ============================================================================= */
 #setupBody, #waitingBody{
   max-height: calc(100vh - 320px);
@@ -2057,7 +2085,7 @@ html, body{
   gap:12px;
   align-items:stretch;
 }
-/* v1062: Setup Control Panel button shape + sizing (match app buttons; no pill-end circles) */
+/* v1065: Setup Control Panel button shape + sizing (match app buttons; no pill-end circles) */
 .controlsRow3 > .cpBtn{
   border-radius: 14px; /* override .pill 999px */
 }
@@ -2084,7 +2112,7 @@ html, body{
 
 
 /* =============================================================================
-   v1062: GLOBAL FROST PASS (ALL SUBPAGES)
+   v1065: GLOBAL FROST PASS (ALL SUBPAGES)
    Goal: Ensure every major panel has consistent frosted-glass look across screens,
          including Waiting Room, Lobby, Leaderboard, Randomizer, Detail/Stats.
    Notes: No behavior changes; visual-only.
@@ -2133,7 +2161,7 @@ html, body{
 
 
 
-/* ===================== v1062: LEADERBOARD SCROLL FIX =====================
+/* ===================== v1065: LEADERBOARD SCROLL FIX =====================
    Make the first panel a flex column so #leaderboardBody can scroll reliably (iOS grid/flex safe).
 ======================================================================= */
 #leaderboard .detailWrap > .panel:first-child{
@@ -2151,7 +2179,7 @@ html, body{
   padding-right: 6px;
 }
 
-/* ===================== v1062 VISUAL CONSISTENCY PASS =====================
+/* ===================== v1065 VISUAL CONSISTENCY PASS =====================
    - Player Stats / Detail panels: match frosted glass style
    - Waiting Room panels: match frosted glass style
    - Waiting indicators: green + glow for ALL waiting players
@@ -2197,7 +2225,7 @@ html, body{
 
 
 /* =============================================================================
-   v1062: FORCE FROST GLASS ON ALL SUBPAGES (stats/detail/waiting/leaderboard/etc.)
+   v1065: FORCE FROST GLASS ON ALL SUBPAGES (stats/detail/waiting/leaderboard/etc.)
 ============================================================================= */
 #detail .panel, #detail .card,
 #waiting .panel, #waiting .card,
@@ -2213,7 +2241,7 @@ html, body{
   -webkit-backdrop-filter: blur(10px) saturate(115%) !important;
 }
 
-/* v1062: Waiting-room joined checkmarks MUST glow green (ok + wait) */
+/* v1065: Waiting-room joined checkmarks MUST glow green (ok + wait) */
 .statusIcon.ok,
 .statusIcon.wait{
   color: rgba(90,255,170,.98) !important;
@@ -2223,7 +2251,7 @@ html, body{
 
 
 /* =============================================================================
-   v1062: FINAL VISUAL CONSISTENCY
+   v1065: FINAL VISUAL CONSISTENCY
    - Waiting status checkmark must glow GREEN
    - Frosted glass across Waiting / Leaderboard / Player Stats panels
 ============================================================================= */
@@ -2257,7 +2285,7 @@ html, body{
 
 
 /* =============================================================================
-   v1062: FINAL VISUAL CONSISTENCY (NO LOGIC CHANGES)
+   v1065: FINAL VISUAL CONSISTENCY (NO LOGIC CHANGES)
    - Player Stats/Detail + Waiting + Leaderboard + Randomizer match main frosted panels
    - Waiting status icons (including "wait") glow green
 ============================================================================= */
@@ -2286,10 +2314,10 @@ html, body{
 }
 
 
-/* v1062: randomizer is automatic (no control panel button) */
+/* v1065: randomizer is automatic (no control panel button) */
 #lobbyRandomizeBtn{ display:none !important; }
 
-/* v1062: make main content panels scrollable on mobile */
+/* v1065: make main content panels scrollable on mobile */
 #lobby #lobbyBody{
   max-height: 52vh !important;
   overflow-y: auto !important;
@@ -2325,17 +2353,17 @@ html, body{
       box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
     }
 
-/* v1062: Remove duplicate Setup START buttons (Controls panel only) */
+/* v1065: Remove duplicate Setup START buttons (Controls panel only) */
 #setupStartBtn, #setupStartInlineBtn{ display:none !important; }
 
-/* v1062: responsive spacing — prevent content panels overlapping header/logo */
+/* v1065: responsive spacing — prevent content panels overlapping header/logo */
 
 #appMain{ padding-top: calc(var(--headerH) + env(safe-area-inset-top)) !important; }
 @media (min-width: 768px){
   
 }
 
-/* v1062: Invite button feedback */
+/* v1065: Invite button feedback */
 #lobbyInviteBtn.inviteActive{
   animation: ngInvitePulse 0.9s ease-in-out infinite alternate;
 }
@@ -2348,22 +2376,22 @@ html, body{
   text-shadow: 0 0 12px rgba(90,255,170,.35), 0 0 26px rgba(90,255,170,.18);
 }
 
-/* v1062: Consolidation — single control path */
+/* v1065: Consolidation — single control path */
 #setupStartBtn, #setupStartInlineBtn, #lobbyBackBtn{ display:none !important; }
 
-/* v1062: CONTROL PANEL VISIBILITY */
+/* v1065: CONTROL PANEL VISIBILITY */
 .controlsRow, .controls, #lobbyControls, #lobbyFooter, #globalFooter { pointer-events: auto !important; }
 button.pill { pointer-events: auto !important; }
 
 
 
-/* v1062: CONTROL PANEL THEME */
+/* v1065: CONTROL PANEL THEME */
 .pill.btnAdvance{ background: rgba(255,255,255,0.12) !important; color: inherit !important; box-shadow: none !important; }
 #lobbyInviteBtn{ background: rgba(43,108,255,0.90) !important; color:#fff !important; }
 
 #setupInviteBtn{ background: rgba(43,108,255,0.90) !important; color:#fff !important; }
 
-/* v1062: Prevent button text overflow on small screens */
+/* v1065: Prevent button text overflow on small screens */
 button.pill{
   font-size: 14px;
   line-height: 1.1;
@@ -2372,6 +2400,21 @@ button.pill{
 
 </style>
 <script id="ngGuards_v748">
+
+/* === v1065: GLOBAL EXECUTION GUARD (STEP 4) === */
+function ngGuard(label, fn){
+  try{
+    return fn();
+  }catch(e){
+    if(typeof ngLogError === "function"){
+      try{ ngLogError(label || "Global_Error", e); }catch(_le){}
+    }else{
+      console.error("Critical Failure:", e);
+    }
+  }
+}
+
+
 /* =============================================================================
    SECTION_UTILS: SAFETY GUARDS  [SECTION_UTILS]
    - Prevents small errors from killing the whole app.
@@ -2387,7 +2430,11 @@ button.pill{
       catch (e) {
         try {
           if (window.ngErr) window.ngErr(label || "Handler error", e && (e.stack || e.message || String(e)));
-        } catch(_e){}
+        } catch(_e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       }
     };
   };
@@ -2400,7 +2447,7 @@ button.pill{
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v1062</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer">v1065</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2430,7 +2477,7 @@ button.pill{
 <div id="app">
 
 <section class="screen active" id="landing">
-  <!-- v1062: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <!-- v1065: target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder=""/>
@@ -2467,7 +2514,7 @@ button.pill{
 
 </div>
 
-<!-- v1062: Player name moved to the old leaderboard slot location -->
+<!-- v1065: Player name moved to the old leaderboard slot location -->
 <div id="playerPageName" class="playerPageName"></div>
 
 </section>
@@ -2578,7 +2625,11 @@ button.pill{
   if(!enterBtn || !emailInput) return;
 
   function setStatus(t){
-    try{ if(statusLine) statusLine.textContent = t; }catch(_){}
+    try{ if(statusLine) statusLine.textContent = t; }catch(_){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   }
 
   let busy = false;
@@ -2595,6 +2646,8 @@ button.pill{
         return;
       }
     }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+
       console.log("ENTER fallback error:", e);
       setStatus("Error.");
     }
@@ -2610,7 +2663,7 @@ button.pill{
 <script type="module">
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          🎮 NIGHT GAMES v1062                               ║
+║                          🎮 NIGHT GAMES v1065                               ║
 ║                     MASTER REWIRE (NO DUPES)                               ║
 ║  - UI LOOK/FEEL preserved                                                   ║
 ║  - Clean game registry + setup engine                                       ║
@@ -2618,12 +2671,20 @@ button.pill{
 ╚══════════════════════════════════════════════════════════════════════════════╝
 */
 
-// ===== v1062 STORAGE SAFETY (iOS Safari Private Mode) =====
+// ===== v1065 STORAGE SAFETY (iOS Safari Private Mode) =====
 // In iOS/Safari Private Browsing, localStorage/IndexedDB can throw "The operation is not supported."
 // Never let storage errors crash the app.
-const ngLSGet = (k)=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } };
-const ngLSSet = (k,v)=>{ try{ localStorage.setItem(k, String(v)); return true; }catch(e){ return false; } };
-const ngLSRemove = (k)=>{ try{ localStorage.removeItem(k); }catch(e){} };
+const ngLSGet = (k)=>{ try{ return localStorage.getItem(k); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ return null; } };
+const ngLSSet = (k,v)=>{ try{ localStorage.setItem(k, String(v)); return true; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ return false; } };
+const ngLSRemove = (k)=>{ try{ localStorage.removeItem(k); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} };
 
 // Optional convenience wrapper
 const NG_STORE = {
@@ -2632,7 +2693,7 @@ const NG_STORE = {
   remove: ngLSRemove
 };
 
-// Night Games v1062
+// Night Games v1065
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { initializeAuth, signInAnonymously, onAuthStateChanged, signOut, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
     import {
@@ -2698,7 +2759,7 @@ const firebaseConfig = {
     const randomizer = document.getElementById("randomizer");
     const emailInput = document.getElementById("emailInput");
 
-    // v1062: email field defaults (no highlight/delete)
+    // v1065: email field defaults (no highlight/delete)
     try{
       const savedEmail = (ngLSGet("ng_saved_email")||"").trim().toLowerCase();
       const isBill = (savedEmail && savedEmail === BILL_EMAIL);
@@ -2716,8 +2777,12 @@ const firebaseConfig = {
         emailEchoEl0.textContent = (isBill ? savedEmail : DUMMY_EMAIL);
         emailEchoEl0.style.opacity = (isBill ? "0" : "1");
       }
-    }catch(e){}
-    // v1062: email overlay text (install once)
+    }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+    // v1065: email overlay text (install once)
     if(!window.__ngEchoInstalled){
       window.__ngEchoInstalled = true;
       const emailEchoEl = document.getElementById("emailEcho");
@@ -2725,7 +2790,11 @@ const firebaseConfig = {
         try{
           const v = (emailInput?.value || "").trim();
           if(emailEchoEl) emailEchoEl.textContent = v ? v : "player@example.com";
-        }catch(e){}
+        }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       }
       if(emailInput){
         emailInput.addEventListener("input", syncEmailEcho, {passive:true});
@@ -2736,7 +2805,7 @@ const firebaseConfig = {
 
 
     /* ===========================
-       v1062 AUDIO CONTROLLER (SINGLE PLAYER)
+       v1065 AUDIO CONTROLLER (SINGLE PLAYER)
        - One Audio element for ALL one-shot sounds (intro + waiting-room slam).
        - Email touch: starts intro + clears dummy instantly.
        =========================== */
@@ -2752,16 +2821,30 @@ const firebaseConfig = {
         const player = new Audio();
         player.preload = "auto";
         // Preload intro so first tap plays immediately (still requires a user gesture to start audio).
-        try{ player.src = INTRO_URL_M4A; if(player.load) player.load(); }catch(e){}
+        try{ player.src = INTRO_URL_M4A; if(player.load) player.load(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
         function playUrl(url){
   try{
     if(url && player.src !== url) player.src = url;
-    try{ player.pause(); }catch(e){}
-    try{ player.currentTime = 0; }catch(e){}
+    try{ player.pause(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+    try{ player.currentTime = 0; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     const p = player.play();
     return p;
   }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+
     return Promise.reject(e);
   }
 }
@@ -2775,8 +2858,16 @@ const firebaseConfig = {
                 const wasMuted = player.muted;
                 player.muted = true;
                 const p = player.play();
-                if(p && p.then) p.then(()=>{ try{ player.pause(); player.currentTime=0; }catch(e){} player.muted = wasMuted; }).catch(()=>{ player.muted = wasMuted; });
-              }catch(e){}
+                if(p && p.then) p.then(()=>{ try{ player.pause(); player.currentTime=0; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} player.muted = wasMuted; }).catch(()=>{ player.muted = wasMuted; });
+              }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
               const AC = window.AudioContext || window.webkitAudioContext;
               if(!AC) return;
@@ -2789,7 +2880,11 @@ const firebaseConfig = {
               src.buffer = buf;
               src.connect(ac.destination);
               if(src.start) src.start(0);
-            }catch(e){}
+            }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
           },
           async playIntro(){
             try{
@@ -2803,7 +2898,11 @@ const firebaseConfig = {
                     window.__ngIntroBlobUrl = URL.createObjectURL(b);
                     ok = true;
                   }
-                }catch(e){}
+                }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
                 if(!ok){
                   try{
                     const r2 = await fetch(INTRO_URL_M4A, { cache:"reload" });
@@ -2812,13 +2911,21 @@ const firebaseConfig = {
                       window.__ngIntroBlobUrl = URL.createObjectURL(b2);
                       ok = true;
                     }
-                  }catch(e){}
+                  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
                 }
               }
               const u = window.__ngIntroBlobUrl || INTRO_URL_M4A;
               playUrl(u);
             }catch(e){
-              try{ playUrl(INTRO_URL_M4A); }catch(e){}
+              try{ playUrl(INTRO_URL_M4A); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
             }
           },
           playSlam(){ playUrl(SLAM_URL); }
@@ -2843,35 +2950,79 @@ const firebaseConfig = {
               if(!v || v === dummy){
                 emailInput.value = "";
               }
-              try{ emailInput.focus(); }catch(e){}
+              try{ emailInput.focus(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
               if(emailEchoEl) emailEchoEl.style.opacity = "0";
-              try{ try{ window.ngAudio.unlock && window.ngAudio.unlock(); }catch(e){}
+              try{ try{ window.ngAudio.unlock && window.ngAudio.unlock(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
               const pp = window.ngAudio.playIntro();
-              if(pp && pp.then){ pp.then(()=>{ try{ window.ngAudio.introStarted = true; }catch(e){} }).catch(()=>{ try{ window.ngAudio.introStarted = false; touched = false; }catch(e){} }); }
-              else { try{ window.ngAudio.introStarted = true; }catch(e){} }
-            }catch(e){}
-            }catch(e){}
+              if(pp && pp.then){ pp.then(()=>{ try{ window.ngAudio.introStarted = true; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} }).catch(()=>{ try{ window.ngAudio.introStarted = false; touched = false; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} }); }
+              else { try{ window.ngAudio.introStarted = true; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} }
+            }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+            }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
           }
           // Use one event type to prevent double-fire on iOS
           EVENTS.forEach(evt=>{
             try{
               emailInput.addEventListener(evt, onTouch, { passive:false });
               if(emailPadEl) emailPadEl.addEventListener(evt, onTouch, { passive:false });
-            }catch(e){}
+            }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
           });
           // If user leaves field empty, restore echo
           emailInput.addEventListener("blur", ()=>{
             try{
               const v = (emailInput.value||"").trim();
               if(!v && emailEchoEl) emailEchoEl.style.opacity = "1";
-            }catch(e){}
+            }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
           }, { passive:true });
           emailInput.addEventListener("input", ()=>{
-            try{ if(emailEchoEl) emailEchoEl.style.opacity = (emailInput.value ? "0" : "1"); }catch(e){}
+            try{ if(emailEchoEl) emailEchoEl.style.opacity = (emailInput.value ? "0" : "1"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
           }, { passive:true });
         }
-      }catch(e){}
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     })();
 
     const enterBtn = document.getElementById("enterBtn");
@@ -2907,13 +3058,25 @@ function setHeaderPlayerLabel(email, explicitName){
       nm = (who && who.name) ? who.name : "";
     }
     ngHeaderPlayer.textContent = nm || "";
-        try{ if(playerPageName) playerPageName.textContent = nm || ""; }catch(e){}
+        try{ if(playerPageName) playerPageName.textContent = nm || ""; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     ngHeaderPlayer.title = em || "";
-  }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 }
 async function doUpdate(auth){
   // Update = sign out + aggressive cache-bust reload so device fetches latest hosted version
-  try{ if(auth) await signOut(auth); }catch(e){}
+  try{ if(auth) await signOut(auth); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
   // Keep remembered email (ng_saved_email) intact on purpose.
 
@@ -2923,15 +3086,27 @@ async function doUpdate(auth){
       const regs = await navigator.serviceWorker.getRegistrations();
       await Promise.all(regs.map(r => r.unregister()));
     }
-  }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   try{
     if('caches' in window){
       const keys = await caches.keys();
       await Promise.all(keys.map(k => caches.delete(k)));
     }
-  }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
-  try{ ngLSSet("ng_force_reload", String(Date.now())); }catch(e){}
+  try{ ngLSSet("ng_force_reload", String(Date.now())); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   const baseUrl = location.origin + location.pathname;
   location.replace(baseUrl + "?v=" + Date.now());
 }
@@ -2971,18 +3146,34 @@ function show(which){
 
 
       // Leaderboard: render full list each time
-      try{ if(which==="leaderboard" && typeof renderLeaderboard==="function") renderLeaderboard(); }catch(e){}
+      try{ if(which==="leaderboard" && typeof renderLeaderboard==="function") renderLeaderboard(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
       // Footer visibility (prevents stacked/duplicate footers)
       try{
         if(typeof landingFooter !== "undefined" && landingFooter) landingFooter.style.display = (which==="landing") ? "block" : "none";
-      }catch(e){}
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       try{
         if(typeof detailFooter !== "undefined" && detailFooter) detailFooter.style.display = (which==="detail") ? "block" : "none";
-      }catch(e){}
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       try{
         if(typeof globalFooter !== "undefined" && globalFooter) globalFooter.style.display = (which==="landing" || which==="detail") ? "none" : "block";
-      }catch(e){}
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     }
     function openDetail(title, html){
       detailTitle.textContent = title;
@@ -2992,7 +3183,7 @@ function show(which){
 
 
 /* =============================================================================
-   RANDOMIZER (v1062)  [SECTION_RANDOMIZER]
+   RANDOMIZER (v1065)  [SECTION_RANDOMIZER]
    - Turn order randomizer (any game)
    - Killer numbers (1–20 unique)
 ============================================================================= */
@@ -3019,8 +3210,16 @@ function wireSetupControlButtons(){
   const startBtn = document.getElementById("setupStartGameBtn");
   const inviteBtn= document.getElementById("setupInviteBtn");
 
-  if(homeBtn) homeBtn.addEventListener("click", ()=>{ try{ show("players"); }catch(e){} });
-  if(backBtn) backBtn.addEventListener("click", ()=>{ try{ show("players"); }catch(e){} });
+  if(homeBtn) homeBtn.addEventListener("click", ()=>{ try{ show("players"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} });
+  if(backBtn) backBtn.addEventListener("click", ()=>{ try{ show("players"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} });
 
   if(startBtn) startBtn.addEventListener("click", async ()=>{
     try{
@@ -3032,12 +3231,24 @@ function wireSetupControlButtons(){
       activeSession = activeSession || {};
       activeSession.practice = true;
       activeSession.started = true;
-      try{ ngLSSet('ng_active_session', JSON.stringify(activeSession)); }catch(e){}
-      try{ show("lobby"); }catch(e){}
+      try{ ngLSSet('ng_active_session', JSON.stringify(activeSession)); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+      try{ show("lobby"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       if(typeof startPracticeSession === "function"){ await startPracticeSession(); }
       else if(typeof startPracticeGame === "function"){ await startPracticeGame(); }
       else if(typeof startSession === "function"){ await startSession(); } // fallback
-    }catch(e){}
+    }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   });
 
   if(inviteBtn) inviteBtn.addEventListener("click", async ()=>{
@@ -3049,25 +3260,57 @@ function wireSetupControlButtons(){
       }
       activeSession = activeSession || {};
       activeSession.practice = false;
-      try{ ngLSSet('ng_active_session', JSON.stringify(activeSession)); }catch(e){}
-      try{ setInviteStatus && setInviteStatus("Sending invites…", false); }catch(e){}
-      try{ await startSession(); }catch(e){}
-      try{ show("waiting"); }catch(e){}
-      try{ await sendInvitesForSession(); setInviteStatus && setInviteStatus("Invites sent.", true); }catch(e){ setInviteStatus && setInviteStatus("Invite failed.", false); }
-    }catch(e){}
+      try{ ngLSSet('ng_active_session', JSON.stringify(activeSession)); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+      try{ setInviteStatus && setInviteStatus("Sending invites…", false); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+      try{ await startSession(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+      try{ show("waiting"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+      try{ await sendInvitesForSession(); setInviteStatus && setInviteStatus("Invites sent.", true); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ setInviteStatus && setInviteStatus("Invite failed.", false); }
+    }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   });
 
-  try{ updateSetupControlPanel(); }catch(e){}
+  try{ updateSetupControlPanel(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 }
 
-document.addEventListener("DOMContentLoaded", ()=>{ try{ wireSetupControlButtons(); }catch(e){} });
+document.addEventListener("DOMContentLoaded", ()=>{ try{ wireSetupControlButtons(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} });
 
 
 function currentSelectedEmails(){
   try{
     const emails = (activeSession && activeSession.setup && activeSession.setup.emails) ? activeSession.setup.emails : [];
     return Array.isArray(emails) ? emails.slice() : [];
-  }catch(e){ return []; }
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ return []; }
 }
 
 function updateSetupControlPanel(){
@@ -3077,7 +3320,11 @@ function updateSetupControlPanel(){
     const inviteBtn = document.getElementById("setupInviteBtn");
     if(startBtn) startBtn.disabled = (count > 1);
     if(inviteBtn) inviteBtn.disabled = (count <= 1);
-  }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 }
 
 
@@ -3131,7 +3378,11 @@ function randomizeKillerNumbers(){
         osc.connect(gain).connect(audioCtx.destination);
         osc.start(t);
         osc.stop(t + 0.10);
-      }catch(e){}
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     }
     document.addEventListener("pointerdown", (e)=>{
       const b = e.target.closest("button");
@@ -3154,12 +3405,36 @@ function persistEmailAfterLogin(email){
   try{
     const em = (email||"").trim().toLowerCase();
     if(!em) return;
-    try{ ngLSSet("ng_saved_email", em); }catch(e){}
-    try{ currentEmail = em; }catch(e){}
-    try{ if(typeof emailInput !== "undefined" && emailInput){ emailInput.value = em; } }catch(e){}
-    try{ setHeaderPlayerLabel && setHeaderPlayerLabel(em); }catch(e){}
-    try{ listenForInvites && listenForInvites(); }catch(e){}
-  }catch(e){}
+    try{ ngLSSet("ng_saved_email", em); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+    try{ currentEmail = em; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+    try{ if(typeof emailInput !== "undefined" && emailInput){ emailInput.value = em; } }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+    try{ setHeaderPlayerLabel && setHeaderPlayerLabel(em); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+    try{ listenForInvites && listenForInvites(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 }
 
 
@@ -3174,7 +3449,7 @@ function persistEmailAfterLogin(email){
       "Half It": "<b>Goal:</b> Hit the target each round — miss it and your score is halved.<br><br>• Each round has a target (example: 20s, 19s, doubles, triples, bull, etc.)<br>• You get 3 darts to score on that target<br>• If you score at least once on the target, you add those points<br>• If you miss the target with all 3 darts, your total score is cut in half<br>• Highest score wins"
     };
     /* =============================================================================
-       LEADERBOARD LIST (v1062)
+       LEADERBOARD LIST (v1065)
        - Show all games defined in GAME_RULES (keeps UI in sync with game list)
        - Placeholder stats until engines finalize
     ============================================================================= */
@@ -3206,11 +3481,15 @@ function persistEmailAfterLogin(email){
             <div style="opacity:.82;">Stats will fill in as scoring engines finalize.</div>
             ${items || `<div style="margin-top:10px; opacity:.8;">No games configured.</div>`}
           </div>`;
-      }catch(e){}
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     }
 
 
-    // ===================== PLAYER STAT TEMPLATES (v1062) =====================
+    // ===================== PLAYER STAT TEMPLATES (v1065) =====================
     // Locked stat sets (values start at 0; game engines will increment later).
     const PLAYER_STAT_TEMPLATES = {
       "01": {
@@ -3322,7 +3601,7 @@ function persistEmailAfterLogin(email){
       }
     };
 
-    // ===================== v1062 01 STATS ACCUMULATION HELPERS =====================
+    // ===================== v1065 01 STATS ACCUMULATION HELPERS =====================
     // This does NOT change any UI or routing.
     // Call record01Result(...) when a 01 game ends to accumulate player stats.
     function _statKey(playerEmail, gameName, key){
@@ -3333,14 +3612,28 @@ function persistEmailAfterLogin(email){
         const v = ngLSGet(_statKey(playerEmail, gameName, key));
         const n = Number(v);
         return Number.isFinite(n) ? n : 0;
-      }catch(e){ return 0; }
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ return 0; }
     }
     function _setNumStat(playerEmail, gameName, key, val){
-      try{ if(activeSession && activeSession.practice) return; }catch(e){}
-      try{ ngLSSet(_statKey(playerEmail, gameName, key), String(Math.max(0, Math.floor(val*1000)/1000))); }catch(e){}
+      try{ if(activeSession && activeSession.practice) return; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+      try{ ngLSSet(_statKey(playerEmail, gameName, key), String(Math.max(0, Math.floor(val*1000)/1000))); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     }
     function _incNumStat(playerEmail, gameName, key, delta){
-      try{ if(activeSession && activeSession.practice) return; }catch(e){}
+      try{ if(activeSession && activeSession.practice) return; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       const cur = _getNumStat(playerEmail, gameName, key);
       _setNumStat(playerEmail, gameName, key, cur + (Number(delta)||0));
     }
@@ -3405,7 +3698,7 @@ function persistEmailAfterLogin(email){
         _setNumStat(p, gameName, "checkout_pct", cpct);
       });
     }
-    // =================== END v1062 HELPERS ===================
+    // =================== END v1065 HELPERS ===================
 
 
     function statKey(email, game, key){
@@ -3438,16 +3731,32 @@ function persistEmailAfterLogin(email){
     let activeSessionId = null;
     let activeSession = null;
 
-    // v1062: Session watcher (sync randomizer + lobby state to all clients)
+    // v1065: Session watcher (sync randomizer + lobby state to all clients)
     let __ngSessionUnsub = null;
-    // v1062: Session controls (fix missing startSession/endSession + keep flow stable)
-// v1062: PRACTICE start (solo) — no Firebase writes, no LIVE banner
-// v1062: PRACTICE start (solo) — no Firebase writes, no LIVE banner
+    // v1065: Session controls (fix missing startSession/endSession + keep flow stable)
+// v1065: PRACTICE start (solo) — no Firebase writes, no LIVE banner
+// v1065: PRACTICE start (solo) — no Firebase writes, no LIVE banner
 function startPracticeSession(){
-  try{ if(!activeSession) activeSession = {}; }catch(e){}
-  try{ activeSession.practice = true; }catch(e){}
-  try{ activeSession.started = false; }catch(e){}
-  try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+  try{ if(!activeSession) activeSession = {}; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+  try{ activeSession.practice = true; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+  try{ activeSession.started = false; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+  try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   try{
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody  = document.getElementById("lobbyBody");
@@ -3455,7 +3764,11 @@ function startPracticeSession(){
     if(lobbyBody)  lobbyBody.innerHTML =
       "<div style='font-weight:1200; font-size:22px; margin-bottom:10px;'>Practice ready.</div>" +
       "<div style='opacity:.82; margin-bottom:12px;'>Press <b>Begin</b> to start your practice game. Stats are not recorded.</div>";
-  }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   // Configure controls for practice
   try{
     const b = document.getElementById("lobbyStartBtn");
@@ -3469,10 +3782,18 @@ function startPracticeSession(){
         b.textContent = "Start";
       }
     }
-  }catch(e){}try{ renderLobby && renderLobby(); }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}try{ renderLobby && renderLobby(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 }
 
-// v1062: Render the in-match "game room" (Lobby) consistently for PRACTICE + LIVE
+// v1065: Render the in-match "game room" (Lobby) consistently for PRACTICE + LIVE
 function renderLobby(){
   try{
     const lobbyTitle = document.getElementById("lobbyTitle");
@@ -3497,7 +3818,9 @@ function renderLobby(){
         const low = String(em||"").toLowerCase();
         const p = (lastPeople||[]).find(x=>x && String(x.email||"").toLowerCase()===low);
         return (p && p.name) ? p.name : prettyNameFromEmail(low);
-      }catch(e){ return String(em||""); }
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ return String(em||""); }
     }
 
     const orderHtml = order.length
@@ -3519,7 +3842,11 @@ function renderLobby(){
         const io = activeSession.setup.inOut || "SI_SO";
         opts = `<div style="opacity:.82; margin-top:8px;">Start: <b>${ss}</b> • Mode: <b>${io.replace("_"," / ")}</b></div>`;
       }
-    }catch(e){}
+    }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
     const practiceNote = isPractice
       ? `<div style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,.10); opacity:.85;">
@@ -3535,21 +3862,41 @@ function renderLobby(){
       ${opts}
       ${practiceNote}
     `;
-  }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 }
 
-// v1062: begin practice gameplay (solo) — local only
+// v1065: begin practice gameplay (solo) — local only
 function startPracticeGame(){
-  try{ if(!activeSession) activeSession = {}; }catch(e){}
-  try{ activeSession.practice = true; activeSession.started = true; }catch(e){}
+  try{ if(!activeSession) activeSession = {}; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+  try{ activeSession.practice = true; activeSession.started = true; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   // Ensure we have at least one player in order list for display
   try{
     if(activeSession && activeSession.setup && Array.isArray(activeSession.setup.emails) && activeSession.setup.emails.length){
       if(!activeSession.randomizer) activeSession.randomizer = {};
       activeSession.randomizer.order = activeSession.setup.emails.slice();
     }
-  }catch(e){}
-  try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+  try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   try{
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody  = document.getElementById("lobbyBody");
@@ -3557,12 +3904,46 @@ function startPracticeGame(){
     if(lobbyBody)  lobbyBody.innerHTML =
       "<div style='font-weight:1200; font-size:22px; margin-bottom:10px;'>Practice started.</div>" +
       "<div style='opacity:.82;'>Game is running (practice mode). Stats are not recorded.</div>";
-  }catch(e){}
-    try{ const b=document.getElementById("lobbyStartBtn"); if(b){ b.style.display="none"; } }catch(e){}
-try{ renderLobby && renderLobby(); }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+    try{ const b=document.getElementById("lobbyStartBtn"); if(b){ b.style.display="none"; } }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+try{ renderLobby && renderLobby(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 }
 
 async function startSession(){
+
+  // === v1065: GAME ENGINE INTEGRATION (Step 2) ===
+  try{
+    const gameId = activeSession && activeSession.gameId;
+
+    switch(gameId) {
+      case 'cricket':
+        if(typeof initCricket === "function") initCricket();
+        break;
+      case 'killer':
+        if(typeof initKiller === "function") initKiller();
+        break;
+      default:
+        if(typeof initStandardScoreboard === "function") initStandardScoreboard();
+    }
+
+    if(typeof show === "function") show("game_screen");
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   const dbx = (window.db) || (window.ngFirebase && window.ngFirebase.db);
   if(!dbx || !activeSessionId) return;
   try{
@@ -3570,15 +3951,31 @@ async function startSession(){
       started: true,
       startedAt: serverTimestamp()
     }, { merge:true });
-  }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   try{
     const lobbyTitle = document.getElementById("lobbyTitle");
     const lobbyBody = document.getElementById("lobbyBody");
     if(lobbyTitle) lobbyTitle.textContent = (activeSession?.game||"Game") + " • LIVE";
     if(lobbyBody) lobbyBody.innerHTML = "<div style='font-weight:1100; font-size:22px; margin-bottom:10px;'>Starting…</div><div style='opacity:.82;'>Game is live.</div>";
-    try{ setTimeout(()=>{ renderLobby && renderLobby(); }, 600); }catch(e){}
-  }catch(e){}
-  try{ show("lobby"); }catch(e){}
+    try{ setTimeout(()=>{ renderLobby && renderLobby(); }, 600); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+  try{ show("lobby"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 }
 
 async function endSession(){
@@ -3589,18 +3986,34 @@ async function endSession(){
       ended: true,
       endedAt: serverTimestamp()
     }, { merge:true });
-  }catch(e){}
-  try{ show("players"); }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+  try{ show("players"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 }
 
-// v1062: Fallback if a game engine hook isn't present yet
+// v1065: Fallback if a game engine hook isn't present yet
 function startGameFromSession(){
-  try{ startSession && startSession(); }catch(e){}
+  try{ startSession && startSession(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 }
 
 function watchSessionDoc(){
       const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
-      try{ if(__ngSessionUnsub){ __ngSessionUnsub(); __ngSessionUnsub=null; } }catch(e){}
+      try{ if(__ngSessionUnsub){ __ngSessionUnsub(); __ngSessionUnsub=null; } }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       try{
         if(!db2 || !activeSessionId) return;
         __ngSessionUnsub = onSnapshot(doc(db2, "sessions", activeSessionId), (snap)=>{
@@ -3614,24 +4027,52 @@ function watchSessionDoc(){
                 const isHost = ((data.host||"").toLowerCase() === (currentEmail||"").toLowerCase());
                 b.style.display = isHost ? "inline-flex" : "none";
               }
-            }catch(e){}
+            }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
             // Randomizer sync: when running, show randomizer screen and animate to stored results
             if(data.randomizer && data.randomizer.state === "running"){
-              try{ show("randomizer"); }catch(e){}
-              try{ runSyncedRandomizer(data.randomizer); }catch(e){}
+              try{ show("randomizer"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+              try{ runSyncedRandomizer(data.randomizer); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
             }
             // Auto-return after done
             if(data.randomizer && data.randomizer.state === "done"){
-              try{ show("lobby"); }catch(e){}
-              try{ renderLobby && renderLobby(); }catch(e){}
+              try{ show("lobby"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+              try{ renderLobby && renderLobby(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
             }
-          }catch(e){}
+          }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         });
-      }catch(e){}
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     }
 
-    // v1062: deterministic shuffle using seed (so everyone sees same order)
+    // v1065: deterministic shuffle using seed (so everyone sees same order)
     function seededShuffle(arr, seed){
       const a = arr.slice();
       let x = (seed>>>0) || 1;
@@ -3649,7 +4090,7 @@ function watchSessionDoc(){
       return a;
     }
 
-    // v1062: animate randomizer UI for everyone (uses stored results)
+    // v1065: animate randomizer UI for everyone (uses stored results)
     let __ngRandRunning = false;
     async function runSyncedRandomizer(r){
       if(__ngRandRunning) return;
@@ -3709,9 +4150,17 @@ function watchSessionDoc(){
         if((activeSession?.host||"").toLowerCase() === (currentEmail||"").toLowerCase()){
           try{
             await setDoc(doc(db2, "sessions", activeSessionId), { randomizer: Object.assign({}, r, { state:"done", doneAt: serverTimestamp() }) }, { merge:true });
-        try{ watchSessionDoc(); }catch(e){}
+        try{ watchSessionDoc(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
-          }catch(e){}
+          }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         }
       }finally{
         __ngRandRunning = false;
@@ -3740,7 +4189,11 @@ function watchSessionDoc(){
           randomizer: { state:"running", startedAt: serverTimestamp(), seed, order, killerNumbers, kind: isKiller ? "killer_dual" : "order_only" }
         };
         await setDoc(doc(db2, "sessions", activeSessionId), payload, { merge:true });
-      }catch(e){}
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     }
 
     function newSessionId(){
@@ -3756,7 +4209,11 @@ function watchSessionDoc(){
         createdAt: Date.now(),
         setup: { count: 1, emails: [(currentEmail||"").toLowerCase()].filter(Boolean) }
       };
-      try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+      try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       listenSessionInvites();
     }
 
@@ -3866,7 +4323,7 @@ ${ needsDartsOpts ? `
       const startInlineBtn = document.getElementById("setupStartInlineBtn");
       const startCtrlBtn = document.getElementById("setupStartBtn");
       const cancelBtn = document.getElementById("setupCancelBtn");
-      // v1062: 01/301 setup defaults
+      // v1065: 01/301 setup defaults
       const setupScoreSel = document.getElementById(scoreId);
       const setupInOutSel = document.getElementById(inOutId);
       if(needsDartsOpts){
@@ -3898,7 +4355,11 @@ ${ needsDartsOpts ? `
       function refreshSummary(){
         const sel = getSelectedEmails();
         summary.textContent = `${sel.length} selected`;
-        try{ updateSetupControlPanel(); }catch(e){}
+        try{ updateSetupControlPanel(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       }
       function refreshCountLabel(want){
         const sel = getSelectedEmails().length;
@@ -3926,7 +4387,11 @@ ${ needsDartsOpts ? `
               now.delete(email);
             }else{
               if(now.size >= want){
-                try{ ping && ping(); }catch(e){}
+                try{ ping && ping(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
                 return;
               }
               now.add(email);
@@ -3939,8 +4404,12 @@ ${ needsDartsOpts ? `
           body.appendChild(row);
         });
         refreshCountLabel(want);
-        // v1062: invite button visibility
-        try{ const ib=document.getElementById('lobbyInviteBtn'); if(ib) ib.style.display = (want>=2?'inline-flex':'none'); }catch(e){}
+        // v1065: invite button visibility
+        try{ const ib=document.getElementById('lobbyInviteBtn'); if(ib) ib.style.display = (want>=2?'inline-flex':'none'); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         refreshSummary();
       }
       function openPicker(want){
@@ -3987,16 +4456,24 @@ ${ needsDartsOpts ? `
       checks.forEach(c=>{ if(c.value === me) c.checked = true; });
 
       
-// v1062: dynamic header height -> CSS var so panels never overlap logo
+// v1065: dynamic header height -> CSS var so panels never overlap logo
 function setHeaderHeightVar(){
   try{
     const header = document.getElementById("header") || document.querySelector(".header") || document.querySelector("#topHeader");
     if(!header) return;
     const h = Math.max(200, Math.round(header.getBoundingClientRect().height));
     document.documentElement.style.setProperty("--headerH", h+"px");
-  }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
 }
-window.addEventListener("resize", ()=>{ try{ setHeaderHeightVar(); }catch(e){} });
+}
+}
+window.addEventListener("resize", ()=>{ try{ setHeaderHeightVar(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} });
 
 function enforce(){
         const want = parseInt(countSel.value||"1",10) || 1;
@@ -4024,10 +4501,18 @@ function enforce(){
       });
 
       const doStart = async ()=>{
-        // v1062: make Lobby START work even before Setup START is pressed
-        try{ window.__ngDoStart = doStart; }catch(e){}
-        // v1062: expose start handler so Lobby START uses same path
-        try{ window.__ngDoStart = doStart; }catch(e){}
+        // v1065: make Lobby START work even before Setup START is pressed
+        try{ window.__ngDoStart = doStart; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+        // v1065: expose start handler so Lobby START uses same path
+        try{ window.__ngDoStart = doStart; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         // v768: Stable start behavior (no broken/partial calls)
         enforce();
         const want = parseInt(countSel.value||"1",10) || 1;
@@ -4037,12 +4522,24 @@ function enforce(){
         activeSession = activeSession || {};
         activeSession.game = game;
         activeSession.setup = { count: want, emails };
-        // v1062: Selection only — Start Game / Invite buttons control flow
-        try{ activeSession.practice = (want <= 1); activeSession.started = false; }catch(e){}
-        try{ ngLSSet('ng_active_session', JSON.stringify(activeSession)); }catch(e){}
-        try{ updateSetupControlPanel && updateSetupControlPanel(); }catch(e){}
+        // v1065: Selection only — Start Game / Invite buttons control flow
+        try{ activeSession.practice = (want <= 1); activeSession.started = false; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+        try{ ngLSSet('ng_active_session', JSON.stringify(activeSession)); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+        try{ updateSetupControlPanel && updateSetupControlPanel(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
-        // v1062: 01/301 rule options captured for engine
+        // v1065: 01/301 rule options captured for engine
         if(needsDartsOpts){
           const startScore = parseInt((document.getElementById(scoreId)?.value)||"501",10) || 501;
           const inOut = (document.getElementById(inOutId)?.value)||"SI_SO";
@@ -4050,26 +4547,50 @@ function enforce(){
           activeSession.setup.inOut = inOut;
         }
 
-try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
         // If solo -> PRACTICE mode: skip waiting + randomizer + stats. If multiplayer -> go to waiting room.
         if(want <= 1){
-          try{ activeSession.practice = true; }catch(e){}
-          try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+          try{ activeSession.practice = true; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+          try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
           try{
             const lobbyTitle = document.getElementById("lobbyTitle");
             const lobbyBody  = document.getElementById("lobbyBody");
             if(lobbyTitle) lobbyTitle.textContent = (activeSession.game||"Game") + " • PRACTICE";
             if(lobbyBody)  lobbyBody.innerHTML = "<div style='font-weight:1100; font-size:22px; margin-bottom:8px;'>Practice</div><div style='opacity:.82;'>Stats are not recorded in solo play.</div>";
-          }catch(e){}
+          }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
           show("lobby");
-          try{ (startPracticeGame && startPracticeGame()) || (startPracticeSession && startPracticeSession()); }catch(e){}
-          try{ const b=document.getElementById("lobbyStartBtn"); if(b){ b.style.display="none"; } }catch(e){}
+          try{ (startPracticeGame && startPracticeGame()) || (startPracticeSession && startPracticeSession()); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+          try{ const b=document.getElementById("lobbyStartBtn"); if(b){ b.style.display="none"; } }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
           return;
         }else{
           show("waiting");
 
-// v1062: ensure session id exists BEFORE sending invites
+// v1065: ensure session id exists BEFORE sending invites
 try{
   if(!activeSessionId){
     activeSessionId = newSessionId();
@@ -4078,17 +4599,33 @@ try{
     activeSession.game = activeSession.game || game;
     activeSession.host = (currentEmail||"").toLowerCase();
     activeSession.createdAt = activeSession.createdAt || Date.now();
-    try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+    try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   }
-}catch(e){}
+}catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
           try{ await
 /*
 ================================================================================
   INVITES  [SECTION_INVITES]
 ================================================================================
 */
-sendInvitesForSession(); }catch(e){}
-          try{ listenSessionInvites && listenSessionInvites(); }catch(e){}
+sendInvitesForSession(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+          try{ listenSessionInvites && listenSessionInvites(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         }
       };
 }
@@ -4097,7 +4634,11 @@ sendInvitesForSession(); }catch(e){}
     // v768: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
     function listenForInvites(){
-      try{ if(invitesUnsub) invitesUnsub(); }catch(e){}
+      try{ if(invitesUnsub) invitesUnsub(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       invitesUnsub = null;
       const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
       if(!db2 || !currentEmail) return;
@@ -4111,7 +4652,7 @@ sendInvitesForSession(); }catch(e){}
         const inv = docSnap.data() || {};
         const from = inv.from || "Host";
 
-// v1062: optional system notification (best-effort)
+// v1065: optional system notification (best-effort)
 try{
   if("Notification" in window){
     if(Notification.permission === "default"){
@@ -4122,7 +4663,11 @@ try{
       new Notification("Night Games Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
-}catch(e){}
+}catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         const game = inv.game || "Game";
         const sessionId = inv.sessionId || null;
         const invited = Array.isArray(inv.invited) ? inv.invited : [];
@@ -4145,14 +4690,24 @@ try{
           joinBtn.addEventListener("click", async ()=>{
             try{
               await setDoc(doc(db2, "invites", docSnap.id), { status:"accepted", respondedAt: serverTimestamp() }, { merge:true });
-            }catch(e){ alert(e.message||e); }
+            }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ alert(e.message||e); }
             // set local session + go waiting
             if(sessionId){
               activeSessionId = sessionId;
-              try{ watchSessionDoc(); }catch(e){}
+              try{ watchSessionDoc(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
               activeSession = { id: sessionId, game, host: inv.fromEmail||inv.from||"", setup:{ count, emails: invited } };
-              try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){}
+              try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       listenSessionInvites();
               listenSessionInvites();
 
@@ -4171,7 +4726,9 @@ renderWaitingRoom();
           noBtn.addEventListener("click", async ()=>{
             try{
               await setDoc(doc(db2, "invites", docSnap.id), { status:"declined", respondedAt: serverTimestamp() }, { merge:true });
-            }catch(e){ alert(e.message||e); }
+            }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ alert(e.message||e); }
             closeDetail();
           });
         }
@@ -4184,7 +4741,11 @@ renderWaitingRoom();
     if(!el) return;
     el.textContent = msg || "";
     el.classList.toggle("inviteOk", !!ok);
-  }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 }
 
 async function sendInvitesForSession(){
@@ -4208,7 +4769,9 @@ async function sendInvitesForSession(){
           count,
           createdAt: serverTimestamp()
         }, { merge:true });
-      }catch(e){ /* non-fatal */ }
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ /* non-fatal */ }
 
       // create invite docs for non-host
       const others = invited.filter(em => em !== hostEmail);
@@ -4231,7 +4794,11 @@ async function sendInvitesForSession(){
     let inviteStatusCache = new Map();
     let sessionInvitesUnsub = null;
     function listenSessionInvites(){
-      try{ if(sessionInvitesUnsub) sessionInvitesUnsub(); }catch(e){}
+      try{ if(sessionInvitesUnsub) sessionInvitesUnsub(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       sessionInvitesUnsub = null;
       const db2 = (window.db) || (window.ngFirebase && window.ngFirebase.db);
       if(!db2 || !activeSessionId) return;
@@ -4244,7 +4811,11 @@ async function sendInvitesForSession(){
             const v = d.data()||{};
             if(v.to) inviteStatusCache.set(String(v.to).toLowerCase(), v.status||"pending");
           });
-        }catch(e){}
+        }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
         // refresh waiting room statuses when invites change
         if(waiting && waiting.classList.contains("active")){
@@ -4283,7 +4854,7 @@ async function sendInvitesForSession(){
         <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
       `;
 
-      // v1062: waiting-room completion overlay (created once)
+      // v1065: waiting-room completion overlay (created once)
       if(!window.__ngWaitOverlay){
         window.__ngWaitOverlay = document.createElement("div");
         window.__ngWaitOverlay.id = "ngWaitOverlay";
@@ -4302,32 +4873,64 @@ async function sendInvitesForSession(){
           window.__ngWaitCompleteLock = true;
 
           // play slam/lock sound (single audio controller)
-          try{ window.ngAudio && window.ngAudio.playSlam && window.ngAudio.playSlam(); }catch(e){}
+          try{ window.ngAudio && window.ngAudio.playSlam && window.ngAudio.playSlam(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
           // show overlay
           try{
             window.__ngWaitOverlay.style.display = "flex";
-          }catch(e){}
+          }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
           // after message stays visible, start randomizer (multiplayer only)
           setTimeout(()=>{
-            try{ window.__ngWaitOverlay.style.opacity = "0"; }catch(e){}
+            try{ window.__ngWaitOverlay.style.opacity = "0"; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
             setTimeout(()=>{
-              try{ window.__ngWaitOverlay.style.display = "none"; window.__ngWaitOverlay.style.opacity = "1"; }catch(e){}
-              try{ show("randomizer"); }catch(e){}
-              try{ hostTriggerRandomizer && hostTriggerRandomizer(); }catch(e){}
+              try{ window.__ngWaitOverlay.style.display = "none"; window.__ngWaitOverlay.style.opacity = "1"; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+              try{ show("randomizer"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+              try{ hostTriggerRandomizer && hostTriggerRandomizer(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
               try{
                 lobbyTitle.textContent = (activeSession.game||"Game") + " • LIVE";
                 lobbyBody.innerHTML = "<div style='font-weight:1100; font-size:22px; margin-bottom:10px;'>Now that all players are present, gameplay will start in a moment.</div><div style='opacity:.82;'>Starting game…</div>";
                 show("lobby");
-              }catch(e){}
+              }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
             }, 250);
           }, 3000);
-        }catch(e){}
+        }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       }
 
-      // v1062: auto-start when the last invited player has joined (host only)
+      // v1065: auto-start when the last invited player has joined (host only)
       try{
         const me = (currentEmail||"").toLowerCase();
         const isHost = me && activeSession && (activeSession.host||"").toLowerCase()===me;
@@ -4345,13 +4948,21 @@ async function sendInvitesForSession(){
           if(!anyDeclined && joined>=want){
             if(window.ngAutoStartedSessionId !== activeSessionId){
               window.ngAutoStartedSessionId = activeSessionId;
-              // v1062: show completion message + sound, then transition
-              try{ __ngRunWaitCompleteTransition(); }catch(e){} 
+              // v1065: show completion message + sound, then transition
+              try{ __ngRunWaitCompleteTransition(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} 
               return;
             }
           }
         }
-      }catch(e){}
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     }
 
 
@@ -4373,7 +4984,7 @@ async function sendInvitesForSession(){
 
     let currentEmail = null;
 
-// v1062: configurable admin email (optional). Set localStorage ng_bill_email to enable special prefills.
+// v1065: configurable admin email (optional). Set localStorage ng_bill_email to enable special prefills.
 const BILL_EMAIL = (ngLSGet("ng_bill_email") || "").trim().toLowerCase();
 const DUMMY_EMAIL = "";
     let currentUid = null;
@@ -4435,7 +5046,9 @@ function renderPlayers(list){
           let ms = 0;
           try{
             ms = ts && typeof ts.toMillis === "function" ? ts.toMillis() : Date.now();
-          }catch(_e){ ms = Date.now(); }
+          }catch(_e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){}
+ ms = Date.now(); }
           m.set(d.id, ms);
         });
         presenceMap = m;
@@ -4474,7 +5087,11 @@ function renderPlayers(list){
           lastActive: serverTimestamp()
         }, { merge: true });
         // optimistic: show online immediately
-        try { presenceMap.set(id, Date.now()); if(lastPeople && lastPeople.length) renderPlayers(lastPeople); } catch(e) {}
+        try { presenceMap.set(id, Date.now()); if(lastPeople && lastPeople.length) renderPlayers(lastPeople); } catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       }
       await tick();
       clearInterval(presenceTimer);
@@ -4482,7 +5099,7 @@ function renderPlayers(list){
     }
 
     async function signInFlow(auth, db, email){
-      // v1062: instrumented sign-in to pinpoint NotSupportedError source (no patch layering)
+      // v1065: instrumented sign-in to pinpoint NotSupportedError source (no patch layering)
       currentEmail = (email||"").trim().toLowerCase();
       if(!currentEmail) return;
 
@@ -4494,7 +5111,11 @@ function renderPlayers(list){
         return;
       }
 
-      const step = (s)=>{ try{ setDbg("AUTH", "step", s, ""); }catch(e){} };
+      const step = (s)=>{ try{ setDbg("AUTH", "step", s, ""); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} };
 
       statusLine.textContent = "Signing in…";
       step("1:auth");
@@ -4503,8 +5124,14 @@ function renderPlayers(list){
         // 1) Auth (anonymous)
         const cred = await signInAnonymously(auth);
         currentUid = cred.user.uid;
-        try{ dbgAuth.textContent = "anon uid " + currentUid.slice(0,6) + "…"; }catch(e){}
+        try{ dbgAuth.textContent = "anon uid " + currentUid.slice(0,6) + "…"; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       }catch(err){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){}
+
         err.step = "signInAnonymously";
         throw err;
       }
@@ -4515,9 +5142,15 @@ function renderPlayers(list){
         const seeded = (ngLSGet("ng_seeded_registry") === "1");
         if(!seeded){
           await seedRegistry(db);
-          try{ ngLSSet("ng_seeded_registry","1"); }catch(e){}
+          try{ ngLSSet("ng_seeded_registry","1"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         }
       }catch(err){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){}
+
         err.step = "seedRegistry";
         throw err;
       }
@@ -4547,14 +5180,28 @@ function renderPlayers(list){
           }, { merge: true });
 
           // Refresh local cache so header render can use it immediately.
-          try{ lastPeople = [...(lastPeople||[]).filter(p => p && (p.email||"").toLowerCase() !== currentEmail), {email: currentEmail, name}]; }catch(e){}
-          try{ setHeaderPlayerLabel(currentEmail, name); }catch(e){}
+          try{ lastPeople = [...(lastPeople||[]).filter(p => p && (p.email||"").toLowerCase() !== currentEmail), {email: currentEmail, name}]; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+          try{ setHeaderPlayerLabel(currentEmail, name); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         } else {
           // Registered: render stored name
           const data = regSnap.data() || {};
-          try{ setHeaderPlayerLabel(currentEmail, data.name || ""); }catch(e){}
+          try{ setHeaderPlayerLabel(currentEmail, data.name || ""); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         }
       }catch(err){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){}
+
         err.step = "registry-getDoc/setDoc";
         throw err;
       }
@@ -4567,22 +5214,38 @@ function renderPlayers(list){
           lastLogin: serverTimestamp()
         }, { merge: true });
       }catch(err){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){}
+
         err.step = "users-setDoc";
         throw err;
       }
 
       // remember last successful email on THIS device/browser
-      try{ persistEmailAfterLogin && persistEmailAfterLogin(); }catch(e){}
+      try{ persistEmailAfterLogin && persistEmailAfterLogin(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 
       step("5:presence");
       try{
         // 5) Presence + live listeners
-        try { presenceMap.set(safeEmail(currentEmail), Date.now()); } catch(e) {}
+        try { presenceMap.set(safeEmail(currentEmail), Date.now()); } catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         await startPresence(db);
         renderGames();
         watchData(db);
-        try{ listenForInvites && listenForInvites(); }catch(e){}
+        try{ listenForInvites && listenForInvites(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       }catch(err){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){}
+
         err.step = "presence/watch";
         throw err;
       }
@@ -4596,7 +5259,7 @@ function renderPlayers(list){
     try {
       const app = initializeApp(firebaseConfig);
       const auth = initializeAuth(app, { persistence: inMemoryPersistence });
-      // v1062: Auth uses in-memory persistence at init to avoid Safari NotSupportedError.
+      // v1065: Auth uses in-memory persistence at init to avoid Safari NotSupportedError.
 
       // Firestore must NEVER be allowed to crash UI on iOS/Safari.
       // Use in-memory cache only. If Firestore cannot initialize, continue in UI-only mode.
@@ -4604,6 +5267,8 @@ function renderPlayers(list){
       try{
         db = initializeFirestore(app, { localCache: memoryLocalCache() });
       }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+
         console.warn("Firestore init failed (continuing without Firestore):", e);
         db = null;
       }
@@ -4632,10 +5297,22 @@ function renderPlayers(list){
     if(u) dbgAuth.textContent = "anon uid " + u.uid.slice(0,6) + "…";
     const saved = (ngLSGet("ng_saved_email") || "").trim().toLowerCase();
     if(saved && saved === BILL_EMAIL){
-      try{ emailInput.value = saved; }catch(e){}
-      try{ setHeaderPlayerLabel(saved); }catch(e){}
+      try{ emailInput.value = saved; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+      try{ setHeaderPlayerLabel(saved); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     }
-  }catch(e){}
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
 });
 
 
@@ -4650,15 +5327,25 @@ window.ngEnter = async function(email){
     // guard: email input required
     const em = String(email||"").trim();
     if(!em){
-      try{ statusLine && (statusLine.textContent = "Enter an email."); }catch(_){}
+      try{ statusLine && (statusLine.textContent = "Enter an email."); }catch(_){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       return;
     }
     // run sign-in flow
     await signInFlow(auth, db, em);
   }catch(err){
     const msg = err?.code || err?.name || err?.message || String(err);
-    try{ statusLine && (statusLine.textContent = "Firebase error."); }catch(_){}
-    try{ setDbg("FAIL", "auth", "fail", (err?.step?("step:"+err.step+" • "):"") + msg); }catch(_e){ console.log("[DBG] FAIL auth", msg); }
+    try{ statusLine && (statusLine.textContent = "Firebase error."); }catch(_){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+    try{ setDbg("FAIL", "auth", "fail", (err?.step?("step:"+err.step+" • "):"") + msg); }catch(_e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){}
+ console.log("[DBG] FAIL auth", msg); }
     alert("Firebase error (" + (err?.step||"unknown") + "): " + msg);
   }
 };
@@ -4673,7 +5360,11 @@ document.addEventListener("click", async (e)=>{
 
 // Update button (top-right)
 if(b && b.id === "ngUpdateBtn"){
-  try{ await doUpdate(auth); }catch(_e){}
+  try{ await doUpdate(auth); }catch(_e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   return;
 }
 
@@ -4703,9 +5394,13 @@ if(b && b.id === "ngUpdateBtn"){
       if(action === "enter_game"){
         try{
           await createSessionForGame(value);
-          try{ renderSetupForGame(value); }catch(err){ throw err; }
+          try{ renderSetupForGame(value); }catch(err){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){}
+ throw err; }
           show("setup");
         }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+
           console.error(e);
           alert("Setup error: " + (e && (e.message||e) ? (e.message||e) : e));
         }
@@ -4721,7 +5416,7 @@ if(b && b.id === "ngUpdateBtn"){
       }
 
       if(action === "player_stats"){
-        // Player Stats Shell (v1062)
+        // Player Stats Shell (v1065)
         const whoEmail = String(value || "").toLowerCase();
         const who = (lastPeople || []).find(p => String(p.email||"").toLowerCase() === whoEmail);
         const whoName = (who && who.name) ? who.name : (whoEmail ? whoEmail.split("@")[0] : "Player");
@@ -4827,13 +5522,21 @@ if(b && b.id === "ngUpdateBtn"){
       }
 
       if(action === "join_session"){
-        try{ await joinActiveSessionIfAny(); }catch(e){}
+        try{ await joinActiveSessionIfAny(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         openDetail("JOINED", `<div style="opacity:.85;">Joined session.</div>`);
         return;
       }
 
       if(action === "end_session"){
-        try{ await endSession(); }catch(e){}
+        try{ await endSession(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         openDetail("SESSION ENDED", `<div style="opacity:.85;">Session ended.</div>`);
         return;
       }
@@ -4853,11 +5556,29 @@ if(b && b.id === "ngUpdateBtn"){
       lobbyBackBtn.addEventListener("click", ()=> show("players"));
       lobbySetupBtn.addEventListener("click", ()=> show("setup"));
       lobbyInviteBtn && lobbyInviteBtn.addEventListener("click", async ()=>{
-        try{ lobbyInviteBtn.classList.add("inviteActive"); }catch(e){}
-        try{ setInviteStatus("Sending invites…", false); }catch(e){}
-        try{ show("waiting"); }catch(e){}
-        try{ await sendInvitesForSession(); setInviteStatus("Invites sent.", true); }catch(e){ setInviteStatus("Invite failed.", false); }
-        try{ setTimeout(()=>{ lobbyInviteBtn.classList.remove("inviteActive"); }, 1800); }catch(e){}
+        try{ lobbyInviteBtn.classList.add("inviteActive"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+        try{ setInviteStatus("Sending invites…", false); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+        try{ show("waiting"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+        try{ await sendInvitesForSession(); setInviteStatus("Invites sent.", true); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ setInviteStatus("Invite failed.", false); }
+        try{ setTimeout(()=>{ lobbyInviteBtn.classList.remove("inviteActive"); }, 1800); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       });
       if(!window.__ngSetupButtonsWired){ window.__ngSetupButtonsWired = true;
       setupHomeBtn && setupHomeBtn.addEventListener("click", ()=> show("players"));
@@ -4866,16 +5587,34 @@ if(b && b.id === "ngUpdateBtn"){
         const setup = (activeSession && activeSession.setup) ? activeSession.setup : {};
         const count = (typeof setup.count === "number") ? setup.count : (Array.isArray(setup.emails) ? setup.emails.length : 0);
         if(count <= 1){
-          try{ setInviteStatus("Select 2+ players to invite.", false); }catch(e){}
+          try{ setInviteStatus("Select 2+ players to invite.", false); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
           return;
         }
-        try{ setInviteStatus("Sending invites…", false); }catch(e){}
+        try{ setInviteStatus("Sending invites…", false); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         try{
           if(typeof startSession === "function") await startSession();
           else if(typeof startGameSession === "function") await startGameSession();
-        }catch(e){}
-        try{ show("waiting"); }catch(e){}
-        try{ await sendInvitesForSession(); setInviteStatus("Invites sent.", true); }catch(e){ setInviteStatus("Invite failed.", false); }
+        }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+        try{ show("waiting"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+        try{ await sendInvitesForSession(); setInviteStatus("Invites sent.", true); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ setInviteStatus("Invite failed.", false); }
       });
 // Reset clears selection (stays on Setup)
       setupResetBtn && setupResetBtn.addEventListener("click", ()=>{
@@ -4893,31 +5632,67 @@ if(b && b.id === "ngUpdateBtn"){
           }
           activeSession = activeSession || {};
           activeSession.setup = { count: 1, emails: me ? [me] : [] };
-          try{ activeSession.practice = true; activeSession.started = false; }catch(e){}
-          try{ ngLSSet('ng_active_session', JSON.stringify(activeSession)); }catch(e){}
-          try{ updateSetupControlPanel && updateSetupControlPanel(); }catch(e){}
-          try{ setInviteStatus("Selection reset.", true); }catch(e){}
-        }catch(e){}
+          try{ activeSession.practice = true; activeSession.started = false; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+          try{ ngLSSet('ng_active_session', JSON.stringify(activeSession)); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+          try{ updateSetupControlPanel && updateSetupControlPanel(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+          try{ setInviteStatus("Selection reset.", true); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+        }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       });
 setupStartGameBtn && setupStartGameBtn.addEventListener("click", async ()=>{
         // Start Game = PRACTICE ONLY (1 local player). Multiplayer uses Invite.
         const setup = (activeSession && activeSession.setup) ? activeSession.setup : {};
         const count = (typeof setup.count === "number") ? setup.count : (Array.isArray(setup.emails) ? setup.emails.length : 0);
         if(count > 1){
-          try{ setInviteStatus("Practice is 1 player. Use Invite for multiplayer.", false); }catch(e){}
+          try{ setInviteStatus("Practice is 1 player. Use Invite for multiplayer.", false); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
           return;
         }
         try{
           if(typeof startPracticeSession === "function") await startPracticeSession();
           else if(typeof startPracticeGame === "function") await startPracticeGame();
-        }catch(e){}
-        try{ show("lobby"); }catch(e){}
+        }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+        try{ show("lobby"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       });
       }
 
 waitingBackBtn.addEventListener("click", ()=> show("setup"));
       lobbyStartBtn.addEventListener("click", ()=>{
-        try{ if(window.__ngDoStart){ window.__ngDoStart(); return; } }catch(e){}
+        try{ if(window.__ngDoStart){ window.__ngDoStart(); return; } }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       });
       lobbyEndBtn.addEventListener("click", ()=> endSession().catch(e=>alert(e.message||e)));
 
@@ -4985,7 +5760,11 @@ waitingBackBtn.addEventListener("click", ()=> show("setup"));
       if(!sticky){
         hideTimer = setTimeout(()=>{ toast.style.display = 'none'; }, 9000);
       }
-    }catch(e){}
+    }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
   }
 
 
@@ -5113,7 +5892,7 @@ waitingBackBtn.addEventListener("click", ()=> show("setup"));
 
 <script>
 /* =============================================================================
-   v1062: INTRO MPA (EMAIL TOUCH) - STABLE, RETRYABLE, iOS-SAFE
+   v1065: INTRO MPA (EMAIL TOUCH) - STABLE, RETRYABLE, iOS-SAFE
 ============================================================================= */
 (function(){
   var introAudio = null;
@@ -5143,18 +5922,36 @@ waitingBackBtn.addEventListener("click", ()=> show("setup"));
   function advanceSrc(){
     idx = (idx + 1) % candidates.length;
     if(introAudio){
-      try{ introAudio.pause(); }catch(e){}
-      try{ introAudio.currentTime = 0; }catch(e){}
+      try{ introAudio.pause(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+      try{ introAudio.currentTime = 0; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
       introAudio.src = candidates[idx];
-      try{ introAudio.load(); }catch(e){}
+      try{ introAudio.load(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     }
   }
   function tryPlay(){
     if(introPlayed) return;
     var a = getAudio();
-    try{ a.currentTime = 0; }catch(e){}
+    try{ a.currentTime = 0; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     var p;
-    try{ p = a.play(); }catch(e){ p = Promise.reject(e); }
+    try{ p = a.play(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ p = Promise.reject(e); }
     if(p && typeof p.then === "function"){
       p.then(function(){ introPlayed = true; })
        .catch(function(){
@@ -5188,13 +5985,15 @@ waitingBackBtn.addEventListener("click", ()=> show("setup"));
 })();
 
 
-/* v1062: CONTROL PANEL HARD-LOCK */
+/* v1065: CONTROL PANEL HARD-LOCK */
 (function(){
   function callIf(fnName, ...args){
     try{
       const fn = (typeof window[fnName]==="function") ? window[fnName] : null;
       return fn ? fn(...args) : null;
-    }catch(e){ console.log("[NG]", fnName, "ERR", e); return null; }
+    }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ console.log("[NG]", fnName, "ERR", e); return null; }
   }
 
   document.addEventListener("click", function(e){
@@ -5203,7 +6002,11 @@ waitingBackBtn.addEventListener("click", ()=> show("setup"));
 
     switch(btn.id){
       case "ngUpdateBtn":
-        try{ location.reload(); }catch(_){}
+        try{ location.reload(); }catch(_){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         break;
 
       case "lobbyBackBtn":
@@ -5214,16 +6017,28 @@ waitingBackBtn.addEventListener("click", ()=> show("setup"));
         // Prefer existing invite handlers
         if(callIf("sendInvite")===null && callIf("inviteSelectedPlayers")===null){
           console.log("[NG] Invite clicked (no handler found)");
-          try{ alert("Invite clicked. (Invite handler not found.)"); }catch(_){}
+          try{ alert("Invite clicked. (Invite handler not found.)"); }catch(_){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         }
         break;
 
       case "lobbyStartBtn":
         // Prefer your real start handler if present
-        if(window.__ngDoStart){ try{ window.__ngDoStart(); return; }catch(_){} }
+        if(window.__ngDoStart){ try{ window.__ngDoStart(); return; }catch(_){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} }
         if(callIf("startGame")===null && callIf("startSelectedGame")===null){
           console.log("[NG] Start clicked (no handler found)");
-          try{ alert("Select a game and complete Setup first."); }catch(_){}
+          try{ alert("Select a game and complete Setup first."); }catch(_){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
           callIf("show","setup"); callIf("showPage","setup");
         }
         break;
@@ -5231,7 +6046,11 @@ waitingBackBtn.addEventListener("click", ()=> show("setup"));
       case "lobbyEndBtn":
         if(callIf("endSession")===null && callIf("endGame")===null){
           console.log("[NG] End/Cancel clicked (no handler found)");
-          try{ alert("End/Cancel clicked. (Handler not found.)"); }catch(_){}
+          try{ alert("End/Cancel clicked. (Handler not found.)"); }catch(_){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         }
         break;
     }
@@ -5240,7 +6059,7 @@ waitingBackBtn.addEventListener("click", ()=> show("setup"));
 
 
 
-/* v1062: INVITE FLOW (IN-APP) */
+/* v1065: INVITE FLOW (IN-APP) */
 async function sendInvite(){
   // In-app invite: writes a pending invite record for opponents and routes to Waiting Room.
   try{
@@ -5252,7 +6071,11 @@ async function sendInvite(){
       if(Array.isArray(window.selectedOpponents)) opponents = window.selectedOpponents.slice();
       else if(window.activeSession && Array.isArray(window.activeSession?.players)) opponents = window.activeSession.players.slice();
       else if(Array.isArray(window.lastPeople)) opponents = window.lastPeople.slice();
-    }catch(_e){}
+    }catch(_e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     // Remove self if present (by name)
     opponents = opponents.filter(x => (x||"").trim() && (x||"").trim() !== fromName);
 
@@ -5268,17 +6091,21 @@ async function sendInvite(){
     // Firestore write (if available)
     if(typeof window.db !== "undefined" && typeof collection === "function" && typeof addDoc === "function"){
       const invCol = collection(db, "invites");
+      const senderEmail = (window.currentUserEmail || window.userEmail || window.email || window.auth?.currentUser?.email || null);
       const payloadBase = {
         sessionId: sessionId || null,
         gameName,
         fromName,
+        fromEmail: senderEmail,
         createdAt: (typeof serverTimestamp === "function") ? serverTimestamp() : new Date(),
         status: "pending"
       };
       for(const to of opponents){
         try{
-          await addDoc(invCol, {...payloadBase, to});
-        }catch(e){ console.log("[INVITE] addDoc failed", e); }
+          await addDoc(invCol, {...payloadBase, toEmail: to, to});
+        }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ console.log("[INVITE] addDoc failed", e); }
       }
       // Optional: mark session as waiting / store invite list
       try{
@@ -5289,20 +6116,35 @@ async function sendInvite(){
             inviteUpdatedAt: payloadBase.createdAt
           });
         }
-      }catch(e){ console.log("[INVITE] session update failed", e); }
+      }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ console.log("[INVITE] session update failed", e); }
     } else {
       console.log("[INVITE] Firestore helpers not available; invite not persisted.");
     }
 
-    // Route to Waiting Room
-    try{ if(typeof show === "function") show("waiting"); else if(typeof showPage === "function") showPage("waiting"); }catch(_e){}
+        // Start listening for accepts
+    try{ if(typeof listenForJoins === "function") await listenForJoins(sessionId); }catch(_e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+
+// Route to Waiting Room
+    try{ if(typeof show === "function") show("waiting"); else if(typeof showPage === "function") showPage("waiting"); }catch(_e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     alert(fromName + " challenged you to a game of " + gameName + ". (Invite sent)");
-  }catch(e){ console.log("[INVITE] error", e); alert("Invite failed: " + (e?.message||e)); }
+  }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){}
+ console.log("[INVITE] error", e); alert("Invite failed: " + (e?.message||e)); }
 }
 
 
 
-/* v1062: CONTROL PANEL HARD-LOCK (ADDED) */
+/* v1065: CONTROL PANEL HARD-LOCK (ADDED) */
 document.addEventListener("click", function(e){
   const btn = e.target.closest("button");
   if(!btn) return;
@@ -5311,7 +6153,7 @@ document.addEventListener("click", function(e){
 }, true);
 
 
-/* v1062: SETUP CONTROL PANEL HARD-LOCK (USER SPEC) */
+/* v1065: SETUP CONTROL PANEL HARD-LOCK (USER SPEC) */
 document.addEventListener("click", function(e){
   const btn = e.target.closest("button");
   if(!btn) return;
@@ -5333,7 +6175,7 @@ document.addEventListener("click", function(e){
 
 
 
-/* === v1062: PRACTICE END + CONTROL PANEL CAPTURE FIXES === */
+/* === v1065: PRACTICE END + CONTROL PANEL CAPTURE FIXES === */
 document.addEventListener("click", function(e){
   const btn = e.target.closest("button");
   if(!btn) return;
@@ -5342,15 +6184,35 @@ document.addEventListener("click", function(e){
   if(btn.id === "lobbyEndBtn"){
     try{
       if(activeSession && activeSession.practice){
-        try{ ngLSSet("ng_active_session",""); }catch(e){}
-        try{ localStorage.removeItem("ng_active_session"); }catch(e){}
-        try{ activeSession = {}; }catch(e){}
+        try{ ngLSSet("ng_active_session",""); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+        try{ localStorage.removeItem("ng_active_session"); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
+        try{ activeSession = {}; }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
         if(typeof show === "function") show("players");
         return;
       }
-    }catch(e){}
+    }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+}
     // Fallback to existing endSession for multiplayer
-    if(typeof endSession === "function"){ try{ endSession(); }catch(e){} }
+    if(typeof endSession === "function"){ try{ endSession(); }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){}
+}
+} }
     return;
   }
 
