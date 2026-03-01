@@ -1,4 +1,13 @@
-/* ===================== NIGHT GAMES v1091 ===================== */
+/* ===================== NIGHT GAMES v1092 ===================== */
+/* ===================== SECTION INDEX (v1092) =====================
+  1) HTML STRUCTURE
+  2) CSS (single <style>)
+  3) JS MODULE IMPORTS + FIREBASE INIT
+  4) UI RENDER / ROUTER / BUTTON WIRING
+  5) GAME ENGINES (01 / etc.)
+  6) MULTIPLAYER (INVITE / WAITING / SYNC)
+  7) UTILITIES + LOGGING
+===================================================================== */
 <!--
 ================================================================================
   NIGHT GAMES |  2026-02-28
@@ -29,7 +38,7 @@ THIS BUILD CHANGES:
 -->
 <!-- =============================================================================
  NIGHT GAMES — BUILD BRIEF (DO NOT DELETE)
- Version: v1091 (FIREBASE CONNECT FIX)
+ Version: v1092 (FIREBASE CONNECT FIX)
  Goal: 100% complete, forward-only. No patch layers. No rollback.
 
  RULES (GUARDRAILS)
@@ -45,7 +54,7 @@ THIS BUILD CHANGES:
 
     html, body{
       height:100%;
-      
+
       min-height: 100dvh; /* iOS/iPadOS Safari dynamic viewport */
 margin:0;
       background:#000;
@@ -217,7 +226,6 @@ margin:0;
       z-index:2;
     }
 
-    
 
     .sectionHead{ padding: 12px 14px 10px 14px; }
 
@@ -280,7 +288,6 @@ margin:0;
       flex: 1 1 auto;
     }
 
-    
 
     .dot{
       width:10px;
@@ -458,8 +465,7 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
     /* v768: glass dropdowns (no white/yellow) */
-    
-    
+
 
     /* Keep iOS/Safari from forcing yellow/white fills on inputs */
     input, textarea, select{
@@ -1243,7 +1249,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* Make panels easier to read (slightly darker glass + blur) */
-#players 
+#players
 
 /* Keep names to the LEFT of buttons (override older mobile stacking rules) */
 #players .itemLine{
@@ -1270,12 +1276,12 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* Slightly reduce name size so row fits cleanly */
-#players 
+#players
 
 /* ===================== DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
-#detail 
+#detail
 
 /* Give room for footer */
 #detail .detailWrap{
@@ -1308,14 +1314,14 @@ border: 1px solid rgba(255,255,255,.22);
 /* ===================== RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
-#detail 
+#detail
 
 /* The detailWrap is a grid with 1fr + auto.
    Make the first panel a flex column so the body can scroll. */
-#detail .detailWrap > 
+#detail .detailWrap >
 
 /* Scroll inside the rules content area */
-#detail .detailWrap > 
+#detail .detailWrap >
 
 /* Give room for footer */
 #detail .detailWrap{
@@ -1389,7 +1395,7 @@ border: 1px solid rgba(255,255,255,.22);
 }
 
 /* : setup scroll reliability (grid/flex fix like Detail screen) */
-#setup .detailWrap > 
+#setup .detailWrap >
 /* Keep setup readable while preserving background */
 
 #setup .detailBody, #setup .detailBody *{
@@ -1776,7 +1782,7 @@ html, body{
    Notes: No behavior changes; visual-only.
 ============================================================================= */
 
-#players 
+#players
 
 /* Give inner scrollers a slightly clearer surface, keep text readable */
 #waiting .detailBody,
@@ -1803,7 +1809,7 @@ html, body{
 /* ===================== : LEADERBOARD SCROLL FIX =====================
    Make the first panel a flex column so #leaderboardBody can scroll reliably (iOS grid/flex safe).
 ======================================================================= */
-#leaderboard .detailWrap > 
+#leaderboard .detailWrap >
 #leaderboard #leaderboardBody{
   flex: 1 1 auto;
   min-height: 0;
@@ -1821,9 +1827,9 @@ html, body{
    - Visual-only (no behavior changes)
 ========================================================================= */
 
-#detail 
+#detail
 
-#waiting 
+#waiting
 
 /* Waiting-room status icons: make "waiting" glow green */
 .statusIcon.wait{
@@ -1840,7 +1846,7 @@ html, body{
 /* =============================================================================
    : FORCE FROST GLASS ON ALL SUBPAGES (stats/detail/waiting/leaderboard/etc.)
 ============================================================================= */
-#detail 
+#detail
 
 /* : Waiting-room joined checkmarks MUST glow green (ok + wait) */
 .statusIcon.ok,
@@ -1883,7 +1889,7 @@ html, body{
 ============================================================================= */
 
 /* Frost/glass consistency across secondary screens */
-#detail 
+#detail
 
 /* Waiting room: make waiting indicator green + glow (applies to everyone) */
 #waiting .statusIcon.ok,
@@ -1909,7 +1915,7 @@ html, body{
   padding-right: 6px;
 }
 
-.detailWrap > 
+.detailWrap >
     .detailBody{
       flex: 1;
       min-height: 0;
@@ -1933,7 +1939,7 @@ html, body{
 
 #appMain{ padding-top: calc(var(--headerH) + env(safe-area-inset-top)) !important; }
 @media (min-width: 768px){
-  
+
 }
 
 /* : Invite button feedback */
@@ -2025,7 +2031,7 @@ button, .btn, .pill{
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1091 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1092 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -2053,7 +2059,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1091 MASTER REPORTER ===================== */
+/* ===================== v1092 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -2092,7 +2098,7 @@ function ngGuard(label, fn){
    - Prevents small errors from killing the whole app.
    - Does NOT change normal behavior when everything is working.
 ============================================================
-    
+
 
 (function(){
   // Safe wrapper for event handlers
@@ -2119,7 +2125,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1091</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1092</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2163,7 +2169,7 @@ function ngGuard(label, fn){
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1091</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1092</div>
   </div>
 </section>
 
@@ -2309,7 +2315,7 @@ function ngGuard(label, fn){
     if(busy) return;
     busy = true;
     try{
-      if(typeof 
+      if(typeof
       }else{
         setStatus("Loading…");
         // small retry window
@@ -2387,7 +2393,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/fireba
       if(err) dbgErr.textContent = err;
     }
 
-    // ===================== v1091 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1092 FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -3852,7 +3858,7 @@ function watchSessionDoc(){
           killerNumbers = {};
           order.forEach((em,i)=>{ killerNumbers[em] = nums[i % nums.length]; });
         }
-        const payload = { 
+        const payload = {
           randomizer: { state:"running", startedAt: serverTimestamp(), seed, order, killerNumbers, kind: isKiller ? "killer_dual" : "order_only" }
         };
         await setDoc(doc(db, "sessions", activeSessionId), payload, { merge:true });
@@ -3924,7 +3930,7 @@ function renderSetupForGame(game){
 setupBody.innerHTML = `
         <div class="setupGameTitle">${game}</div>
         <div style="opacity:.78; margin-bottom:14px;">Pick players, then use Controls.</div>
-        
+
 
         <div class="fieldLabel">Number of Players</div>
         <select id="setupCount" class="glassSelect">
@@ -3940,7 +3946,7 @@ setupBody.innerHTML = `
           <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
             ${opts}
           </div>
-        
+
 
 </div>
 
@@ -4120,7 +4126,7 @@ ${ needsDartsOpts ? `
       // default select current user
       checks.forEach(c=>{ if(c.value === me) c.checked = true; });
 
-      
+
 // : dynamic header height -> CSS var so panels never overlap logo
 function setHeaderHeightVar(){
   try{
@@ -4275,7 +4281,7 @@ try{
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
-          try{ 
+          try{
 /*
 ================================================================================
   INVITES  [SECTION_INVITES]
@@ -4616,7 +4622,7 @@ async function sendInvitesForSession(){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
-} 
+}
               return;
             }
           }
@@ -4920,7 +4926,7 @@ function renderPlayers(list){
       }
 
       // v768: expose firebase handles for non-module code (prevents "db is not defined")
-      
+
       window.db = db;
       window.__ngHasDB = !!db;
 
@@ -5248,7 +5254,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1091 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1092 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
