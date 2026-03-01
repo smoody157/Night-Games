@@ -4,56 +4,7 @@
 <!-- NIGHT GAMES v1094 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>)
-  3) JS MODULE IMPORTS + FIREBASE INIT
-  4) UI RENDER / ROUTER / BUTTON WIRING
-  5) GAME ENGINES (01 / etc.)
-  6) MULTIPLAYER (INVITE / WAITING / SYNC)
-  7) UTILITIES + LOGGING
-===================================================================== */
-<!--
-================================================================================
-  NIGHT GAMES |  2026-02-28
-================================================================================
-  MASTER CLEAN BUILD (STABILITY FIRST)
-  - Enter must work (email -> players) and must never regress.
-  - Game -> Setup must open.
-  - Setup Start must work (1 player + 2+ players).
-
-  CHANGES:
-  - Fixed JS parse error (removed stray '});' that broke load).
-  - No other behavior changes.
-
-THIS BUILD CHANGES:
-  - Behavior change: rollback to stable ngLogError-only handling to restore connectivity; no feature changes..
-  - Labels / section banners / edit notes only.
-  - Visible version badge added.
-
-  QUICK JUMP (Ctrl/Cmd+F):
-    [EDIT_BG] [EDIT_LOGO] [EDIT_VERSION] [EDIT_COLORS] [EDIT_DROPDOWNS]
-    [SECTION_CONFIG] [SECTION_FIREBASE] [SECTION_STATE] [SECTION_ROUTING]
-
-/* === : MULTIPLAYER FLOW & SYNC (STEP 3) === */
-
-    [SECTION_UI] [SECTION_PLAYERS] [SECTION_GAMES] [SECTION_SETUP]
-    [SECTION_WAITING] [SECTION_INVITES] [SECTION_UTILS] [SECTION_DEBUG]
-================================================================================
--->
-<!-- =============================================================================
- NIGHT GAMES — BUILD BRIEF (DO NOT DELETE)
- Version: v1092 (FIREBASE CONNECT FIX)
- Goal: 100% complete, forward-only. No patch layers. No rollback.
-
- RULES (GUARDRAILS)
-  1) Forward-only: never roll back to an earlier build for “stability”. Consolidate in-place.
-  2) No patch layering: fixes must replace/merge into the correct section (delete the old code).
-  3) No new UI elements unless explicitly requested.
-  4) No duplicate CSS selectors: each selector exists once (canonical rule). Merge then delete duplicates.
-  5) UI wiring must not depend on Firebase success: buttons must work even if backend is unavailable.
-  6) All ES module imports (if any) must be at the very top of the module script.
-
- SECTION MAP
-  - CSS: THEME (:root vars) • COMPONENTS (
+<style>:root vars) • COMPONENTS (
 
     html, body{
       height:100%;
@@ -229,7 +180,6 @@ margin:0;
       z-index:2;
     }
 
-
     .sectionHead{ padding: 12px 14px 10px 14px; }
 
     .title{
@@ -290,7 +240,6 @@ margin:0;
       min-width: 0;
       flex: 1 1 auto;
     }
-
 
     .dot{
       width:10px;
@@ -468,7 +417,6 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
     /* v768: glass dropdowns (no white/yellow) */
-
 
     /* Keep iOS/Safari from forcing yellow/white fills on inputs */
     input, textarea, select{
@@ -2128,7 +2076,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1094</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1095</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2172,7 +2120,7 @@ function ngGuard(label, fn){
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1094</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1095</div>
   </div>
 </section>
 
@@ -2268,7 +2216,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1094is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1095is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2341,6 +2289,20 @@ function ngGuard(label, fn){
 })();
 </script>
 <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { initializeAuth, signInAnonymously, onAuthStateChanged, signOut, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import {
+      getFirestore,
+      initializeFirestore, memoryLocalCache,
+      doc, setDoc, getDoc,
+      collection, onSnapshot,
+      serverTimestamp, query, where
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+window.ngFirebaseBoot = window.ngFirebaseBoot || {};
+window.ngFirebaseBoot.stage = "module_loaded";
+window.ngFirebaseBoot.ts = Date.now();
+
 window.ngLastError = "none";
 
 /*
@@ -2374,17 +2336,6 @@ const NG_STORE = {
   set: ngLSSet,
   remove: ngLSRemove
 };
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { initializeAuth, signInAnonymously, onAuthStateChanged, signOut, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import {
-      getFirestore,
-      initializeFirestore, memoryLocalCache,
-      doc, setDoc, getDoc,
-      collection, onSnapshot,
-      serverTimestamp, query, where
-    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
     const dbgState = document.getElementById("dbgState");
     const dbgAuth = document.getElementById("dbgAuth");
     const dbgFs = document.getElementById("dbgFs");
@@ -4333,7 +4284,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1094Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1095Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -5374,7 +5325,6 @@ function ngUpdateBtn(){
 /* ===================== FINAL FREEZE =====================
    Production Build - Structural Edits Locked
 ============================================================== */
-
 </script>
 
 </body>
