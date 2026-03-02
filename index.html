@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- NIGHT GAMES v1122 -->
+<!-- NIGHT GAMES v1123 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -1981,10 +1981,99 @@ button, .btn, .pill{
   box-shadow: 0 0 18px rgba(0, 255, 140, 0.22);
 }
 .btnAdvance:active, .btn-advance:active{ transform: translateY(1px); }
+
+/* ==== v1123 GRAPHICS RESTORE (forced) =====================================
+   Purpose: ensure landing graphics/UI are visible even if earlier variable blocks
+   were lost/corrupted. This does NOT change your logic/wiring.
+============================================================================ */
+:root{
+  /* Core layout vars used throughout the stylesheet */
+  --txt: rgba(255,255,255,.92);
+  --uiW: min(760px, 94vw);
+  --maxW: 900px;
+
+  /* Glass UI */
+  --fieldFill: rgba(255,255,255,.06);
+  --zShadow: drop-shadow(0 18px 28px rgba(0,0,0,.55));
+  --zShadowSoft: drop-shadow(0 12px 20px rgba(0,0,0,.45));
+
+  /* Stage background (keep it dark; safe fallback if artwork var was missing) */
+  --bgStage:
+    radial-gradient(120% 110% at 50% 10%, rgba(0,210,255,.18), rgba(0,0,0,0) 58%),
+    radial-gradient(120% 120% at 50% 110%, rgba(255,175,0,.10), rgba(0,0,0,0) 58%),
+    linear-gradient(180deg, #000, #000);
+
+  /* Landing pad geometry */
+  --padWidth: min(640px, 92vw);
+  --padsBottom: max(10px, env(safe-area-inset-bottom));
+  --emailH: 72px;
+  --enterH: 88px;
+  --ngPadGap: 12px;
+  --ngPadsRadius: 22px;
+  --ngTextDrop: 0px;
+}
+
+/* Force landing pads visible + tappable */
+#landing #landingPads{
+  width: var(--padWidth) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  bottom: max(40px, calc(env(safe-area-inset-bottom) + 30px)) !important;
+  display: grid !important;
+  gap: var(--ngPadGap) !important;
+  z-index: 6 !important;
+  pointer-events: none !important;
+}
+#landing #emailPad,
+#landing #enterBtn{
+  pointer-events: auto !important;
+}
+
+/* Glass look (so you SEE the controls even without artwork) */
+#landing #emailPad,
+#landing #enterBtn{
+  width: 100% !important;
+  border-radius: var(--ngPadsRadius) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06)) !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+  box-shadow:
+    0 12px 34px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.40),
+    inset 0 -1px 0 rgba(255,255,255,.16) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+}
+
+/* Make ENTER visible (some builds left it at opacity:0 for invisible overlays) */
+#landing #enterBtn{
+  opacity: 1 !important;
+  height: var(--enterH) !important;
+  position: relative !important;
+}
+#landing #emailPad{ height: var(--emailH) !important; }
+
+/* Ensure the email display text is visible */
+#landing #emailEcho{
+  display:flex !important;
+  opacity: 1 !important;
+  color: rgba(255,255,255,.95) !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,.85), 0 0 18px rgba(0,0,0,.55) !important;
+}
+
+/* If the ENTER label elements exist, make them visible */
+#landing #enterBtn .enterText,
+#landing #enterBtn .enterSub{
+  opacity: 1 !important;
+}
+
+/* Safety: ensure screens can show */
+.screen.active{ display:block !important; }
+/* ======================================================================== */
+
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1122 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1123 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -2012,7 +2101,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1122 MASTER REPORTER ===================== */
+/* ===================== v1123 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -2078,7 +2167,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1122</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1123</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2122,7 +2211,7 @@ function ngGuard(label, fn){
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1122</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1123</div>
   </div>
 </section>
 
@@ -2218,7 +2307,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1122 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1123 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2292,7 +2381,7 @@ function ngGuard(label, fn){
 </script>
 
 <script>
-// ===================== v1122 NO-MODULE BOOTSTRAP =====================
+// ===================== v1123 NO-MODULE BOOTSTRAP =====================
 // Goal: iPhone Safari sometimes skips <script type="module"> on GitHub Pages.
 // This bootstrap loads Firebase via dynamic import inside a plain script, then runs the app.
 
@@ -2310,7 +2399,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1122";
+  window.ngBuild = "v1123";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -2337,7 +2426,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1122";
+window.ngBuild = "v1123";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -2386,7 +2475,7 @@ const NG_STORE = {
       if(err && dbgErr) dbgErr.textContent = err;
     }
 
-    // ===================== v1122 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1123 FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -5252,7 +5341,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1122 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1123 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
