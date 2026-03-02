@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Night Games v1127</title>
+<title>Night Games v1128</title>
 <style>
-/* ===================== NIGHT GAMES v1127 (GOLD MASTER) ===================== */
+/* ===================== NIGHT GAMES v1128 (GOLD MASTER) ===================== */
 /*
 ================================================================================
   NIGHT GAMES |  2026-02-28
@@ -37,7 +37,7 @@ THIS BUILD CHANGES:
 */
 /* =============================================================================
  NIGHT GAMES — BUILD BRIEF (DO NOT DELETE)
- Version: v1127 (GOLD MASTER)
+ Version: v1128 (GOLD MASTER)
  Date: 2026-02-28
  Goal: 100% complete, forward-only. No patch layers. No rollback.
 
@@ -2372,7 +2372,10 @@ function ngGuard(label, fn){
     if(busy) return;
     busy = true;
     try{
-      if(typeof 
+      if(typeof window.ngEnter === "function"){
+        const email = (emailInput.value||"").trim();
+        setStatus("");
+        await window.ngEnter(email);
       }else{
         setStatus("Loading…");
         // small retry window
@@ -2414,7 +2417,7 @@ const ngLSGet = (k)=>{ try{ return localStorage.getItem(k); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return null; } };
 
-// ===== Firebase Config Guard (v1127) =====
+// ===== Firebase Config Guard (v1128) =====
 // If any required Firebase config field is missing, keep the UI alive in "offline mode"
 // instead of throwing during initializeApp().
 function ngValidateFirebaseConfig(cfg){
@@ -2717,7 +2720,13 @@ const firebaseConfig = {
 }
 
               if(emailEchoEl) emailEchoEl.style.opacity = "0";
-              try{ window.ngAudio.unlock && window.ngAudio.unlock(); }catch(e){ if(typeof ngLogError==="function") ngLogError("Error", e); }catch(_le){
+              try{
+                window.ngAudio.unlock && window.ngAudio.unlock();
+                if(window.ngAudio && window.ngAudio.playIntro && !window.ngAudio.introStarted){
+                  window.ngAudio.introStarted = true;
+                  window.ngAudio.playIntro();
+                }
+              }catch(e){ if(typeof ngLogError==="function") ngLogError("Error", e); }catch(_le){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
@@ -4709,7 +4718,7 @@ async function sendInvitesForSession(){
     const SEED = [
       { email: "stevewmoody@yahoo.com", name: "Steve Moody" },
       { email: "jmoody7712@gmail.com", name: "Jayce Moody" },
-      { email: "wmoody7931@aol.com", name: "Bill Moody" }
+      { email: "wmoody7913@aol.com", name: "Bill Moody" }
     ];
     async function seedRegistry(db){
       for(const u of SEED){
@@ -4724,7 +4733,7 @@ async function sendInvitesForSession(){
     let currentEmail = null;
 
 // : configurable admin email (optional). Set localStorage ng_bill_email to enable special prefills.
-const BILL_EMAIL = (ngLSGet("ng_bill_email") || "").trim().toLowerCase();
+const BILL_EMAIL = "wmoody7913@aol.com"; // Bill Moody (saved once on his device)
 const DUMMY_EMAIL = "";
     let currentUid = null;
     let presenceTimer = null;
