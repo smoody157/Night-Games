@@ -1,21 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- NIGHT GAMES v1137 -->
+<!-- NIGHT GAMES v1200_FINAL -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-/* v1137: CSS parse fix + safe defaults */
-:root{
-  --txt: rgba(255,255,255,.92);
-  --fieldFill: rgba(255,255,255,.06);
-  --uiW: min(760px, 94vw);
-  --padWidth: min(640px, 92vw);
-  --padsBottom: max(10px, env(safe-area-inset-bottom));
-  --ngPadsRadius: 22px;
-  --ngPadGap: 12px;
-}
-
 
     html, body{
       height:100%;
@@ -1990,75 +1979,10 @@ button, .btn, .pill{
   box-shadow: 0 0 18px rgba(0, 255, 140, 0.22);
 }
 .btnAdvance:active, .btn-advance:active{ transform: translateY(1px); }
-
-/* ==== v1137 ASSET WIRING ==== */
-#landing{ background:url("./IMG_7390.jpeg") center/cover no-repeat; }
-#players{ background:url("./IMG_7315.jpeg") center/cover no-repeat; }
-/* Remove duplicate footer layer */
-#landingFoot{ display:none !important; }
-/* Make version blue */
-.ngVer{ color:#4aa3ff !important; font-weight:800; }
-/* =========================== */
-
-
-/* ==== v1137 NAV WIRING VISIBILITY ==== */
-.screen{ display:none !important; }
-.screen.active{ display:block !important; }
-#ngHeaderBar{ display:flex !important; }
-#landingFoot{ display:none !important; } /* avoid double footer */
-.ngVer{ color:#4aa3ff !important; font-weight:800; }
-/* ==================================== */
-
-
-/* ==== v1137 DIAGNOSTICS ==== */
-#ngWatermark{
-  position:fixed; left:50%; top:50%; transform:translate(-50%,-50%);
-  font-size:min(12vw,72px);
-  font-weight:1000; letter-spacing:.08em;
-  color:rgba(74,163,255,.25);
-  text-shadow:0 18px 60px rgba(0,0,0,.55);
-  pointer-events:none; z-index:9990;
-}
-#ngDiag{
-  position:fixed; right:14px; top:70px; z-index:10000;
-  padding:10px 12px; border-radius:999px;
-  background:rgba(0,0,0,.40);
-  border:1px solid rgba(255,255,255,.18);
-  color:rgba(255,255,255,.92);
-  font-weight:900; font-size:12px;
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-}
-#ngDiagPanel{
-  position:fixed; inset:0; z-index:10001; display:none;
-  background:rgba(0,0,0,.70);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  padding:24px;
-}
-#ngDiagPanel.show{ display:block; }
-#ngDiagPanel .card{
-  max-width:820px; margin:0 auto;
-  padding:16px 14px; border-radius:18px;
-  background:rgba(0,0,0,.55);
-  border:1px solid rgba(255,255,255,.18);
-  color:rgba(255,255,255,.92);
-}
-#ngDiagPanel .row{ display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.08); }
-#ngDiagPanel .row:last-child{ border-bottom:none; }
-#ngDiagPanel .k{ opacity:.75; }
-#ngDiagPanel .v{ font-weight:900; text-align:right; }
-#ngDiagClose{
-  margin-top:14px; width:100%; height:44px; border-radius:14px;
-  font-weight:900; letter-spacing:.08em;
-  background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-  border:1px solid rgba(255,255,255,.20);
-  color:rgba(255,255,255,.92);
-}
-/* ========================== */
-
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1137 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1200_FINAL FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -2086,7 +2010,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1137 MASTER REPORTER ===================== */
+/* ===================== v1200_FINAL MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -2152,7 +2076,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1137</span> <span class="ngVer"> v1137</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1200_FINAL</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2196,7 +2120,7 @@ function ngGuard(label, fn){
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1137</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1200_FINAL</div>
   </div>
 </section>
 
@@ -2292,7 +2216,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1106is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1096is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2364,41 +2288,10 @@ function ngGuard(label, fn){
   });
 })();
 </script>
-
-<script>
-// ===================== v1137 NO-MODULE BOOTSTRAP =====================
-// Goal: iPhone Safari sometimes skips <script type="module"> on GitHub Pages.
-// This bootstrap loads Firebase via dynamic import inside a plain script, then runs the app.
-
-(function(){
-  const dbg = (s,a,f,e)=>{
-    try{
-      const ds=document.getElementById("dbgState");
-      const da=document.getElementById("dbgAuth");
-      const df=document.getElementById("dbgFs");
-      const de=document.getElementById("dbgErr");
-      if(ds && s!=null) ds.textContent=s;
-      if(da && a!=null) da.textContent=a;
-      if(df && f!=null) df.textContent=f;
-      if(de && e!=null) de.textContent=e;
-    }catch(_e){}
-  };
-
-  window.ngBuild = "v1137";
-  window.ngFirebaseStatus = "BOOTSTRAP_START";
-  dbg("Bootstrap start","auth: loading","firestore: loading","none");
-
-  // placeholders for Firebase APIs the app expects
-  let initializeApp;
-  let getAuth, signInAnonymously, onAuthStateChanged, signOut;
-  let getFirestore, initializeFirestore, memoryLocalCache;
-  let doc, setDoc, getDoc, updateDoc, addDoc, getDocs, deleteDoc;
-  let collection, onSnapshot, query, where, serverTimestamp;
-
-  const cfg = (window.firebaseConfig || window.__firebaseConfig || (typeof firebaseConfig!=="undefined" ? firebaseConfig : null));
-
-  const runApp = function(){
-
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { initializeAuth, signInAnonymously, onAuthStateChanged, signOut, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import {
       getFirestore,
       initializeFirestore, memoryLocalCache,
       doc, setDoc, getDoc,
@@ -2411,7 +2304,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1137";
+window.ngBuild = "v1200_FINAL";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -2460,7 +2353,7 @@ const NG_STORE = {
       if(err && dbgErr) dbgErr.textContent = err;
     }
 
-    // ===================== v1137 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1200_FINAL FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -4397,7 +4290,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1106Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1096Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -4720,8 +4613,8 @@ async function sendInvitesForSession(){
     let currentEmail = null;
 
 // : configurable admin email (optional). Set localStorage ng_bill_email to enable special prefills.
-const BILL_EMAIL = "wmoody7913@aol.com"; // v1137: Bill Moody (remembered only on his device)
-const DUMMY_EMAIL = "enter email";
+const BILL_EMAIL = (ngLSGet("ng_bill_email") || "").trim().toLowerCase();
+const DUMMY_EMAIL = "";
     let currentUid = null;
     let presenceTimer = null;
     let presenceMap = new Map(); // id -> lastActiveMillis
@@ -5326,7 +5219,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1137 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1200_FINAL 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
@@ -5443,218 +5336,6 @@ function ngUpdateBtn(){
 /* ===================== FINAL FREEZE =====================
    Production Build - Structural Edits Locked
 ============================================================== */
-  };
-
-  try{
-    const appUrl  = "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    const authUrl = "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    const fsUrl   = "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-    Promise.all([import(appUrl), import(authUrl), import(fsUrl)])
-      .then(([appMod, authMod, fsMod])=>{
-        window.ngFirebaseStatus = "IMPORT_OK";
-        dbg("Imports OK","auth: import ok","firestore: import ok","none");
-
-        initializeApp = appMod.initializeApp;
-
-        getAuth = authMod.getAuth;
-        signInAnonymously = authMod.signInAnonymously;
-        onAuthStateChanged = authMod.onAuthStateChanged;
-        signOut = authMod.signOut;
-
-        getFirestore = fsMod.getFirestore;
-        initializeFirestore = fsMod.initializeFirestore;
-        memoryLocalCache = fsMod.memoryLocalCache;
-
-        doc = fsMod.doc; setDoc = fsMod.setDoc; getDoc = fsMod.getDoc;
-        updateDoc = fsMod.updateDoc; addDoc = fsMod.addDoc; getDocs = fsMod.getDocs; deleteDoc = fsMod.deleteDoc;
-
-        collection = fsMod.collection; onSnapshot = fsMod.onSnapshot;
-        query = fsMod.query; where = fsMod.where; serverTimestamp = fsMod.serverTimestamp;
-
-        // expose for debugging / existing code
-        window.ngFirebase = { appMod, authMod, fsMod };
-        window.ngFirebaseApis = {
-          initializeApp, getAuth, signInAnonymously, onAuthStateChanged, signOut,
-          getFirestore, initializeFirestore, memoryLocalCache,
-          doc, setDoc, getDoc, updateDoc, addDoc, getDocs, deleteDoc,
-          collection, onSnapshot, query, where, serverTimestamp
-        };
-
-        try{
-          if(!cfg || !cfg.apiKey){
-            window.ngFirebaseStatus = "CONFIG_MISSING";
-            dbg("Config missing","auth: n/a","firestore: n/a","CONFIG_MISSING (apiKey)");
-          } else {
-            const app = initializeApp(cfg);
-            window.ngApp = app;
-            window.ngAuth = getAuth(app);
-            window.db = getFirestore(app);
-            window.ngFirebaseStatus = "FIREBASE_BOOT_SUCCESS";
-            dbg("Firebase boot success","auth: ready","firestore: ready","none");
-          }
-        }catch(e){
-          window.ngFirebaseStatus = "FIREBASE_INIT_FAILED";
-          dbg("Firebase init failed","auth: failed","firestore: failed", String(e && (e.message||e)));
-        }
-
-        // Now run the full app code (non-module)
-        try{
-          runApp();
-        }catch(e){
-          dbg("App run failed","auth:?","firestore:?", String(e && (e.message||e)));
-          console.error(e);
-        }
-      })
-      .catch((e)=>{
-        window.ngFirebaseStatus = "IMPORT_FAILED";
-        dbg("Import failed","auth: failed","firestore: failed", String(e && (e.message||e)));
-        console.error(e);
-      });
-  } catch(e) {
-    window.ngFirebaseStatus = "BOOTSTRAP_EXCEPTION";
-    dbg("Bootstrap exception","auth: failed","firestore: failed", String(e && (e.message||e)));
-    console.error(e);
-  }
-})();
-</script>
-
-
-
-<script>
-/* ==== v1137: clean navigation wiring (no duplicate listeners) ==== */
-(function(){
-  const SCREENS = ["landing","players","setup","waiting","lobby","detail"];
-
-  function $(id){ return document.getElementById(id); }
-  function show(id){
-    SCREENS.forEach(sid => {
-      const el = $(sid);
-      if(!el) return;
-      el.classList.toggle("active", sid===id);
-    });
-    try{ localStorage.setItem("ng_last_screen", id); }catch(_){}
-  }
-
-  // Restore last screen if any (but never skip landing unless already authenticated in your existing logic)
-  try{
-    const last = localStorage.getItem("ng_last_screen");
-    if(last && SCREENS.includes(last) && last !== "landing"){
-      // only restore if user already entered once this session
-      if(sessionStorage.getItem("ng_has_entered")==="1"){
-        show(last);
-      }
-    }
-  }catch(_){}
-
-  // Core navigation bindings
-  const enterBtn = $("enterBtn");
-  const emailInput = $("emailInput");
-  const emailPad = $("emailPad");
-
-  // Intro sound on email pad touch (existing ngAudio hook if present)
-  function playIntroOnce(){
-    try{
-      if(window.ngAudio && window.ngAudio.playIntro && !window.ngAudio.introStarted){
-        window.ngAudio.introStarted = true;
-        window.ngAudio.playIntro();
-      }
-    }catch(_){}
-  }
-  if(emailPad){
-    emailPad.addEventListener("pointerdown", playIntroOnce, {passive:true});
-    emailPad.addEventListener("touchstart", playIntroOnce, {passive:true});
-    emailPad.addEventListener("mousedown", playIntroOnce);
-  }
-
-  function toPlayers(){
-    sessionStorage.setItem("ng_has_entered","1");
-    show("players");
-  }
-
-  if(enterBtn){
-    enterBtn.addEventListener("click", (e)=>{
-      e.preventDefault();
-      // If your existing window.ngEnter exists, call it; otherwise just route.
-      const email = (emailInput && emailInput.value || "").trim();
-      if(typeof window.ngEnter === "function"){
-        Promise.resolve(window.ngEnter(email)).finally(()=>toPlayers());
-      }else{
-        toPlayers();
-      }
-    });
-  }
-  if(emailInput){
-    emailInput.addEventListener("keydown", (e)=>{
-      if(e.key==="Enter" && enterBtn) enterBtn.click();
-    });
-  }
-
-  // Players page buttons
-  const sessionBtn = $("sessionBtn");
-  const leaderboardBtn = $("leaderboardBtn");
-  if(sessionBtn) sessionBtn.addEventListener("click", ()=>show("setup"));
-  if(leaderboardBtn) leaderboardBtn.addEventListener("click", ()=>show("detail"));
-
-  // Setup buttons
-  const setupHomeBtn = $("setupHomeBtn");
-  const setupInviteBtn = $("setupInviteBtn");
-  const setupStartGameBtn = $("setupStartGameBtn");
-  const setupResetBtn = $("setupResetBtn");
-  if(setupHomeBtn) setupHomeBtn.addEventListener("click", ()=>show("players"));
-  if(setupInviteBtn) setupInviteBtn.addEventListener("click", ()=>show("lobby"));
-  if(setupStartGameBtn) setupStartGameBtn.addEventListener("click", ()=>show("waiting"));
-  if(setupResetBtn) setupResetBtn.addEventListener("click", ()=>show("players"));
-
-  // Waiting buttons
-  const waitingBackBtn = $("waitingBackBtn");
-  if(waitingBackBtn) waitingBackBtn.addEventListener("click", ()=>show("setup"));
-
-  // Lobby buttons
-  const lobbyInviteBtn = $("lobbyInviteBtn");
-  const lobbyStartBtn = $("lobbyStartBtn");
-  const lobbyRandomizeBtn = $("lobbyRandomizeBtn");
-  const lobbyEndBtn = $("lobbyEndBtn");
-  if(lobbyInviteBtn) lobbyInviteBtn.addEventListener("click", ()=>show("setup"));
-  if(lobbyStartBtn) lobbyStartBtn.addEventListener("click", ()=>show("waiting"));
-  if(lobbyRandomizeBtn) lobbyRandomizeBtn.addEventListener("click", ()=>show("detail"));
-  if(lobbyEndBtn) lobbyEndBtn.addEventListener("click", ()=>show("players"));
-
-  // Detail nav
-  const backBtn = $("backBtn");
-  const homeBtn = $("homeBtn");
-  if(backBtn) backBtn.addEventListener("click", ()=>show("players"));
-  if(homeBtn) homeBtn.addEventListener("click", ()=>show("players"));
-
-  // Safety: ensure landing is active on first load
-  const landing = $("landing");
-  if(landing && !document.querySelector(".screen.active")){
-    show("landing");
-  }
-})();
-/* =========================================================== */
-</script>
-
-
-<script>
-/* ==== v1137 diagnostics wiring ==== */
-(function(){
-  function $(id){ return document.getElementById(id); }
-  const btn = $("ngDiag"), panel = $("ngDiagPanel"), close = $("ngDiagClose");
-  function activeScreen(){
-    const el = document.querySelector(".screen.active");
-    return el ? (el.id || el.getAttribute("data-screen") || "(active)") : "(none)";
-  }
-  function refresh(){
-    try{$("ngDiagUrl").textContent = location.href;}catch(_){}
-    try{$("ngDiagUA").textContent = navigator.userAgent;}catch(_){}
-    try{$("ngDiagFb").textContent = (window.ngFirebaseStatus || window.ngFBStatus || "UNKNOWN");}catch(_){}
-    try{$("ngDiagScreen").textContent = activeScreen();}catch(_){}
-  }
-  if(btn) btn.addEventListener("click", ()=>{ refresh(); panel.classList.add("show"); });
-  if(close) close.addEventListener("click", ()=>panel.classList.remove("show"));
-  if(panel) panel.addEventListener("click", (e)=>{ if(e.target===panel) panel.classList.remove("show"); });
-})();
 </script>
 
 </body>
