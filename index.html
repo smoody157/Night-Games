@@ -5,6 +5,31 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
+/* ==== v1119 RENDERFIX: provide default CSS variables so UI can't disappear ==== */
+:root{
+  --txt: rgba(255,255,255,.92);
+  --uiW: min(760px, 94vw);
+  --maxW: 900px;
+  --fieldFill: rgba(255,255,255,.06);
+  --zShadow: drop-shadow(0 18px 28px rgba(0,0,0,.55));
+  --zShadowSoft: drop-shadow(0 12px 20px rgba(0,0,0,.45));
+  --bgStage: radial-gradient(120% 90% at 50% 10%, rgba(40,120,220,.22), rgba(0,0,0,0) 55%), radial-gradient(120% 120% at 50% 110%, rgba(255,190,80,.10), rgba(0,0,0,0) 55%), linear-gradient(180deg, #000, #000);
+  --padWidth: min(640px, 92vw);
+  --padsBottom: max(70px, calc(env(safe-area-inset-bottom) + 60px));
+  --emailH: 64px;
+  --enterH: 72px;
+  --ngPadW: min(640px, 92vw);
+  --ngPadH: 72px;
+  --ngPadsRadius: 22px;
+  --ngPadGap: 12px;
+  --ngTextDrop: 0px;
+  --ngEmailH: 64px;
+  --ngEnterH: 72px;
+  --ngGap: 12px;
+  --ngPadR: 22px;
+  --headerH: 60px;
+}
+
 /* Night Games CSS */
 
 
@@ -2109,7 +2134,7 @@ function ngGuard(label, fn){
 
 <section class="screen active" id="landing">
   <!-- : target artwork background includes the visible pads; we wire ONLY invisible overlays -->
-  <div id="landingPads">
+  <div id="landingPads" style="display:grid;visibility:visible;opacity:1">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder=""/>
       <div id="emailEcho">player@example.com</div>
