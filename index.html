@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- NIGHT GAMES v1136 -->
+<!-- NIGHT GAMES v1137 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-/* v1136: CSS parse fix + safe defaults */
+/* v1137: CSS parse fix + safe defaults */
 :root{
   --txt: rgba(255,255,255,.92);
   --fieldFill: rgba(255,255,255,.06);
@@ -1991,7 +1991,7 @@ button, .btn, .pill{
 }
 .btnAdvance:active, .btn-advance:active{ transform: translateY(1px); }
 
-/* ==== v1136 ASSET WIRING ==== */
+/* ==== v1137 ASSET WIRING ==== */
 #landing{ background:url("./IMG_7390.jpeg") center/cover no-repeat; }
 #players{ background:url("./IMG_7315.jpeg") center/cover no-repeat; }
 /* Remove duplicate footer layer */
@@ -2001,7 +2001,7 @@ button, .btn, .pill{
 /* =========================== */
 
 
-/* ==== v1136 NAV WIRING VISIBILITY ==== */
+/* ==== v1137 NAV WIRING VISIBILITY ==== */
 .screen{ display:none !important; }
 .screen.active{ display:block !important; }
 #ngHeaderBar{ display:flex !important; }
@@ -2009,10 +2009,56 @@ button, .btn, .pill{
 .ngVer{ color:#4aa3ff !important; font-weight:800; }
 /* ==================================== */
 
+
+/* ==== v1137 DIAGNOSTICS ==== */
+#ngWatermark{
+  position:fixed; left:50%; top:50%; transform:translate(-50%,-50%);
+  font-size:min(12vw,72px);
+  font-weight:1000; letter-spacing:.08em;
+  color:rgba(74,163,255,.25);
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
+  pointer-events:none; z-index:9990;
+}
+#ngDiag{
+  position:fixed; right:14px; top:70px; z-index:10000;
+  padding:10px 12px; border-radius:999px;
+  background:rgba(0,0,0,.40);
+  border:1px solid rgba(255,255,255,.18);
+  color:rgba(255,255,255,.92);
+  font-weight:900; font-size:12px;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+#ngDiagPanel{
+  position:fixed; inset:0; z-index:10001; display:none;
+  background:rgba(0,0,0,.70);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  padding:24px;
+}
+#ngDiagPanel.show{ display:block; }
+#ngDiagPanel .card{
+  max-width:820px; margin:0 auto;
+  padding:16px 14px; border-radius:18px;
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.18);
+  color:rgba(255,255,255,.92);
+}
+#ngDiagPanel .row{ display:flex; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.08); }
+#ngDiagPanel .row:last-child{ border-bottom:none; }
+#ngDiagPanel .k{ opacity:.75; }
+#ngDiagPanel .v{ font-weight:900; text-align:right; }
+#ngDiagClose{
+  margin-top:14px; width:100%; height:44px; border-radius:14px;
+  font-weight:900; letter-spacing:.08em;
+  background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.20);
+  color:rgba(255,255,255,.92);
+}
+/* ========================== */
+
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1136 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1137 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -2040,7 +2086,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1136 MASTER REPORTER ===================== */
+/* ===================== v1137 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -2106,7 +2152,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1136</span> <span class="ngVer"> v1136</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1137</span> <span class="ngVer"> v1137</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2150,7 +2196,7 @@ function ngGuard(label, fn){
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1136</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1137</div>
   </div>
 </section>
 
@@ -2320,7 +2366,7 @@ function ngGuard(label, fn){
 </script>
 
 <script>
-// ===================== v1136 NO-MODULE BOOTSTRAP =====================
+// ===================== v1137 NO-MODULE BOOTSTRAP =====================
 // Goal: iPhone Safari sometimes skips <script type="module"> on GitHub Pages.
 // This bootstrap loads Firebase via dynamic import inside a plain script, then runs the app.
 
@@ -2338,7 +2384,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1136";
+  window.ngBuild = "v1137";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -2365,7 +2411,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1136";
+window.ngBuild = "v1137";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -2414,7 +2460,7 @@ const NG_STORE = {
       if(err && dbgErr) dbgErr.textContent = err;
     }
 
-    // ===================== v1136 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1137 FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -4674,7 +4720,7 @@ async function sendInvitesForSession(){
     let currentEmail = null;
 
 // : configurable admin email (optional). Set localStorage ng_bill_email to enable special prefills.
-const BILL_EMAIL = "wmoody7913@aol.com"; // v1136: Bill Moody (remembered only on his device)
+const BILL_EMAIL = "wmoody7913@aol.com"; // v1137: Bill Moody (remembered only on his device)
 const DUMMY_EMAIL = "enter email";
     let currentUid = null;
     let presenceTimer = null;
@@ -5280,7 +5326,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1136 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1137 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
@@ -5476,7 +5522,7 @@ function ngUpdateBtn(){
 
 
 <script>
-/* ==== v1136: clean navigation wiring (no duplicate listeners) ==== */
+/* ==== v1137: clean navigation wiring (no duplicate listeners) ==== */
 (function(){
   const SCREENS = ["landing","players","setup","waiting","lobby","detail"];
 
@@ -5587,6 +5633,28 @@ function ngUpdateBtn(){
   }
 })();
 /* =========================================================== */
+</script>
+
+
+<script>
+/* ==== v1137 diagnostics wiring ==== */
+(function(){
+  function $(id){ return document.getElementById(id); }
+  const btn = $("ngDiag"), panel = $("ngDiagPanel"), close = $("ngDiagClose");
+  function activeScreen(){
+    const el = document.querySelector(".screen.active");
+    return el ? (el.id || el.getAttribute("data-screen") || "(active)") : "(none)";
+  }
+  function refresh(){
+    try{$("ngDiagUrl").textContent = location.href;}catch(_){}
+    try{$("ngDiagUA").textContent = navigator.userAgent;}catch(_){}
+    try{$("ngDiagFb").textContent = (window.ngFirebaseStatus || window.ngFBStatus || "UNKNOWN");}catch(_){}
+    try{$("ngDiagScreen").textContent = activeScreen();}catch(_){}
+  }
+  if(btn) btn.addEventListener("click", ()=>{ refresh(); panel.classList.add("show"); });
+  if(close) close.addEventListener("click", ()=>panel.classList.remove("show"));
+  if(panel) panel.addEventListener("click", (e)=>{ if(e.target===panel) panel.classList.remove("show"); });
+})();
 </script>
 
 </body>
