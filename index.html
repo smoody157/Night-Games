@@ -1,35 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- NIGHT GAMES v1121 -->
+<!-- NIGHT GAMES v1122 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-/* ==== v1121 RENDERFIX: provide default CSS variables so UI can't disappear ==== */
-:root{
-  --txt: rgba(255,255,255,.92);
-  --uiW: min(760px, 94vw);
-  --maxW: 900px;
-  --fieldFill: rgba(255,255,255,.06);
-  --zShadow: drop-shadow(0 18px 28px rgba(0,0,0,.55));
-  --zShadowSoft: drop-shadow(0 12px 20px rgba(0,0,0,.45));
-  --bgStage: radial-gradient(120% 90% at 50% 10%, rgba(40,120,220,.22), rgba(0,0,0,0) 55%), radial-gradient(120% 120% at 50% 110%, rgba(255,190,80,.10), rgba(0,0,0,0) 55%), linear-gradient(180deg, #000, #000);
-  --padWidth: min(640px, 92vw);
-  --padsBottom: max(70px, calc(env(safe-area-inset-bottom) + 60px));
-  --emailH: 64px;
-  --enterH: 72px;
-  --ngPadW: min(640px, 92vw);
-  --ngPadH: 72px;
-  --ngPadsRadius: 22px;
-  --ngPadGap: 12px;
-  --ngTextDrop: 0px;
-  --ngEmailH: 64px;
-  --ngEnterH: 72px;
-  --ngGap: 12px;
-  --ngPadR: 22px;
-  --headerH: 60px;
-}
-
 /* Night Games CSS */
 
 
@@ -2009,7 +1984,7 @@ button, .btn, .pill{
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1121 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1122 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -2037,7 +2012,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1121 MASTER REPORTER ===================== */
+/* ===================== v1122 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -2103,7 +2078,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1121</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1122</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2134,7 +2109,7 @@ function ngGuard(label, fn){
 
 <section class="screen active" id="landing">
   <!-- : target artwork background includes the visible pads; we wire ONLY invisible overlays -->
-  <div id="landingPads" style="display:grid;visibility:visible;opacity:1">
+  <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder=""/>
       <div id="emailEcho">player@example.com</div>
@@ -2147,7 +2122,7 @@ function ngGuard(label, fn){
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1121</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1122</div>
   </div>
 </section>
 
@@ -2243,7 +2218,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1121 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1122 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2317,7 +2292,7 @@ function ngGuard(label, fn){
 </script>
 
 <script>
-// ===================== v1121 NO-MODULE BOOTSTRAP =====================
+// ===================== v1122 NO-MODULE BOOTSTRAP =====================
 // Goal: iPhone Safari sometimes skips <script type="module"> on GitHub Pages.
 // This bootstrap loads Firebase via dynamic import inside a plain script, then runs the app.
 
@@ -2335,7 +2310,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1121";
+  window.ngBuild = "v1122";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -2362,7 +2337,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1121";
+window.ngBuild = "v1122";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -2411,7 +2386,7 @@ const NG_STORE = {
       if(err && dbgErr) dbgErr.textContent = err;
     }
 
-    // ===================== v1121 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1122 FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -5277,7 +5252,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1121 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1122 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
@@ -5459,74 +5434,8 @@ function ngUpdateBtn(){
       })
       .catch((e)=>{
         window.ngFirebaseStatus = "IMPORT_FAILED";
-        dbg("Import failed — trying compat SDK","auth: retry","firestore: retry", String(e && (e.message||e)));
+        dbg("Import failed","auth: failed","firestore: failed", String(e && (e.message||e)));
         console.error(e);
-
-        // ===== Compat fallback (no modules) =====
-        const loadScript = (src)=> new Promise((res, rej)=>{
-          try{
-            const s=document.createElement("script");
-            s.src=src; s.async=true;
-            s.onload=()=>res();
-            s.onerror=()=>rej(new Error("Failed to load "+src));
-            document.head.appendChild(s);
-          }catch(err){ rej(err); }
-        });
-
-        const v="10.12.5";
-        Promise.resolve()
-          .then(()=>loadScript(`https://www.gstatic.com/firebasejs/${v}/firebase-app-compat.js`))
-          .then(()=>loadScript(`https://www.gstatic.com/firebasejs/${v}/firebase-auth-compat.js`))
-          .then(()=>loadScript(`https://www.gstatic.com/firebasejs/${v}/firebase-firestore-compat.js`))
-          .then(()=>{
-            if(!window.firebase) throw new Error("firebase compat namespace missing");
-            window.ngFirebaseStatus = "COMPAT_OK";
-            dbg("Compat OK","auth: compat ok","firestore: compat ok","none");
-
-            // Shim modular-style functions used by the app
-            initializeApp = (cfg)=> firebase.initializeApp(cfg);
-
-            getAuth = ()=> firebase.auth();
-            signInAnonymously = (auth)=> auth.signInAnonymously();
-            onAuthStateChanged = (auth, cb)=> auth.onAuthStateChanged(cb);
-            signOut = (auth)=> auth.signOut();
-
-            getFirestore = ()=> firebase.firestore();
-            doc = (db, col, id)=> db.collection(col).doc(id);
-            collection = (db, col)=> db.collection(col);
-            setDoc = (ref, data, opts)=> ref.set(data, opts);
-            getDoc = (ref)=> ref.get().then(snap=>({ exists: ()=>snap.exists, data: ()=>snap.data(), id: snap.id, ref: ref }));
-            updateDoc = (ref, data)=> ref.update(data);
-            addDoc = (colRef, data)=> colRef.add(data);
-            deleteDoc = (ref)=> ref.delete();
-            serverTimestamp = ()=> firebase.firestore.FieldValue.serverTimestamp();
-
-            // query helpers (chain on CollectionReference/Query)
-            where = (field, op, val)=> ({ __ngWhere:[field,op,val] });
-            orderBy = (field, dir)=> ({ __ngOrderBy:[field,dir] });
-            limit = (n)=> ({ __ngLimit:n });
-
-            query = (colRef, ...clauses)=>{
-              let q = colRef;
-              for(const c of clauses){
-                if(!c) continue;
-                if(c.__ngWhere) q = q.where(c.__ngWhere[0], c.__ngWhere[1], c.__ngWhere[2]);
-                else if(c.__ngOrderBy) q = q.orderBy(c.__ngOrderBy[0], c.__ngOrderBy[1]);
-                else if(typeof c.__ngLimit==="number") q = q.limit(c.__ngLimit);
-              }
-              return q;
-            };
-
-            onSnapshot = (q, cb)=> q.onSnapshot(cb);
-
-            // Now run app
-            try{ runApp(); }catch(err){ dbg("App run failed (compat)","auth:?","firestore:?", String(err && (err.message||err))); console.error(err); }
-          })
-          .catch((err)=>{
-            window.ngFirebaseStatus = "COMPAT_FAILED";
-            dbg("Compat failed","auth: failed","firestore: failed", String(err && (err.message||err)));
-            console.error(err);
-          });
       });
   } catch(e) {
     window.ngFirebaseStatus = "BOOTSTRAP_EXCEPTION";
