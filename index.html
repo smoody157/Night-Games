@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- NIGHT GAMES v1134 -->
+<!-- NIGHT GAMES v1136 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-/* v1134: CSS parse fix + safe defaults */
+/* v1136: CSS parse fix + safe defaults */
 :root{
   --txt: rgba(255,255,255,.92);
   --fieldFill: rgba(255,255,255,.06);
@@ -1991,7 +1991,7 @@ button, .btn, .pill{
 }
 .btnAdvance:active, .btn-advance:active{ transform: translateY(1px); }
 
-/* ==== v1134 ASSET WIRING ==== */
+/* ==== v1136 ASSET WIRING ==== */
 #landing{ background:url("./IMG_7390.jpeg") center/cover no-repeat; }
 #players{ background:url("./IMG_7315.jpeg") center/cover no-repeat; }
 /* Remove duplicate footer layer */
@@ -2000,10 +2000,19 @@ button, .btn, .pill{
 .ngVer{ color:#4aa3ff !important; font-weight:800; }
 /* =========================== */
 
+
+/* ==== v1136 NAV WIRING VISIBILITY ==== */
+.screen{ display:none !important; }
+.screen.active{ display:block !important; }
+#ngHeaderBar{ display:flex !important; }
+#landingFoot{ display:none !important; } /* avoid double footer */
+.ngVer{ color:#4aa3ff !important; font-weight:800; }
+/* ==================================== */
+
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1134 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1136 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -2031,7 +2040,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1134 MASTER REPORTER ===================== */
+/* ===================== v1136 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -2097,7 +2106,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1134</span> <span class="ngVer"> v1134</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1136</span> <span class="ngVer"> v1136</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2141,7 +2150,7 @@ function ngGuard(label, fn){
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1134</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1136</div>
   </div>
 </section>
 
@@ -2311,7 +2320,7 @@ function ngGuard(label, fn){
 </script>
 
 <script>
-// ===================== v1134 NO-MODULE BOOTSTRAP =====================
+// ===================== v1136 NO-MODULE BOOTSTRAP =====================
 // Goal: iPhone Safari sometimes skips <script type="module"> on GitHub Pages.
 // This bootstrap loads Firebase via dynamic import inside a plain script, then runs the app.
 
@@ -2329,7 +2338,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1134";
+  window.ngBuild = "v1136";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -2356,7 +2365,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1134";
+window.ngBuild = "v1136";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -2405,7 +2414,7 @@ const NG_STORE = {
       if(err && dbgErr) dbgErr.textContent = err;
     }
 
-    // ===================== v1134 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1136 FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -4665,7 +4674,7 @@ async function sendInvitesForSession(){
     let currentEmail = null;
 
 // : configurable admin email (optional). Set localStorage ng_bill_email to enable special prefills.
-const BILL_EMAIL = "wmoody7913@aol.com"; // v1134: Bill Moody (remembered only on his device)
+const BILL_EMAIL = "wmoody7913@aol.com"; // v1136: Bill Moody (remembered only on his device)
 const DUMMY_EMAIL = "enter email";
     let currentUid = null;
     let presenceTimer = null;
@@ -5271,7 +5280,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1134 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1136 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
@@ -5467,68 +5476,117 @@ function ngUpdateBtn(){
 
 
 <script>
-/* ==== v1134 BUTTON WIRING FALLBACK ====
-   Purpose: ensure all on-screen buttons navigate even if Firebase/module boot fails.
-   This does NOT remove your existing logic; it only provides a safe router.
-*/
+/* ==== v1136: clean navigation wiring (no duplicate listeners) ==== */
 (function(){
-  function $id(id){ return document.getElementById(id); }
-  function allScreens(){ return Array.from(document.querySelectorAll('section.screen')); }
+  const SCREENS = ["landing","players","setup","waiting","lobby","detail"];
 
-  function showScreen(id){
-    allScreens().forEach(s => s.classList.remove('active'));
-    const el = $id(id);
-    if(el) el.classList.add('active');
-  }
-  window.ngShowScreen = window.ngShowScreen || showScreen;
-
-  function bindOnce(id, fn){
-    const el = $id(id);
-    if(!el) return;
-    if(el.dataset.ngBound==="1") return;
-    el.dataset.ngBound="1";
-    el.addEventListener('click', fn);
+  function $(id){ return document.getElementById(id); }
+  function show(id){
+    SCREENS.forEach(sid => {
+      const el = $(sid);
+      if(!el) return;
+      el.classList.toggle("active", sid===id);
+    });
+    try{ localStorage.setItem("ng_last_screen", id); }catch(_){}
   }
 
-  // Landing -> Players
-  bindOnce('enterBtn', function(){
-    const emailEl = $id('emailInput') || $id('emailField') || $id('email');
-    const email = (emailEl && emailEl.value || '').trim();
-    // Minimal: show players even if email empty; your real auth still runs if available.
-    try{ if(typeof window.ngEnter === 'function') { window.ngEnter(email); return; } }catch(e){}
-    // Display email in placeholder spots if present
-    const echo = $id('emailEcho') || $id('playerEmail') || $id('currentEmail');
-    if(echo) echo.textContent = email || '';
-    showScreen('players');
-  });
+  // Restore last screen if any (but never skip landing unless already authenticated in your existing logic)
+  try{
+    const last = localStorage.getItem("ng_last_screen");
+    if(last && SCREENS.includes(last) && last !== "landing"){
+      // only restore if user already entered once this session
+      if(sessionStorage.getItem("ng_has_entered")==="1"){
+        show(last);
+      }
+    }
+  }catch(_){}
 
-  // Players -> Setup / Waiting / Lobby / Detail (common buttons)
-  bindOnce('setupHomeBtn', function(){ showScreen('players'); });
-  bindOnce('setupInviteBtn', function(){ showScreen('waiting'); });
-  bindOnce('setupStartGameBtn', function(){ showScreen('lobby'); });
-  bindOnce('setupResetBtn', function(){ showScreen('players'); });
+  // Core navigation bindings
+  const enterBtn = $("enterBtn");
+  const emailInput = $("emailInput");
+  const emailPad = $("emailPad");
 
-  bindOnce('waitingBackBtn', function(){ showScreen('players'); });
-  bindOnce('lobbyBackBtn', function(){ showScreen('players'); });
-  bindOnce('detailBackBtn', function(){ showScreen('players'); });
+  // Intro sound on email pad touch (existing ngAudio hook if present)
+  function playIntroOnce(){
+    try{
+      if(window.ngAudio && window.ngAudio.playIntro && !window.ngAudio.introStarted){
+        window.ngAudio.introStarted = true;
+        window.ngAudio.playIntro();
+      }
+    }catch(_){}
+  }
+  if(emailPad){
+    emailPad.addEventListener("pointerdown", playIntroOnce, {passive:true});
+    emailPad.addEventListener("touchstart", playIntroOnce, {passive:true});
+    emailPad.addEventListener("mousedown", playIntroOnce);
+  }
 
-  // Session/Leaderboard buttons toggle their panels if your logic exists; otherwise route to detail
-  bindOnce('sessionBtn', function(){
-    try{ if(typeof window.ngHandleAction === 'function') { window.ngHandleAction('show_session'); return; } }catch(e){}
-    showScreen('setup');
-  });
-  bindOnce('leaderboardBtn', function(){
-    try{ if(typeof window.ngHandleAction === 'function') { window.ngHandleAction('show_leaderboard'); return; } }catch(e){}
-    showScreen('detail');
-  });
+  function toPlayers(){
+    sessionStorage.setItem("ng_has_entered","1");
+    show("players");
+  }
 
-  // Ensure something is active
-  const anyActive = allScreens().some(s => s.classList.contains('active'));
-  if(!anyActive){
-    const landing = $id('landing');
-    if(landing) landing.classList.add('active');
+  if(enterBtn){
+    enterBtn.addEventListener("click", (e)=>{
+      e.preventDefault();
+      // If your existing window.ngEnter exists, call it; otherwise just route.
+      const email = (emailInput && emailInput.value || "").trim();
+      if(typeof window.ngEnter === "function"){
+        Promise.resolve(window.ngEnter(email)).finally(()=>toPlayers());
+      }else{
+        toPlayers();
+      }
+    });
+  }
+  if(emailInput){
+    emailInput.addEventListener("keydown", (e)=>{
+      if(e.key==="Enter" && enterBtn) enterBtn.click();
+    });
+  }
+
+  // Players page buttons
+  const sessionBtn = $("sessionBtn");
+  const leaderboardBtn = $("leaderboardBtn");
+  if(sessionBtn) sessionBtn.addEventListener("click", ()=>show("setup"));
+  if(leaderboardBtn) leaderboardBtn.addEventListener("click", ()=>show("detail"));
+
+  // Setup buttons
+  const setupHomeBtn = $("setupHomeBtn");
+  const setupInviteBtn = $("setupInviteBtn");
+  const setupStartGameBtn = $("setupStartGameBtn");
+  const setupResetBtn = $("setupResetBtn");
+  if(setupHomeBtn) setupHomeBtn.addEventListener("click", ()=>show("players"));
+  if(setupInviteBtn) setupInviteBtn.addEventListener("click", ()=>show("lobby"));
+  if(setupStartGameBtn) setupStartGameBtn.addEventListener("click", ()=>show("waiting"));
+  if(setupResetBtn) setupResetBtn.addEventListener("click", ()=>show("players"));
+
+  // Waiting buttons
+  const waitingBackBtn = $("waitingBackBtn");
+  if(waitingBackBtn) waitingBackBtn.addEventListener("click", ()=>show("setup"));
+
+  // Lobby buttons
+  const lobbyInviteBtn = $("lobbyInviteBtn");
+  const lobbyStartBtn = $("lobbyStartBtn");
+  const lobbyRandomizeBtn = $("lobbyRandomizeBtn");
+  const lobbyEndBtn = $("lobbyEndBtn");
+  if(lobbyInviteBtn) lobbyInviteBtn.addEventListener("click", ()=>show("setup"));
+  if(lobbyStartBtn) lobbyStartBtn.addEventListener("click", ()=>show("waiting"));
+  if(lobbyRandomizeBtn) lobbyRandomizeBtn.addEventListener("click", ()=>show("detail"));
+  if(lobbyEndBtn) lobbyEndBtn.addEventListener("click", ()=>show("players"));
+
+  // Detail nav
+  const backBtn = $("backBtn");
+  const homeBtn = $("homeBtn");
+  if(backBtn) backBtn.addEventListener("click", ()=>show("players"));
+  if(homeBtn) homeBtn.addEventListener("click", ()=>show("players"));
+
+  // Safety: ensure landing is active on first load
+  const landing = $("landing");
+  if(landing && !document.querySelector(".screen.active")){
+    show("landing");
   }
 })();
+/* =========================================================== */
 </script>
 
 </body>
