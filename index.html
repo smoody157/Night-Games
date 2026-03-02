@@ -4,7 +4,9 @@
 <!-- NIGHT GAMES v1118 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>:root vars) • COMPONENTS (
+<style>
+/* Night Games CSS */
+
 
     html, body{
       height:100%;
@@ -2218,7 +2220,7 @@ function ngGuard(label, fn){
 </div>
 <div class="globalFooter" id="globalFooter">Night Games v1118 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
-<div class="fatal" id="fatal">
+<div class="fatal" id="fatal" style="display:none">
 <div class="card">
 <h2>Firebase didn’t start</h2>
 <p>This page uses Firebase modules. If you’re on a web link and still see this, the host is blocking module imports or Firebase is blocked.</p>
@@ -5377,6 +5379,7 @@ function ngUpdateBtn(){
     Promise.all([import(appUrl), import(authUrl), import(fsUrl)])
       .then(([appMod, authMod, fsMod])=>{
         window.ngFirebaseStatus = "IMPORT_OK";
+        try{ const fatalEl=document.getElementById("fatal"); if(fatalEl) fatalEl.style.display="none"; }catch(_e){}
         dbg("Imports OK","auth: import ok","firestore: import ok","none");
 
         initializeApp = appMod.initializeApp;
