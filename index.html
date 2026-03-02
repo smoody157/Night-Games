@@ -1,57 +1,1991 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1207</title>
-<!-- NIGHT GAMES v1207 -->
+<title>Night Games v1209</title>
+<!-- NIGHT GAMES v1209 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
+<style>:root vars) • COMPONENTS (
+
+    html, body{
+      height:100%;
+
+      min-height: 100dvh; /* iOS/iPadOS Safari dynamic viewport */
+margin:0;
+      background:#000;
+      color:var(--txt);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      overflow:hidden;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* Debug panel (toggle) */
+    .dbg{ display:none; }
+    .dbgHead{
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .dbgHead span{
+      font-size: 13px;
+      font-weight: 1000;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: .92;
+    }
+    .dbgHead b{ color: rgba(90,255,170,.92); }
+    .dbgBody{
+      display:none;
+      padding: 10px 12px 12px 12px;
+      font-size: 13px;
+      line-height: 1.4;
+      opacity: .9;
+    }
+    .dbg.open .dbgBody{ display:block; }
+    .kv{ display:flex; justify-content: space-between; gap:10px; }
+    .kv code{ opacity:.95; }
+    .warn{ color: rgba(255,210,90,.95); }
+    .bad{ color: rgba(255,120,120,.95); }
+    .ok{ color: rgba(90,255,170,.95); }
+
+    #app{
+  padding-top: 72px; /* keep UI clear of header */ position:fixed; inset:0; }
+    .screen{ position:absolute; inset:0; display:none; }
+    .screen.active{ display:block; }
+
+    .screen::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: var(--bgStage);
+      background-repeat:no-repeat;
+      /* Responsive stage fit: keep the top/logo visible on all aspect ratios */
+      background-size: cover;
+      background-position: center top;
+    }
+    .screen::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(130% 110% at 50% 25%, rgba(0,0,0,0), rgba(0,0,0,.22) 60%, rgba(0,0,0,.52) 100%);
+      pointer-events:none;
+    }
+
+    /* ===== Landing ===== */
+    .landingUI{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      width: var(--uiW);
+      max-width: var(--maxW);
+      top: clamp(320px, 48vh, 590px);
+      display:grid;
+      gap: 14px;
+      justify-items:center;
+      z-index:2;
+    }
+
+    .field3d, .btn3d{
+      width: min(640px, 92vw);
+      height: 72px;
+      border-radius: 22px;
+      transform: translateZ(0);
+      filter: var(--zShadow);
+      background: var(--fieldFill);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow:
+        inset 0 2px 6px rgba(255,255,255,.45),
+        inset 0 -14px 22px rgba(0,0,0,.60),
+        0 0 18px rgba(0,210,255,.10);
+      position:relative;
+      overflow:hidden;
+    }
+    .field3d::before, .btn3d::before{
+      content:"";
+      position:absolute;
+      inset: 10px 12px auto 12px;
+      height: 16px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,255,255,.52), rgba(255,255,255,0));
+      opacity: .42;
+      pointer-events:none;
+    }
+    .field3d input{
+      width:100%;
+      height:100%;
+      border:0;
+      outline:none;
+      background:transparent;
+      color: rgba(255,255,255,.95);
+      font-size: 18px;
+      letter-spacing: .6px;
+      padding: 0 20px;
+      box-sizing:border-box;
+      -webkit-appearance:none;
+      appearance:none;
+    }
+    .field3d input::placeholder{ color: rgba(235,245,255,.55); }
+
+    /* iOS Safari yellow autofill kill */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+      -webkit-text-fill-color: rgba(255,255,255,.95) !important;
+      caret-color: rgba(255,255,255,.95);
+      transition: background-color 99999s ease-out 0s;
+      -webkit-box-shadow: 0 0 0px 1000px var(--fieldFill) inset !important;
+      box-shadow: 0 0 0px 1000px var(--fieldFill) inset !important;
+      border-radius: 22px;
+    }
+
+    .btn3d{
+      cursor:pointer;
+      color: rgba(255,255,255,.96);
+      font-weight: 1000;
+      font-size: 28px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: transform .07s ease, filter .07s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn3d:active{ transform: translateY(2px) scale(.995); filter: var(--zShadowSoft); }
+
+    .hint{
+      font-size: 13px;
+      opacity: .78;
+      text-align:center;
+      max-width: min(640px, 92vw);
+      line-height: 1.35;
+    }
+
+    /* ===== Hub ===== */
+    .hub{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      width: var(--uiW);
+      max-width: var(--maxW);
+      top: clamp(220px, 30vh, 340px);
+      bottom: max(120px, env(safe-area-inset-bottom));
+      display:grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 18px;
+      padding: 0 12px;
+      box-sizing:border-box;
+      z-index:2;
+    }
+
+    .sectionHead{ padding: 12px 14px 10px 14px; }
+
+    .title{
+      font-weight: 1000;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-size: clamp(22px, 3.0vh, 30px);
+      position: relative;
+      padding-bottom: 6px;
+      width: 100%;
+      background: linear-gradient(180deg,
+        rgba(255,228,170,.92) 0%,
+        rgba(255,170,70,.90) 40%,
+        rgba(255,242,210,.96) 72%,
+        rgba(255,190,95,.88) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-stroke: 0.7px rgba(255,255,255,.18);
+      text-shadow:
+        0 1px 0 rgba(255,255,255,.22),
+        0 -2px 10px rgba(0,0,0,.70),
+        0 0 22px rgba(0,210,255,.18);
+    }
+    .title::after{
+      content:"";
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height:2px;
+      border-radius:999px;
+      background: linear-gradient(90deg, rgba(0,210,255,.55), rgba(255,175,0,.40), rgba(0,210,255,.10));
+      opacity:.75;
+    }
+
+    .list{
+      position:absolute;
+      left: 0; right: 0;
+      top: 54px; bottom: 0;
+      padding: 10px 12px 14px 12px;
+      box-sizing: border-box;
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .itemLine{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 4px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+    .leftStack{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.18);
+      box-shadow: 0 0 0 1px rgba(255,255,255,.12);
+      flex: 0 0 auto;
+    }
+    .dot.online{
+      background: rgba(60, 255, 160, .98);
+      box-shadow: 0 0 18px rgba(60,255,160,.75), 0 0 38px rgba(60,255,160,.30), 0 0 0 1px rgba(60,255,160,.45);
+      animation: onlinePulse 1.35s ease-in-out infinite;
+    }
+    @keyframes onlinePulse{
+      0%{ transform: scale(1); filter: brightness(1.0); }
+      50%{ transform: scale(1.15); filter: brightness(1.25); }
+      100%{ transform: scale(1); filter: brightness(1.0); }
+    }
+
+    .actions{ display:flex; gap:8px; flex:0 0 auto; }
+
+    .pill{
+      /* v768 uniform button sizing */
+border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.03);
+      color: rgba(255,255,255,.95);
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 1000;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow:
+        inset 0 2px 6px rgba(255,255,255,.28),
+        inset 0 -10px 16px rgba(0,0,0,.55),
+        0 0 16px rgba(0,210,255,.08);
+      transition: transform .07s ease, filter .07s ease;
+    }
+.pill:active{
+      transform: translateY(2px) scale(.99);
+      filter: var(--zShadowSoft);
+    }
+
+    .detailWrap{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      width: var(--uiW);
+      max-width: var(--maxW);
+      top: clamp(220px, 30vh, 340px);
+      bottom: max(120px, env(safe-area-inset-bottom));
+      z-index: 2;
+      display:grid;
+      grid-template-rows: 1fr auto;
+      gap: 18px;
+      padding: 0 12px;
+      box-sizing:border-box;
+    }
+    .detailBody{
+      padding: 14px 14px 18px 14px;
+      line-height: 1.55;
+      font-size: 18px;
+      opacity: .92;
+    }
+
+    .fatal{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.82);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 20px;
+      z-index: 99999;
+    }
+    .fatal .card{
+      width: min(720px, 92vw);
+      border-radius: 22px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 22px 46px rgba(0,0,0,.55);
+      padding: 16px 16px 18px 16px;
+    }
+    .fatal h2{ margin:0 0 8px 0; font-size: 18px; letter-spacing:1px; text-transform: uppercase; }
+    .fatal p{ margin:0 0 10px 0; opacity:.88; line-height:1.45; }
+    .fatal pre{
+      margin:0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 13px;
+      opacity: .9;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 10px 12px;
+      border-radius: 14px;
+    }
+
+    /* v768: header row + mini pill */
+    .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
+    .pillMini{
+      padding: 8px 12px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      height: 34px;
+      align-self: center;
+    }
+
+    /* v768: session indicator */
+    .sessionPill{
+      padding: 8px 12px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      height: 34px;
+      align-self: center;
+      opacity: .92;
+    }
+    .sessionPill.live{
+      border-color: rgba(90,255,170,.55);
+      box-shadow:
+        inset 0 2px 6px rgba(255,255,255,.28),
+        inset 0 -10px 16px rgba(0,0,0,.55),
+        0 0 16px rgba(90,255,170,.12);
+    }
+
+    /* v768 layout lock: micro vertical drop */
+    .appWrap, .screen, .landing, .players {
+        }
+
+/* v768 ATW emoji: keep color + one-line */
+    .gameLabelWrap{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      white-space:nowrap;
+    }
+    .emojiGlobe{
+      display:inline-block;
+      font-size: 18px;
+      line-height: 1;
+      color: initial !important;
+      background: none !important;
+      -webkit-text-fill-color: initial !important;
+      -webkit-background-clip: initial !important;
+      background-clip: initial !important;
+      filter: drop-shadow(0 0 10px rgba(120,200,255,.18));
+    }
+
+    /* v768: Setup screen scroll/visibility fix for iPhone Safari (more vertical room) */
+    #setup .detailWrap{
+      top: clamp(150px, 18vh, 260px);
+      bottom: max(80px, env(safe-area-inset-bottom));
+    }
+    /* Ensure list area can always finger-scroll */
+    #setup .list{
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+    }
+
+    /* : Ensure setup + waiting bodies can scroll (iOS safe in flex/grid) */
+    #setup .detailWrap, #waiting .detailWrap{ min-height: 0; }
+
+    #setup .detailBody, #waiting .detailBody{
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    /* v768: glass dropdowns (no white/yellow) */
+
+    /* Keep iOS/Safari from forcing yellow/white fills on inputs */
+    input, textarea, select{
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+      caret-color: rgba(255,255,255,.95);
+    }
+    input:-webkit-autofill,
+    textarea:-webkit-autofill,
+    select:-webkit-autofill{
+      -webkit-text-fill-color: rgba(255,255,255,.96) !important;
+      transition: background-color 99999s ease-in-out 0s;
+      box-shadow: 0 0 0 1000px rgba(255,255,255,.06) inset !important;
+      border: 1px solid rgba(255,255,255,.16) !important;
+    }
+
+    /***********************
+     *  v768 ERROR HUD
+     *  - Appears only when an error occurs
+     *  - Small, not in the way
+     ***********************/
+    #ngErrToast{
+      position: fixed;
+      right: 14px;
+      bottom: max(14px, env(safe-area-inset-bottom));
+      z-index: 99999;
+      display: none;
+      max-width: min(420px, calc(100vw - 28px));
+    }
+    #ngErrToast .card{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(20,20,24,.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 0 18px rgba(255,255,255,.06);
+      overflow:hidden;
+    }
+    #ngErrToast .head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    #ngErrToast .title{
+      font-weight: 1200;
+      font-size: 14px;
+      letter-spacing: .2px;
+      opacity: .95;
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      white-space: nowrap;
+    }
+    #ngErrToast .dot{
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255,80,80,.92);
+      box-shadow: 0 0 14px rgba(255,80,80,.35);
+      flex: 0 0 auto;
+    }
+    #ngErrToast .btn{
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-weight: 1100;
+      font-size: 13px;
+      line-height: 1;
+    }
+    #ngErrToast .btn:active{ transform: translateY(1px); opacity:.96; }
+    #ngErrToast .body{
+      padding: 10px 12px 12px;
+      font-size: 13px;
+      line-height: 1.35;
+      opacity: .90;
+    }
+    #ngErrToast .msg{
+      font-weight: 1000;
+      font-size: 13px;
+      margin-bottom: 8px;
+      opacity: .96;
+    }
+    #ngErrToast .detail{
+      display:none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      opacity: .90;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    #ngErrToast.expanded .detail{ display:block; }
+
+/* =============================================================================
+   SECTION: EDITABLE COORDINATES  [EDIT_LOGO] [EDIT_BG] [EDIT_VERSION]
+   - If you want to move the logo or tweak offsets, search for these tags.
+============================================================================= */
+
+/* =============================================================================
+   SECTION_SETUP: PLAYER PICKER DROPDOWN  [SECTION_SETUP]
+============================================================================= */
+/* v768: player picker dropdown */
+
+.pickerModal{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.58);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index: 99999;
+  padding: 18px;
+}
+.pickerCard{
+  width: min(520px, 100%);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 0 30px rgba(0,0,0,.35), inset 0 0 24px rgba(255,255,255,.06);
+  overflow:hidden;
+}
+.pickerHead{
+  padding: 14px 16px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+.pickerHead .t{ font-weight:1200; font-size:18px; }
+.pickerHead .c{ opacity:.75; font-weight:900; font-size:14px; }
+.pickerBody{
+  max-height: 46vh;
+  overflow-y:auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 12px;
+}
+.pickerRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+  margin-bottom: 10px;
+}
+.pickerRow .nm{ font-weight:1100; }
+.pickerRow .em{ opacity:.65; font-size: 13px; font-weight:800; }
+.pickerFoot{
+  padding: 12px 12px;
+  display:flex;
+  gap: 10px;
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+.pickerFoot .pill{ flex:1; }
+
+/* =============================================================================
+   SECTION_UI: VERSION BADGE  [EDIT_VERSION]
+============================================================================= */
+/* =============================================================================
+   SECTION_UI: FIELD LABELS (visual separation)  [EDIT_COLORS]
+============================================================================= */
+.fieldLabel{
+  display:inline-block;
+  padding: 8px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(120,190,255,.22);
+  background: rgba(40,120,220,.14);
+  color: rgba(225,245,255,.96);
+  font-weight: 1100;
+  letter-spacing: .4px;
+  margin: 0 0 10px 0;
+  box-shadow: inset 0 0 18px rgba(120,190,255,.08);
+}
+
+.setupGameTitle{
+  font-weight: 1200;
+  font-size: 30px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 14px rgba(0,0,0,.65), 0 0 22px rgba(0,210,255,.18);
+}
+/* Make "advance" buttons readable */
+.pill
+
+/* Prevent duplicated controls from stacking/overlapping inside setup body */
+
+#ngHeaderBar{
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: min(760px, 94vw);
+  padding: 8px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: hidden;
+  display:flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ngTopRow{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.ngBottomRow{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 2px 0 0;
+}
+.ngBottomLeft{ flex: 0 0 auto; width: 1px; }
+.ngLogoutBtn{
+  height: 34px;
+  padding: 8px 12px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  opacity: .92;
+}
+
+#ngHeaderBar::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:16px;
+  pointer-events:none;
+  background: radial-gradient(120px 80px at 18% 0%, rgba(70,170,255,.28), transparent 70%),
+              radial-gradient(140px 90px at 82% 0%, rgba(70,255,160,.22), transparent 72%),
+              linear-gradient(90deg, rgba(70,170,255,.12), rgba(70,255,160,.10));
+  mix-blend-mode: screen;
+}
+#ngHeaderBar > span{
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+  font-size: 13px;
+  letter-spacing: .2px;
+}
+.ngHeaderLeft{ font-weight: 700; }
+.ngHeaderCenter{ opacity: .95; }
+.ngHeaderRight{ opacity: .85; }
+#ngHeaderBar span{
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-weight: 900;
+  opacity: .92;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#ngHeaderBar .ngHeaderLeft{ flex: 0 0 auto; max-width: 45%; }
+#ngHeaderBar .ngHeaderCenter{ flex: 1 1 auto; opacity: .80; max-width: 40%; }
+#ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
+
+/* Make sure landing UI sits below the header */
+#landing .landingUI{ }
+/* ===================== v768 UI FIXES (requested) ===================== */
+/* Hide Lobby Setup button (requested) */
+/* Uniform pill buttons (size/shape) */
+.pill{
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+/* Prevent text from colliding into buttons in lists */
+.leftStack{ min-width: 0; }
+
+/* Picker rows: truncate long name/email, keep button fixed */
+.pickerRow > div{ min-width: 0; }
+.pickerRow .nm, .pickerRow .em{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+/* v768: move setup/waiting panels down slightly so the glass doesn't run into the logo */
+#setup .detailWrap, #waiting .detailWrap{
+  top: clamp(210px, 26vh, 340px);
+}
+
+/* v768: waiting room typography + centering */
+#waiting .detailBody{
+  text-align: center;
+}
+.waitRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+.waitLeft{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.waitName{
+  font-weight: 1050;
+  font-size: 20px;
+  letter-spacing: .2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.waitMeta{
+  opacity:.78;
+  font-weight:900;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.statusIcon{
+  width: 22px;
+  text-align:center;
+  font-size: 16px;
+  font-weight: 1100;
+}
+.statusIcon.ok{ color: rgba(90,255,170,.95); }
+.statusIcon.wait{ color: rgba(255,210,90,.95); }
+.statusIcon.no{ color: rgba(255,120,120,.95); }
+    .actions{ width:100%; }
+    .actions .pill{ flex:1; text-align:center; }
+
+    /* v771: Item lines show label ABOVE buttons (so game/player names are visible) */
+    .itemLine{
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      padding: 14px 6px;
+      border-bottom: 1px solid rgba(255,255,255,.18); /* slightly stronger divider */
+    }
+    .leftStack{
+      width: 100%;
+      justify-content: center;
+    }
+    .gameLabelWrap{ justify-content:center; width:100%; }
+    .actions{
+      width:100%;
+    }
+    .actions .pill{
+      flex:1;
+      text-align:center;
+    }
+
+/* Header: remove pill */
+#ngHeaderBar{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+#ngHeaderBar::before{ display:none !important; }
+#ngHeaderBar .ngTitle{
+  color: #d7b24a !important;
+  font-weight: 1000;
+  letter-spacing: .4px;
+  text-shadow: 0 2px 10px rgba(0,0,0,.75);
+}
+#ngHeaderBar .ngVer{
+  color: rgba(0,210,255,.95) !important;
+  font-weight: 1000;
+  text-shadow: 0 2px 10px rgba(0,0,0,.75);
+}
+#ngHeaderBar .ngOnline, #ngHeaderRight{
+  color: rgba(60,255,160,.98) !important;
+  font-weight: 1000;
+  text-shadow: 0 2px 10px rgba(0,0,0,.75);
+}
+
+/* Landing pads positioned to match the artwork's email & enter fields */
+#landing #landingPads{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(640px,92vw);
+  max-width:640px;
+  bottom:max(70px, calc(env(safe-area-inset-bottom) + 60px));
+  display:grid;
+  gap:10px;
+  z-index:5;
+  pointer-events:none;
+}
+
+/* Email pad slightly smaller than ENTER */
+#landing #emailPad{
+  position:relative;
+  height:64px;
+  pointer-events:auto;
+}
+#landing #emailInput{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  border:0;
+  outline:none;
+  background:transparent;
+  color:transparent;
+  caret-color:transparent;
+}
+#landing #emailEcho{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:17px;
+  font-weight:1000;
+  letter-spacing:.6px;
+  color:rgba(255,255,255,.95);
+  text-shadow:0 2px 12px rgba(0,0,0,.85), 0 0 18px rgba(0,0,0,.55);
+  pointer-events:none;
+  user-select:none;
+}
+#landing #enterBtn{
+  height:72px;
+  border:0;
+  background:transparent;
+  border-radius:22px;
+  opacity:0;
+  pointer-events:auto;
+  cursor:pointer;
+}
+
+/* Single hint line */
+#landing .landingHint{
+  text-align:center;
+  font-size:12px;
+  font-weight:900;
+  opacity:.86;
+  pointer-events:none;
+}
+
+/* Footer */
+#landing #landingFoot{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:max(10px, env(safe-area-inset-bottom));
+  width:min(900px, 96vw);
+  text-align:center;
+  z-index:6;
+  pointer-events:none;
+}
+#landing .landingFooter{
+  font-size:12px;
+  font-weight:800;
+  opacity:.80;
+  line-height:1.25;
+}
+#landing .landingCopy{
+  margin-top:4px;
+  font-size:10px;
+  font-weight:800;
+  opacity:.62;
+  letter-spacing:.2px;
+}
+
+/* Make the invisible pads match the stage width and sit a little lower */
+
+#landing #landingPads{
+  width: var(--padWidth) !important;
+  bottom: var(--padsBottom) !important;
+  gap: 12px !important;
+}
+#landing #emailPad{
+  height: var(--emailH) !important;
+}
+#landing #enterBtn{
+  width: 100% !important;
+  height: var(--enterH) !important;
+  border-radius: 28px !important;
+}
+#landing #emailEcho{
+  font-size: 18px !important;
+}
+
+/* Move the white email text + hint down together */
+ /* tweak if needed */
+#landing #emailEcho,
+#landing #statusLine{
+  transform: translateX(-50%) translateY(var(--ngTextDrop)) !important;
+}
+
+/* Show clear (semi-transparent) pads so you can see/align them */
+#landing #emailPad{
+  outline: 2px solid rgba(255,255,255,.28) !important;
+  background: rgba(255,255,255,.06) !important;
+  border-radius: 22px !important;
+}
+#landing #enterBtn{
+  opacity: 1 !important;
+  outline: 2px solid rgba(255,255,255,.28) !important;
+  background: rgba(255,255,255,.05) !important;
+  border-radius: 22px !important;
+}
+
+/* Same size + stage width */
+#landing #landingPads{
+  gap: var(--ngPadGap) !important;
+}
+#landing #emailPad,
+#landing #enterBtn{
+  width: 100% !important;
+  height: var(--ngPadH) !important;
+  border-radius: var(--ngPadsRadius) !important;
+}
+
+/* Crystal-clear glass look */
+#landing #emailPad,
+#landing #enterBtn{
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.06)) !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+  box-shadow:
+    0 12px 34px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.40),
+    inset 0 -1px 0 rgba(255,255,255,.16) !important;
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+}
+
+/* remove the old outline styling from */
+#landing #emailPad{ outline: none !important; }
+#landing #enterBtn{ outline: none !important; opacity: 1 !important; }
+
+/* Keep email text centered INSIDE top pad */
+#landing #emailEcho{
+  transform: translateY(0px) !important;
+  font-size: 18px !important;
+}
+
+/* Put hint INSIDE the enter pad, under ENTER */
+#landing #enterBtn{
+  position: relative;
+  padding: 0 !important;
+}
+#landing #enterBtn .enterText{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-62%);
+  font-size: 28px;
+  font-weight: 1000;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 2px 14px rgba(0,0,0,.55);
+  pointer-events:none;
+}
+#landing #enterBtn .enterSub{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform: translate(-50%, 30%);
+  width: 92%;
+  text-align:center;
+  font-size: 12px;
+  font-weight: 900;
+  opacity: .86;
+  color: rgba(255,255,255,.88);
+  text-shadow: 0 2px 12px rgba(0,0,0,.55);
+  pointer-events:none;
+}
+
+/* Nudge email+enter group down a touch more without breaking footer */
+#landing #landingPads{
+  bottom:max(58px, calc(env(safe-area-inset-bottom) + 48px)) !important;
+}
+
+/* Move pad stack UP a bit (increase bottom) */
+#landing #landingPads{
+  bottom:max(78px, calc(env(safe-area-inset-bottom) + 70px)) !important;
+}
+
+/* Smaller width + consistent sizing */
+#landing #emailPad,
+#landing #enterBtn{
+  width: var(--ngPadW) !important;
+  height: var(--ngPadH) !important;
+  border-radius: var(--ngPadsRadius) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+/* Crystal-clear beveled glass (no tint) */
+#landing #emailPad,
+#landing #enterBtn{
+  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.035)) !important;
+  border: 1px solid rgba(255,255,255,.34) !important;
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -1px 0 rgba(255,255,255,.18),
+    inset 1px 0 0 rgba(255,255,255,.18),
+    inset -1px 0 0 rgba(255,255,255,.18) !important;
+  backdrop-filter: blur(8px) saturate(110%);
+  -webkit-backdrop-filter: blur(8px) saturate(110%);
+}
+
+/* Keep email text centered inside top pad */
+#landing #emailEcho{
+  font-size: 17px !important;
+}
+
+/* ENTER + subtext scale down slightly to fit smaller pad */
+#landing #enterBtn .enterText{
+  font-size: 24px !important;
+  transform: translate(-50%,-64%) !important;
+}
+#landing #enterBtn .enterSub{
+  font-size: 11px !important;
+  transform: translate(-50%, 36%) !important;
+}
+
+/* Move pads UP slightly */
+#landing #landingPads{
+  bottom:max(110px, calc(env(safe-area-inset-bottom) + 95px)) !important;
+}
+
+/* Crystal clear glass (no color tint at all) */
+#landing #emailPad,
+#landing #enterBtn{
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.55) !important;
+  box-shadow:
+    0 8px 22px rgba(0,0,0,.25),
+    inset 0 2px 6px rgba(255,255,255,.55),
+    inset 0 -2px 6px rgba(255,255,255,.15);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Pad stack position (leave overall where it is) */
+#landing #landingPads{
+  gap: var(--ngGap) !important;
+}
+
+/* Common glass look: crystal clear, shiny, beveled */
+#landing #emailPad,
+#landing #enterBtn{
+  width: var(--ngPadW) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  border-radius: var(--ngPadR) !important;
+  position: relative !important;
+  overflow: hidden !important;
+
+  background: rgba(255,255,255,0.03) !important;   /* clear, not frosted */
+  border: 1px solid rgba(255,255,255,0.55) !important;
+  box-shadow:
+    0 10px 26px rgba(0,0,0,0.26),
+    inset 0 2px 10px rgba(255,255,255,0.55),
+    inset 0 -2px 8px rgba(255,255,255,0.14),
+    inset 1px 0 0 rgba(255,255,255,0.18),
+    inset -1px 0 0 rgba(255,255,255,0.18) !important;
+
+  backdrop-filter: blur(5px) saturate(115%);
+  -webkit-backdrop-filter: blur(5px) saturate(115%);
+}
+
+/* Beveled sparkle highlight */
+#landing #emailPad::before,
+#landing #enterBtn::before{
+  content:"";
+  position:absolute;
+  left:-15%;
+  top:-55%;
+  width:130%;
+  height:90%;
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.22) 32%,
+    rgba(255,255,255,0.06) 52%,
+    rgba(255,255,255,0) 76%);
+  transform: rotate(10deg);
+  pointer-events:none;
+  mix-blend-mode: screen;
+}
+#landing #emailPad::after,
+#landing #enterBtn::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: var(--ngPadR);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.10);
+  pointer-events:none;
+}
+
+/* Sizes */
+#landing #enterBtn{ height: var(--ngEnterH) !important; }
+#landing #emailPad{ height: var(--ngEmailH) !important; transform: translateY(var(--ngEmailLift)) !important; }
+
+/* Keep email text centered inside the email pad */
+#landing #emailEcho{ font-size: 17px !important; }
+
+/* Keep ENTER text readable if present */
+#landing #enterBtn .enterText{
+  font-size: 24px !important;
+  transform: translate(-50%,-62%) !important;
+}
+
+/* ===================== FINAL POLISH ===================== */
+
+/* Slightly increase spacing control */
+#landing #landingPads{
+  gap: var(--ngGap) !important;
+}
+
+/* ENTER button reference */
+#landing #enterBtn{
+  height: var(--ngEnterH) !important;
+}
+
+/* Email smaller + slightly higher */
+#landing #emailPad{
+  height: var(--ngEmailH) !important;
+  transform: translateY(var(--ngEmailLift)) !important;
+}
+
+/* Crystal clear glass (frost removed completely) */
+#landing #emailPad,
+#landing #enterBtn{
+  width: var(--ngPadW) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  border-radius: var(--ngPadR) !important;
+  position: relative !important;
+  overflow: hidden !important;
+
+  background: rgba(255,255,255,0.01) !important;  /* nearly invisible */
+  border: 1px solid rgba(255,255,255,0.65) !important;
+  box-shadow:
+    0 8px 20px rgba(0,0,0,0.22),
+    inset 0 3px 10px rgba(255,255,255,0.65),
+    inset 0 -3px 8px rgba(255,255,255,0.12),
+    inset 1px 0 0 rgba(255,255,255,0.20),
+    inset -1px 0 0 rgba(255,255,255,0.20) !important;
+
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Drop hint text slightly lower */
+#landing #enterBtn .enterSub{
+  transform: translate(-50%, 42%) !important;
+}
+
+/* ===================== PLAYERS READABILITY + ROW LAYOUT ===================== */
+
+/* Move BOTH panels down slightly (harder to read when too high) */
+#players .hub{
+  top: clamp(250px, 34vh, 380px) !important;   /* was 220px/30vh/340px */
+}
+
+/* Make panels easier to read (slightly darker glass + blur) */
+#players
+
+/* Keep names to the LEFT of buttons (override older mobile stacking rules) */
+#players .itemLine{
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+#players .leftStack{
+  justify-content: flex-start !important;
+}
+
+#players .actions{
+  width: auto !important;
+}
+
+/* Make buttons smaller (both sections) */
+#players .actions .pill{
+  flex: 0 0 auto !important;
+  padding: 9px 12px !important;
+  font-size: 12px !important;
+  letter-spacing: 1px;
+}
+
+/* Slightly reduce name size so row fits cleanly */
+#players
+
+/* ===================== DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
+
+/* Frost / glass on RULES/detail panels */
+#detail
+
+/* Give room for footer */
+#detail .detailWrap{
+  padding-bottom: 90px;
+}
+
+/* Scroll inside the rules content panel */
+#detail #detailBody{
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 6px;
+}
+
+/* Footer pinned to bottom of the viewport */
+#detail .detailFooter{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(env(safe-area-inset-bottom) + 12px);
+  text-align: center;
+  font-weight: 900;
+  font-size: 13px;
+  opacity: .88;
+  text-shadow: 0 2px 14px rgba(0,0,0,.65);
+  pointer-events: none;
+  padding: 0 12px;
+}
+
+/* ===================== RULES SCROLL FIX (GRID/FLEX) ===================== */
+
+/* Frost / glass on RULES/detail panels */
+#detail
+
+/* The detailWrap is a grid with 1fr + auto.
+   Make the first panel a flex column so the body can scroll. */
+#detail .detailWrap >
+
+/* Scroll inside the rules content area */
+#detail .detailWrap >
+
+/* Give room for footer */
+#detail .detailWrap{
+  padding-bottom: 90px;
+}
+
+/* Footer pinned to bottom of the viewport */
+#detail .detailFooter{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(env(safe-area-inset-bottom) + 12px);
+  text-align: center;
+  font-weight: 900;
+  font-size: 13px;
+  opacity: .88;
+  text-shadow: 0 2px 14px rgba(0,0,0,.65);
+  pointer-events: none;
+  padding: 0 12px;
+}
+
+/* ===================== PLAYER STATS UI ===================== */
+#detail .statScroll{
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 6px;
+}
+#detail .statSection{
+  margin: 14px 0 16px;
+}
+#detail .statSectionTitle{
+  font-weight: 1000;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  font-size: 12px;
+  opacity: .85;
+  margin-bottom: 8px;
+}
+#detail .statRow{
+  display:flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.12);
+  margin-bottom: 10px;
+}
+#detail .statLabel{
+  font-weight: 1000;
+}
+#detail .statHelp{
+  font-weight: 800;
+  opacity: .70;
+  font-size: 12px;
+  margin-top: 4px;
+}
+#detail .statVal{
+  font-weight: 1100;
+  min-width: 54px;
+  text-align: right;
+  opacity: .95;
+}
+
+/* ===================== SETUP SCROLL + LIGHT FROST ===================== */
+#setup .detailBody{
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* : setup scroll reliability (grid/flex fix like Detail screen) */
+#setup .detailWrap >
+/* Keep setup readable while preserving background */
+
+#setup .detailBody, #setup .detailBody *{
+  text-shadow: 0 1px 2px rgba(0,0,0,.55);
+}
+
+/* ===================== DETAIL BUTTON UNIFORMITY ===================== */
+#detail .pill{
+  height: 44px;
+  padding: 12px 16px !important;
+}
+#detail .detailBody{ box-sizing: border-box; }
+
+/* ===================== HEADER PLAYER NAME ===================== */
+#ngHeaderBar .ngHeaderPlayer{
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.1;
+  letter-spacing: .06em;
+  text-transform: none;
+  font-weight: 1100;
+  color: rgba(60,255,160,.98);
+  text-shadow: 0 2px 12px rgba(0,0,0,.75), 0 0 18px rgba(60,255,160,.22);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 64%;
+}
+
+/* Center/Right widths tuned for 4-span header */
+#ngHeaderBar .ngHeaderLeft{ flex: 0 0 auto; max-width: 35%; }
+#ngHeaderBar .ngHeaderCenter{ flex: 0 0 auto; opacity: .80; max-width: 30%; }
+#ngHeaderBar .ngHeaderRight{ flex: 0 0 auto; opacity: .85; max-width: 20%; }
+
+/* ===================== GLOBAL FOOTER ===================== */
+.globalFooter{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(env(safe-area-inset-bottom) + 10px);
+  text-align: center;
+  font-weight: 900;
+  font-size: 12px;
+  opacity: .86;
+  text-shadow: 0 2px 14px rgba(0,0,0,.65);
+  pointer-events: none;
+  padding: 0 12px;
+  z-index: 9990;
+}
+
+/* ===================== BUTTON SIZING BY CATEGORY ===================== */
+.pill{ height: 44px; }
+.pill
+.pill.pillMini{ height: 34px; }
+
+.statGameBtn{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding: 14px 14px;
+  border-radius: 16px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.16);
+}
+.statGameBtn .r{ opacity:.78; font-weight:900; }
+
+#detail .detailBody .pill{ height:44px; }
+#detail .detailBody .actions .pill{ flex:1; }
+
+/* ===================== RESPONSIVE STAGE FIT ===================== */
+/* On wider/shorter viewports (iPad landscape, desktops), avoid cropping by switching to contain. */
+@media (min-aspect-ratio: 4/3){
+  .screen::before{
+    background-size: contain;
+    background-position: center top;
+  }
+}
+/* On very tall viewports, keep cover for an immersive look while still pinning the top/logo. */
+@media (max-aspect-ratio: 3/4){
+  .screen::before{
+    background-size: cover;
+    background-position: center top;
+  }
+}
+
+/* ===================== HEADER STRIP CENTERING ===================== */
+.ngBottomRow{ position: relative; }
+#ngHeaderPlayer{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 70%;
+  pointer-events: none;
+}
+.ngUpdateBtn{ height:34px; padding:8px 12px; font-size:11px; letter-spacing:1px; }
+
+/* =============================================================================
+   SECTION: HEADER POLISH (NAME / ONLINE / FIREBASE TEXT)
+   - No layout redesign. Pure alignment + typography polish.
+============================================================================= */
+#ngHeaderBar .ngHeaderCenter{
+  font-size: 11px !important;
+  letter-spacing: .25px !important;
+  opacity: .95;
+  white-space: nowrap;
+  text-align: center;
+}
+#ngHeaderRight{
+  display: inline-block;
+  width: 92px;            /* matches Update button footprint */
+  text-align: center;     /* centers "Online" above Update */
+  font-size: 12px !important;
+}
+#ngUpdateBtn{
+  width: 92px;
+}
+
+/* Player name (center) — glass text (no box) */
+#ngHeaderPlayer{
+  font-size: 18px !important;
+  font-weight: 1100 !important;
+  letter-spacing: .6px !important;
+  text-transform: none !important;
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+
+  /* Glassy text finish */
+  color: rgba(90,255,170,.98) !important;
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.55),
+    0 0 12px rgba(90,255,170,.22);
+}
+
+/* =============================================================================
+   SECTION: PLAYER NAME (PREMIUM GLASS TEXT, NO BOX)
+============================================================================= */
+#ngHeaderPlayer{
+  display:block;
+  width:100%;
+  text-align:center !important;
+  font-size: 20px !important;
+  font-weight: 1200 !important;
+  letter-spacing: .85px !important;
+  line-height: 1.1;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  color: rgba(180,255,230,.98) !important;
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.62),
+    0 0 14px rgba(80,255,180,.32);
+}
+@supports (-webkit-background-clip: text){
+  #ngHeaderPlayer{
+    background: linear-gradient(180deg, rgba(210,255,240,1) 0%, rgba(90,255,190,.98) 45%, rgba(25,185,160,.98) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* =============================================================================
+   : PLAYER NAME (PREMIUM, HONOR-THE-PLAYER)
+============================================================================= */
+#ngHeaderPlayer{
+  display:block;
+  width:100%;
+  text-align:center !important;
+  font-size: 20px !important;
+  font-weight: 1200 !important;
+  letter-spacing: .9px !important;
+  line-height: 1.1;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  border: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  color: rgba(220,255,245,.98) !important;
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.62),
+    0 0 14px rgba(80,255,180,.32);
+}
+@supports (-webkit-background-clip: text){
+  #ngHeaderPlayer{
+    background: linear-gradient(180deg, rgba(235,255,248,1) 0%, rgba(110,255,200,.98) 48%, rgba(25,185,160,.98) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* =============================================================================
+   : STABILIZE 1–5 (LAYOUT + SETUP ENTRY SAFETY)
+   1) iPad overlap: push hub down on tablet widths
+   2) Firebase • Firestore: side-by-side, centered, readable (no clipping)
+   3) Default view: show 2 full rows (reduce row height slightly)
+   4) Inline Start: intentionally kept (consistent across games)
+   5) Setup entry error: guarded in JS below
+============================================================================= */
+
+/* Header center: readable, no clipping/ellipsis */
+#ngHeaderBar .ngHeaderCenter{
+  font-size: 11px !important;
+  letter-spacing: .03em !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+#ngHeaderBar > span.ngHeaderCenter{
+  overflow: visible !important;
+}
+
+/* iPad/tablet: avoid hub creeping into logo */
+@media (min-width: 760px){
+  .hub{
+    top: clamp(270px, 26vh, 380px) !important;
+  }
+}
+
+/* Two full items by default: slightly smaller rows */
+.itemLine{
+  padding: 10px 6px !important;
+  line-height: 1.25 !important;
+}
+
+/* =============================================================================
+   : Player Page Name (premium)
+============================================================================= */
+.playerPageName{
+  width:100%;
+  text-align:center;
+  margin: 10px auto 8px auto;
+  font-size: 22px;
+  font-weight: 1200;
+  letter-spacing: .10em;
+  line-height:1.15;
+  color: rgba(220,255,245,.98);
+  text-shadow: 0 1px 0 rgba(0,0,0,.62), 0 0 16px rgba(80,255,180,.34);
+}
+@supports (-webkit-background-clip: text){
+  .playerPageName{
+    background: linear-gradient(180deg, rgba(245,255,250,1) 0%, rgba(120,255,205,.98) 52%, rgba(25,185,160,.98) 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+}
+
+/* =============================================================================
+   : Leaderboard button under Players area (skinny + wide)
+============================================================================= */
+.leaderboardSlot{ display:flex; justify-content:center; margin: 14px 0 8px 0; }
+#players .hub{ grid-template-rows: 1fr 1fr auto; }
+
+.ngWideBtn{ min-width: 260px; padding: 9px 18px !important; letter-spacing: .14em; }
+@media (min-width:760px){ .ngWideBtn{ min-width: 360px; } }
+
+/* =============================================================================
+   : Player Name + Leaderboard placement (Players screen)
+============================================================================= */
+.playerPageName{
+  width: 100%;
+  text-align: center;
+  margin: 10px auto 8px auto;
+  font-size: 22px;
+  font-weight: 1200;
+  letter-spacing: .10em;
+  line-height: 1.15;
+  color: rgba(220,255,245,.98);
+  text-shadow: 0 1px 0 rgba(0,0,0,.62), 0 0 16px rgba(80,255,180,.34);
+}
+@supports (-webkit-background-clip: text){
+  .playerPageName{
+    background: linear-gradient(180deg, rgba(245,255,250,1) 0%, rgba(120,255,205,.98) 52%, rgba(25,185,160,.98) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+.leaderboardSlot{
+  display:flex;
+  justify-content:center;
+  margin: 14px 0 8px 0;
+}
+.ngWideBtn{
+  min-width: 250px;
+  padding: 9px 18px !important;
+  letter-spacing: .14em;
+}
+@media (min-width: 760px){
+  .ngWideBtn{ min-width: 360px; }
+}
+
+/* =============================================================================
+   : Authoritative Scroll System (ALL SCREENS)
+   Goal: Every list/panel that needs scrolling scrolls reliably (iOS safe),
+         while the app shell stays locked (no page-bounce).
+============================================================================= */
+
+/* Keep the app shell locked; scrolling happens inside panels/lists. */
+html, body{
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Prevent a parent overflow rule from killing child scroll. */
+.screen,
+.detailWrap,
+
+/* Standard scroll containers */
+.list,
+.detailBody,
+#gamesList,
+#playersList,
+#setupBody,
+#waitingBody,
+#lobbyBody,
+#detailBody,
+#leaderboardBody,
+#randomizerBody{
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+/* If any list is inside a panel, ensure it can actually take the height. */
+
+/* Safety: avoid accidental scroll disable via pointer-events */
+.list *,
+.detailBody *{
+  pointer-events: auto;
+}
+
+/* =============================================================================
+   : Critical scroll restore for Setup/Waiting + controls alignment
+============================================================================= */
+#setupBody, #waitingBody{
+  max-height: calc(100vh - 320px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#playersList, #gamesList, #setupBody .list, #waitingBody .list{
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.controlsRow3{
+  display:flex;
+  gap:12px;
+  align-items:stretch;
+}
+/* : Setup Control Panel button shape + sizing (match app buttons; no pill-end circles) */
+.controlsRow3 > .cpBtn{
+  border-radius: 14px; /* override .pill 999px */
+}
+.controlsRow3 > .cpOuter{ flex: 1.15 1 0; }
+.controlsRow3 > .cpMid{ flex: 0.85 1 0; }
+.controlsRow3 > .pill{
+  flex: 1 1 0;
+}
+.controlsRow3 > .pill
+.leaderboardSlot{
+  padding: 10px 0 14px 0;
+  display:flex;
+  justify-content:center;
+}
+#leaderboardBtn{
+  width: min(92%, 520px);
+  padding: 8px 12px;
+  font-size: 13px;
+  letter-spacing: .16em;
+  opacity: .88;
+}
+
+/* =============================================================================
+   : GLOBAL FROST PASS (ALL SUBPAGES)
+   Goal: Ensure every major panel has consistent frosted-glass look across screens,
+         including Waiting Room, Lobby, Leaderboard, Randomizer, Detail/Stats.
+   Notes: No behavior changes; visual-only.
+============================================================================= */
+
+#players
+
+/* Give inner scrollers a slightly clearer surface, keep text readable */
+#waiting .detailBody,
+#lobby .detailBody,
+#leaderboard .detailBody,
+#randomizer .detailBody,
+#detail .detailBody{
+  background: rgba(255,255,255,.02);
+  border-radius: 16px;
+}
+
+/* Make section dividers/labels pop consistently on frosted panels */
+#waiting .title,
+#lobby .title,
+#leaderboard .title,
+#randomizer .title,
+#detail .title{
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.18),
+    0 -2px 10px rgba(0,0,0,.70),
+    0 0 22px rgba(0,210,255,.18);
+}
+
+/* ===================== : LEADERBOARD SCROLL FIX =====================
+   Make the first panel a flex column so #leaderboardBody can scroll reliably (iOS grid/flex safe).
+======================================================================= */
+#leaderboard .detailWrap >
+#leaderboard #leaderboardBody{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  padding-right: 6px;
+}
+
+/* ===================== VISUAL CONSISTENCY PASS =====================
+   - Player Stats / Detail panels: match frosted glass style
+   - Waiting Room panels: match frosted glass style
+   - Waiting indicators: green + glow for ALL waiting players
+   - Visual-only (no behavior changes)
+========================================================================= */
+
+#detail
+
+#waiting
+
+/* Waiting-room status icons: make "waiting" glow green */
+.statusIcon.wait{
+  color: rgba(90,255,170,.98) !important;
+  text-shadow: 0 0 14px rgba(90,255,170,.55);
+  filter: drop-shadow(0 0 10px rgba(90,255,170,.45));
+}
+.statusIcon.wait::after{
+  content:"";
+  display:inline-block;
+  width:0; height:0;
+}
+
+/* =============================================================================
+   : FORCE FROST GLASS ON ALL SUBPAGES (stats/detail/waiting/leaderboard/etc.)
+============================================================================= */
+#detail
+
+/* : Waiting-room joined checkmarks MUST glow green (ok + wait) */
+.statusIcon.ok,
+.statusIcon.wait{
+  color: rgba(90,255,170,.98) !important;
+  text-shadow: 0 0 14px rgba(90,255,170,.55) !important;
+  filter: drop-shadow(0 0 10px rgba(90,255,170,.45)) !important;
+}
+
+/* =============================================================================
+   : FINAL VISUAL CONSISTENCY
+   - Waiting status checkmark must glow GREEN
+   - Frosted glass across Waiting / Leaderboard / Player Stats panels
+============================================================================= */
+.statusIcon.ok,
+.statusIcon.wait{
+  color: rgba(90,255,170,.98) !important;
+  text-shadow: 0 0 10px rgba(90,255,170,.55), 0 0 18px rgba(90,255,170,.35) !important;
+}
+.statusIcon.no{
+  text-shadow: 0 0 10px rgba(255,120,120,.45) !important;
+}
+
+/* Frosted glass: unify panel surfaces across all screens */
+
+/* Ensure leaderboard body scrolls */
+#leaderboard .detailBody,
+#leaderboardBody{
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  min-height: 0 !important;
+  flex: 1 1 auto !important;
+}
+#leaderboard .detailWrap{ min-height:0 !important; }
+
+/* =============================================================================
+   : FINAL VISUAL CONSISTENCY (NO LOGIC CHANGES)
+   - Player Stats/Detail + Waiting + Leaderboard + Randomizer match main frosted panels
+   - Waiting status icons (including "wait") glow green
+============================================================================= */
+
+/* Frost/glass consistency across secondary screens */
+#detail
+
+/* Waiting room: make waiting indicator green + glow (applies to everyone) */
+#waiting .statusIcon.ok,
+#waiting .statusIcon.wait{
+  color: rgba(90,255,170,.98) !important;
+  text-shadow: 0 0 12px rgba(90,255,170,.45), 0 0 22px rgba(90,255,170,.22) !important;
+}
+
+/* : randomizer is automatic (no control panel button) */
+#lobbyRandomizeBtn{ display:none !important; }
+
+/* : make main content panels scrollable on mobile */
+#lobby #lobbyBody{
+  max-height: 52vh !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-right: 6px;
+}
+#setup .detailBody{
+  max-height: 62vh !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-right: 6px;
+}
+
+.detailWrap >
+    .detailBody{
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active{
+      -webkit-text-fill-color: rgba(235,245,255,.96);
+      transition: background-color 5000s ease-in-out 0s;
+      box-shadow: 0 0 0px 1000px rgba(255,255,255,.035) inset !important;
+    }
+
+/* : Remove duplicate Setup START buttons (Controls panel only) */
+#setupStartBtn, #setupStartInlineBtn{ display:none !important; }
+
+/* : responsive spacing — prevent content panels overlapping header/logo */
+
+#appMain{ padding-top: calc(var(--headerH) + env(safe-area-inset-top)) !important; }
+@media (min-width: 768px){
+
+}
+
+/* : Invite button feedback */
+#lobbyInviteBtn.inviteActive{
+  animation: ngInvitePulse 0.9s ease-in-out infinite alternate;
+}
+@keyframes ngInvitePulse{
+  from{ filter: brightness(1.0); transform: translateY(0); }
+  to{ filter: brightness(1.35); transform: translateY(-1px); }
+}
+#waitingInviteStatus.inviteOk{
+  color: rgba(90,255,170,.98);
+  text-shadow: 0 0 12px rgba(90,255,170,.35), 0 0 26px rgba(90,255,170,.18);
+}
+
+/* : Consolidation — single control path */
+#setupStartBtn, #setupStartInlineBtn, #lobbyBackBtn{ display:none !important; }
+
+/* : CONTROL PANEL VISIBILITY */
+.controlsRow, .controls, #lobbyControls, #lobbyFooter, #globalFooter { pointer-events: auto !important; }
+button.pill { pointer-events: auto !important; }
+
+/* : CONTROL PANEL THEME */
+.pill
+#lobbyInviteBtn{ background: rgba(43,108,255,0.90) !important; color:#fff !important; }
+
+#setupInviteBtn{ background: rgba(43,108,255,0.90) !important; color:#fff !important; }
+
+/* : Prevent button text overflow on small screens */
+button.pill{
+  font-size: 14px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+/* ===================== PASS 2 (CSS) : CANONICAL PANEL + SCROLL ===================== */
 :root{
-  --bg:#05060a;
-  --panel:#0c1018;
-  --txt:#e8eefc;
-  --muted:rgba(232,238,252,.72);
-  --stroke:rgba(255,255,255,.12);
-  --a:#00d2ff;
-  --b:#ff33a8;
-  --good:#5affaa;
-  --bad:#ff7878;
-  --radius:16px;
+  --ng-panel-bg: rgba(255,255,255,0.08);
+  --ng-panel-brd: rgba(255,255,255,0.15);
+  --ng-panel-radius: 12px;
+  --ng-panel-blur: 12px;
 }
-html,body{height:100%; margin:0; background:var(--bg); color:var(--txt); font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;}
-*{box-sizing:border-box}
-a{color:var(--a)}
-.container{max-width:980px; margin:0 auto; padding:14px 14px 76px;}
-.h1{font-weight:900; letter-spacing:.4px; font-size:20px; margin:6px 0 8px}
-.sub{color:var(--muted); font-size:13px; line-height:1.35}
-.panel{background:rgba(12,16,24,.70); border:1px solid var(--stroke); border-radius:var(--radius); padding:14px; margin:10px 0}
-.row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-.btn{
-  appearance:none; border:1px solid var(--stroke); background:rgba(255,255,255,.07);
-  color:var(--txt); padding:10px 12px; border-radius:999px; font-weight:800; cursor:pointer;
+
+/* Canonical frosted panel */
+.ng-panel{
+  backdrop-filter: blur(var(--ng-panel-blur));
+  -webkit-backdrop-filter: blur(var(--ng-panel-blur));
+  background: var(--ng-panel-bg);
+  border: 1px solid var(--ng-panel-brd);
+  border-radius: var(--ng-panel-radius);
 }
-.btn.primary{border-color:rgba(0,210,255,.45); background:rgba(0,210,255,.14)}
-.btn.secondary{border-color:rgba(255,51,168,.38); background:rgba(255,51,168,.12)}
-.btn.good{border-color:rgba(90,255,170,.42); background:rgba(90,255,170,.12)}
-.btn.warn{border-color:rgba(255,120,120,.42); background:rgba(255,120,120,.10)}
-.btn:active{transform:scale(.98)}
-input,textarea,select{
-  width:100%; padding:11px 12px; border-radius:12px; border:1px solid var(--stroke);
-  background:rgba(0,0,0,.25); color:var(--txt); outline:none;
+
+/* Standard scroll container (iOS safe) */
+.ng-scroll{
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
-label{color:var(--muted); font-size:12px}
-.kv{display:flex; justify-content:space-between; gap:10px; padding:10px 12px; border:1px solid var(--stroke);
-  border-radius:12px; background:rgba(0,0,0,.20); margin-top:8px; font-size:13px}
-.kv span{color:var(--muted); text-align:right}
-.badge{display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid var(--stroke); color:var(--muted); font-size:12px}
-hr{border:none; border-top:1px solid rgba(255,255,255,.08); margin:12px 0}
-.globalFooter{position:fixed; left:0; right:0; bottom:0; padding:10px 14px; background:rgba(5,6,10,.92); border-top:1px solid rgba(255,255,255,.08); color:var(--muted); font-size:12px}
-.fatal{display:none !important}
-pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
+
+/* Map legacy frosted containers to canonical style (dedup target) */
+
+/* Map common scroll shells */
+.rulesScroll, .detailScroll, .setupScroll, .waitingScroll, .leaderboardScroll, .scrollBody{
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Button text containment */
+button, .btn, .pill{
+  line-height: 1.1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.btnAdvance:active, .btn-advance:active{ transform: translateY(1px); }
+
+/* ===================== CANONICAL .btnAdvance (LIT GREEN) ===================== */
+.btnAdvance, .btn-advance{
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(0, 255, 128, 0.14);
+  border: 1px solid rgba(0, 255, 160, 0.35);
+  color: #eafff4;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 0 18px rgba(0, 255, 140, 0.22);
+}
+.btnAdvance:active, .btn-advance:active{ transform: translateY(1px); }
+
+#fatal{display:none !important;}
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1207 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1209 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -79,7 +2013,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1207 MASTER REPORTER ===================== */
+/* ===================== v1209 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -145,7 +2079,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1207</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1209</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -189,7 +2123,7 @@ function ngGuard(label, fn){
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1207</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1209</div>
   </div>
 </section>
 
@@ -285,9 +2219,20 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1207 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1209 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
-
+<div class="fatal" id="fatal">
+<div class="card">
+<h2>Firebase didn’t start</h2>
+<p>This page uses Firebase modules. If you’re on a web link and still see this, the host is blocking module imports or Firebase is blocked.</p>
+<pre id="fatalMsg">No details.</pre>
+</div>
+</div>
+<script nomodule="">
+    // Very old browsers only
+    document.getElementById("fatal").style.display = "flex";
+    document.getElementById("fatalMsg").textContent = "Your browser doesn’t support ES Modules. Use a modern Safari/Chrome.";
+  </script>
 <script>
     // Debug UI toggle
     (function(){
@@ -348,12 +2293,8 @@ function ngGuard(label, fn){
 </script>
 
 <script>
-// ===================== v1207 NO-MODULE BOOTSTRAP =====================
-// Goal: iPhone Safari sometimes skips <!-- Firebase compat (non-module; works on iPhone Safari + GitHub Pages) -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script> on GitHub Pages.
+// ===================== v1209 NO-MODULE BOOTSTRAP =====================
+// Goal: iPhone Safari sometimes skips <script type="module"> on GitHub Pages.
 // This bootstrap loads Firebase via dynamic import inside a plain script, then runs the app.
 
 (function(){
@@ -370,7 +2311,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1207";
+  window.ngBuild = "v1209";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -383,13 +2324,19 @@ function ngGuard(label, fn){
 
   const cfg = (window.firebaseConfig || window.__firebaseConfig || (typeof firebaseConfig!=="undefined" ? firebaseConfig : null));
 
-  const runApp = function(){
+  const runApp = async function(){
+    const {
+      getFirestore,
+      initializeFirestore, memoryLocalCache,
+      doc, setDoc, getDoc, updateDoc, addDoc, getDocs, deleteDoc,
+      collection, onSnapshot, query, where, serverTimestamp
+    } = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js");
 window.ngFirebaseBoot = window.ngFirebaseBoot || {};
 window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1207";
+window.ngBuild = "v1209";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -438,7 +2385,7 @@ const NG_STORE = {
       if(err && dbgErr) dbgErr.textContent = err;
     }
 
-    // ===================== v1207 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1209 FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -3304,7 +5251,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1207 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1209 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
@@ -3424,125 +5371,72 @@ function ngUpdateBtn(){
   };
 
   try{
-    
-    // ---- COMPAT FIREBASE BOOT (no ES modules) ----
-    window.ngFirebaseStatus = "COMPAT_BOOT";
-    dbg("Compat boot","auth: boot","firestore: boot","none");
+    const appUrl  = "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    const authUrl = "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    const fsUrl   = "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-    try{
-      const cfg2 = cfg;
-      if(!cfg2){
-        window.ngFirebaseStatus = "NO_CONFIG";
-        dbg("No firebaseConfig found","auth: missing config","firestore: missing config","Set window.firebaseConfig");
-      }else{
-        try{ if(!firebase.apps || !firebase.apps.length){ firebase.initializeApp(cfg2); } }catch(_e){}
-      }
+    Promise.all([import(appUrl), import(authUrl), import(fsUrl)])
+      .then(([appMod, authMod, fsMod])=>{
+        window.ngFirebaseStatus = "IMPORT_OK";
+        dbg("Imports OK","auth: import ok","firestore: import ok","none");
 
-      // Provide modular-like helpers expected by the app using compat underneath
-      initializeApp = (c)=>{ try{ if(!firebase.apps || !firebase.apps.length){ return firebase.initializeApp(c); } return firebase.app(); }catch(e){ return firebase.app(); } };
+        initializeApp = appMod.initializeApp;
 
-      getAuth = ()=>firebase.auth();
-      signInAnonymously = (auth)=> (auth || firebase.auth()).signInAnonymously();
-      onAuthStateChanged = (auth, cb)=> (auth || firebase.auth()).onAuthStateChanged(cb);
-      signOut = (auth)=> (auth || firebase.auth()).signOut();
+        getAuth = authMod.getAuth;
+        signInAnonymously = authMod.signInAnonymously;
+        onAuthStateChanged = authMod.onAuthStateChanged;
+        signOut = authMod.signOut;
 
-      // Email link auth helpers (if used)
-      window.sendSignInLinkToEmail = window.sendSignInLinkToEmail || ((auth, email, settings)=> (auth || firebase.auth()).sendSignInLinkToEmail(email, settings));
-      window.isSignInWithEmailLink = window.isSignInWithEmailLink || ((auth, link)=> (auth || firebase.auth()).isSignInWithEmailLink(link));
-      window.signInWithEmailLink = window.signInWithEmailLink || ((auth, email, link)=> (auth || firebase.auth()).signInWithEmailLink(email, link));
+        getFirestore = fsMod.getFirestore;
+        initializeFirestore = fsMod.initializeFirestore;
+        memoryLocalCache = fsMod.memoryLocalCache;
 
-      getFirestore = ()=>firebase.firestore();
-      // Provide "serverTimestamp" + increment in modular style
-      serverTimestamp = ()=>firebase.firestore.FieldValue.serverTimestamp();
-      window.increment = window.increment || ((n)=>firebase.firestore.FieldValue.increment(n));
+        doc = fsMod.doc; setDoc = fsMod.setDoc; getDoc = fsMod.getDoc;
+        updateDoc = fsMod.updateDoc; addDoc = fsMod.addDoc; getDocs = fsMod.getDocs; deleteDoc = fsMod.deleteDoc;
 
-      // Refs
-      function _pathFromSegs(segs){
-        return segs.filter(Boolean).join("/").replace(/\/+/g,"/");
-      }
-      collection = (db, ...segs)=>{
-        const d = db || firebase.firestore();
-        const path = _pathFromSegs(segs);
-        return d.collection(path);
-      };
-      doc = (dbOrCol, ...segs)=>{
-        const first = dbOrCol || firebase.firestore();
-        // if passed a CollectionReference
-        if(first && typeof first.doc === "function" && typeof first.collection !== "function"){
-          const id = segs[0];
-          return first.doc(id);
-        }
-        // if passed Firestore instance
-        let d = first;
-        if(segs.length===0) throw new Error("doc() missing path");
-        // Build alternating collection/doc segments
-        let ref = d;
-        for(let i=0;i<segs.length;i++){
-          const seg = segs[i];
-          // even index = collection, odd index = doc id (if exists)
-          if(i===0){
-            ref = d.collection(seg);
-          }else if(i%2===1){
-            ref = ref.doc(seg);
-          }else{
-            ref = ref.collection(seg);
+        collection = fsMod.collection; onSnapshot = fsMod.onSnapshot;
+        query = fsMod.query; where = fsMod.where; serverTimestamp = fsMod.serverTimestamp;
+
+        // expose for debugging / existing code
+        window.ngFirebase = { appMod, authMod, fsMod };
+        window.ngFirebaseApis = {
+          initializeApp, getAuth, signInAnonymously, onAuthStateChanged, signOut,
+          getFirestore, initializeFirestore, memoryLocalCache,
+          doc, setDoc, getDoc, updateDoc, addDoc, getDocs, deleteDoc,
+          collection, onSnapshot, query, where, serverTimestamp
+        };
+
+        try{
+          if(!cfg || !cfg.apiKey){
+            window.ngFirebaseStatus = "CONFIG_MISSING";
+            dbg("Config missing","auth: n/a","firestore: n/a","CONFIG_MISSING (apiKey)");
+          } else {
+            const app = initializeApp(cfg);
+            window.ngApp = app;
+            window.ngAuth = getAuth(app);
+            window.db = getFirestore(app);
+            window.ngFirebaseStatus = "FIREBASE_BOOT_SUCCESS";
+            dbg("Firebase boot success","auth: ready","firestore: ready","none");
           }
+        }catch(e){
+          window.ngFirebaseStatus = "FIREBASE_INIT_FAILED";
+          dbg("Firebase init failed","auth: failed","firestore: failed", String(e && (e.message||e)));
         }
-        // If ended on collection, return a doc with auto id? (rare)
-        if(ref && typeof ref.add === "function" && typeof ref.doc === "function" && (segs.length%2===1)){
-          // ended on collection
-          return ref.doc();
+
+        // Now run the full app code (non-module)
+        try{
+          runApp();
+        }catch(e){
+          dbg("App run failed","auth:?","firestore:?", String(e && (e.message||e)));
+          console.error(e);
         }
-        return ref;
-      };
-
-      setDoc = (docRef, data, options)=>{
-        if(options && options.merge) return docRef.set(data, {merge:true});
-        return docRef.set(data);
-      };
-      getDoc = (docRef)=>docRef.get();
-      updateDoc = (docRef, data)=>docRef.update(data);
-      deleteDoc = (docRef)=>docRef.delete();
-      addDoc = (colRef, data)=>colRef.add(data);
-
-      // Constraints + query
-      const _where = (field, op, value)=>({t:"where", field, op, value});
-      const _orderBy = (field, dir)=>({t:"orderBy", field, dir});
-      const _limit = (n)=>({t:"limit", n});
-      where = _where;
-      window.orderBy = window.orderBy || _orderBy;
-      window.limit = window.limit || _limit;
-
-      query = (colRef, ...constraints)=>{
-        let q = colRef;
-        for(const c of constraints){
-          if(!c) continue;
-          if(c.t==="where") q = q.where(c.field, c.op, c.value);
-          else if(c.t==="orderBy") q = q.orderBy(c.field, c.dir);
-          else if(c.t==="limit") q = q.limit(c.n);
-        }
-        return q;
-      };
-
-      getDocs = (q)=>q.get();
-      onSnapshot = (ref, cb, errCb)=>ref.onSnapshot(cb, errCb);
-
-      window.ngFirebaseStatus = "COMPAT_READY";
-      dbg("Compat ready","auth: ready","firestore: ready","none");
-
-      // Run app
-      try{ runApp(); }catch(e){
-        window.ngFirebaseStatus = "APP_RUN_FAILED";
-        dbg("App run failed","auth:?","firestore:?", String(e && (e.message||e)));
+      })
+      .catch((e)=>{
+        window.ngFirebaseStatus = "IMPORT_FAILED";
+        dbg("Import failed","auth: failed","firestore: failed", String(e && (e.message||e)));
         console.error(e);
-      }
-    }catch(e){
-      window.ngFirebaseStatus = "COMPAT_EXCEPTION";
-      dbg("Compat exception","auth: failed","firestore: failed", String(e && (e.message||e)));
-      console.error(e);
-    }
-
-} catch(e) {
+      });
+  } catch(e) {
     window.ngFirebaseStatus = "BOOTSTRAP_EXCEPTION";
     dbg("Bootstrap exception","auth: failed","firestore: failed", String(e && (e.message||e)));
     console.error(e);
