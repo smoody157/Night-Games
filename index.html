@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- NIGHT GAMES v1099 -->
+<!-- NIGHT GAMES v1101 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>:root vars) • COMPONENTS (
@@ -2076,7 +2076,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1099</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1101</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2120,7 +2120,7 @@ function ngGuard(label, fn){
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1099</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1101</div>
   </div>
 </section>
 
@@ -2216,7 +2216,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1099is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1101is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2288,7 +2288,71 @@ function ngGuard(label, fn){
   });
 })();
 </script>
-<script type="module">
+<script type="module">window.ngBuild = "v1100";
+  window.ngFirebaseStatus = "MODULE_RUNNING";
+  const dbgState = document.getElementById("dbgState");
+  const dbgAuth  = document.getElementById("dbgAuth");
+  const dbgFs    = document.getElementById("dbgFs");
+  const dbgErr   = document.getElementById("dbgErr");
+  const setDbg = (s,a,f,e)=>{ if(s&&dbgState) dbgState.textContent=s; if(a&&dbgAuth) dbgAuth.textContent=a; if(f&&dbgFs) dbgFs.textContent=f; if(e&&dbgErr) dbgErr.textContent=e; };
+
+  setDbg("Module running", "auth: loading", "firestore: loading", "none");
+
+  // Firebase config must exist in this file
+  try {
+    // Dynamic imports so we can catch failures (Safari/GitHub Pages friendly)
+    const appMod  = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js");
+    setDbg(null, "auth: loading", "firestore: loading", "imports: app ok");
+    const authMod = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js");
+    setDbg(null, "auth: loading", "firestore: loading", "imports: auth ok");
+    const fsMod   = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js");
+    setDbg(null, "auth: loading", "firestore: loading", "imports: firestore ok");
+
+    const firebaseConfig = window.firebaseConfig || window.__firebaseConfig;
+    if(!firebaseConfig || !firebaseConfig.apiKey) {
+      window.ngFirebaseStatus = "CONFIG_MISSING";
+      setDbg("Firebase failed", "auth: ?", "firestore: ?", "CONFIG_MISSING (apiKey blank)");
+      throw new Error("firebaseConfig missing/blank");
+    }
+
+    const app = appMod.initializeApp(firebaseConfig);
+    window.ngApp = app;
+
+    const auth = authMod.getAuth(app);
+    window.ngAuth = auth;
+
+    const db = fsMod.getFirestore(app);
+    window.db = db;
+
+    window.ngFirebaseStatus = "FIRESTORE_READY";
+    setDbg("Firebase OK", "auth: ready", "firestore: ready", "none");
+
+    // Optional anonymous sign-in; failure won't block UI
+    try {
+      if(authMod.signInAnonymously) await authMod.signInAnonymously(auth);
+    } catch(e) {}
+
+  } catch(e) {
+    const msg = (e && (e.message||e.code)) ? (e.message||e.code) : String(e);
+    window.ngFirebaseStatus = "FIREBASE_INIT_FAILED: " + msg;
+    setDbg("Firebase failed", "auth: ?", "firestore: ?", window.ngFirebaseStatus);
+  }
+
+
+// === v1101: FULL BELT DIAG WRAPPER ===
+window.ngBuild = "v1101";
+window.__ngAfterFirebaseBoot = async function(){
+  try{
+    if(typeof initializeFirebase === "function"){
+      // initializeFirebase should detect existing window.db/auth and reuse if already set
+      await initializeFirebase();
+    }
+  }catch(e){
+    try{ if(typeof setDbg==="function") setDbg("AfterBoot failed","auth:?","fs:?",""+(e&&e.message||e)); }catch(_e){}
+  }
+};
+
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
@@ -4290,7 +4354,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1099Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1101Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -4866,7 +4930,8 @@ function renderPlayers(list){
     // Start Firebase and wire handlers
     try {
       const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
+      const auth = window.ngAuth || getAuth(app);
+      window.ngAuth = auth;
       
       window.ngFirebaseStatus = "AUTH_INIT";
 // : Auth uses in-memory persistence at init to avoid Safari NotSupportedError.
