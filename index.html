@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Night Games v1128</title>
+<title>Night Games v1130</title>
 <style>
-/* ===================== NIGHT GAMES v1128 (GOLD MASTER) ===================== */
+/* ===================== NIGHT GAMES v1130 (GOLD MASTER) ===================== */
 /*
 ================================================================================
   NIGHT GAMES |  2026-02-28
@@ -37,7 +37,7 @@ THIS BUILD CHANGES:
 */
 /* =============================================================================
  NIGHT GAMES — BUILD BRIEF (DO NOT DELETE)
- Version: v1128 (GOLD MASTER)
+ Version: v1130 (GOLD MASTER)
  Date: 2026-02-28
  Goal: 100% complete, forward-only. No patch layers. No rollback.
 
@@ -2085,6 +2085,20 @@ button, .btn, .pill{
   box-shadow: 0 0 18px rgba(0, 255, 140, 0.22);
 }
 .btnAdvance:active, .btn-advance:active{ transform: translateY(1px); }
+
+/* ==== v1130 ASSET WIRING (repo root) ==== */
+#landing{
+  background: url("./IMG_7390.jpeg") center/cover no-repeat;
+}
+#players{
+  background: url("./IMG_7315.jpeg") center/cover no-repeat;
+}
+/* ======================================= */
+
+
+/* v1130: fallback */
+html,body{ background:#000; }
+
 </style>
 
 </style>
@@ -2182,7 +2196,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer"> v1130</span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2223,11 +2237,7 @@ function ngGuard(label, fn){
 
     <!-- Keep ONLY one hint line (matches artwork intent) -->
 </div>
-
-  <!-- Footer at the foot (separate from hint) -->
-  <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games</div>
-  </div>
+  <!-- landingFoot removed in v1130 (avoid duplicate footer); global footer remains -->
 </section>
 
 <section class="screen" id="players">
@@ -2417,7 +2427,7 @@ const ngLSGet = (k)=>{ try{ return localStorage.getItem(k); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return null; } };
 
-// ===== Firebase Config Guard (v1128) =====
+// ===== Firebase Config Guard (v1130) =====
 // If any required Firebase config field is missing, keep the UI alive in "offline mode"
 // instead of throwing during initializeApp().
 function ngValidateFirebaseConfig(cfg){
@@ -5423,5 +5433,15 @@ function ngUpdateBtn(){
 
 </script>
 
+
+<script>
+(function(){
+  try{
+    window.ngBuild = "v1130";
+    var el = document.querySelector(".ngVer");
+    if(el) el.textContent = " v1130";
+  }catch(_e){}
+})();
+</script>
 </body>
 </html>
