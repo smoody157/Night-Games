@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- NIGHT GAMES v1101 -->
+<!-- NIGHT GAMES v1102 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>:root vars) • COMPONENTS (
@@ -2076,7 +2076,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1101</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1102</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2120,7 +2120,7 @@ function ngGuard(label, fn){
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1101</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1102</div>
   </div>
 </section>
 
@@ -2216,7 +2216,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1101is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1102is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2288,55 +2288,67 @@ function ngGuard(label, fn){
   });
 })();
 </script>
-<script type="module">window.ngBuild = "v1100";
-  window.ngFirebaseStatus = "MODULE_RUNNING";
-  const dbgState = document.getElementById("dbgState");
-  const dbgAuth  = document.getElementById("dbgAuth");
-  const dbgFs    = document.getElementById("dbgFs");
-  const dbgErr   = document.getElementById("dbgErr");
-  const setDbg = (s,a,f,e)=>{ if(s&&dbgState) dbgState.textContent=s; if(a&&dbgAuth) dbgAuth.textContent=a; if(f&&dbgFs) dbgFs.textContent=f; if(e&&dbgErr) dbgErr.textContent=e; };
+<script type="module">
+// ===================== v1102 DIAGNOSTIC MODULE (NO TOP-LEVEL AWAIT) =====================
+window.ngBuild = "v1102";
+window.ngFirebaseStatus = "MODULE_RUNNING";
+const dbgState = document.getElementById("dbgState");
+const dbgAuth  = document.getElementById("dbgAuth");
+const dbgFs    = document.getElementById("dbgFs");
+const dbgErr   = document.getElementById("dbgErr");
+const setDbg = (s,a,f,e)=>{
+  if(s!==null && s!==undefined && dbgState) dbgState.textContent = s;
+  if(a!==null && a!==undefined && dbgAuth)  dbgAuth.textContent  = a;
+  if(f!==null && f!==undefined && dbgFs)    dbgFs.textContent    = f;
+  if(e!==null && e!==undefined && dbgErr)   dbgErr.textContent   = e;
+};
 
-  setDbg("Module running", "auth: loading", "firestore: loading", "none");
+setDbg("Module running", "auth: loading", "firestore: loading", "none");
 
-  // Firebase config must exist in this file
+(function bootstrapFirebase(){
   try {
-    // Dynamic imports so we can catch failures (Safari/GitHub Pages friendly)
-    const appMod  = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js");
-    setDbg(null, "auth: loading", "firestore: loading", "imports: app ok");
-    const authMod = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js");
-    setDbg(null, "auth: loading", "firestore: loading", "imports: auth ok");
-    const fsMod   = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js");
-    setDbg(null, "auth: loading", "firestore: loading", "imports: firestore ok");
+    // Use Promise chain (no top-level await) for older Safari compatibility
+    const appUrl = "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    const authUrl = "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    const fsUrl = "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-    const firebaseConfig = window.firebaseConfig || window.__firebaseConfig;
-    if(!firebaseConfig || !firebaseConfig.apiKey) {
-      window.ngFirebaseStatus = "CONFIG_MISSING";
-      setDbg("Firebase failed", "auth: ?", "firestore: ?", "CONFIG_MISSING (apiKey blank)");
-      throw new Error("firebaseConfig missing/blank");
-    }
+    Promise.all([import(appUrl), import(authUrl), import(fsUrl)])
+      .then(([appMod, authMod, fsMod]) => {
+        setDbg(null, "auth: import ok", "firestore: import ok", "none");
 
-    const app = appMod.initializeApp(firebaseConfig);
-    window.ngApp = app;
+        const cfg = window.firebaseConfig || window.__firebaseConfig || (typeof firebaseConfig !== "undefined" ? firebaseConfig : null);
+        if(!cfg || !cfg.apiKey) {
+          window.ngFirebaseStatus = "CONFIG_MISSING";
+          setDbg("Config missing", "auth: n/a", "firestore: n/a", "CONFIG_MISSING (apiKey)");
+          return;
+        }
 
-    const auth = authMod.getAuth(app);
-    window.ngAuth = auth;
+        const app = appMod.initializeApp(cfg);
+        const auth = authMod.getAuth(app);
+        const db = fsMod.getFirestore(app);
 
-    const db = fsMod.getFirestore(app);
-    window.db = db;
+        window.ngApp = app;
+        window.ngAuth = auth;
+        window.db = db;
+        window.ngFirebaseStatus = "FIREBASE_BOOT_SUCCESS";
+        setDbg("Firebase boot success", "auth: ready", "firestore: ready", "none");
 
-    window.ngFirebaseStatus = "FIRESTORE_READY";
-    setDbg("Firebase OK", "auth: ready", "firestore: ready", "none");
-
-    // Optional anonymous sign-in; failure won't block UI
-    try {
-      if(authMod.signInAnonymously) await authMod.signInAnonymously(auth);
-    } catch(e) {}
-
+        // Continue into full app boot if hook exists
+        if(typeof window.__ngAfterFirebaseBoot === "function") {
+          Promise.resolve(window.__ngAfterFirebaseBoot()).catch((e)=>{
+            setDbg("AfterBoot error", "auth: ready", "firestore: ready", String(e && (e.message||e)));
+          });
+        }
+      })
+      .catch((e) => {
+        window.ngFirebaseStatus = "IMPORT_FAILED";
+        setDbg("Import failed", "auth: failed", "firestore: failed", String(e && (e.message||e)));
+      });
   } catch(e) {
-    const msg = (e && (e.message||e.code)) ? (e.message||e.code) : String(e);
-    window.ngFirebaseStatus = "FIREBASE_INIT_FAILED: " + msg;
-    setDbg("Firebase failed", "auth: ?", "firestore: ?", window.ngFirebaseStatus);
+    window.ngFirebaseStatus = "BOOTSTRAP_EXCEPTION";
+    setDbg("Bootstrap exception", "auth: failed", "firestore: failed", String(e && (e.message||e)));
   }
+})();
 
 
 // === v1101: FULL BELT DIAG WRAPPER ===
@@ -4354,7 +4366,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1101Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1102Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
