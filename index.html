@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1229</title>
-<!-- NIGHT GAMES v1229 -->
+<title>Night Games v1230</title>
+<!-- NIGHT GAMES v1230 -->
 <meta charset="utf-8">
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -53,7 +53,7 @@ hr{border:none; border-top:1px solid rgba(255,255,255,.08); margin:12px 0}
 pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 /* ===========================
-   Landing layout (v1229 spec)
+   Landing layout (v1230 spec)
    =========================== */
 .ngTitleText{ color: var(--ngYellow, #f6c553); font-weight: 1000; letter-spacing:.5px; }
 .ngTitleVer{ color: var(--ngBlue, #39b7ff); font-weight: 1000; margin-left:6px; }
@@ -139,14 +139,14 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Landing polish (v1229)
+   Landing polish (v1230)
    =========================== */
 #app .screen{display:none; min-height:100vh;}
 #app .screen.active{display:block;}
 #landing{position:fixed; inset:0; z-index:50;}
 #landing::before{opacity:1;}
 .landingHeader{
-  position:absolute; left:0; right:0; top:10px;
+  position:absolute; left:0; right:0; top:0px;
   display:flex; align-items:center; justify-content:space-between;
   padding: 12px 18px;
   z-index:60;
@@ -168,7 +168,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 #players .setupCopy{display:none !important;}
 
 /* ===========================
-   Landing micro-align (v1229)
+   Landing micro-align (v1230)
    =========================== */
 #landing::before{ background-position:center center; }
 /* Move controls up slightly */
@@ -181,7 +181,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Landing spacing + clarity (v1229)
+   Landing spacing + clarity (v1230)
    =========================== */
 /* Equalize perceived spacing */
 #landingPads{ 
@@ -205,7 +205,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Landing footer + crystal bevel (v1229)
+   Landing footer + crystal bevel (v1230)
    =========================== */
 #landingCopy{
   text-align:center;
@@ -245,7 +245,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Crystal pill refinement (v1229)
+   Crystal pill refinement (v1230)
    =========================== */
 #emailPad input,
 #enterBtn,
@@ -289,7 +289,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Crystal Clear Pills (v1229)
+   Crystal Clear Pills (v1230)
    =========================== */
 #emailPad input,
 #enterBtn,
@@ -327,7 +327,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Header restore (v1229)
+   Header restore (v1230)
    =========================== */
 .ngTitleText{ color: var(--ngYellow, #f6c553) !important; font-weight: 1000; letter-spacing:.6px; }
 .ngTitleVer{ color: var(--ngBlue, #39b7ff) !important; font-weight: 1000; margin-left:6px; }
@@ -335,7 +335,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Crystal clear pills (cool tint) (v1229)
+   Crystal clear pills (cool tint) (v1230)
    =========================== */
 #emailPad input,
 #enterBtn,
@@ -372,7 +372,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   FORCE footer + crystal pills (v1229)
+   FORCE footer + crystal pills (v1230)
    =========================== */
 #landingFoot{
   position: absolute !important;
@@ -453,7 +453,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   FORCE landing visuals (v1229)
+   FORCE landing visuals (v1230)
    =========================== */
 #landingFoot{
   position:absolute !important;
@@ -498,13 +498,13 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Landing final polish (v1229)
+   Landing final polish (v1230)
    =========================== */
 #landingPads{ bottom: 140px !important; } /* keep layout, just account for footer bar */
 
 
 /* ===========================
-   Melted glass dual-light (v1229)
+   Melted glass dual-light (v1230)
    =========================== */
 #emailInput,
 #enterBtn,
@@ -538,10 +538,28 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
   color:rgba(255,255,255,.75);
 }
 
+
+/* ===========================
+   Cover baked-in artwork area (v1230)
+   =========================== */
+#landingVeil{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(92vw, 620px);
+  bottom: 86px;
+  height: 170px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.38));
+  z-index:55;
+  pointer-events:none;
+}
+#landingPads{ z-index:60 !important; }
+
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1229 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1230 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -569,7 +587,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1229 MASTER REPORTER ===================== */
+/* ===================== v1230 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -634,7 +652,7 @@ function ngGuard(label, fn){
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle"><span class="ngTitleText">Night Games</span> <span class="ngTitleVer">v1229</span></span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle"><span class="ngTitleText">Night Games</span> <span class="ngTitleVer">v1230</span></span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -670,6 +688,7 @@ function ngGuard(label, fn){
     <div class="ngOnline">ONLINE</div>
   </div>
   <!-- : target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+  <div id="landingVeil"></div>
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder="player@example.com"/ style="width:94%;margin:0 auto;display:block;text-align:center;height:44px;padding:10px 14px;border-radius:999px;background-image:radial-gradient(140px 70px at 25% 18%, rgba(255,255,255,.22), transparent 62%),linear-gradient(180deg, rgba(57,183,255,.16) 0%, rgba(255,255,255,.02) 42%, rgba(255,255,255,.035) 100%);background-color:rgba(255,255,255,.01);border:1px solid rgba(255,255,255,.28);color:rgba(255,255,255,.96);backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);box-shadow:inset 0 2px 0 rgba(255,255,255,.78), inset 0 -2px 0 rgba(0,0,0,.18), 0 18px 46px rgba(0,0,0,.44);" >
@@ -780,7 +799,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1229 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1230 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 
 <script>
@@ -843,7 +862,7 @@ function ngGuard(label, fn){
 </script>
 
 <script>
-// ===================== v1229 NO-MODULE BOOTSTRAP =====================
+// ===================== v1230 NO-MODULE BOOTSTRAP =====================
 // Goal: iPhone Safari sometimes skips <!-- Firebase compat (non-module; works on iPhone Safari + GitHub Pages) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -865,7 +884,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1229";
+  window.ngBuild = "v1230";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -884,7 +903,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1229";
+window.ngBuild = "v1230";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -933,7 +952,7 @@ const NG_STORE = {
       if(err && dbgErr) dbgErr.textContent = err;
     }
 
-    // ===================== v1229 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1230 FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -3799,7 +3818,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1229 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1230 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
@@ -4049,7 +4068,7 @@ function ngUpdateBtn(){
 
 <script>
 
-/* ===== Landing wiring v1229 ===== */
+/* ===== Landing wiring v1230 ===== */
 (function(){
   function setLandingBg(url){
     try{ document.documentElement.style.setProperty('--landingBg', 'url("'+url+'")'); }catch(e){}
@@ -4109,11 +4128,11 @@ email.addEventListener('focus', introOnce, {passive:true});
 
 </script>
 
-<script>console.log('Night Games v1229 loaded');</script>
+<script>console.log('Night Games v1230 loaded');</script>
 
 <script>
-/* ===== Version + landing enforce (v1229) ===== */
-const APP_VERSION = "v1229";
+/* ===== Version + landing enforce (v1230) ===== */
+const APP_VERSION = "v1230";
 (function(){
   function setText(sel, txt){ const el=document.querySelector(sel); if(el) el.textContent=txt; }
   function setAll(sel, txt){ document.querySelectorAll(sel).forEach(el=>el.textContent=txt); }
@@ -4128,7 +4147,7 @@ const APP_VERSION = "v1229";
 
 
 <script>
-/* ===== Cache/ServiceWorker reset (v1229) ===== */
+/* ===== Cache/ServiceWorker reset (v1230) ===== */
 (function(){
   try {
     if ('serviceWorker' in navigator) {
@@ -4137,16 +4156,16 @@ const APP_VERSION = "v1229";
     if (window.caches && caches.keys) {
       caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
     }
-    console.log('Night Games v1229 cache reset ran');
+    console.log('Night Games v1230 cache reset ran');
   } catch(e) {}
 })();
 </script>
 
 
 <script>
-/* ===== Hard Enforcer (v1229) ===== */
+/* ===== Hard Enforcer (v1230) ===== */
 (function(){
-  const APP_VERSION = "v1229";
+  const APP_VERSION = "v1230";
   // 1) Version: replace any visible v12xx token in header area
   try {
     document.querySelectorAll('.ngTitleVer,[data-app-version]').forEach(el=>el.textContent = APP_VERSION.toUpperCase());
@@ -4215,9 +4234,9 @@ const APP_VERSION = "v1229";
 
 
 <script>
-/* ===== Landing lock (v1229) ===== */
+/* ===== Landing lock (v1230) ===== */
 (function(){
-  const APP_VERSION = "v1229";
+  const APP_VERSION = "v1230";
   // Header: find a header container and ensure NG title + version + online colors
   function ensureHeader(){
     const hdr = document.querySelector('#landingHeader,.landingHeader,#topbar,header,.header');
@@ -4268,7 +4287,7 @@ const APP_VERSION = "v1229";
 
 
 <script>
-/* ===== Footer reposition (v1229) ===== */
+/* ===== Footer reposition (v1230) ===== */
 (function(){
   const landing = document.getElementById('landing');
   if(!landing) return;
