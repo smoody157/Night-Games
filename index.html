@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1223</title>
-<!-- NIGHT GAMES v1223 -->
+<title>Night Games v1224</title>
+<!-- NIGHT GAMES v1224 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -50,7 +50,7 @@ hr{border:none; border-top:1px solid rgba(255,255,255,.08); margin:12px 0}
 pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 /* ===========================
-   Landing layout (v1223 spec)
+   Landing layout (v1224 spec)
    =========================== */
 .ngTitleText{ color: var(--ngYellow, #f6c553); font-weight: 1000; letter-spacing:.5px; }
 .ngTitleVer{ color: var(--ngBlue, #39b7ff); font-weight: 1000; margin-left:6px; }
@@ -136,7 +136,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Landing polish (v1223)
+   Landing polish (v1224)
    =========================== */
 #app .screen{display:none; min-height:100vh;}
 #app .screen.active{display:block;}
@@ -165,7 +165,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 #players .setupCopy{display:none !important;}
 
 /* ===========================
-   Landing micro-align (v1223)
+   Landing micro-align (v1224)
    =========================== */
 #landing::before{ background-position:center center; }
 /* Move controls up slightly */
@@ -178,7 +178,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Landing spacing + clarity (v1223)
+   Landing spacing + clarity (v1224)
    =========================== */
 /* Equalize perceived spacing */
 #landingPads{ 
@@ -202,7 +202,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Landing footer + crystal bevel (v1223)
+   Landing footer + crystal bevel (v1224)
    =========================== */
 #landingCopy{
   text-align:center;
@@ -242,7 +242,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Crystal pill refinement (v1223)
+   Crystal pill refinement (v1224)
    =========================== */
 #emailPad input,
 #enterBtn,
@@ -286,7 +286,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Crystal Clear Pills (v1223)
+   Crystal Clear Pills (v1224)
    =========================== */
 #emailPad input,
 #enterBtn,
@@ -324,7 +324,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Header restore (v1223)
+   Header restore (v1224)
    =========================== */
 .ngTitleText{ color: var(--ngYellow, #f6c553) !important; font-weight: 1000; letter-spacing:.6px; }
 .ngTitleVer{ color: var(--ngBlue, #39b7ff) !important; font-weight: 1000; margin-left:6px; }
@@ -332,7 +332,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Crystal clear pills (cool tint) (v1223)
+   Crystal clear pills (cool tint) (v1224)
    =========================== */
 #emailPad input,
 #enterBtn,
@@ -369,7 +369,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   FORCE footer + crystal pills (v1223)
+   FORCE footer + crystal pills (v1224)
    =========================== */
 #landingFoot{
   position: absolute !important;
@@ -448,10 +448,55 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 #landing #enterBtn{ font-weight: 1000 !important; letter-spacing: .9px !important; }
 #landing #landingLeaderboardBtn{ font-weight: 900 !important; letter-spacing: .7px !important; }
 
+
+/* ===========================
+   FORCE landing visuals (v1224)
+   =========================== */
+#landingFoot{
+  position:absolute !important;
+  left:0 !important; right:0 !important;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 6px) !important;
+  z-index: 99999 !important;
+  display:block !important;
+  text-align:center !important;
+}
+#landingCopy{
+  display:block !important;
+  color: rgba(255,255,255,.92) !important;
+  font-weight: 900 !important;
+  font-size: 13px !important;
+  opacity: .90 !important;
+  padding: 0 14px !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,.60) !important;
+}
+/* Crystal clear pill glass: very transparent with cool-blue frost at top bevel */
+#landing #emailPad input,
+#landing #enterBtn,
+#landing #landingLeaderboardBtn{
+  border-radius: 999px !important;
+  background-image:
+    radial-gradient(140px 70px at 25% 18%, rgba(255,255,255,.22), transparent 62%),
+    linear-gradient(180deg,
+      rgba(57,183,255,.16) 0%,
+      rgba(255,255,255,.02) 42%,
+      rgba(255,255,255,.035) 100%) !important;
+  background-color: rgba(255,255,255,.01) !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+  backdrop-filter: blur(14px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.78),
+    inset 0 -2px 0 rgba(0,0,0,.18),
+    0 18px 46px rgba(0,0,0,.44) !important;
+  color: rgba(255,255,255,.96) !important;
+}
+#landing #emailPad input{ text-align:center !important; }
+#landing #emailPad input::placeholder{ color: rgba(255,255,255,.72) !important; text-align:center; }
+
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1223 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1224 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -479,7 +524,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1223 MASTER REPORTER ===================== */
+/* ===================== v1224 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -544,7 +589,7 @@ function ngGuard(label, fn){
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle"><span class="ngTitleText">Night Games</span> <span class="ngTitleVer">v1223</span></span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle"><span class="ngTitleText">Night Games</span> <span class="ngTitleVer">v1224</span></span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -690,7 +735,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1223 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1224 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 
 <script>
@@ -753,7 +798,7 @@ function ngGuard(label, fn){
 </script>
 
 <script>
-// ===================== v1223 NO-MODULE BOOTSTRAP =====================
+// ===================== v1224 NO-MODULE BOOTSTRAP =====================
 // Goal: iPhone Safari sometimes skips <!-- Firebase compat (non-module; works on iPhone Safari + GitHub Pages) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -775,7 +820,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1223";
+  window.ngBuild = "v1224";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -794,7 +839,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1223";
+window.ngBuild = "v1224";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -843,7 +888,7 @@ const NG_STORE = {
       if(err && dbgErr) dbgErr.textContent = err;
     }
 
-    // ===================== v1223 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1224 FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -2780,7 +2825,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1214Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1224Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -3709,7 +3754,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1223 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1224 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
@@ -3959,7 +4004,7 @@ function ngUpdateBtn(){
 
 <script>
 
-/* ===== Landing wiring v1223 ===== */
+/* ===== Landing wiring v1224 ===== */
 (function(){
   function setLandingBg(url){
     try{ document.documentElement.style.setProperty('--landingBg', 'url("'+url+'")'); }catch(e){}
@@ -4019,6 +4064,22 @@ email.addEventListener('focus', introOnce, {passive:true});
 
 </script>
 
-<script>console.log('Night Games v1223 loaded');</script>
+<script>console.log('Night Games v1224 loaded');</script>
+
+<script>
+/* ===== Version + landing enforce (v1224) ===== */
+const APP_VERSION = "v1224";
+(function(){
+  function setText(sel, txt){ const el=document.querySelector(sel); if(el) el.textContent=txt; }
+  function setAll(sel, txt){ document.querySelectorAll(sel).forEach(el=>el.textContent=txt); }
+  // Version in any header/footer locations
+  setAll('.ngTitleVer', APP_VERSION.toUpperCase());
+  setAll('[data-app-version]', APP_VERSION);
+  // Footer text enforce
+  const lc=document.getElementById('landingCopy');
+  if(lc) lc.textContent = '© 2026 The Dart Room. Night Games is owned and operated by The Dart Room. All rights reserved.';
+})();
+</script>
+
 </body>
 </html>
