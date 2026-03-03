@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1212</title>
-<!-- NIGHT GAMES v1212 -->
+<title>Night Games v1214</title>
+<!-- NIGHT GAMES v1214 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -49,64 +49,95 @@ hr{border:none; border-top:1px solid rgba(255,255,255,.08); margin:12px 0}
 .fatal{display:none !important}
 pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
-#fatal,.fatal{display:none !important;}
+/* ===========================
+   Landing layout (v1214 spec)
+   =========================== */
+.ngTitleText{ color: var(--ngYellow, #f6c553); font-weight: 1000; letter-spacing:.5px; }
+.ngTitleVer{ color: var(--ngBlue, #39b7ff); font-weight: 1000; margin-left:6px; }
+.ngOnline{ color: var(--ngGreen, #3cff7a) !important; }
 
-/* ===== Landing polish v1212 ===== */
-#dbg{display:none;}
-body.debug #dbg{display:block;}
 #landing{
-  position:relative;
-  min-height:100vh;
+  position: absolute; inset: 0;
   background: #000;
-  background-size: cover;
-  background-position:center;
-  background-repeat:no-repeat;
 }
 #landing::before{
   content:"";
   position:absolute; inset:0;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,.05), rgba(0,0,0,.55));
-  pointer-events:none;
+  background: var(--landingBg, radial-gradient(1200px 800px at 50% 10%, rgba(255,255,255,.10), transparent 55%));
+  background-size: cover;
+  background-position: center top;
+  filter: none;
 }
-#landingPads{position:relative; z-index:2;}
-.padEmail input{
-  font-size:16px !important;
-  background: rgba(255,255,255,.12) !important;
-  border: 1px solid rgba(255,255,255,.22) !important;
+#landingPads{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(92vw, 620px);
+  bottom:72px; /* sits above footer */
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  z-index:3;
+}
+#emailPad{
+  width:100%;
+}
+#emailPad input{
+  width:100%;
+  height:44px;
+  padding: 10px 14px;
+  font-size:16px; /* prevent iOS zoom */
+  color: rgba(255,255,255,.95);
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 14px;
+  outline:none;
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 999px !important;
-  padding: 16px 18px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 10px 26px rgba(0,0,0,.35);
 }
-#emailEcho{display:none !important;}
+#emailPad input::placeholder{ color: rgba(255,255,255,.70); }
+#emailEcho{ display:none !important; }
+
 #enterBtn, #landingLeaderboardBtn{
-  width: min(520px, 92vw);
-  margin: 12px auto 0 auto;
-  display:block;
-  border-radius: 999px;
-  border:1px solid rgba(255,255,255,.22);
-  background: rgba(255,255,255,.12);
-  color: var(--txt);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.20);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 14px;
+  background: rgba(255,255,255,.10);
+  color: rgba(255,255,255,.95);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 10px 26px rgba(0,0,0,.35);
+  cursor:pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-#enterBtn{padding: 18px 18px;}
+#enterBtn{
+  height:44px;
+  font-weight: 900;
+  letter-spacing: .8px;
+  font-size: 16px;
+}
+#enterBtn .enterSub{ display:none; }
 #landingLeaderboardBtn{
-  padding: 14px 18px;
-  font-weight:800;
-  letter-spacing:.06em;
-  text-transform:uppercase;
+  height:36px;
+  width:50%;
+  margin: 0 auto;
+  font-weight: 800;
+  letter-spacing: .6px;
+  font-size: 14px;
+  opacity: .92;
 }
-#enterBtn:active, #landingLeaderboardBtn:active{
-  transform: translateY(1px);
+
+#landingFoot{
+  position:absolute;
+  left:0; right:0;
+  bottom: 18px;
+  z-index:3;
+  text-align:center;
 }
-#landingFoot{position:relative; z-index:2;}
+#landingCopy{ text-align:center; opacity:.78; font-size:13px; }
 
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1212 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1214 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -134,7 +165,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1212 MASTER REPORTER ===================== */
+/* ===================== v1214 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -200,7 +231,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1212</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle"><span class="ngTitleText">Night Games</span> <span class="ngTitleVer">v1214</span></span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -228,15 +259,14 @@ function ngGuard(label, fn){
 </div>
 </div>
 <div id="app">
-<audio id="introAudio" preload="auto"></audio>
-
 
 <section class="screen active" id="landing">
   <!-- : target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
       <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder=""/>
-</div>
+      <div id="emailEcho">player@example.com</div>
+    </div>
 
     <button id="enterBtn" type="button" aria-label="Enter"><span class="enterText">ENTER</span><span class="enterSub" id="statusLine">Email-only sign-in (no password). Firebase stable build.</span></button>
 
@@ -247,7 +277,7 @@ function ngGuard(label, fn){
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1212</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1214</div>
   </div>
 </section>
 
@@ -343,7 +373,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1212 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1214 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 
 <script>
@@ -406,7 +436,7 @@ function ngGuard(label, fn){
 </script>
 
 <script>
-// ===================== v1212 NO-MODULE BOOTSTRAP =====================
+// ===================== v1214 NO-MODULE BOOTSTRAP =====================
 // Goal: iPhone Safari sometimes skips <!-- Firebase compat (non-module; works on iPhone Safari + GitHub Pages) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -428,7 +458,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1212";
+  window.ngBuild = "v1214";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -447,7 +477,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1212";
+window.ngBuild = "v1214";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -496,7 +526,7 @@ const NG_STORE = {
       if(err && dbgErr) dbgErr.textContent = err;
     }
 
-    // ===================== v1212 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1214 FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -2433,7 +2463,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1204Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1214Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -3362,7 +3392,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1212 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1214 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
@@ -3611,67 +3641,65 @@ function ngUpdateBtn(){
 
 
 <script>
+
+/* ===== Landing wiring v1214 ===== */
 (function(){
-  try{
-    if(new URLSearchParams(location.search).has('debug')) document.body.classList.add('debug');
-  }catch(e){}
-
-  // Landing background asset auto-detect (tries common repo locations)
-  const candidates = [];
-  const bases = ["", "assets/", "img/", "images/"];
-  const names = ["7390","7390.jpg","7390.jpeg","7390.png","IMG_7390.JPG","IMG_7390.jpg","IMG_7390.JPEG","IMG_7390.jpeg","IMG_7390.PNG","IMG_7390.png"];
-  bases.forEach(b=>names.forEach(n=>candidates.push(b+n)));
-
-  function tryBg(i){
+  function setLandingBg(url){
+    try{ document.documentElement.style.setProperty('--landingBg', 'url("'+url+'")'); }catch(e){}
+  }
+  const candidates = [
+    "7390.jpg","7390.jpeg","7390.png",
+    "IMG_7390.jpg","IMG_7390.jpeg","IMG_7390.PNG","IMG_7390.JPG",
+    "assets/7390.jpg","assets/7390.jpeg","assets/7390.png",
+    "img/7390.jpg","images/7390.jpg"
+  ];
+  (function tryNext(i){
     if(i>=candidates.length) return;
-    const src = candidates[i];
-    const img = new Image();
-    img.onload = ()=>{ const el=document.getElementById('landing'); if(el) el.style.backgroundImage = `url(${src})`; };
-    img.onerror = ()=>tryBg(i+1);
-    img.src = src + (src.includes('?')?'&':'?') + 'v=' + Date.now();
-  }
-  tryBg(0);
+    const u = candidates[i];
+    const im = new Image();
+    im.onload = ()=> setLandingBg(u);
+    im.onerror = ()=> tryNext(i+1);
+    im.src = u + "?cb=" + Date.now();
+  })(0);
 
-  // Intro sound: attempt to load common filenames; play once when email field is first touched/focused.
-  const audio = document.getElementById('introAudio');
-  const audioNames = ["mpa_intro.mp3","mpa_intro.m4a","intro.mp3","intro.m4a","mpa.mp3","mpa.m4a"];
-  const audioCandidates=[];
-  bases.forEach(b=>audioNames.forEach(n=>audioCandidates.push(b+n)));
-  let audioSet=false;
-  function setAudio(i){
-    if(audioSet || !audio) return;
-    if(i>=audioCandidates.length) return;
-    audio.src = audioCandidates[i];
-    audio.load();
-    audio.oncanplaythrough = ()=>{ audioSet=true; };
-    audio.onerror = ()=>setAudio(i+1);
-  }
-  setAudio(0);
+  // Intro sound on first focus/touch of email
+  const email = document.getElementById('emailInput');
+  const enter = document.getElementById('enterBtn');
+  const lb = document.getElementById('landingLeaderboardBtn');
 
-  let played=false;
-  function playIntro(){
-    if(played || !audio) return;
-    played=true;
-    audio.currentTime=0;
-    const p = audio.play();
-    if(p && typeof p.catch==='function') p.catch(()=>{});
-  }
-
-  window.addEventListener('DOMContentLoaded', ()=>{
-    const email = document.getElementById('emailInput');
-    if(email){
-      email.addEventListener('focus', playIntro, {once:true});
-      email.addEventListener('pointerdown', ()=>{ try{ email.focus(); }catch(e){} }, {passive:true});
+  function introOnce(){
+    if(window.ngAudio && typeof window.ngAudio.playIntro === "function"){
+      if(window.ngAudio.introStarted) return;
+      window.ngAudio.introStarted = true;
+      window.ngAudio.playIntro();
     }
-    const lb = document.getElementById('landingLeaderboardBtn');
-    if(lb){
-      lb.addEventListener('click', ()=>{
-        try{ if(typeof show==='function') show('leaderboard'); }catch(e){}
-      });
-    }
-  });
+  }
+  if(email){
+    email.placeholder = "SteveWMoody@yahoo.com";
+    email.addEventListener('focus', introOnce, {passive:true});
+    email.addEventListener('pointerdown', introOnce, {passive:true});
+  }
+  if(enter){
+    enter.addEventListener('click', function(){
+      // For now: go to players hub (your next page) without waiting for Firebase
+      try{
+        document.getElementById('landing')?.classList.remove('active');
+        document.getElementById('players')?.classList.add('active');
+      }catch(e){}
+    });
+  }
+  if(lb){
+    lb.addEventListener('click', function(){
+      // For now: jump to players screen and scroll leaderboard section into view
+      try{
+        document.getElementById('landing')?.classList.remove('active');
+        document.getElementById('players')?.classList.add('active');
+        document.getElementById('leaderboardBtn')?.scrollIntoView({behavior:'smooth', block:'center'});
+      }catch(e){}
+    });
+  }
 })();
-</script>
 
+</script>
 </body>
 </html>
