@@ -10,8 +10,8 @@
 </script>
 <script src="./firebase-config.js"></script>
 
-<title>Night Games v1237</title>
-<!-- NIGHT GAMES v1237 -->
+<title>Night Games v1238</title>
+<!-- NIGHT GAMES v1238 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>:root vars) • COMPONENTS (
@@ -1993,7 +1993,7 @@ button, .btn, .pill{
 #fatal{display:none !important;}
 
 /* ===========================
-   Landing crystal neon polish (v1237)
+   Landing crystal neon polish (v1238)
    =========================== */
 #emailEcho{ display:none !important; }
 /* Move footer up onto image bottom */
@@ -2042,7 +2042,7 @@ button, .btn, .pill{
 
 
 /* ===========================
-   MINIMAL VISUAL PATCH (v1237)
+   MINIMAL VISUAL PATCH (v1238)
    - Footer lifted into image
    - Crystal neon pill buttons
    =========================== */
@@ -2083,13 +2083,13 @@ button, .btn, .pill{
 }
 
 
-/* ===== Offline-friendly fallback (v1237) ===== */
+/* ===== Offline-friendly fallback (v1238) ===== */
 #fatal { display:none !important; }
 #firebaseDidntStart, .firebaseDidntStart, #firebaseNotice { display:none !important; }
 
 
 /* ===========================
-   Landing no-fail patch (v1237)
+   Landing no-fail patch (v1238)
    - Footer up into image
    - Crystal clear neon glass buttons
    =========================== */
@@ -2130,10 +2130,16 @@ button, .btn, .pill{
   color: rgba(255,255,255,0.74) !important;
 }
 
+
+/* ===== Footer de-dupe (v1238) ===== */
+#appFoot, #footer, .footer, .site-footer, #ngFooter {
+  display:none !important;
+}
+
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1237 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1238 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -2161,7 +2167,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1237 MASTER REPORTER ===================== */
+/* ===================== v1238 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -2227,7 +2233,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1237</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1238</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2369,7 +2375,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1237 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1238 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2444,7 +2450,7 @@ function ngGuard(label, fn){
 
 
 <script>
-// ===================== v1237 COMPAT BOOTSTRAP (NO import()) =====================
+// ===================== v1238 COMPAT BOOTSTRAP (NO import()) =====================
 // Purpose: Works on older iOS Safari that can't parse dynamic import() outside modules.
 // Loads Firebase compat UMD builds and exposes ngApp/ngAuth/db.
 
@@ -2462,7 +2468,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1237";
+  window.ngBuild = "v1238";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   window.ngLastError = "none";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
@@ -2516,8 +2522,8 @@ function ngGuard(label, fn){
 
 
 <script>
-/* ===== Version + landing enforce (v1237) ===== */
-window.APP_VERSION = "v1237";
+/* ===== Version + landing enforce (v1238) ===== */
+window.APP_VERSION = "v1238";
 (function(){
   try {
     // header version
@@ -2531,7 +2537,7 @@ window.APP_VERSION = "v1237";
 
 
 <script>
-/* ===== Landing LEADERBOARD button wiring (v1237) ===== */
+/* ===== Landing LEADERBOARD button wiring (v1238) ===== */
 (function(){
   const lb = document.getElementById('landingLeaderboardBtn');
   if(!lb) return;
@@ -2555,7 +2561,7 @@ window.APP_VERSION = "v1237";
 
 
 <script>
-/* ===== UX Guard (v1237) ===== */
+/* ===== UX Guard (v1238) ===== */
 (function(){
   function tick(){
     const fatal = document.getElementById('fatal');
@@ -2575,7 +2581,7 @@ window.APP_VERSION = "v1237";
 
 
 <script>
-/* ===== Landing ENTER override (v1237) ===== */
+/* ===== Landing ENTER override (v1238) ===== */
 (function(){
   function qs(sel){ return document.querySelector(sel); }
   function goHome(){
@@ -2614,7 +2620,7 @@ window.APP_VERSION = "v1237";
 
 
 <script>
-/* ===== Config missing helper (v1237) ===== */
+/* ===== Config missing helper (v1238) ===== */
 (function(){
   function addBadge(){
     if (window.ngFirebaseStatus !== "CONFIG_MISSING") return;
@@ -2624,7 +2630,7 @@ window.APP_VERSION = "v1237";
     const b = document.createElement('div');
     b.id = 'cfgBadge';
     b.style.cssText = "margin-top:8px;padding:10px 12px;border-radius:12px;background:rgba(255,180,0,.12);border:1px solid rgba(255,180,0,.35);color:rgba(255,255,255,.92);font-weight:800;line-height:1.2;";
-    b.textContent = "Firebase config missing. Create /firebase-config.js once (window.firebaseConfig = Ellipsis) so builds stop breaking.";
+    b.textContent = "Firebase config missing. Create /firebase-config.js once (window.firebaseConfig = { ... }) so builds stop breaking.";
     dbg.appendChild(b);
   }
   setTimeout(addBadge, 200);
@@ -2634,7 +2640,7 @@ window.APP_VERSION = "v1237";
 
 
 <script>
-/* ===== Landing no-fail enforce (v1237) ===== */
+/* ===== Landing no-fail enforce (v1238) ===== */
 (function(){
   function apply(){
     try {
@@ -2675,6 +2681,21 @@ window.APP_VERSION = "v1237";
   else apply();
   setTimeout(apply, 200);
   setTimeout(apply, 800);
+})();
+</script>
+
+
+<script>
+/* ===== Footer de-dupe runtime (v1238) ===== */
+(function(){
+  try {
+    const texts = Array.from(document.querySelectorAll('body *')).filter(n=>n && n.children && n.children.length===0 && n.textContent && n.textContent.includes('Night Games is owned and operated by The Dart Room'));
+    // keep the first occurrence, hide the rest
+    for (let i=1;i<texts.length;i++) {
+      const el = texts[i];
+      el.style.display='none';
+    }
+  } catch(e) {}
 })();
 </script>
 
