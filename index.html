@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1226</title>
-<!-- NIGHT GAMES v1226 -->
+<title>Night Games v1228</title>
+<!-- NIGHT GAMES v1228 -->
 <meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 :root{
@@ -50,7 +53,7 @@ hr{border:none; border-top:1px solid rgba(255,255,255,.08); margin:12px 0}
 pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 /* ===========================
-   Landing layout (v1224 spec)
+   Landing layout (v1228 spec)
    =========================== */
 .ngTitleText{ color: var(--ngYellow, #f6c553); font-weight: 1000; letter-spacing:.5px; }
 .ngTitleVer{ color: var(--ngBlue, #39b7ff); font-weight: 1000; margin-left:6px; }
@@ -136,7 +139,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Landing polish (v1224)
+   Landing polish (v1228)
    =========================== */
 #app .screen{display:none; min-height:100vh;}
 #app .screen.active{display:block;}
@@ -165,7 +168,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 #players .setupCopy{display:none !important;}
 
 /* ===========================
-   Landing micro-align (v1224)
+   Landing micro-align (v1228)
    =========================== */
 #landing::before{ background-position:center center; }
 /* Move controls up slightly */
@@ -178,7 +181,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Landing spacing + clarity (v1224)
+   Landing spacing + clarity (v1228)
    =========================== */
 /* Equalize perceived spacing */
 #landingPads{ 
@@ -202,7 +205,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Landing footer + crystal bevel (v1224)
+   Landing footer + crystal bevel (v1228)
    =========================== */
 #landingCopy{
   text-align:center;
@@ -242,7 +245,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Crystal pill refinement (v1224)
+   Crystal pill refinement (v1228)
    =========================== */
 #emailPad input,
 #enterBtn,
@@ -286,7 +289,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Crystal Clear Pills (v1224)
+   Crystal Clear Pills (v1228)
    =========================== */
 #emailPad input,
 #enterBtn,
@@ -324,7 +327,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Header restore (v1224)
+   Header restore (v1228)
    =========================== */
 .ngTitleText{ color: var(--ngYellow, #f6c553) !important; font-weight: 1000; letter-spacing:.6px; }
 .ngTitleVer{ color: var(--ngBlue, #39b7ff) !important; font-weight: 1000; margin-left:6px; }
@@ -332,7 +335,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Crystal clear pills (cool tint) (v1224)
+   Crystal clear pills (cool tint) (v1228)
    =========================== */
 #emailPad input,
 #enterBtn,
@@ -369,7 +372,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   FORCE footer + crystal pills (v1224)
+   FORCE footer + crystal pills (v1228)
    =========================== */
 #landingFoot{
   position: absolute !important;
@@ -450,7 +453,7 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   FORCE landing visuals (v1224)
+   FORCE landing visuals (v1228)
    =========================== */
 #landingFoot{
   position:absolute !important;
@@ -495,106 +498,14 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 
 
 /* ===========================
-   Landing force styles (v1226)
+   Landing final polish (v1228)
    =========================== */
-#app .screen{display:none; min-height:100vh;}
-#app .screen.active{display:block;}
-#landing{position:fixed; inset:0; z-index:50;}
-#landing::before{
-  content:"";
-  position:absolute; inset:0;
-  background: var(--landingBg, #000);
-  background-size: cover;
-  background-position: center top;
-}
-#landingPads{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(92vw, 620px);
-  bottom: 110px;
-  display:flex;
-  flex-direction:column;
-  gap: 14px;
-  z-index:60;
-}
-/* Header colors */
-.landingHeader{
-  position:absolute; left:0; right:0; top:10px;
-  display:flex; justify-content:space-between; align-items:center;
-  padding: 12px 18px;
-  z-index:70;
-  text-transform:uppercase;
-  font-weight:900;
-  letter-spacing:.8px;
-  text-shadow: 0 2px 10px rgba(0,0,0,.55);
-}
-.ngTitleText{ color: var(--ngYellow, #f6c553) !important; }
-.ngTitleVer{ color: var(--ngBlue, #39b7ff) !important; margin-left:6px; }
-.ngMid{ color: rgba(255,255,255,.80); font-weight:800; font-size:12px; }
-.ngOnline{ color: var(--ngGreen, #3cff7a) !important; }
-/* Crystal clear pills (cool-blue top frost) */
-#emailInput, #enterBtn, #landingLeaderboardBtn{
-  border-radius: 999px !important;
-  border: 1px solid rgba(255,255,255,.28) !important;
-  color: rgba(255,255,255,.96) !important;
-  backdrop-filter: blur(14px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,.78),
-    inset 0 -2px 0 rgba(0,0,0,.18),
-    0 18px 46px rgba(0,0,0,.44) !important;
-  background-image:
-    radial-gradient(140px 70px at 25% 18%, rgba(255,255,255,.22), transparent 62%),
-    linear-gradient(180deg, rgba(57,183,255,.16) 0%, rgba(255,255,255,.02) 42%, rgba(255,255,255,.035) 100%) !important;
-  background-color: rgba(255,255,255,.01) !important;
-}
-#emailInput{
-  width:94%;
-  margin:0 auto;
-  display:block;
-  height:44px;
-  padding:10px 14px;
-  font-size:16px;
-  text-align:center;
-}
-#emailInput::placeholder{ color: rgba(255,255,255,.72); }
-#enterBtn{
-  width:100%;
-  height:44px;
-  font-weight:1000;
-  letter-spacing:.9px;
-  font-size:16px;
-}
-#landingLeaderboardBtn{
-  width:50%;
-  margin:0 auto;
-  height:36px;
-  font-weight:900;
-  letter-spacing:.7px;
-  font-size:14px;
-}
-#landingFoot{
-  position:absolute;
-  left:0; right:0;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
-  z-index:80;
-  text-align:center;
-  pointer-events:none;
-}
-#landingCopy{
-  color: rgba(255,255,255,.92);
-  font-weight:900;
-  font-size:13px;
-  opacity:.90;
-  padding:0 14px;
-  text-shadow: 0 2px 12px rgba(0,0,0,.60);
-}
+#landingPads{ bottom: 140px !important; } /* keep layout, just account for footer bar */
 
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1224 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1228 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -622,7 +533,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1224 MASTER REPORTER ===================== */
+/* ===================== v1228 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -687,7 +598,7 @@ function ngGuard(label, fn){
 </script>
 </head>
 <body>
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle"><span class="ngTitleText">Night Games</span> <span class="ngTitleVer">v1224</span></span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle"><span class="ngTitleText">Night Games</span> <span class="ngTitleVer">v1228</span></span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -718,23 +629,27 @@ function ngGuard(label, fn){
 
 <section class="screen active" id="landing">
   <div id="landingHeader" class="landingHeader">
-    <div class="ngLeft"><span class="ngTitleText">NIGHT GAMES</span> <span class="ngTitleVer" data-app-version>V1226</span></div>
+    <div class="ngLeft"><span class="ngTitleText">NIGHT GAMES</span> <span class="ngTitleVer">V1215</span></div>
     <div class="ngMid">FIREBASE • FIRESTORE</div>
     <div class="ngOnline">ONLINE</div>
   </div>
-
+  <!-- : target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
-      <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder="player@example.com">
+      <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder="player@example.com"/ style="width:94%;margin:0 auto;display:block;text-align:center;height:44px;padding:10px 14px;border-radius:999px;background-image:radial-gradient(140px 70px at 25% 18%, rgba(255,255,255,.22), transparent 62%),linear-gradient(180deg, rgba(57,183,255,.16) 0%, rgba(255,255,255,.02) 42%, rgba(255,255,255,.035) 100%);background-color:rgba(255,255,255,.01);border:1px solid rgba(255,255,255,.28);color:rgba(255,255,255,.96);backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);box-shadow:inset 0 2px 0 rgba(255,255,255,.78), inset 0 -2px 0 rgba(0,0,0,.18), 0 18px 46px rgba(0,0,0,.44);" >
+      <div id="emailEcho">player@example.com</div>
     </div>
 
-    <button id="enterBtn" type="button" aria-label="Enter"><span class="enterText">ENTER</span></button>
-    <button id="landingLeaderboardBtn" type="button" aria-label="Leaderboard">LEADERBOARD</button>
-  </div>
+    <button id="enterBtn" type="button" aria-label="Enter" style="width:100%;height:44px;border-radius:999px;background-image:radial-gradient(140px 70px at 25% 18%, rgba(255,255,255,.22), transparent 62%),linear-gradient(180deg, rgba(57,183,255,.16) 0%, rgba(255,255,255,.02) 42%, rgba(255,255,255,.035) 100%);background-color:rgba(255,255,255,.01);border:1px solid rgba(255,255,255,.28);color:rgba(255,255,255,.96);font-weight:1000;letter-spacing:.9px;backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);box-shadow:inset 0 2px 0 rgba(255,255,255,.78), inset 0 -2px 0 rgba(0,0,0,.18), 0 18px 46px rgba(0,0,0,.44);" ><span class="enterText">ENTER</span><span class="enterSub" id="statusLine">Email-only sign-in (no password). Firebase stable build.</span></button>
 
-  <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room. Night Games is owned and operated by The Dart Room. All rights reserved.</div>
-  </div>
+    <button id="landingLeaderboardBtn" type="button" aria-label="Leaderboard" style="width:50%;margin:0 auto;height:36px;border-radius:999px;background-image:radial-gradient(140px 70px at 25% 18%, rgba(255,255,255,.22), transparent 62%),linear-gradient(180deg, rgba(57,183,255,.16) 0%, rgba(255,255,255,.02) 42%, rgba(255,255,255,.035) 100%);background-color:rgba(255,255,255,.01);border:1px solid rgba(255,255,255,.28);color:rgba(255,255,255,.96);font-weight:900;letter-spacing:.7px;backdrop-filter:blur(14px) saturate(180%);-webkit-backdrop-filter:blur(14px) saturate(180%);box-shadow:inset 0 2px 0 rgba(255,255,255,.78), inset 0 -2px 0 rgba(0,0,0,.18), 0 18px 46px rgba(0,0,0,.44);" >LEADERBOARD</button>
+
+    <!-- Keep ONLY one hint line (matches artwork intent) -->
+</div>
+
+  <!-- Footer at the foot (separate from hint) -->
+  <div id="landingFoot" style="position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 6px);z-index:99999;text-align:center;pointer-events:none;">
+    <div class="landingCopy" id="landingCopy" style="display:block;color:rgba(255,255,255,.92);font-weight:900;font-size:13px;opacity:.90;padding:0 14px;text-shadow:0 2px 12px rgba(0,0,0,.60);" >© 2026 The Dart Room. Night Games is owned and operated by The Dart Room. All rights reserved.</div>
 </section>
 
 <section class="screen" id="players">
@@ -829,7 +744,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1226 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1228 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 
 <script>
@@ -892,7 +807,7 @@ function ngGuard(label, fn){
 </script>
 
 <script>
-// ===================== v1224 NO-MODULE BOOTSTRAP =====================
+// ===================== v1228 NO-MODULE BOOTSTRAP =====================
 // Goal: iPhone Safari sometimes skips <!-- Firebase compat (non-module; works on iPhone Safari + GitHub Pages) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -914,7 +829,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1224";
+  window.ngBuild = "v1228";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -933,7 +848,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1224";
+window.ngBuild = "v1228";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -982,7 +897,7 @@ const NG_STORE = {
       if(err && dbgErr) dbgErr.textContent = err;
     }
 
-    // ===================== v1224 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1228 FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -2919,7 +2834,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1226Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1224Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -3848,7 +3763,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1224 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1228 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
@@ -4098,7 +4013,7 @@ function ngUpdateBtn(){
 
 <script>
 
-/* ===== Landing wiring v1224 ===== */
+/* ===== Landing wiring v1228 ===== */
 (function(){
   function setLandingBg(url){
     try{ document.documentElement.style.setProperty('--landingBg', 'url("'+url+'")'); }catch(e){}
@@ -4158,11 +4073,11 @@ email.addEventListener('focus', introOnce, {passive:true});
 
 </script>
 
-<script>console.log('Night Games v1226 loaded');</script>
+<script>console.log('Night Games v1228 loaded');</script>
 
 <script>
-/* ===== Version + landing enforce (v1224) ===== */
-const APP_VERSION = "v1224";
+/* ===== Version + landing enforce (v1228) ===== */
+const APP_VERSION = "v1228";
 (function(){
   function setText(sel, txt){ const el=document.querySelector(sel); if(el) el.textContent=txt; }
   function setAll(sel, txt){ document.querySelectorAll(sel).forEach(el=>el.textContent=txt); }
@@ -4172,6 +4087,146 @@ const APP_VERSION = "v1224";
   // Footer text enforce
   const lc=document.getElementById('landingCopy');
   if(lc) lc.textContent = '© 2026 The Dart Room. Night Games is owned and operated by The Dart Room. All rights reserved.';
+})();
+</script>
+
+
+<script>
+/* ===== Cache/ServiceWorker reset (v1228) ===== */
+(function(){
+  try {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+    }
+    if (window.caches && caches.keys) {
+      caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+    }
+    console.log('Night Games v1228 cache reset ran');
+  } catch(e) {}
+})();
+</script>
+
+
+<script>
+/* ===== Hard Enforcer (v1228) ===== */
+(function(){
+  const APP_VERSION = "v1228";
+  // 1) Version: replace any visible v12xx token in header area
+  try {
+    document.querySelectorAll('.ngTitleVer,[data-app-version]').forEach(el=>el.textContent = APP_VERSION.toUpperCase());
+    // Also patch any header text nodes that contain v12
+    const hdr = document.querySelector('#topbar,header,.header,#landingHeader');
+    if (hdr) hdr.innerHTML = hdr.innerHTML.replace(/v\d{3,4}/gi, APP_VERSION);
+  } catch(e){}
+
+  // 2) Footer: ensure landing footer exists and is visible
+  function ensureFooter(){
+    const landing = document.getElementById('landing') || document.querySelector('#landingScreen,.landing,#screenLanding');
+    if(!landing) return;
+    let foot = document.getElementById('landingFoot');
+    if(!foot){
+      foot = document.createElement('div');
+      foot.id = 'landingFoot';
+      landing.appendChild(foot);
+    }
+    foot.style.cssText = "position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 6px);z-index:99999;text-align:center;pointer-events:none;";
+    let copy = document.getElementById('landingCopy');
+    if(!copy){
+      copy = document.createElement('div');
+      copy.id = 'landingCopy';
+      foot.appendChild(copy);
+    }
+    copy.textContent = "© 2026 The Dart Room. Night Games is owned and operated by The Dart Room. All rights reserved.";
+    copy.style.cssText = "display:block;color:rgba(255,255,255,.92);font-weight:900;font-size:13px;opacity:.90;padding:0 14px;text-shadow:0 2px 12px rgba(0,0,0,.60);";
+  }
+
+  // 3) Crystal pill style: apply directly (no reliance on selector wars)
+  function crystalize(el, kind){
+    if(!el) return;
+    el.style.borderRadius = "999px";
+    el.style.border = "1px solid rgba(255,255,255,.28)";
+    el.style.color = "rgba(255,255,255,.96)";
+    el.style.webkitBackdropFilter = "blur(14px) saturate(180%)";
+    el.style.backdropFilter = "blur(14px) saturate(180%)";
+    el.style.boxShadow = "inset 0 2px 0 rgba(255,255,255,.78), inset 0 -2px 0 rgba(0,0,0,.18), 0 18px 46px rgba(0,0,0,.44)";
+    el.style.backgroundColor = "rgba(255,255,255,.01)";
+    el.style.backgroundImage =
+      "radial-gradient(140px 70px at 25% 18%, rgba(255,255,255,.22), transparent 62%)," +
+      "linear-gradient(180deg, rgba(57,183,255,.16) 0%, rgba(255,255,255,.02) 42%, rgba(255,255,255,.035) 100%)";
+    if(kind==='email'){
+      el.style.textAlign = "center";
+      el.style.fontSize = "16px";
+    }
+  }
+
+  function apply(){
+    ensureFooter();
+    // try common ids used across our builds
+    const email = document.getElementById('emailInput') || document.querySelector('input[type="email"]');
+    const enter = document.getElementById('enterBtn') || document.querySelector('button#enter, button.enter, button[data-action="enter"]');
+    const lb = document.getElementById('landingLeaderboardBtn') || document.querySelector('button#leaderboard, button.leaderboard, button[data-action="leaderboard"]');
+    if(email) crystalize(email,'email');
+    if(enter) crystalize(enter,'btn');
+    if(lb) crystalize(lb,'btn');
+  }
+
+  // Run now and after a short delay (covers JS-rendered landing)
+  apply();
+  setTimeout(apply, 250);
+  setTimeout(apply, 1000);
+})();
+</script>
+
+
+<script>
+/* ===== Landing lock (v1228) ===== */
+(function(){
+  const APP_VERSION = "v1228";
+  // Header: find a header container and ensure NG title + version + online colors
+  function ensureHeader(){
+    const hdr = document.querySelector('#landingHeader,.landingHeader,#topbar,header,.header');
+    if(!hdr) return;
+    // Ensure version span exists
+    let ver = hdr.querySelector('.ngTitleVer,[data-app-version]');
+    if(!ver){
+      // Try to find a title container
+      const left = hdr.querySelector('.ngLeft,.left,.title,.ngTitle,.ngTitleText') || hdr;
+      ver = document.createElement('span');
+      ver.className = 'ngTitleVer';
+      ver.setAttribute('data-app-version','');
+      ver.style.marginLeft = '6px';
+      left.appendChild(ver);
+    }
+    ver.textContent = APP_VERSION.toUpperCase();
+    // Color enforcement (safe)
+    hdr.querySelectorAll('.ngTitleText').forEach(el=>el.style.color='#f6c553');
+    hdr.querySelectorAll('.ngTitleVer').forEach(el=>el.style.color='#39b7ff');
+    hdr.querySelectorAll('.ngOnline').forEach(el=>el.style.color='#3cff7a');
+  }
+
+  // Footer: place in black bar under image (extends page)
+  function ensureFooter(){
+    const landing = document.getElementById('landing') || document.querySelector('#landingScreen,.landing,#screenLanding');
+    if(!landing) return;
+    let foot = document.getElementById('landingFoot');
+    if(!foot){
+      foot = document.createElement('div');
+      foot.id = 'landingFoot';
+      landing.appendChild(foot);
+    }
+    foot.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:99999;text-align:center;pointer-events:none;background:rgba(0,0,0,.62);padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px);";
+    let copy = document.getElementById('landingCopy');
+    if(!copy){
+      copy = document.createElement('div');
+      copy.id = 'landingCopy';
+      foot.appendChild(copy);
+    }
+    copy.textContent = "© 2026 The Dart Room. Night Games is owned and operated by The Dart Room. All rights reserved.";
+    copy.style.cssText = "display:block;color:rgba(255,255,255,.92);font-weight:900;font-size:13px;opacity:.92;padding:0 14px;text-shadow:0 2px 12px rgba(0,0,0,.60);";
+  }
+
+  function run(){ ensureHeader(); ensureFooter(); }
+  run(); setTimeout(run, 150); setTimeout(run, 600); setTimeout(run, 1200);
 })();
 </script>
 
