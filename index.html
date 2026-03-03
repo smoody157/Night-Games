@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1224</title>
-<!-- NIGHT GAMES v1224 -->
+<title>Night Games v1226</title>
+<!-- NIGHT GAMES v1226 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -493,6 +493,104 @@ pre{white-space:pre-wrap; word-break:break-word; color:rgba(232,238,252,.78)}
 #landing #emailPad input{ text-align:center !important; }
 #landing #emailPad input::placeholder{ color: rgba(255,255,255,.72) !important; text-align:center; }
 
+
+/* ===========================
+   Landing force styles (v1226)
+   =========================== */
+#app .screen{display:none; min-height:100vh;}
+#app .screen.active{display:block;}
+#landing{position:fixed; inset:0; z-index:50;}
+#landing::before{
+  content:"";
+  position:absolute; inset:0;
+  background: var(--landingBg, #000);
+  background-size: cover;
+  background-position: center top;
+}
+#landingPads{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(92vw, 620px);
+  bottom: 110px;
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+  z-index:60;
+}
+/* Header colors */
+.landingHeader{
+  position:absolute; left:0; right:0; top:10px;
+  display:flex; justify-content:space-between; align-items:center;
+  padding: 12px 18px;
+  z-index:70;
+  text-transform:uppercase;
+  font-weight:900;
+  letter-spacing:.8px;
+  text-shadow: 0 2px 10px rgba(0,0,0,.55);
+}
+.ngTitleText{ color: var(--ngYellow, #f6c553) !important; }
+.ngTitleVer{ color: var(--ngBlue, #39b7ff) !important; margin-left:6px; }
+.ngMid{ color: rgba(255,255,255,.80); font-weight:800; font-size:12px; }
+.ngOnline{ color: var(--ngGreen, #3cff7a) !important; }
+/* Crystal clear pills (cool-blue top frost) */
+#emailInput, #enterBtn, #landingLeaderboardBtn{
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+  color: rgba(255,255,255,.96) !important;
+  backdrop-filter: blur(14px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.78),
+    inset 0 -2px 0 rgba(0,0,0,.18),
+    0 18px 46px rgba(0,0,0,.44) !important;
+  background-image:
+    radial-gradient(140px 70px at 25% 18%, rgba(255,255,255,.22), transparent 62%),
+    linear-gradient(180deg, rgba(57,183,255,.16) 0%, rgba(255,255,255,.02) 42%, rgba(255,255,255,.035) 100%) !important;
+  background-color: rgba(255,255,255,.01) !important;
+}
+#emailInput{
+  width:94%;
+  margin:0 auto;
+  display:block;
+  height:44px;
+  padding:10px 14px;
+  font-size:16px;
+  text-align:center;
+}
+#emailInput::placeholder{ color: rgba(255,255,255,.72); }
+#enterBtn{
+  width:100%;
+  height:44px;
+  font-weight:1000;
+  letter-spacing:.9px;
+  font-size:16px;
+}
+#landingLeaderboardBtn{
+  width:50%;
+  margin:0 auto;
+  height:36px;
+  font-weight:900;
+  letter-spacing:.7px;
+  font-size:14px;
+}
+#landingFoot{
+  position:absolute;
+  left:0; right:0;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
+  z-index:80;
+  text-align:center;
+  pointer-events:none;
+}
+#landingCopy{
+  color: rgba(255,255,255,.92);
+  font-weight:900;
+  font-size:13px;
+  opacity:.90;
+  padding:0 14px;
+  text-shadow: 0 2px 12px rgba(0,0,0,.60);
+}
+
 </style>
 <script id="ngGuards_v748">
 
@@ -620,27 +718,23 @@ function ngGuard(label, fn){
 
 <section class="screen active" id="landing">
   <div id="landingHeader" class="landingHeader">
-    <div class="ngLeft"><span class="ngTitleText">NIGHT GAMES</span> <span class="ngTitleVer">V1215</span></div>
+    <div class="ngLeft"><span class="ngTitleText">NIGHT GAMES</span> <span class="ngTitleVer" data-app-version>V1226</span></div>
     <div class="ngMid">FIREBASE • FIRESTORE</div>
     <div class="ngOnline">ONLINE</div>
   </div>
-  <!-- : target artwork background includes the visible pads; we wire ONLY invisible overlays -->
+
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
-      <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder="player@example.com"/>
-      <div id="emailEcho">player@example.com</div>
+      <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder="player@example.com">
     </div>
 
-    <button id="enterBtn" type="button" aria-label="Enter"><span class="enterText">ENTER</span><span class="enterSub" id="statusLine">Email-only sign-in (no password). Firebase stable build.</span></button>
-
+    <button id="enterBtn" type="button" aria-label="Enter"><span class="enterText">ENTER</span></button>
     <button id="landingLeaderboardBtn" type="button" aria-label="Leaderboard">LEADERBOARD</button>
+  </div>
 
-    <!-- Keep ONLY one hint line (matches artwork intent) -->
-</div>
-
-  <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
     <div class="landingCopy" id="landingCopy">© 2026 The Dart Room. Night Games is owned and operated by The Dart Room. All rights reserved.</div>
+  </div>
 </section>
 
 <section class="screen" id="players">
@@ -735,7 +829,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1224 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1226 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 
 <script>
@@ -2825,7 +2919,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1224Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1226Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -4064,7 +4158,7 @@ email.addEventListener('focus', introOnce, {passive:true});
 
 </script>
 
-<script>console.log('Night Games v1224 loaded');</script>
+<script>console.log('Night Games v1226 loaded');</script>
 
 <script>
 /* ===== Version + landing enforce (v1224) ===== */
