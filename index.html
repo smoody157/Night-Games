@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1235</title>
-<!-- NIGHT GAMES v1235 -->
+
+<!-- ===== Firebase Config Loader (keep this file in repo) ===== -->
+<script>
+// If you paste new builds over index.html, keep your Firebase config in /firebase-config.js
+// Format:
+// window.firebaseConfig = { apiKey:"...", authDomain:"...", projectId:"...", storageBucket:"...", messagingSenderId:"...", appId:"..." };
+</script>
+<script src="./firebase-config.js"></script>
+
+<title>Night Games v1237</title>
+<!-- NIGHT GAMES v1237 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>:root vars) • COMPONENTS (
@@ -1984,7 +1993,7 @@ button, .btn, .pill{
 #fatal{display:none !important;}
 
 /* ===========================
-   Landing crystal neon polish (v1235)
+   Landing crystal neon polish (v1237)
    =========================== */
 #emailEcho{ display:none !important; }
 /* Move footer up onto image bottom */
@@ -2033,7 +2042,7 @@ button, .btn, .pill{
 
 
 /* ===========================
-   MINIMAL VISUAL PATCH (v1235)
+   MINIMAL VISUAL PATCH (v1237)
    - Footer lifted into image
    - Crystal neon pill buttons
    =========================== */
@@ -2073,10 +2082,58 @@ button, .btn, .pill{
   color: rgba(255,255,255,0.75) !important;
 }
 
+
+/* ===== Offline-friendly fallback (v1237) ===== */
+#fatal { display:none !important; }
+#firebaseDidntStart, .firebaseDidntStart, #firebaseNotice { display:none !important; }
+
+
+/* ===========================
+   Landing no-fail patch (v1237)
+   - Footer up into image
+   - Crystal clear neon glass buttons
+   =========================== */
+#landingFoot {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 28px) !important;
+  background: transparent !important;
+  text-align: center !important;
+  z-index: 80 !important;
+  pointer-events: none !important;
+}
+#landingCopy {
+  padding: 0 16px !important;
+}
+#landing #emailPad input,
+#landing #emailInput,
+#landing #enterBtn,
+#landing #landingLeaderboardBtn {
+  border-radius: 999px !important;
+  background-color: rgba(255,255,255,0.02) !important;
+  background-image:
+    radial-gradient(140px 70px at 18% 22%, rgba(60,180,255,0.38), transparent 62%),
+    radial-gradient(140px 70px at 82% 22%, rgba(255,80,80,0.34), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.02) 46%, rgba(255,255,255,0.04) 100%) !important;
+  border: 1px solid rgba(255,255,255,0.28) !important;
+  color: rgba(255,255,255,0.96) !important;
+  backdrop-filter: blur(16px) saturate(185%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(185%) !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.78),
+    inset 0 -2px 0 rgba(0,0,0,0.18),
+    0 18px 46px rgba(0,0,0,0.44) !important;
+}
+#landing #emailPad input::placeholder,
+#landing #emailInput::placeholder {
+  color: rgba(255,255,255,0.74) !important;
+}
+
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1235 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1237 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -2104,7 +2161,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1235 MASTER REPORTER ===================== */
+/* ===================== v1237 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -2170,7 +2227,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1235</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1237</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2312,7 +2369,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1235 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1237 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2387,7 +2444,7 @@ function ngGuard(label, fn){
 
 
 <script>
-// ===================== v1235 COMPAT BOOTSTRAP (NO import()) =====================
+// ===================== v1237 COMPAT BOOTSTRAP (NO import()) =====================
 // Purpose: Works on older iOS Safari that can't parse dynamic import() outside modules.
 // Loads Firebase compat UMD builds and exposes ngApp/ngAuth/db.
 
@@ -2405,7 +2462,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1235";
+  window.ngBuild = "v1237";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   window.ngLastError = "none";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
@@ -2459,8 +2516,8 @@ function ngGuard(label, fn){
 
 
 <script>
-/* ===== Version + landing enforce (v1235) ===== */
-window.APP_VERSION = "v1235";
+/* ===== Version + landing enforce (v1237) ===== */
+window.APP_VERSION = "v1237";
 (function(){
   try {
     // header version
@@ -2474,7 +2531,7 @@ window.APP_VERSION = "v1235";
 
 
 <script>
-/* ===== Landing LEADERBOARD button wiring (v1235) ===== */
+/* ===== Landing LEADERBOARD button wiring (v1237) ===== */
 (function(){
   const lb = document.getElementById('landingLeaderboardBtn');
   if(!lb) return;
@@ -2498,7 +2555,7 @@ window.APP_VERSION = "v1235";
 
 
 <script>
-/* ===== UX Guard (v1235) ===== */
+/* ===== UX Guard (v1237) ===== */
 (function(){
   function tick(){
     const fatal = document.getElementById('fatal');
@@ -2518,7 +2575,7 @@ window.APP_VERSION = "v1235";
 
 
 <script>
-/* ===== Landing ENTER override (v1235) ===== */
+/* ===== Landing ENTER override (v1237) ===== */
 (function(){
   function qs(sel){ return document.querySelector(sel); }
   function goHome(){
@@ -2552,6 +2609,72 @@ window.APP_VERSION = "v1235";
   }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", bind);
   else bind();
+})();
+</script>
+
+
+<script>
+/* ===== Config missing helper (v1237) ===== */
+(function(){
+  function addBadge(){
+    if (window.ngFirebaseStatus !== "CONFIG_MISSING") return;
+    const dbg = document.getElementById('dbg');
+    if(!dbg) return;
+    if(document.getElementById('cfgBadge')) return;
+    const b = document.createElement('div');
+    b.id = 'cfgBadge';
+    b.style.cssText = "margin-top:8px;padding:10px 12px;border-radius:12px;background:rgba(255,180,0,.12);border:1px solid rgba(255,180,0,.35);color:rgba(255,255,255,.92);font-weight:800;line-height:1.2;";
+    b.textContent = "Firebase config missing. Create /firebase-config.js once (window.firebaseConfig = Ellipsis) so builds stop breaking.";
+    dbg.appendChild(b);
+  }
+  setTimeout(addBadge, 200);
+  setTimeout(addBadge, 800);
+})();
+</script>
+
+
+<script>
+/* ===== Landing no-fail enforce (v1237) ===== */
+(function(){
+  function apply(){
+    try {
+      var foot = document.getElementById('landingFoot');
+      var copy = document.getElementById('landingCopy');
+      if(copy) copy.textContent = '© 2026 The Dart Room. Night Games is owned and operated by The Dart Room. All rights reserved.';
+      if(foot){
+        foot.style.position = "absolute";
+        foot.style.left = "0";
+        foot.style.right = "0";
+        foot.style.bottom = "calc(env(safe-area-inset-bottom,0px) + 28px)";
+        foot.style.background = "transparent";
+        foot.style.zIndex = "80";
+        foot.style.textAlign = "center";
+        foot.style.pointerEvents = "none";
+      }
+      function crystal(el){
+        if(!el) return;
+        el.style.borderRadius = "999px";
+        el.style.backgroundColor = "rgba(255,255,255,0.02)";
+        el.style.backgroundImage =
+          "radial-gradient(140px 70px at 18% 22%, rgba(60,180,255,0.38), transparent 62%)," +
+          "radial-gradient(140px 70px at 82% 22%, rgba(255,80,80,0.34), transparent 62%)," +
+          "linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.02) 46%, rgba(255,255,255,0.04) 100%)";
+        el.style.border = "1px solid rgba(255,255,255,0.28)";
+        el.style.color = "rgba(255,255,255,0.96)";
+        el.style.webkitBackdropFilter = "blur(16px) saturate(185%)";
+        el.style.backdropFilter = "blur(16px) saturate(185%)";
+        el.style.boxShadow = "inset 0 2px 0 rgba(255,255,255,0.78), inset 0 -2px 0 rgba(0,0,0,0.18), 0 18px 46px rgba(0,0,0,0.44)";
+      }
+      var email = document.getElementById('emailInput') || document.querySelector('#landing input[type="email"]') || document.querySelector('#landing #emailPad input');
+      var enter = document.getElementById('enterBtn');
+      var lb = document.getElementById('landingLeaderboardBtn');
+      crystal(email); crystal(enter); crystal(lb);
+    } catch(e) {}
+  }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", apply);
+  else apply();
+  setTimeout(apply, 200);
+  setTimeout(apply, 800);
 })();
 </script>
 
