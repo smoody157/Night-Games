@@ -216,14 +216,27 @@ const gameModules={};
 
 function registerGame(id,engine){
 
-gameModules[id]=engine;
-
-}
-
+gameModules[id]=/* ===================================================== */
+/* SECTION 15 — FIREBASE CONNECTION                      */
 /* ===================================================== */
-/* SECTION 15 — FIREBASE PLACEHOLDER                      */
-/* ===================================================== */
-/* Insert Firebase init + Firestore listeners here */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
+authDomain: "gamenightdarts-e7601.firebaseapp.com",
+projectId: "gamenightdarts-e7601",
+storageBucket: "gamenightdarts-e7601.firebasestorage.app",
+messagingSenderId: "270045452251",
+appId: "1:270045452251:web:393956ce18b43316e939fe",
+measurementId: "G-LQEHF02ZVR"
+
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 </script>
 
