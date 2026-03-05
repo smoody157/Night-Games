@@ -1,179 +1,105 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Night Games</title>
 
-<!-- ====================================================== -->
-<!-- NIGHT GAMES MASTER BUILD                               -->
-<!-- Organized learning build                               -->
-<!-- You can safely edit sections marked SAFE TO EDIT       -->
-<!-- ====================================================== -->
-
-<!-- ====================================================== -->
-<!-- SECTION 1 — VISUAL SETTINGS (SAFE TO EDIT)             -->
-<!-- Change colors, fonts, layout                           -->
-<!-- ====================================================== -->
+<!-- MASTER TRAINING BUILD -->
+<!-- Organized so you can learn the architecture -->
 
 <style>
-
-body{
-    background:#0b0f18;
-    color:white;
-    font-family:Arial, Helvetica, sans-serif;
-    margin:0;
-}
-
-header{
-    background:#020617;
-    padding:20px;
-    text-align:center;
-    font-size:32px;
-}
-
-.panel{
-    padding:20px;
-    text-align:center;
-}
-
-button{
-    padding:10px 20px;
-    margin:6px;
-    border-radius:6px;
-    border:none;
-    background:#22c55e;
-    cursor:pointer;
-}
-
-input{
-    padding:8px;
-    font-size:16px;
-}
-
-.player{
-    padding:6px;
-}
-
-.online{
-    color:#22c55e;
-}
-
+body{background:#0b0f18;color:white;font-family:Arial;margin:0}
+header{background:#020617;padding:20px;text-align:center;font-size:32px}
+.panel{padding:20px;text-align:center}
+button{padding:10px 20px;margin:6px;border-radius:6px;border:none;background:#22c55e}
+input{padding:8px;font-size:16px}
+.player{padding:6px}
+.online{color:#22c55e}
 </style>
 
 </head>
-
 <body>
 
 <header>Night Games</header>
 
-
-<!-- ====================================================== -->
-<!-- SECTION 2 — LOGIN SCREEN                               -->
-<!-- ====================================================== -->
+<!-- ===================================================== -->
+<!-- SECTION 1 — LOGIN SCREEN -->
+<!-- ===================================================== -->
 
 <div id="loginScreen" class="panel">
-
 <h2>Sign In</h2>
-
 <input id="email" placeholder="enter email">
-
 <br><br>
-
 <button onclick="login()">ENTER</button>
-
 </div>
 
 
-<!-- ====================================================== -->
-<!-- SECTION 3 — PLAYER PAGE                                -->
-<!-- ====================================================== -->
+
+<!-- ===================================================== -->
+<!-- SECTION 2 — PLAYER PAGE -->
+<!-- ===================================================== -->
 
 <div id="playerScreen" class="panel" style="display:none">
-
 <h2>Players</h2>
-
 <div id="playerList"></div>
-
 <hr>
-
-<h2>Game Modes</h2>
-
 <button onclick="practice()">Practice</button>
 <button onclick="openLobby()">Multiplayer</button>
-
 </div>
 
 
-<!-- ====================================================== -->
-<!-- SECTION 4 — MULTIPLAYER LOBBY                          -->
-<!-- ====================================================== -->
+
+<!-- ===================================================== -->
+<!-- SECTION 3 — MULTIPLAYER LOBBY -->
+<!-- ===================================================== -->
 
 <div id="lobbyScreen" class="panel" style="display:none">
-
 <h2>Lobby</h2>
-
 <div id="lobbyPlayers">Waiting for players...</div>
-
-<br>
-
 <button onclick="startGame()">Start Game</button>
-
 </div>
 
 
-<!-- ====================================================== -->
-<!-- SECTION 5 — GAME AREA                                  -->
-<!-- ====================================================== -->
+
+<!-- ===================================================== -->
+<!-- SECTION 4 — GAME AREA -->
+<!-- ===================================================== -->
 
 <div id="gameScreen" class="panel" style="display:none">
-
 <h2 id="turnDisplay"></h2>
-
-<h3>Dart Board Test</h3>
-
 <button onclick="throwDart(20)">20</button>
 <button onclick="throwDart(19)">19</button>
 <button onclick="throwDart(18)">18</button>
 <button onclick="throwDart(5)">5</button>
 <button onclick="throwDart(1)">1</button>
-
 </div>
 
 
-<!-- ====================================================== -->
-<!-- SECTION 6 — PLAYER REGISTRY                            -->
-<!-- Pre‑registered players                                 -->
-<!-- ====================================================== -->
-
 <script>
 
-const players = {
+/* ===================================================== */
+/* SECTION 5 — PLAYER REGISTRY                           */
+/* ===================================================== */
 
+const players={
 "stevewmoody@yahoo.com":{name:"Steve Moody"},
 "jmoody7712@gmail.com":{name:"Jayce Moody"},
 "wmoody7931@aol.com":{name:"Bill Moody"}
-
 };
-
 
 let currentPlayer=null;
 
-
-
-<!-- ====================================================== -->
-<!-- SECTION 7 — LOGIN SYSTEM                               -->
-<!-- ====================================================== -->
+/* ===================================================== */
+/* SECTION 6 — LOGIN SYSTEM                              */
+/* ===================================================== */
 
 function login(){
 
 const email=document.getElementById("email").value;
 
 if(!players[email]){
-
 const name=prompt("Enter your name");
 players[email]={name:name};
-
 }
 
 currentPlayer=players[email];
@@ -185,11 +111,9 @@ showPlayers();
 
 }
 
-
-
-<!-- ====================================================== -->
-<!-- SECTION 8 — PLAYER LIST DISPLAY                        -->
-<!-- ====================================================== -->
+/* ===================================================== */
+/* SECTION 7 — PLAYER LIST                               */
+/* ===================================================== */
 
 function showPlayers(){
 
@@ -199,7 +123,6 @@ list.innerHTML="";
 for(let p in players){
 
 let div=document.createElement("div");
-
 div.className="player";
 
 div.innerHTML=players[p].name+" <span class='online'>●</span>";
@@ -210,16 +133,13 @@ list.appendChild(div);
 
 }
 
-
-
-<!-- ====================================================== -->
-<!-- SECTION 9 — PRACTICE MODE                              -->
-<!-- Local single‑player                                    -->
-<!-- ====================================================== -->
+/* ===================================================== */
+/* SECTION 8 — PRACTICE MODE                             */
+/* ===================================================== */
 
 function practice(){
 
-alert("Practice mode. Stats disabled.");
+alert("Practice mode (local only)");
 
 document.getElementById("playerScreen").style.display="none";
 document.getElementById("gameScreen").style.display="block";
@@ -228,12 +148,9 @@ startTurn();
 
 }
 
-
-
-<!-- ====================================================== -->
-<!-- SECTION 10 — MULTIPLAYER LOBBY                         -->
-<!-- Placeholder structure for session system               -->
-<!-- ====================================================== -->
+/* ===================================================== */
+/* SECTION 9 — LOBBY SYSTEM                              */
+/* ===================================================== */
 
 function openLobby(){
 
@@ -242,7 +159,9 @@ document.getElementById("lobbyScreen").style.display="block";
 
 }
 
-
+/* ===================================================== */
+/* SECTION 10 — START GAME                               */
+/* ===================================================== */
 
 function startGame(){
 
@@ -253,11 +172,9 @@ startTurn();
 
 }
 
-
-
-<!-- ====================================================== -->
-<!-- SECTION 11 — TURN ORDER SYSTEM                         -->
-<!-- ====================================================== -->
+/* ===================================================== */
+/* SECTION 11 — TURN SYSTEM                              */
+/* ===================================================== */
 
 let turnOrder=[];
 let currentTurn=0;
@@ -265,18 +182,15 @@ let currentTurn=0;
 function startTurn(){
 
 turnOrder=[currentPlayer.name];
-
 currentTurn=0;
 
 document.getElementById("turnDisplay").innerText="Turn: "+turnOrder[currentTurn];
 
 }
 
-
-
-<!-- ====================================================== -->
-<!-- SECTION 12 — DART THROW ENGINE                         -->
-<!-- ====================================================== -->
+/* ===================================================== */
+/* SECTION 12 — DART THROW ENGINE                        */
+/* ===================================================== */
 
 function throwDart(score){
 
@@ -284,26 +198,21 @@ alert(currentPlayer.name+" scored "+score);
 
 }
 
-
-
-<!-- ====================================================== -->
-<!-- SECTION 13 — STATS SYSTEM (placeholder)                -->
-<!-- ====================================================== -->
+/* ===================================================== */
+/* SECTION 13 — STATS ENGINE (STRUCTURE)                  */
+/* ===================================================== */
 
 function recordStats(){
 
-console.log("Stats recording placeholder");
+console.log("Stats placeholder");
 
 }
 
+/* ===================================================== */
+/* SECTION 14 — GAME MODULE SYSTEM                        */
+/* ===================================================== */
 
-
-<!-- ====================================================== -->
-<!-- SECTION 14 — GAME MODULE SYSTEM                        -->
-<!-- Future games plug in here                              -->
-<!-- ====================================================== -->
-
-const gameModules = {};
+const gameModules={};
 
 function registerGame(id,engine){
 
@@ -311,7 +220,10 @@ gameModules[id]=engine;
 
 }
 
-
+/* ===================================================== */
+/* SECTION 15 — FIREBASE PLACEHOLDER                      */
+/* ===================================================== */
+/* Insert Firebase init + Firestore listeners here */
 
 </script>
 
