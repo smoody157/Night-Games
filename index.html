@@ -1,21 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Night Games</title>
 
+<!-- =====================================================
+NIGHT GAMES — PROGRESS BUILD (all-in-one, no modules)
+- Keeps: labeled sections, 3 seeded players, login->player page flow
+- Adds: Firebase (Firestore) wiring using compat SDK (no import/module issues)
+- Adds: Presence (online dots), simple lobby room creation/join, invites (basic)
+- Leaves: advanced turn sync + full stats as next step, but hooks exist
+===================================================== -->
+
 <!-- ===================================================== -->
 <!-- SECTION 1 — VISUAL SETTINGS (SAFE TO EDIT)            -->
 <!-- ===================================================== -->
 <style>
-  body{background:#0b0f18;color:#fff;font-family:Arial,Helvetica,sans-serif;margin:0}
-  header{background:#020617;padding:18px;text-align:center;font-size:28px}
-  .panel{padding:20px;text-align:center}
-  button{padding:10px 20px;margin:6px;border-radius:6px;border:none;background:#22c55e;cursor:pointer}
-  input{padding:10px;font-size:16px;border-radius:6px;border:none;width:260px;max-width:85%}
-  .player{padding:6px}
-  .online{color:#22c55e}
+  :root{
+    --bg:#0b0f18;
+    --header:#020617;
+    --panelText:#ffffff;
+    --btn:#22c55e;
+    --btnText:#07120a;
+    --muted:#9aa4b2;
+    --danger:#ef4444;
+    --card:#0f172a;
+  }
+  body{background:var(--bg);color:var(--panelText);font-family:Arial,Helvetica,sans-serif;margin:0}
+  header{background:var(--header);padding:18px;text-align:center;font-size:28px}
+  .panel{padding:18px;text-align:center}
+  .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+  button{padding:10px 16px;margin:6px;border-radius:8px;border:none;background:var(--btn);color:var(--btnText);cursor:pointer;font-weight:700}
+  button.secondary{background:#334155;color:#fff}
+  button.danger{background:var(--danger);color:#fff}
+  input,select{padding:10px;font-size:16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:#0b1220;color:#fff;width:280px;max-width:90%}
+  .card{background:var(--card);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:12px;max-width:720px;margin:12px auto}
+  .player{padding:6px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .dot{font-size:18px;line-height:18px}
+  .online{color:var(--btn)}
+  .offline{color:#64748b}
+  small{color:var(--muted)}
+  hr{border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0}
+  #debugBox{
+    position:fixed;left:10px;right:10px;bottom:10px;
+    background:rgba(0,0,0,.78);
+    border:1px solid rgba(255,255,255,.16);
+    padding:10px;border-radius:10px;font-size:12px;text-align:left;
+    max-height:35vh;overflow:auto;display:none;white-space:pre-wrap;
+    z-index:9999;
+  }
+  #debugBox b{display:block;margin-bottom:6px}
 </style>
 </head>
 
@@ -26,156 +61,440 @@
 <!-- SECTION 2 — LOGIN SCREEN                              -->
 <!-- ===================================================== -->
 <div id="loginScreen" class="panel">
-  <h2>Sign In</h2>
-  <input id="email" placeholder="enter email">
-  <br><br>
-  <button id="enterBtn" type="button">ENTER</button>
+  <div class="card">
+    <h2 style="margin:6px 0 10px">Sign In</h2>
+    <input id="email" placeholder="enter email">
+    <div class="row">
+      <button id="enterBtn" type="button">ENTER</button>
+      <button id="toggleDebugBtn" type="button" class="secondary">Debug</button>
+    </div>
+    <small>Tip: use one of the seeded emails (Steve/Jayce/Bill).</small>
+  </div>
 </div>
 
 <!-- ===================================================== -->
 <!-- SECTION 3 — PLAYER PAGE                               -->
 <!-- ===================================================== -->
 <div id="playerScreen" class="panel" style="display:none">
-  <h2>Players</h2>
-  <div id="playerList"></div>
-  <hr>
-  <button id="practiceBtn" type="button">Practice</button>
-  <button id="multiBtn" type="button">Multiplayer</button>
+  <div class="card">
+    <h2 style="margin:6px 0 10px">Players</h2>
+    <div id="playerList"></div>
+    <hr>
+    <h3 style="margin:6px 0 10px">Game Modes</h3>
+    <div class="row">
+      <button id="practiceBtn" type="button">Practice</button>
+      <button id="multiBtn" type="button">Multiplayer</button>
+      <button id="signOutBtn" type="button" class="secondary">Back</button>
+    </div>
+  </div>
 </div>
 
 <!-- ===================================================== -->
 <!-- SECTION 4 — MULTIPLAYER LOBBY                         -->
 <!-- ===================================================== -->
 <div id="lobbyScreen" class="panel" style="display:none">
-  <h2>Lobby</h2>
-  <div id="lobbyPlayers">Waiting for players...</div>
-  <br>
-  <button id="startBtn" type="button">Start Game</button>
+  <div class="card">
+    <h2 style="margin:6px 0 10px">Lobby</h2>
+    <div id="lobbyStatus"><small>Choose players and send invites.</small></div>
+    <hr>
+    <div id="inviteArea"></div>
+    <div class="row">
+      <button id="createRoomBtn" type="button">Create Room</button>
+      <button id="leaveLobbyBtn" type="button" class="secondary">Back</button>
+    </div>
+  </div>
 </div>
 
 <!-- ===================================================== -->
 <!-- SECTION 5 — GAME AREA                                 -->
 <!-- ===================================================== -->
 <div id="gameScreen" class="panel" style="display:none">
-  <h2 id="turnDisplay"></h2>
-  <div style="margin:10px 0">Dart Board Test</div>
-  <button type="button" data-score="20">20</button>
-  <button type="button" data-score="19">19</button>
-  <button type="button" data-score="18">18</button>
-  <button type="button" data-score="5">5</button>
-  <button type="button" data-score="1">1</button>
+  <div class="card">
+    <h2 id="turnDisplay" style="margin:6px 0 10px">Turn:</h2>
+    <div style="margin:10px 0"><small>Dart Board Test (local)</small></div>
+    <div class="row">
+      <button type="button" data-score="20">20</button>
+      <button type="button" data-score="19">19</button>
+      <button type="button" data-score="18">18</button>
+      <button type="button" data-score="5">5</button>
+      <button type="button" data-score="1">1</button>
+    </div>
+    <div class="row">
+      <button id="backToPlayersBtn" type="button" class="secondary">Back</button>
+    </div>
+  </div>
 </div>
+
+<div id="debugBox"><b>Debug</b><div id="debugText"></div></div>
+
+<!-- ===================================================== -->
+<!-- SECTION 6 — FIREBASE SDK (NO MODULES)                 -->
+<!-- Uses compat SDK to avoid import/type="module" issues  -->
+<!-- ===================================================== -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
 <script>
 /* ===================================================== */
-/* SECTION 6 — PLAYER REGISTRY                            */
+/* SECTION 7 — DEBUG HELPERS                              */
 /* ===================================================== */
-const players = {
-  "stevewmoody@yahoo.com": { name: "Steve Moody" },
-  "jmoody7712@gmail.com": { name: "Jayce Moody" },
-  "wmoody7931@aol.com":   { name: "Bill Moody" }
-};
-let currentPlayer = null;
-
-/* ===================================================== */
-/* SECTION 7 — UI HELPERS                                 */
-/* ===================================================== */
-function show(elId){
-  document.getElementById("loginScreen").style.display = (elId==="loginScreen") ? "block" : "none";
-  document.getElementById("playerScreen").style.display = (elId==="playerScreen") ? "block" : "none";
-  document.getElementById("lobbyScreen").style.display = (elId==="lobbyScreen") ? "block" : "none";
-  document.getElementById("gameScreen").style.display  = (elId==="gameScreen")  ? "block" : "none";
+const debugBox = document.getElementById("debugBox");
+const debugText = document.getElementById("debugText");
+function logDebug(msg){
+  const t = new Date().toLocaleTimeString();
+  debugText.textContent += `[${t}] ${msg}\n`;
+}
+function showDebug(on){
+  debugBox.style.display = on ? "block" : "none";
 }
 
 /* ===================================================== */
-/* SECTION 8 — LOGIN SYSTEM                               */
+/* SECTION 8 — UI HELPERS                                 */
 /* ===================================================== */
-function login(){
-  const email = (document.getElementById("email").value || "").trim().toLowerCase();
-  if(!email){ alert("Enter an email"); return; }
-
-  if(!players[email]){
-    const name = prompt("Enter your name");
-    if(!name){ return; }
-    players[email] = { name: name.trim() || "Player" };
-  }
-  currentPlayer = players[email];
-  show("playerScreen");
-  renderPlayers();
-}
-
-/* ===================================================== */
-/* SECTION 9 — PLAYER LIST                                */
-/* ===================================================== */
-function renderPlayers(){
-  const list = document.getElementById("playerList");
-  list.innerHTML = "";
-  Object.keys(players).forEach(email => {
-    const div = document.createElement("div");
-    div.className = "player";
-    div.innerHTML = players[email].name + " <span class='online'>●</span>";
-    list.appendChild(div);
+function showOnly(screenId){
+  ["loginScreen","playerScreen","lobbyScreen","gameScreen"].forEach(id=>{
+    document.getElementById(id).style.display = (id===screenId) ? "block" : "none";
   });
 }
 
 /* ===================================================== */
-/* SECTION 10 — PRACTICE MODE (LOCAL ONLY)                */
+/* SECTION 9 — FIREBASE CONFIG (YOUR PROJECT)             */
+/* ===================================================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
+  authDomain: "gamenightdarts-e7601.firebaseapp.com",
+  projectId: "gamenightdarts-e7601",
+  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
+  messagingSenderId: "270045452251",
+  appId: "1:270045452251:web:393956ce18b43316e939fe",
+  measurementId: "G-LQEHF02ZVR"
+};
+
+let db = null;
+try{
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  logDebug("Firebase initialized (Firestore compat).");
+}catch(e){
+  logDebug("Firebase init ERROR: " + (e?.message || e));
+}
+
+/* ===================================================== */
+/* SECTION 10 — PLAYER REGISTRY (SEEDED)                  */
+/* ===================================================== */
+const players = {
+  "stevewmoody@yahoo.com": { name:"Steve Moody" },
+  "jmoody7712@gmail.com":  { name:"Jayce Moody" },
+  "wmoody7931@aol.com":    { name:"Bill Moody" }
+};
+
+/* ===================================================== */
+/* SECTION 11 — APP STATE                                 */
+/* ===================================================== */
+let currentEmail = null;
+let currentPlayer = null;
+let presenceUnsub = null;
+let invitesUnsub = null;
+let roomUnsub = null;
+let currentRoomId = null;
+
+/* ===================================================== */
+/* SECTION 12 — LOGIN SYSTEM                              */
+/* ===================================================== */
+async function login(){
+  const email = (document.getElementById("email").value||"").trim().toLowerCase();
+  if(!email){ alert("Enter an email"); return; }
+
+  if(!players[email]){
+    const name = prompt("Enter your name");
+    if(!name) return;
+    players[email] = { name: name.trim() || "Player" };
+  }
+  currentEmail = email;
+  currentPlayer = players[email];
+  showOnly("playerScreen");
+  renderPlayers(); // local render immediately
+  await startPresence(); // online dots
+  await listenInvites(); // incoming invites
+}
+
+/* ===================================================== */
+/* SECTION 13 — PLAYER LIST + ONLINE DOTS                 */
+/* ===================================================== */
+let onlineMap = {}; // email -> true/false
+function renderPlayers(){
+  const list = document.getElementById("playerList");
+  list.innerHTML = "";
+  Object.keys(players).forEach(email=>{
+    const row = document.createElement("div");
+    row.className = "player";
+    const isOnline = !!onlineMap[email];
+    row.innerHTML = `
+      <div>
+        <div><b>${players[email].name}</b></div>
+        <small>${email}</small>
+      </div>
+      <div class="dot ${isOnline ? "online":"offline"}">●</div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+/* ===================================================== */
+/* SECTION 14 — PRESENCE (ONLINE STATUS)                  */
+/* Firestore presence is "best-effort" on web.            */
+/* ===================================================== */
+async function startPresence(){
+  if(!db || !currentEmail) return;
+  // Mark self online (heartbeat)
+  const presRef = db.collection("presence").doc(currentEmail);
+  await presRef.set({
+    email: currentEmail,
+    name: currentPlayer?.name || "Player",
+    online: true,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  }, { merge:true });
+  logDebug("Presence set: online=true");
+
+  // Heartbeat every 20s
+  if(window.__presenceTimer) clearInterval(window.__presenceTimer);
+  window.__presenceTimer = setInterval(()=>{
+    presRef.set({ online:true, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge:true })
+      .catch(e=>logDebug("Presence heartbeat error: "+(e?.message||e)));
+  }, 20000);
+
+  // Listen to presence collection
+  if(presenceUnsub) presenceUnsub();
+  presenceUnsub = db.collection("presence").onSnapshot(snap=>{
+    const map = {};
+    snap.forEach(doc=>{
+      const d = doc.data() || {};
+      if(d.email) map[d.email] = !!d.online;
+    });
+    onlineMap = map;
+    renderPlayers();
+  }, err=>logDebug("Presence listen error: "+(err?.message||err)));
+
+  // Best-effort offline on unload
+  window.addEventListener("beforeunload", ()=>{
+    try{ presRef.set({ online:false, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge:true }); }catch(e){}
+  });
+}
+
+/* ===================================================== */
+/* SECTION 15 — PRACTICE MODE (LOCAL ONLY)                */
 /* ===================================================== */
 function practice(){
   alert("Practice mode (local only). Stats disabled.");
-  show("gameScreen");
-  startTurn();
+  showOnly("gameScreen");
+  startTurnLocal();
 }
 
 /* ===================================================== */
-/* SECTION 11 — LOBBY (UI ONLY FOR NOW)                   */
+/* SECTION 16 — MULTIPLAYER: ROOM + INVITES (BASIC)       */
+/* This is a working starting point. We expand next.      */
 /* ===================================================== */
 function openLobby(){
-  show("lobbyScreen");
+  showOnly("lobbyScreen");
+  buildInviteUI();
 }
-function startGame(){
-  show("gameScreen");
-  startTurn();
+
+function buildInviteUI(){
+  const area = document.getElementById("inviteArea");
+  area.innerHTML = "";
+  const others = Object.keys(players).filter(e=>e!==currentEmail);
+  if(!others.length){
+    area.innerHTML = "<small>No other players in registry.</small>";
+    return;
+  }
+  const wrap = document.createElement("div");
+  wrap.innerHTML = `<div style="margin-bottom:8px"><small>Select who to invite:</small></div>`;
+  others.forEach(e=>{
+    const id = "inv_"+btoa(e).replace(/=/g,"");
+    const line = document.createElement("div");
+    line.style.textAlign = "left";
+    line.innerHTML = `
+      <label style="display:flex;gap:10px;align-items:center;margin:6px 0">
+        <input type="checkbox" id="${id}" />
+        <span>${players[e].name} <small style="color:var(--muted)">(${e})</small></span>
+      </label>
+    `;
+    wrap.appendChild(line);
+  });
+  area.appendChild(wrap);
+}
+
+async function createRoomAndInvite(){
+  if(!db) { alert("Firebase not ready"); return; }
+  const area = document.getElementById("inviteArea");
+  const checks = Array.from(area.querySelectorAll("input[type=checkbox]"));
+  const invited = checks.filter(c=>c.checked).map(c=>{
+    const label = c.parentElement?.innerText || "";
+    // extract email between parentheses if present
+    const m = label.match(/\(([^)]+)\)/);
+    return m ? m[1].trim().toLowerCase() : null;
+  }).filter(Boolean);
+
+  if(invited.length < 1){
+    alert("Select at least 1 player to invite.");
+    return;
+  }
+
+  // Create room doc
+  const roomRef = db.collection("rooms").doc();
+  currentRoomId = roomRef.id;
+
+  const room = {
+    id: currentRoomId,
+    hostEmail: currentEmail,
+    hostName: currentPlayer?.name || "Host",
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    status: "waiting",
+    maxPlayers: 1 + invited.length,
+    players: {
+      [currentEmail]: { email: currentEmail, name: currentPlayer?.name || "Player", joined:true }
+    }
+  };
+
+  await roomRef.set(room);
+  logDebug("Room created: "+currentRoomId);
+
+  // Write invite docs
+  const batch = db.batch();
+  invited.forEach(email=>{
+    const invRef = db.collection("invites").doc(); // one invite per player per room
+    batch.set(invRef, {
+      toEmail: email,
+      fromEmail: currentEmail,
+      fromName: currentPlayer?.name || "Player",
+      roomId: currentRoomId,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      status: "pending"
+    });
+  });
+  await batch.commit();
+  logDebug("Invites sent: "+invited.join(", "));
+
+  document.getElementById("lobbyStatus").innerHTML = `<small>Room <b>${currentRoomId}</b> created. Waiting for players to join...</small>`;
+
+  // Listen to room updates (players joining)
+  listenRoom(currentRoomId);
+}
+
+async function listenInvites(){
+  if(!db || !currentEmail) return;
+  if(invitesUnsub) invitesUnsub();
+  invitesUnsub = db.collection("invites")
+    .where("toEmail","==",currentEmail)
+    .where("status","==","pending")
+    .onSnapshot(snap=>{
+      snap.forEach(doc=>{
+        const inv = doc.data() || {};
+        if(inv.roomId){
+          const ok = confirm(`Invite from ${inv.fromName||inv.fromEmail} to join room ${inv.roomId}. Join?`);
+          if(ok){
+            acceptInvite(doc.id, inv.roomId);
+          }else{
+            db.collection("invites").doc(doc.id).set({ status:"declined" }, { merge:true });
+          }
+        }
+      });
+    }, err=>logDebug("Invites listen error: "+(err?.message||err)));
+}
+
+async function acceptInvite(inviteId, roomId){
+  if(!db) return;
+  // mark invite accepted
+  await db.collection("invites").doc(inviteId).set({ status:"accepted" }, { merge:true });
+
+  // add self to room players map
+  const roomRef = db.collection("rooms").doc(roomId);
+  await roomRef.set({
+    players: {
+      [currentEmail]: { email: currentEmail, name: currentPlayer?.name || "Player", joined:true }
+    }
+  }, { merge:true });
+
+  currentRoomId = roomId;
+  showOnly("lobbyScreen");
+  document.getElementById("lobbyStatus").innerHTML = `<small>Joined room <b>${roomId}</b>. Waiting for host...</small>`;
+  listenRoom(roomId);
+}
+
+function listenRoom(roomId){
+  if(!db) return;
+  if(roomUnsub) roomUnsub();
+  roomUnsub = db.collection("rooms").doc(roomId).onSnapshot(doc=>{
+    const room = doc.data();
+    if(!room) return;
+    const p = room.players || {};
+    const names = Object.keys(p).map(e=>p[e].name || e);
+    document.getElementById("lobbyPlayers").innerHTML = `<small>Players in room:</small><div style="margin-top:8px">${names.map(n=>`<div class="player" style="justify-content:center">${n}</div>`).join("")}</div>`;
+    if(room.status === "started"){
+      // future: transition to synced game
+      document.getElementById("lobbyStatus").innerHTML = `<small>Game started (sync coming next).</small>`;
+    }
+  }, err=>logDebug("Room listen error: "+(err?.message||err)));
 }
 
 /* ===================================================== */
-/* SECTION 12 — TURN SYSTEM                               */
+/* SECTION 17 — LOCAL TURN SYSTEM (STABLE)                */
 /* ===================================================== */
 let turnOrder = [];
 let currentTurn = 0;
-function startTurn(){
+function startTurnLocal(){
   turnOrder = [currentPlayer?.name || "Player"];
   currentTurn = 0;
   document.getElementById("turnDisplay").innerText = "Turn: " + turnOrder[currentTurn];
 }
 
 /* ===================================================== */
-/* SECTION 13 — DART THROW ENGINE                         */
+/* SECTION 18 — LOCAL DART THROW ENGINE (STABLE)          */
 /* ===================================================== */
 function throwDart(score){
   alert((currentPlayer?.name || "Player") + " scored " + score);
 }
 
 /* ===================================================== */
-/* SECTION 14 — WIRE BUTTONS (NO SILENT FAIL)             */
+/* SECTION 19 — NAV BUTTONS                               */
 /* ===================================================== */
-document.addEventListener("DOMContentLoaded", () => {
+function backToPlayers(){
+  showOnly("playerScreen");
+}
+function leaveLobby(){
+  showOnly("playerScreen");
+}
+function signOut(){
+  // best-effort offline
+  try{
+    if(db && currentEmail){
+      db.collection("presence").doc(currentEmail).set({
+        online:false,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge:true });
+    }
+  }catch(e){}
+  currentEmail=null; currentPlayer=null; currentRoomId=null;
+  showOnly("loginScreen");
+}
+
+/* ===================================================== */
+/* SECTION 20 — WIRE BUTTONS (NO SILENT FAIL)             */
+/* ===================================================== */
+document.addEventListener("DOMContentLoaded", ()=>{
   document.getElementById("enterBtn").addEventListener("click", login);
   document.getElementById("practiceBtn").addEventListener("click", practice);
   document.getElementById("multiBtn").addEventListener("click", openLobby);
-  document.getElementById("startBtn").addEventListener("click", startGame);
-
-  // score buttons
-  document.querySelectorAll("[data-score]").forEach(btn => {
-    btn.addEventListener("click", () => throwDart(Number(btn.dataset.score)));
+  document.getElementById("createRoomBtn").addEventListener("click", createRoomAndInvite);
+  document.getElementById("leaveLobbyBtn").addEventListener("click", leaveLobby);
+  document.getElementById("signOutBtn").addEventListener("click", signOut);
+  document.getElementById("backToPlayersBtn").addEventListener("click", backToPlayers);
+  document.getElementById("toggleDebugBtn").addEventListener("click", ()=> showDebug(debugBox.style.display!=="block"));
+  document.querySelectorAll("[data-score]").forEach(btn=>{
+    btn.addEventListener("click", ()=> throwDart(Number(btn.dataset.score)));
   });
+  logDebug("DOM ready.");
 });
-
-/* ===================================================== */
-/* SECTION 15 — FIREBASE (COMING NEXT)                    */
-/* We will add Firestore presence + rooms AFTER this base */
-/* is confirmed stable on your phone.                     */
-/* ===================================================== */
 </script>
 
 </body>
