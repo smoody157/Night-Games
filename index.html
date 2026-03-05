@@ -454,6 +454,114 @@ button{
   bottom: 0;
 }
 
+
+/* ===================================================== */
+/* STEVE UI ORGANIZE PASS                                */
+/* ===================================================== */
+
+/* Stop seeing other screens behind the current one */
+.screen{
+  position: fixed;
+  left:0; right:0;
+  top:48px; bottom:0;
+  overflow:hidden;
+  display:none;          /* showOnly() controls visibility */
+  z-index:10;
+}
+#loginScreen{ display:flex; z-index:20; }
+#playerScreen{ z-index:15; }
+#lobbyScreen{ z-index:15; }
+#gameScreen{ z-index:15; }
+
+/* Make glass lighter (less dark) */
+.glass{
+  background: linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,.10)) !important;
+  border: 1px solid rgba(255,255,255,.20) !important;
+}
+
+/* Slim pill buttons */
+button.primary, button.ghost{
+  height: 32px !important;
+  padding: 6px 16px !important;
+  font-size: 12px !important;
+  border-radius: 999px !important;
+}
+
+/* Keep all row buttons same size and on the same line */
+.rowButtons{
+  display:flex !important;
+  gap:10px !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+}
+.rowButtons button{
+  min-width: 92px !important;
+  text-align:center !important;
+}
+
+/* Games list shows ~2 rows then scroll */
+#gamesList .scrollArea,
+#gamesList.scrollArea{
+  max-height: 210px !important;
+  overflow:auto !important;
+}
+
+/* Players list scroll stays; show ~2 players max (not the whole list) */
+#playerList.scrollArea{
+  max-height: 170px !important;
+  overflow:auto !important;
+}
+
+/* Move content up so LEADERBOARD is visible above bottom text */
+#playerScreen.screen{
+  padding-top: 160px !important;
+  padding-bottom: 110px !important;
+}
+
+/* FooterBar: keep above bottom text & always visible */
+#playerScreen .footerBar{
+  position: fixed;
+  left: var(--safePad);
+  right: var(--safePad);
+  bottom: 62px;               /* above browser bar + your white footer text */
+  width: var(--stageW);
+  margin: 0 auto;
+  z-index: 40;
+}
+
+/* Clean up frost use: hide frost on main sections */
+.frost{ display:none; }
+
+/* Login stairs spacing: email narrower than ENTER */
+#loginScreen{ align-items:flex-end; }
+#loginScreen .centerStack{
+  width: var(--stageW);
+  margin: 0 auto 20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 12px;
+}
+#loginScreen input{
+  width: 86% !important;
+  max-width: 86% !important;
+  height: 40px !important;
+}
+#loginScreen #enterBtn{
+  width: 92% !important;
+  max-width: 92% !important;
+  height: 42px !important;
+}
+
+
+/* Header small button (SESSION/❤️ SUPPORT) */
+.panelHeader button{
+  height: 30px !important;
+  padding: 6px 14px !important;
+  font-size: 12px !important;
+  border-radius: 999px !important;
+}
+
 </style>
 </head>
 
@@ -494,7 +602,7 @@ button{
     <div class="glass">
       <div class="glassHeader">
         <div>GAMES</div>
-        <button id="sessionBtn" type="button" class="ghost">SESSION</button>
+        <button id="sessionBtn" type="button" class="ghost" onclick="window.open('https://venmo.com/u/Steve-Moody-8','_blank')" onclick="window.open(\'https://venmo.com/u/Steve-Moody-8\',\'_blank\')">❤️ SUPPORT</button>
       </div>
       <div class="glassBody" scrollArea id="gamesList">
 <div class="scrollArea">
@@ -623,7 +731,6 @@ button{
 
   <div class="footerBar">
     <button id="leaderboardBtn" type="button" class="ghost">LEADERBOARD</button>
-    <a class="donateButton" href="https://venmo.com/u/Steve-Moody-8" target="_blank" rel="noopener">❤️ Help support this app and future updates</a>
     <small>© 2026 The Dart Room</small>
   </div>
 </div>
@@ -722,10 +829,13 @@ function showDebug(on){ debugBox.style.display = on ? "block" : "none"; }
 /* ===================================================== */
 /* SUBSEC 16B — SCREEN NAV                            */
 /* ===================================================== */
-function showOnly(screenId){
-  ["loginScreen","playerScreen","lobbyScreen","gameScreen"].forEach(id=>{
-    document.getElementById(id).style.display = (id===screenId) ? "block" : "none";
+function showOnly(id){
+  const ids = ["loginScreen","playerScreen","lobbyScreen","gameScreen"];
+  ids.forEach(x=>{
+    const el = document.getElementById(x);
+    if(el) el.style.display = (x===id) ? "flex" : "none";
   });
+});
 }
 
 /* ===================================================== */
