@@ -426,6 +426,34 @@ button{
   border-color: rgba(255,255,255,.22);
 }
 
+
+/* ===================================================== */
+/* SCROLL EVERYWHERE (Steve rule):                        */
+/* - player screen content scrolls                        */
+/* - games list scrolls (1–2 rows visible)                */
+/* - player list scrolls (1 row visible)                  */
+/* ===================================================== */
+.stageScroll{
+  width: var(--stageW);
+  max-height: calc(100vh - var(--topClear) - var(--botClear) - 48px);
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  padding-bottom: 10px;
+}
+
+/* show 1–2 games at a time */
+#gamesList.scrollArea{ max-height: 210px !important; overflow:auto; }
+/* show ~1 player at a time */
+#playerList.scrollArea{ max-height: 92px !important; overflow:auto; }
+
+/* keep footer visible */
+#playerScreen .footerBar{
+  position: sticky;
+  bottom: 0;
+}
+
 </style>
 </head>
 
@@ -468,17 +496,83 @@ button{
         <div>GAMES</div>
         <button id="sessionBtn" type="button" class="ghost">SESSION</button>
       </div>
-      <div class="glassBody" id="gamesList">
+      <div class="glassBody" scrollArea id="gamesList">
 <div class="scrollArea">
 
+<!-- Games Rows (scroll) -->
+<div class="gameRow">
+  <div class="gameInfo">
+    <div class="gameName">01</div>
+    <div class="gameSub">Practice / Local testing</div>
+  </div>
+  <div class="rowButtons">
+    <button id="zeroOneEnterBtn" class="primary" type="button">ENTER</button>
+    <button class="ghost" type="button" onclick="alert('Rules (placeholder)')">RULES</button>
+    <button class="ghost" type="button" onclick="alert('History (placeholder)')">HISTORY</button>
+  </div>
+</div>
 
-        <!-- ===================================================== -->
-        <!-- SUBSEC 11A — PLUG-AND-PLAY GAME MODULES               -->
-        <!-- ===================================================== -->
+<div class="gameRow">
+  <div class="gameInfo">
+    <div class="gameName">Cricket</div>
+    <div class="gameSub">Practice / Local testing</div>
+  </div>
+  <div class="rowButtons">
+    <button id="practiceBtn" class="primary" type="button">ENTER</button>
+    <button class="ghost" type="button" onclick="alert('Rules (placeholder)')">RULES</button>
+    <button class="ghost" type="button" onclick="alert('History (placeholder)')">HISTORY</button>
+  </div>
+</div>
 
-        <div class="listRow">
-          <div>
-            <div class="name">Cricket</div>
+<div class="gameRow">
+  <div class="gameInfo">
+    <div class="gameName">Killer</div>
+    <div class="gameSub">Multiplayer lobby</div>
+  </div>
+  <div class="rowButtons">
+    <button id="multiBtn" class="primary" type="button">ENTER</button>
+    <button class="ghost" type="button" onclick="alert('Rules (placeholder)')">RULES</button>
+    <button class="ghost" type="button" onclick="alert('History (placeholder)')">HISTORY</button>
+  </div>
+</div>
+
+<div class="gameRow">
+  <div class="gameInfo">
+    <div class="gameName">Around the World</div>
+    <div class="gameSub">Practice / Local testing</div>
+  </div>
+  <div class="rowButtons">
+    <button id="atwEnterBtn" class="primary" type="button">ENTER</button>
+    <button class="ghost" type="button" onclick="alert('Rules (placeholder)')">RULES</button>
+    <button class="ghost" type="button" onclick="alert('History (placeholder)')">HISTORY</button>
+  </div>
+</div>
+
+<div class="gameRow">
+  <div class="gameInfo">
+    <div class="gameName">Half-It</div>
+    <div class="gameSub">Practice / Local testing</div>
+  </div>
+  <div class="rowButtons">
+    <button id="halfItEnterBtn" class="primary" type="button">ENTER</button>
+    <button class="ghost" type="button" onclick="alert('Rules (placeholder)')">RULES</button>
+    <button class="ghost" type="button" onclick="alert('History (placeholder)')">HISTORY</button>
+  </div>
+</div>
+
+<div class="gameRow">
+  <div class="gameInfo">
+    <div class="gameName">Shanghai</div>
+    <div class="gameSub">Practice / Local testing</div>
+  </div>
+  <div class="rowButtons">
+    <button id="shanghaiEnterBtn" class="primary" type="button">ENTER</button>
+    <button class="ghost" type="button" onclick="alert('Rules (placeholder)')">RULES</button>
+    <button class="ghost" type="button" onclick="alert('History (placeholder)')">HISTORY</button>
+  </div>
+</div>
+
+</div>
             <div class="meta">Practice / Local testing</div>
           </div>
           <div class="rowButtons">
@@ -547,12 +641,12 @@ button{
       <div class="glassBody">
         <div id="lobbyStatus"><small>Select players, then Create Room.</small></div>
         <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
-        <div id="inviteArea" class="scrollArea"></div>
+        <div id="inviteArea" class="scrollArea" class="scrollArea"></div>
         <div style="margin-top:12px">
           <button id="createRoomBtn" type="button" class="primary">CREATE ROOM</button>
         </div>
         <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
-        <div id="lobbyPlayers" class="scrollArea"><small>Players will show here after wiring Firestore.</small></div>
+        <div id="lobbyPlayers" class="scrollArea" class="scrollArea"><small>Players will show here after wiring Firestore.</small></div>
       </div>
     </div>
   </div>
@@ -786,6 +880,12 @@ function openHistory(email){
 /* SECTION 22 — BUTTON WIRING (NO SILENT FAIL)            */
 /* ===================================================== */
 document.addEventListener("DOMContentLoaded", ()=>{
+  // bindMoreGames
+  const bind2 = (id, fn) => { const el = document.getElementById(id); if(el) el.addEventListener("click", fn); };
+  bind2("zeroOneEnterBtn", () => startGame("01"));
+  bind2("atwEnterBtn", () => startGame("atw"));
+  bind2("halfItEnterBtn", () => startGame("halfit"));
+
   // bindGameButtons
   const bind = (id, fn) => { const el = document.getElementById(id); if(el) el.addEventListener("click", fn); };
   bind("practiceBtn", () => startGame("cricket"));
