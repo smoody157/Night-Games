@@ -2,249 +2,180 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Night Games</title>
 
-<!-- MASTER TRAINING BUILD -->
-<!-- Organized so you can learn the architecture -->
-
+<!-- ===================================================== -->
+<!-- SECTION 1 — VISUAL SETTINGS (SAFE TO EDIT)            -->
+<!-- ===================================================== -->
 <style>
-body{background:#0b0f18;color:white;font-family:Arial;margin:0}
-header{background:#020617;padding:20px;text-align:center;font-size:32px}
-.panel{padding:20px;text-align:center}
-button{padding:10px 20px;margin:6px;border-radius:6px;border:none;background:#22c55e}
-input{padding:8px;font-size:16px}
-.player{padding:6px}
-.online{color:#22c55e}
+  body{background:#0b0f18;color:#fff;font-family:Arial,Helvetica,sans-serif;margin:0}
+  header{background:#020617;padding:18px;text-align:center;font-size:28px}
+  .panel{padding:20px;text-align:center}
+  button{padding:10px 20px;margin:6px;border-radius:6px;border:none;background:#22c55e;cursor:pointer}
+  input{padding:10px;font-size:16px;border-radius:6px;border:none;width:260px;max-width:85%}
+  .player{padding:6px}
+  .online{color:#22c55e}
 </style>
-
 </head>
-<body>
 
+<body>
 <header>Night Games</header>
 
 <!-- ===================================================== -->
-<!-- SECTION 1 — LOGIN SCREEN -->
+<!-- SECTION 2 — LOGIN SCREEN                              -->
 <!-- ===================================================== -->
-
 <div id="loginScreen" class="panel">
-<h2>Sign In</h2>
-<input id="email" placeholder="enter email">
-<br><br>
-<button id="enterBtn" type="button">ENTER</button>
+  <h2>Sign In</h2>
+  <input id="email" placeholder="enter email">
+  <br><br>
+  <button id="enterBtn" type="button">ENTER</button>
 </div>
 
-
-
 <!-- ===================================================== -->
-<!-- SECTION 2 — PLAYER PAGE -->
+<!-- SECTION 3 — PLAYER PAGE                               -->
 <!-- ===================================================== -->
-
 <div id="playerScreen" class="panel" style="display:none">
-<h2>Players</h2>
-<div id="playerList"></div>
-<hr>
-<button onclick="practice()">Practice</button>
-<button onclick="openLobby()">Multiplayer</button>
+  <h2>Players</h2>
+  <div id="playerList"></div>
+  <hr>
+  <button id="practiceBtn" type="button">Practice</button>
+  <button id="multiBtn" type="button">Multiplayer</button>
 </div>
 
-
-
 <!-- ===================================================== -->
-<!-- SECTION 3 — MULTIPLAYER LOBBY -->
+<!-- SECTION 4 — MULTIPLAYER LOBBY                         -->
 <!-- ===================================================== -->
-
 <div id="lobbyScreen" class="panel" style="display:none">
-<h2>Lobby</h2>
-<div id="lobbyPlayers">Waiting for players...</div>
-<button onclick="startGame()">Start Game</button>
+  <h2>Lobby</h2>
+  <div id="lobbyPlayers">Waiting for players...</div>
+  <br>
+  <button id="startBtn" type="button">Start Game</button>
 </div>
 
-
-
 <!-- ===================================================== -->
-<!-- SECTION 4 — GAME AREA -->
+<!-- SECTION 5 — GAME AREA                                 -->
 <!-- ===================================================== -->
-
 <div id="gameScreen" class="panel" style="display:none">
-<h2 id="turnDisplay"></h2>
-<button onclick="throwDart(20)">20</button>
-<button onclick="throwDart(19)">19</button>
-<button onclick="throwDart(18)">18</button>
-<button onclick="throwDart(5)">5</button>
-<button onclick="throwDart(1)">1</button>
+  <h2 id="turnDisplay"></h2>
+  <div style="margin:10px 0">Dart Board Test</div>
+  <button type="button" data-score="20">20</button>
+  <button type="button" data-score="19">19</button>
+  <button type="button" data-score="18">18</button>
+  <button type="button" data-score="5">5</button>
+  <button type="button" data-score="1">1</button>
 </div>
 
-
-<script type="module">
-
+<script>
 /* ===================================================== */
-/* SECTION 5 — PLAYER REGISTRY                           */
+/* SECTION 6 — PLAYER REGISTRY                            */
 /* ===================================================== */
-
-const players={
-"stevewmoody@yahoo.com":{name:"Steve Moody"},
-"jmoody7712@gmail.com":{name:"Jayce Moody"},
-"wmoody7931@aol.com":{name:"Bill Moody"}
+const players = {
+  "stevewmoody@yahoo.com": { name: "Steve Moody" },
+  "jmoody7712@gmail.com": { name: "Jayce Moody" },
+  "wmoody7931@aol.com":   { name: "Bill Moody" }
 };
-
-let currentPlayer=null;
+let currentPlayer = null;
 
 /* ===================================================== */
-/* SECTION 6 — LOGIN SYSTEM                              */
+/* SECTION 7 — UI HELPERS                                 */
 /* ===================================================== */
+function show(elId){
+  document.getElementById("loginScreen").style.display = (elId==="loginScreen") ? "block" : "none";
+  document.getElementById("playerScreen").style.display = (elId==="playerScreen") ? "block" : "none";
+  document.getElementById("lobbyScreen").style.display = (elId==="lobbyScreen") ? "block" : "none";
+  document.getElementById("gameScreen").style.display  = (elId==="gameScreen")  ? "block" : "none";
+}
 
+/* ===================================================== */
+/* SECTION 8 — LOGIN SYSTEM                               */
+/* ===================================================== */
 function login(){
+  const email = (document.getElementById("email").value || "").trim().toLowerCase();
+  if(!email){ alert("Enter an email"); return; }
 
-const email=document.getElementById("email").value;
-
-if(!players[email]){
-const name=prompt("Enter your name");
-players[email]={name:name};
-}
-
-currentPlayer=players[email];
-
-document.getElementById("loginScreen").style.display="none";
-document.getElementById("playerScreen").style.display="block";
-
-showPlayers();
-
+  if(!players[email]){
+    const name = prompt("Enter your name");
+    if(!name){ return; }
+    players[email] = { name: name.trim() || "Player" };
+  }
+  currentPlayer = players[email];
+  show("playerScreen");
+  renderPlayers();
 }
 
 /* ===================================================== */
-/* SECTION 7 — PLAYER LIST                               */
+/* SECTION 9 — PLAYER LIST                                */
 /* ===================================================== */
-
-function showPlayers(){
-
-let list=document.getElementById("playerList");
-list.innerHTML="";
-
-for(let p in players){
-
-let div=document.createElement("div");
-div.className="player";
-
-div.innerHTML=players[p].name+" <span class='online'>●</span>";
-
-list.appendChild(div);
-
-}
-
+function renderPlayers(){
+  const list = document.getElementById("playerList");
+  list.innerHTML = "";
+  Object.keys(players).forEach(email => {
+    const div = document.createElement("div");
+    div.className = "player";
+    div.innerHTML = players[email].name + " <span class='online'>●</span>";
+    list.appendChild(div);
+  });
 }
 
 /* ===================================================== */
-/* SECTION 8 — PRACTICE MODE                             */
+/* SECTION 10 — PRACTICE MODE (LOCAL ONLY)                */
 /* ===================================================== */
-
 function practice(){
-
-alert("Practice mode (local only)");
-
-document.getElementById("playerScreen").style.display="none";
-document.getElementById("gameScreen").style.display="block";
-
-startTurn();
-
+  alert("Practice mode (local only). Stats disabled.");
+  show("gameScreen");
+  startTurn();
 }
 
 /* ===================================================== */
-/* SECTION 9 — LOBBY SYSTEM                              */
+/* SECTION 11 — LOBBY (UI ONLY FOR NOW)                   */
 /* ===================================================== */
-
 function openLobby(){
-
-document.getElementById("playerScreen").style.display="none";
-document.getElementById("lobbyScreen").style.display="block";
-
+  show("lobbyScreen");
 }
-
-/* ===================================================== */
-/* SECTION 10 — START GAME                               */
-/* ===================================================== */
-
 function startGame(){
-
-document.getElementById("lobbyScreen").style.display="none";
-document.getElementById("gameScreen").style.display="block";
-
-startTurn();
-
+  show("gameScreen");
+  startTurn();
 }
 
 /* ===================================================== */
-/* SECTION 11 — TURN SYSTEM                              */
+/* SECTION 12 — TURN SYSTEM                               */
 /* ===================================================== */
-
-let turnOrder=[];
-let currentTurn=0;
-
+let turnOrder = [];
+let currentTurn = 0;
 function startTurn(){
-
-turnOrder=[currentPlayer.name];
-currentTurn=0;
-
-document.getElementById("turnDisplay").innerText="Turn: "+turnOrder[currentTurn];
-
+  turnOrder = [currentPlayer?.name || "Player"];
+  currentTurn = 0;
+  document.getElementById("turnDisplay").innerText = "Turn: " + turnOrder[currentTurn];
 }
 
 /* ===================================================== */
-/* SECTION 12 — DART THROW ENGINE                        */
+/* SECTION 13 — DART THROW ENGINE                         */
 /* ===================================================== */
-
 function throwDart(score){
-
-alert(currentPlayer.name+" scored "+score);
-
+  alert((currentPlayer?.name || "Player") + " scored " + score);
 }
 
 /* ===================================================== */
-/* SECTION 13 — STATS ENGINE (STRUCTURE)                  */
+/* SECTION 14 — WIRE BUTTONS (NO SILENT FAIL)             */
 /* ===================================================== */
-
-function recordStats(){
-
-console.log("Stats placeholder");
-
-}
-
-/* ===================================================== */
-/* SECTION 14 — GAME MODULE SYSTEM                        */
-/* ===================================================== */
-
-const gameModules={};
-
-function registerGame(id,engine){
-
-gameModules[id]=/* ===================================================== */
-/* SECTION 15 — FIREBASE CONNECTION                      */
-/* ===================================================== */
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-
-apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-authDomain: "gamenightdarts-e7601.firebaseapp.com",
-projectId: "gamenightdarts-e7601",
-storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-messagingSenderId: "270045452251",
-appId: "1:270045452251:web:393956ce18b43316e939fe",
-measurementId: "G-LQEHF02ZVR"
-
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-// STEP 2 — hard-wire the ENTER button to login()
 document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("enterBtn");
-  if (btn) btn.addEventListener("click", () => {
-    alert("ENTER clicked");
-    login();
+  document.getElementById("enterBtn").addEventListener("click", login);
+  document.getElementById("practiceBtn").addEventListener("click", practice);
+  document.getElementById("multiBtn").addEventListener("click", openLobby);
+  document.getElementById("startBtn").addEventListener("click", startGame);
+
+  // score buttons
+  document.querySelectorAll("[data-score]").forEach(btn => {
+    btn.addEventListener("click", () => throwDart(Number(btn.dataset.score)));
   });
 });
+
+/* ===================================================== */
+/* SECTION 15 — FIREBASE (COMING NEXT)                    */
+/* We will add Firestore presence + rooms AFTER this base */
+/* is confirmed stable on your phone.                     */
+/* ===================================================== */
 </script>
 
 </body>
