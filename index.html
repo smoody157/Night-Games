@@ -194,6 +194,10 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
     cursor:pointer;
   }
   button.primary{
+    background: rgba(255,255,255,.14);
+    border-color: rgba(255,255,255,.22);
+    color:#fff;
+
     background: rgba(34,197,94,.85);
     border-color: rgba(34,197,94,.30);
     color: #06210f;
@@ -383,6 +387,45 @@ button{
   flex-wrap:wrap;
 }
 
+
+/* ===================================================== */
+/* TUNING (per Steve): one-player visible + dot by name   */
+/* ===================================================== */
+#playerScreen.screen{ padding-top: 175px !important; } /* avoid covering logo area */
+
+/* show about one player row at a time */
+#playerList.scrollArea{ max-height: 92px !important; }
+
+/* remove frost look from main UI (keep class available for future sub-panels) */
+.frost{ display:none; }
+
+/* list row layout: dot right next to name */
+.listRow{ justify-content:flex-start; gap:10px; }
+.listRow .rowButtons{ margin-left:auto; display:flex; gap:8px; }
+
+
+/* ===================================================== */
+/* LANDING (per Steve): clean, under-stage controls       */
+/* ===================================================== */
+#loginScreen .hero{ display:none; } /* logo baked into background */
+
+/* controls sit low ("under stage") */
+#loginScreen{ align-items:flex-end; }
+#loginScreen .centerStack{ margin-bottom: 18px; }
+
+/* email pill: skinny + long as stage */
+#loginScreen input{
+  padding: 12px 16px;
+  font-size: 18px;
+  border-radius: 999px;
+}
+
+/* enter button: same glass color (not green) */
+#loginScreen #enterBtn.primary{
+  background: rgba(255,255,255,.14);
+  border-color: rgba(255,255,255,.22);
+}
+
 </style>
 </head>
 
@@ -411,8 +454,7 @@ button{
   <div class="centerStack">
     <input id="email" placeholder="player@example.com">
     <button id="enterBtn" type="button" class="primary">ENTER</button>
-    <button id="toggleDebugBtn" type="button" class="ghost">DEBUG</button>
-  </div>
+</div>
 </div>
 
 <!-- ===================================================== -->
@@ -569,6 +611,7 @@ const players = {
   "wmoody7931@aol.com":    { name:"Bill Moody" }
 };
 let currentEmail = null;
+let onlineMap = {};
 let currentPlayer = null;
 
 /* ===================================================== */
@@ -620,6 +663,7 @@ function login(){
 /* ===================================================== */
 /* SECTION 18 — PLAYERS LIST (WORKING)                    */
 /* ===================================================== */
+
 function renderPlayers(){
   const list = document.getElementById("playerList");
   list.innerHTML = "";
@@ -627,16 +671,27 @@ function renderPlayers(){
     const row = document.createElement("div");
     row.className = "listRow";
     const isMe = (email === currentEmail);
+    const isOnline = (onlineMap && onlineMap[email]) || isMe;
+    const dotClass = isOnline ? "online" : "offline";
     row.innerHTML = `
-      <div>
-        <div class="name">${players[email].name}${isMe ? " (You)" : ""}</div>
-        <div class="meta">${email}</div>
+      <div style="display:flex;align-items:center;gap:10px;min-width:0">
+        <div class="dot ${dotClass}">●</div>
+        <div style="min-width:0">
+          <div class="name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+            ${players[email].name}${isMe ? " (You)" : ""}
+          </div>
+          <div class="meta" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${email}</div>
+        </div>
       </div>
-      <div class="dot ${isMe ? "online" : "offline"}">●</div>
+      <div class="rowButtons">
+        <button type="button" class="ghost" onclick="openStats('${email.replace("'", "\\'")}')">STATS</button>
+        <button type="button" class="ghost" onclick="openHistory('${email.replace("'", "\\'")}')">HISTORY</button>
+      </div>
     `;
     list.appendChild(row);
   });
 }
+
 
 /* ===================================================== */
 /* SECTION 19 — PRACTICE MODE (WORKING)                   */
@@ -715,6 +770,17 @@ function startGame(gameKey){
   // Cricket + Shanghai currently launch local Practice screen.
   // Next step: replace with real engines + multiplayer sync.
   practice();
+}
+
+
+/* ===================================================== */
+/* PLAYER BUTTONS (placeholders — wire later)             */
+/* ===================================================== */
+function openStats(email){
+  alert("Stats (placeholder) for: " + email);
+}
+function openHistory(email){
+  alert("History (placeholder) for: " + email);
 }
 
 /* SECTION 22 — BUTTON WIRING (NO SILENT FAIL)            */
