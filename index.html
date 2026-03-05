@@ -53,9 +53,9 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
         --logo-img: url("assets/nightgames_logo.png");
       If you leave them as 'none', gradients are used and everything still works.
     */
-    --login-bg-img: none;
-    --player-bg-img: none;
-    --logo-img: none;
+    --login-bg-img: url("assets/login_bg.jpg");
+    --player-bg-img: url("assets/player_bg.jpg");
+    --logo-img: url("assets/logo.png");
 
     /* Fallback gradients */
     --login-bg-fallback:
@@ -251,6 +251,28 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
     z-index:9999;
   }
   #debugBox b{display:block;margin-bottom:6px}
+
+  /* ===================================================== */
+  /* DONATE BUTTON (LOW PROFILE)                           */
+  /* ===================================================== */
+  .donateButton{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 12px;
+    font-size:12px;
+    border-radius:999px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(255,255,255,.10);
+    color: #fff;
+    text-decoration:none;
+    opacity:.88;
+    font-weight:900;
+    letter-spacing:.3px;
+    text-transform: none;
+  }
+  .donateButton:hover{ opacity:1; }
+
 </style>
 </head>
 
@@ -351,6 +373,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
 
   <div class="footerBar">
     <button id="leaderboardBtn" type="button" class="ghost">LEADERBOARD</button>
+    <a class="donateButton" href="https://venmo.com/u/Steve-Moody-8" target="_blank" rel="noopener">❤️ Help support this app and future updates</a>
     <small>© 2026 The Dart Room</small>
   </div>
 </div>
@@ -554,18 +577,7 @@ function createRoomAndInvite_UIOnly(){
 /* SECTION 21 — FIREBASE / FIRESTORE (ADD LATER)          */
 /* ===================================================== */
 /*
- const firebaseConfig = {
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-  projectId: "gamenightdarts-e7601",
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-  messagingSenderId: "270045452251",
-  appId: "1:270045452251:web:393956ce18b43316e939fe",
-  measurementId: "G-LQEHF02ZVR"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore(); When you’re ready, we add Firebase compat scripts + Firestore here.
+  When you’re ready, we add Firebase compat scripts + Firestore here.
   For now, UI stays stable and you learn the structure without breakage.
 */
 
