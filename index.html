@@ -237,7 +237,14 @@ measurementId: "G-LQEHF02ZVR"
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
+// STEP 2 — hard-wire the ENTER button to login()
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("enterBtn");
+  if (btn) btn.addEventListener("click", () => {
+    alert("ENTER clicked");
+    login();
+  });
+});
 </script>
 
 </body>
