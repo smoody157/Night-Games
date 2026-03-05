@@ -1,1168 +1,698 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Night Games</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Night Games v1234.0-clean</title>
 
-<!-- =====================================================================
-NIGHT GAMES — MORE COMPLETE TRAINING BUILD (UI-FIRST + CLEAN SECTIONS)
-ONE FILE. Drop into repo as: index.html
-
-WHAT THIS BUILD DOES (WORKING TODAY):
-✅ Landing (login) page with "your style" (top bar + hero + glass UI)
-✅ Email-only sign-in (no password). Seeds Steve/Jayce/Bill.
-✅ Switches to Players page (Games panel + Players panel) like your screenshot
-✅ Practice mode (local, no stats) opens a simple Game screen
-✅ Multiplayer UI shell (Lobby screen + Invite checkboxes + Create Room button)
-✅ Debug overlay button that always works
-
-WHAT THIS BUILD INTENTIONALLY LEAVES OUT (SO IT WON’T BREAK):
-⛔ Full multiplayer sync (turn lock / synced throws / real-time scoring)
-⛔ Firestore rooms/invites wiring (we add AFTER UI is stable for you)
-
-WHY THIS IS BETTER FOR YOU:
-- You get a “real” looking app immediately (your skins / layout style)
-- Buttons work. Screen switching works.
-- Then we add Firebase/Firestore back in one small section at a time.
-
-YOU ONLY EDIT 2 AREAS RIGHT NOW:
-1) Artwork paths (top of file)
-2) Firebase/Firestore wiring (near bottom)
-
-===================================================================== -->
-
-<!-- ===================================================== -->
-<!-- SECTION 1 — VISUAL SETTINGS + ARTWORK PATHS (EDIT ME) -->
-<!-- ===================================================== -->
 <style>
-  :root{
-    --bg:#05070d;
-    --glass: rgba(255,255,255,.10);
-    --glass2: rgba(255,255,255,.06);
-    --stroke: rgba(255,255,255,.14);
-    --text:#fff;
-    --muted:#a7b0c0;
-    --accent:#22c55e;
-    --gold:#fbbf24;
+/* =====================================================
+   NIGHT GAMES — MASTER TRAINING BUILD (v1234.0-clean)
+   GOAL: Clean, readable, no patch junk, stable UI flow.
+   Pages:
+   - Login (landing)
+   - Players
+   - Lobby (waiting room placeholder wiring)
+   - Game (placeholder)
+   ===================================================== */
 
-    /* ===== ARTWORK PATHS (optional) =====
-      Put your repo image paths here, example:
-        --login-bg-img: url("IMG_7390.jpeg");
-        --player-bg-img: url("IMG_7315.jpeg");
-        --logo-img: none;
-      If you leave them as 'none', gradients are used and everything still works.
-    */
-    --login-bg-img: url("IMG_7390.jpeg");
-    --player-bg-img: url("IMG_7315.jpeg");
-    --logo-img: none;
-
-    /* Fallback gradients */
-    --login-bg-fallback:
-      radial-gradient(circle at 50% 30%, rgba(34,197,94,.18), transparent 55%),
-      radial-gradient(circle at 30% 70%, rgba(59,130,246,.18), transparent 55%),
-      linear-gradient(180deg, #020617 0%, #05070d 60%, #020617 100%);
-
-    --player-bg-fallback:
-      radial-gradient(circle at 50% 30%, rgba(34,197,94,.12), transparent 55%),
-      radial-gradient(circle at 30% 70%, rgba(59,130,246,.14), transparent 55%),
-      linear-gradient(180deg, #020617 0%, #05070d 70%, #020617 100%);
-  }
-
-  body{ margin:0; min-height:100vh; background:var(--bg); color:var(--text);
-        font-family: Arial, Helvetica, sans-serif; }
-
-  /* ===================================================== */
-  /* SECTION 2 — TOP STATUS BAR (CSS) */
-  /* ===================================================== */
-  .topbar{
-    position:sticky; top:0; z-index:10;
-    display:flex; justify-content:space-between; align-items:center;
-    padding:10px 14px;
-    background: rgba(0,0,0,.55);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255,255,255,.10);
-    font-weight:900; letter-spacing:.8px;
-    text-transform: uppercase; font-size:12px;
-  }
-  .topbar .left{ color:var(--gold); }
-  .topbar .center{ color:#e5e7eb; }
-  .topbar .right{ color:var(--accent); }
-  .topbar small{ font-weight:800; color:var(--muted); text-transform:none; letter-spacing:0; }
-
-  /* ===================================================== */
-  /* SECTION 3 — SCREEN BACKGROUNDS (CSS) */
-  /* ===================================================== */
-  .screen{
-    min-height: calc(100vh - 48px);
-    padding: 18px 14px 40px;
-    background: var(--login-bg-fallback);
-    background-size: cover;
-    background-position: center;
-  }
-  #loginScreen{ background-image: var(--login-bg-img); }
-  #playerScreen, #lobbyScreen, #gameScreen{
-    background: var(--player-bg-fallback);
-    background-size: cover; background-position: center;
-  }
-  #playerScreen{ background-image: var(--player-bg-img); }
-
-  /* ===================================================== */
-  /* SECTION 4 — HERO / LOGO (CSS) */
-  /* ===================================================== */
-  .hero{
-    max-width: 860px;
-    margin: 40px auto 34px; /* spacing so panels don’t collide */
-    text-align:center;
-  }
-  .logo{
-    width:min(720px, 95%);
-    height: clamp(140px, 22vw, 260px);
-    margin: 8px auto 14px;
-    border-radius: 22px;
-    border: 1px solid rgba(255,255,255,.12);
-    background:
-      radial-gradient(circle at 20% 20%, rgba(255,255,255,.08), transparent 60%),
-      radial-gradient(circle at 80% 30%, rgba(34,197,94,.10), transparent 55%),
-      linear-gradient(135deg, rgba(59,130,246,.15), rgba(239,68,68,.12));
-    box-shadow: 0 18px 50px rgba(0,0,0,.55);
-    position:relative;
-    overflow:hidden;
-  }
-  .logo::before{
-    content:"";
-    position:absolute; inset:0;
-    background-image: var(--logo-img);
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    opacity: 1;
-  }
-  .logoText{
-    position:absolute; inset:0;
-    display:flex; align-items:center; justify-content:center;
-    font-size: clamp(34px, 7vw, 72px);
-    font-weight:900;
-    text-shadow: 0 8px 28px rgba(0,0,0,.6);
-    pointer-events:none;
-  }
-  .subtag{ color: var(--muted); font-weight:800; margin-top: 6px; }
-
-  /* ===================================================== */
-  /* SECTION 5 — GLASS PANELS + GRID (CSS) */
-  /* ===================================================== */
-  .grid{
-    max-width: 860px;
-    margin: 12px auto 0 auto;
-    display:grid;
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-  @media (min-width: 860px){
-    .grid.two{ grid-template-columns: 1.2fr 1fr; }
-  }
-  .glass{
-    background: linear-gradient(180deg, var(--glass), var(--glass2));
-    border: 1px solid var(--stroke);
-    border-radius: 18px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 18px 50px rgba(0,0,0,.45);
-    overflow:hidden;
-  }
-  .glassHeader{
-    display:flex; justify-content:space-between; align-items:center;
-    padding: 12px 14px;
-    font-weight:900; letter-spacing:.8px;
-    text-transform:uppercase;
-    border-bottom: 1px solid rgba(255,255,255,.10);
-    background: rgba(0,0,0,.18);
-  }
-  .glassBody{ padding: 12px 14px; }
-
-  /* ===================================================== */
-  /* SECTION 6 — CONTROLS (CSS) */
-  /* ===================================================== */
-  button{
-    padding: 10px 16px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.18);
-    background: rgba(255,255,255,.10);
-    color: #fff;
-    font-weight:900;
-    letter-spacing:.6px;
-    text-transform: uppercase;
-    cursor:pointer;
-  }
-  button.primary{
-    background: rgba(255,255,255,.14);
-    border-color: rgba(255,255,255,.22);
-    color:#fff;
-
-    background: rgba(34,197,94,.85);
-    border-color: rgba(34,197,94,.30);
-    color: #06210f;
-  }
-  button.ghost{ background: rgba(255,255,255,.08); }
-
-  input{
-    width:min(520px, 92%);
-    padding: 14px 16px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.18);
-    background: rgba(255,255,255,.08);
-    color:#fff;
-    font-size: 18px;
-    outline:none;
-  }
-  input::placeholder{ color: rgba(255,255,255,.65); }
-  .centerStack{ display:flex; flex-direction:column; align-items:center; gap:12px; }
-
-  /* ===================================================== */
-  /* SECTION 7 — LISTS (CSS) */
-  /* ===================================================== */
-  .listRow{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap: 10px;
-    padding: 10px 8px;
-    border-bottom: 1px solid rgba(255,255,255,.08);
-  }
-  .listRow:last-child{ border-bottom:none; }
-  .name{ font-weight:900; }
-  .meta{ color: var(--muted); font-size: 12px; margin-top: 2px; }
-  .dot{ font-size: 18px; }
-  .online{ color: var(--accent); }
-  .offline{ color: #64748b; }
-  .rowButtons{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
-
-  .footerBar{
-    max-width: 860px; margin: 16px auto 0;
-    display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
-    color: var(--muted);
-    font-size: 12px;
-  }
-
-  /* ===================================================== */
-  /* SECTION 8 — DEBUG BOX (CSS) */
-  /* ===================================================== */
-  #debugBox{
-    position:fixed; left:10px; right:10px; bottom:10px;
-    background:rgba(0,0,0,.78);
-    border:1px solid rgba(255,255,255,.16);
-    padding:10px; border-radius:10px; font-size:12px; text-align:left;
-    max-height:35vh; overflow:auto; display:none; white-space:pre-wrap;
-    z-index:9999;
-  }
-  #debugBox b{display:block;margin-bottom:6px}
-
-  /* ===================================================== */
-  /* DONATE BUTTON (LOW PROFILE)                           */
-  /* ===================================================== */
-  .donateButton{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    padding:6px 12px;
-    font-size:12px;
-    border-radius:999px;
-    border: 1px solid rgba(255,255,255,.18);
-    background: rgba(255,255,255,.10);
-    color: #fff;
-    text-decoration:none;
-    opacity:.88;
-    font-weight:900;
-    letter-spacing:.3px;
-    text-transform: none;
-  }
-  .donateButton:hover{ opacity:1; }
-
-
-/* ===================================================== */
-/* UI POLISH — SHINY BEVELED GLASS + ONE-THING-AT-A-TIME  */
-/* ===================================================== */
-html, body{ height:100%; }
-body{ overflow:hidden; }
-
+/* =============== 0) GLOBAL RESET ===================== */
+*{ box-sizing:border-box; }
+html, body{ height:100%; margin:0; padding:0; }
+body{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:#fff;
+  overflow:hidden; /* each screen manages its own scroll */
+}
 :root{
   --safePad: 14px;
   --stageW: min(740px, calc(100vw - (var(--safePad) * 2)));
-  --topClear: 118px;  /* keeps baked-in logo/header visible */
-  --botClear: 86px;
-  --panelMax: 44vh;   /* panel body scroll height */
+  --topClearLogin: 120px;   /* keep logo area clear (login bg has logo) */
+  --topClearPlayers: 170px; /* keep baked logo clear (players bg has logo) */
+  --botClear: 92px;
+  --glassA: rgba(255,255,255,.22);
+  --glassB: rgba(255,255,255,.08);
+  --glassBorder: rgba(255,255,255,.22);
+  --shadow: rgba(0,0,0,.55);
 }
 
-/* Keep each screen to one viewport; no full-page scrolling */
-.screen{
-  height: calc(100vh - 48px); /* topbar height */
-  overflow:hidden;
-  padding: var(--topClear) var(--safePad) var(--botClear);
+/* =============== 1) TOP TEXT BAR (NO STRIP) ========== */
+.topBar{
+  position:fixed;
+  top:0; left:0; right:0;
+  height:48px;
+  padding: 8px 14px;
   display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  box-sizing:border-box;
+  align-items:center;
+  justify-content:space-between;
+  background: transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  z-index:9999;
+}
+.topLeft{
+  font-weight:900;
+  font-size:13px;
+  letter-spacing:.4px;
+  text-shadow:0 2px 10px rgba(0,0,0,.75);
+}
+.topRight{
+  font-weight:800;
+  font-size:11px;
+  opacity:.9;
+  text-shadow:0 2px 10px rgba(0,0,0,.75);
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.pillDot{
+  width:9px; height:9px;
+  border-radius:999px;
+  background:#22c55e;
+  box-shadow: 0 0 10px rgba(34,197,94,.65);
+  display:inline-block;
 }
 
-/* Constrain main content to “stage width” */
-.hero, .grid, .footerBar{
-  width: var(--stageW) !important;
-  max-width: var(--stageW) !important;
+/* Floating version label (always visible) */
+.versionTag{
+  position: fixed;
+  top: 8px;
+  left: 14px;
+  z-index: 99999;
+  font-weight: 900;
+  font-size: 12px;
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 2px 10px rgba(0,0,0,.85);
+  pointer-events:none;
 }
 
-/* Stack everything vertically (no side-by-side columns) */
-.grid, .grid.two{
-  display:flex !important;
-  flex-direction:column !important;
-  gap:14px !important;
+/* =============== 2) SCREENS BASE ===================== */
+.screen{
+  position:fixed;
+  left:0; right:0;
+  top:48px; bottom:0;
+  display:none;              /* showOnly() enables exactly one */
+  overflow:hidden;
+  padding: 0 var(--safePad);
+  z-index:10;
 }
-
-/* Landing email + buttons: match stage width and never hit the edges */
-.centerStack{
+.screenInner{
   width: var(--stageW);
   margin: 0 auto;
-  gap: 12px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
 }
-.centerStack input,
-.centerStack button{
-  width: 100%;
-  max-width: 100%;
-}
-.centerStack button{ height: 54px; font-size: 16px; }
+/* Default visible screen (if JS fails): login */
+#loginScreen{ display:flex; z-index:20; }
 
-/* Stronger, shinier glass */
+/* =============== 3) BACKGROUNDS (YOUR REPO ASSETS) ==== */
+.bg{
+  position:absolute;
+  inset:0;
+  background-size: cover;
+  background-position: center;
+  background-repeat:no-repeat;
+  z-index:0;
+}
+/* Update these names to match your repo exactly */
+#loginBg{ background-image: url("IMG_7390.jpeg"); }
+#playersBg{ background-image: url("IMG_7315.jpeg"); }
+#lobbyBg{ background-image: url("IMG_7315.jpeg"); }
+#gameBg{ background-image: url("IMG_7315.jpeg"); }
+
+/* =============== 4) GLASS / BEVELED UI =============== */
 .glass{
+  position:relative;
+  z-index:2;
   border-radius: 26px;
-  border: 1px solid rgba(255,255,255,.18);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.06));
+  border: 1px solid var(--glassBorder);
+  background: linear-gradient(180deg, rgba(255,255,255,.30), rgba(255,255,255,.11));
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
   box-shadow:
-    0 22px 60px rgba(0,0,0,.48),
-    inset 0 1px 0 rgba(255,255,255,.30),
-    inset 0 -1px 0 rgba(0,0,0,.28);
-  position: relative;
-  overflow: hidden;
+    0 20px 55px var(--shadow),
+    inset 0 1px 0 rgba(255,255,255,.35),
+    inset 0 -1px 0 rgba(0,0,0,.35);
+  overflow:hidden;
 }
 .glass::before{
   content:"";
   position:absolute; inset:0;
-  background:
-    radial-gradient(1200px 240px at 18% 0%,
-      rgba(255,255,255,.46),
-      rgba(255,255,255,0) 62%);
+  background: radial-gradient(1200px 260px at 18% 0%,
+    rgba(255,255,255,.55),
+    rgba(255,255,255,0) 60%);
   pointer-events:none;
 }
-
-/* Frost helper for readable sub blocks */
-.frost{
-  background: rgba(0,0,0,.22);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 16px;
-  padding: 10px 12px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+.panelHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding: 12px 14px;
+  font-weight: 900;
+  letter-spacing:.6px;
+}
+.panelBody{
+  padding: 12px 14px 14px;
 }
 
-/* Only panel bodies scroll (one thing at a time) */
-.glassBody.scrollArea,
+/* Scroll windows: show 1–2 items at a time, always scroll for rest */
 .scrollArea{
-  max-height: var(--panelMax);
   overflow:auto;
-  padding-right: 6px;
+  -webkit-overflow-scrolling: touch;
+  padding-right:6px;
 }
 
-/* Bubble buttons */
+/* =============== 5) BUTTONS: CRYSTAL PILLS ============ */
 button{
+  font-family:inherit;
+  cursor:pointer;
+}
+.btnPill{
   border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.42);
+  background: linear-gradient(180deg,
+      rgba(255,255,255,.40) 0%,
+      rgba(255,255,255,.14) 45%,
+      rgba(0,0,0,.38) 100%);
+  box-shadow:
+    inset 0 2px 6px rgba(255,255,255,.55),
+    inset 0 -5px 12px rgba(0,0,0,.65),
+    0 10px 24px rgba(0,0,0,.55);
+  color:#fff;
 }
-.rowButtons button{
-  padding: 8px 14px;
+.btnPill:active{ transform: translateY(1px); }
+
+.primary{
+  height: 40px;
+  padding: 10px 18px;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+.ghost{
+  height: 32px;
+  padding: 6px 14px;
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: .6px;
+  opacity:.95;
 }
 
-/* Footer stays compact and visible */
-.footerBar{
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
+/* =============== 6) LOGIN (LANDING) =================== */
+#loginScreen .screenInner{
+  padding-top: var(--topClearLogin);
+  padding-bottom: var(--botClear);
+  justify-content:flex-end;  /* controls under the stage */
 }
-
-
-/* ===================================================== */
-/* TUNING (per Steve): one-player visible + dot by name   */
-/* ===================================================== */
-#playerScreen.screen{ padding-top: 175px !important; } /* avoid covering logo area */
-
-/* show about one player row at a time */
-#playerList.scrollArea{ max-height: 92px !important; }
-
-/* remove frost look from main UI (keep class available for future sub-panels) */
-.frost{ display:none; }
-
-/* list row layout: dot right next to name */
-.listRow{ justify-content:flex-start; gap:10px; }
-.listRow .rowButtons{ margin-left:auto; display:flex; gap:8px; }
-
-
-/* ===================================================== */
-/* LANDING (per Steve): clean, under-stage controls       */
-/* ===================================================== */
-#loginScreen .hero{ display:none; } /* logo baked into background */
-
-/* controls sit low ("under stage") */
-#loginScreen{ align-items:flex-end; }
-#loginScreen .centerStack{ margin-bottom: 18px; }
-
-/* email pill: skinny + long as stage */
-#loginScreen input{
-  padding: 12px 16px;
-  font-size: 18px;
+.centerStack{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+}
+#email{
+  width: 86%;
+  max-width: 86%;
+  height: 40px;
+  padding: 10px 14px;
   border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.30);
+  background: rgba(255,255,255,.10);
+  color:#fff;
+  text-align:center;
+  font-size:16px;
+  outline:none;
 }
-
-/* enter button: same glass color (not green) */
-#loginScreen #enterBtn.primary{
-  background: rgba(255,255,255,.14);
-  border-color: rgba(255,255,255,.22);
+/* Autofill yellow kill */
+#email:-webkit-autofill,
+#email:-webkit-autofill:hover,
+#email:-webkit-autofill:focus,
+#email:-webkit-autofill:active{
+  -webkit-text-fill-color:#ffffff !important;
+  transition: background-color 9999s ease-in-out 0s !important;
+  box-shadow: 0 0 0px 1000px rgba(0,0,0,0) inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(0,0,0,0) inset !important;
+  background-color: transparent !important;
 }
+#enterBtn{
+  width: 92%;
+  max-width: 92%;
+}
+.hint{ font-size:12px; opacity:.85; text-align:center; }
 
-
-/* ===================================================== */
-/* SCROLL EVERYWHERE (Steve rule):                        */
-/* - player screen content scrolls                        */
-/* - games list scrolls (1–2 rows visible)                */
-/* - player list scrolls (1 row visible)                  */
-/* ===================================================== */
+/* =============== 7) PLAYERS SCREEN ==================== */
+#playerScreen .screenInner{
+  padding-top: var(--topClearPlayers);
+  padding-bottom: var(--botClear);
+  justify-content:flex-start;
+}
+/* Whole players screen scrolls */
 .stageScroll{
-  width: var(--stageW);
-  max-height: calc(100vh - var(--topClear) - var(--botClear) - 48px);
+  flex:1;
   overflow:auto;
   display:flex;
   flex-direction:column;
   gap:14px;
   padding-bottom: 10px;
 }
-
-/* show 1–2 games at a time */
-#gamesList.scrollArea{ max-height: 210px !important; overflow:auto; }
-/* show ~1 player at a time */
-#playerList.scrollArea{ max-height: 92px !important; overflow:auto; }
-
-/* keep footer visible */
-#playerScreen .footerBar{
-  position: sticky;
-  bottom: 0;
+/* Panels: show small windows then scroll inside */
+#gamesScroll{ max-height: 210px; }   /* ~2 game rows */
+#playersScroll{ max-height: 170px; } /* ~2 players */
+.listRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.12);
 }
-
-
-/* ===================================================== */
-/* STEVE UI ORGANIZE PASS                                */
-/* ===================================================== */
-
-/* Stop seeing other screens behind the current one */
-.screen{
-  position: fixed;
-  left:0; right:0;
-  top:48px; bottom:0;
+.leftGroup{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.dot{
+  width:10px; height:10px;
+  border-radius:999px;
+  box-shadow: 0 0 10px rgba(34,197,94,.55);
+  flex:0 0 auto;
+}
+.dot.online{ background:#22c55e; }
+.dot.offline{ background: rgba(255,255,255,.35); box-shadow:none; }
+.name{
+  font-weight:900;
+  white-space:nowrap;
   overflow:hidden;
-  display:none;          /* showOnly() controls visibility */
-  z-index:10;
+  text-overflow:ellipsis;
 }
-#loginScreen{ display:flex; z-index:20; }
-#playerScreen{ z-index:15; }
-#lobbyScreen{ z-index:15; }
-#gameScreen{ z-index:15; }
-
-/* Make glass lighter (less dark) */
-.glass{
-  background: linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,.10)) !important;
-  border: 1px solid rgba(255,255,255,.20) !important;
+.meta{
+  font-size:11px;
+  opacity:.85;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
-
-/* Slim pill buttons */
-button.primary, button.ghost{
-  height: 32px !important;
-  padding: 6px 16px !important;
-  font-size: 12px !important;
-  border-radius: 999px !important;
-}
-
-/* Keep all row buttons same size and on the same line */
 .rowButtons{
-  display:flex !important;
-  gap:10px !important;
-  align-items:center !important;
-  justify-content:flex-end !important;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:flex-end;
 }
-.rowButtons button{
-  min-width: 92px !important;
-  text-align:center !important;
-}
+.rowButtons button{ min-width: 92px; }
 
-/* Games list shows ~2 rows then scroll */
-#gamesList .scrollArea,
-#gamesList.scrollArea{
-  max-height: 210px !important;
-  overflow:auto !important;
-}
-
-/* Players list scroll stays; show ~2 players max (not the whole list) */
-#playerList.scrollArea{
-  max-height: 170px !important;
-  overflow:auto !important;
-}
-
-/* Move content up so LEADERBOARD is visible above bottom text */
-#playerScreen.screen{
-  padding-top: 160px !important;
-  padding-bottom: 110px !important;
-}
-
-/* FooterBar: keep above bottom text & always visible */
-#playerScreen .footerBar{
-  position: fixed;
-  left: var(--safePad);
-  right: var(--safePad);
-  bottom: 62px;               /* above browser bar + your white footer text */
+/* Footer buttons fixed above the very bottom */
+.footerBar{
   width: var(--stageW);
   margin: 0 auto;
-  z-index: 40;
-}
-
-/* Clean up frost use: hide frost on main sections */
-.frost{ display:none; }
-
-/* Login stairs spacing: email narrower than ENTER */
-#loginScreen{ align-items:flex-end; }
-#loginScreen .centerStack{
-  width: var(--stageW);
-  margin: 0 auto 20px;
+  position: sticky;
+  bottom: 0;
+  padding: 10px 0 0;
   display:flex;
-  flex-direction:column;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+/* =============== 8) GAME ROWS ========================= */
+.gameRow{
+  display:flex;
   align-items:center;
-  gap: 12px;
+  justify-content:space-between;
+  gap:12px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.12);
 }
-#loginScreen input{
-  width: 86% !important;
-  max-width: 86% !important;
-  height: 40px !important;
+.gameInfo{ min-width:0; }
+.gameName{ font-weight:900; }
+.gameSub{ font-size:11px; opacity:.85; }
+
+/* =============== 9) LOBBY / GAME (basic placeholder) == */
+.simpleText{
+  padding: 14px;
+  font-size:14px;
+  line-height:1.3;
+  opacity:.95;
 }
-#loginScreen #enterBtn{
-  width: 92% !important;
-  max-width: 92% !important;
-  height: 42px !important;
-}
-
-
-/* Header small button (SESSION/❤️ SUPPORT) */
-.panelHeader button{
-  height: 30px !important;
-  padding: 6px 14px !important;
-  font-size: 12px !important;
-  border-radius: 999px !important;
-}
-
-
-/* ===================================================== */
-/* TOP BAR: text only (no gray/blur bar)                  */
-/* ===================================================== */
-.topBar, .topbar, #topBar{
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-
-/* ===================================================== */
-/* BUTTONS: crystal beveled pills                         */
-/* ===================================================== */
-button.primary, button.ghost{
-  border-radius: 999px !important;
-  border: 1px solid rgba(255,255,255,.42) !important;
-  background: linear-gradient(180deg,
-      rgba(255,255,255,.38) 0%,
-      rgba(255,255,255,.14) 45%,
-      rgba(0,0,0,.38) 100%) !important;
-  box-shadow:
-    inset 0 2px 6px rgba(255,255,255,.50),
-    inset 0 -5px 12px rgba(0,0,0,.65),
-    0 10px 24px rgba(0,0,0,.55) !important;
-}
-button.primary:active, button.ghost:active{
-  transform: translateY(1px);
-}
-
-
-/* ===================================================== */
-/* REMOVE HEADER BACKGROUND STRIP (Steve)                 */
-/* ===================================================== */
-#headerBg, .headerBg, .topbarBg, .topBarBg{
-  display:none !important;
-}
-
-
-/* ===================================================== */
-/* LOGIN CONTROLS (Steve): skinny, equal height, stairs   */
-/* ===================================================== */
-#loginScreen .centerStack{ gap: 12px !important; }
-
-#loginScreen input#email{
-  height: 40px !important;
-  padding: 10px 14px !important;
-  font-size: 16px !important;
-  border-radius: 999px !important;
-  background: rgba(255,255,255,.12) !important;
-}
-
-#loginScreen #enterBtn{
-  height: 40px !important;
-  padding: 10px 14px !important;
-  font-size: 15px !important;  /* bigger */
-  font-weight: 900 !important;
-  letter-spacing: 1px !important;
-  border-radius: 999px !important;
-}
-
-
-/* ===================================================== */
-/* AUTOFILL FIX: remove yellow background in email input  */
-/* ===================================================== */
-#loginScreen input#email:-webkit-autofill,
-#loginScreen input#email:-webkit-autofill:hover,
-#loginScreen input#email:-webkit-autofill:focus,
-#loginScreen input#email:-webkit-autofill:active{
-  -webkit-text-fill-color: #ffffff !important;
-  transition: background-color 9999s ease-in-out 0s !important;
-  box-shadow: 0 0 0px 1000px rgba(0,0,0,0) inset !important;
-  -webkit-box-shadow: 0 0 0px 1000px rgba(0,0,0,0) inset !important;
-  background-color: transparent !important;
-}
-
-
-/* floating version label */
-.versionTag{
-  position: fixed;
-  top: 8px;
-  left: 14px;
-  z-index: 9999;
-  font-weight: 900;
-  font-size: 12px;
-  color: rgba(255,255,255,.9);
-  text-shadow: 0 2px 8px rgba(0,0,0,.8);
-  pointer-events:none;
-}
-
 </style>
 </head>
 
 <body>
-<div class="versionTag">v1233.0</div>
+<div class="versionTag">v1234.0-clean</div>
 
-
-<!-- ===================================================== -->
-<!-- SECTION 9 — TOP STATUS BAR (HTML) -->
-<!-- ===================================================== -->
-<div class="topbar">
-  <div class="left">NIGHT GAMES <small id="verText">vUI-Complete</small></div>
-  <div class="center">FIREBASE • FIRESTORE</div>
-  <div class="right" id="onlineText">UI MODE</div>
-</div>
-
-<!-- ===================================================== -->
-<!-- SECTION 10 — LOGIN SCREEN (LANDING) -->
-<!-- ===================================================== -->
-<div id="loginScreen" class="screen">
-  <div class="hero">
-    <div class="logo">
-      <div class="logoText">NIGHT GAMES</div>
-    </div>
-    <div class="subtag">A The Dart Room Game</div>
+<div class="topBar">
+  <div class="topLeft">NIGHT GAMES <span style="opacity:.9">v1234.0-clean</span></div>
+  <div class="topRight">
+    <span>FIREBASE • FIRESTORE</span>
+    <span class="pillDot" title="online"></span>
   </div>
-
-  <div class="centerStack">
-    <input id="email" placeholder="player@example.com">
-    <button id="enterBtn" type="button" class="primary" type="button" onclick="login()">ENTER</button>
-</div>
 </div>
 
-<!-- ===================================================== -->
-<!-- SECTION 11 — PLAYERS PAGE (GAMES + PLAYERS) -->
-<!-- ===================================================== -->
-<div id="playerScreen" class="screen" style="display:none">
-  <div class="grid two">
+<!-- =====================================================
+     SCREEN 1: LOGIN
+     ===================================================== -->
+<section id="loginScreen" class="screen">
+  <div id="loginBg" class="bg"></div>
 
-    <div class="glass">
-      <div class="glassHeader">
-        <div>GAMES</div>
-        <button id="sessionBtn" type="button" class="ghost" onclick="window.open('https://venmo.com/u/Steve-Moody-8','_blank')" onclick="window.open(\'https://venmo.com/u/Steve-Moody-8\',\'_blank\')">❤️ SUPPORT</button>
+  <div class="screenInner">
+    <div class="centerStack glass" style="padding:14px 14px 16px;">
+      <div class="panelHeader" style="padding:0 0 10px 0;">
+        <div>WELCOME</div>
+        <div style="font-weight:900; opacity:.9;">Sign in</div>
       </div>
-      <div class="glassBody" scrollArea id="gamesList">
-<div class="scrollArea">
 
-<!-- Games Rows (scroll) -->
-<div class="gameRow">
-  <div class="gameInfo">
-    <div class="gameName">01</div>
-    <div class="gameSub">Practice / Local testing</div>
-  </div>
-  <div class="rowButtons">
-    <button id="zeroOneEnterBtn" class="primary" type="button">ENTER</button>
-    <button class="ghost" type="button" onclick="alert('Rules (placeholder)')">RULES</button>
-    <button class="ghost" type="button" onclick="alert('History (placeholder)')">HISTORY</button>
-  </div>
-</div>
+      <!-- Email input (skinny pill) -->
+      <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="your@email.com" />
 
-<div class="gameRow">
-  <div class="gameInfo">
-    <div class="gameName">Cricket</div>
-    <div class="gameSub">Practice / Local testing</div>
-  </div>
-  <div class="rowButtons">
-    <button id="practiceBtn" class="primary" type="button">ENTER</button>
-    <button class="ghost" type="button" onclick="alert('Rules (placeholder)')">RULES</button>
-    <button class="ghost" type="button" onclick="alert('History (placeholder)')">HISTORY</button>
-  </div>
-</div>
+      <!-- Enter button (same height, slightly wider) -->
+      <button id="enterBtn" class="btnPill primary" type="button">ENTER</button>
 
-<div class="gameRow">
-  <div class="gameInfo">
-    <div class="gameName">Killer</div>
-    <div class="gameSub">Multiplayer lobby</div>
+      <div id="loginMsg" class="hint"></div>
+    </div>
   </div>
-  <div class="rowButtons">
-    <button id="multiBtn" class="primary" type="button">ENTER</button>
-    <button class="ghost" type="button" onclick="alert('Rules (placeholder)')">RULES</button>
-    <button class="ghost" type="button" onclick="alert('History (placeholder)')">HISTORY</button>
-  </div>
-</div>
+</section>
 
-<div class="gameRow">
-  <div class="gameInfo">
-    <div class="gameName">Around the World</div>
-    <div class="gameSub">Practice / Local testing</div>
-  </div>
-  <div class="rowButtons">
-    <button id="atwEnterBtn" class="primary" type="button">ENTER</button>
-    <button class="ghost" type="button" onclick="alert('Rules (placeholder)')">RULES</button>
-    <button class="ghost" type="button" onclick="alert('History (placeholder)')">HISTORY</button>
-  </div>
-</div>
+<!-- =====================================================
+     SCREEN 2: PLAYERS
+     ===================================================== -->
+<section id="playerScreen" class="screen">
+  <div id="playersBg" class="bg"></div>
 
-<div class="gameRow">
-  <div class="gameInfo">
-    <div class="gameName">Half-It</div>
-    <div class="gameSub">Practice / Local testing</div>
-  </div>
-  <div class="rowButtons">
-    <button id="halfItEnterBtn" class="primary" type="button">ENTER</button>
-    <button class="ghost" type="button" onclick="alert('Rules (placeholder)')">RULES</button>
-    <button class="ghost" type="button" onclick="alert('History (placeholder)')">HISTORY</button>
-  </div>
-</div>
+  <div class="screenInner">
+    <div class="stageScroll">
+      <!-- GAMES PANEL -->
+      <div class="glass">
+        <div class="panelHeader">
+          <div>GAMES</div>
+          <!-- Support button replaces SESSION, per Steve -->
+          <button id="supportBtn" class="btnPill ghost" type="button">❤️ SUPPORT</button>
+        </div>
+        <div class="panelBody">
+          <div id="gamesScroll" class="scrollArea">
+            <div class="gameRow">
+              <div class="gameInfo">
+                <div class="gameName">01</div>
+                <div class="gameSub">Local practice (engine next)</div>
+              </div>
+              <div class="rowButtons">
+                <button class="btnPill ghost" id="g01Enter" type="button">ENTER</button>
+                <button class="btnPill ghost" type="button">RULES</button>
+                <button class="btnPill ghost" type="button">HISTORY</button>
+              </div>
+            </div>
 
-<div class="gameRow">
-  <div class="gameInfo">
-    <div class="gameName">Shanghai</div>
-    <div class="gameSub">Practice / Local testing</div>
-  </div>
-  <div class="rowButtons">
-    <button id="shanghaiEnterBtn" class="primary" type="button">ENTER</button>
-    <button class="ghost" type="button" onclick="alert('Rules (placeholder)')">RULES</button>
-    <button class="ghost" type="button" onclick="alert('History (placeholder)')">HISTORY</button>
-  </div>
-</div>
+            <div class="gameRow">
+              <div class="gameInfo">
+                <div class="gameName">Cricket</div>
+                <div class="gameSub">Local practice (engine next)</div>
+              </div>
+              <div class="rowButtons">
+                <button class="btnPill ghost" id="cricketEnter" type="button">ENTER</button>
+                <button class="btnPill ghost" type="button">RULES</button>
+                <button class="btnPill ghost" type="button">HISTORY</button>
+              </div>
+            </div>
 
-</div>
-            <div class="meta">Practice / Local testing</div>
-          </div>
-          <div class="rowButtons">
-            <button id="practiceBtn" type="button" class="primary">ENTER</button>
-            <button id="cricketRulesBtn" type="button" class="ghost">RULES</button>
-            <button id="cricketHistoryBtn" type="button" class="ghost">HISTORY</button>
+            <div class="gameRow">
+              <div class="gameInfo">
+                <div class="gameName">Killer</div>
+                <div class="gameSub">Multiplayer lobby</div>
+              </div>
+              <div class="rowButtons">
+                <button class="btnPill ghost" id="killerEnter" type="button">ENTER</button>
+                <button class="btnPill ghost" type="button">RULES</button>
+                <button class="btnPill ghost" type="button">HISTORY</button>
+              </div>
+            </div>
+
+            <div class="gameRow">
+              <div class="gameInfo">
+                <div class="gameName">Around the World</div>
+                <div class="gameSub">Local practice (engine next)</div>
+              </div>
+              <div class="rowButtons">
+                <button class="btnPill ghost" id="atwEnter" type="button">ENTER</button>
+                <button class="btnPill ghost" type="button">RULES</button>
+                <button class="btnPill ghost" type="button">HISTORY</button>
+              </div>
+            </div>
+
+            <div class="gameRow">
+              <div class="gameInfo">
+                <div class="gameName">Half-It</div>
+                <div class="gameSub">Local practice (engine next)</div>
+              </div>
+              <div class="rowButtons">
+                <button class="btnPill ghost" id="halfItEnter" type="button">ENTER</button>
+                <button class="btnPill ghost" type="button">RULES</button>
+                <button class="btnPill ghost" type="button">HISTORY</button>
+              </div>
+            </div>
+
+            <div class="gameRow">
+              <div class="gameInfo">
+                <div class="gameName">Shanghai</div>
+                <div class="gameSub">Local practice (engine next)</div>
+              </div>
+              <div class="rowButtons">
+                <button class="btnPill ghost" id="shanghaiEnter" type="button">ENTER</button>
+                <button class="btnPill ghost" type="button">RULES</button>
+                <button class="btnPill ghost" type="button">HISTORY</button>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="listRow">
-          <div>
-            <div class="name">Killer</div>
-            <div class="meta">Multiplayer lobby shell</div>
-          </div>
-          <div class="rowButtons">
-            <button id="multiBtn" type="button" class="primary">ENTER</button>
-            <button id="killerRulesBtn" type="button" class="ghost">RULES</button>
-            <button id="killerHistoryBtn" type="button" class="ghost">HISTORY</button>
-          </div>
+      <!-- PLAYERS PANEL -->
+      <div class="glass">
+        <div class="panelHeader">
+          <div>PLAYERS</div>
+          <div style="font-weight:900; opacity:.9;" id="meLabel">Offline</div>
         </div>
-
-        <div class="listRow">
-          <div>
-            <div class="name">Shanghai</div>
-            <div class="meta">Placeholder module row</div>
-          </div>
-          <div class="rowButtons">
-            <button id="shanghaiEnterBtn" type="button" class="primary">ENTER</button>
-            <button id="shanghaiRulesBtn" type="button" class="ghost">RULES</button>
-            <button id="shanghaiHistoryBtn" type="button" class="ghost">HISTORY</button>
-          
-</div>
-</div>
+        <div class="panelBody">
+          <div id="playersScroll" class="scrollArea"></div>
         </div>
-
       </div>
     </div>
 
-    <div class="glass">
-      <div class="glassHeader">
-        <div>PLAYERS</div>
-        <button id="backBtn" type="button" class="ghost">BACK</button>
-      </div>
-      <div class="glassBody scrollArea" id="playerList"></div>
+    <div class="footerBar">
+      <button id="leaderboardBtn" class="btnPill ghost" type="button">LEADERBOARD</button>
+      <button id="logoutBtn" class="btnPill ghost" type="button">LOG OUT</button>
     </div>
-
   </div>
+</section>
 
-  <div class="footerBar">
-    <button id="leaderboardBtn" type="button" class="ghost">LEADERBOARD</button>
-    <small>© 2026 The Dart Room</small>
-  </div>
-</div>
+<!-- =====================================================
+     SCREEN 3: LOBBY / WAITING ROOM (placeholder wiring)
+     ===================================================== -->
+<section id="lobbyScreen" class="screen">
+  <div id="lobbyBg" class="bg"></div>
 
-<!-- ===================================================== -->
-<!-- SECTION 12 — MULTIPLAYER LOBBY (UI SHELL) -->
-<!-- ===================================================== -->
-<div id="lobbyScreen" class="screen" style="display:none">
-  <div class="grid">
+  <div class="screenInner" style="padding-top: var(--topClearPlayers); padding-bottom: var(--botClear);">
     <div class="glass">
-      <div class="glassHeader">
+      <div class="panelHeader">
         <div>LOBBY</div>
-        <button id="leaveLobbyBtn" type="button" class="ghost">BACK</button>
+        <button id="leaveLobbyBtn" class="btnPill ghost" type="button">BACK</button>
       </div>
-      <div class="glassBody">
-        <div id="lobbyStatus"><small>Select players, then Create Room.</small></div>
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
-        <div id="inviteArea" class="scrollArea" class="scrollArea"></div>
-        <div style="margin-top:12px">
-          <button id="createRoomBtn" type="button" class="primary">CREATE ROOM</button>
+      <div class="panelBody">
+        <div class="simpleText">
+          This is the waiting room shell.<br><br>
+          Next steps (clean build path):
+          <ul>
+            <li>Invite players</li>
+            <li>Lock room when all join</li>
+            <li>Randomize turn order</li>
+            <li>Start game</li>
+          </ul>
         </div>
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
-        <div id="lobbyPlayers" class="scrollArea" class="scrollArea"><small>Players will show here after wiring Firestore.</small></div>
+        <button id="createRoomBtn" class="btnPill primary" type="button" style="width:100%;">CREATE ROOM (placeholder)</button>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ===================================================== -->
-<!-- SECTION 13 — GAME SCREEN (LOCAL PRACTICE) -->
-<!-- ===================================================== -->
-<div id="gameScreen" class="screen" style="display:none">
-  <div class="grid">
+<!-- =====================================================
+     SCREEN 4: GAME (placeholder)
+     ===================================================== -->
+<section id="gameScreen" class="screen">
+  <div id="gameBg" class="bg"></div>
+
+  <div class="screenInner" style="padding-top: var(--topClearPlayers); padding-bottom: var(--botClear);">
     <div class="glass">
-      <div class="glassHeader">
-        <div>GAME</div>
-        <button id="backToPlayersBtn" type="button" class="ghost">BACK</button>
+      <div class="panelHeader">
+        <div id="gameTitle">GAME</div>
+        <button id="backToPlayersBtn" class="btnPill ghost" type="button">BACK</button>
       </div>
-      <div class="glassBody">
-        <h2 id="turnDisplay" style="margin:6px 0 10px">Turn:</h2>
-        <small>Practice throws (local). Multiplayer sync comes next.</small>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px">
-          <button type="button" class="primary" data-score="20">20</button>
-          <button type="button" class="primary" data-score="19">19</button>
-          <button type="button" class="primary" data-score="18">18</button>
-          <button type="button" class="primary" data-score="5">5</button>
-          <button type="button" class="primary" data-score="1">1</button>
+      <div class="panelBody">
+        <div class="simpleText" id="gameBody">
+          Game screen placeholder. Next: install one complete game engine (Killer or 01).
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ===================================================== -->
-<!-- SECTION 14 — DEBUG BOX (HTML) -->
-<!-- ===================================================== -->
-<div id="debugBox"><b>Debug</b><div id="debugText"></div></div>
-
-<!-- ===================================================== -->
-
-<!-- ===================================================== -->
-<!-- INTRO AUDIO (PLACEHOLDER)                              -->
-<!-- File expected at repo root: "New Recording 2.m4a"       -->
-<!-- ===================================================== -->
-<audio id="introAudio" src="New Recording 2.m4a" preload="auto"></audio>
-<!-- SECTION 15 — FIREBASE SDK SCRIPTS (COMPAT)            -->
-<!-- ===================================================== -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<!-- =====================================================
+     AUDIO: intro (plays when email box focused)
+     Update filename if needed
+     ===================================================== -->
+<audio id="introSound" preload="auto" src="IMG_new recording 2.mp3"></audio>
 
 <script>
-/* ===================================================== */
-/* SECTION 16 — CORE APP STATE                            */
-/* ===================================================== */
-const players = {
-  "stevewmoody@yahoo.com": { name:"Steve Moody" },
-  "jmoody7712@gmail.com":  { name:"Jayce Moody" },
-  "wmoody7931@aol.com":    { name:"Bill Moody" }
-};
+/* =====================================================
+   SECTION A) STATE
+   ===================================================== */
 let currentEmail = null;
-let onlineMap = {};
-let currentPlayer = null;
+let players = {
+  "steve@example.com": { name: "Steve Moody" },
+  "jayce@example.com": { name: "Jayce Moody" },
+  "bill@example.com": { name: "Bill Moody" },
+};
 
-/* ===================================================== */
-/* SUBSEC 16A — DEBUG LOGGING                         */
-/* ===================================================== */
-const debugBox = document.getElementById("debugBox");
-const debugText = document.getElementById("debugText");
-function logDebug(msg){
-  const t = new Date().toLocaleTimeString();
-  debugText.textContent += `[${t}] ${msg}\n`;
-}
-function showDebug(on){ debugBox.style.display = on ? "block" : "none"; }
-
-/* ===================================================== */
-/* SUBSEC 16B — SCREEN NAV                            */
-/* ===================================================== */
+/* =====================================================
+   SECTION B) UTIL — stable screen switching (no bleed)
+   ===================================================== */
 function showOnly(id){
   const ids = ["loginScreen","playerScreen","lobbyScreen","gameScreen"];
   ids.forEach(x=>{
     const el = document.getElementById(x);
     if(el) el.style.display = (x===id) ? "flex" : "none";
   });
-});
 }
 
-/* ===================================================== */
-/* SECTION 17 — LOGIN SYSTEM (WORKING)                    */
-/* ===================================================== */
+/* =====================================================
+   SECTION C) SAFE BINDING — no missing element crashes
+   ===================================================== */
+function safeBind(id, ev, fn){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener(ev, fn);
+}
+
+/* =====================================================
+   SECTION D) LOGIN — clean + reliable
+   ===================================================== */
 function login(){
-  try{
-    const email = (document.getElementById("email").value||"").trim().toLowerCase();
-    if(!email){ alert("Enter an email"); return; }
-
-    if(!players[email]){
-      const name = prompt("Enter your name");
-      if(!name) return;
-      players[email] = { name: name.trim() || "Player" };
-    }
-    currentEmail = email;
-    currentPlayer = players[email];
-
-    logDebug("Login OK: " + email);
-    showOnly("playerScreen");
-    renderPlayers();
-    buildInviteUI();
-  }catch(e){
-    logDebug("LOGIN ERROR: " + (e?.message || e));
-    alert("Login error — tap DEBUG for details.");
+  const email = (document.getElementById("email")?.value || "").trim().toLowerCase();
+  const msg = document.getElementById("loginMsg");
+  if(!email){
+    if(msg) msg.textContent = "Enter your email.";
+    return;
   }
+  currentEmail = email;
+  if(!players[email]){
+    // clean onboarding placeholder — next step: ask for name
+    players[email] = { name: "New Player" };
+  }
+  const meLabel = document.getElementById("meLabel");
+  if(meLabel) meLabel.textContent = "Online";
+  renderPlayers();
+  showOnly("playerScreen");
 }
 
-/* ===================================================== */
-/* SECTION 18 — PLAYERS LIST (WORKING)                    */
-/* ===================================================== */
+function logout(){
+  currentEmail = null;
+  const emailEl = document.getElementById("email");
+  if(emailEl) emailEl.value = "";
+  const msg = document.getElementById("loginMsg");
+  if(msg) msg.textContent = "";
+  showOnly("loginScreen");
+}
 
+/* =====================================================
+   SECTION E) PLAYERS RENDER
+   ===================================================== */
 function renderPlayers(){
-  const list = document.getElementById("playerList");
+  const list = document.getElementById("playersScroll");
+  if(!list) return;
   list.innerHTML = "";
   Object.keys(players).forEach(email=>{
     const row = document.createElement("div");
     row.className = "listRow";
     const isMe = (email === currentEmail);
-    const isOnline = (onlineMap && onlineMap[email]) || isMe;
-    const dotClass = isOnline ? "online" : "offline";
     row.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;min-width:0">
-        <div class="dot ${dotClass}">●</div>
+      <div class="leftGroup">
+        <div class="dot ${isMe ? "online" : "offline"}"></div>
         <div style="min-width:0">
-          <div class="name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-            ${players[email].name}${isMe ? " (You)" : ""}
-          </div>
-          <div class="meta" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${email}</div>
+          <div class="name">${players[email].name}${isMe ? " (You)" : ""}</div>
+          <div class="meta">${email}</div>
         </div>
       </div>
       <div class="rowButtons">
-        <button type="button" class="ghost" onclick="openStats('${email.replace("'", "\\'")}')">STATS</button>
-        <button type="button" class="ghost" onclick="openHistory('${email.replace("'", "\\'")}')">HISTORY</button>
+        <button class="btnPill ghost" type="button" onclick="alert('Stats placeholder')">STATS</button>
+        <button class="btnPill ghost" type="button" onclick="alert('History placeholder')">HISTORY</button>
       </div>
     `;
     list.appendChild(row);
   });
 }
 
-
-/* ===================================================== */
-/* SECTION 19 — PRACTICE MODE (WORKING)                   */
-/* ===================================================== */
-let turnOrder = [];
-let currentTurn = 0;
-function practice(){
-  logDebug("Practice start");
-  showOnly("gameScreen");
-  turnOrder = [currentPlayer?.name || "Player"];
-  currentTurn = 0;
-  document.getElementById("turnDisplay").innerText = "Turn: " + turnOrder[currentTurn];
-}
-function throwDart(score){
-  alert((currentPlayer?.name || "Player") + " scored " + score);
-}
-
-/* ===================================================== */
-/* SECTION 20 — MULTIPLAYER LOBBY (UI READY)              */
-/* ===================================================== */
+/* =====================================================
+   SECTION F) GAME LAUNCHER (clean placeholder routing)
+   ===================================================== */
 function openLobby(){
   showOnly("lobbyScreen");
-  buildInviteUI();
 }
-function buildInviteUI(){
-  const area = document.getElementById("inviteArea");
-  area.innerHTML = "";
-  const others = Object.keys(players).filter(e=>e!==currentEmail);
-  if(!others.length){
-    area.innerHTML = "<small>No other players in registry.</small>";
-    return;
-  }
-  const wrap = document.createElement("div");
-  wrap.innerHTML = `<div style="margin-bottom:8px"><small>Select who to invite:</small></div>`;
-  others.forEach(e=>{
-    const id = "inv_"+btoa(e).replace(/=/g,"");
-    const line = document.createElement("div");
-    line.style.textAlign = "left";
-    line.innerHTML = `
-      <label style="display:flex;gap:10px;align-items:center;margin:6px 0">
-        <input type="checkbox" id="${id}" />
-        <span>${players[e].name} <small style="color:var(--muted)">(${e})</small></span>
-      </label>
-    `;
-    wrap.appendChild(line);
-  });
-  area.appendChild(wrap);
+function openGame(title){
+  const t = document.getElementById("gameTitle");
+  const b = document.getElementById("gameBody");
+  if(t) t.textContent = title;
+  if(b) b.textContent = title + " placeholder. Next: install real engine + multiplayer sync.";
+  showOnly("gameScreen");
 }
+
+/* =====================================================
+   SECTION G) LOBBY PLACEHOLDER
+   ===================================================== */
 function createRoomAndInvite_UIOnly(){
-  const checks = Array.from(document.querySelectorAll("#inviteArea input[type=checkbox]"));
-  const invited = checks.filter(c=>c.checked).map(c=>c.parentElement?.innerText||"").join(", ");
-  document.getElementById("lobbyStatus").innerHTML =
-    `<small>UI-Only: Create Room clicked. Selected: <b>${invited || "none"}</b>.<br>Next step: wire Firestore rooms/invites.</small>`;
-  logDebug("Create Room (UI-only).");
+  alert("Create room placeholder (waiting room wiring next).");
 }
 
-/* ===================================================== */
-/* SECTION 21 — FIREBASE / FIRESTORE (ADD LATER)          */
-/* ===================================================== */
-/*
-  When you’re ready, we add Firebase compat scripts + Firestore here.
-  For now, UI stays stable and you learn the structure without breakage.
-*/
-
-/* ===================================================== */
-
-/* ===================================================== */
-/* GAME LAUNCHER — wires the ENTER buttons (simple)       */
-/* ===================================================== */
-function startGame(gameKey){
-  logDebug("startGame: " + gameKey);
-  if(gameKey === "killer"){
-    openLobby();
-    return;
-  }
-  // Cricket + Shanghai currently launch local Practice screen.
-  // Next step: replace with real engines + multiplayer sync.
-  practice();
-}
-
-
-/* ===================================================== */
-/* PLAYER BUTTONS (placeholders — wire later)             */
-/* ===================================================== */
-function openStats(email){
-  alert("Stats (placeholder) for: " + email);
-}
-function openHistory(email){
-  alert("History (placeholder) for: " + email);
-}
-
-/* SECTION 22 — BUTTON WIRING (NO SILENT FAIL)            */
-/* ===================================================== */
+/* =====================================================
+   SECTION H) INIT
+   ===================================================== */
 document.addEventListener("DOMContentLoaded", ()=>{
-  // Email Enter key triggers login
+  // Email focus plays intro audio (if file exists)
+  const intro = document.getElementById("introSound");
   const emailEl = document.getElementById("email");
   if(emailEl){
+    emailEl.addEventListener("focus", ()=>{ try{ intro?.play(); }catch(e){} });
     emailEl.addEventListener("keydown", (e)=>{
-      if(e.key === "Enter"){
-        e.preventDefault();
-        login();
-      }
+      if(e.key === "Enter"){ e.preventDefault(); login(); }
     });
   }
 
-  // bindMoreGames
-  const bind2 = (id, fn) => { const el = document.getElementById(id); if(el) el.addEventListener("click", fn); };
-  bind2("zeroOneEnterBtn", () => startGame("01"));
-  bind2("atwEnterBtn", () => startGame("atw"));
-  bind2("halfItEnterBtn", () => startGame("halfit"));
+  // Core buttons
+  safeBind("enterBtn","click", login);
+  safeBind("logoutBtn","click", logout);
+  safeBind("leaveLobbyBtn","click", ()=> showOnly("playerScreen"));
+  safeBind("backToPlayersBtn","click", ()=> showOnly("playerScreen"));
 
-  // bindGameButtons
-  const bind = (id, fn) => { const el = document.getElementById(id); if(el) el.addEventListener("click", fn); };
-  bind("practiceBtn", () => startGame("cricket"));
-  bind("multiBtn", () => startGame("killer"));
-  bind("shanghaiEnterBtn", () => startGame("shanghai"));
+  // Games
+  safeBind("killerEnter","click", openLobby);
+  safeBind("cricketEnter","click", ()=> openGame("Cricket"));
+  safeBind("g01Enter","click", ()=> openGame("01"));
+  safeBind("atwEnter","click", ()=> openGame("Around the World"));
+  safeBind("halfItEnter","click", ()=> openGame("Half-It"));
+  safeBind("shanghaiEnter","click", ()=> openGame("Shanghai"));
 
-  // =====================================================
-  // INTRO AUDIO HOOK (plays once when user taps/focuses email)
-  // =====================================================
-  // INTRO_AUDIO_HOOK
-  try{
-    const emailEl = document.getElementById("email");
-    const introEl = document.getElementById("introAudio");
-    let introPlayed = false;
-    if(emailEl && introEl){
-      const playOnce = () => {
-        if(introPlayed) return;
-        introPlayed = true;
-        introEl.currentTime = 0;
-        introEl.play().catch(()=>{});
-      };
-      emailEl.addEventListener("focus", playOnce);
-      emailEl.addEventListener("pointerdown", playOnce);
-      emailEl.addEventListener("click", playOnce);
-    }
-  }catch(e){}
+  // Header support button (replaces SESSION)
+  safeBind("supportBtn","click", ()=> window.open("https://venmo.com/u/Steve-Moody-8","_blank"));
 
-  // -----------------------------------------------------
-  // SAFE BINDING: never crash if an element is missing
-  // -----------------------------------------------------
-  const safeBind = (id, ev, fn) => {
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.addEventListener(ev, fn);
-  };
+  safeBind("leaderboardBtn","click", ()=> alert("Leaderboard placeholder"));
 
-  safeBind("enterBtn", "click", login);
-  safeBind("createRoomBtn", "click", createRoomAndInvite_UIOnly);
-  safeBind("leaveLobbyBtn", "click", ()=> showOnly("playerScreen"));
-  safeBind("backBtn", "click", ()=> showOnly("loginScreen"));
-  safeBind("backToPlayersBtn", "click", ()=> showOnly("playerScreen"));
-
-  // placeholders
-  safeBind("sessionBtn", "click", ()=> window.open("https://venmo.com/u/Steve-Moody-8","_blank"));
-  safeBind("leaderboardBtn", "click", ()=> alert("Leaderboard placeholder"));
-  safeBind("cricketRulesBtn", "click", ()=> alert("Cricket rules placeholder"));
-  safeBind("cricketHistoryBtn", "click", ()=> alert("Cricket history placeholder"));
-  safeBind("killerRulesBtn", "click", ()=> alert("Killer rules placeholder"));
-  safeBind("killerHistoryBtn", "click", ()=> alert("Killer history placeholder"));
-
-  document.getElementById("killerHistoryBtn").addEventListener("click", ()=> alert("Killer history placeholder"));
-  document.getElementById("shanghaiRulesBtn").addEventListener("click", ()=> alert("Shanghai rules placeholder"));
-  document.getElementById("shanghaiHistoryBtn").addEventListener("click", ()=> alert("Shanghai history placeholder"));
-
-  // dart buttons
-  document.querySelectorAll("[data-score]").forEach(btn=>{
-    btn.addEventListener("click", ()=> throwDart(Number(btn.dataset.score)));
-  });
-
-  logDebug("DOM ready. UI-first build loaded.");
+  // Start on login
+  showOnly("loginScreen");
 });
 </script>
-
 </body>
 </html>
