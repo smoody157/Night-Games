@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Night Games v1232.8</title>
+<title>Night Games</title>
 
 <!-- =====================================================================
 NIGHT GAMES — MORE COMPLETE TRAINING BUILD (UI-FIRST + CLEAN SECTIONS)
@@ -596,41 +596,70 @@ button.primary:active, button.ghost:active{
 
 
 /* ===================================================== */
-/* INPUT AUTOFILL FIX (remove yellow background)          */
+/* REMOVE HEADER BACKGROUND STRIP (Steve)                 */
 /* ===================================================== */
-input{
-  background: rgba(255,255,255,.10);
-}
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus{
-  -webkit-text-fill-color: #ffffff !important;
-  transition: background-color 9999s ease-in-out 0s !important;
-  box-shadow: 0 0 0px 1000px rgba(255,255,255,.10) inset !important;
+#headerBg, .headerBg, .topbarBg, .topBarBg{
+  display:none !important;
 }
 
 
 /* ===================================================== */
-/* LOGIN SIZING (email == enter)                          */
+/* LOGIN CONTROLS (Steve): skinny, equal height, stairs   */
 /* ===================================================== */
-#loginScreen input,
-#loginScreen #enterBtn{
-  width: 92% !important;
-  max-width: 92% !important;
-  height: 38px !important;
-}
 #loginScreen .centerStack{ gap: 12px !important; }
 
+#loginScreen input#email{
+  height: 40px !important;
+  padding: 10px 14px !important;
+  font-size: 16px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.12) !important;
+}
 
-/* DEBUG OFF */
-#debugBox{display:none !important;}
+#loginScreen #enterBtn{
+  height: 40px !important;
+  padding: 10px 14px !important;
+  font-size: 15px !important;  /* bigger */
+  font-weight: 900 !important;
+  letter-spacing: 1px !important;
+  border-radius: 999px !important;
+}
+
+
+/* ===================================================== */
+/* AUTOFILL FIX: remove yellow background in email input  */
+/* ===================================================== */
+#loginScreen input#email:-webkit-autofill,
+#loginScreen input#email:-webkit-autofill:hover,
+#loginScreen input#email:-webkit-autofill:focus,
+#loginScreen input#email:-webkit-autofill:active{
+  -webkit-text-fill-color: #ffffff !important;
+  transition: background-color 9999s ease-in-out 0s !important;
+  box-shadow: 0 0 0px 1000px rgba(0,0,0,0) inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(0,0,0,0) inset !important;
+  background-color: transparent !important;
+}
+
+
+/* floating version label */
+.versionTag{
+  position: fixed;
+  top: 8px;
+  left: 14px;
+  z-index: 9999;
+  font-weight: 900;
+  font-size: 12px;
+  color: rgba(255,255,255,.9);
+  text-shadow: 0 2px 8px rgba(0,0,0,.8);
+  pointer-events:none;
+}
+
 </style>
 </head>
 
 <body>
+<div class="versionTag">v1233.0</div>
+
 
 <!-- ===================================================== -->
 <!-- SECTION 9 — TOP STATUS BAR (HTML) -->
@@ -849,7 +878,8 @@ textarea:-webkit-autofill:focus{
   </div>
 </div>
 
-
+<!-- ===================================================== -->
+<!-- SECTION 14 — DEBUG BOX (HTML) -->
 <!-- ===================================================== -->
 <div id="debugBox"><b>Debug</b><div id="debugText"></div></div>
 
@@ -1054,6 +1084,17 @@ function openHistory(email){
 /* SECTION 22 — BUTTON WIRING (NO SILENT FAIL)            */
 /* ===================================================== */
 document.addEventListener("DOMContentLoaded", ()=>{
+  // Email Enter key triggers login
+  const emailEl = document.getElementById("email");
+  if(emailEl){
+    emailEl.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter"){
+        e.preventDefault();
+        login();
+      }
+    });
+  }
+
   // bindMoreGames
   const bind2 = (id, fn) => { const el = document.getElementById(id); if(el) el.addEventListener("click", fn); };
   bind2("zeroOneEnterBtn", () => startGame("01"));
