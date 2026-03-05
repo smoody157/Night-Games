@@ -48,14 +48,14 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
 
     /* ===== ARTWORK PATHS (optional) =====
       Put your repo image paths here, example:
-        --login-bg-img: url("assets/7390.jpg");
-        --player-bg-img: url("assets/player_bg.jpg");
-        --logo-img: url("assets/nightgames_logo.png");
+        --login-bg-img: url("IMG_7390.jpeg");
+        --player-bg-img: url("IMG_7315.jpeg");
+        --logo-img: none;
       If you leave them as 'none', gradients are used and everything still works.
     */
-    --login-bg-img: url("assets/7390.jpg");
-    --player-bg-img: url("assets/7315.jpg");
-    --logo-img: url("assets/logo.png");
+    --login-bg-img: url("IMG_7390.jpeg");
+    --player-bg-img: url("IMG_7315.jpeg");
+    --logo-img: none;
 
     /* Fallback gradients */
     --login-bg-fallback:
@@ -433,6 +433,12 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
 <div id="debugBox"><b>Debug</b><div id="debugText"></div></div>
 
 <!-- ===================================================== -->
+
+<!-- ===================================================== -->
+<!-- INTRO AUDIO (PLACEHOLDER)                              -->
+<!-- File expected at repo root: "New Recording 2.m4a"       -->
+<!-- ===================================================== -->
+<audio id="introAudio" src="New Recording 2.m4a" preload="auto"></audio>
 <!-- SECTION 15 — FIREBASE SDK SCRIPTS (COMPAT)            -->
 <!-- ===================================================== -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -585,6 +591,27 @@ function createRoomAndInvite_UIOnly(){
 /* SECTION 22 — BUTTON WIRING (NO SILENT FAIL)            */
 /* ===================================================== */
 document.addEventListener("DOMContentLoaded", ()=>{
+  // =====================================================
+  // INTRO AUDIO HOOK (plays once when user taps/focuses email)
+  // =====================================================
+  // INTRO_AUDIO_HOOK
+  try{
+    const emailEl = document.getElementById("email");
+    const introEl = document.getElementById("introAudio");
+    let introPlayed = false;
+    if(emailEl && introEl){
+      const playOnce = () => {
+        if(introPlayed) return;
+        introPlayed = true;
+        introEl.currentTime = 0;
+        introEl.play().catch(()=>{});
+      };
+      emailEl.addEventListener("focus", playOnce);
+      emailEl.addEventListener("pointerdown", playOnce);
+      emailEl.addEventListener("click", playOnce);
+    }
+  }catch(e){}
+
   document.getElementById("enterBtn").addEventListener("click", login);
   document.getElementById("toggleDebugBtn").addEventListener("click", ()=> showDebug(debugBox.style.display!=="block"));
   document.getElementById("practiceBtn").addEventListener("click", practice);
