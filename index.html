@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Night Games</title>
+<title>Night Games v1232.8</title>
 
 <!-- =====================================================================
 NIGHT GAMES — MORE COMPLETE TRAINING BUILD (UI-FIRST + CLEAN SECTIONS)
@@ -594,6 +594,39 @@ button.primary:active, button.ghost:active{
   transform: translateY(1px);
 }
 
+
+/* ===================================================== */
+/* INPUT AUTOFILL FIX (remove yellow background)          */
+/* ===================================================== */
+input{
+  background: rgba(255,255,255,.10);
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus{
+  -webkit-text-fill-color: #ffffff !important;
+  transition: background-color 9999s ease-in-out 0s !important;
+  box-shadow: 0 0 0px 1000px rgba(255,255,255,.10) inset !important;
+}
+
+
+/* ===================================================== */
+/* LOGIN SIZING (email == enter)                          */
+/* ===================================================== */
+#loginScreen input,
+#loginScreen #enterBtn{
+  width: 92% !important;
+  max-width: 92% !important;
+  height: 38px !important;
+}
+#loginScreen .centerStack{ gap: 12px !important; }
+
+
+/* DEBUG OFF */
+#debugBox{display:none !important;}
 </style>
 </head>
 
@@ -816,8 +849,7 @@ button.primary:active, button.ghost:active{
   </div>
 </div>
 
-<!-- ===================================================== -->
-<!-- SECTION 14 — DEBUG BOX (HTML) -->
+
 <!-- ===================================================== -->
 <div id="debugBox"><b>Debug</b><div id="debugText"></div></div>
 
