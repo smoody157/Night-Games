@@ -562,6 +562,38 @@ button.primary, button.ghost{
   border-radius: 999px !important;
 }
 
+
+/* ===================================================== */
+/* TOP BAR: text only (no gray/blur bar)                  */
+/* ===================================================== */
+.topBar, .topbar, #topBar{
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+
+/* ===================================================== */
+/* BUTTONS: crystal beveled pills                         */
+/* ===================================================== */
+button.primary, button.ghost{
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,.42) !important;
+  background: linear-gradient(180deg,
+      rgba(255,255,255,.38) 0%,
+      rgba(255,255,255,.14) 45%,
+      rgba(0,0,0,.38) 100%) !important;
+  box-shadow:
+    inset 0 2px 6px rgba(255,255,255,.50),
+    inset 0 -5px 12px rgba(0,0,0,.65),
+    0 10px 24px rgba(0,0,0,.55) !important;
+}
+button.primary:active, button.ghost:active{
+  transform: translateY(1px);
+}
+
 </style>
 </head>
 
@@ -589,7 +621,7 @@ button.primary, button.ghost{
 
   <div class="centerStack">
     <input id="email" placeholder="player@example.com">
-    <button id="enterBtn" type="button" class="primary">ENTER</button>
+    <button id="enterBtn" type="button" class="primary" type="button" onclick="login()">ENTER</button>
 </div>
 </div>
 
@@ -1023,19 +1055,29 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
   }catch(e){}
 
-  document.getElementById("enterBtn").addEventListener("click", login);
-  document.getElementById("toggleDebugBtn").addEventListener("click", ()=> showDebug(debugBox.style.display!=="block"));
-  document.getElementById("createRoomBtn").addEventListener("click", createRoomAndInvite_UIOnly);
-  document.getElementById("leaveLobbyBtn").addEventListener("click", ()=> showOnly("playerScreen"));
-  document.getElementById("backBtn").addEventListener("click", ()=> showOnly("loginScreen"));
-  document.getElementById("backToPlayersBtn").addEventListener("click", ()=> showOnly("playerScreen"));
+  // -----------------------------------------------------
+  // SAFE BINDING: never crash if an element is missing
+  // -----------------------------------------------------
+  const safeBind = (id, ev, fn) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener(ev, fn);
+  };
+
+  safeBind("enterBtn", "click", login);
+  safeBind("createRoomBtn", "click", createRoomAndInvite_UIOnly);
+  safeBind("leaveLobbyBtn", "click", ()=> showOnly("playerScreen"));
+  safeBind("backBtn", "click", ()=> showOnly("loginScreen"));
+  safeBind("backToPlayersBtn", "click", ()=> showOnly("playerScreen"));
 
   // placeholders
-  document.getElementById("sessionBtn").addEventListener("click", ()=> alert("Session placeholder"));
-  document.getElementById("leaderboardBtn").addEventListener("click", ()=> alert("Leaderboard placeholder"));
-  document.getElementById("cricketRulesBtn").addEventListener("click", ()=> alert("Cricket rules placeholder"));
-  document.getElementById("cricketHistoryBtn").addEventListener("click", ()=> alert("Cricket history placeholder"));
-  document.getElementById("killerRulesBtn").addEventListener("click", ()=> alert("Killer rules placeholder"));
+  safeBind("sessionBtn", "click", ()=> window.open("https://venmo.com/u/Steve-Moody-8","_blank"));
+  safeBind("leaderboardBtn", "click", ()=> alert("Leaderboard placeholder"));
+  safeBind("cricketRulesBtn", "click", ()=> alert("Cricket rules placeholder"));
+  safeBind("cricketHistoryBtn", "click", ()=> alert("Cricket history placeholder"));
+  safeBind("killerRulesBtn", "click", ()=> alert("Killer rules placeholder"));
+  safeBind("killerHistoryBtn", "click", ()=> alert("Killer history placeholder"));
+
   document.getElementById("killerHistoryBtn").addEventListener("click", ()=> alert("Killer history placeholder"));
   document.getElementById("shanghaiRulesBtn").addEventListener("click", ()=> alert("Shanghai rules placeholder"));
   document.getElementById("shanghaiHistoryBtn").addEventListener("click", ()=> alert("Shanghai history placeholder"));
