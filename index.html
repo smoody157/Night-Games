@@ -1,23 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<!-- ===== Firebase Config (INLINE) ===== -->
-<script>
-window.firebaseConfig = window.firebaseConfig || {
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-  projectId: "gamenightdarts-e7601",
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-  messagingSenderId: "270045452251",
-  appId: "1:270045452251:web:393956ce18b43316e939fe",
-  measurementId: "G-LQEHF02ZVR"
-};
-</script>
-
-<!-- NIGHT GAMES v1242 -->
+<title>Night Games v1232</title>
+<!-- NIGHT GAMES v1232 -->
+<!-- ============================================================
+     NIGHT GAMES (TRAINING BUILD) — ORGANIZED + SAFE EDIT POINTS
+     - This file is intentionally broken into sections.
+     - To MOVE things: search for 'EDIT:' blocks or CSS vars under :root.
+     - To SHOW touchpads: search for 'DEBUG HITBOX' and toggle.
+     ============================================================ -->
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>:root vars) • COMPONENTS (
 
     html, body{
@@ -31,6 +24,16 @@ margin:0;
       overflow:hidden;
       -webkit-text-size-adjust: 100%;
     }
+
+    /* =========================================================
+       DEBUG HITBOX (touchpads) — set to 1 to visualize tap boxes
+       ========================================================= */
+    :root{ --showHitboxes: 0; }
+    .tap, .hitbox, .pad, .touchpad{
+      background: rgba(255,0,0, calc(0.25 * var(--showHitboxes))) !important;
+      outline: calc(2px * var(--showHitboxes)) solid rgba(255,0,0,0.85) !important;
+    }
+
 
     /* Debug panel (toggle) */
     .dbg{ display:none; }
@@ -1994,44 +1997,60 @@ button, .btn, .pill{
 }
 .btnAdvance:active, .btn-advance:active{ transform: translateY(1px); }
 
-/* ===== v1242 Landing footer + crystal buttons (no-module master) ===== */
-#landingFoot {
+#fatal{display:none !important;}
+
+/* ===========================
+   Landing crystal neon polish (v1232)
+   =========================== */
+#emailEcho{ display:none !important; }
+/* Move footer up onto image bottom */
+#landingFoot{
   position:absolute !important;
   left:0 !important; right:0 !important;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 22px) !important;
-  background:transparent !important;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 18px) !important;
   text-align:center !important;
   z-index: 80 !important;
   pointer-events:none !important;
 }
-/* Crystal glass pills on landing */
-#landing #emailPad input,
+#landingCopy{
+  opacity:.95 !important;
+  font-weight:900 !important;
+  font-size:13px !important;
+  text-shadow:0 2px 14px rgba(0,0,0,.65) !important;
+}
+/* Crystal clear pill buttons with subtle blue/red neon melt */
 #landing #emailInput,
 #landing #enterBtn,
-#landing #landingLeaderboardBtn {
+#landing #landingLeaderboardBtn{
   border-radius: 999px !important;
-  background-color: rgba(255,255,255,0.02) !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+  color: rgba(255,255,255,.96) !important;
+  background-color: rgba(255,255,255,.01) !important;
   background-image:
-    radial-gradient(140px 70px at 18% 22%, rgba(60,180,255,0.38), transparent 62%),
-    radial-gradient(140px 70px at 82% 22%, rgba(255,80,80,0.34), transparent 62%),
-    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.02) 48%, rgba(255,255,255,0.05) 100%) !important;
-  border: 1px solid rgba(255,255,255,0.30) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(185%) !important;
+    radial-gradient(140px 70px at 18% 22%, rgba(57,183,255,.38), transparent 62%),
+    radial-gradient(140px 70px at 82% 22%, rgba(255,80,80,.34), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,.02) 46%, rgba(255,255,255,.04) 100%) !important;
   backdrop-filter: blur(16px) saturate(185%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(185%) !important;
   box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.80),
-    inset 0 -2px 0 rgba(0,0,0,0.18),
-    0 18px 46px rgba(0,0,0,0.44) !important;
+    inset 0 2px 0 rgba(255,255,255,.78),
+    inset 0 -2px 0 rgba(0,0,0,.18),
+    0 18px 46px rgba(0,0,0,.44) !important;
 }
-#landing #emailPad input::placeholder,
-#landing #emailInput::placeholder {
-  color: rgba(255,255,255,0.74) !important;
+#landing #emailInput{
+  text-align:center !important;
 }
+#landing #emailInput::placeholder{
+  color: rgba(255,255,255,.74) !important;
+}
+/* Sizes */
+#landing #enterBtn{ height:44px; }
+#landing #landingLeaderboardBtn{ height:36px; width:50%; margin:0 auto; }
 
 </style>
 <script id="ngGuards_v748">
 
-/* ===================== v1242 FIREBASE CONFIG GUARD (NO 404) ===================== */
+/* ===================== v1232 FIREBASE CONFIG GUARD (NO 404) ===================== */
 function ngValidateFirebaseConfig(firebaseConfig){
   const missing = [];
   if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
@@ -2059,7 +2078,7 @@ function ngLogError(label, err){
     }
   }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
 }
-/* ===================== v1242 MASTER REPORTER ===================== */
+/* ===================== v1232 MASTER REPORTER ===================== */
 window.ngErr = (label, e) => {
   console.warn(`[${label}]`, e);
   if(typeof ngLogError === "function") ngLogError(label, e);
@@ -2125,7 +2144,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1242</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1232</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2158,18 +2177,20 @@ function ngGuard(label, fn){
   <!-- : target artwork background includes the visible pads; we wire ONLY invisible overlays -->
   <div id="landingPads">
     <div id="emailPad" class="padEmail">
-      <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder=""/>
+      <input autocomplete="email" id="emailInput" inputmode="email" type="email" value="" placeholder="player@example.com"/>
       <div id="emailEcho">player@example.com</div>
     </div>
 
     <button id="enterBtn" type="button" aria-label="Enter"><span class="enterText">ENTER</span><span class="enterSub" id="statusLine">Email-only sign-in (no password). Firebase stable build.</span></button>
+
+    <button id="landingLeaderboardBtn" type="button" aria-label="Leaderboard">LEADERBOARD</button>
 
     <!-- Keep ONLY one hint line (matches artwork intent) -->
 </div>
 
   <!-- Footer at the foot (separate from hint) -->
   <div id="landingFoot">
-    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room — Night Games v1242</div>
+    <div class="landingCopy" id="landingCopy">© 2026 The Dart Room. Night Games is owned and operated by The Dart Room. All rights reserved.</div>
   </div>
 </section>
 
@@ -2265,7 +2286,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1106is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1232 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2339,7 +2360,7 @@ function ngGuard(label, fn){
 </script>
 
 <script>
-// ===================== v1242 NO-MODULE BOOTSTRAP =====================
+// ===================== v1232 NO-MODULE BOOTSTRAP =====================
 // Goal: iPhone Safari sometimes skips <script type="module"> on GitHub Pages.
 // This bootstrap loads Firebase via dynamic import inside a plain script, then runs the app.
 
@@ -2357,7 +2378,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1242";
+  window.ngBuild = "v1232";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -2370,21 +2391,19 @@ function ngGuard(label, fn){
 
   const cfg = (window.firebaseConfig || window.__firebaseConfig || (typeof firebaseConfig!=="undefined" ? firebaseConfig : null));
 
-  const runApp = function(){
-
+  const runApp = async function(){
+    const {
       getFirestore,
       initializeFirestore, memoryLocalCache,
-      doc, setDoc, getDoc,
-      collection, onSnapshot,
-      serverTimestamp, query, where
-    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
+      doc, setDoc, getDoc, updateDoc, addDoc, getDocs, deleteDoc,
+      collection, onSnapshot, query, where, serverTimestamp
+    } = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js");
 window.ngFirebaseBoot = window.ngFirebaseBoot || {};
 window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1242";
+window.ngBuild = "v1232";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -2433,7 +2452,7 @@ const NG_STORE = {
       if(err && dbgErr) dbgErr.textContent = err;
     }
 
-    // ===================== v1242 FIREBASE BLOCKERS DIAGNOSTICS =====================
+    // ===================== v1232 FIREBASE BLOCKERS DIAGNOSTICS =====================
     async function ngFirebaseSelfTest(db, auth){
       try{
         if(!db){
@@ -4370,7 +4389,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1106Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1232Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -5299,7 +5318,7 @@ if(typeof db==="undefined"||typeof doc!=="function"||typeof onSnapshot!=="functi
 
 /* ===================== GAME ENGINE CORE ===================== */
 
-/* ===================== v1242 01 ENGINE (301/501/701) ===================== */
+/* ===================== v1232 01 ENGINE (301/501/701) ===================== */
 function runGameEngine(session){
   try{
     if(!session || !session.gameId) return;
@@ -5495,13 +5514,40 @@ function ngUpdateBtn(){
 
 
 <script>
-/* ===== v1242 Single-player safeguard ===== */
+/* ===== Version + landing enforce (v1232) ===== */
+window.APP_VERSION = "v1232";
 (function(){
   try {
-    if(window.activeSession && window.activeSession.setup && Number(window.activeSession.setup.count||1) <= 1){
-      window.activeSession.practice = true;
-    }
+    // header version
+    document.querySelectorAll('#ngHeaderBar .ngVer, .ngVer, [data-app-version]').forEach(el=>el.textContent = window.APP_VERSION.toUpperCase());
+    // footer copy
+    const lc = document.getElementById('landingCopy');
+    if(lc) lc.textContent = '© 2026 The Dart Room. Night Games is owned and operated by The Dart Room. All rights reserved.';
   } catch(e) {}
+})();
+</script>
+
+
+<script>
+/* ===== Landing LEADERBOARD button wiring (v1232) ===== */
+(function(){
+  const lb = document.getElementById('landingLeaderboardBtn');
+  if(!lb) return;
+  lb.addEventListener('click', function(){
+    // Prefer existing app router if present
+    try {
+      const show = window.showScreen || window.setScreen || window.goTo;
+      if(typeof show === "function") { show("players"); }
+    } catch(e) {}
+    // fallback: activate players screen manually
+    try {
+      document.querySelectorAll('#app .screen').forEach(s=>s.classList.remove('active'));
+      const players = document.getElementById('players');
+      if(players) players.classList.add('active');
+      const btn = document.getElementById('leaderboardBtn');
+      if(btn) btn.scrollIntoView({behavior:'smooth', block:'center'});
+    } catch(e) {}
+  });
 })();
 </script>
 
