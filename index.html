@@ -6,42 +6,216 @@
 <title>Night Games</title>
 
 <!-- =====================================================
-NIGHT GAMES — PROGRESS BUILD (all-in-one, no modules)
-- Keeps: labeled sections, 3 seeded players, login->player page flow
-- Adds: Firebase (Firestore) wiring using compat SDK (no import/module issues)
-- Adds: Presence (online dots), simple lobby room creation/join, invites (basic)
-- Leaves: advanced turn sync + full stats as next step, but hooks exist
+NIGHT GAMES — UI SKIN + PROGRESS BUILD (all-in-one)
+- Keeps: Firestore compat (no module imports), seeded players, presence, lobby invites/rooms
+- Upgrades: Landing page + Players page layout to match your screenshots (glass panels, header bar)
+- IMPORTANT: Set your artwork paths in SECTION 1 variables (no other file changes needed)
 ===================================================== -->
 
 <!-- ===================================================== -->
-<!-- SECTION 1 — VISUAL SETTINGS (SAFE TO EDIT)            -->
+<!-- SECTION 1 — VISUAL SETTINGS + ARTWORK PATHS (EDIT ME) -->
 <!-- ===================================================== -->
 <style>
   :root{
-    --bg:#0b0f18;
-    --header:#020617;
-    --panelText:#ffffff;
+    --bg:#05070d;
+    --glass: rgba(255,255,255,.10);
+    --glass2: rgba(255,255,255,.06);
+    --stroke: rgba(255,255,255,.14);
+    --text:#fff;
+    --muted:#a7b0c0;
+    --accent:#22c55e;
     --btn:#22c55e;
     --btnText:#07120a;
-    --muted:#9aa4b2;
-    --danger:#ef4444;
-    --card:#0f172a;
+
+    /* === ARTWORK PATHS (put your repo filenames here) ===
+       Example: url("assets/login-bg.jpg")
+       If you leave them blank, the page still works with a gradient.
+    */
+    --login-bg: radial-gradient(circle at 50% 30%, rgba(34,197,94,.18), transparent 55%),
+                radial-gradient(circle at 30% 70%, rgba(59,130,246,.18), transparent 55%),
+                linear-gradient(180deg, #020617 0%, #05070d 60%, #020617 100%);
+    --player-bg: radial-gradient(circle at 50% 30%, rgba(34,197,94,.12), transparent 55%),
+                 radial-gradient(circle at 30% 70%, rgba(59,130,246,.14), transparent 55%),
+                 linear-gradient(180deg, #020617 0%, #05070d 70%, #020617 100%);
+
+    /* Optional logo image (set to url("...") or leave as none) */
+    --logo-img: none;
   }
-  body{background:var(--bg);color:var(--panelText);font-family:Arial,Helvetica,sans-serif;margin:0}
-  header{background:var(--header);padding:18px;text-align:center;font-size:28px}
-  .panel{padding:18px;text-align:center}
-  .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0}
-  button{padding:10px 16px;margin:6px;border-radius:8px;border:none;background:var(--btn);color:var(--btnText);cursor:pointer;font-weight:700}
-  button.secondary{background:#334155;color:#fff}
-  button.danger{background:var(--danger);color:#fff}
-  input,select{padding:10px;font-size:16px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:#0b1220;color:#fff;width:280px;max-width:90%}
-  .card{background:var(--card);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:12px;max-width:720px;margin:12px auto}
-  .player{padding:6px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .dot{font-size:18px;line-height:18px}
-  .online{color:var(--btn)}
-  .offline{color:#64748b}
-  small{color:var(--muted)}
-  hr{border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0}
+
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+    margin:0;
+    min-height:100vh;
+  }
+
+  /* Top status bar (like your screenshots) */
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:10;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 14px;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,.10);
+    font-weight:700;
+    letter-spacing:.8px;
+    text-transform: uppercase;
+    font-size:12px;
+  }
+  .topbar .left{color:#fbbf24}
+  .topbar .center{color:#e5e7eb}
+  .topbar .right{color:var(--accent)}
+  .topbar small{font-weight:600;color:var(--muted);text-transform:none;letter-spacing:0}
+
+  /* Screen backgrounds */
+  .screen{
+    min-height: calc(100vh - 48px);
+    background: var(--login-bg);
+    background-size: cover;
+    background-position: center;
+    padding: 18px 14px 40px;
+  }
+  #playerScreen.screen{ background: var(--player-bg); }
+
+  /* Hero area */
+  .hero{
+    max-width: 860px;
+    margin: 14px auto 18px;
+    text-align:center;
+  }
+  .logo{
+    width:min(720px, 95%);
+    height: clamp(140px, 22vw, 260px);
+    margin: 8px auto 14px;
+    border-radius: 22px;
+    border: 1px solid rgba(255,255,255,.12);
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.08), transparent 60%),
+      radial-gradient(circle at 80% 30%, rgba(34,197,94,.10), transparent 55%),
+      linear-gradient(135deg, rgba(59,130,246,.15), rgba(239,68,68,.12));
+    box-shadow: 0 18px 50px rgba(0,0,0,.55);
+    position:relative;
+    overflow:hidden;
+  }
+  .logo::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image: var(--logo-img);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 1;
+  }
+  .logoText{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size: clamp(34px, 7vw, 72px);
+    font-weight:900;
+    text-shadow: 0 8px 28px rgba(0,0,0,.6);
+    pointer-events:none;
+  }
+  .subtag{
+    color: var(--muted);
+    font-weight:600;
+    margin-top: 6px;
+  }
+
+  /* Glass card/panels */
+  .grid{
+    max-width: 860px;
+    margin: 0 auto;
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  @media (min-width: 860px){
+    .grid.two{ grid-template-columns: 1.2fr 1fr; }
+  }
+
+  .glass{
+    background: linear-gradient(180deg, var(--glass), var(--glass2));
+    border: 1px solid var(--stroke);
+    border-radius: 18px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 18px 50px rgba(0,0,0,.45);
+    overflow:hidden;
+  }
+  .glassHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding: 12px 14px;
+    font-weight:800;
+    letter-spacing:.8px;
+    text-transform:uppercase;
+    border-bottom: 1px solid rgba(255,255,255,.10);
+    background: rgba(0,0,0,.18);
+  }
+  .glassBody{ padding: 12px 14px; }
+
+  /* Buttons and inputs */
+  button{
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(255,255,255,.10);
+    color: #fff;
+    font-weight:800;
+    letter-spacing:.6px;
+    text-transform: uppercase;
+    cursor:pointer;
+  }
+  button.primary{
+    background: rgba(34,197,94,.85);
+    border-color: rgba(34,197,94,.30);
+    color: #06210f;
+  }
+  button.ghost{ background: rgba(255,255,255,.08); }
+
+  input{
+    width:min(520px, 92%);
+    padding: 14px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(255,255,255,.08);
+    color:#fff;
+    font-size: 18px;
+    outline:none;
+  }
+  input::placeholder{ color: rgba(255,255,255,.65); }
+
+  .centerStack{ display:flex; flex-direction:column; align-items:center; gap:12px; }
+
+  /* Lists */
+  .listRow{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap: 10px;
+    padding: 10px 8px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .listRow:last-child{ border-bottom:none; }
+  .name{ font-weight:900; }
+  .meta{ color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .dot{ font-size: 18px; }
+  .online{ color: var(--accent); }
+  .offline{ color: #64748b; }
+
+  .rowButtons{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+  .footerBar{
+    max-width: 860px; margin: 16px auto 0;
+    display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* Debug */
   #debugBox{
     position:fixed;left:10px;right:10px;bottom:10px;
     background:rgba(0,0,0,.78);
@@ -55,72 +229,146 @@ NIGHT GAMES — PROGRESS BUILD (all-in-one, no modules)
 </head>
 
 <body>
-<header>Night Games</header>
 
 <!-- ===================================================== -->
-<!-- SECTION 2 — LOGIN SCREEN                              -->
+<!-- SECTION 2 — TOP STATUS BAR                            -->
 <!-- ===================================================== -->
-<div id="loginScreen" class="panel">
-  <div class="card">
-    <h2 style="margin:6px 0 10px">Sign In</h2>
-    <input id="email" placeholder="enter email">
-    <div class="row">
-      <button id="enterBtn" type="button">ENTER</button>
-      <button id="toggleDebugBtn" type="button" class="secondary">Debug</button>
+<div class="topbar">
+  <div class="left">NIGHT GAMES <small id="verText">vProgress</small></div>
+  <div class="center">FIREBASE • FIRESTORE</div>
+  <div class="right" id="onlineText">OFFLINE</div>
+</div>
+
+<!-- ===================================================== -->
+<!-- SECTION 3 — LOGIN SCREEN (LANDING)                    -->
+<!-- ===================================================== -->
+<div id="loginScreen" class="screen">
+  <div class="hero">
+    <div class="logo">
+      <div class="logoText">NIGHT GAMES</div>
     </div>
-    <small>Tip: use one of the seeded emails (Steve/Jayce/Bill).</small>
+    <div class="subtag">A The Dart Room Game</div>
+  </div>
+
+  <div class="centerStack">
+    <input id="email" placeholder="player@example.com">
+    <button id="enterBtn" type="button" class="primary">ENTER</button>
+    <button id="toggleDebugBtn" type="button" class="ghost">Debug</button>
   </div>
 </div>
 
 <!-- ===================================================== -->
-<!-- SECTION 3 — PLAYER PAGE                               -->
+<!-- SECTION 4 — PLAYER PAGE (GAMES + PLAYERS)             -->
 <!-- ===================================================== -->
-<div id="playerScreen" class="panel" style="display:none">
-  <div class="card">
-    <h2 style="margin:6px 0 10px">Players</h2>
-    <div id="playerList"></div>
-    <hr>
-    <h3 style="margin:6px 0 10px">Game Modes</h3>
-    <div class="row">
-      <button id="practiceBtn" type="button">Practice</button>
-      <button id="multiBtn" type="button">Multiplayer</button>
-      <button id="signOutBtn" type="button" class="secondary">Back</button>
+<div id="playerScreen" class="screen" style="display:none">
+  <div class="grid two">
+
+    <div class="glass">
+      <div class="glassHeader">
+        <div>GAMES</div>
+        <button id="sessionBtn" type="button" class="ghost">SESSION</button>
+      </div>
+      <div class="glassBody" id="gamesList">
+        <!-- Plug-and-play games: add rows here -->
+        <div class="listRow">
+          <div>
+            <div class="name">Cricket</div>
+            <div class="meta">Standard cricket rules</div>
+          </div>
+          <div class="rowButtons">
+            <button id="practiceBtn" type="button" class="primary">ENTER</button>
+            <button type="button" class="ghost" onclick="alert('Rules placeholder')">RULES</button>
+            <button type="button" class="ghost" onclick="alert('History placeholder')">HISTORY</button>
+          </div>
+        </div>
+
+        <div class="listRow">
+          <div>
+            <div class="name">Killer</div>
+            <div class="meta">Random number assignment</div>
+          </div>
+          <div class="rowButtons">
+            <button id="multiBtn" type="button" class="primary">ENTER</button>
+            <button type="button" class="ghost" onclick="alert('Rules placeholder')">RULES</button>
+            <button type="button" class="ghost" onclick="alert('History placeholder')">HISTORY</button>
+          </div>
+        </div>
+
+        <div class="listRow">
+          <div>
+            <div class="name">Shanghai</div>
+            <div class="meta">1–20 progression</div>
+          </div>
+          <div class="rowButtons">
+            <button type="button" class="primary" onclick="alert('Coming next')">ENTER</button>
+            <button type="button" class="ghost" onclick="alert('Rules placeholder')">RULES</button>
+            <button type="button" class="ghost" onclick="alert('History placeholder')">HISTORY</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass">
+      <div class="glassHeader">
+        <div>PLAYERS</div>
+        <button id="signOutBtn" type="button" class="ghost">BACK</button>
+      </div>
+      <div class="glassBody" id="playerList"></div>
+    </div>
+
+  </div>
+
+  <div class="footerBar">
+    <button id="leaderboardBtn" type="button" class="ghost">LEADERBOARD</button>
+    <small>© 2026 The Dart Room</small>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- SECTION 5 — MULTIPLAYER LOBBY                         -->
+<!-- ===================================================== -->
+<div id="lobbyScreen" class="screen" style="display:none">
+  <div class="grid">
+    <div class="glass">
+      <div class="glassHeader">
+        <div>LOBBY</div>
+        <button id="leaveLobbyBtn" type="button" class="ghost">BACK</button>
+      </div>
+      <div class="glassBody">
+        <div id="lobbyStatus"><small>Choose players and send invites.</small></div>
+        <hr>
+        <div id="inviteArea"></div>
+        <div style="margin-top:12px">
+          <button id="createRoomBtn" type="button" class="primary">CREATE ROOM</button>
+        </div>
+        <hr>
+        <div id="lobbyPlayers"><small>Players in room will appear here.</small></div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- ===================================================== -->
-<!-- SECTION 4 — MULTIPLAYER LOBBY                         -->
+<!-- SECTION 6 — GAME AREA                                 -->
 <!-- ===================================================== -->
-<div id="lobbyScreen" class="panel" style="display:none">
-  <div class="card">
-    <h2 style="margin:6px 0 10px">Lobby</h2>
-    <div id="lobbyStatus"><small>Choose players and send invites.</small></div>
-    <hr>
-    <div id="inviteArea"></div>
-    <div class="row">
-      <button id="createRoomBtn" type="button">Create Room</button>
-      <button id="leaveLobbyBtn" type="button" class="secondary">Back</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===================================================== -->
-<!-- SECTION 5 — GAME AREA                                 -->
-<!-- ===================================================== -->
-<div id="gameScreen" class="panel" style="display:none">
-  <div class="card">
-    <h2 id="turnDisplay" style="margin:6px 0 10px">Turn:</h2>
-    <div style="margin:10px 0"><small>Dart Board Test (local)</small></div>
-    <div class="row">
-      <button type="button" data-score="20">20</button>
-      <button type="button" data-score="19">19</button>
-      <button type="button" data-score="18">18</button>
-      <button type="button" data-score="5">5</button>
-      <button type="button" data-score="1">1</button>
-    </div>
-    <div class="row">
-      <button id="backToPlayersBtn" type="button" class="secondary">Back</button>
+<div id="gameScreen" class="screen" style="display:none">
+  <div class="grid">
+    <div class="glass">
+      <div class="glassHeader">
+        <div>GAME</div>
+        <button id="backToPlayersBtn" type="button" class="ghost">BACK</button>
+      </div>
+      <div class="glassBody">
+        <h2 id="turnDisplay" style="margin:6px 0 10px">Turn:</h2>
+        <small>Dart Board Test (local)</small>
+        <div class="row" style="margin-top:12px">
+          <button type="button" data-score="20" class="primary">20</button>
+          <button type="button" data-score="19" class="primary">19</button>
+          <button type="button" data-score="18" class="primary">18</button>
+          <button type="button" data-score="5" class="primary">5</button>
+          <button type="button" data-score="1" class="primary">1</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -128,15 +376,14 @@ NIGHT GAMES — PROGRESS BUILD (all-in-one, no modules)
 <div id="debugBox"><b>Debug</b><div id="debugText"></div></div>
 
 <!-- ===================================================== -->
-<!-- SECTION 6 — FIREBASE SDK (NO MODULES)                 -->
-<!-- Uses compat SDK to avoid import/type="module" issues  -->
+<!-- SECTION 7 — FIREBASE SDK (NO MODULES)                 -->
 <!-- ===================================================== -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
 <script>
 /* ===================================================== */
-/* SECTION 7 — DEBUG HELPERS                              */
+/* SECTION 8 — DEBUG HELPERS                              */
 /* ===================================================== */
 const debugBox = document.getElementById("debugBox");
 const debugText = document.getElementById("debugText");
@@ -144,12 +391,10 @@ function logDebug(msg){
   const t = new Date().toLocaleTimeString();
   debugText.textContent += `[${t}] ${msg}\n`;
 }
-function showDebug(on){
-  debugBox.style.display = on ? "block" : "none";
-}
+function showDebug(on){ debugBox.style.display = on ? "block" : "none"; }
 
 /* ===================================================== */
-/* SECTION 8 — UI HELPERS                                 */
+/* SECTION 9 — UI HELPERS                                 */
 /* ===================================================== */
 function showOnly(screenId){
   ["loginScreen","playerScreen","lobbyScreen","gameScreen"].forEach(id=>{
@@ -158,7 +403,7 @@ function showOnly(screenId){
 }
 
 /* ===================================================== */
-/* SECTION 9 — FIREBASE CONFIG (YOUR PROJECT)             */
+/* SECTION 10 — FIREBASE CONFIG                           */
 /* ===================================================== */
 const firebaseConfig = {
   apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
@@ -175,12 +420,14 @@ try{
   firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
   logDebug("Firebase initialized (Firestore compat).");
+  document.getElementById("onlineText").textContent = "ONLINE";
 }catch(e){
   logDebug("Firebase init ERROR: " + (e?.message || e));
+  document.getElementById("onlineText").textContent = "OFFLINE";
 }
 
 /* ===================================================== */
-/* SECTION 10 — PLAYER REGISTRY (SEEDED)                  */
+/* SECTION 11 — PLAYER REGISTRY (SEEDED)                  */
 /* ===================================================== */
 const players = {
   "stevewmoody@yahoo.com": { name:"Steve Moody" },
@@ -189,7 +436,7 @@ const players = {
 };
 
 /* ===================================================== */
-/* SECTION 11 — APP STATE                                 */
+/* SECTION 12 — APP STATE                                 */
 /* ===================================================== */
 let currentEmail = null;
 let currentPlayer = null;
@@ -197,9 +444,10 @@ let presenceUnsub = null;
 let invitesUnsub = null;
 let roomUnsub = null;
 let currentRoomId = null;
+let onlineMap = {}; // email -> true/false
 
 /* ===================================================== */
-/* SECTION 12 — LOGIN SYSTEM                              */
+/* SECTION 13 — LOGIN SYSTEM                              */
 /* ===================================================== */
 async function login(){
   const email = (document.getElementById("email").value||"").trim().toLowerCase();
@@ -213,26 +461,25 @@ async function login(){
   currentEmail = email;
   currentPlayer = players[email];
   showOnly("playerScreen");
-  renderPlayers(); // local render immediately
-  await startPresence(); // online dots
-  await listenInvites(); // incoming invites
+  renderPlayers();
+  await startPresence();
+  await listenInvites();
 }
 
 /* ===================================================== */
-/* SECTION 13 — PLAYER LIST + ONLINE DOTS                 */
+/* SECTION 14 — PLAYER LIST + ONLINE DOTS                 */
 /* ===================================================== */
-let onlineMap = {}; // email -> true/false
 function renderPlayers(){
   const list = document.getElementById("playerList");
   list.innerHTML = "";
   Object.keys(players).forEach(email=>{
     const row = document.createElement("div");
-    row.className = "player";
+    row.className = "listRow";
     const isOnline = !!onlineMap[email];
     row.innerHTML = `
       <div>
-        <div><b>${players[email].name}</b></div>
-        <small>${email}</small>
+        <div class="name">${players[email].name}</div>
+        <div class="meta">${email}</div>
       </div>
       <div class="dot ${isOnline ? "online":"offline"}">●</div>
     `;
@@ -241,12 +488,10 @@ function renderPlayers(){
 }
 
 /* ===================================================== */
-/* SECTION 14 — PRESENCE (ONLINE STATUS)                  */
-/* Firestore presence is "best-effort" on web.            */
+/* SECTION 15 — PRESENCE                                  */
 /* ===================================================== */
 async function startPresence(){
   if(!db || !currentEmail) return;
-  // Mark self online (heartbeat)
   const presRef = db.collection("presence").doc(currentEmail);
   await presRef.set({
     email: currentEmail,
@@ -256,14 +501,12 @@ async function startPresence(){
   }, { merge:true });
   logDebug("Presence set: online=true");
 
-  // Heartbeat every 20s
   if(window.__presenceTimer) clearInterval(window.__presenceTimer);
   window.__presenceTimer = setInterval(()=>{
     presRef.set({ online:true, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge:true })
       .catch(e=>logDebug("Presence heartbeat error: "+(e?.message||e)));
   }, 20000);
 
-  // Listen to presence collection
   if(presenceUnsub) presenceUnsub();
   presenceUnsub = db.collection("presence").onSnapshot(snap=>{
     const map = {};
@@ -275,14 +518,13 @@ async function startPresence(){
     renderPlayers();
   }, err=>logDebug("Presence listen error: "+(err?.message||err)));
 
-  // Best-effort offline on unload
   window.addEventListener("beforeunload", ()=>{
     try{ presRef.set({ online:false, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge:true }); }catch(e){}
   });
 }
 
 /* ===================================================== */
-/* SECTION 15 — PRACTICE MODE (LOCAL ONLY)                */
+/* SECTION 16 — PRACTICE MODE (LOCAL)                     */
 /* ===================================================== */
 function practice(){
   alert("Practice mode (local only). Stats disabled.");
@@ -291,8 +533,7 @@ function practice(){
 }
 
 /* ===================================================== */
-/* SECTION 16 — MULTIPLAYER: ROOM + INVITES (BASIC)       */
-/* This is a working starting point. We expand next.      */
+/* SECTION 17 — MULTIPLAYER: ROOM + INVITES (BASIC)       */
 /* ===================================================== */
 function openLobby(){
   showOnly("lobbyScreen");
@@ -330,7 +571,6 @@ async function createRoomAndInvite(){
   const checks = Array.from(area.querySelectorAll("input[type=checkbox]"));
   const invited = checks.filter(c=>c.checked).map(c=>{
     const label = c.parentElement?.innerText || "";
-    // extract email between parentheses if present
     const m = label.match(/\(([^)]+)\)/);
     return m ? m[1].trim().toLowerCase() : null;
   }).filter(Boolean);
@@ -340,7 +580,6 @@ async function createRoomAndInvite(){
     return;
   }
 
-  // Create room doc
   const roomRef = db.collection("rooms").doc();
   currentRoomId = roomRef.id;
 
@@ -359,10 +598,9 @@ async function createRoomAndInvite(){
   await roomRef.set(room);
   logDebug("Room created: "+currentRoomId);
 
-  // Write invite docs
   const batch = db.batch();
   invited.forEach(email=>{
-    const invRef = db.collection("invites").doc(); // one invite per player per room
+    const invRef = db.collection("invites").doc();
     batch.set(invRef, {
       toEmail: email,
       fromEmail: currentEmail,
@@ -375,9 +613,9 @@ async function createRoomAndInvite(){
   await batch.commit();
   logDebug("Invites sent: "+invited.join(", "));
 
-  document.getElementById("lobbyStatus").innerHTML = `<small>Room <b>${currentRoomId}</b> created. Waiting for players to join...</small>`;
+  document.getElementById("lobbyStatus").innerHTML =
+    `<small>Room <b>${currentRoomId}</b> created. Waiting for players to join...</small>`;
 
-  // Listen to room updates (players joining)
   listenRoom(currentRoomId);
 }
 
@@ -391,7 +629,7 @@ async function listenInvites(){
       snap.forEach(doc=>{
         const inv = doc.data() || {};
         if(inv.roomId){
-          const ok = confirm(`Invite from ${inv.fromName||inv.fromEmail} to join room ${inv.roomId}. Join?`);
+          const ok = confirm(\`Invite from \${inv.fromName||inv.fromEmail} to join room \${inv.roomId}. Join?\`);
           if(ok){
             acceptInvite(doc.id, inv.roomId);
           }else{
@@ -404,10 +642,8 @@ async function listenInvites(){
 
 async function acceptInvite(inviteId, roomId){
   if(!db) return;
-  // mark invite accepted
   await db.collection("invites").doc(inviteId).set({ status:"accepted" }, { merge:true });
 
-  // add self to room players map
   const roomRef = db.collection("rooms").doc(roomId);
   await roomRef.set({
     players: {
@@ -417,7 +653,8 @@ async function acceptInvite(inviteId, roomId){
 
   currentRoomId = roomId;
   showOnly("lobbyScreen");
-  document.getElementById("lobbyStatus").innerHTML = `<small>Joined room <b>${roomId}</b>. Waiting for host...</small>`;
+  document.getElementById("lobbyStatus").innerHTML =
+    `<small>Joined room <b>${roomId}</b>. Waiting for host...</small>`;
   listenRoom(roomId);
 }
 
@@ -429,16 +666,13 @@ function listenRoom(roomId){
     if(!room) return;
     const p = room.players || {};
     const names = Object.keys(p).map(e=>p[e].name || e);
-    document.getElementById("lobbyPlayers").innerHTML = `<small>Players in room:</small><div style="margin-top:8px">${names.map(n=>`<div class="player" style="justify-content:center">${n}</div>`).join("")}</div>`;
-    if(room.status === "started"){
-      // future: transition to synced game
-      document.getElementById("lobbyStatus").innerHTML = `<small>Game started (sync coming next).</small>`;
-    }
+    document.getElementById("lobbyPlayers").innerHTML =
+      `<small>Players in room:</small><div style="margin-top:8px">${names.map(n=>\`<div class="listRow" style="justify-content:center"><div class="name">\${n}</div></div>\`).join("")}</div>`;
   }, err=>logDebug("Room listen error: "+(err?.message||err)));
 }
 
 /* ===================================================== */
-/* SECTION 17 — LOCAL TURN SYSTEM (STABLE)                */
+/* SECTION 18 — LOCAL TURN SYSTEM                         */
 /* ===================================================== */
 let turnOrder = [];
 let currentTurn = 0;
@@ -449,23 +683,18 @@ function startTurnLocal(){
 }
 
 /* ===================================================== */
-/* SECTION 18 — LOCAL DART THROW ENGINE (STABLE)          */
+/* SECTION 19 — LOCAL DART THROW ENGINE                   */
 /* ===================================================== */
 function throwDart(score){
   alert((currentPlayer?.name || "Player") + " scored " + score);
 }
 
 /* ===================================================== */
-/* SECTION 19 — NAV BUTTONS                               */
+/* SECTION 20 — NAV                                      */
 /* ===================================================== */
-function backToPlayers(){
-  showOnly("playerScreen");
-}
-function leaveLobby(){
-  showOnly("playerScreen");
-}
+function backToPlayers(){ showOnly("playerScreen"); }
+function leaveLobby(){ showOnly("playerScreen"); }
 function signOut(){
-  // best-effort offline
   try{
     if(db && currentEmail){
       db.collection("presence").doc(currentEmail).set({
@@ -479,9 +708,10 @@ function signOut(){
 }
 
 /* ===================================================== */
-/* SECTION 20 — WIRE BUTTONS (NO SILENT FAIL)             */
+/* SECTION 21 — WIRE BUTTONS                              */
 /* ===================================================== */
 document.addEventListener("DOMContentLoaded", ()=>{
+  document.getElementById("verText").textContent = "vUI-SKIN";
   document.getElementById("enterBtn").addEventListener("click", login);
   document.getElementById("practiceBtn").addEventListener("click", practice);
   document.getElementById("multiBtn").addEventListener("click", openLobby);
@@ -490,6 +720,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
   document.getElementById("signOutBtn").addEventListener("click", signOut);
   document.getElementById("backToPlayersBtn").addEventListener("click", backToPlayers);
   document.getElementById("toggleDebugBtn").addEventListener("click", ()=> showDebug(debugBox.style.display!=="block"));
+  document.getElementById("sessionBtn").addEventListener("click", ()=> alert("Session placeholder"));
+  document.getElementById("leaderboardBtn").addEventListener("click", ()=> alert("Leaderboard placeholder"));
   document.querySelectorAll("[data-score]").forEach(btn=>{
     btn.addEventListener("click", ()=> throwDart(Number(btn.dataset.score)));
   });
