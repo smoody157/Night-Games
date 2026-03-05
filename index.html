@@ -27,8 +27,8 @@ WHY THIS IS BETTER FOR YOU:
 - Then we add Firebase/Firestore back in one small section at a time.
 
 YOU ONLY EDIT 2 AREAS RIGHT NOW:
-1) SECTION 1: artwork paths (optional)
-2) (Later) add game modules where labeled
+1) Artwork paths (top of file)
+2) Firebase/Firestore wiring (near bottom)
 
 ===================================================================== -->
 
@@ -73,7 +73,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
         font-family: Arial, Helvetica, sans-serif; }
 
   /* ===================================================== */
-  /* SECTION 2 — TOP STATUS BAR                             */
+  /* SECTION 2 — TOP STATUS BAR (CSS) */
   /* ===================================================== */
   .topbar{
     position:sticky; top:0; z-index:10;
@@ -91,7 +91,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
   .topbar small{ font-weight:800; color:var(--muted); text-transform:none; letter-spacing:0; }
 
   /* ===================================================== */
-  /* SECTION 3 — SCREEN BACKGROUNDS                         */
+  /* SECTION 3 — SCREEN BACKGROUNDS (CSS) */
   /* ===================================================== */
   .screen{
     min-height: calc(100vh - 48px);
@@ -108,7 +108,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
   #playerScreen{ background-image: var(--player-bg-img); }
 
   /* ===================================================== */
-  /* SECTION 4 — HERO / LOGO                                */
+  /* SECTION 4 — HERO / LOGO (CSS) */
   /* ===================================================== */
   .hero{
     max-width: 860px;
@@ -149,7 +149,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
   .subtag{ color: var(--muted); font-weight:800; margin-top: 6px; }
 
   /* ===================================================== */
-  /* SECTION 5 — GLASS PANELS + GRID                        */
+  /* SECTION 5 — GLASS PANELS + GRID (CSS) */
   /* ===================================================== */
   .grid{
     max-width: 860px;
@@ -180,7 +180,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
   .glassBody{ padding: 12px 14px; }
 
   /* ===================================================== */
-  /* SECTION 6 — CONTROLS                                   */
+  /* SECTION 6 — CONTROLS (CSS) */
   /* ===================================================== */
   button{
     padding: 10px 16px;
@@ -214,7 +214,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
   .centerStack{ display:flex; flex-direction:column; align-items:center; gap:12px; }
 
   /* ===================================================== */
-  /* SECTION 7 — LISTS                                      */
+  /* SECTION 7 — LISTS (CSS) */
   /* ===================================================== */
   .listRow{
     display:flex;
@@ -240,7 +240,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
   }
 
   /* ===================================================== */
-  /* SECTION 8 — DEBUG BOX                                  */
+  /* SECTION 8 — DEBUG BOX (CSS) */
   /* ===================================================== */
   #debugBox{
     position:fixed; left:10px; right:10px; bottom:10px;
@@ -257,7 +257,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
 <body>
 
 <!-- ===================================================== -->
-<!-- SECTION 2 — TOP STATUS BAR                            -->
+<!-- SECTION 9 — TOP STATUS BAR (HTML) -->
 <!-- ===================================================== -->
 <div class="topbar">
   <div class="left">NIGHT GAMES <small id="verText">vUI-Complete</small></div>
@@ -266,7 +266,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
 </div>
 
 <!-- ===================================================== -->
-<!-- SECTION 9 — LOGIN SCREEN (LANDING)                    -->
+<!-- SECTION 10 — LOGIN SCREEN (LANDING) -->
 <!-- ===================================================== -->
 <div id="loginScreen" class="screen">
   <div class="hero">
@@ -284,7 +284,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
 </div>
 
 <!-- ===================================================== -->
-<!-- SECTION 10 — PLAYERS PAGE (GAMES + PLAYERS)           -->
+<!-- SECTION 11 — PLAYERS PAGE (GAMES + PLAYERS) -->
 <!-- ===================================================== -->
 <div id="playerScreen" class="screen" style="display:none">
   <div class="grid two">
@@ -297,7 +297,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
       <div class="glassBody" id="gamesList">
 
         <!-- ===================================================== -->
-        <!-- SECTION 10A — PLUG-AND-PLAY GAME MODULES               -->
+        <!-- SUBSEC 11A — PLUG-AND-PLAY GAME MODULES               -->
         <!-- ===================================================== -->
 
         <div class="listRow">
@@ -356,7 +356,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
 </div>
 
 <!-- ===================================================== -->
-<!-- SECTION 11 — MULTIPLAYER LOBBY (UI SHELL)             -->
+<!-- SECTION 12 — MULTIPLAYER LOBBY (UI SHELL) -->
 <!-- ===================================================== -->
 <div id="lobbyScreen" class="screen" style="display:none">
   <div class="grid">
@@ -380,7 +380,7 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
 </div>
 
 <!-- ===================================================== -->
-<!-- SECTION 12 — GAME SCREEN (LOCAL PRACTICE)             -->
+<!-- SECTION 13 — GAME SCREEN (LOCAL PRACTICE) -->
 <!-- ===================================================== -->
 <div id="gameScreen" class="screen" style="display:none">
   <div class="grid">
@@ -405,13 +405,20 @@ YOU ONLY EDIT 2 AREAS RIGHT NOW:
 </div>
 
 <!-- ===================================================== -->
-<!-- SECTION 8 — DEBUG BOX                                 -->
+<!-- SECTION 14 — DEBUG BOX (HTML) -->
 <!-- ===================================================== -->
 <div id="debugBox"><b>Debug</b><div id="debugText"></div></div>
 
+<!-- ===================================================== -->
+<!-- SECTION 15 — FIREBASE SDK SCRIPTS (COMPAT)            -->
+<!-- ===================================================== -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
 <script>
 /* ===================================================== */
-/* SECTION 13 — CORE APP STATE                            */
+/* SECTION 16 — CORE APP STATE                            */
 /* ===================================================== */
 const players = {
   "stevewmoody@yahoo.com": { name:"Steve Moody" },
@@ -422,7 +429,7 @@ let currentEmail = null;
 let currentPlayer = null;
 
 /* ===================================================== */
-/* SECTION 13A — DEBUG LOGGING                            */
+/* SUBSEC 16A — DEBUG LOGGING                         */
 /* ===================================================== */
 const debugBox = document.getElementById("debugBox");
 const debugText = document.getElementById("debugText");
@@ -433,7 +440,7 @@ function logDebug(msg){
 function showDebug(on){ debugBox.style.display = on ? "block" : "none"; }
 
 /* ===================================================== */
-/* SECTION 13B — SCREEN NAV                               */
+/* SUBSEC 16B — SCREEN NAV                            */
 /* ===================================================== */
 function showOnly(screenId){
   ["loginScreen","playerScreen","lobbyScreen","gameScreen"].forEach(id=>{
@@ -442,7 +449,7 @@ function showOnly(screenId){
 }
 
 /* ===================================================== */
-/* SECTION 14 — LOGIN SYSTEM (WORKING)                    */
+/* SECTION 17 — LOGIN SYSTEM (WORKING)                    */
 /* ===================================================== */
 function login(){
   try{
@@ -468,7 +475,7 @@ function login(){
 }
 
 /* ===================================================== */
-/* SECTION 15 — PLAYERS LIST (WORKING)                    */
+/* SECTION 18 — PLAYERS LIST (WORKING)                    */
 /* ===================================================== */
 function renderPlayers(){
   const list = document.getElementById("playerList");
@@ -489,7 +496,7 @@ function renderPlayers(){
 }
 
 /* ===================================================== */
-/* SECTION 16 — PRACTICE MODE (WORKING)                   */
+/* SECTION 19 — PRACTICE MODE (WORKING)                   */
 /* ===================================================== */
 let turnOrder = [];
 let currentTurn = 0;
@@ -505,7 +512,7 @@ function throwDart(score){
 }
 
 /* ===================================================== */
-/* SECTION 17 — MULTIPLAYER LOBBY (UI READY)              */
+/* SECTION 20 — MULTIPLAYER LOBBY (UI READY)              */
 /* ===================================================== */
 function openLobby(){
   showOnly("lobbyScreen");
@@ -544,7 +551,7 @@ function createRoomAndInvite_UIOnly(){
 }
 
 /* ===================================================== */
-/* SECTION 18 — FIREBASE / FIRESTORE (ADD LATER)          */
+/* SECTION 21 — FIREBASE / FIRESTORE (ADD LATER)          */
 /* ===================================================== */
 /*
   When you’re ready, we add Firebase compat scripts + Firestore here.
@@ -552,7 +559,7 @@ function createRoomAndInvite_UIOnly(){
 */
 
 /* ===================================================== */
-/* SECTION 19 — BUTTON WIRING (NO SILENT FAIL)            */
+/* SECTION 22 — BUTTON WIRING (NO SILENT FAIL)            */
 /* ===================================================== */
 document.addEventListener("DOMContentLoaded", ()=>{
   document.getElementById("enterBtn").addEventListener("click", login);
