@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Night Games v1238-clean</title>
-
-<!-- CLEANED SINGLE-FILE BUILD -->
+<title>Night Games v1238.2-checkpoint</title>
 
 <style>
   :root{
@@ -34,7 +32,7 @@
 
   .screen{
     position:fixed;
-    left:0; right:0; top:0; bottom:0;
+    inset:0;
     display:none;
     overflow:hidden;
     padding: var(--topPad) var(--safePad) var(--botPad);
@@ -86,6 +84,7 @@
     display:flex;
     flex-direction:column;
     gap:14px;
+    margin:0 auto;
   }
 
   .glass{
@@ -180,12 +179,6 @@
     font-size:15px;
   }
 
-  .panel{
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.14);
-    border-radius: 18px;
-    padding: 12px;
-  }
   .scrollArea{
     max-height: 210px;
     overflow:auto;
@@ -207,9 +200,11 @@
   .meta{ color: var(--muted); font-size: 12px; margin-top:2px; }
   .dot{
     font-size:18px;
-    color: var(--accent);
     flex:0 0 auto;
   }
+  .online{ color: var(--accent); }
+  .offline{ color: #64748b; }
+
   .rowButtons{
     display:flex;
     gap:8px;
@@ -262,11 +257,56 @@
     font-size:13px;
     line-height:1.35;
   }
+
+  .statusIcon{
+    font-size:18px;
+    margin-right:8px;
+    font-weight:900;
+    display:inline-block;
+    min-width:18px;
+    text-align:center;
+  }
+  .statusJoined{
+    color:#00ff88;
+    text-shadow:0 0 6px #00ff88;
+  }
+  .statusDeclined{
+    color:#ff4444;
+    text-shadow:0 0 6px #ff4444;
+  }
+  .statusWaiting{
+    color:#ffd23f;
+    text-shadow:0 0 6px #ffd23f;
+  }
+
+  .readyBanner{
+    margin-top:10px;
+    padding:10px 12px;
+    border-radius:14px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.14);
+    text-align:center;
+    font-weight:800;
+  }
+
+  .randomizerList{
+    margin-top:12px;
+    display:grid;
+    gap:8px;
+  }
+
+  .loginFinePrint{
+    margin-top:18px;
+    text-align:center;
+    font-size:11px;
+    color:rgba(255,255,255,.78);
+    line-height:1.4;
+  }
 </style>
 </head>
 
 <body>
-<div class="versionTag">v1238-clean</div>
+<div class="versionTag">v1238.2-checkpoint</div>
 
 <div class="topbar">
   <div class="left">Night Games</div>
@@ -278,6 +318,7 @@
   <div class="centerStack">
     <input id="email" type="email" placeholder="player@example.com">
     <button id="enterBtn" type="button" class="primary">ENTER</button>
+    <div class="loginFinePrint">© 2026 The Dart Room — All Rights Reserved</div>
   </div>
 </div>
 
@@ -346,11 +387,13 @@
         <div id="lobbyStatus" class="lobbyNote">Select players, then create room.</div>
         <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
         <div id="inviteArea" class="scrollArea"></div>
-        <div style="margin-top:12px">
+        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
           <button id="createRoomBtn" type="button" class="primary">CREATE ROOM</button>
+          <button id="markAllJoinedBtn" type="button" class="ghost">MARK ALL JOINED</button>
         </div>
         <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
         <div id="lobbyPlayers" class="scrollArea lobbyNote">Players will show here after wiring Firestore.</div>
+        <div id="readyBanner"></div>
       </div>
     </div>
   </div>
@@ -366,6 +409,7 @@
       <div class="glassBody">
         <h2 id="turnDisplay" style="margin:6px 0 10px">Turn:</h2>
         <div class="gameNote">Practice throws (local). Multiplayer sync comes next.</div>
+        <div id="randomizerResults" class="randomizerList"></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px">
           <button type="button" class="primary" data-score="20">20</button>
           <button type="button" class="primary" data-score="19">19</button>
@@ -386,11 +430,41 @@ const players = {
   "jmoody7712@gmail.com":  { name:"Jayce Moody" },
   "wmoody7931@aol.com":    { name:"Bill Moody" }
 };
+
 let currentEmail = null;
 let currentPlayer = null;
-let onlineMap = {};
 let turnOrder = [];
 let currentTurn = 0;
+
+// waiting room / randomizer state
+let roomPlayers = [];
+let playerStatus = {};
+let gameType = "killer";
+let killerNumbers = [];
+
+// simple sound restore
+let audioCtx = null;
+function ensureAudio(){
+  if(!audioCtx){
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if(Ctx) audioCtx = new Ctx();
+  }
+}
+function clickSound(){
+  try{
+    ensureAudio();
+    if(!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.type = "sine";
+    osc.frequency.value = 600;
+    gain.gain.value = 0.05;
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.05);
+  }catch(e){}
+}
 
 function showOnly(id){
   const ids = ["loginScreen","playerScreen","lobbyScreen","gameScreen"];
@@ -412,6 +486,7 @@ function login(){
   currentEmail = email;
   currentPlayer = players[email];
 
+  clickSound();
   renderPlayers();
   buildInviteUI();
   showOnly("playerScreen");
@@ -422,7 +497,7 @@ function renderPlayers(){
   list.innerHTML = "";
   Object.keys(players).forEach(email=>{
     const isMe = (email === currentEmail);
-    const isOnline = (onlineMap[email] || isMe);
+    const isOnline = (email === currentEmail);
     const row = document.createElement("div");
     row.className = "listRow";
     row.innerHTML = `
@@ -447,15 +522,18 @@ function practice(gameKey){
   turnOrder = [currentPlayer?.name || "Player"];
   currentTurn = 0;
   document.getElementById("turnDisplay").innerText = `Turn: ${turnOrder[currentTurn]} • ${gameKey}`;
+  document.getElementById("randomizerResults").innerHTML = "";
 }
 
 function throwDart(score){
+  clickSound();
   alert((currentPlayer?.name || "Player") + " scored " + score);
 }
 
 function openLobby(){
   showOnly("lobbyScreen");
   buildInviteUI();
+  resetLobbyState();
 }
 
 function buildInviteUI(){
@@ -478,11 +556,165 @@ function buildInviteUI(){
   area.appendChild(wrap);
 }
 
+function resetLobbyState(){
+  roomPlayers = [];
+  playerStatus = {};
+  turnOrder = [];
+  killerNumbers = [];
+  document.getElementById("lobbyPlayers").innerHTML = "Players will show here after wiring Firestore.";
+  document.getElementById("readyBanner").innerHTML = "";
+  document.getElementById("lobbyStatus").innerHTML = "Select players, then create room.";
+}
+
 function createRoomAndInvite_UIOnly(){
+  clickSound();
+
   const checks = Array.from(document.querySelectorAll("#inviteArea input[type=checkbox]"));
-  const invited = checks.filter(c=>c.checked).map(c=>c.parentElement?.innerText||"").join(", ");
+  const selectedEmails = checks.filter(c=>c.checked).map(c=>c.id.replace(/^inv_/, ""));
+  const emailMap = {};
+  Object.keys(players).forEach(e => { emailMap[btoa(e).replace(/=/g, "")] = e; });
+
+  roomPlayers = [];
+  playerStatus = {};
+  turnOrder = [];
+  killerNumbers = [];
+
+  roomPlayers.push({ name: currentPlayer?.name || "Host", email: currentEmail });
+  playerStatus[currentEmail] = "joined";
+
+  selectedEmails.forEach(key=>{
+    const email = emailMap[key];
+    if(email){
+      roomPlayers.push({ name: players[email].name, email });
+      playerStatus[email] = "waiting";
+    }
+  });
+
   document.getElementById("lobbyStatus").innerHTML =
-    `<small>UI-only: Create Room clicked. Selected: <b>${invited || "none"}</b>.<br>Next step: wire Firestore rooms/invites.</small>`;
+    `<small>Room created for <b>${gameType}</b>. Waiting for players to join…</small>`;
+
+  renderWaitingRoom();
+  checkRoomReady();
+}
+
+function renderWaitingRoom(){
+  const area = document.getElementById("lobbyPlayers");
+  area.innerHTML = "";
+
+  if(!roomPlayers.length){
+    area.innerHTML = "<small>No room players yet.</small>";
+    return;
+  }
+
+  roomPlayers.forEach((p) => {
+    let icon = "⌛";
+    let cls = "statusWaiting";
+
+    if(playerStatus[p.email] === "joined"){
+      icon = "✔";
+      cls = "statusJoined";
+    } else if(playerStatus[p.email] === "declined"){
+      icon = "✖";
+      cls = "statusDeclined";
+    }
+
+    const row = document.createElement("div");
+    row.className = "listRow";
+    row.innerHTML = `
+      <span class="statusIcon ${cls}">${icon}</span>
+      <div style="min-width:0">
+        <div class="name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div>
+        <div class="meta" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.email}</div>
+      </div>
+      <div class="rowButtons">
+        ${p.email !== currentEmail ? `<button class="ghost" type="button" data-join="${p.email}">JOIN</button>
+        <button class="ghost" type="button" data-decline="${p.email}">DECLINE</button>` : ""}
+      </div>
+    `;
+    area.appendChild(row);
+  });
+}
+
+function playerJoined(email){
+  clickSound();
+  playerStatus[email] = "joined";
+  renderWaitingRoom();
+  checkRoomReady();
+}
+
+function playerDeclined(email){
+  clickSound();
+  playerStatus[email] = "declined";
+  renderWaitingRoom();
+}
+
+function checkRoomReady(){
+  if(!roomPlayers.length) return;
+
+  const joined = Object.values(playerStatus).filter(s => s === "joined");
+  const allJoined = joined.length === roomPlayers.length;
+
+  if(allJoined){
+    document.getElementById("readyBanner").innerHTML =
+      `<div class="readyBanner">Now that everyone has joined the room, let's get the game started.</div>`;
+    setTimeout(startRandomizers, 1000);
+  } else {
+    document.getElementById("readyBanner").innerHTML = "";
+  }
+}
+
+function randomizeTurnOrder(){
+  const order = roomPlayers.map(p => ({...p}));
+  for(let i = order.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  return order;
+}
+
+function randomizeKillerNumbers(){
+  const nums = [];
+  for(let i = 1; i <= 20; i++) nums.push(i);
+  for(let i = nums.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [nums[i], nums[j]] = [nums[j], nums[i]];
+  }
+  return nums.slice(0, roomPlayers.length);
+}
+
+function startRandomizers(){
+  turnOrder = randomizeTurnOrder();
+  killerNumbers = [];
+
+  if(gameType === "killer"){
+    killerNumbers = randomizeKillerNumbers();
+  }
+
+  launchGame(turnOrder, killerNumbers);
+}
+
+function launchGame(order, killerAssignments){
+  clickSound();
+  showOnly("gameScreen");
+
+  currentTurn = 0;
+  document.getElementById("turnDisplay").innerText =
+    `Turn: ${order[0]?.name || (currentPlayer?.name || "Player")} • ${gameType}`;
+
+  const results = document.getElementById("randomizerResults");
+  results.innerHTML = "";
+
+  const orderCard = document.createElement("div");
+  orderCard.className = "readyBanner";
+  orderCard.innerHTML = "<strong>Turn Order</strong><br>" + order.map((p, i) => `${i+1}. ${p.name}`).join("<br>");
+  results.appendChild(orderCard);
+
+  if(gameType === "killer" && killerAssignments.length){
+    const killerCard = document.createElement("div");
+    killerCard.className = "readyBanner";
+    killerCard.innerHTML = "<strong>Killer Numbers</strong><br>" + order.map((p, i) => `${p.name} → ${killerAssignments[i]}`).join("<br>");
+    results.appendChild(killerCard);
+  }
 }
 
 function openStats(email){ alert("Stats (placeholder) for: " + email); }
@@ -491,6 +723,8 @@ function openRules(game){ alert("Rules (placeholder) for: " + game); }
 function openGameHistory(game){ alert("History (placeholder) for: " + game); }
 
 function startGame(gameKey){
+  gameType = (gameKey === "killer") ? "killer" : gameKey;
+  clickSound();
   if(gameKey === "killer"){ openLobby(); return; }
   practice(gameKey);
 }
@@ -508,13 +742,24 @@ document.addEventListener("DOMContentLoaded", ()=>{
   emailEl.addEventListener("focus", playOnce);
   emailEl.addEventListener("pointerdown", playOnce);
   emailEl.addEventListener("click", playOnce);
+  emailEl.addEventListener("keydown", (e)=>{
+    if(e.key === "Enter"){
+      e.preventDefault();
+      login();
+    }
+  });
 
   document.getElementById("enterBtn").addEventListener("click", login);
-  document.getElementById("backBtn").addEventListener("click", ()=> showOnly("loginScreen"));
-  document.getElementById("leaveLobbyBtn").addEventListener("click", ()=> showOnly("playerScreen"));
-  document.getElementById("backToPlayersBtn").addEventListener("click", ()=> showOnly("playerScreen"));
+  document.getElementById("backBtn").addEventListener("click", ()=> { clickSound(); showOnly("loginScreen"); });
+  document.getElementById("leaveLobbyBtn").addEventListener("click", ()=> { clickSound(); showOnly("playerScreen"); });
+  document.getElementById("backToPlayersBtn").addEventListener("click", ()=> { clickSound(); showOnly("playerScreen"); });
   document.getElementById("createRoomBtn").addEventListener("click", createRoomAndInvite_UIOnly);
-  document.getElementById("leaderboardBtn").addEventListener("click", ()=> alert("Leaderboard placeholder"));
+  document.getElementById("markAllJoinedBtn").addEventListener("click", ()=>{
+    roomPlayers.forEach(p => { playerStatus[p.email] = "joined"; });
+    renderWaitingRoom();
+    checkRoomReady();
+  });
+  document.getElementById("leaderboardBtn").addEventListener("click", ()=> { clickSound(); alert("Leaderboard placeholder"); });
 
   document.getElementById("zeroOneEnterBtn").addEventListener("click", ()=> startGame("01"));
   document.getElementById("practiceBtn").addEventListener("click", ()=> startGame("Cricket"));
@@ -530,171 +775,25 @@ document.addEventListener("DOMContentLoaded", ()=>{
   document.getElementById("gamesList").addEventListener("click", (e)=>{
     const rules = e.target.closest("[data-rules]");
     const hist = e.target.closest("[data-history]");
-    if(rules) openRules(rules.dataset.rules);
-    if(hist) openGameHistory(hist.dataset.history);
+    if(rules){ clickSound(); openRules(rules.dataset.rules); }
+    if(hist){ clickSound(); openGameHistory(hist.dataset.history); }
   });
 
   document.getElementById("playerList").addEventListener("click", (e)=>{
     const stats = e.target.closest("[data-stats]");
     const hist = e.target.closest("[data-history-player]");
-    if(stats) openStats(stats.dataset.stats);
-    if(hist) openHistory(hist.dataset.historyPlayer);
+    if(stats){ clickSound(); openStats(stats.dataset.stats); }
+    if(hist){ clickSound(); openHistory(hist.dataset.historyPlayer); }
+  });
+
+  document.getElementById("lobbyPlayers").addEventListener("click", (e)=>{
+    const joinBtn = e.target.closest("[data-join]");
+    const declineBtn = e.target.closest("[data-decline]");
+    if(joinBtn) playerJoined(joinBtn.dataset.join);
+    if(declineBtn) playerDeclined(declineBtn.dataset.decline);
   });
 });
 </script>
 
 </body>
 </html>
-
-
-/* =====================================================
-PATCH: SOUND SYSTEM RESTORE
-===================================================== */
-
-let audioCtx = null
-
-function ensureAudio(){
-  if(!audioCtx){
-    const AudioContext = window.AudioContext || window.webkitAudioContext
-    audioCtx = new AudioContext()
-  }
-}
-
-function clickSound(){
-  try{
-    ensureAudio()
-    const osc = audioCtx.createOscillator()
-    const gain = audioCtx.createGain()
-    osc.connect(gain)
-    gain.connect(audioCtx.destination)
-    osc.type = "sine"
-    osc.frequency.value = 600
-    gain.gain.value = 0.05
-    osc.start()
-    osc.stop(audioCtx.currentTime + 0.05)
-  }catch(e){}
-}
-
-/* =====================================================
-PATCH: WAITING ROOM + RANDOMIZERS
-===================================================== */
-
-let roomPlayers = []
-let playerStatus = {}
-let gameType = "killer"
-
-function addPlayerToRoom(name,email){
-  roomPlayers.push({name,email})
-  playerStatus[email] = "waiting"
-  renderWaitingRoom()
-}
-
-function playerJoined(email){
-  playerStatus[email] = "joined"
-  renderWaitingRoom()
-  checkRoomReady()
-}
-
-function playerDeclined(email){
-  playerStatus[email] = "declined"
-  renderWaitingRoom()
-}
-
-function renderWaitingRoom(){
-
-  const area = document.getElementById("lobbyPlayers")
-  if(!area) return
-
-  area.innerHTML = ""
-
-  roomPlayers.forEach(p=>{
-
-    let icon = "⌛"
-    let cls = "statusWaiting"
-
-    if(playerStatus[p.email]==="joined"){
-      icon="✔"
-      cls="statusJoined"
-    }
-
-    if(playerStatus[p.email]==="declined"){
-      icon="✖"
-      cls="statusDeclined"
-    }
-
-    const row=document.createElement("div")
-    row.className="listRow"
-
-    row.innerHTML=`
-      <span class="statusIcon ${cls}">${icon}</span>
-      ${p.name}
-    `
-
-    area.appendChild(row)
-
-  })
-}
-
-function checkRoomReady(){
-
-  const joined=Object.values(playerStatus).filter(s=>s==="joined")
-
-  if(joined.length===roomPlayers.length && roomPlayers.length>0){
-    setTimeout(startRandomizers,1000)
-  }
-
-}
-
-function randomizeTurnOrder(){
-
-  const names=roomPlayers.map(p=>p.name)
-
-  for(let i=names.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1))
-    const t=names[i]
-    names[i]=names[j]
-    names[j]=t
-  }
-
-  return names
-}
-
-function randomizeKillerNumbers(){
-
-  const nums=[]
-  for(let i=1;i<=20;i++) nums.push(i)
-
-  for(let i=nums.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1))
-    const t=nums[i]
-    nums[i]=nums[j]
-    nums[j]=t
-  }
-
-  return nums.slice(0,roomPlayers.length)
-}
-
-function startRandomizers(){
-
-  const order=randomizeTurnOrder()
-  let killer=null
-
-  if(gameType==="killer"){
-    killer=randomizeKillerNumbers()
-  }
-
-  launchGame(order,killer)
-}
-
-function launchGame(order,killer){
-
-  clickSound()
-
-  console.log("TURN ORDER",order)
-  console.log("KILLER",killer)
-
-  if(typeof showOnly==="function"){
-    showOnly("gameScreen")
-  }
-
-}
