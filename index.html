@@ -122,7 +122,7 @@
 
   .centerStack{
     width: var(--stageW);
-    margin-top: 60vh;
+    margin: auto auto 18px;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -544,3 +544,156 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 </body>
 </html>
+
+
+/* =====================================================
+PATCH: SOUND SYSTEM RESTORE
+===================================================== */
+
+let audioCtx = null
+
+function ensureAudio(){
+  if(!audioCtx){
+    const AudioContext = window.AudioContext || window.webkitAudioContext
+    audioCtx = new AudioContext()
+  }
+}
+
+function clickSound(){
+  try{
+    ensureAudio()
+    const osc = audioCtx.createOscillator()
+    const gain = audioCtx.createGain()
+    osc.connect(gain)
+    gain.connect(audioCtx.destination)
+    osc.type = "sine"
+    osc.frequency.value = 600
+    gain.gain.value = 0.05
+    osc.start()
+    osc.stop(audioCtx.currentTime + 0.05)
+  }catch(e){}
+}
+
+/* =====================================================
+PATCH: WAITING ROOM + RANDOMIZERS
+===================================================== */
+
+let roomPlayers = []
+let playerStatus = {}
+let gameType = "killer"
+
+function addPlayerToRoom(name,email){
+  roomPlayers.push({name,email})
+  playerStatus[email] = "waiting"
+  renderWaitingRoom()
+}
+
+function playerJoined(email){
+  playerStatus[email] = "joined"
+  renderWaitingRoom()
+  checkRoomReady()
+}
+
+function playerDeclined(email){
+  playerStatus[email] = "declined"
+  renderWaitingRoom()
+}
+
+function renderWaitingRoom(){
+
+  const area = document.getElementById("lobbyPlayers")
+  if(!area) return
+
+  area.innerHTML = ""
+
+  roomPlayers.forEach(p=>{
+
+    let icon = "⌛"
+    let cls = "statusWaiting"
+
+    if(playerStatus[p.email]==="joined"){
+      icon="✔"
+      cls="statusJoined"
+    }
+
+    if(playerStatus[p.email]==="declined"){
+      icon="✖"
+      cls="statusDeclined"
+    }
+
+    const row=document.createElement("div")
+    row.className="listRow"
+
+    row.innerHTML=`
+      <span class="statusIcon ${cls}">${icon}</span>
+      ${p.name}
+    `
+
+    area.appendChild(row)
+
+  })
+}
+
+function checkRoomReady(){
+
+  const joined=Object.values(playerStatus).filter(s=>s==="joined")
+
+  if(joined.length===roomPlayers.length && roomPlayers.length>0){
+    setTimeout(startRandomizers,1000)
+  }
+
+}
+
+function randomizeTurnOrder(){
+
+  const names=roomPlayers.map(p=>p.name)
+
+  for(let i=names.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1))
+    const t=names[i]
+    names[i]=names[j]
+    names[j]=t
+  }
+
+  return names
+}
+
+function randomizeKillerNumbers(){
+
+  const nums=[]
+  for(let i=1;i<=20;i++) nums.push(i)
+
+  for(let i=nums.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1))
+    const t=nums[i]
+    nums[i]=nums[j]
+    nums[j]=t
+  }
+
+  return nums.slice(0,roomPlayers.length)
+}
+
+function startRandomizers(){
+
+  const order=randomizeTurnOrder()
+  let killer=null
+
+  if(gameType==="killer"){
+    killer=randomizeKillerNumbers()
+  }
+
+  launchGame(order,killer)
+}
+
+function launchGame(order,killer){
+
+  clickSound()
+
+  console.log("TURN ORDER",order)
+  console.log("KILLER",killer)
+
+  if(typeof showOnly==="function"){
+    showOnly("gameScreen")
+  }
+
+}
