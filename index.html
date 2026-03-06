@@ -1083,5 +1083,37 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 </script>
+  <script>
+
+/* =========================================================
+KILLER RANDOMIZER + TURN LOGIC
+========================================================= */
+
+function NG_assignRandomKiller(){
+
+    const players = NG_killerPlayers();
+    if(players.length === 0) return;
+
+    const shuffled = NG_shuffleArray(players);
+
+    // Assign a random "Killer" for the round
+    NG_KILLER.killers = {};
+    shuffled.forEach(p => NG_KILLER.killers[p] = false);
+
+    const killerIndex = Math.floor(Math.random() * players.length);
+    NG_KILLER.killers[shuffled[killerIndex]] = true;
+
+    NG_renderKillerAll();
+}
+
+function NG_nextKillerTurn(){
+
+    NG_nextTurn();
+    NG_assignRandomKiller();
+    NG_renderKillerAll();
+
+}
+
+</script>
 </html>
 
