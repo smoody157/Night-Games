@@ -1,124 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Night Games</title>
 
-/* =========================================================
-NIGHT GAMES MASTER BUILD (ORGANIZED TEMPLATE)
-Target file: index.html
-Assets:
-IMG_7390.jpeg  -> landing background
-IMG_7315.jpeg  -> players page background
-New Recording 2.m4a -> intro audio
-========================================================= */
+<style>
+  :root{
+    --app-y-offset: 120px;
+    --app-x-offset: 0px;
 
+    --games-visible-rows: 2;
+    --players-visible-rows: 2;
 
-/* =========================================================
-SECTION 01 — CONTROL PANEL (EDITABLE KNOBS)
-========================================================= */
+    --button-height: 48px;
+    --button-radius: 8px;
 
-const CONTROL_PANEL = {
+    --accent-color: #00ff88;
+    --gold-color: #d4af37;
+    --text-color: #ffffff;
 
-  APP_Y_OFFSET: 120,
-  APP_X_OFFSET: 0,
+    --glass-opacity: 0.85;
+  }
 
-  GAMES_VISIBLE_ROWS: 2,
-  PLAYERS_VISIBLE_ROWS: 2,
+  *{
+    box-sizing:border-box;
+  }
 
-  BUTTON_HEIGHT: 48,
+  body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    color:var(--text-color);
+    background:#000;
+  }
 
-  COLORS: {
-    accent: "#00ff88",
-    gold: "#d4af37",
-    text: "#ffffff"
-  },
+  #landingScreen,
+  #playersScreen{
+    min-height:100vh;
+    background-size:cover;
+    background-position:center;
+    display:none;
+  }
 
-  GLASS_OPACITY: 0.85
+  #landingScreen{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    background-image:url("IMG_7390.jpeg");
+    padding:20px;
+    text-align:center;
+  }
 
-};
+  #playersScreen{
+    background-image:url("IMG_7315.jpeg");
+    padding:20px;
+  }
 
+  #emailInput{
+    width:min(420px, 90%);
+    height:48px;
+    padding:0 14px;
+    border:none;
+    border-radius:999px;
+    font-size:16px;
+  }
 
-/* =========================================================
-SECTION 02 — GAME MODE LOGIC
-========================================================= */
+  #enterBtn{
+    margin-top:12px;
+    width:min(420px, 90%);
+    height:48px;
+    border:none;
+    border-radius:999px;
+    background:rgba(255,255,255,0.18);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+  }
 
-function determineGameMode(playerCount){
-    if(playerCount == 1){
-        return "local";
-    } else {
-        return "multiplayer";
-    }
+  #NG_APP{
+    position:relative;
+    top:var(--app-y-offset);
+    left:var(--app-x-offset);
+    width:100%;
+    max-width:900px;
+    margin:0 auto;
+  }
+
+  .NG_section{
+    margin-bottom:20px;
+  }
+
+  .NG_section h2{
+    margin:0 0 10px 0;
+  }
+
+  .NG_list{
+    max-height:140px;
+    overflow-y:auto;
+  }
+
+  .NG_row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px;
+    margin-bottom:8px;
+    background:rgba(0,0,0,0.4);
+    border-radius:var(--button-radius);
+  }
+
+  .NG_name{
+    flex:1;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .NG_buttons{
+    display:flex;
+    gap:6px;
+    flex-wrap:nowrap;
+  }
+
+  .NG_buttons button,
+  #NG_leaderboard_btn,
+  #NG_donate_btn{
+    height:var(--button-height);
+    padding:0 12px;
+    border:none;
+    border-radius:var(--button-radius);
+    cursor:pointer;
+    font-weight:bold;
+  }
+
+  #NG_leaderboard_btn{
+    width:100%;
+  }
+
+  #NG_donate_btn{
+    width:100%;
+    background:var(--gold-color);
+    color:black;
+  }
+</style>
+</head>
+<body>
+
+<!-- LANDING SCREEN -->
+<div id="landingScreen">
+  <input id="emailInput" type="email" placeholder="Enter your email">
+  <button id="enterBtn">ENTER</button>
+  <audio id="introAudio" src="New Recording 2.m4a" preload="auto"></audio>
+</div>
+
+<!-- PLAYERS SCREEN -->
+<div id="playersScreen">
+  <div id="NG_APP">
+
+    <!-- GAMES SECTION -->
+    <div class="NG_section" id="NG_games_section">
+      <h2>Games</h2>
+      <div class="NG_list" id="NG_games_list"></div>
+    </div>
+
+    <!-- LEADERBOARD BUTTON -->
+    <div class="NG_section" id="NG_leaderboard_section">
+      <button id="NG_leaderboard_btn">LEADERBOARD</button>
+    </div>
+
+    <!-- DONATE BUTTON -->
+    <div class="NG_section" id="NG_donate_section">
+      <button id="NG_donate_btn" onclick="NG_openDonate()">
+        Help support future updates and development
+      </button>
+    </div>
+
+    <!-- PLAYERS SECTION -->
+    <div class="NG_section" id="NG_players_section">
+      <h2>Players</h2>
+      <div class="NG_list" id="NG_players_list"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const NG_PLAYERS = [];
+const NG_GAMES = [];
+
+function NG_openDonate(){
+  window.open("https://venmo.com/u/Steve-Moody-8","_blank");
 }
 
-
-/* =========================================================
-SECTION 03 — DONATE BUTTON
-========================================================= */
-
-function openDonate(){
-    window.open("https://venmo.com/u/Steve-Moody-8","_blank");
+function NG_addPlayer(name,email,online=false){
+  NG_PLAYERS.push({
+    name:name,
+    email:email,
+    online:online
+  });
 }
 
-
-/* =========================================================
-SECTION 04 — RANDOMIZER
-========================================================= */
-
-function shufflePlayers(players){
-    for(let i = players.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        [players[i], players[j]] = [players[j], players[i]];
-    }
-    return players;
+function NG_removePlayer(email){
+  const index = NG_PLAYERS.findIndex(p => p.email === email);
+  if(index !== -1){
+    NG_PLAYERS.splice(index,1);
+    NG_renderPlayers();
+  }
 }
 
-
-/* =========================================================
-SECTION 05 — KILLER GAME ENGINE (BASIC STRUCTURE)
-========================================================= */
-
-let killerNumbers = {};
-let playerLives = {};
-
-function startKiller(players){
-
-    const shuffled = shufflePlayers(players);
-
-    shuffled.forEach((p,i)=>{
-        killerNumbers[p.id] = i+1;
-        playerLives[p.id] = 3;
-    });
-
-    console.log("Killer numbers:", killerNumbers);
-
+function NG_addGame(id,name){
+  NG_GAMES.push({
+    id:id,
+    name:name
+  });
 }
 
+function NG_renderPlayers(){
+  const list = document.getElementById("NG_players_list");
+  if(!list) return;
 
-/* =========================================================
-SECTION 06 — UI LAYOUT EXAMPLE
-========================================================= */
+  const players = [...NG_PLAYERS].sort((a,b)=>Number(b.online)-Number(a.online));
+  list.innerHTML = "";
 
-// GAMES SECTION ROW FORMAT
-// [Game Name]  [ENTER]  [RULES]  [HISTORY]
+  players.forEach(player=>{
+    const row = document.createElement("div");
+    row.className = "NG_row";
+    row.innerHTML = `
+      <div class="NG_name">${player.name}</div>
+      <div class="NG_buttons">
+        <button>STATS</button>
+        <button>HISTORY</button>
+        <button onclick="NG_removePlayer('${player.email}')">REMOVE</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+}
 
-// PLAYERS SECTION ROW FORMAT
-// [Player Name]  [STATS]  [HISTORY]  [REMOVE]
+function NG_renderGames(){
+  const list = document.getElementById("NG_games_list");
+  if(!list) return;
 
+  list.innerHTML = "";
 
-/* =========================================================
-SECTION 07 — DONATE BUTTON HTML
-========================================================= */
+  NG_GAMES.forEach(game=>{
+    const row = document.createElement("div");
+    row.className = "NG_row";
+    row.innerHTML = `
+      <div class="NG_name">${game.name}</div>
+      <div class="NG_buttons">
+        <button>ENTER</button>
+        <button>RULES</button>
+        <button>HISTORY</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+}
 
-// <button onclick="openDonate()">
-// Help support future updates and development
-// </button>
+function NG_boot(){
+  NG_addGame("killer","Killer");
+  NG_addGame("around_world","Around the World");
+  NG_addGame("cricket","Cricket");
+  NG_addGame("301","301");
 
+  NG_addPlayer("Steve Moody","steve@email.com",true);
+  NG_addPlayer("Taylor","taylor@email.com",false);
 
-/* =========================================================
-SECTION 08 — NOTES
-========================================================= */
+  NG_renderGames();
+  NG_renderPlayers();
+}
 
-// • Only 2 games visible before scroll
-// • Only 2 players visible before scroll
-// • Online players sorted to top
-// • Leaderboard button between games and players
-// • Donate button on Players page
-// • 1 player = local practice
-// • 2-8 players = multiplayer
+document.getElementById("emailInput").addEventListener("focus",function(){
+  const audio = document.getElementById("introAudio");
+  audio.play().catch(()=>{});
+},{once:true});
 
+document.getElementById("enterBtn").addEventListener("click",function(){
+  document.getElementById("landingScreen").style.display = "none";
+  document.getElementById("playersScreen").style.display = "block";
+});
+
+document.addEventListener("DOMContentLoaded",function(){
+  NG_boot();
+});
+</script>
+
+</body>
+</html>
