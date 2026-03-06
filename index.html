@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Night Games v1236.0-current</title>
+<title>Night Games v1236.1-clean-enterfix</title>
 
 <!-- =====================================================================
 NIGHT GAMES — MORE COMPLETE TRAINING BUILD (UI-FIRST + CLEAN SECTIONS)
@@ -564,7 +564,7 @@ button.primary, button.ghost{
 
 
 /* =====================================================
-   STEVE FIX PACK — v1236.0-current
+   STEVE FIX PACK — v1236.1-clean-enterfix
    GOAL: no header strip, visible version, skinny login controls,
          kill yellow autofill, ensure ENTER works.
    ===================================================== */
@@ -645,7 +645,7 @@ input[type="email"]:-webkit-autofill:active {
 </head>
 
 <body>
-<div class="versionTag">v1236.0-current</div>
+<div class="versionTag">v1236.1-clean-enterfix</div>
 
 
 <!-- ===================================================== -->
@@ -867,8 +867,7 @@ input[type="email"]:-webkit-autofill:active {
 
 <!-- ===================================================== -->
 <!-- SECTION 14 — DEBUG BOX (HTML) -->
-<!-- ===================================================== -->
-<div id="debugBox"><b>Debug</b><div id="debugText"></div></div>
+</div>
 
 <!-- ===================================================== -->
 
@@ -902,10 +901,9 @@ let currentPlayer = null;
 const debugBox = document.getElementById("debugBox");
 const debugText = document.getElementById("debugText");
 function logDebug(msg){
-  const t = new Date().toLocaleTimeString();
-  debugText.textContent += `[${t}] ${msg}\n`;
+  try{ console.log("[NightGames]", msg); }catch(e){}
 }
-function showDebug(on){ debugBox.style.display = on ? "block" : "none"; }
+function showDebug(on){ /* debug UI removed */ }
 
 /* ===================================================== */
 /* SUBSEC 16B — SCREEN NAV                            */
@@ -916,7 +914,6 @@ function showOnly(id){
     const el = document.getElementById(x);
     if(el) el.style.display = (x===id) ? "flex" : "none";
   });
-});
 }
 
 /* ===================================================== */
@@ -1105,7 +1102,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
   }catch(e){}
 
   document.getElementById("enterBtn").addEventListener("click", login);
-  document.getElementById("toggleDebugBtn").addEventListener("click", ()=> showDebug(debugBox.style.display!=="block"));
   document.getElementById("createRoomBtn").addEventListener("click", createRoomAndInvite_UIOnly);
   document.getElementById("leaveLobbyBtn").addEventListener("click", ()=> showOnly("playerScreen"));
   document.getElementById("backBtn").addEventListener("click", ()=> showOnly("loginScreen"));
@@ -1135,7 +1131,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 <script>
 /* =====================================================
-   HARDENING — v1236.0-current
+   HARDENING — v1236.1-clean-enterfix
    Prevent missing elements from killing the whole script.
    ===================================================== */
 (function() {
