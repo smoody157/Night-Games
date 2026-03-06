@@ -3,28 +3,30 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Night Games v1238.2-checkpoint</title>
+<title>Night Games v1240-clean-integration-attempt</title>
 
 <style>
   :root{
     --bg:#05070d;
-    --glass: rgba(255,255,255,.14);
-    --glass2: rgba(255,255,255,.08);
-    --stroke: rgba(255,255,255,.16);
     --text:#fff;
-    --muted:#a7b0c0;
+    --muted:#b7c0cf;
     --accent:#22c55e;
-    --gold:#fbbf24;
-    --safePad: 14px;
-    --stageW: min(740px, calc(100vw - (var(--safePad) * 2)));
-    --topPad: 72px;
-    --botPad: 96px;
+    --danger:#ff4d5e;
+    --warn:#ffd23f;
+    --blue:#3b82f6;
+    --safePad:14px;
+    --stackW:min(760px, calc(100vw - (var(--safePad) * 2)));
+    --panelGlassTop: rgba(255,255,255,.22);
+    --panelGlassBot: rgba(255,255,255,.08);
+    --panelBorder: rgba(255,255,255,.18);
+    --btnTop: rgba(255,255,255,.42);
+    --btnBot: rgba(255,255,255,.12);
   }
 
-  *{ box-sizing:border-box; }
-  html, body{ height:100%; margin:0; }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
   body{
-    background:var(--bg);
+    background:#000;
     color:var(--text);
     font-family: Arial, Helvetica, sans-serif;
     overflow:hidden;
@@ -35,20 +37,18 @@
     inset:0;
     display:none;
     overflow:hidden;
-    padding: var(--topPad) var(--safePad) var(--botPad);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-size:cover;
+    background-position:center top;
+    background-repeat:no-repeat;
   }
-  .screen.active{ display:flex; justify-content:center; align-items:flex-start; }
-
-  #loginScreen{ background-image: url("IMG_7390.jpeg"); }
-  #playerScreen, #lobbyScreen, #gameScreen{ background-image: url("IMG_7315.jpeg"); }
+  .screen.active{display:block}
+  #loginScreen{background-image:url("IMG_7390.jpeg")}
+  #playerScreen,#lobbyScreen,#gameScreen{background-image:url("IMG_7315.jpeg")}
 
   .topbar{
     position:fixed;
-    top:0; left:0; right:0;
-    z-index:99;
+    top:0;left:0;right:0;
+    z-index:50;
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -57,365 +57,351 @@
     letter-spacing:.8px;
     text-transform:uppercase;
     font-size:12px;
-    text-shadow:0 2px 10px rgba(0,0,0,.65);
-    background:transparent;
+    text-shadow:0 2px 10px rgba(0,0,0,.75);
     pointer-events:none;
   }
-  .topbar .left{ color:var(--gold); }
-  .topbar .center{ color:#e5e7eb; }
-  .topbar .right{ color:var(--accent); }
+  .topbar .left{color:#fbbf24}
+  .topbar .center{color:#e5e7eb}
+  .topbar .right{color:var(--accent)}
 
   .versionTag{
-    position: fixed;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    font-weight: 900;
-    font-size: 12px;
-    color:#3b82f6;
-    text-shadow: 0 2px 10px rgba(0,0,0,.85);
+    position:fixed;
+    top:84px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:55;
+    font-size:12px;
+    font-weight:900;
+    color:var(--blue);
+    text-shadow:0 2px 10px rgba(0,0,0,.85);
     pointer-events:none;
   }
 
-  .grid{
-    width: var(--stageW);
-    max-width: var(--stageW);
+  .stageStack{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    width:var(--stackW);
+    max-width:var(--stackW);
     display:flex;
     flex-direction:column;
-    gap:14px;
-    margin:0 auto;
+    align-items:center;
   }
 
-  .glass{
-    background: linear-gradient(180deg, var(--glass), var(--glass2));
-    border: 1px solid var(--stroke);
-    border-radius: 24px;
-    backdrop-filter: blur(16px);
+  .glassPanel,
+  .separatorBar{
+    width:100%;
+    border-radius:24px;
+    border:1px solid var(--panelBorder);
+    background:linear-gradient(180deg, var(--panelGlassTop), var(--panelGlassBot));
     box-shadow:
       0 18px 50px rgba(0,0,0,.45),
-      inset 0 1px 0 rgba(255,255,255,.26),
-      inset 0 -1px 0 rgba(0,0,0,.20);
+      inset 0 1px 0 rgba(255,255,255,.30),
+      inset 0 -1px 0 rgba(0,0,0,.22);
+    backdrop-filter:blur(16px) saturate(130%);
+    -webkit-backdrop-filter:blur(16px) saturate(130%);
     position:relative;
     overflow:hidden;
   }
-  .glass::before{
+  .glassPanel::before,
+  .separatorBar::before{
     content:"";
-    position:absolute; inset:0;
-    background: radial-gradient(1200px 240px at 18% 0%, rgba(255,255,255,.42), rgba(255,255,255,0) 62%);
+    position:absolute;
+    inset:0;
+    background:radial-gradient(1200px 240px at 18% 0%, rgba(255,255,255,.42), rgba(255,255,255,0) 62%);
     pointer-events:none;
   }
-  .glassHeader{
+
+  .panelHeader{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding: 12px 14px;
+    padding:12px 14px;
+    border-bottom:1px solid rgba(255,255,255,.10);
     font-weight:900;
     letter-spacing:.8px;
     text-transform:uppercase;
-    border-bottom: 1px solid rgba(255,255,255,.10);
-    background: rgba(0,0,0,.10);
     position:relative;
     z-index:1;
   }
-  .glassBody{ padding: 12px 14px; position:relative; z-index:1; }
 
-  .centerStack{
-    width: var(--stageW);
-    margin: auto auto 18px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
+  .panelBody{
+    padding:12px 14px;
+    position:relative;
+    z-index:1;
+  }
+
+  .bevelBtn{
+    appearance:none;
+    border:none;
+    color:#fff;
+    cursor:pointer;
+    padding:8px 16px;
+    min-height:34px;
+    border-radius:999px;
+    font-weight:900;
+    letter-spacing:.4px;
+    text-transform:uppercase;
+    background:linear-gradient(180deg, var(--btnTop), var(--btnBot));
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:
+      0 8px 14px rgba(0,0,0,.35),
+      inset 0 2px 4px rgba(255,255,255,.35),
+      inset 0 -6px 10px rgba(0,0,0,.18);
+  }
+  .bevelBtn:active{transform:translateY(1px)}
+  .bevelBtn.primary{
+    color:#082014;
+    background:linear-gradient(180deg, rgba(160,255,205,.95), rgba(34,197,94,.78));
+    border-color:rgba(80,255,170,.45);
+  }
+  .bevelBtn.subtle{
+    padding:6px 12px;
+    min-height:28px;
+    font-size:12px;
+    text-transform:none;
+  }
+
+  .loginStack{
+    top:0; bottom:0;
+    justify-content:flex-end;
+    padding-bottom:78px;
     gap:12px;
   }
-
-  input{
-    width: 86%;
-    max-width: 86%;
-    height: 40px;
-    padding: 10px 14px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,.18);
-    background: rgba(255,255,255,.10);
-    color:#fff;
-    font-size: 16px;
+  .fieldWrap input{
+    width:86%;
+    max-width:86%;
+    height:42px;
+    border:none;
     outline:none;
+    border-radius:999px;
+    padding:10px 16px;
     text-align:center;
+    color:#fff;
+    font-size:16px;
+    background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.18);
+    box-shadow:
+      0 8px 14px rgba(0,0,0,.35),
+      inset 0 2px 4px rgba(255,255,255,.22),
+      inset 0 -6px 10px rgba(0,0,0,.16);
   }
-  input::placeholder{ color: rgba(255,255,255,.68); }
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus{
-    -webkit-text-fill-color:#fff;
-    transition: background-color 9999s ease-in-out 0s;
-    box-shadow: 0 0 0 1000px rgba(0,0,0,0) inset;
-    -webkit-box-shadow: 0 0 0 1000px rgba(0,0,0,0) inset;
+  .fieldWrap input::placeholder{color:rgba(255,255,255,.68)}
+  .enterWrap .bevelBtn{
+    width:92%;
+    max-width:92%;
+    height:42px;
+  }
+  .loginFinePrint{
+    margin-top:6px;
+    text-align:center;
+    font-size:11px;
+    color:rgba(255,255,255,.82);
+    line-height:1.4;
+    text-shadow:0 2px 8px rgba(0,0,0,.7);
   }
 
-  button{
-    border-radius:999px;
-    border: 1px solid rgba(255,255,255,.18);
-    background: rgba(255,255,255,.10);
-    color:#fff;
+  .playerStack{
+    top:118px;
+    gap:14px;
+    padding-bottom:24px;
+  }
+
+  .separatorBar{
+    min-height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
     font-weight:900;
-    letter-spacing:.6px;
-    text-transform: uppercase;
-    cursor:pointer;
-  }
-  button.primary{
-    background: rgba(255,255,255,.14);
-    color:#fff;
-    border-color: rgba(255,255,255,.22);
-  }
-  button.ghost{
-    background: rgba(255,255,255,.08);
-    color:#fff;
-  }
-  #enterBtn{
-    width: 92%;
-    max-width: 92%;
-    height: 42px;
-    padding:10px 18px;
-    font-size:15px;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.92);
+    position:relative;
+    z-index:1;
   }
 
   .scrollArea{
-    max-height: 210px;
+    max-height:210px;
     overflow:auto;
     -webkit-overflow-scrolling:touch;
-    padding-right: 6px;
+    padding-right:4px;
   }
-  #playerList.scrollArea{ max-height: 170px; }
+  #playerList.scrollArea{max-height:190px}
 
   .listRow{
     display:flex;
-    justify-content:flex-start;
     align-items:center;
     gap:10px;
-    padding: 10px 8px;
-    border-bottom: 1px solid rgba(255,255,255,.08);
+    padding:10px 4px;
+    border-bottom:1px solid rgba(255,255,255,.08);
   }
-  .listRow:last-child{ border-bottom:none; }
-  .name{ font-weight:900; }
-  .meta{ color: var(--muted); font-size: 12px; margin-top:2px; }
-  .dot{
-    font-size:18px;
-    flex:0 0 auto;
+  .listRow:last-child{border-bottom:none}
+  .rowMain{
+    min-width:0;
+    flex:1 1 auto;
   }
-  .online{ color: var(--accent); }
-  .offline{ color: #64748b; }
-
+  .name{
+    font-weight:900;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .meta{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
   .rowButtons{
     display:flex;
     gap:8px;
-    justify-content:flex-end;
-    align-items:center;
     margin-left:auto;
-    flex-wrap:wrap;
-  }
-  .rowButtons button{
-    min-width:92px;
-    height:32px;
-    padding:6px 16px;
-    font-size:12px;
-  }
-
-  .gameInfo{ min-width:0; }
-  .gameName{ font-weight:900; }
-  .gameSub{ color:var(--muted); font-size:12px; margin-top:2px; }
-
-  .footerBar{
-    width: var(--stageW);
-    max-width: var(--stageW);
-    margin: 16px auto 0;
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    flex-wrap:wrap;
-    color:var(--muted);
-    font-size:12px;
-  }
-
-  .supportButton{
-    display:inline-flex;
+    flex-wrap:nowrap;
     align-items:center;
-    gap:6px;
-    padding:6px 12px;
-    font-size:12px;
-    border-radius:999px;
-    border: 1px solid rgba(255,255,255,.18);
-    background: rgba(255,255,255,.10);
-    color:#fff;
-    text-decoration:none;
-    font-weight:900;
-    text-transform:none;
-    pointer-events:auto;
   }
 
-  .lobbyNote, .gameNote{
-    color:var(--muted);
-    font-size:13px;
-    line-height:1.35;
+  .statusDot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:#64748b;
+    box-shadow:0 0 0 1px rgba(255,255,255,.12);
+    flex:0 0 auto;
+  }
+  .statusDot.online{
+    background:rgba(60,255,160,.98);
+    box-shadow:0 0 14px rgba(60,255,160,.8), 0 0 24px rgba(60,255,160,.32);
   }
 
   .statusIcon{
-    font-size:18px;
-    margin-right:8px;
-    font-weight:900;
     display:inline-block;
     min-width:18px;
+    font-weight:900;
     text-align:center;
+    font-size:18px;
   }
-  .statusJoined{
-    color:#00ff88;
-    text-shadow:0 0 6px #00ff88;
-  }
-  .statusDeclined{
-    color:#ff4444;
-    text-shadow:0 0 6px #ff4444;
-  }
-  .statusWaiting{
-    color:#ffd23f;
-    text-shadow:0 0 6px #ffd23f;
+  .statusJoined{color:#00ff88;text-shadow:0 0 12px rgba(0,255,136,.5)}
+  .statusDeclined{color:var(--danger);text-shadow:0 0 12px rgba(255,77,94,.45)}
+  .statusWaiting{color:var(--warn);text-shadow:0 0 12px rgba(255,210,63,.45)}
+
+  .donationWrap{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    margin-top:4px;
   }
 
-  .readyBanner{
-    margin-top:10px;
-    padding:10px 12px;
-    border-radius:14px;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.14);
-    text-align:center;
-    font-weight:800;
-  }
-
-  .randomizerList{
+  .resultsCard{
     margin-top:12px;
-    display:grid;
-    gap:8px;
+    padding:10px 12px;
+    border-radius:16px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    line-height:1.45;
   }
 
-  .loginFinePrint{
-    margin-top:18px;
-    text-align:center;
-    font-size:11px;
-    color:rgba(255,255,255,.78);
-    line-height:1.4;
-  }
+  .hide{display:none!important}
 </style>
 </head>
-
 <body>
-<div class="versionTag">v1238.2-checkpoint</div>
 
 <div class="topbar">
   <div class="left">Night Games</div>
   <div class="center">Firebase • Firestore</div>
-  <div class="right" id="onlineText">UI Mode</div>
+  <div class="right" id="modeText">UI Mode</div>
 </div>
 
+<div class="versionTag">v1240-clean-integration-attempt</div>
+
 <div id="loginScreen" class="screen active">
-  <div class="centerStack">
-    <input id="email" type="email" placeholder="player@example.com">
-    <button id="enterBtn" type="button" class="primary">ENTER</button>
+  <div class="stageStack loginStack">
+    <div class="fieldWrap" style="text-align:center">
+      <input id="emailInput" type="email" placeholder="player@example.com">
+    </div>
+    <div class="enterWrap" style="text-align:center">
+      <button id="enterBtn" class="bevelBtn">ENTER</button>
+    </div>
     <div class="loginFinePrint">© 2026 The Dart Room — All Rights Reserved</div>
   </div>
 </div>
 
 <div id="playerScreen" class="screen">
-  <div class="grid">
-    <div class="glass">
-      <div class="glassHeader">
+  <div class="stageStack playerStack">
+    <div class="glassPanel">
+      <div class="panelHeader">
         <div>Games</div>
-        <a class="supportButton" href="https://venmo.com/u/Steve-Moody-8" target="_blank" rel="noopener">❤️ Support</a>
+        <button id="supportBtn" class="bevelBtn subtle" type="button">Help support future updates and projects</button>
       </div>
-      <div class="glassBody">
+      <div class="panelBody">
         <div id="gamesList" class="scrollArea">
-          <div class="listRow">
-            <div class="gameInfo"><div class="gameName">01</div><div class="gameSub">Practice / Local testing</div></div>
-            <div class="rowButtons"><button id="zeroOneEnterBtn" class="primary" type="button">ENTER</button><button class="ghost" type="button" data-rules="01">RULES</button><button class="ghost" type="button" data-history="01">HISTORY</button></div>
-          </div>
-          <div class="listRow">
-            <div class="gameInfo"><div class="gameName">Cricket</div><div class="gameSub">Practice / Local testing</div></div>
-            <div class="rowButtons"><button id="practiceBtn" class="primary" type="button">ENTER</button><button class="ghost" type="button" data-rules="Cricket">RULES</button><button class="ghost" type="button" data-history="Cricket">HISTORY</button></div>
-          </div>
-          <div class="listRow">
-            <div class="gameInfo"><div class="gameName">Killer</div><div class="gameSub">Multiplayer lobby</div></div>
-            <div class="rowButtons"><button id="multiBtn" class="primary" type="button">ENTER</button><button class="ghost" type="button" data-rules="Killer">RULES</button><button class="ghost" type="button" data-history="Killer">HISTORY</button></div>
-          </div>
-          <div class="listRow">
-            <div class="gameInfo"><div class="gameName">Around the World</div><div class="gameSub">Practice / Local testing</div></div>
-            <div class="rowButtons"><button id="atwEnterBtn" class="primary" type="button">ENTER</button><button class="ghost" type="button" data-rules="Around the World">RULES</button><button class="ghost" type="button" data-history="Around the World">HISTORY</button></div>
-          </div>
-          <div class="listRow">
-            <div class="gameInfo"><div class="gameName">Half-It</div><div class="gameSub">Practice / Local testing</div></div>
-            <div class="rowButtons"><button id="halfItEnterBtn" class="primary" type="button">ENTER</button><button class="ghost" type="button" data-rules="Half-It">RULES</button><button class="ghost" type="button" data-history="Half-It">HISTORY</button></div>
-          </div>
-          <div class="listRow">
-            <div class="gameInfo"><div class="gameName">Shanghai</div><div class="gameSub">Practice / Local testing</div></div>
-            <div class="rowButtons"><button id="shanghaiEnterBtn" class="primary" type="button">ENTER</button><button class="ghost" type="button" data-rules="Shanghai">RULES</button><button class="ghost" type="button" data-history="Shanghai">HISTORY</button></div>
-          </div>
+          <div class="listRow"><div class="rowMain"><div class="name">01</div><div class="meta">Practice / local testing</div></div><div class="rowButtons"><button class="bevelBtn primary" data-game="01">Enter</button><button class="bevelBtn" data-rules="01">Rules</button><button class="bevelBtn" data-history="01">History</button></div></div>
+          <div class="listRow"><div class="rowMain"><div class="name">Cricket</div><div class="meta">Practice / local testing</div></div><div class="rowButtons"><button class="bevelBtn primary" data-game="Cricket">Enter</button><button class="bevelBtn" data-rules="Cricket">Rules</button><button class="bevelBtn" data-history="Cricket">History</button></div></div>
+          <div class="listRow"><div class="rowMain"><div class="name">Killer</div><div class="meta">Multiplayer lobby</div></div><div class="rowButtons"><button class="bevelBtn primary" data-game="killer">Enter</button><button class="bevelBtn" data-rules="Killer">Rules</button><button class="bevelBtn" data-history="Killer">History</button></div></div>
+          <div class="listRow"><div class="rowMain"><div class="name">Shanghai</div><div class="meta">Practice / local testing</div></div><div class="rowButtons"><button class="bevelBtn primary" data-game="Shanghai">Enter</button><button class="bevelBtn" data-rules="Shanghai">Rules</button><button class="bevelBtn" data-history="Shanghai">History</button></div></div>
+          <div class="listRow"><div class="rowMain"><div class="name">ATW</div><div class="meta">Practice / local testing</div></div><div class="rowButtons"><button class="bevelBtn primary" data-game="ATW">Enter</button><button class="bevelBtn" data-rules="ATW">Rules</button><button class="bevelBtn" data-history="ATW">History</button></div></div>
+          <div class="listRow"><div class="rowMain"><div class="name">Half It</div><div class="meta">Practice / local testing</div></div><div class="rowButtons"><button class="bevelBtn primary" data-game="Half It">Enter</button><button class="bevelBtn" data-rules="Half It">Rules</button><button class="bevelBtn" data-history="Half It">History</button></div></div>
         </div>
       </div>
     </div>
 
-    <div class="glass">
-      <div class="glassHeader">
+    <div class="separatorBar">Session / Randomizer / Room Status</div>
+
+    <div class="glassPanel">
+      <div class="panelHeader">
         <div>Players</div>
-        <button id="backBtn" type="button" class="ghost">BACK</button>
+        <button id="backToLoginBtn" class="bevelBtn subtle" type="button">Back</button>
       </div>
-      <div class="glassBody">
+      <div class="panelBody">
         <div id="playerList" class="scrollArea"></div>
       </div>
     </div>
-  </div>
 
-  <div class="footerBar">
-    <button id="leaderboardBtn" type="button" class="ghost">LEADERBOARD</button>
-    <small>© 2026 The Dart Room</small>
+    <div class="donationWrap">
+      <button id="donateBtn" class="bevelBtn subtle" type="button">Help support future updates and projects</button>
+    </div>
   </div>
 </div>
 
 <div id="lobbyScreen" class="screen">
-  <div class="grid">
-    <div class="glass">
-      <div class="glassHeader">
-        <div>Lobby</div>
-        <button id="leaveLobbyBtn" type="button" class="ghost">BACK</button>
+  <div class="stageStack playerStack">
+    <div class="glassPanel">
+      <div class="panelHeader">
+        <div>Lobby / Waiting Room</div>
+        <button id="backToPlayersBtn" class="bevelBtn subtle" type="button">Back</button>
       </div>
-      <div class="glassBody">
-        <div id="lobbyStatus" class="lobbyNote">Select players, then create room.</div>
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
-        <div id="inviteArea" class="scrollArea"></div>
-        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
-          <button id="createRoomBtn" type="button" class="primary">CREATE ROOM</button>
-          <button id="markAllJoinedBtn" type="button" class="ghost">MARK ALL JOINED</button>
+      <div class="panelBody">
+        <div id="lobbyStatus" class="meta" style="font-size:13px;color:#dbe4f0;margin-bottom:10px">Select players, then create room.</div>
+        <div id="inviteArea" class="scrollArea" style="max-height:170px"></div>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px">
+          <button id="createRoomBtn" class="bevelBtn primary" type="button">Create Room</button>
+          <button id="markAllJoinedBtn" class="bevelBtn" type="button">Mark All Joined</button>
         </div>
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
-        <div id="lobbyPlayers" class="scrollArea lobbyNote">Players will show here after wiring Firestore.</div>
-        <div id="readyBanner"></div>
+        <div id="everyoneJoinedMsg" class="resultsCard hide">Now that everyone has joined the room, let's get the game started.</div>
+        <div id="lobbyPlayers" class="scrollArea" style="max-height:220px;margin-top:12px"></div>
       </div>
     </div>
   </div>
 </div>
 
 <div id="gameScreen" class="screen">
-  <div class="grid">
-    <div class="glass">
-      <div class="glassHeader">
+  <div class="stageStack playerStack">
+    <div class="glassPanel">
+      <div class="panelHeader">
         <div>Game</div>
-        <button id="backToPlayersBtn" type="button" class="ghost">BACK</button>
+        <button id="backGameBtn" class="bevelBtn subtle" type="button">Back</button>
       </div>
-      <div class="glassBody">
+      <div class="panelBody">
         <h2 id="turnDisplay" style="margin:6px 0 10px">Turn:</h2>
-        <div class="gameNote">Practice throws (local). Multiplayer sync comes next.</div>
-        <div id="randomizerResults" class="randomizerList"></div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px">
-          <button type="button" class="primary" data-score="20">20</button>
-          <button type="button" class="primary" data-score="19">19</button>
-          <button type="button" class="primary" data-score="18">18</button>
-          <button type="button" class="primary" data-score="5">5</button>
-          <button type="button" class="primary" data-score="1">1</button>
+        <div id="gameNote" class="meta" style="font-size:13px;color:#dbe4f0">Integrated local flow ready. Multiplayer sync still requires live Firebase/device testing.</div>
+        <div id="randomizerResults"></div>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px">
+          <button class="bevelBtn primary" data-score="20">20</button>
+          <button class="bevelBtn primary" data-score="19">19</button>
+          <button class="bevelBtn primary" data-score="18">18</button>
+          <button class="bevelBtn primary" data-score="5">5</button>
+          <button class="bevelBtn primary" data-score="1">1</button>
         </div>
       </div>
     </div>
@@ -425,6 +411,15 @@
 <audio id="introAudio" src="New Recording 2.m4a" preload="auto"></audio>
 
 <script>
+const GAME_RULES = {
+  "01":"Reach exactly 0. Choose 301 / 501 / 701. Bust if below 0.",
+  "Cricket":"Close 15–20 + Bull and be tied or ahead in points.",
+  "Killer":"Each player gets a number. Hit your double to become a Killer.",
+  "Shanghai":"Rounds go 1 → 20. Highest points wins.",
+  "ATW":"Hit every number in order to advance.",
+  "Half It":"Miss the target and your total score is halved."
+};
+
 const players = {
   "stevewmoody@yahoo.com": { name:"Steve Moody" },
   "jmoody7712@gmail.com":  { name:"Jayce Moody" },
@@ -433,17 +428,13 @@ const players = {
 
 let currentEmail = null;
 let currentPlayer = null;
-let turnOrder = [];
-let currentTurn = 0;
-
-// waiting room / randomizer state
+let currentGame = null;
 let roomPlayers = [];
 let playerStatus = {};
-let gameType = "killer";
+let turnOrder = [];
 let killerNumbers = [];
-
-// simple sound restore
 let audioCtx = null;
+
 function ensureAudio(){
   if(!audioCtx){
     const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -459,339 +450,215 @@ function clickSound(){
     osc.connect(gain);
     gain.connect(audioCtx.destination);
     osc.type = "sine";
-    osc.frequency.value = 600;
+    osc.frequency.value = 640;
     gain.gain.value = 0.05;
     osc.start();
-    osc.stop(audioCtx.currentTime + 0.05);
-  }catch(e){}
+    osc.stop(audioCtx.currentTime + 0.04);
+  }catch(_e){}
 }
-
-function showOnly(id){
-  const ids = ["loginScreen","playerScreen","lobbyScreen","gameScreen"];
-  ids.forEach(x=>{
+function show(id){
+  ["loginScreen","playerScreen","lobbyScreen","gameScreen"].forEach(x=>{
     const el = document.getElementById(x);
     if(el) el.classList.toggle("active", x===id);
   });
 }
-
 function login(){
-  const email = (document.getElementById("email").value || "").trim().toLowerCase();
+  const email = (document.getElementById("emailInput").value || "").trim().toLowerCase();
   if(!email){ alert("Enter an email"); return; }
-
-  if(!players[email]){
-    const name = prompt("Enter your name");
-    if(!name) return;
-    players[email] = { name: name.trim() || "Player" };
-  }
+  if(!players[email]) players[email] = { name: email.split("@")[0] || "Player" };
   currentEmail = email;
   currentPlayer = players[email];
-
   clickSound();
   renderPlayers();
   buildInviteUI();
-  showOnly("playerScreen");
+  show("playerScreen");
 }
-
 function renderPlayers(){
-  const list = document.getElementById("playerList");
-  list.innerHTML = "";
+  const host = document.getElementById("playerList");
+  host.innerHTML = "";
   Object.keys(players).forEach(email=>{
-    const isMe = (email === currentEmail);
-    const isOnline = (email === currentEmail);
+    const isMe = email === currentEmail;
     const row = document.createElement("div");
     row.className = "listRow";
-    row.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;min-width:0">
-        <div class="dot ${isOnline ? "online" : "offline"}">●</div>
-        <div style="min-width:0">
-          <div class="name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${players[email].name}${isMe ? " (You)" : ""}</div>
-          <div class="meta" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${email}</div>
-        </div>
-      </div>
-      <div class="rowButtons">
-        <button type="button" class="ghost" data-stats="${email}">STATS</button>
-        <button type="button" class="ghost" data-history-player="${email}">HISTORY</button>
-      </div>
-    `;
-    list.appendChild(row);
+    row.innerHTML = '<div class="statusDot ' + (isMe ? 'online' : '') + '"></div><div class="rowMain"><div class="name">' + players[email].name + (isMe ? ' (You)' : '') + '</div><div class="meta">' + email + '</div></div><div class="rowButtons"><button class="bevelBtn" data-stats="' + email + '" type="button">Stats</button><button class="bevelBtn" data-phistory="' + email + '" type="button">History</button></div>';
+    host.appendChild(row);
   });
 }
-
-function practice(gameKey){
-  showOnly("gameScreen");
-  turnOrder = [currentPlayer?.name || "Player"];
-  currentTurn = 0;
-  document.getElementById("turnDisplay").innerText = `Turn: ${turnOrder[currentTurn]} • ${gameKey}`;
-  document.getElementById("randomizerResults").innerHTML = "";
-}
-
-function throwDart(score){
-  clickSound();
-  alert((currentPlayer?.name || "Player") + " scored " + score);
-}
-
-function openLobby(){
-  showOnly("lobbyScreen");
-  buildInviteUI();
-  resetLobbyState();
-}
-
 function buildInviteUI(){
   const area = document.getElementById("inviteArea");
   area.innerHTML = "";
-  const others = Object.keys(players).filter(e => e !== currentEmail);
+  const others = Object.keys(players).filter(email => email !== currentEmail);
   if(!others.length){
-    area.innerHTML = "<small>No other players in registry.</small>";
+    area.innerHTML = "<div class='meta'>No other players available.</div>";
     return;
   }
-  const wrap = document.createElement("div");
-  wrap.innerHTML = `<div style="margin-bottom:8px"><small>Select who to invite:</small></div>`;
-  others.forEach(e=>{
-    const id = "inv_" + btoa(e).replace(/=/g, "");
-    const line = document.createElement("div");
-    line.style.textAlign = "left";
-    line.innerHTML = `<label style="display:flex;gap:10px;align-items:center;margin:6px 0"><input type="checkbox" id="${id}" /><span>${players[e].name} <small style="color:var(--muted)">(${e})</small></span></label>`;
-    wrap.appendChild(line);
+  others.forEach(email=>{
+    const safe = btoa(email).replace(/=/g,"");
+    const row = document.createElement("div");
+    row.className = "listRow";
+    row.innerHTML = '<input id="inv_' + safe + '" type="checkbox" /><div class="rowMain"><div class="name">' + players[email].name + '</div><div class="meta">' + email + '</div></div>';
+    area.appendChild(row);
   });
-  area.appendChild(wrap);
 }
-
+function startGameSelection(gameKey){
+  currentGame = gameKey;
+  clickSound();
+  if(String(gameKey).toLowerCase() === "killer"){
+    resetLobbyState();
+    buildInviteUI();
+    show("lobbyScreen");
+  }else{
+    launchGame([{name: currentPlayer ? currentPlayer.name : "Player", email: currentEmail}], []);
+  }
+}
 function resetLobbyState(){
   roomPlayers = [];
   playerStatus = {};
   turnOrder = [];
   killerNumbers = [];
-  document.getElementById("lobbyPlayers").innerHTML = "Players will show here after wiring Firestore.";
-  document.getElementById("readyBanner").innerHTML = "";
+  document.getElementById("everyoneJoinedMsg").classList.add("hide");
+  document.getElementById("lobbyPlayers").innerHTML = "";
   document.getElementById("lobbyStatus").innerHTML = "Select players, then create room.";
 }
-
-function createRoomAndInvite_UIOnly(){
+function createRoom(){
   clickSound();
-
-  const checks = Array.from(document.querySelectorAll("#inviteArea input[type=checkbox]"));
-  const selectedEmails = checks.filter(c=>c.checked).map(c=>c.id.replace(/^inv_/, ""));
-  const emailMap = {};
-  Object.keys(players).forEach(e => { emailMap[btoa(e).replace(/=/g, "")] = e; });
-
-  roomPlayers = [];
+  const checks = Array.from(document.querySelectorAll('#inviteArea input[type="checkbox"]'));
+  const selectedKeys = checks.filter(c=>c.checked).map(c=>c.id.replace(/^inv_/,""));
+  const keyMap = {};
+  Object.keys(players).forEach(email => keyMap[btoa(email).replace(/=/g,"")] = email);
+  roomPlayers = [{ name: currentPlayer ? currentPlayer.name : "Host", email: currentEmail }];
   playerStatus = {};
-  turnOrder = [];
-  killerNumbers = [];
-
-  roomPlayers.push({ name: currentPlayer?.name || "Host", email: currentEmail });
   playerStatus[currentEmail] = "joined";
-
-  selectedEmails.forEach(key=>{
-    const email = emailMap[key];
+  selectedKeys.forEach(key=>{
+    const email = keyMap[key];
     if(email){
-      roomPlayers.push({ name: players[email].name, email });
+      roomPlayers.push({ name: players[email].name, email: email });
       playerStatus[email] = "waiting";
     }
   });
-
-  document.getElementById("lobbyStatus").innerHTML =
-    `<small>Room created for <b>${gameType}</b>. Waiting for players to join…</small>`;
-
+  document.getElementById("lobbyStatus").innerHTML = 'Room created for <b>' + (currentGame || "game") + '</b>. Waiting for players to join…';
   renderWaitingRoom();
   checkRoomReady();
 }
-
 function renderWaitingRoom(){
-  const area = document.getElementById("lobbyPlayers");
-  area.innerHTML = "";
-
+  const host = document.getElementById("lobbyPlayers");
+  host.innerHTML = "";
   if(!roomPlayers.length){
-    area.innerHTML = "<small>No room players yet.</small>";
+    host.innerHTML = "<div class='meta'>No room players yet.</div>";
     return;
   }
-
-  roomPlayers.forEach((p) => {
+  roomPlayers.forEach(p=>{
     let icon = "⌛";
     let cls = "statusWaiting";
-
-    if(playerStatus[p.email] === "joined"){
-      icon = "✔";
-      cls = "statusJoined";
-    } else if(playerStatus[p.email] === "declined"){
-      icon = "✖";
-      cls = "statusDeclined";
-    }
-
+    if(playerStatus[p.email] === "joined"){ icon = "✔"; cls = "statusJoined"; }
+    else if(playerStatus[p.email] === "declined"){ icon = "✖"; cls = "statusDeclined"; }
     const row = document.createElement("div");
     row.className = "listRow";
-    row.innerHTML = `
-      <span class="statusIcon ${cls}">${icon}</span>
-      <div style="min-width:0">
-        <div class="name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div>
-        <div class="meta" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.email}</div>
-      </div>
-      <div class="rowButtons">
-        ${p.email !== currentEmail ? `<button class="ghost" type="button" data-join="${p.email}">JOIN</button>
-        <button class="ghost" type="button" data-decline="${p.email}">DECLINE</button>` : ""}
-      </div>
-    `;
-    area.appendChild(row);
+    row.innerHTML = '<span class="statusIcon ' + cls + '">' + icon + '</span><div class="rowMain"><div class="name">' + p.name + '</div><div class="meta">' + p.email + '</div></div><div class="rowButtons">' + (p.email !== currentEmail ? '<button class="bevelBtn" data-join="' + p.email + '" type="button">Join</button><button class="bevelBtn" data-decline="' + p.email + '" type="button">Decline</button>' : '') + '</div>';
+    host.appendChild(row);
   });
 }
-
-function playerJoined(email){
-  clickSound();
-  playerStatus[email] = "joined";
-  renderWaitingRoom();
-  checkRoomReady();
-}
-
-function playerDeclined(email){
-  clickSound();
-  playerStatus[email] = "declined";
-  renderWaitingRoom();
-}
-
+function playerJoined(email){ clickSound(); playerStatus[email] = "joined"; renderWaitingRoom(); checkRoomReady(); }
+function playerDeclined(email){ clickSound(); playerStatus[email] = "declined"; renderWaitingRoom(); }
 function checkRoomReady(){
   if(!roomPlayers.length) return;
-
-  const joined = Object.values(playerStatus).filter(s => s === "joined");
-  const allJoined = joined.length === roomPlayers.length;
-
-  if(allJoined){
-    document.getElementById("readyBanner").innerHTML =
-      `<div class="readyBanner">Now that everyone has joined the room, let's get the game started.</div>`;
-    setTimeout(startRandomizers, 1000);
-  } else {
-    document.getElementById("readyBanner").innerHTML = "";
+  const joinedCount = Object.values(playerStatus).filter(v => v === "joined").length;
+  if(joinedCount === roomPlayers.length){
+    document.getElementById("everyoneJoinedMsg").classList.remove("hide");
+    setTimeout(startRandomizers, 900);
+  }else{
+    document.getElementById("everyoneJoinedMsg").classList.add("hide");
   }
 }
-
 function randomizeTurnOrder(){
-  const order = roomPlayers.map(p => ({...p}));
-  for(let i = order.length - 1; i > 0; i--){
+  const arr = roomPlayers.map(p => ({name:p.name,email:p.email}));
+  for(let i = arr.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
-    [order[i], order[j]] = [order[j], order[i]];
+    const tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
   }
-  return order;
+  return arr;
 }
-
 function randomizeKillerNumbers(){
   const nums = [];
-  for(let i = 1; i <= 20; i++) nums.push(i);
+  for(let i=1;i<=20;i++) nums.push(i);
   for(let i = nums.length - 1; i > 0; i--){
     const j = Math.floor(Math.random() * (i + 1));
-    [nums[i], nums[j]] = [nums[j], nums[i]];
+    const tmp = nums[i]; nums[i] = nums[j]; nums[j] = tmp;
   }
   return nums.slice(0, roomPlayers.length);
 }
-
 function startRandomizers(){
   turnOrder = randomizeTurnOrder();
   killerNumbers = [];
-
-  if(gameType === "killer"){
-    killerNumbers = randomizeKillerNumbers();
-  }
-
+  if(String(currentGame).toLowerCase() === "killer") killerNumbers = randomizeKillerNumbers();
   launchGame(turnOrder, killerNumbers);
 }
-
-function launchGame(order, killerAssignments){
+function launchGame(order, killerAssign){
   clickSound();
-  showOnly("gameScreen");
-
-  currentTurn = 0;
-  document.getElementById("turnDisplay").innerText =
-    `Turn: ${order[0]?.name || (currentPlayer?.name || "Player")} • ${gameType}`;
-
+  show("gameScreen");
+  const leader = order[0] ? order[0].name : (currentPlayer ? currentPlayer.name : "Player");
+  document.getElementById("turnDisplay").textContent = "Turn: " + leader + " • " + (currentGame || "Game");
   const results = document.getElementById("randomizerResults");
   results.innerHTML = "";
-
   const orderCard = document.createElement("div");
-  orderCard.className = "readyBanner";
-  orderCard.innerHTML = "<strong>Turn Order</strong><br>" + order.map((p, i) => `${i+1}. ${p.name}`).join("<br>");
+  orderCard.className = "resultsCard";
+  orderCard.innerHTML = "<strong>Turn Order</strong><br>" + order.map((p,i)=> (i+1) + ". " + p.name).join("<br>");
   results.appendChild(orderCard);
-
-  if(gameType === "killer" && killerAssignments.length){
+  if(killerAssign && killerAssign.length){
     const killerCard = document.createElement("div");
-    killerCard.className = "readyBanner";
-    killerCard.innerHTML = "<strong>Killer Numbers</strong><br>" + order.map((p, i) => `${p.name} → ${killerAssignments[i]}`).join("<br>");
+    killerCard.className = "resultsCard";
+    killerCard.innerHTML = "<strong>Killer Numbers</strong><br>" + order.map((p,i)=> p.name + " → " + killerAssign[i]).join("<br>");
     results.appendChild(killerCard);
   }
 }
-
-function openStats(email){ alert("Stats (placeholder) for: " + email); }
-function openHistory(email){ alert("History (placeholder) for: " + email); }
-function openRules(game){ alert("Rules (placeholder) for: " + game); }
-function openGameHistory(game){ alert("History (placeholder) for: " + game); }
-
-function startGame(gameKey){
-  gameType = (gameKey === "killer") ? "killer" : gameKey;
-  clickSound();
-  if(gameKey === "killer"){ openLobby(); return; }
-  practice(gameKey);
-}
+function throwDart(score){ clickSound(); alert((currentPlayer ? currentPlayer.name : "Player") + " scored " + score); }
+function openRules(game){ alert(GAME_RULES[game] || "Rules placeholder"); }
+function openGameHistory(game){ alert("History placeholder for: " + game); }
+function openStats(email){ alert("Stats placeholder for: " + email); }
+function openPlayerHistory(email){ alert("History placeholder for: " + email); }
 
 document.addEventListener("DOMContentLoaded", ()=>{
-  const emailEl = document.getElementById("email");
-  const introEl = document.getElementById("introAudio");
+  const emailInput = document.getElementById("emailInput");
+  const introAudio = document.getElementById("introAudio");
   let introPlayed = false;
-  const playOnce = () => {
+  const playOnce = ()=>{
     if(introPlayed) return;
     introPlayed = true;
-    introEl.currentTime = 0;
-    introEl.play().catch(()=>{});
+    try{ introAudio.currentTime = 0; introAudio.play().catch(()=>{}); }catch(_e){}
   };
-  emailEl.addEventListener("focus", playOnce);
-  emailEl.addEventListener("pointerdown", playOnce);
-  emailEl.addEventListener("click", playOnce);
-  emailEl.addEventListener("keydown", (e)=>{
-    if(e.key === "Enter"){
-      e.preventDefault();
-      login();
-    }
-  });
-
+  emailInput.addEventListener("focus", playOnce);
+  emailInput.addEventListener("pointerdown", playOnce);
+  emailInput.addEventListener("click", playOnce);
+  emailInput.addEventListener("keydown", e=>{ if(e.key === "Enter"){ e.preventDefault(); login(); } });
   document.getElementById("enterBtn").addEventListener("click", login);
-  document.getElementById("backBtn").addEventListener("click", ()=> { clickSound(); showOnly("loginScreen"); });
-  document.getElementById("leaveLobbyBtn").addEventListener("click", ()=> { clickSound(); showOnly("playerScreen"); });
-  document.getElementById("backToPlayersBtn").addEventListener("click", ()=> { clickSound(); showOnly("playerScreen"); });
-  document.getElementById("createRoomBtn").addEventListener("click", createRoomAndInvite_UIOnly);
-  document.getElementById("markAllJoinedBtn").addEventListener("click", ()=>{
-    roomPlayers.forEach(p => { playerStatus[p.email] = "joined"; });
-    renderWaitingRoom();
-    checkRoomReady();
+  document.getElementById("backToLoginBtn").addEventListener("click", ()=>{ clickSound(); show("loginScreen"); });
+  document.getElementById("backToPlayersBtn").addEventListener("click", ()=>{ clickSound(); show("playerScreen"); });
+  document.getElementById("backGameBtn").addEventListener("click", ()=>{ clickSound(); show("playerScreen"); });
+  document.getElementById("createRoomBtn").addEventListener("click", createRoom);
+  document.getElementById("markAllJoinedBtn").addEventListener("click", ()=>{ roomPlayers.forEach(p => playerStatus[p.email] = "joined"); renderWaitingRoom(); checkRoomReady(); });
+  document.getElementById("gamesList").addEventListener("click", e=>{
+    const gameBtn = e.target.closest("[data-game]");
+    const rulesBtn = e.target.closest("[data-rules]");
+    const histBtn = e.target.closest("[data-history]");
+    if(gameBtn) startGameSelection(gameBtn.dataset.game);
+    if(rulesBtn){ clickSound(); openRules(rulesBtn.dataset.rules); }
+    if(histBtn){ clickSound(); openGameHistory(histBtn.dataset.history); }
   });
-  document.getElementById("leaderboardBtn").addEventListener("click", ()=> { clickSound(); alert("Leaderboard placeholder"); });
-
-  document.getElementById("zeroOneEnterBtn").addEventListener("click", ()=> startGame("01"));
-  document.getElementById("practiceBtn").addEventListener("click", ()=> startGame("Cricket"));
-  document.getElementById("multiBtn").addEventListener("click", ()=> startGame("killer"));
-  document.getElementById("atwEnterBtn").addEventListener("click", ()=> startGame("Around the World"));
-  document.getElementById("halfItEnterBtn").addEventListener("click", ()=> startGame("Half-It"));
-  document.getElementById("shanghaiEnterBtn").addEventListener("click", ()=> startGame("Shanghai"));
-
-  document.querySelectorAll("[data-score]").forEach(btn=>{
-    btn.addEventListener("click", ()=> throwDart(Number(btn.dataset.score)));
+  document.getElementById("playerList").addEventListener("click", e=>{
+    const statsBtn = e.target.closest("[data-stats]");
+    const histBtn = e.target.closest("[data-phistory]");
+    if(statsBtn){ clickSound(); openStats(statsBtn.dataset.stats); }
+    if(histBtn){ clickSound(); openPlayerHistory(histBtn.dataset.phistory); }
   });
-
-  document.getElementById("gamesList").addEventListener("click", (e)=>{
-    const rules = e.target.closest("[data-rules]");
-    const hist = e.target.closest("[data-history]");
-    if(rules){ clickSound(); openRules(rules.dataset.rules); }
-    if(hist){ clickSound(); openGameHistory(hist.dataset.history); }
+  document.getElementById("lobbyPlayers").addEventListener("click", e=>{
+    const join = e.target.closest("[data-join]");
+    const decline = e.target.closest("[data-decline]");
+    if(join) playerJoined(join.dataset.join);
+    if(decline) playerDeclined(decline.dataset.decline);
   });
-
-  document.getElementById("playerList").addEventListener("click", (e)=>{
-    const stats = e.target.closest("[data-stats]");
-    const hist = e.target.closest("[data-history-player]");
-    if(stats){ clickSound(); openStats(stats.dataset.stats); }
-    if(hist){ clickSound(); openHistory(hist.dataset.historyPlayer); }
-  });
-
-  document.getElementById("lobbyPlayers").addEventListener("click", (e)=>{
-    const joinBtn = e.target.closest("[data-join]");
-    const declineBtn = e.target.closest("[data-decline]");
-    if(joinBtn) playerJoined(joinBtn.dataset.join);
-    if(declineBtn) playerDeclined(declineBtn.dataset.decline);
-  });
+  document.querySelectorAll("[data-score]").forEach(btn=>{ btn.addEventListener("click", ()=> throwDart(Number(btn.dataset.score))); });
+  document.getElementById("supportBtn").addEventListener("click", ()=>{ clickSound(); window.open("https://venmo.com/u/Steve-Moody-8","_blank"); });
+  document.getElementById("donateBtn").addEventListener("click", ()=>{ clickSound(); window.open("https://venmo.com/u/Steve-Moody-8","_blank"); });
 });
 </script>
 
