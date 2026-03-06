@@ -1,488 +1,507 @@
-Paste this entire file into index.html
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Night Games Master</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Night Games v1238-master</title>
 
 <!-- =========================================================
-SECTION 01 — MASTER FILE HEADER
-Single-file master build designed to be readable and maintainable.
-Paste this file into index.html on GitHub Pages.
+NIGHT GAMES — MASTER ORGANIZED BUILD
+Base: your uploaded v1238 clean rewired build
+Purpose:
+- Keep your real visual style
+- Add strong section labels and editor notes
+- Support BOTH practice (local) and multiplayer (web) for EVERY game
+- Keep everything in ONE file so you can study it
 ========================================================= -->
 
 <style>
 /* =========================================================
-SECTION 02 — COLOR ZONE
-Edit colors here first.
+SECTION 01 — COLOR ZONE
 ========================================================= */
 :root{
-  --bg:#000000;
-  --panel:rgba(255,255,255,.08);
-  --panel-strong:rgba(255,255,255,.12);
-  --border:rgba(255,255,255,.18);
-  --text:#ffffff;
-  --muted:rgba(255,255,255,.74);
-  --accent:#00d2ff;
-  --good:#5affaa;
-  --warn:#ffd25a;
-  --bad:#ff7878;
-  --gold:#d7b24a;
-  --shadow:0 18px 40px rgba(0,0,0,.38);
+  --bg:#05070d;
+  --glass: rgba(255,255,255,.14);
+  --glass2: rgba(255,255,255,.08);
+  --stroke: rgba(255,255,255,.16);
+  --text:#fff;
+  --muted:#a7b0c0;
+  --accent:#22c55e;
+  --gold:#fbbf24;
+  --blue:#60a5fa;
+  --danger:#ef4444;
 }
 
 /* =========================================================
-SECTION 03 — LAYOUT / ALIGNMENT ZONE
-Edit spacing, widths, and vertical positions here.
+SECTION 02 — LAYOUT / ALIGNMENT ZONE
 ========================================================= */
 :root{
-  --app-width:min(980px, 94vw);
-  --header-top:12px;
-  --header-radius:18px;
-  --screen-top:120px;
-  --panel-radius:18px;
-  --panel-pad:14px;
-  --row-gap:12px;
-  --button-h:44px;
-  --footer-bottom:12px;
+  --safePad: 14px;
+  --stageW: min(740px, calc(100vw - (var(--safePad) * 2)));
+  --topPad: 72px;
+  --botPad: 96px;
+  --loginInputW: 82%;
+  --enterW: 92%;
+  --loginInputH: 36px;
+  --enterH: 40px;
 }
 
-/* =========================================================
-SECTION 04 — GLOBAL STYLES
-========================================================= */
-html,body{
-  margin:0;
-  min-height:100%;
+*{ box-sizing:border-box; }
+html, body{ height:100%; margin:0; }
+body{
   background:var(--bg);
   color:var(--text);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-}
-body{
-  background:
-    radial-gradient(1200px 700px at 20% 0%, rgba(0,210,255,.14), transparent 60%),
-    radial-gradient(900px 600px at 80% 0%, rgba(90,255,170,.10), transparent 60%),
-    #000;
-}
-*{ box-sizing:border-box; }
-
-button,input,select,textarea{
-  font:inherit;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow:hidden;
 }
 
-button{
-  height:var(--button-h);
-  padding:0 14px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  background:rgba(255,255,255,.06);
-  color:var(--text);
-  cursor:pointer;
+/* =========================================================
+SECTION 03 — SCREEN SYSTEM
+========================================================= */
+.screen{
+  position:fixed;
+  left:0; right:0; top:0; bottom:0;
+  display:none;
+  overflow:hidden;
+  padding: var(--topPad) var(--safePad) var(--botPad);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
-button:hover{ background:rgba(255,255,255,.10); }
-button.primary{
-  background:rgba(0,210,255,.18);
-  border-color:rgba(0,210,255,.40);
+.screen.active{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
 }
-button.good{
-  background:rgba(90,255,170,.16);
-  border-color:rgba(90,255,170,.38);
-}
-button.warn{
-  background:rgba(255,210,90,.16);
-  border-color:rgba(255,210,90,.38);
-}
-input,select{
-  height:var(--button-h);
-  padding:0 12px;
-  border-radius:14px;
-  border:1px solid var(--border);
-  background:rgba(255,255,255,.05);
-  color:var(--text);
-  min-width:0;
-}
-small, .muted{ color:var(--muted); }
 
-.panel{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:var(--panel-radius);
-  box-shadow:var(--shadow);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-}
-.panel strong.section-title{
-  display:block;
-  color:var(--gold);
-  letter-spacing:.06em;
+/* =========================================================
+SECTION 04 — ASSET MAP
+========================================================= */
+#loginScreen{ background-image: url("IMG_7390.jpeg"); }
+#playerScreen,
+#setupScreen,
+#lobbyScreen,
+#gameScreen{ background-image: url("IMG_7315.jpeg"); }
+
+/* =========================================================
+SECTION 05 — HEADER / FOOTER
+========================================================= */
+.topbar{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:99;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  padding:10px 14px;
+  font-weight:900;
+  letter-spacing:.8px;
   text-transform:uppercase;
   font-size:12px;
-  margin-bottom:8px;
+  text-shadow:0 2px 10px rgba(0,0,0,.65);
+  background:transparent;
+  pointer-events:none;
 }
-.wrap{
-  width:var(--app-width);
-  margin:0 auto;
-  padding-bottom:72px;
-}
-#header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  padding-top:var(--header-top);
-}
-.header-bar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:12px 14px;
-}
-.brand{
-  font-weight:1000;
-  letter-spacing:.08em;
-  color:var(--gold);
-}
-.version{ color:var(--accent); font-weight:900; }
-.online{ color:var(--good); font-weight:900; }
+.topbar .left{ color:var(--gold); justify-self:start; }
+.topbar .center{ color:var(--blue); justify-self:center; }
+.topbar .right{ justify-self:end; color:#e5e7eb; }
+.topbar .online{ color:var(--accent); }
 
-#main{
-  padding-top:var(--screen-top);
-}
-
-.screen{ display:none; }
-.screen.active{ display:block; }
-
-.stack{
-  display:grid;
-  gap:var(--row-gap);
-}
-
-.row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-}
-.row > *{ flex:0 0 auto; }
-
-.grid-2{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-@media (max-width: 760px){
-  .grid-2{ grid-template-columns:1fr; }
-}
-
-.list{
-  display:grid;
-  gap:10px;
-}
-.item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:12px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.04);
-}
-.item .meta{
-  min-width:0;
-}
-.item .meta .name{
-  font-weight:1000;
-}
-.item .meta .sub{
-  color:var(--muted);
-  font-size:12px;
-}
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  font-size:12px;
-  color:var(--muted);
-}
-.badge.ok{ color:var(--good); border-color:rgba(90,255,170,.35); }
-.badge.warn{ color:var(--warn); border-color:rgba(255,210,90,.35); }
-.badge.bad{ color:var(--bad); border-color:rgba(255,120,120,.35); }
-
-.footer{
+.footerBar{
   position:fixed;
-  left:0; right:0; bottom:var(--footer-bottom);
+  left:0; right:0;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  z-index:99;
   text-align:center;
-  color:var(--muted);
+  color:rgba(255,255,255,.78);
   font-size:12px;
+  font-weight:800;
+  text-shadow:0 2px 10px rgba(0,0,0,.7);
   pointer-events:none;
 }
 
-.code{
-  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-  white-space:pre-wrap;
-  word-break:break-word;
-  font-size:12px;
+/* =========================================================
+SECTION 06 — GLASS UI SYSTEM
+========================================================= */
+.grid{
+  width: var(--stageW);
+  max-width: var(--stageW);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.glass{
+  background: linear-gradient(180deg, var(--glass), var(--glass2));
+  border: 1px solid var(--stroke);
+  border-radius: 24px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 18px 50px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.26),
+    inset 0 -1px 0 rgba(0,0,0,.20);
+  position:relative;
+  overflow:hidden;
+}
+.glass::before{
+  content:"";
+  position:absolute; inset:0;
+  background: radial-gradient(1200px 240px at 18% 0%, rgba(255,255,255,.42), rgba(255,255,255,0) 62%);
+  pointer-events:none;
+}
+.glassHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding: 12px 14px;
+  font-weight:900;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.10);
+  position:relative;
+  z-index:1;
+}
+.glassBody{ padding: 12px 14px; position:relative; z-index:1; }
+
+/* =========================================================
+SECTION 07 — INPUTS / BUTTONS
+========================================================= */
+input{
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.10);
+  color:#fff;
+  outline:none;
+  text-align:center;
+  padding: 8px 14px;
+}
+input::placeholder{ color: rgba(255,255,255,.68); }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus{
+  -webkit-text-fill-color:#fff !important;
+  transition: background-color 9999s ease-in-out 0s;
+  box-shadow: 0 0 0 1000px rgba(0,0,0,0) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(0,0,0,0) inset !important;
+  border: 1px solid rgba(255,255,255,.18);
+}
+button{
+  border-radius:999px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.10);
+  color:#fff;
+  font-weight:900;
+  letter-spacing:.6px;
+  text-transform: uppercase;
+  cursor:pointer;
+  padding:8px 16px;
+}
+button.primary{
+  background: rgba(255,255,255,.14);
+  border-color: rgba(255,255,255,.22);
+}
+button.ghost{
+  background: rgba(255,255,255,.08);
 }
 
-.hidden{ display:none !important; }
+/* =========================================================
+SECTION 08 — LANDING PAGE
+========================================================= */
+.centerStack{
+  width: var(--stageW);
+  margin: auto auto 18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+}
+#email{
+  width: var(--loginInputW);
+  max-width: var(--loginInputW);
+  height: var(--loginInputH);
+  font-size: 15px;
+}
+#enterBtn{
+  width: var(--enterW);
+  max-width: var(--enterW);
+  height: var(--enterH);
+  font-size:14px;
+}
+#loginHint{
+  font-size:12px;
+  color:rgba(255,255,255,.78);
+  text-align:center;
+  width:100%;
+}
+
+/* =========================================================
+SECTION 09 — PANELS / LISTS
+========================================================= */
+.panel{
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 18px;
+  padding: 12px;
+}
+.scrollArea{
+  max-height: 210px;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  padding-right: 6px;
+}
+.listRow{
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+  gap:10px;
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.listRow:last-child{ border-bottom:none; }
+.name{ font-weight:900; }
+.meta{ color: var(--muted); font-size: 12px; margin-top:2px; }
+.dot{
+  font-size:18px;
+  color: var(--accent);
+  flex:0 0 auto;
+}
+.rowButtons{
+  display:flex;
+  gap:8px;
+  justify-content:flex-end;
+  align-items:center;
+  margin-left:auto;
+  flex-wrap:wrap;
+}
+.rowButtons button{
+  min-width:92px;
+  height:32px;
+  padding:6px 14px;
+  font-size:12px;
+}
+.gameInfo{ min-width:0; }
+.gameName{ font-weight:900; }
+.gameSub{ color:var(--muted); font-size:12px; margin-top:2px; }
+
+.twoCol{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+@media (max-width:760px){
+  .twoCol{ grid-template-columns:1fr; }
+}
+
+.note{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.35;
+}
+.modeButtonRow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.modeButtonRow button{
+  min-width:150px;
+  height:38px;
+}
+#selectedGameTitle{
+  font-size:22px;
+  font-weight:900;
+  margin:0 0 6px 0;
+}
+#currentModeLabel{
+  color:var(--accent);
+  font-size:13px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+#throwButtons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:12px;
+}
+#throwButtons button{
+  min-width:78px;
+  height:42px;
+}
 </style>
 </head>
-<body>
 
-<div id="header" class="wrap">
-  <div class="header-bar panel">
-    <div class="brand">Night Games Master</div>
-    <div class="version" id="appVersion">v1232-master</div>
-    <div class="online" id="topStatus">booting</div>
+<body>
+<div class="topbar">
+  <div class="left">Night Games</div>
+  <div class="center">v1238</div>
+  <div class="right"><span>Firebase • Firestore • </span><span class="online" id="onlineText">Online</span></div>
+</div>
+
+<div class="footerBar">
+  © 2026 The Dart Room • Night Games™ • All Rights Reserved
+</div>
+
+<div id="loginScreen" class="screen active">
+  <div class="centerStack">
+    <input id="email" type="email" placeholder="player@example.com">
+    <button id="enterBtn" type="button" class="primary">ENTER</button>
+    <div id="loginHint">Enter your email to continue</div>
   </div>
 </div>
 
-<div id="main" class="wrap stack">
-
-  <!-- =========================================================
-  SECTION 05 — DEBUG PANEL
-  ========================================================= -->
-  <section class="panel" id="debugPanel">
-    <div style="padding:14px;">
-      <strong class="section-title">Debug Panel</strong>
-      <div class="grid-2">
-        <div class="code" id="dbgState">State: booting</div>
-        <div class="code" id="dbgErr">Last error: none</div>
-        <div class="code" id="dbgAuth">Auth: loading</div>
-        <div class="code" id="dbgFs">Firestore: loading</div>
+<div id="playerScreen" class="screen">
+  <div class="grid">
+    <div class="glass">
+      <div class="glassHeader">
+        <div>Games</div>
+        <div id="playerNameHeader">Player</div>
       </div>
-    </div>
-  </section>
-
-  <!-- =========================================================
-  SECTION 06 — SCREEN: LANDING
-  ========================================================= -->
-  <section class="screen active stack" id="screenLanding">
-    <div class="panel" style="padding:18px;">
-      <strong class="section-title">Landing</strong>
-      <h1 style="margin:0 0 12px 0;">Night Games</h1>
-      <div class="row">
-        <input id="nameInput" placeholder="Your display name" style="min-width:260px;">
-        <button class="primary" id="enterBtn">Enter</button>
-        <button id="practiceBtn">Local Practice</button>
-      </div>
-      <div class="row">
-        <small class="muted" id="statusLine">Enter a name to continue.</small>
-      </div>
-    </div>
-  </section>
-
-  <!-- =========================================================
-  SECTION 07 — SCREEN: HOME / HUB
-  ========================================================= -->
-  <section class="screen stack" id="screenHome">
-    <div class="panel" style="padding:14px;">
-      <strong class="section-title">Navigation</strong>
-      <div class="row">
-        <button class="primary" id="navSessions">Sessions</button>
-        <button id="navGames">Games</button>
-        <button id="navRules">Rules</button>
-        <button id="navDebug">Debug</button>
-        <button class="warn" id="logoutBtn">Sign Out</button>
+      <div class="glassBody">
+        <div id="gamesList" class="scrollArea"></div>
       </div>
     </div>
 
-    <div class="grid-2">
-      <section class="panel" style="padding:14px;">
-        <strong class="section-title">Session Control</strong>
-        <div class="stack">
-          <div class="row">
-            <input id="sessionNameInput" placeholder="Session name" style="min-width:220px;">
-            <select id="gameSelect"></select>
-          </div>
-          <div class="row">
-            <button class="good" id="createSessionBtn">Create Session</button>
-            <input id="joinCodeInput" placeholder="Paste session id" style="min-width:220px;">
-            <button id="joinSessionBtn">Join Session</button>
-          </div>
-          <small class="muted">This is the organized master build. Sessions sync through Firestore.</small>
-        </div>
-      </section>
-
-      <section class="panel" style="padding:14px;">
-        <strong class="section-title">Current Player</strong>
-        <div class="stack">
-          <div class="item">
-            <div class="meta">
-              <div class="name" id="whoamiName">Not signed in yet</div>
-              <div class="sub" id="whoamiSub">Anonymous auth pending…</div>
-            </div>
-            <div class="badge" id="whoamiBadge">offline</div>
-          </div>
-          <div class="code" id="activeSessionBox">No active session.</div>
-        </div>
-      </section>
-    </div>
-
-    <section class="panel" style="padding:14px;">
-      <strong class="section-title">Live Sessions</strong>
-      <div id="sessionsList" class="list"></div>
-    </section>
-  </section>
-
-  <!-- =========================================================
-  SECTION 08 — SCREEN: WAITING ROOM
-  ========================================================= -->
-  <section class="screen stack" id="screenWaiting">
-    <div class="panel" style="padding:14px;">
-      <strong class="section-title">Waiting Room</strong>
-      <div class="row">
-        <button id="backHomeBtn">Back</button>
-        <button class="good" id="readyBtn">Toggle Ready</button>
-        <button class="primary" id="startGameBtn">Start Game</button>
+    <div class="glass">
+      <div class="glassHeader">
+        <div>Players</div>
+        <button id="backBtn" type="button" class="ghost">BACK</button>
       </div>
-      <div class="code" id="waitingMeta">No session.</div>
-    </div>
-
-    <section class="panel" style="padding:14px;">
-      <strong class="section-title">Players</strong>
-      <div id="waitingPlayers" class="list"></div>
-    </section>
-  </section>
-
-  <!-- =========================================================
-  SECTION 09 — SCREEN: GAME / DETAIL
-  ========================================================= -->
-  <section class="screen stack" id="screenGame">
-    <div class="panel" style="padding:14px;">
-      <strong class="section-title">Game Screen</strong>
-      <div class="row">
-        <button id="gameBackBtn">Back to Waiting Room</button>
+      <div class="glassBody">
+        <div id="playerList" class="scrollArea"></div>
       </div>
-      <div class="code" id="gameInfoBox">Game not started yet.</div>
     </div>
-  </section>
-
-  <!-- =========================================================
-  SECTION 10 — SCREEN: RULES
-  ========================================================= -->
-  <section class="screen stack" id="screenRules">
-    <div class="panel" style="padding:14px;">
-      <strong class="section-title">Game Rules Library</strong>
-      <div id="rulesBox" class="code"></div>
-    </div>
-  </section>
-
+  </div>
 </div>
 
-<div class="footer">Night Games Master — organized learning build</div>
+<div id="setupScreen" class="screen">
+  <div class="grid">
+    <div class="glass">
+      <div class="glassHeader">
+        <div>Setup</div>
+        <button id="setupBackBtn" type="button" class="ghost">BACK</button>
+      </div>
+      <div class="glassBody">
+        <div id="selectedGameTitle">Game</div>
+        <div id="currentModeLabel">Mode not selected</div>
+        <div class="note" style="margin-top:8px">
+          Practice is one-player local only. Multiplayer creates or joins a live web room.
+        </div>
+
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
+
+        <div class="twoCol">
+          <div class="panel">
+            <div style="font-weight:900;margin-bottom:8px">Control Panel</div>
+            <div class="modeButtonRow">
+              <button id="modePracticeBtn" type="button" class="primary">Practice</button>
+              <button id="modeMultiBtn" type="button" class="primary">Multiplayer</button>
+            </div>
+            <div class="note" style="margin-top:10px" id="modeHelpText">
+              Choose a mode to continue.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div style="font-weight:900;margin-bottom:8px">Setup Options</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <input id="roomCodeInput" type="text" placeholder="Room code (for join)">
+              <div class="modeButtonRow">
+                <button id="startPracticeBtn" type="button" class="ghost">Start Practice</button>
+                <button id="createRoomBtn" type="button" class="ghost">Create Room</button>
+                <button id="joinRoomBtn" type="button" class="ghost">Join Room</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
+
+        <div class="note" id="setupStatus">Select a mode above.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="lobbyScreen" class="screen">
+  <div class="grid">
+    <div class="glass">
+      <div class="glassHeader">
+        <div>Lobby</div>
+        <button id="leaveLobbyBtn" type="button" class="ghost">BACK</button>
+      </div>
+      <div class="glassBody">
+        <div id="lobbyStatus" class="note">Create or join a room for this game.</div>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
+        <div class="panel">
+          <div style="font-weight:900;margin-bottom:6px">Current Room</div>
+          <div id="roomMeta" class="note">No room active.</div>
+        </div>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
+        <div class="panel">
+          <div style="font-weight:900;margin-bottom:6px">Players In Room</div>
+          <div id="lobbyPlayers" class="scrollArea note">Players will appear here.</div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+          <button id="toggleReadyBtn" type="button" class="primary">Toggle Ready</button>
+          <button id="startGameBtn" type="button" class="ghost">Start Game</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="gameScreen" class="screen">
+  <div class="grid">
+    <div class="glass">
+      <div class="glassHeader">
+        <div>Game</div>
+        <button id="backToPlayersBtn" type="button" class="ghost">BACK</button>
+      </div>
+      <div class="glassBody">
+        <h2 id="turnDisplay" style="margin:6px 0 10px">Turn:</h2>
+        <div class="note" id="gameModeNote">Game mode not started yet.</div>
+        <div id="throwButtons">
+          <button type="button" class="primary" data-score="20">20</button>
+          <button type="button" class="primary" data-score="19">19</button>
+          <button type="button" class="primary" data-score="18">18</button>
+          <button type="button" class="primary" data-score="5">5</button>
+          <button type="button" class="primary" data-score="1">1</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<audio id="introAudio" src="New Recording 2.m4a" preload="auto"></audio>
 
 <script type="module">
 /* =========================================================
-SECTION 11 — CONTROL CENTER
-Edit settings and labels here first.
-========================================================= */
-const CONTROL = {
-  APP_NAME: "Night Games",
-  VERSION: "v1232-master",
-  DEBUG_ENABLED: true,
-  DEFAULT_GAME: "01",
-  ALLOW_LOCAL_PRACTICE: true
-};
-
-/* =========================================================
-SECTION 12 — GAME REGISTRY
-Add / remove games here.
+SECTION 18 — GAME REGISTRY
 ========================================================= */
 const GAME_REGISTRY = {
-  "01": {
-    title: "01",
-    description: "Standard countdown game",
-    rules: "Each player starts from a score and counts down to zero."
-  },
-  "CRICKET": {
-    title: "Cricket",
-    description: "Close your numbers before your opponents.",
-    rules: "Hit the cricket numbers and close them out before opponents do."
-  },
-  "KILLER": {
-    title: "Killer",
-    description: "Claim your number and eliminate opponents.",
-    rules: "Players earn lives and try to knock opponents out."
-  }
+  "01": { title:"01", description:"Standard countdown", rules:"Start from a score and count down to zero." },
+  "Cricket": { title:"Cricket", description:"Close numbers and outscore", rules:"Close cricket numbers before opponents." },
+  "Killer": { title:"Killer", description:"Eliminate opponents", rules:"Claim number and knock others out." },
+  "Around the World": { title:"Around the World", description:"Travel around the board", rules:"Hit numbers in order around the board." },
+  "Half-It": { title:"Half-It", description:"Score or lose half", rules:"Miss the target and lose half your score." },
+  "Shanghai": { title:"Shanghai", description:"Round-based scoring", rules:"Advance target by round and hit single/double/triple." }
 };
 
 /* =========================================================
-SECTION 13 — DOM REFERENCES
-========================================================= */
-const DOM = {
-  appVersion: document.getElementById("appVersion"),
-  topStatus: document.getElementById("topStatus"),
-  dbgState: document.getElementById("dbgState"),
-  dbgAuth: document.getElementById("dbgAuth"),
-  dbgFs: document.getElementById("dbgFs"),
-  dbgErr: document.getElementById("dbgErr"),
-  statusLine: document.getElementById("statusLine"),
-  nameInput: document.getElementById("nameInput"),
-  enterBtn: document.getElementById("enterBtn"),
-  practiceBtn: document.getElementById("practiceBtn"),
-  screenLanding: document.getElementById("screenLanding"),
-  screenHome: document.getElementById("screenHome"),
-  screenWaiting: document.getElementById("screenWaiting"),
-  screenGame: document.getElementById("screenGame"),
-  screenRules: document.getElementById("screenRules"),
-  sessionNameInput: document.getElementById("sessionNameInput"),
-  gameSelect: document.getElementById("gameSelect"),
-  createSessionBtn: document.getElementById("createSessionBtn"),
-  joinCodeInput: document.getElementById("joinCodeInput"),
-  joinSessionBtn: document.getElementById("joinSessionBtn"),
-  whoamiName: document.getElementById("whoamiName"),
-  whoamiSub: document.getElementById("whoamiSub"),
-  whoamiBadge: document.getElementById("whoamiBadge"),
-  activeSessionBox: document.getElementById("activeSessionBox"),
-  sessionsList: document.getElementById("sessionsList"),
-  backHomeBtn: document.getElementById("backHomeBtn"),
-  readyBtn: document.getElementById("readyBtn"),
-  startGameBtn: document.getElementById("startGameBtn"),
-  waitingMeta: document.getElementById("waitingMeta"),
-  waitingPlayers: document.getElementById("waitingPlayers"),
-  gameInfoBox: document.getElementById("gameInfoBox"),
-  gameBackBtn: document.getElementById("gameBackBtn"),
-  rulesBox: document.getElementById("rulesBox"),
-  navSessions: document.getElementById("navSessions"),
-  navGames: document.getElementById("navGames"),
-  navRules: document.getElementById("navRules"),
-  navDebug: document.getElementById("navDebug"),
-  logoutBtn: document.getElementById("logoutBtn")
-};
-
-/* =========================================================
-SECTION 14 — DEBUG / ERROR CENTER
-========================================================= */
-function setDebug(state, auth, fs, err){
-  if(state != null) DOM.dbgState.textContent = `State: ${state}`;
-  if(auth != null) DOM.dbgAuth.textContent = `Auth: ${auth}`;
-  if(fs != null) DOM.dbgFs.textContent = `Firestore: ${fs}`;
-  if(err != null) DOM.dbgErr.textContent = `Last error: ${err}`;
-  if(state) DOM.topStatus.textContent = state;
-}
-function fail(label, error){
-  console.error(label, error);
-  setDebug(label, DOM.dbgAuth.textContent.replace(/^Auth:\s*/,""), DOM.dbgFs.textContent.replace(/^Firestore:\s*/,""), String(error?.message || error || "unknown"));
-}
-
-/* =========================================================
-SECTION 15 — FIREBASE IMPORTS
+SECTION 19 — FIREBASE IMPORTS
 ========================================================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {
-  getFirestore, collection, doc, setDoc, updateDoc, getDoc, getDocs,
-  onSnapshot, query, serverTimestamp, deleteDoc
+  getFirestore, doc, setDoc, getDoc, updateDoc, collection,
+  onSnapshot, getDocs, serverTimestamp, deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 /* =========================================================
-SECTION 16 — FIREBASE CONFIG
+SECTION 20 — FIREBASE CONFIG
 ========================================================= */
 const firebaseConfig = {
   apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
@@ -495,283 +514,473 @@ const firebaseConfig = {
 };
 
 /* =========================================================
-SECTION 17 — APP STATE
+SECTION 21 — DOM REFERENCES
+========================================================= */
+const DOM = {
+  onlineText: document.getElementById("onlineText"),
+  email: document.getElementById("email"),
+  enterBtn: document.getElementById("enterBtn"),
+  introAudio: document.getElementById("introAudio"),
+
+  playerNameHeader: document.getElementById("playerNameHeader"),
+  gamesList: document.getElementById("gamesList"),
+  playerList: document.getElementById("playerList"),
+  backBtn: document.getElementById("backBtn"),
+
+  setupBackBtn: document.getElementById("setupBackBtn"),
+  selectedGameTitle: document.getElementById("selectedGameTitle"),
+  currentModeLabel: document.getElementById("currentModeLabel"),
+  modeHelpText: document.getElementById("modeHelpText"),
+  roomCodeInput: document.getElementById("roomCodeInput"),
+  modePracticeBtn: document.getElementById("modePracticeBtn"),
+  modeMultiBtn: document.getElementById("modeMultiBtn"),
+  startPracticeBtn: document.getElementById("startPracticeBtn"),
+  createRoomBtn: document.getElementById("createRoomBtn"),
+  joinRoomBtn: document.getElementById("joinRoomBtn"),
+  setupStatus: document.getElementById("setupStatus"),
+
+  leaveLobbyBtn: document.getElementById("leaveLobbyBtn"),
+  lobbyStatus: document.getElementById("lobbyStatus"),
+  roomMeta: document.getElementById("roomMeta"),
+  lobbyPlayers: document.getElementById("lobbyPlayers"),
+  toggleReadyBtn: document.getElementById("toggleReadyBtn"),
+  startGameBtn: document.getElementById("startGameBtn"),
+
+  backToPlayersBtn: document.getElementById("backToPlayersBtn"),
+  turnDisplay: document.getElementById("turnDisplay"),
+  gameModeNote: document.getElementById("gameModeNote")
+};
+
+/* =========================================================
+SECTION 22 — APP STATE
 ========================================================= */
 const STATE = {
   app: null,
   auth: null,
   db: null,
-  user: null,
-  displayName: "",
-  activeSessionId: "",
-  activeSessionUnsub: null,
-  sessionsUnsub: null,
-  localPractice: false
+  email: "",
+  emailKey: "",
+  playerName: "",
+  players: {},
+  selectedGame: "",
+  selectedMode: "",
+  activeRoomId: "",
+  activeRoomUnsub: null
 };
 
 /* =========================================================
-SECTION 18 — UI ROUTER
+SECTION 23 — HELPERS
 ========================================================= */
-function showScreen(id){
-  [DOM.screenLanding, DOM.screenHome, DOM.screenWaiting, DOM.screenGame, DOM.screenRules]
-    .forEach(el => el.classList.remove("active"));
-  id.classList.add("active");
+function emailToKey(email){
+  return email.trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
 }
-function updatePlayerBadge(text, klass=""){
-  DOM.whoamiBadge.className = `badge ${klass}`.trim();
-  DOM.whoamiBadge.textContent = text;
+function showOnly(id){
+  ["loginScreen","playerScreen","setupScreen","lobbyScreen","gameScreen"].forEach(x=>{
+    document.getElementById(x).classList.toggle("active", x===id);
+  });
+}
+function setOnlineText(text){
+  DOM.onlineText.textContent = text;
+}
+function sanitizeName(name){
+  return (name || "").trim().slice(0, 40) || "Player";
+}
+function destroyRoomListener(){
+  if(typeof STATE.activeRoomUnsub === "function"){
+    STATE.activeRoomUnsub();
+    STATE.activeRoomUnsub = null;
+  }
+}
+function setSelectedMode(mode){
+  STATE.selectedMode = mode;
+  DOM.currentModeLabel.textContent = mode === "practice" ? "Practice Mode" : "Multiplayer Mode";
+  DOM.modeHelpText.textContent = mode === "practice"
+    ? "Practice = one player, no waiting room, no stats/history writes."
+    : "Multiplayer = web room, waiting room, shared live state.";
+  DOM.setupStatus.textContent = mode === "practice"
+    ? `Ready to start ${STATE.selectedGame} in local practice.`
+    : `Ready to create or join a web room for ${STATE.selectedGame}.`;
 }
 
 /* =========================================================
-SECTION 19 — RENDER HELPERS
+SECTION 24 — RENDERERS
 ========================================================= */
-function populateGames(){
-  DOM.gameSelect.innerHTML = "";
-  Object.entries(GAME_REGISTRY).forEach(([key, game]) => {
-    const opt = document.createElement("option");
-    opt.value = key;
-    opt.textContent = `${game.title} — ${game.description}`;
-    if(key === CONTROL.DEFAULT_GAME) opt.selected = true;
-    DOM.gameSelect.appendChild(opt);
+function renderGames(){
+  DOM.gamesList.innerHTML = "";
+  Object.values(GAME_REGISTRY).forEach(game=>{
+    const row = document.createElement("div");
+    row.className = "listRow";
+    row.innerHTML = `
+      <div class="gameInfo">
+        <div class="gameName">${game.title}</div>
+        <div class="gameSub">Practice + Multiplayer</div>
+      </div>
+      <div class="rowButtons">
+        <button class="primary" type="button" data-enter="${game.title}">ENTER</button>
+        <button class="ghost" type="button" data-rules="${game.title}">RULES</button>
+        <button class="ghost" type="button" data-history="${game.title}">HISTORY</button>
+      </div>
+    `;
+    DOM.gamesList.appendChild(row);
   });
 }
-function renderRules(){
-  DOM.rulesBox.textContent = Object.entries(GAME_REGISTRY)
-    .map(([key, game]) => `${key}\n${game.title}\n${game.description}\nRules: ${game.rules}\n`)
-    .join("\n");
-}
-function renderSessions(items){
-  DOM.sessionsList.innerHTML = "";
-  if(!items.length){
-    DOM.sessionsList.innerHTML = `<div class="item"><div class="meta"><div class="name">No sessions yet</div><div class="sub">Create one above.</div></div></div>`;
+function renderPlayers(){
+  DOM.playerList.innerHTML = "";
+  const emails = Object.keys(STATE.players).sort();
+  if(!emails.length){
+    DOM.playerList.innerHTML = `<div class="note">No players loaded yet.</div>`;
     return;
   }
-  items.forEach(item => {
+  emails.forEach(email=>{
+    const p = STATE.players[email];
+    const isMe = email === STATE.email;
     const row = document.createElement("div");
-    row.className = "item";
+    row.className = "listRow";
     row.innerHTML = `
-      <div class="meta">
-        <div class="name">${item.name || "Untitled Session"}</div>
-        <div class="sub">ID: ${item.id} · Game: ${item.game || "?"} · Players: ${(item.players || []).length}</div>
+      <div style="display:flex;align-items:center;gap:10px;min-width:0">
+        <div class="dot">●</div>
+        <div style="min-width:0">
+          <div class="name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}${isMe ? " (You)" : ""}</div>
+          <div class="meta" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${email}</div>
+        </div>
       </div>
-      <div class="row">
-        <button data-join="${item.id}">Join</button>
+      <div class="rowButtons">
+        <button type="button" class="ghost" data-stats="${email}">STATS</button>
+        <button type="button" class="ghost" data-history-player="${email}">HISTORY</button>
       </div>
     `;
-    row.querySelector("button").addEventListener("click", () => joinSession(item.id));
-    DOM.sessionsList.appendChild(row);
+    DOM.playerList.appendChild(row);
   });
 }
-function renderWaiting(session){
-  DOM.waitingMeta.textContent = `Session: ${session.name || session.id || "unknown"} · Game: ${session.game || "?"} · Started: ${session.started ? "yes" : "no"}`;
-  DOM.activeSessionBox.textContent = JSON.stringify(session, null, 2);
-  DOM.waitingPlayers.innerHTML = "";
-  (session.players || []).forEach(player => {
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `
-      <div class="meta">
-        <div class="name">${player.name || "Player"}</div>
-        <div class="sub">${player.uid || "no uid"}</div>
+function renderLobby(room){
+  DOM.lobbyStatus.textContent = `Lobby active for ${room.game}.`;
+  DOM.roomMeta.innerHTML = `
+    <div><b>Game:</b> ${room.game}</div>
+    <div><b>Room ID:</b> ${room.id}</div>
+    <div><b>Host:</b> ${room.hostName}</div>
+    <div><b>Status:</b> ${room.started ? "Started" : "Waiting"}</div>
+  `;
+  const players = Array.isArray(room.players) ? room.players : [];
+  if(!players.length){
+    DOM.lobbyPlayers.innerHTML = `<div class="note">No players in room.</div>`;
+  }else{
+    DOM.lobbyPlayers.innerHTML = players.map(p => `
+      <div class="listRow">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="dot">●</div>
+          <div>
+            <div class="name">${p.name}</div>
+            <div class="meta">${p.email}</div>
+          </div>
+        </div>
+        <div class="rowButtons">
+          <button type="button" class="ghost">${p.ready ? "READY" : "WAITING"}</button>
+        </div>
       </div>
-      <div class="badge ${player.ready ? "ok" : "warn"}">${player.ready ? "ready" : "waiting"}</div>
-    `;
-    DOM.waitingPlayers.appendChild(div);
-  });
-  if(session.started){
-    DOM.gameInfoBox.textContent = `Game started.\nSession: ${session.name}\nGame: ${session.game}\nPlayers:\n${(session.players||[]).map(p=>`- ${p.name}`).join("\n")}`;
-    showScreen(DOM.screenGame);
+    `).join("");
+  }
+
+  if(room.started){
+    DOM.turnDisplay.innerText = `Turn: ${players[0]?.name || STATE.playerName} • ${room.game}`;
+    DOM.gameModeNote.textContent = `Multiplayer web match for ${room.game}.`;
+    showOnly("gameScreen");
   }
 }
 
 /* =========================================================
-SECTION 20 — FIRESTORE / SESSION ENGINE
+SECTION 25 — LOGIN / IDENTITY
 ========================================================= */
-async function createSession(){
-  if(!STATE.db || !STATE.user) return;
-  const sessionId = `${Date.now()}`;
-  const playerName = STATE.displayName || "Player";
-  const payload = {
-    id: sessionId,
-    name: DOM.sessionNameInput.value.trim() || `${playerName}'s Session`,
-    game: DOM.gameSelect.value,
-    hostUid: STATE.user.uid,
+async function login(){
+  const email = (DOM.email.value || "").trim().toLowerCase();
+  if(!email){
+    alert("Enter an email");
+    return;
+  }
+
+  setOnlineText("Connecting");
+  STATE.email = email;
+  STATE.emailKey = emailToKey(email);
+
+  try{
+    if(!STATE.app){
+      STATE.app = initializeApp(firebaseConfig);
+      STATE.auth = getAuth(STATE.app);
+      STATE.db = getFirestore(STATE.app);
+      await signInAnonymously(STATE.auth);
+    }
+
+    const playerRef = doc(STATE.db, "players", STATE.emailKey);
+    const snap = await getDoc(playerRef);
+
+    if(!snap.exists()){
+      const name = sanitizeName(prompt("Enter your name"));
+      STATE.playerName = name;
+      await setDoc(playerRef, {
+        email,
+        name,
+        createdAt: serverTimestamp(),
+        lastSeenAt: serverTimestamp(),
+        stats: {},
+        history: []
+      });
+    }else{
+      const data = snap.data();
+      STATE.playerName = data.name || "Player";
+      await updateDoc(playerRef, {
+        lastSeenAt: serverTimestamp()
+      });
+    }
+
+    DOM.playerNameHeader.textContent = STATE.playerName;
+    await loadPlayers();
+    renderGames();
+    renderPlayers();
+    setOnlineText("Online");
+    showOnly("playerScreen");
+  }catch(err){
+    console.error(err);
+    setOnlineText("Offline");
+    alert("Login failed: " + (err?.message || err));
+  }
+}
+
+async function loadPlayers(){
+  STATE.players = {};
+  const snap = await getDocs(collection(STATE.db, "players"));
+  snap.forEach(d => {
+    const data = d.data();
+    if(data?.email){
+      STATE.players[data.email] = { name: data.name || "Player" };
+    }
+  });
+}
+
+/* =========================================================
+SECTION 26 — GAME FLOW
+========================================================= */
+function openSetup(gameTitle){
+  STATE.selectedGame = gameTitle;
+  STATE.selectedMode = "";
+  DOM.selectedGameTitle.textContent = gameTitle;
+  DOM.currentModeLabel.textContent = "Mode not selected";
+  DOM.modeHelpText.textContent = "Choose Practice or Multiplayer.";
+  DOM.setupStatus.textContent = `Preparing ${gameTitle}.`;
+  DOM.roomCodeInput.value = "";
+  showOnly("setupScreen");
+}
+function startPractice(){
+  if(!STATE.selectedGame){
+    DOM.setupStatus.textContent = "No game selected.";
+    return;
+  }
+  setSelectedMode("practice");
+  DOM.turnDisplay.innerText = `Turn: ${STATE.playerName} • ${STATE.selectedGame}`;
+  DOM.gameModeNote.textContent = `${STATE.selectedGame} in local practice. No stats or web updates are written in practice mode.`;
+  showOnly("gameScreen");
+}
+
+/* =========================================================
+SECTION 27 — MULTIPLAYER / ROOMS
+========================================================= */
+async function createRoom(){
+  if(!STATE.selectedGame){
+    DOM.setupStatus.textContent = "No game selected.";
+    return;
+  }
+  setSelectedMode("multiplayer");
+
+  const roomId = `${STATE.selectedGame.replace(/\s+/g,"").toLowerCase()}_${Date.now()}`;
+  const roomRef = doc(STATE.db, "rooms", roomId);
+
+  const player = {
+    email: STATE.email,
+    name: STATE.playerName,
+    ready: false
+  };
+
+  await setDoc(roomRef, {
+    id: roomId,
+    game: STATE.selectedGame,
+    hostEmail: STATE.email,
+    hostName: STATE.playerName,
+    players: [player],
     started: false,
     createdAt: serverTimestamp(),
-    players: [
-      {
-        uid: STATE.user.uid,
-        name: playerName,
-        ready: false
-      }
-    ]
-  };
-  await setDoc(doc(STATE.db, "sessions", sessionId), payload);
-  await openSession(sessionId);
+    updatedAt: serverTimestamp()
+  });
+
+  await openRoom(roomId);
 }
-async function joinSession(sessionId){
-  if(!STATE.db || !STATE.user || !sessionId) return;
-  const ref = doc(STATE.db, "sessions", sessionId);
-  const snap = await getDoc(ref);
-  if(!snap.exists()){
-    DOM.statusLine.textContent = "Session not found.";
+async function joinRoom(){
+  const roomId = (DOM.roomCodeInput.value || "").trim();
+  if(!roomId){
+    DOM.setupStatus.textContent = "Enter a room code first.";
     return;
   }
-  const data = snap.data();
-  const players = Array.isArray(data.players) ? data.players.slice() : [];
-  if(!players.find(p => p.uid === STATE.user.uid)){
-    players.push({ uid: STATE.user.uid, name: STATE.displayName || "Player", ready: false });
-    await updateDoc(ref, { players });
+
+  const roomRef = doc(STATE.db, "rooms", roomId);
+  const snap = await getDoc(roomRef);
+  if(!snap.exists()){
+    DOM.setupStatus.textContent = "Room not found.";
+    return;
   }
-  await openSession(sessionId);
+
+  const room = snap.data();
+  const players = Array.isArray(room.players) ? [...room.players] : [];
+  const alreadyIn = players.find(p => p.email === STATE.email);
+
+  if(!alreadyIn){
+    players.push({
+      email: STATE.email,
+      name: STATE.playerName,
+      ready: false
+    });
+    await updateDoc(roomRef, {
+      players,
+      updatedAt: serverTimestamp()
+    });
+  }
+
+  await openRoom(roomId);
 }
-async function openSession(sessionId){
-  if(STATE.activeSessionUnsub) STATE.activeSessionUnsub();
-  STATE.activeSessionId = sessionId;
-  const ref = doc(STATE.db, "sessions", sessionId);
-  STATE.activeSessionUnsub = onSnapshot(ref, (snap) => {
-    if(!snap.exists()) return;
-    renderWaiting(snap.data());
-    showScreen(DOM.screenWaiting);
+async function openRoom(roomId){
+  destroyRoomListener();
+  STATE.activeRoomId = roomId;
+
+  const roomRef = doc(STATE.db, "rooms", roomId);
+  STATE.activeRoomUnsub = onSnapshot(roomRef, (snap) => {
+    if(!snap.exists()){
+      DOM.lobbyStatus.textContent = "Room closed.";
+      return;
+    }
+    renderLobby(snap.data());
+    showOnly("lobbyScreen");
   });
 }
 async function toggleReady(){
-  if(!STATE.activeSessionId || !STATE.user) return;
-  const ref = doc(STATE.db, "sessions", STATE.activeSessionId);
-  const snap = await getDoc(ref);
+  if(!STATE.activeRoomId) return;
+  const roomRef = doc(STATE.db, "rooms", STATE.activeRoomId);
+  const snap = await getDoc(roomRef);
   if(!snap.exists()) return;
-  const data = snap.data();
-  const players = (data.players || []).map(p => p.uid === STATE.user.uid ? { ...p, ready: !p.ready } : p);
-  await updateDoc(ref, { players });
-}
-async function startGame(){
-  if(!STATE.activeSessionId) return;
-  await updateDoc(doc(STATE.db, "sessions", STATE.activeSessionId), { started: true });
-}
-async function leaveSession(){
-  if(!STATE.activeSessionId || !STATE.user) return;
-  const ref = doc(STATE.db, "sessions", STATE.activeSessionId);
-  const snap = await getDoc(ref);
-  if(snap.exists()){
-    const data = snap.data();
-    const players = (data.players || []).filter(p => p.uid !== STATE.user.uid);
-    if(players.length){
-      await updateDoc(ref, { players });
-    } else {
-      await deleteDoc(ref);
-    }
-  }
-  if(STATE.activeSessionUnsub) STATE.activeSessionUnsub();
-  STATE.activeSessionUnsub = null;
-  STATE.activeSessionId = "";
-  showScreen(DOM.screenHome);
-}
 
-/* =========================================================
-SECTION 21 — AUTH SYSTEM
-========================================================= */
-async function bootFirebase(){
-  setDebug("firebase boot", "loading", "loading", "none");
-  STATE.app = initializeApp(firebaseConfig);
-  STATE.auth = getAuth(STATE.app);
-  STATE.db = getFirestore(STATE.app);
-  setDebug("firebase ready", "ready", "ready", "none");
-  updatePlayerBadge("online", "ok");
-}
-async function signIn(){
-  setDebug("sign in", "starting", "ready", "none");
-  await signInAnonymously(STATE.auth);
-}
-function bindAuth(){
-  onAuthStateChanged(STATE.auth, (user) => {
-    STATE.user = user || null;
-    if(user){
-      DOM.whoamiSub.textContent = user.uid;
-      updatePlayerBadge("online", "ok");
-      setDebug("auth ready", "ready", "ready", "none");
-      bindSessionsList();
-    } else {
-      DOM.whoamiSub.textContent = "No active user.";
-      updatePlayerBadge("offline", "bad");
-      setDebug("auth missing", "missing", "ready", "none");
+  const room = snap.data();
+  const players = (room.players || []).map(p => {
+    if(p.email === STATE.email){
+      return { ...p, ready: !p.ready };
     }
+    return p;
+  });
+
+  await updateDoc(roomRef, {
+    players,
+    updatedAt: serverTimestamp()
   });
 }
+async function startMultiplayerGame(){
+  if(!STATE.activeRoomId) return;
+  const roomRef = doc(STATE.db, "rooms", STATE.activeRoomId);
+  await updateDoc(roomRef, {
+    started: true,
+    updatedAt: serverTimestamp()
+  });
+}
+async function leaveRoom(){
+  if(!STATE.activeRoomId) return;
 
-/* =========================================================
-SECTION 22 — LIVE LISTENERS
-========================================================= */
-function bindSessionsList(){
-  if(STATE.sessionsUnsub) return;
-  const q = query(collection(STATE.db, "sessions"));
-  STATE.sessionsUnsub = onSnapshot(q, (snap) => {
-    const items = snap.docs.map(d => d.data());
-    renderSessions(items);
-  }, (error) => fail("sessions listener", error));
+  const roomRef = doc(STATE.db, "rooms", STATE.activeRoomId);
+  const snap = await getDoc(roomRef);
+  if(snap.exists()){
+    const room = snap.data();
+    const players = (room.players || []).filter(p => p.email !== STATE.email);
+    if(players.length){
+      await updateDoc(roomRef, {
+        players,
+        updatedAt: serverTimestamp()
+      });
+    }else{
+      await deleteDoc(roomRef);
+    }
+  }
+
+  destroyRoomListener();
+  STATE.activeRoomId = "";
+  showOnly("playerScreen");
 }
 
 /* =========================================================
-SECTION 23 — EVENT WIRING
+SECTION 28 — GAME ACTIONS
 ========================================================= */
-DOM.enterBtn.addEventListener("click", async () => {
-  const name = DOM.nameInput.value.trim();
-  if(!name){
-    DOM.statusLine.textContent = "Please enter a name.";
-    return;
-  }
-  STATE.displayName = name;
-  DOM.whoamiName.textContent = name;
-  DOM.statusLine.textContent = "Signing in…";
-  try{
-    if(!STATE.auth) await bootFirebase();
-    await signIn();
-    bindAuth();
-    showScreen(DOM.screenHome);
-    DOM.statusLine.textContent = "Signed in.";
-  }catch(error){
-    fail("enter", error);
-    DOM.statusLine.textContent = `Error: ${error?.message || error}`;
-  }
-});
+function throwDart(score){
+  const label = STATE.selectedMode === "multiplayer" ? "multiplayer" : "practice";
+  alert(`${STATE.playerName} scored ${score} in ${STATE.selectedGame} (${label})`);
+}
 
-DOM.practiceBtn.addEventListener("click", () => {
-  STATE.localPractice = true;
-  DOM.gameInfoBox.textContent = "Local practice mode.\nThis master build is organized so you can learn the structure safely.";
-  showScreen(DOM.screenGame);
-});
+/* =========================================================
+SECTION 29 — INFO BUTTONS
+========================================================= */
+function openRules(game){ alert("Rules for: " + game); }
+function openGameHistory(game){ alert("Game history for: " + game); }
+function openStats(email){ alert("Stats for: " + email); }
+function openPlayerHistory(email){ alert("Player history for: " + email); }
 
-DOM.createSessionBtn.addEventListener("click", () => createSession().catch(e => fail("createSession", e)));
-DOM.joinSessionBtn.addEventListener("click", () => joinSession(DOM.joinCodeInput.value.trim()).catch(e => fail("joinSession", e)));
-DOM.readyBtn.addEventListener("click", () => toggleReady().catch(e => fail("toggleReady", e)));
-DOM.startGameBtn.addEventListener("click", () => startGame().catch(e => fail("startGame", e)));
-DOM.backHomeBtn.addEventListener("click", () => leaveSession().catch(e => fail("leaveSession", e)));
-DOM.gameBackBtn.addEventListener("click", () => showScreen(DOM.screenWaiting));
-DOM.navSessions.addEventListener("click", () => showScreen(DOM.screenHome));
-DOM.navGames.addEventListener("click", () => showScreen(DOM.screenHome));
-DOM.navRules.addEventListener("click", () => showScreen(DOM.screenRules));
-DOM.navDebug.addEventListener("click", () => document.getElementById("debugPanel").scrollIntoView({behavior:"smooth"}));
-DOM.logoutBtn.addEventListener("click", async () => {
-  try{
-    if(STATE.activeSessionId) await leaveSession();
-    if(STATE.auth) await signOut(STATE.auth);
-    STATE.user = null;
-    showScreen(DOM.screenLanding);
-    DOM.statusLine.textContent = "Signed out.";
-    updatePlayerBadge("offline", "bad");
-  }catch(error){
-    fail("logout", error);
-  }
+/* =========================================================
+SECTION 30 — EVENTS
+========================================================= */
+document.addEventListener("DOMContentLoaded", ()=>{
+  let introPlayed = false;
+  const playOnce = () => {
+    if(introPlayed) return;
+    introPlayed = true;
+    DOM.introAudio.currentTime = 0;
+    DOM.introAudio.play().catch(()=>{});
+  };
+  DOM.email.addEventListener("focus", playOnce);
+  DOM.email.addEventListener("pointerdown", playOnce);
+  DOM.email.addEventListener("click", playOnce);
+
+  DOM.enterBtn.addEventListener("click", login);
+  DOM.backBtn.addEventListener("click", ()=> showOnly("loginScreen"));
+  DOM.setupBackBtn.addEventListener("click", ()=> showOnly("playerScreen"));
+  DOM.leaveLobbyBtn.addEventListener("click", ()=> leaveRoom().catch(console.error));
+  DOM.backToPlayersBtn.addEventListener("click", ()=> showOnly("playerScreen"));
+
+  DOM.modePracticeBtn.addEventListener("click", ()=> setSelectedMode("practice"));
+  DOM.modeMultiBtn.addEventListener("click", ()=> setSelectedMode("multiplayer"));
+
+  DOM.startPracticeBtn.addEventListener("click", startPractice);
+  DOM.createRoomBtn.addEventListener("click", ()=> createRoom().catch(console.error));
+  DOM.joinRoomBtn.addEventListener("click", ()=> joinRoom().catch(console.error));
+
+  DOM.toggleReadyBtn.addEventListener("click", ()=> toggleReady().catch(console.error));
+  DOM.startGameBtn.addEventListener("click", ()=> startMultiplayerGame().catch(console.error));
+
+  DOM.gamesList.addEventListener("click", (e)=>{
+    const enter = e.target.closest("[data-enter]");
+    const rules = e.target.closest("[data-rules]");
+    const hist = e.target.closest("[data-history]");
+    if(enter) openSetup(enter.dataset.enter);
+    if(rules) openRules(rules.dataset.rules);
+    if(hist) openGameHistory(hist.dataset.history);
+  });
+
+  DOM.playerList.addEventListener("click", (e)=>{
+    const stats = e.target.closest("[data-stats]");
+    const hist = e.target.closest("[data-history-player]");
+    if(stats) openStats(stats.dataset.stats);
+    if(hist) openPlayerHistory(hist.dataset.historyPlayer);
+  });
+
+  document.querySelectorAll("[data-score]").forEach(btn=>{
+    btn.addEventListener("click", ()=> throwDart(Number(btn.dataset.score)));
+  });
+
+  renderGames();
 });
 
 /* =========================================================
-SECTION 24 — APP BOOT
+SECTION 31 — APP BOOT
 ========================================================= */
-(function boot(){
-  DOM.appVersion.textContent = CONTROL.VERSION;
-  populateGames();
-  renderRules();
-  setDebug("ready for sign-in", "waiting", "waiting", "none");
-})();
+setOnlineText("Online");
 </script>
 </body>
 </html>
