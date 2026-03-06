@@ -1,15 +1,14 @@
+NIGHT GAMES BASELINE BUILD (WORKING TEMPLATE)
+==============================================
 
-NIGHT GAMES – CLEAN WORKING BUILD (EDITOR VERSION)
-==================================================
-
-This file is structured so each section is easy to understand and edit.
-When you're ready to run it, save it as:
+Save this file as:
 
 index.html
 
----------------------------------------------------------------------
-SECTION 1 — HTML STRUCTURE
----------------------------------------------------------------------
+This is a minimal working Night Games + Firebase build.
+It should load on GitHub Pages and show the Night Games screen.
+
+------------------------------------------------------------------
 
 <!DOCTYPE html>
 <html>
@@ -25,37 +24,24 @@ margin:0;
 background:#000;
 color:#fff;
 font-family:Arial,Helvetica,sans-serif;
-}
-
-#app{
-position:fixed;
-inset:0;
-}
-
-.screen{
-display:none;
-position:absolute;
-inset:0;
-}
-
-.screen.active{
-display:block;
-}
-
-.center{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
 text-align:center;
 }
 
+#app{
+padding:40px;
+}
+
 button{
-padding:14px 22px;
+padding:12px 20px;
 font-size:18px;
-border-radius:12px;
+border-radius:10px;
 border:none;
-cursor:pointer;
+margin-top:20px;
+}
+
+input{
+padding:10px;
+font-size:16px;
 }
 
 </style>
@@ -65,58 +51,22 @@ cursor:pointer;
 
 <div id="app">
 
-<div id="landing" class="screen active">
-<div class="center">
-
 <h1>NIGHT GAMES</h1>
 
-<input id="playerName" placeholder="Enter Name">
+<input id="nameInput" placeholder="Enter your name">
 
-<br><br>
+<br>
 
 <button id="enterBtn">ENTER</button>
 
-</div>
-</div>
-
-<div id="hub" class="screen">
-
-<div class="center">
-
-<h2>Players</h2>
-
-<div id="playersList"></div>
-
-<br>
-
-<button id="createGame">Create Game</button>
-
-</div>
-
-</div>
-
-<div id="waiting" class="screen">
-
-<div class="center">
-
-<h2>Waiting Room</h2>
-
-<div id="waitingPlayers"></div>
-
-<br>
-
-<button id="startGame">Start</button>
-
-</div>
-
-</div>
+<div id="status"></div>
 
 </div>
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"
-import { getFirestore, doc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js"
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const firebaseConfig = {
 apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
@@ -125,86 +75,27 @@ projectId: "gamenightdarts-e7601",
 storageBucket: "gamenightdarts-e7601.firebasestorage.app",
 messagingSenderId: "270045452251",
 appId: "1:270045452251:web:393956ce18b43316e939fe"
-}
+};
 
-const app = initializeApp(firebaseConfig)
-const db = getFirestore(app)
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-let playerName = ""
-let sessionId = null
+document.getElementById("enterBtn").onclick = async ()=>{
 
-function showScreen(id){
-document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"))
-document.getElementById(id).classList.add("active")
-}
+const name=document.getElementById("nameInput").value;
 
-document.getElementById("enterBtn").onclick = ()=>{
+if(!name)return;
 
-playerName = document.getElementById("playerName").value
+const id=Date.now().toString();
 
-if(!playerName) return
+await setDoc(doc(db,"players",id),{
+name:name,
+joined:true
+});
 
-showScreen("hub")
+document.getElementById("status").innerText="Player registered: "+name;
 
-}
-
-document.getElementById("createGame").onclick = async ()=>{
-
-sessionId = Date.now().toString()
-
-await setDoc(doc(db,"sessions",sessionId),{
-host:playerName,
-players:[playerName],
-state:"waiting"
-})
-
-showScreen("waiting")
-
-listenSession()
-
-}
-
-function listenSession(){
-
-const ref = doc(db,"sessions",sessionId)
-
-onSnapshot(ref,(snap)=>{
-
-const data = snap.data()
-
-if(!data) return
-
-renderPlayers(data.players)
-
-})
-
-}
-
-function renderPlayers(players){
-
-const box = document.getElementById("waitingPlayers")
-
-box.innerHTML=""
-
-players.forEach(p=>{
-
-const div=document.createElement("div")
-div.textContent=p
-box.appendChild(div)
-
-})
-
-}
-
-document.getElementById("startGame").onclick = async ()=>{
-
-const ref = doc(db,"sessions",sessionId)
-
-await updateDoc(ref,{state:"playing"})
-
-alert("Game starting")
-
-}
+};
 
 </script>
 
