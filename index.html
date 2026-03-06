@@ -1,265 +1,458 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NightGames</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>NightGames</title>
 
-<style>
+  <!--
+    NightGames CAUGHT-UP CLEAN BUILD (single file)
+    Version: v1237.3-caughtup
+  -->
 
-body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:url("IMG_7390.jpg") center/cover no-repeat fixed;
-color:white;
-}
+  <style>
+    :root{
+      --glass: rgba(255,255,255,.16);
+      --border: rgba(255,255,255,.18);
+      --txt: #fff;
+      --muted: rgba(255,255,255,.78);
+      --accent: #22c55e;
+      --accentTxt: #071012;
+      --shadow: 0 12px 34px rgba(0,0,0,.38);
+      --radius: 22px;
+      --pill: 999px;
+    }
 
-header{
-position:fixed;
-top:0;
-left:0;
-right:0;
-height:40px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:0 15px;
-background:black;
-font-size:14px;
-}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--txt);
+      background:#000;
+      overflow:hidden;
+    }
 
-#version{
-color:#ffd54a;
-}
+    .bg{
+      position:fixed;
+      inset:0;
+      background:#000 center/cover no-repeat;
+      z-index:0;
+      transform: translateZ(0);
+    }
+    #bgLanding{ background-image:url("IMG_7390.jpg"); }
+    #bgPlayers{ background-image:url("IMG_7315.jpg"); display:none; }
 
-.screen{
-display:none;
-padding-top:60px;
-height:100vh;
-}
+    .topbar{
+      position:fixed;
+      top:10px; left:12px; right:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      z-index:50;
+      pointer-events:none;
+      text-shadow: 0 2px 12px rgba(0,0,0,.75);
+      font-size:13px;
+      letter-spacing:.3px;
+    }
+    .topbar .ver{ color:#ffd24a; }
+    .topbar .status{ color:#a7f3d0; }
 
-.active{
-display:block;
-}
+    .screen{
+      position:absolute;
+      inset:0;
+      padding: 56px 16px 18px;
+      display:none;
+      z-index:10;
+    }
+    .screen.active{ display:block; }
 
-.center{
-text-align:center;
-margin-top:120px;
-}
+    .card{
+      width:min(720px, 100%);
+      margin:0 auto;
+      background:var(--glass);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .pad{ padding:16px; }
 
-input{
-width:70%;
-padding:12px;
-border-radius:30px;
-border:none;
-background:rgba(255,255,255,0.25);
-color:white;
-font-size:16px;
-text-align:center;
-}
+    .bevel{
+      border-radius: var(--pill);
+      border: 1px solid rgba(255,255,255,.20);
+      background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.10));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.35),
+        inset 0 -10px 18px rgba(0,0,0,.18),
+        0 10px 24px rgba(0,0,0,.22);
+      backdrop-filter: blur(12px);
+    }
 
-button{
-border:none;
-border-radius:30px;
-padding:10px 25px;
-margin-top:15px;
-font-size:16px;
-cursor:pointer;
-}
+    .title{
+      margin:0 0 6px;
+      font-size:18px;
+      font-weight:800;
+      letter-spacing:.3px;
+    }
+    .sub{
+      margin:0 0 12px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.25;
+    }
 
-.enterBtn{
-background:#4caf50;
-color:black;
-}
+    .stageSpace{ height: 22vh; }
 
-.panel{
-width:90%;
-margin:auto;
-background:rgba(255,255,255,0.15);
-backdrop-filter:blur(10px);
-border-radius:20px;
-padding:15px;
-}
+    .inputPill{
+      width: 92%;
+      max-width: 560px;
+      padding: 12px 16px;
+      font-size:16px;
+      color:var(--txt);
+      outline:none;
+      -webkit-appearance:none;
+      appearance:none;
+      background: rgba(255,255,255,.10);
+    }
+    .inputPill::placeholder{ color: rgba(255,255,255,.72); }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus{
+      -webkit-text-fill-color: #fff;
+      transition: background-color 9999s ease-in-out 0s;
+      box-shadow: 0 0 0px 1000px rgba(255,255,255,.08) inset;
+    }
 
-.playerRow{
-display:flex;
-justify-content:space-between;
-margin:10px 0;
-}
+    .btn{
+      width: 92%;
+      max-width: 560px;
+      padding: 12px 16px;
+      border-radius: var(--pill);
+      border: 0;
+      font-size:16px;
+      font-weight:900;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      user-select:none;
+    }
+    .btnPrimary{
+      background: var(--accent);
+      color: var(--accentTxt);
+      box-shadow: 0 10px 26px rgba(34,197,94,.22);
+    }
+    .btnGhost{
+      background: rgba(255,255,255,.16);
+      color:#fff;
+      border: 1px solid rgba(255,255,255,.18);
+    }
 
-.gameList{
-max-height:250px;
-overflow-y:auto;
-}
+    .panel{
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .scroll{
+      max-height: 220px;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      padding-right:6px;
+    }
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 10px 10px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.10);
+      margin-bottom: 10px;
+    }
+    .row:last-child{ margin-bottom:0; }
 
-.gameRow{
-display:flex;
-justify-content:space-between;
-margin:10px 0;
-}
+    .left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .name{
+      font-weight:900;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      background:#22c55e;
+      box-shadow: 0 0 12px rgba(34,197,94,.75);
+      flex:0 0 auto;
+    }
+    .miniBtns{ display:flex; gap:8px; }
+    .mini{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.14);
+      color:#fff;
+      font-size:13px;
+      font-weight:900;
+      cursor:pointer;
+    }
 
-.smallBtn{
-background:rgba(255,255,255,0.25);
-color:white;
-padding:6px 12px;
-margin-left:5px;
-}
+    .twoCol{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 820px){
+      .twoCol{ grid-template-columns: 1fr 1fr; }
+    }
 
-.supportBtn{
-background:rgba(255,255,255,0.4);
-}
+    .sectionHeader{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom: 10px;
+    }
 
-</style>
+    .supportLink{
+      text-decoration:none;
+      color:#fff;
+      font-weight:900;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.16);
+      pointer-events:auto;
+    }
+
+    .footerBar{
+      margin-top: 12px;
+      display:flex;
+      gap:10px;
+    }
+    .footerBar .btn{ width:50%; max-width:none; }
+  </style>
 </head>
 
-
 <body>
+  <div id="bgLanding" class="bg"></div>
+  <div id="bgPlayers" class="bg"></div>
 
-<header>
-<div>NightGames</div>
-<div id="version">v1237</div>
-<div>ONLINE</div>
-</header>
+  <div class="topbar">
+    <div>NightGames</div>
+    <div class="ver" id="verText">v1237.3</div>
+    <div class="status" id="statusText">LOCAL</div>
+  </div>
 
+  <section id="screen-login" class="screen active">
+    <div class="stageSpace"></div>
+    <div class="card">
+      <div class="pad" style="text-align:center;">
+        <div class="title">Welcome</div>
+        <div class="sub">Enter your email to continue.</div>
 
-<!-- LOGIN SCREEN -->
+        <audio id="introAudio" preload="auto" src="New Recording 2.mp3"></audio>
 
-<div id="login" class="screen active">
+        <input id="emailInput" class="inputPill bevel" type="email" inputmode="email" autocomplete="email"
+               placeholder="your@email.com" />
 
-<div class="center">
+        <button id="enterBtn" class="btn btnPrimary bevel" type="button">ENTER</button>
 
-<input id="email" placeholder="Enter Email">
+        <div class="sub" style="margin-top:10px;">
+          Tip: tap the email field to play the intro. If you don't have the audio file yet, it's fine.
+        </div>
+      </div>
+    </div>
+  </section>
 
-<br>
+  <section id="screen-home" class="screen">
+    <div class="card">
+      <div class="pad">
+        <div class="sectionHeader">
+          <div>
+            <div class="title" style="margin:0;">Players & Games</div>
+            <div class="sub" style="margin:6px 0 0;">Each panel scrolls. We show about 2 items at a time.</div>
+          </div>
+          <a class="supportLink" href="https://venmo.com/u/Steve-Moody-8" target="_blank" rel="noopener">
+            ❤ Support
+          </a>
+        </div>
 
-<button class="enterBtn" onclick="enterApp()">ENTER</button>
+        <div class="twoCol">
+          <div class="panel">
+            <div class="title" style="font-size:16px;margin:0 0 10px;">Players</div>
+            <div class="scroll" id="playersList">
+              <div class="row">
+                <div class="left">
+                  <span class="dot" title="online"></span>
+                  <span class="name">Steve Moody</span>
+                </div>
+                <div class="miniBtns">
+                  <button class="mini" type="button" data-action="stats">STATS</button>
+                  <button class="mini" type="button" data-action="history">HISTORY</button>
+                </div>
+              </div>
 
-</div>
+              <div class="row">
+                <div class="left">
+                  <span class="dot" title="online"></span>
+                  <span class="name">Jayce Moody</span>
+                </div>
+                <div class="miniBtns">
+                  <button class="mini" type="button" data-action="stats">STATS</button>
+                  <button class="mini" type="button" data-action="history">HISTORY</button>
+                </div>
+              </div>
 
-</div>
+              <div class="row">
+                <div class="left">
+                  <span class="dot" title="online"></span>
+                  <span class="name">Bill Moody</span>
+                </div>
+                <div class="miniBtns">
+                  <button class="mini" type="button" data-action="stats">STATS</button>
+                  <button class="mini" type="button" data-action="history">HISTORY</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
+          <div class="panel">
+            <div class="title" style="font-size:16px;margin:0 0 10px;">Games</div>
+            <div class="scroll" id="gamesList">
+              <div class="row">
+                <div class="left"><span class="name">Killer</span></div>
+                <div class="miniBtns">
+                  <button class="mini" type="button" data-game="killer" data-action="play">PLAY</button>
+                  <button class="mini" type="button" data-game="killer" data-action="rules">RULES</button>
+                </div>
+              </div>
 
+              <div class="row">
+                <div class="left"><span class="name">Around the World</span></div>
+                <div class="miniBtns">
+                  <button class="mini" type="button" data-game="around" data-action="play">PLAY</button>
+                  <button class="mini" type="button" data-game="around" data-action="rules">RULES</button>
+                </div>
+              </div>
 
-<!-- PLAYERS SCREEN -->
+              <div class="row">
+                <div class="left"><span class="name">Shanghai</span></div>
+                <div class="miniBtns">
+                  <button class="mini" type="button" data-game="shanghai" data-action="play">PLAY</button>
+                  <button class="mini" type="button" data-game="shanghai" data-action="rules">RULES</button>
+                </div>
+              </div>
 
-<div id="players" class="screen">
+              <div class="row">
+                <div class="left"><span class="name">Half-It</span></div>
+                <div class="miniBtns">
+                  <button class="mini" type="button" data-game="halfit" data-action="play">PLAY</button>
+                  <button class="mini" type="button" data-game="halfit" data-action="rules">RULES</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-<div class="panel">
+        <div class="footerBar">
+          <button class="btn btnGhost bevel" id="backToLoginBtn" type="button">BACK</button>
+          <button class="btn btnPrimary bevel" id="leaderboardBtn" type="button">LEADERBOARD</button>
+        </div>
 
-<h3>Players</h3>
+        <div class="sub" style="margin-top:12px;">
+          Next major step: Waiting Room / Multiplayer.
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div id="playerList">
+  <script>
+    const VERSION = "v1237.3-caughtup";
+    document.getElementById("verText").textContent = VERSION;
 
-<div class="playerRow">
-<span>Player 1</span>
-<div>
-<button class="smallBtn">Stats</button>
-<button class="smallBtn">History</button>
-</div>
-</div>
+    const screens = {
+      login: document.getElementById("screen-login"),
+      home: document.getElementById("screen-home"),
+    };
+    const bgLanding = document.getElementById("bgLanding");
+    const bgPlayers = document.getElementById("bgPlayers");
 
-<div class="playerRow">
-<span>Player 2</span>
-<div>
-<button class="smallBtn">Stats</button>
-<button class="smallBtn">History</button>
-</div>
-</div>
+    function showScreen(name){
+      Object.values(screens).forEach(s => s.classList.remove("active"));
+      screens[name].classList.add("active");
 
-</div>
+      if(name === "login"){
+        bgLanding.style.display = "block";
+        bgPlayers.style.display = "none";
+      } else {
+        bgLanding.style.display = "none";
+        bgPlayers.style.display = "block";
+      }
+    }
 
-<br>
+    const emailInput = document.getElementById("emailInput");
+    const enterBtn = document.getElementById("enterBtn");
+    const introAudio = document.getElementById("introAudio");
 
-<button onclick="showScreen('games')">Continue</button>
+    let introPlayed = false;
+    function tryPlayIntro(){
+      if(introPlayed) return;
+      introPlayed = true;
+      introAudio.play().catch(()=>{});
+    }
 
-</div>
+    emailInput.addEventListener("focus", tryPlayIntro);
+    emailInput.addEventListener("pointerdown", tryPlayIntro);
 
-</div>
+    function enterApp(){
+      const email = (emailInput.value || "").trim();
+      if(!email){
+        alert("Enter your email.");
+        return;
+      }
+      showScreen("home");
+    }
 
+    enterBtn.addEventListener("click", enterApp);
 
+    document.getElementById("backToLoginBtn").addEventListener("click", () => showScreen("login"));
 
-<!-- GAMES SCREEN -->
+    document.getElementById("leaderboardBtn").addEventListener("click", () => {
+      alert("Leaderboard coming next (stub).");
+    });
 
-<div id="games" class="screen">
+    document.getElementById("playersList").addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-action]");
+      if(!btn) return;
+      const row = e.target.closest(".row");
+      const playerName = row?.querySelector(".name")?.textContent?.trim() || "Player";
+      const action = btn.dataset.action;
+      alert(playerName + " → " + action.toUpperCase() + " (stub)");
+    });
 
-<div class="panel">
+    document.getElementById("gamesList").addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-game]");
+      if(!btn) return;
+      const game = btn.dataset.game;
+      const action = btn.dataset.action;
+      if(action === "rules"){
+        alert("Rules for " + game + " (stub)");
+      } else {
+        alert("Start " + game + " (stub). Next: Waiting Room / Multiplayer.");
+      }
+    });
 
-<div style="display:flex;justify-content:space-between">
-
-<h3>Games</h3>
-
-<button class="supportBtn">❤ Support</button>
-
-</div>
-
-<div class="gameList">
-
-<div class="gameRow">
-<span>Killer</span>
-<div>
-<button class="enterBtn">Play</button>
-<button class="smallBtn">Rules</button>
-</div>
-</div>
-
-<div class="gameRow">
-<span>Around The World</span>
-<div>
-<button class="enterBtn">Play</button>
-<button class="smallBtn">Rules</button>
-</div>
-</div>
-
-<div class="gameRow">
-<span>Shanghai</span>
-<div>
-<button class="enterBtn">Play</button>
-<button class="smallBtn">Rules</button>
-</div>
-</div>
-
-<div class="gameRow">
-<span>Half-It</span>
-<div>
-<button class="enterBtn">Play</button>
-<button class="smallBtn">Rules</button>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-
-<script>
-
-function showScreen(id){
-
-document.querySelectorAll(".screen").forEach(screen=>{
-screen.classList.remove("active");
-});
-
-document.getElementById(id).classList.add("active");
-
-}
-
-function enterApp(){
-
-let email=document.getElementById("email").value;
-
-if(email===""){
-alert("Please enter email");
-return;
-}
-
-showScreen("players");
-
-}
-
-</script>
-
+    showScreen("login");
+  </script>
 </body>
 </html>
