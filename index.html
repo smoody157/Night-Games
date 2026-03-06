@@ -641,6 +641,44 @@ input[type="email"]:-webkit-autofill:active {
   background-color: transparent !important;
 }
 
+
+/* ===================================================== */
+/* KILLER MULTIPLAYER PATCH CSS                          */
+/* ===================================================== */
+.killerRow{
+  display:grid;
+  grid-template-columns: 1fr auto auto;
+  gap:10px;
+  align-items:center;
+  padding:10px 8px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.killerRow:last-child{ border-bottom:none; }
+.killerBadges{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+.killerBadge{
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.08);
+  font-size:12px;
+  font-weight:900;
+}
+.killerTurn{
+  border-color: rgba(34,197,94,.35);
+  background: rgba(34,197,94,.18);
+  color: #d1fae5;
+}
+.killerOut{
+  border-color: rgba(239,68,68,.35);
+  background: rgba(239,68,68,.18);
+  color: #fee2e2;
+}
+.killerHost{
+  border-color: rgba(251,191,36,.35);
+  background: rgba(251,191,36,.14);
+  color: #fde68a;
+}
+
 </style>
 </head>
 
@@ -819,52 +857,63 @@ input[type="email"]:-webkit-autofill:active {
 <!-- ===================================================== -->
 <!-- SECTION 12 — MULTIPLAYER LOBBY (UI SHELL) -->
 <!-- ===================================================== -->
+
 <div id="lobbyScreen" class="screen" style="display:none">
   <div class="grid">
     <div class="glass">
       <div class="glassHeader">
-        <div>LOBBY</div>
+        <div>KILLER LOBBY</div>
         <button id="leaveLobbyBtn" type="button" class="ghost">BACK</button>
       </div>
       <div class="glassBody">
-        <div id="lobbyStatus"><small>Select players, then Create Room.</small></div>
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
-        <div id="inviteArea" class="scrollArea" class="scrollArea"></div>
-        <div style="margin-top:12px">
-          <button id="createRoomBtn" type="button" class="primary">CREATE ROOM</button>
+        <div id="lobbyStatus"><small>Create a room or join with a room code.</small></div>
+        <div class="meta" style="margin:10px 0 6px 0">ROOM CODE</div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <div id="roomCodeDisplay" style="min-width:120px;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);font-weight:900;letter-spacing:1px;text-align:center">-----</div>
+          <input id="joinRoomInput" placeholder="Enter room code" style="max-width:240px;width:240px">
+          <button id="joinRoomBtn" type="button" class="ghost">JOIN ROOM</button>
         </div>
         <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
-        <div id="lobbyPlayers" class="scrollArea" class="scrollArea"><small>Players will show here after wiring Firestore.</small></div>
+        <div id="inviteArea" class="scrollArea"></div>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+          <button id="createRoomBtn" type="button" class="primary">CREATE ROOM</button>
+          <button id="startMatchBtn" type="button" class="ghost">START KILLER</button>
+        </div>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
+        <div class="meta" style="margin-bottom:8px">PLAYERS IN ROOM</div>
+        <div id="lobbyPlayers" class="scrollArea"><small>No room connected yet.</small></div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ===================================================== -->
-<!-- SECTION 13 — GAME SCREEN (LOCAL PRACTICE) -->
+<!-- SECTION 13 — GAME SCREEN (KILLER MULTIPLAYER) -->
 <!-- ===================================================== -->
 <div id="gameScreen" class="screen" style="display:none">
   <div class="grid">
     <div class="glass">
       <div class="glassHeader">
-        <div>GAME</div>
+        <div>KILLER</div>
         <button id="backToPlayersBtn" type="button" class="ghost">BACK</button>
       </div>
       <div class="glassBody">
         <h2 id="turnDisplay" style="margin:6px 0 10px">Turn:</h2>
-        <small>Practice throws (local). Multiplayer sync comes next.</small>
+        <div id="killerStatus" class="meta" style="margin-bottom:10px">Waiting for match start.</div>
+        <div id="killerBoard" class="scrollArea" style="display:flex;flex-direction:column;gap:10px"></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px">
-          <button type="button" class="primary" data-score="20">20</button>
-          <button type="button" class="primary" data-score="19">19</button>
-          <button type="button" class="primary" data-score="18">18</button>
-          <button type="button" class="primary" data-score="5">5</button>
-          <button type="button" class="primary" data-score="1">1</button>
+          <button id="hitOwnBtn" type="button" class="primary">HIT OWN NUMBER</button>
+          <button id="hitOpponentBtn" type="button" class="ghost">HIT OPPONENT</button>
+          <button id="nextTurnBtn" type="button" class="ghost">NEXT TURN</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- ===================================================== -->
+<!-- SECTION 14 — DEBUG BOX (HTML) -->
+<div id="debugBox"><b>Debug</b><div id="debugText"></div></div>
 <!-- ===================================================== -->
 <!-- SECTION 14 — DEBUG BOX (HTML) -->
 </div>
@@ -878,300 +927,9 @@ input[type="email"]:-webkit-autofill:active {
 <audio id="introAudio" src="New Recording 2.m4a" preload="auto"></audio>
 <!-- SECTION 15 — FIREBASE SDK SCRIPTS (COMPAT)            -->
 <!-- ===================================================== -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
-
-// =============================
-// FIREBASE MULTIPLAYER PATCH
-// =============================
-const firebaseConfig = {
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-  projectId: "gamenightdarts-e7601",
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-  messagingSenderId: "270045452251",
-  appId: "1:270045452251:web:393956ce18b43316e939fe",
-  measurementId: "G-LQEHF02ZVR"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-let activeRoomId = null;
-
-// REPLACE UI-ONLY ROOM CREATION
-async function createRoomAndInvite_UIOnly(){
-
-  const roomId = Math.random().toString(36).substring(2,7).toUpperCase();
-  activeRoomId = roomId;
-
-  const checks = Array.from(
-    document.querySelectorAll("#inviteArea input[type=checkbox]")
-  );
-
-  const invited = checks
-    .filter(c=>c.checked)
-    .map(c=>c.parentElement.innerText);
-
-  await db.collection("rooms").doc(roomId).set({
-    host: currentEmail,
-    game: "killer",
-    players: [currentEmail],
-    invited: invited,
-    turn: 0,
-    created: Date.now()
-  });
-
-  document.getElementById("lobbyStatus").innerHTML =
-    "<small>Room created: <b>"+roomId+"</b></small>";
-
-  listenToRoom(roomId);
-}
-
-// REALTIME ROOM LISTENER
-function listenToRoom(roomId){
-
-  db.collection("rooms").doc(roomId)
-  .onSnapshot(doc=>{
-
-    const data = doc.data();
-    if(!data) return;
-
-    const area = document.getElementById("lobbyPlayers");
-    area.innerHTML = "";
-
-    data.players.forEach(p=>{
-
-      const div = document.createElement("div");
-      div.innerText = players[p]?.name || p;
-      area.appendChild(div);
-
-    });
-
-  });
-}
-
-// JOIN ROOM (for invited player)
-async function joinRoom(roomId){
-
-  activeRoomId = roomId;
-
-  const ref = db.collection("rooms").doc(roomId);
-
-  const room = await ref.get();
-  if(!room.exists){
-    alert("Room not found");
-    return;
-  }
-
-  const data = room.data();
-  const playersList = data.players || [];
-
-  if(!playersList.includes(currentEmail)){
-    playersList.push(currentEmail);
-  }
-
-  await ref.update({ players: playersList });
-
-  listenToRoom(roomId);
-}
-
-</script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js">
-
-// =============================
-// FIREBASE MULTIPLAYER PATCH
-// =============================
-const firebaseConfig = {
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-  projectId: "gamenightdarts-e7601",
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-  messagingSenderId: "270045452251",
-  appId: "1:270045452251:web:393956ce18b43316e939fe",
-  measurementId: "G-LQEHF02ZVR"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-let activeRoomId = null;
-
-// REPLACE UI-ONLY ROOM CREATION
-async function createRoomAndInvite_UIOnly(){
-
-  const roomId = Math.random().toString(36).substring(2,7).toUpperCase();
-  activeRoomId = roomId;
-
-  const checks = Array.from(
-    document.querySelectorAll("#inviteArea input[type=checkbox]")
-  );
-
-  const invited = checks
-    .filter(c=>c.checked)
-    .map(c=>c.parentElement.innerText);
-
-  await db.collection("rooms").doc(roomId).set({
-    host: currentEmail,
-    game: "killer",
-    players: [currentEmail],
-    invited: invited,
-    turn: 0,
-    created: Date.now()
-  });
-
-  document.getElementById("lobbyStatus").innerHTML =
-    "<small>Room created: <b>"+roomId+"</b></small>";
-
-  listenToRoom(roomId);
-}
-
-// REALTIME ROOM LISTENER
-function listenToRoom(roomId){
-
-  db.collection("rooms").doc(roomId)
-  .onSnapshot(doc=>{
-
-    const data = doc.data();
-    if(!data) return;
-
-    const area = document.getElementById("lobbyPlayers");
-    area.innerHTML = "";
-
-    data.players.forEach(p=>{
-
-      const div = document.createElement("div");
-      div.innerText = players[p]?.name || p;
-      area.appendChild(div);
-
-    });
-
-  });
-}
-
-// JOIN ROOM (for invited player)
-async function joinRoom(roomId){
-
-  activeRoomId = roomId;
-
-  const ref = db.collection("rooms").doc(roomId);
-
-  const room = await ref.get();
-  if(!room.exists){
-    alert("Room not found");
-    return;
-  }
-
-  const data = room.data();
-  const playersList = data.players || [];
-
-  if(!playersList.includes(currentEmail)){
-    playersList.push(currentEmail);
-  }
-
-  await ref.update({ players: playersList });
-
-  listenToRoom(roomId);
-}
-
-</script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js">
-
-// =============================
-// FIREBASE MULTIPLAYER PATCH
-// =============================
-const firebaseConfig = {
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-  projectId: "gamenightdarts-e7601",
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-  messagingSenderId: "270045452251",
-  appId: "1:270045452251:web:393956ce18b43316e939fe",
-  measurementId: "G-LQEHF02ZVR"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-let activeRoomId = null;
-
-// REPLACE UI-ONLY ROOM CREATION
-async function createRoomAndInvite_UIOnly(){
-
-  const roomId = Math.random().toString(36).substring(2,7).toUpperCase();
-  activeRoomId = roomId;
-
-  const checks = Array.from(
-    document.querySelectorAll("#inviteArea input[type=checkbox]")
-  );
-
-  const invited = checks
-    .filter(c=>c.checked)
-    .map(c=>c.parentElement.innerText);
-
-  await db.collection("rooms").doc(roomId).set({
-    host: currentEmail,
-    game: "killer",
-    players: [currentEmail],
-    invited: invited,
-    turn: 0,
-    created: Date.now()
-  });
-
-  document.getElementById("lobbyStatus").innerHTML =
-    "<small>Room created: <b>"+roomId+"</b></small>";
-
-  listenToRoom(roomId);
-}
-
-// REALTIME ROOM LISTENER
-function listenToRoom(roomId){
-
-  db.collection("rooms").doc(roomId)
-  .onSnapshot(doc=>{
-
-    const data = doc.data();
-    if(!data) return;
-
-    const area = document.getElementById("lobbyPlayers");
-    area.innerHTML = "";
-
-    data.players.forEach(p=>{
-
-      const div = document.createElement("div");
-      div.innerText = players[p]?.name || p;
-      area.appendChild(div);
-
-    });
-
-  });
-}
-
-// JOIN ROOM (for invited player)
-async function joinRoom(roomId){
-
-  activeRoomId = roomId;
-
-  const ref = db.collection("rooms").doc(roomId);
-
-  const room = await ref.get();
-  if(!room.exists){
-    alert("Room not found");
-    return;
-  }
-
-  const data = room.data();
-  const playersList = data.players || [];
-
-  if(!playersList.includes(currentEmail)){
-    playersList.push(currentEmail);
-  }
-
-  await ref.update({ players: playersList });
-
-  listenToRoom(roomId);
-}
-
-</script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
 <script>
 /* ===================================================== */
@@ -1415,103 +1173,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
   logDebug("DOM ready. UI-first build loaded.");
 });
-
-
-// =============================
-// FIREBASE MULTIPLAYER PATCH
-// =============================
-const firebaseConfig = {
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-  projectId: "gamenightdarts-e7601",
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-  messagingSenderId: "270045452251",
-  appId: "1:270045452251:web:393956ce18b43316e939fe",
-  measurementId: "G-LQEHF02ZVR"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-let activeRoomId = null;
-
-// REPLACE UI-ONLY ROOM CREATION
-async function createRoomAndInvite_UIOnly(){
-
-  const roomId = Math.random().toString(36).substring(2,7).toUpperCase();
-  activeRoomId = roomId;
-
-  const checks = Array.from(
-    document.querySelectorAll("#inviteArea input[type=checkbox]")
-  );
-
-  const invited = checks
-    .filter(c=>c.checked)
-    .map(c=>c.parentElement.innerText);
-
-  await db.collection("rooms").doc(roomId).set({
-    host: currentEmail,
-    game: "killer",
-    players: [currentEmail],
-    invited: invited,
-    turn: 0,
-    created: Date.now()
-  });
-
-  document.getElementById("lobbyStatus").innerHTML =
-    "<small>Room created: <b>"+roomId+"</b></small>";
-
-  listenToRoom(roomId);
-}
-
-// REALTIME ROOM LISTENER
-function listenToRoom(roomId){
-
-  db.collection("rooms").doc(roomId)
-  .onSnapshot(doc=>{
-
-    const data = doc.data();
-    if(!data) return;
-
-    const area = document.getElementById("lobbyPlayers");
-    area.innerHTML = "";
-
-    data.players.forEach(p=>{
-
-      const div = document.createElement("div");
-      div.innerText = players[p]?.name || p;
-      area.appendChild(div);
-
-    });
-
-  });
-}
-
-// JOIN ROOM (for invited player)
-async function joinRoom(roomId){
-
-  activeRoomId = roomId;
-
-  const ref = db.collection("rooms").doc(roomId);
-
-  const room = await ref.get();
-  if(!room.exists){
-    alert("Room not found");
-    return;
-  }
-
-  const data = room.data();
-  const playersList = data.players || [];
-
-  if(!playersList.includes(currentEmail)){
-    playersList.push(currentEmail);
-  }
-
-  await ref.update({ players: playersList });
-
-  listenToRoom(roomId);
-}
-
 </script>
 
 
@@ -1549,103 +1210,403 @@ async function joinRoom(roomId){
     safeBind("enter","click", function(){ if(typeof login==="function") login(); });
   });
 })();
+</script>
 
 
-// =============================
-// FIREBASE MULTIPLAYER PATCH
-// =============================
-const firebaseConfig = {
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-  projectId: "gamenightdarts-e7601",
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-  messagingSenderId: "270045452251",
-  appId: "1:270045452251:web:393956ce18b43316e939fe",
-  measurementId: "G-LQEHF02ZVR"
-};
+<script>
+/* =====================================================
+   LIVE FIRESTORE + KILLER PATCH
+   This patch keeps your existing app shell and only wires
+   Killer/lobby multiplayer into the existing Night Games build.
+   ===================================================== */
+(function(){
+  const firebaseConfig = {
+    apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
+    authDomain: "gamenightdarts-e7601.firebaseapp.com",
+    projectId: "gamenightdarts-e7601",
+    storageBucket: "gamenightdarts-e7601.firebasestorage.app",
+    messagingSenderId: "270045452251",
+    appId: "1:270045452251:web:393956ce18b43316e939fe",
+    measurementId: "G-LQEHF02ZVR"
+  };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+  try{
+    if(!firebase.apps.length){ firebase.initializeApp(firebaseConfig); }
+  }catch(e){ console.error("Firebase init error", e); }
 
-let activeRoomId = null;
+  const db = firebase.firestore();
 
-// REPLACE UI-ONLY ROOM CREATION
-async function createRoomAndInvite_UIOnly(){
+  window.NG_ROOM = {
+    id: null,
+    unsub: null,
+    host: false
+  };
 
-  const roomId = Math.random().toString(36).substring(2,7).toUpperCase();
-  activeRoomId = roomId;
+  function setLobbyStatus(html){
+    const el = document.getElementById("lobbyStatus");
+    if(el) el.innerHTML = html;
+  }
 
-  const checks = Array.from(
-    document.querySelectorAll("#inviteArea input[type=checkbox]")
-  );
+  function roomCode(){
+    return Math.random().toString(36).substring(2,7).toUpperCase();
+  }
 
-  const invited = checks
-    .filter(c=>c.checked)
-    .map(c=>c.parentElement.innerText);
+  function getSelectedInviteEmails(){
+    return Array.from(document.querySelectorAll("#inviteArea input[type=checkbox]"))
+      .filter(c => c.checked)
+      .map(c => c.value)
+      .filter(Boolean);
+  }
 
-  await db.collection("rooms").doc(roomId).set({
-    host: currentEmail,
-    game: "killer",
-    players: [currentEmail],
-    invited: invited,
-    turn: 0,
-    created: Date.now()
-  });
-
-  document.getElementById("lobbyStatus").innerHTML =
-    "<small>Room created: <b>"+roomId+"</b></small>";
-
-  listenToRoom(roomId);
-}
-
-// REALTIME ROOM LISTENER
-function listenToRoom(roomId){
-
-  db.collection("rooms").doc(roomId)
-  .onSnapshot(doc=>{
-
-    const data = doc.data();
-    if(!data) return;
-
+  function renderLobbyPlayers(data){
     const area = document.getElementById("lobbyPlayers");
-    area.innerHTML = "";
+    if(!area) return;
+    const list = Array.isArray(data.players) ? data.players : [];
+    if(!list.length){
+      area.innerHTML = "<small>No players in room yet.</small>";
+      return;
+    }
+    area.innerHTML = list.map((email, idx) => {
+      const name = (players[email] && players[email].name) ? players[email].name : email;
+      const hostBadge = email === data.host ? '<span class="killerBadge killerHost">HOST</span>' : '';
+      const you = email === currentEmail ? ' (You)' : '';
+      return `
+        <div class="killerRow">
+          <div>
+            <div class="name">${name}${you}</div>
+            <div class="meta">${email}</div>
+          </div>
+          <div class="killerBadges">${hostBadge}</div>
+        </div>
+      `;
+    }).join("");
+  }
 
-    data.players.forEach(p=>{
+  function renderKillerBoard(data){
+    const board = document.getElementById("killerBoard");
+    const turnDisplay = document.getElementById("turnDisplay");
+    const killerStatus = document.getElementById("killerStatus");
+    if(!board || !turnDisplay || !killerStatus) return;
 
-      const div = document.createElement("div");
-      div.innerText = players[p]?.name || p;
-      area.appendChild(div);
+    const playersArr = Array.isArray(data.players) ? data.players : [];
+    const state = data.killerState || {};
+    const lives = state.lives || {};
+    const killers = state.killers || {};
+    const currentTurnEmail = state.currentTurnEmail || playersArr[0] || null;
+    const phase = data.phase || "lobby";
 
+    if(phase !== "live"){
+      turnDisplay.innerText = "Turn: waiting to start";
+      killerStatus.innerText = "Waiting for host to start Killer.";
+      board.innerHTML = "";
+      return;
+    }
+
+    const winnerEmail = playersArr.find(email => (lives[email] ?? 0) > 0 && playersArr.filter(e => (lives[e] ?? 0) > 0).length === 1);
+
+    if(winnerEmail){
+      const winnerName = players[winnerEmail]?.name || winnerEmail;
+      turnDisplay.innerText = "Winner: " + winnerName;
+    }else{
+      const turnName = players[currentTurnEmail]?.name || currentTurnEmail || "Player";
+      turnDisplay.innerText = "Turn: " + turnName;
+    }
+
+    killerStatus.innerText = "Own hit adds a life up to 3. At 3 lives you become a Killer. Hit Opponent removes 1 life from the other player.";
+
+    board.innerHTML = playersArr.map((email) => {
+      const name = players[email]?.name || email;
+      const playerLives = Math.max(0, Number(lives[email] || 0));
+      const isKillerNow = !!killers[email] || playerLives >= 3;
+      const isTurn = email === currentTurnEmail;
+      const out = playerLives <= 0 && phase === "live";
+      return `
+        <div class="killerRow">
+          <div>
+            <div class="name">${name}${email === currentEmail ? " (You)" : ""}</div>
+            <div class="meta">${email}</div>
+          </div>
+          <div class="killerBadges">
+            <span class="killerBadge ${isTurn ? 'killerTurn' : ''}">${isTurn ? 'TURN' : 'WAIT'}</span>
+            <span class="killerBadge ${out ? 'killerOut' : ''}">LIVES ${playerLives}</span>
+            <span class="killerBadge">${isKillerNow ? 'KILLER' : 'ALIVE'}</span>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function unsubscribeRoom(){
+    try{ if(window.NG_ROOM.unsub) window.NG_ROOM.unsub(); }catch(e){}
+    window.NG_ROOM.unsub = null;
+  }
+
+  async function createRoomAndInvite_LIVE(){
+    if(!currentEmail){
+      alert("Log in first.");
+      return;
+    }
+    const rid = roomCode();
+    const invitedEmails = getSelectedInviteEmails();
+    const roomRef = db.collection("rooms").doc(rid);
+
+    const initialPlayers = [currentEmail];
+    const killerState = {
+      lives: { [currentEmail]: 0 },
+      killers: { [currentEmail]: false },
+      currentTurnEmail: currentEmail,
+      round: 1
+    };
+
+    await roomRef.set({
+      roomId: rid,
+      host: currentEmail,
+      game: "killer",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      phase: "lobby",
+      players: initialPlayers,
+      invited: invitedEmails,
+      killerState: killerState
     });
 
+    window.NG_ROOM.id = rid;
+    window.NG_ROOM.host = true;
+    const roomCodeDisplay = document.getElementById("roomCodeDisplay");
+    if(roomCodeDisplay) roomCodeDisplay.innerText = rid;
+    setLobbyStatus(`<small>Room created: <b>${rid}</b>. Share this code with Bill.</small>`);
+    listenToRoom(rid);
+  }
+
+  async function joinRoom_LIVE(){
+    const input = document.getElementById("joinRoomInput");
+    const rid = (input?.value || "").trim().toUpperCase();
+    if(!rid){
+      alert("Enter a room code.");
+      return;
+    }
+    if(!currentEmail){
+      alert("Log in first.");
+      return;
+    }
+
+    const roomRef = db.collection("rooms").doc(rid);
+    const snap = await roomRef.get();
+    if(!snap.exists){
+      alert("Room not found.");
+      return;
+    }
+
+    const data = snap.data() || {};
+    const playersList = Array.isArray(data.players) ? data.players.slice() : [];
+    if(!playersList.includes(currentEmail)) playersList.push(currentEmail);
+
+    const killerState = data.killerState || {};
+    killerState.lives = killerState.lives || {};
+    killerState.killers = killerState.killers || {};
+    if(typeof killerState.lives[currentEmail] === "undefined") killerState.lives[currentEmail] = 0;
+    if(typeof killerState.killers[currentEmail] === "undefined") killerState.killers[currentEmail] = false;
+    if(!killerState.currentTurnEmail) killerState.currentTurnEmail = playersList[0] || currentEmail;
+    if(!killerState.round) killerState.round = 1;
+
+    await roomRef.update({
+      players: playersList,
+      killerState: killerState
+    });
+
+    window.NG_ROOM.id = rid;
+    window.NG_ROOM.host = data.host === currentEmail;
+    const roomCodeDisplay = document.getElementById("roomCodeDisplay");
+    if(roomCodeDisplay) roomCodeDisplay.innerText = rid;
+    setLobbyStatus(`<small>Joined room: <b>${rid}</b></small>`);
+    listenToRoom(rid);
+  }
+
+  function listenToRoom(rid){
+    unsubscribeRoom();
+    const roomRef = db.collection("rooms").doc(rid);
+    window.NG_ROOM.unsub = roomRef.onSnapshot((snap) => {
+      if(!snap.exists) return;
+      const data = snap.data() || {};
+      const roomCodeDisplay = document.getElementById("roomCodeDisplay");
+      if(roomCodeDisplay) roomCodeDisplay.innerText = rid;
+      renderLobbyPlayers(data);
+      renderKillerBoard(data);
+
+      if(data.phase === "live"){
+        showOnly("gameScreen");
+      }else{
+        showOnly("lobbyScreen");
+      }
+    }, (err) => {
+      console.error("Room listener error", err);
+      setLobbyStatus("<small>Realtime error. Check Firestore rules/project.</small>");
+    });
+  }
+
+  async function startKillerMatch_LIVE(){
+    if(!window.NG_ROOM.id){
+      alert("Create or join a room first.");
+      return;
+    }
+    const roomRef = db.collection("rooms").doc(window.NG_ROOM.id);
+    const snap = await roomRef.get();
+    if(!snap.exists) return;
+    const data = snap.data() || {};
+    if(data.host !== currentEmail){
+      alert("Only the host can start the match.");
+      return;
+    }
+    const playersArr = Array.isArray(data.players) ? data.players : [];
+    if(playersArr.length < 2){
+      alert("Need 2 players in the room.");
+      return;
+    }
+
+    const lives = {};
+    const killers = {};
+    playersArr.forEach(email => {
+      lives[email] = 0;
+      killers[email] = false;
+    });
+
+    await roomRef.update({
+      phase: "live",
+      killerState: {
+        lives,
+        killers,
+        currentTurnEmail: playersArr[0],
+        round: 1
+      }
+    });
+
+    showOnly("gameScreen");
+  }
+
+  async function nextTurn_LIVE(){
+    if(!window.NG_ROOM.id) return;
+    const roomRef = db.collection("rooms").doc(window.NG_ROOM.id);
+    const snap = await roomRef.get();
+    if(!snap.exists) return;
+    const data = snap.data() || {};
+    if(data.phase !== "live") return;
+
+    const playersArr = Array.isArray(data.players) ? data.players : [];
+    const state = data.killerState || {};
+    const lives = state.lives || {};
+    let idx = Math.max(0, playersArr.indexOf(state.currentTurnEmail));
+    let attempts = 0;
+    do{
+      idx = (idx + 1) % playersArr.length;
+      attempts++;
+    }while((lives[playersArr[idx]] ?? 0) <= 0 && attempts < playersArr.length + 1);
+
+    await roomRef.update({
+      "killerState.currentTurnEmail": playersArr[idx],
+      "killerState.round": Number(state.round || 1) + (idx === 0 ? 1 : 0)
+    });
+  }
+
+  async function hitOwn_LIVE(){
+    if(!window.NG_ROOM.id) return;
+    const roomRef = db.collection("rooms").doc(window.NG_ROOM.id);
+    const snap = await roomRef.get();
+    if(!snap.exists) return;
+    const data = snap.data() || {};
+    const state = data.killerState || {};
+    if(state.currentTurnEmail !== currentEmail){
+      alert("Wait for your turn.");
+      return;
+    }
+
+    const lives = Object.assign({}, state.lives || {});
+    const killers = Object.assign({}, state.killers || {});
+    let val = Number(lives[currentEmail] || 0);
+    if(val < 3) val += 1;
+    lives[currentEmail] = val;
+    killers[currentEmail] = val >= 3;
+
+    await roomRef.update({
+      "killerState.lives": lives,
+      "killerState.killers": killers
+    });
+  }
+
+  async function hitOpponent_LIVE(){
+    if(!window.NG_ROOM.id) return;
+    const roomRef = db.collection("rooms").doc(window.NG_ROOM.id);
+    const snap = await roomRef.get();
+    if(!snap.exists) return;
+    const data = snap.data() || {};
+    const state = data.killerState || {};
+    if(state.currentTurnEmail !== currentEmail){
+      alert("Wait for your turn.");
+      return;
+    }
+    const lives = Object.assign({}, state.lives || {});
+    const killers = Object.assign({}, state.killers || {});
+    if(!(killers[currentEmail] || Number(lives[currentEmail] || 0) >= 3)){
+      alert("You are not a Killer yet.");
+      return;
+    }
+
+    const targetEmail = (data.players || []).find(email => email !== currentEmail && Number(lives[email] || 0) > 0);
+    if(!targetEmail){
+      alert("No opponent available.");
+      return;
+    }
+    lives[targetEmail] = Math.max(0, Number(lives[targetEmail] || 0) - 1);
+    await roomRef.update({
+      "killerState.lives": lives
+    });
+  }
+
+  function hardBind(id, fn){
+    const el = document.getElementById(id);
+    if(!el) return;
+    const cloned = el.cloneNode(true);
+    el.parentNode.replaceChild(cloned, el);
+    cloned.addEventListener("click", fn);
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    // Override original placeholder room creation with live version
+    window.createRoomAndInvite_UIOnly = createRoomAndInvite_LIVE;
+    hardBind("createRoomBtn", createRoomAndInvite_LIVE);
+    hardBind("joinRoomBtn", joinRoom_LIVE);
+    hardBind("startMatchBtn", startKillerMatch_LIVE);
+    hardBind("hitOwnBtn", hitOwn_LIVE);
+    hardBind("hitOpponentBtn", hitOpponent_LIVE);
+    hardBind("nextTurnBtn", nextTurn_LIVE);
+
+    const backBtn = document.getElementById("backToPlayersBtn");
+    if(backBtn){
+      backBtn.addEventListener("click", function(){
+        unsubscribeRoom();
+      });
+    }
+    const leaveBtn = document.getElementById("leaveLobbyBtn");
+    if(leaveBtn){
+      leaveBtn.addEventListener("click", function(){
+        unsubscribeRoom();
+      });
+    }
+
+    // Make Killer enter always go to lobby
+    const multiBtn = document.getElementById("multiBtn");
+    if(multiBtn){
+      multiBtn.addEventListener("click", function(){
+        showOnly("lobbyScreen");
+      });
+    }
+
+    const joinInput = document.getElementById("joinRoomInput");
+    if(joinInput){
+      joinInput.addEventListener("keydown", function(e){
+        if(e.key === "Enter") joinRoom_LIVE();
+      });
+    }
   });
-}
-
-// JOIN ROOM (for invited player)
-async function joinRoom(roomId){
-
-  activeRoomId = roomId;
-
-  const ref = db.collection("rooms").doc(roomId);
-
-  const room = await ref.get();
-  if(!room.exists){
-    alert("Room not found");
-    return;
-  }
-
-  const data = room.data();
-  const playersList = data.players || [];
-
-  if(!playersList.includes(currentEmail)){
-    playersList.push(currentEmail);
-  }
-
-  await ref.update({ players: playersList });
-
-  listenToRoom(roomId);
-}
-
+})();
 </script>
 
 </body>
