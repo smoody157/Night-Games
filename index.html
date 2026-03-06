@@ -992,5 +992,96 @@ window.addEventListener("load", function(){
 });
 
 </script>
+  <script>
+
+/* =========================================================
+LEADERBOARD BUTTON + DONATE BUTTON
+========================================================= */
+
+function NG_openLeaderboard(){
+    alert("Leaderboard coming soon!");
+}
+
+function NG_openDonate(){
+    window.open("https://venmo.com/u/Steve-Moody-8","_blank");
+}
+
+function NG_mountControls(){
+
+    const app = document.getElementById("NG_APP");
+    if(!app) return;
+
+    const controlsSection = document.createElement("div");
+    controlsSection.id = "NG_controls_section";
+    controlsSection.style.marginTop = "20px";
+    controlsSection.style.display = "flex";
+    controlsSection.style.gap = "12px";
+
+    const leaderboardBtn = document.createElement("button");
+    leaderboardBtn.textContent = "Leaderboard";
+    leaderboardBtn.onclick = NG_openLeaderboard;
+
+    const donateBtn = document.createElement("button");
+    donateBtn.textContent = "Help support future updates and development";
+    donateBtn.onclick = NG_openDonate;
+
+    controlsSection.appendChild(leaderboardBtn);
+    controlsSection.appendChild(donateBtn);
+
+    app.appendChild(controlsSection);
+}
+
+/* =========================================================
+MULTIPLAYER INVITE HOOK
+========================================================= */
+
+function NG_invitePlayer(email){
+    alert(email + " has been invited to the game.");
+    // TODO: Connect with Firebase messaging for actual invites
+}
+
+function NG_sendInvites(selectedPlayers){
+    selectedPlayers.forEach(p => NG_invitePlayer(p.email));
+    alert("Invites sent to " + selectedPlayers.length + " player(s).");
+}
+
+/* =========================================================
+BOOT CONTROLS
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function(){
+    if(typeof NG_mountControls === "function"){
+        NG_mountControls();
+    }
+});
+
+</script>
+  <script>
+
+/* =========================================================
+KILLER AUTO-START + FINAL POLISH
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    // Start the boot sequence
+    if(typeof NG_boot === "function"){
+        NG_boot();
+    }
+
+    // Render all Killer info
+    if(typeof NG_renderKillerAll === "function"){
+        NG_renderKillerAll();
+    }
+
+    // Optional: auto-start Killer if selected
+    const defaultGame = NG_getGames().find(g => g.id === "killer");
+    if(defaultGame){
+        NG_enterGame("killer");
+    }
+
+});
+
+</script>
 </html>
 
