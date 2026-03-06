@@ -745,5 +745,252 @@ window.addEventListener("load", function(){
 });
 
 </script>
+  <script>
+
+/* =========================================================
+KILLER ENTER HOOK
+========================================================= */
+
+function NG_enterGame(gameId){
+
+  if(gameId === "killer"){
+    NG_startKillerGame();
+    return;
+  }
+
+  alert(gameId + " is not wired yet.");
+
+}
+
+function NG_renderGames(){
+
+  const list = document.getElementById("NG_games_list");
+  if(!list) return;
+
+  const games = NG_getGames();
+  list.innerHTML = "";
+
+  games.forEach(game => {
+
+    const row = document.createElement("div");
+    row.className = "NG_row";
+
+    row.innerHTML = `
+      <div class="NG_name">${game.name}</div>
+      <div class="NG_buttons">
+        <button onclick="NG_enterGame('${game.id}')">ENTER</button>
+        <button onclick="alert('Rules coming next')">RULES</button>
+        <button onclick="alert('History coming next')">HISTORY</button>
+      </div>
+    `;
+
+    list.appendChild(row);
+
+  });
+
+}
+
+</script>
+  <script>
+
+/* =========================================================
+KILLER GAME BUTTON WIRING
+========================================================= */
+
+function NG_registerDefaultGames(){
+
+  if(typeof NG_GAMES === "undefined"){
+    NG_GAMES = [];
+  }
+
+  if(NG_GAMES.length > 0) return;
+
+  NG_GAMES.push({ id:"killer", name:"Killer" });
+  NG_GAMES.push({ id:"around_world", name:"Around the World" });
+  NG_GAMES.push({ id:"cricket", name:"Cricket" });
+  NG_GAMES.push({ id:"301", name:"301" });
+
+}
+
+function NG_boot(){
+
+  if(typeof NG_registerDefaultGames === "function"){
+    NG_registerDefaultGames();
+  }
+
+  if(typeof NG_renderGames === "function"){
+    NG_renderGames();
+  }
+
+  if(typeof NG_renderPlayers === "function"){
+    NG_renderPlayers();
+  }
+
+}
+
+</script>
+  <script>
+
+/* =========================================================
+PLAYER SAFE DEFAULT
+========================================================= */
+
+if(typeof NG_PLAYERS === "undefined"){
+  var NG_PLAYERS = [];
+}
+
+function NG_addPlayer(name,email,online){
+
+  NG_PLAYERS.push({
+    name:name,
+    email:email,
+    online:online || false
+  });
+
+}
+
+function NG_removePlayer(email){
+
+  NG_PLAYERS = NG_PLAYERS.filter(p => p.email !== email);
+
+  if(typeof NG_renderPlayers === "function"){
+    NG_renderPlayers();
+  }
+
+}
+
+</script>
+  <script>
+
+/* =========================================================
+PLAYER SAFE DEFAULT
+========================================================= */
+
+if(typeof NG_PLAYERS === "undefined"){
+  var NG_PLAYERS = [];
+}
+
+function NG_addPlayer(name,email,online){
+
+  NG_PLAYERS.push({
+    name:name,
+    email:email,
+    online:online || false
+  });
+
+}
+
+function NG_removePlayer(email){
+
+  NG_PLAYERS = NG_PLAYERS.filter(p => p.email !== email);
+
+  if(typeof NG_renderPlayers === "function"){
+    NG_renderPlayers();
+  }
+
+}
+
+
+/* =========================================================
+GAME REGISTRY
+========================================================= */
+
+if(typeof NG_GAMES === "undefined"){
+  var NG_GAMES = [];
+}
+
+function NG_registerDefaultGames(){
+
+  if(NG_GAMES.length > 0) return;
+
+  NG_GAMES.push({ id:"killer", name:"Killer" });
+  NG_GAMES.push({ id:"around_world", name:"Around the World" });
+  NG_GAMES.push({ id:"cricket", name:"Cricket" });
+  NG_GAMES.push({ id:"301", name:"301" });
+
+}
+
+
+/* =========================================================
+GAME ENTER HOOK
+========================================================= */
+
+function NG_enterGame(gameId){
+
+  if(gameId === "killer"){
+    NG_startKillerGame();
+    return;
+  }
+
+  alert(gameId + " is not wired yet.");
+
+}
+
+
+/* =========================================================
+GAME RENDER
+========================================================= */
+
+function NG_renderGames(){
+
+  const list = document.getElementById("NG_games_list");
+  if(!list) return;
+
+  const games = NG_GAMES;
+  list.innerHTML = "";
+
+  games.forEach(game => {
+
+    const row = document.createElement("div");
+    row.className = "NG_row";
+
+    row.innerHTML = `
+      <div class="NG_name">${game.name}</div>
+      <div class="NG_buttons">
+        <button onclick="NG_enterGame('${game.id}')">ENTER</button>
+        <button onclick="alert('Rules coming next')">RULES</button>
+        <button onclick="alert('History coming next')">HISTORY</button>
+      </div>
+    `;
+
+    list.appendChild(row);
+
+  });
+
+}
+
+
+/* =========================================================
+BOOT SYSTEM
+========================================================= */
+
+function NG_boot(){
+
+  NG_registerDefaultGames();
+
+  if(typeof NG_renderGames === "function"){
+    NG_renderGames();
+  }
+
+  if(typeof NG_renderPlayers === "function"){
+    NG_renderPlayers();
+  }
+
+}
+
+
+/* =========================================================
+PAGE START
+========================================================= */
+
+window.addEventListener("load", function(){
+
+  if(typeof NG_boot === "function"){
+    NG_boot();
+  }
+
+});
+
+</script>
 </html>
 
