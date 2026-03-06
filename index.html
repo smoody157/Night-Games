@@ -287,6 +287,463 @@ document.addEventListener("DOMContentLoaded",function(){
   NG_boot();
 });
 </script>
+  <script>
+/* =========================================================
+KILLER START + NUMBER ASSIGNMENT
+========================================================= */
+
+if (typeof NG_KILLER === "undefined") {
+  let NG_KILLER = {
+    players: [],
+    numbers: {},
+    lives: {},
+    killers: {},
+    currentTurn: 0
+  };
+}
+
+function NG_startKiller(players){
+  NG_KILLER.players = [...players];
+  NG_KILLER.numbers = {};
+  NG_KILLER.lives = {};
+  NG_KILLER.killers = {};
+  NG_KILLER.currentTurn = 0;
+
+  players.forEach(playerEmail => {
+    NG_KILLER.lives[playerEmail] = 3;
+    NG_KILLER.killers[playerEmail] = false;
+  });
+}
+
+function NG_assignKillerNumbers(){
+  const availableNumbers = [12,13,14,15,16,17,18,19,20];
+  const shuffledPlayers = NG_shuffleArray([...NG_KILLER.players]);
+
+  shuffledPlayers.forEach((playerEmail, index) => {
+    NG_KILLER.numbers[playerEmail] = availableNumbers[index];
+  });
+
+  return NG_KILLER.numbers;
+}
+
+function NG_getCurrentPlayer(){
+  return NG_KILLER.players[NG_KILLER.currentTurn] || null;
+}
+
+function NG_nextTurn(){
+  NG_KILLER.currentTurn++;
+
+  if (NG_KILLER.currentTurn >= NG_KILLER.players.length) {
+    NG_KILLER.currentTurn = 0;
+  }
+
+  return NG_getCurrentPlayer();
+}
+
+function NG_startKillerGame(){
+  const players = NG_getPlayers().map(p => p.email);
+
+  if (!players.length) return;
+
+  NG_startKiller(players);
+  NG_assignKillerNumbers();
+
+  if (typeof NG_renderKillerAll === "function") {
+    NG_renderKillerAll();
+  }
+}
+</script>
+  <script>
+
+/* =========================================================
+KILLER RENDER + TURN DISPLAY
+========================================================= */
+
+function NG_renderKillerTurn(){
+
+  const el = document.getElementById("NG_killer_current_player");
+  if(!el) return;
+
+  const player = NG_getCurrentPlayer();
+  el.textContent = player || "None";
+
+}
+
+function NG_renderKillerNumbers(){
+
+  const box = document.getElementById("NG_killer_numbers");
+  if(!box) return;
+
+  box.innerHTML = "";
+
+  Object.keys(NG_KILLER.numbers).forEach(playerEmail => {
+
+    const row = document.createElement("div");
+    row.className = "NG_killer_number_row";
+
+    row.innerHTML = `
+      <span>${playerEmail}</span>
+      <span>${NG_KILLER.numbers[playerEmail]}</span>
+      <span>Lives: ${NG_KILLER.lives[playerEmail] ?? 0}</span>
+      <span>${NG_KILLER.killers[playerEmail] ? "KILLER" : "NOT KILLER"}</span>
+    `;
+
+    box.appendChild(row);
+
+  });
+
+}
+
+function NG_renderKillerAll(){
+
+  NG_renderKillerTurn();
+  NG_renderKillerNumbers();
+
+}
+
+</script>
+  <script>
+
+/* =========================================================
+KILLER HIT + LIFE SYSTEM
+========================================================= */
+
+function NG_killerLoseLife(playerEmail){
+
+  if(typeof NG_KILLER.lives[playerEmail] === "undefined") return;
+
+  NG_KILLER.lives[playerEmail]--;
+
+  if(NG_KILLER.lives[playerEmail] < 0){
+    NG_KILLER.lives[playerEmail] = 0;
+  }
+
+  NG_renderKillerAll();
+
+}
+
+function NG_killerHit(){
+
+  const currentPlayer = NG_getCurrentPlayer();
+  if(!currentPlayer) return;
+
+  if(NG_KILLER.killers[currentPlayer] === false){
+
+    NG_KILLER.killers[currentPlayer] = true;
+
+  } else {
+
+    const targetIndex = (NG_KILLER.currentTurn + 1) % NG_KILLER.players.length;
+    const targetPlayer = NG_KILLER.players[targetIndex];
+
+    NG_killerLoseLife(targetPlayer);
+
+  }
+
+  NG_renderKillerAll();
+
+}
+
+function NG_killerNextTurn(){
+
+  NG_nextTurn();
+  NG_renderKillerAll();
+
+}
+
+</script>
+  <script>
+
+/* =========================================================
+KILLER UI SECTION
+========================================================= */
+
+function NG_mountKillerSection(){
+
+  const app = document.getElementById("NG_APP");
+  if(!app) return;
+
+  const section = document.createElement("div");
+  section.className = "NG_section";
+  section.id = "NG_killer_section";
+
+  section.innerHTML = `
+    <h2>Killer</h2>
+
+    <div id="NG_killer_box">
+
+      <div id="NG_killer_controls">
+
+        <button onclick="NG_startKillerGame()">
+          Start Killer
+        </button>
+
+        <button onclick="NG_killerNextTurn()">
+          Next Turn
+        </button>
+
+        <button onclick="NG_killerHit()">
+          Hit Number
+        </button>
+
+      </div>
+
+      <div id="NG_killer_turn_box">
+        Current Turn:
+        <span id="NG_killer_current_player">None</span>
+      </div>
+
+      <div id="NG_killer_numbers"></div>
+
+    </div>
+  `;
+
+  app.appendChild(section);
+
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+
+  if(typeof NG_mountKillerSection === "function"){
+    NG_mountKillerSection();
+  }
+
+});
+
+</script>
+  <script>
+
+/* =========================================================
+KILLER BOOT HOOK
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function(){
+
+  if(typeof NG_mountKillerSection === "function"){
+    NG_mountKillerSection();
+  }
+
+  if(typeof NG_renderKillerAll === "function"){
+    NG_renderKillerAll();
+  }
+
+});
+
+</script>
+  <script>
+
+/* =========================================================
+KILLER PLAYER CONNECTOR
+========================================================= */
+
+function NG_getPlayers(){
+  return NG_PLAYERS || [];
+}
+
+function NG_getGames(){
+  return NG_GAMES || [];
+}
+
+function NG_killerPlayers(){
+  const players = NG_getPlayers();
+  return players.map(p => p.email);
+}
+
+</script>
+  <script>
+function NG_getPlayers(){
+  return NG_PLAYERS || [];
+}
+
+function NG_getGames(){
+  return NG_GAMES || [];
+}
+
+function NG_killerPlayers(){
+  return NG_getPlayers().map(p => p.email);
+}
+</script>
+  <script>
+/* =========================================================
+KILLER WIN CHECK
+========================================================= */
+
+function NG_checkKillerWinner(){
+
+  const alivePlayers = NG_KILLER.players.filter(playerEmail => {
+    return (NG_KILLER.lives[playerEmail] ?? 0) > 0;
+  });
+
+  if(alivePlayers.length === 1){
+    alert("Winner: " + alivePlayers[0]);
+    return alivePlayers[0];
+  }
+
+  return null;
+}
+
+function NG_killerLoseLife(playerEmail){
+
+  if(typeof NG_KILLER.lives[playerEmail] === "undefined") return;
+
+  NG_KILLER.lives[playerEmail]--;
+
+  if(NG_KILLER.lives[playerEmail] < 0){
+    NG_KILLER.lives[playerEmail] = 0;
+  }
+
+  NG_renderKillerAll();
+  NG_checkKillerWinner();
+}
+</script>
+  <script>
+
+/* =========================================================
+PLAYERS RENDER
+========================================================= */
+
+function NG_renderPlayers(){
+
+  const list = document.getElementById("NG_players_list");
+  if(!list) return;
+
+  const players = NG_getPlayers();
+  list.innerHTML = "";
+
+  players.forEach(player => {
+
+    const row = document.createElement("div");
+    row.className = "NG_row";
+
+    row.innerHTML = `
+      <div class="NG_name">${player.name}</div>
+      <div class="NG_buttons">
+        <button>STATS</button>
+        <button>HISTORY</button>
+        <button onclick="NG_removePlayer('${player.email}')">REMOVE</button>
+      </div>
+    `;
+
+    list.appendChild(row);
+
+  });
+
+}
+
+
+/* =========================================================
+GAME REGISTRY
+========================================================= */
+
+function NG_registerDefaultGames(){
+
+  if(typeof NG_GAMES === "undefined"){
+    NG_GAMES = [];
+  }
+
+  if(NG_GAMES.length > 0) return;
+
+  NG_GAMES.push({ id:"killer", name:"Killer" });
+  NG_GAMES.push({ id:"around_world", name:"Around the World" });
+  NG_GAMES.push({ id:"cricket", name:"Cricket" });
+  NG_GAMES.push({ id:"301", name:"301" });
+
+}
+
+
+/* =========================================================
+BOOT SYSTEM
+========================================================= */
+
+function NG_boot(){
+
+  if(typeof NG_registerDefaultGames === "function"){
+    NG_registerDefaultGames();
+  }
+
+  if(typeof NG_renderGames === "function"){
+    NG_renderGames();
+  }
+
+  if(typeof NG_renderPlayers === "function"){
+    NG_renderPlayers();
+  }
+
+}
+
+
+/* =========================================================
+PAGE START
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function(){
+
+  if(typeof NG_boot === "function"){
+    NG_boot();
+  }
+
+});
+
+</script>
+  <script>
+
+/* =========================================================
+KILLER TURN DISPLAY FIX
+========================================================= */
+
+function NG_renderKillerTurn(){
+
+  const el = document.getElementById("NG_killer_current_player");
+  if(!el) return;
+
+  const player = NG_getCurrentPlayer();
+
+  if(player){
+    el.textContent = player;
+  } else {
+    el.textContent = "None";
+  }
+
+}
+
+
+/* =========================================================
+KILLER REFRESH ALL
+========================================================= */
+
+function NG_renderKillerAll(){
+
+  if(typeof NG_renderKillerTurn === "function"){
+    NG_renderKillerTurn();
+  }
+
+  if(typeof NG_renderKillerNumbers === "function"){
+    NG_renderKillerNumbers();
+  }
+
+}
+
+</script>
 
 </body>
+  <script>
+
+/* =========================================================
+FINAL PAGE INIT
+========================================================= */
+
+window.addEventListener("load", function(){
+
+  if(typeof NG_boot === "function"){
+    NG_boot();
+  }
+
+  if(typeof NG_renderKillerAll === "function"){
+    NG_renderKillerAll();
+  }
+
+});
+
+</script>
 </html>
+
