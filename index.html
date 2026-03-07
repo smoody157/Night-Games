@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1381</title>
-<!-- NIGHT GAMES v1381 -->
+<title>Night Games v1382</title>
+<!-- NIGHT GAMES v1382 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -2057,7 +2057,7 @@ button, .btn, .pill{
 #landing #landingLeaderboardBtn{ height:36px; width:50%; margin:0 auto; }
 
 
-/* ===== v1381 landing cleanup ===== */
+/* ===== v1382 landing cleanup ===== */
 #globalFooter,
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
@@ -2180,7 +2180,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== V1381 header + landing final polish ===== */
+/* ===== V1382 header + landing final polish ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2394,7 +2394,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== V1381 FINAL LANDING / HEADER PASS ===== */
+/* ===== V1382 FINAL LANDING / HEADER PASS ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2616,6 +2616,45 @@ html, body {
   text-align:center !important;
 }
 
+
+/* ===== V1382 FINAL HARDENING ===== */
+html, body {
+  min-height: 100vh !important;
+  min-height: 100dvh !important;
+}
+
+body {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#app {
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+  padding-top: 76px !important;
+}
+
+#landing .screen,
+#landing.screen {
+  min-height: 100% !important;
+}
+
+#landing #landingPads {
+  bottom: max(92px, calc(env(safe-area-inset-bottom) + 78px)) !important;
+}
+
+#landing #emailPad,
+#landing #enterBtn {
+  will-change: transform !important;
+}
+
+#landing #emailInput {
+  font-size: 16px !important;
+}
+
 </style>
 <script id="ngGuards_v748">
 
@@ -2721,11 +2760,11 @@ function ngGuard(label, fn){
   </div>
   <div class="ngBottomRow">
     <span class="ngBottomLeft"></span>
-    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title="" style="display:none;">V1381</span>
+    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title="" style="display:none;">V1382</span>
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">V1381</div>
+<div id="ngVersionBelow">V1382</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2864,7 +2903,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1381 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1382 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2956,7 +2995,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1381";
+  window.ngBuild = "v1382";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -2981,7 +3020,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1381";
+window.ngBuild = "v1382";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -4967,7 +5006,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1381Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1382Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -6093,7 +6132,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1381";
+window.APP_VERSION = "v1382";
 (function(){
   try {
     // header version
@@ -6113,22 +6152,31 @@ window.APP_VERSION = "v1381";
 
 
 
-<script id="ng-v1381-landing-fix">
+
+
+
+<script id="ng-v1382-landing-fix">
 document.addEventListener("DOMContentLoaded", function(){
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "V1381";
+    if (vb) vb.textContent = "V1382";
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
     var status = document.getElementById("statusLine");
     var introPlayed = false;
+    var ticks = 0;
+    var maxTicks = 50; // 10 seconds @ 200ms
 
     function setEnabled(flag){
-      if(email) email.disabled = !flag;
-      if(enter) enter.disabled = !flag;
+      if(email) {
+        email.disabled = !flag;
+        email.style.pointerEvents = flag ? "auto" : "none";
+      }
+      if(enter) {
+        enter.disabled = !flag;
+        enter.style.pointerEvents = flag ? "auto" : "none";
+      }
       if(status) status.textContent = flag ? "Email-only sign-in (no password)." : "Connecting…";
-      if(email) email.style.pointerEvents = flag ? "auto" : "none";
-      if(enter) enter.style.pointerEvents = flag ? "auto" : "none";
     }
 
     function playIntro(){
@@ -6145,9 +6193,15 @@ document.addEventListener("DOMContentLoaded", function(){
 
     setEnabled(false);
     var iv = setInterval(function(){
+      ticks += 1;
       if(window.db || window.ngFirebaseStatus === "FIREBASE_BOOT_SUCCESS"){
         clearInterval(iv);
         setEnabled(true);
+        return;
+      }
+      if(ticks >= maxTicks){
+        clearInterval(iv);
+        if(status) status.textContent = "Connection timeout. Refresh to retry.";
       }
     }, 200);
 
