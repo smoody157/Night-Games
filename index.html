@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1401</title>
-<!-- NIGHT GAMES v1401 -->
+<title>Night Games v1404</title>
+<!-- NIGHT GAMES v1404 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -2057,7 +2057,7 @@ button, .btn, .pill{
 #landing #landingLeaderboardBtn{ height:36px; width:50%; margin:0 auto; }
 
 
-/* ===== v1401 landing cleanup ===== */
+/* ===== v1404 landing cleanup ===== */
 #globalFooter,
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
@@ -2180,7 +2180,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== v1401 header + landing final polish ===== */
+/* ===== v1404 header + landing final polish ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2394,7 +2394,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== v1401 FINAL LANDING / HEADER PASS ===== */
+/* ===== v1404 FINAL LANDING / HEADER PASS ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2617,7 +2617,7 @@ html, body {
 }
 
 
-/* ===== v1401 FINAL HARDENING ===== */
+/* ===== v1404 FINAL HARDENING ===== */
 html, body {
   min-height: 100vh !important;
   min-height: 100dvh !important;
@@ -2656,7 +2656,7 @@ body {
 }
 
 
-/* ===== v1401 PRODUCTION CLEANUP ===== */
+/* ===== v1404 PRODUCTION CLEANUP ===== */
 html, body{
   height:100%;
   min-height:100vh;
@@ -2702,7 +2702,7 @@ body{
 }
 
 
-/* ===== v1401 FINAL RELEASE CLEANUP ===== */
+/* ===== v1404 FINAL RELEASE CLEANUP ===== */
 html, body{
   height:100% !important;
   min-height:100vh !important;
@@ -2738,7 +2738,7 @@ body{
 }
 
 
-/* ===== v1401 landing activation + email position tweak ===== */
+/* ===== v1404 landing activation + email position tweak ===== */
 #landing #landingPads{
   bottom:max(108px, calc(env(safe-area-inset-bottom) + 94px)) !important;
 }
@@ -2751,7 +2751,7 @@ body{
 }
 
 
-/* ===== v1401 enter + audio activation ===== */
+/* ===== v1404 enter + audio activation ===== */
 #landing #emailPad{ position:relative !important; z-index:40 !important; }
 #landing #emailInput{
   position:absolute !important; inset:0 !important;
@@ -2764,7 +2764,7 @@ body{
 #landing #emailEcho{ display:none !important; }
 
 
-/* ===== v1401 guaranteed-entry interaction patch ===== */
+/* ===== v1404 guaranteed-entry interaction patch ===== */
 #landing #emailPad{ position:relative !important; z-index:50 !important; }
 #landing #emailInput{
   position:absolute !important;
@@ -2783,7 +2783,7 @@ body{
 #landing #emailEcho{ display:none !important; }
 
 
-/* ===== v1401 Enter button unlock ===== */
+/* ===== v1404 Enter button unlock ===== */
 #landing #landingPads { z-index: 60 !important; }
 #landing #enterBtn {
   position: relative !important;
@@ -2804,7 +2804,7 @@ body{
 }
 
 
-/* ===== V1401 players/games layout wiring ===== */
+/* ===== v1404 players/games layout wiring ===== */
 #players .hub{
   grid-template-rows: 1fr auto 1fr !important;
   gap: 10px !important;
@@ -2834,6 +2834,32 @@ body{
 #players .actions .pill{
   padding: 8px 10px !important;
   font-size: 11px !important;
+}
+
+
+/* ===== V1404 layout visibility ===== */
+#players .hub{
+  grid-template-rows: 1fr auto 1fr !important;
+  gap: 10px !important;
+  top: clamp(230px, 31vh, 340px) !important;
+}
+#players #gamesList,
+#players #playersList{
+  max-height: 150px !important;
+  overflow: hidden !important;
+}
+#players .itemLine{
+  min-height: 54px !important;
+  padding: 10px 6px !important;
+}
+#players .actions{
+  display:flex !important;
+  gap:8px !important;
+}
+#players .leaderboardSlot{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
 }
 
 </style>
@@ -2935,7 +2961,7 @@ function ngGuard(label, fn){
 
 
 
-<script id="ng-v1401-appcheck-hook">
+<script id="ng-v1404-appcheck-hook">
 window.NG_APP_CHECK = window.NG_APP_CHECK || { enabled:false, siteKey:"", note:"Enable Firebase App Check in Firebase Console before launch." };
 window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%202.m4a", silentOnFail:true };
 </script>
@@ -2955,7 +2981,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">v1401</div>
+<div id="ngVersionBelow">v1404</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -3007,7 +3033,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   <div class="panel" id="gamesPanel">
     <div class="sectionHead headerRow">
       <div class="title">Games</div>
-      <div style="display:flex; gap:10px; align-items:center;"><button class="pill pillMini sessionPill" data-action="show_session" id="sessionBtn" type="button">Session</button></div>
+      <div style="display:flex; gap:10px; align-items:center;"><button class="pill pillMini sessionPill" data-action="show_session" id="sessionBtn" type="button">Help / Support</button></div>
     </div>
     <div class="list" id="gamesList"></div>
   </div>
@@ -3093,7 +3119,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1401 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1404 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -3185,7 +3211,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1401";
+  window.ngBuild = "v1404";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -3210,7 +3236,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1401";
+window.ngBuild = "v1404";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -5196,7 +5222,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1401Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1404Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -6321,7 +6347,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1401";
+window.APP_VERSION = "v1404";
 (function(){
   try {
     // header version
@@ -6360,11 +6386,11 @@ window.APP_VERSION = "v1401";
 
 
 
-<script id="ng-v1401-force-entry">
+<script id="ng-v1404-force-entry">
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1401";
+    if (vb) vb.textContent = "v1404";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -6475,110 +6501,74 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
-<script id="ng-v1401-ui-wiring">
+
+
+
+<script id="ng-v1404-ui-wiring">
+
 function closeDetail(){
   try{
     if(typeof show === "function") show("players");
-    const detail = document.getElementById("detail");
-    const players = document.getElementById("players");
-    if(detail) detail.classList.remove("active");
-    if(players) players.classList.add("active");
   }catch(e){ console.error(e); }
 }
 
-document.addEventListener("click", function(e){
+document.addEventListener("DOMContentLoaded", function(){
+
   try{
-    const btn = e.target.closest("button[data-action]");
-    if(!btn) return;
 
-    const action = btn.getAttribute("data-action");
-    const value = btn.getAttribute("data-value") || "";
+    var vb = document.getElementById("ngVersionBelow");
+    if(vb) vb.textContent = "V1404";
 
-    if(action === "show_leaderboard"){
-      e.preventDefault();
-      if(typeof renderLeaderboard === "function") renderLeaderboard();
-      if(typeof show === "function") show("leaderboard");
-      return;
-    }
+    const gamesList = document.getElementById("gamesList");
+    const playersList = document.getElementById("playersList");
 
-    if(action === "show_session"){
-      e.preventDefault();
-      const html = `
-        <div style="line-height:1.5;">
-          <div><b>Build:</b> V1401</div>
-          <div><b>Player:</b> ${(window.currentEmail||"").trim() || "Not signed in"}</div>
-          <div><b>Status:</b> ${(window.ngFirebaseStatus||"Local mode")}</div>
-        </div>`;
-      if(typeof openDetail === "function") openDetail("Session", html);
-      else if(typeof show === "function") show("detail");
-      return;
-    }
-
-    if(action === "game_rules"){
-      e.preventDefault();
-      const rules = (typeof GAME_RULES === "object" && GAME_RULES && GAME_RULES[value]) ? GAME_RULES[value] : "Rules coming soon.";
-      if(typeof openDetail === "function") openDetail(value + " Rules", rules);
-      return;
-    }
-
-    if(action === "game_history"){
-      e.preventDefault();
-      const html = `<div style="opacity:.9;">${value} history will appear here as matches are recorded.</div>`;
-      if(typeof openDetail === "function") openDetail(value + " History", html);
-      return;
-    }
-
-    if(action === "enter_game"){
-      e.preventDefault();
-      try{
-        window.activeSession = window.activeSession || {};
-        window.activeSession.game = value;
-        const setupBody = document.getElementById("setupBody");
-        if(setupBody){
-          setupBody.innerHTML = `
-            <div style="font-weight:1100; font-size:20px; margin-bottom:10px;">${value}</div>
-            <div style="opacity:.82; margin-bottom:12px;">Select opponents, then Start Game or Invite to Waiting Room.</div>`;
-        }
-      }catch(_){}
-      if(typeof show === "function") show("setup");
-      return;
-    }
-
-    if(action === "player_stats"){
-      e.preventDefault();
-      const html = `<div class="statScroll">
-        <div class="statSection">
-          <div class="statSectionTitle">${value}</div>
-          <div class="statRow"><div><div class="statLabel">Wins</div><div class="statHelp">Recorded across finished games</div></div><div class="statVal">—</div></div>
-          <div class="statRow"><div><div class="statLabel">Average</div><div class="statHelp">Performance metric placeholder</div></div><div class="statVal">—</div></div>
+    if(gamesList){
+      gamesList.innerHTML = `
+        <div class="itemLine">
+          <div class="leftStack"><span class="glassText">501</span></div>
+          <div class="actions">
+            <button class="pill">Enter</button>
+            <button class="pill">Rules</button>
+            <button class="pill">History</button>
+          </div>
         </div>
-      </div>`;
-      if(typeof openDetail === "function") openDetail("Player Stats", html);
-      return;
+        <div class="itemLine">
+          <div class="leftStack"><span class="glassText">Cricket</span></div>
+          <div class="actions">
+            <button class="pill">Enter</button>
+            <button class="pill">Rules</button>
+            <button class="pill">History</button>
+          </div>
+        </div>
+      `;
     }
 
-    if(action === "player_history"){
-      e.preventDefault();
-      const html = `<div style="opacity:.9;">Match history for <b>${value}</b> will appear here once sessions are recorded.</div>`;
-      if(typeof openDetail === "function") openDetail("Player History", html);
-      return;
+    if(playersList){
+      playersList.innerHTML = `
+        <div class="itemLine">
+          <div class="leftStack"><span class="glassText">Player 1</span></div>
+          <div class="actions">
+            <button class="pill">Stats</button>
+            <button class="pill">History</button>
+            <button class="pill">Remove</button>
+          </div>
+        </div>
+        <div class="itemLine">
+          <div class="leftStack"><span class="glassText">Player 2</span></div>
+          <div class="actions">
+            <button class="pill">Stats</button>
+            <button class="pill">History</button>
+            <button class="pill">Remove</button>
+          </div>
+        </div>
+      `;
     }
 
-    if(action === "player_remove"){
-      e.preventDefault();
-      try{
-        if(window.activeSession && window.activeSession.setup && Array.isArray(window.activeSession.setup.emails)){
-          window.activeSession.setup.emails = window.activeSession.setup.emails.filter(x => (x||"").toLowerCase() !== value.toLowerCase());
-        }
-      }catch(_){}
-      const row = btn.closest(".itemLine");
-      if(row) row.remove();
-      return;
-    }
-  }catch(err){
-    console.error(err);
+  }catch(e){
+    console.error(e);
   }
-}, true);
+
+});
 </script>
 
 </body>
