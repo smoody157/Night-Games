@@ -1,20 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1232</title>
+<title>Night Games v1337</title>
 <!-- NIGHT GAMES v1232 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-:root{
-  --txt: rgba(255,255,255,.92);
-  --fieldFill: rgba(255,255,255,.06);
-  --uiW: min(760px, 94vw);
-  --maxW: 760px;
-  --zShadow: drop-shadow(0 10px 20px rgba(0,0,0,.28));
-  --zShadowSoft: drop-shadow(0 6px 12px rgba(0,0,0,.20));
-  --bgStage: none;
-}
+<style>:root vars) • COMPONENTS (
 
     html, body{
       height:100%;
@@ -530,77 +521,7 @@ border: 1px solid rgba(255,255,255,.22);
    SECTION: EDITABLE COORDINATES  [EDIT_LOGO] [EDIT_BG] [EDIT_VERSION]
    - If you want to move the logo or tweak offsets, search for these tags.
 ============================================================================= */
-/* =============================================================
-EDITABLE COORDINATES
-============================================================= */
 
-:root{
-
-  /* ---------------------------------------------------------
-  GLOBAL UI POSITIONING
-  --------------------------------------------------------- */
-
-  --ngTopBarY: 18px;
-  --ngTopBarX: 20px;
-
-  --ngHeaderOffsetY: 10px;
-
-  --ngLeaderboardY: 58vh;
-  --ngLeaderboardX: 50%;
-
-  --ngFooterY: 92vh;
-
-  /* ---------------------------------------------------------
-  LANDING SCREEN
-  --------------------------------------------------------- */
-
-  --ngLandingLogoY: 18vh;
-  --ngLandingLogoX: 50%;
-
-  --ngEmailInputY: 48vh;
-  --ngEmailInputX: 50%;
-
-  --ngEnterButtonY: 56vh;
-  --ngEnterButtonX: 50%;
-
-  /* ---------------------------------------------------------
-  HUB / PLAYER SCREEN
-  --------------------------------------------------------- */
-
-  --ngGamesPanelY: 22vh;
-  --ngGamesPanelX: 50%;
-
-  --ngPlayersPanelY: 52vh;
-  --ngPlayersPanelX: 50%;
-
-  --ngLeaderboardButtonY: 80vh;
-  --ngLeaderboardButtonX: 50%;
-
-  /* ---------------------------------------------------------
-  WAITING ROOM
-  --------------------------------------------------------- */
-
-  --ngWaitingHeaderY: 16vh;
-
-  --ngWaitingListY: 32vh;
-
-  --ngWaitingStartButtonY: 78vh;
-
-  /* ---------------------------------------------------------
-  RANDOMIZER
-  --------------------------------------------------------- */
-
-  --ngRandomizerY: 45vh;
-
-  /* ---------------------------------------------------------
-  GAME SCREEN
-  --------------------------------------------------------- */
-
-  --ngScoreboardY: 26vh;
-
-  --ngThrowControlsY: 82vh;
-
-}
 /* =============================================================================
    SECTION_SETUP: PLAYER PICKER DROPDOWN  [SECTION_SETUP]
 ============================================================================= */
@@ -691,6 +612,8 @@ EDITABLE COORDINATES
   text-shadow: 0 2px 14px rgba(0,0,0,.65), 0 0 22px rgba(0,210,255,.18);
 }
 /* Make "advance" buttons readable */
+.pill
+
 /* Prevent duplicated controls from stacking/overlapping inside setup body */
 
 #ngHeaderBar{
@@ -1278,6 +1201,8 @@ EDITABLE COORDINATES
 }
 
 /* Make panels easier to read (slightly darker glass + blur) */
+#players
+
 /* Keep names to the LEFT of buttons (override older mobile stacking rules) */
 #players .itemLine{
   flex-direction: row !important;
@@ -1303,9 +1228,13 @@ EDITABLE COORDINATES
 }
 
 /* Slightly reduce name size so row fits cleanly */
+#players
+
 /* ===================== DETAIL (RULES) SCROLL + FROST + FOOTER ===================== */
 
 /* Frost / glass on RULES/detail panels */
+#detail
+
 /* Give room for footer */
 #detail .detailWrap{
   padding-bottom: 90px;
@@ -1337,9 +1266,14 @@ EDITABLE COORDINATES
 /* ===================== RULES SCROLL FIX (GRID/FLEX) ===================== */
 
 /* Frost / glass on RULES/detail panels */
+#detail
+
 /* The detailWrap is a grid with 1fr + auto.
    Make the first panel a flex column so the body can scroll. */
+#detail .detailWrap >
+
 /* Scroll inside the rules content area */
+#detail .detailWrap >
 
 /* Give room for footer */
 #detail .detailWrap{
@@ -1413,6 +1347,7 @@ EDITABLE COORDINATES
 }
 
 /* : setup scroll reliability (grid/flex fix like Detail screen) */
+#setup .detailWrap >
 /* Keep setup readable while preserving background */
 
 #setup .detailBody, #setup .detailBody *{
@@ -1468,6 +1403,7 @@ EDITABLE COORDINATES
 
 /* ===================== BUTTON SIZING BY CATEGORY ===================== */
 .pill{ height: 44px; }
+.pill
 .pill.pillMini{ height: 34px; }
 
 .statGameBtn{
@@ -1843,6 +1779,10 @@ html, body{
    - Visual-only (no behavior changes)
 ========================================================================= */
 
+#detail
+
+#waiting
+
 /* Waiting-room status icons: make "waiting" glow green */
 .statusIcon.wait{
   color: rgba(90,255,170,.98) !important;
@@ -1901,6 +1841,8 @@ html, body{
 ============================================================================= */
 
 /* Frost/glass consistency across secondary screens */
+#detail
+
 /* Waiting room: make waiting indicator green + glow (applies to everyone) */
 #waiting .statusIcon.ok,
 #waiting .statusIcon.wait{
@@ -1925,7 +1867,8 @@ html, body{
   padding-right: 6px;
 }
 
-.detailWrap > .detailBody{
+.detailWrap >
+    .detailBody{
       flex: 1;
       min-height: 0;
       overflow-y: auto;
@@ -1972,6 +1915,7 @@ html, body{
 button.pill { pointer-events: auto !important; }
 
 /* : CONTROL PANEL THEME */
+.pill
 #lobbyInviteBtn{ background: rgba(43,108,255,0.90) !important; color:#fff !important; }
 
 #setupInviteBtn{ background: rgba(43,108,255,0.90) !important; color:#fff !important; }
@@ -2145,7 +2089,7 @@ function ngGuard(label, fn){
     return fn();
   }catch(e){
     if(typeof ngLogError === "function"){
-      try{ ngLogError(label || "Global_Error", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+      try{ ngLogError(label || "Global_Error", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
     }else{
       console.error("Critical Failure:", e);
     }
@@ -2169,7 +2113,7 @@ function ngGuard(label, fn){
           if (window.ngErr) window.ngErr(label || "Handler error", e && (e.stack || e.message || String(e)));
         } catch(_e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       }
@@ -2184,7 +2128,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1232</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1337</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2326,7 +2270,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1232 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1337 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2366,7 +2310,7 @@ function ngGuard(label, fn){
   function setStatus(t){
     try{ if(statusLine) statusLine.textContent = t; }catch(_){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   }
@@ -2384,7 +2328,7 @@ function ngGuard(label, fn){
         return;
       }
     }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 
       console.log("ENTER fallback error:", e);
       setStatus("Error.");
@@ -2418,7 +2362,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1232";
+  window.ngBuild = "v1337";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -2443,7 +2387,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1232";
+window.ngBuild = "v1337";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -2464,14 +2408,14 @@ const ngLSGet = (k)=>{ try{ return localStorage.getItem(k); }catch (e) {
       window.ngFirebaseStatus = "FIREBASE_INIT_FAILED: " + (e && (e.message||e.code)||String(e));
       try{ setDbg("Firebase failed", "auth: ?", "firestore: ?", window.ngFirebaseStatus); }catch(_e){}
       try{ if(typeof ngLogError==="function") ngLogError("Catch", e);
-    }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+    }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return null; } };
 const ngLSSet = (k,v)=>{ try{ localStorage.setItem(k, String(v)); return true; }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return false; } };
 const ngLSRemove = (k)=>{ try{ localStorage.removeItem(k); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 } };
 
@@ -2587,7 +2531,7 @@ const firebaseConfig = {
       }
     }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     // : email overlay text (install once)
@@ -2600,7 +2544,7 @@ const firebaseConfig = {
           if(emailEchoEl) emailEchoEl.textContent = v ? v : "player@example.com";
         }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       }
@@ -2630,7 +2574,7 @@ const firebaseConfig = {
         // Preload intro so first tap plays immediately (still requires a user gesture to start audio).
         try{ player.src = INTRO_URL_M4A; if(player.load) player.load(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
@@ -2639,18 +2583,18 @@ const firebaseConfig = {
     if(url && player.src !== url) player.src = url;
     try{ player.pause(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     try{ player.currentTime = 0; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     const p = player.play();
     return p;
   }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 
     return Promise.reject(e);
   }
@@ -2667,12 +2611,12 @@ const firebaseConfig = {
                 const p = player.play();
                 if(p && p.then) p.then(()=>{ try{ player.pause(); player.currentTime=0; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 } player.muted = wasMuted; }).catch(()=>{ player.muted = wasMuted; });
               }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
@@ -2689,7 +2633,7 @@ const firebaseConfig = {
               if(src.start) src.start(0);
             }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           },
@@ -2707,7 +2651,7 @@ const firebaseConfig = {
                   }
                 }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
                 if(!ok){
@@ -2720,7 +2664,7 @@ const firebaseConfig = {
                     }
                   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
                 }
@@ -2730,7 +2674,7 @@ const firebaseConfig = {
             }catch(e){
               try{ playUrl(INTRO_URL_M4A); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
             }
@@ -2759,18 +2703,18 @@ const firebaseConfig = {
               }
               try{ emailInput.focus(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
               if(emailEchoEl) emailEchoEl.style.opacity = "0";
               try{ window.ngAudio.unlock && window.ngAudio.unlock(); }catch(e){ if(typeof ngLogError==="function") ngLogError("Error", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
             }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           }
@@ -2781,7 +2725,7 @@ const firebaseConfig = {
               if(emailPadEl) emailPadEl.addEventListener(evt, onTouch, { passive:false });
             }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           });
@@ -2792,21 +2736,21 @@ const firebaseConfig = {
               if(!v && emailEchoEl) emailEchoEl.style.opacity = "1";
             }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           }, { passive:true });
           emailInput.addEventListener("input", ()=>{
             try{ if(emailEchoEl) emailEchoEl.style.opacity = (emailInput.value ? "0" : "1"); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           }, { passive:true });
         }
       }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     })();
@@ -2846,13 +2790,13 @@ function setHeaderPlayerLabel(email, explicitName){
     ngHeaderPlayer.textContent = nm || "";
         try{ if(playerPageName) playerPageName.textContent = nm || ""; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     ngHeaderPlayer.title = em || "";
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 }
@@ -2860,7 +2804,7 @@ async function doUpdate(auth){
   // Update = sign out + aggressive cache-bust reload so device fetches latest hosted version
   try{ if(auth) await signOut(auth); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
@@ -2874,7 +2818,7 @@ async function doUpdate(auth){
     }
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   try{
@@ -2884,13 +2828,13 @@ async function doUpdate(auth){
     }
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
   try{ ngLSSet("ng_force_reload", String(Date.now())); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   const baseUrl = location.origin + location.pathname;
@@ -2932,7 +2876,7 @@ function show(which){
       // Leaderboard: render full list each time
       try{ if(which==="leaderboard" && typeof renderLeaderboard==="function") renderLeaderboard(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
@@ -2941,25 +2885,24 @@ function show(which){
         if(typeof landingFooter !== "undefined" && landingFooter) landingFooter.style.display = (which==="landing") ? "block" : "none";
       }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       try{
         if(typeof detailFooter !== "undefined" && detailFooter) detailFooter.style.display = (which==="detail") ? "block" : "none";
       }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       try{
         if(typeof globalFooter !== "undefined" && globalFooter) globalFooter.style.display = (which==="landing" || which==="detail") ? "none" : "block";
       }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     }
-    window.showScreen = show;
     function openDetail(title, html){
       detailTitle.textContent = title;
       detailBody.innerHTML = html;
@@ -2996,12 +2939,12 @@ function wireSetupControlButtons(){
 
   if(homeBtn) homeBtn.addEventListener("click", ()=>{ try{ show("players"); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 } });
   if(backBtn) backBtn.addEventListener("click", ()=>{ try{ show("players"); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 } });
 
@@ -3017,12 +2960,12 @@ function wireSetupControlButtons(){
       activeSession.started = true;
       try{ ngLSSet('ng_active_session', JSON.stringify(activeSession)); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       try{ show("lobby"); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       if(typeof startPracticeSession === "function"){ await startPracticeSession(); }
@@ -3030,7 +2973,7 @@ function wireSetupControlButtons(){
       else if(typeof startSession === "function"){ await startSession(); } // fallback
     }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   });
@@ -3046,44 +2989,44 @@ function wireSetupControlButtons(){
       activeSession.practice = false;
       try{ ngLSSet('ng_active_session', JSON.stringify(activeSession)); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       try{ setInviteStatus && setInviteStatus("Sending invites…", false); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       try{ await startSession(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       try{ show("waiting"); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       try{ await sendInvitesForSession(); setInviteStatus && setInviteStatus("Invites sent.", true); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  setInviteStatus && setInviteStatus("Invite failed.", false); }
     }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   });
 
   try{ updateSetupControlPanel(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{ try{ wireSetupControlButtons(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 } });
 
@@ -3092,7 +3035,7 @@ function currentSelectedEmails(){
     const emails = (activeSession && activeSession.setup && activeSession.setup.emails) ? activeSession.setup.emails : [];
     return Array.isArray(emails) ? emails.slice() : [];
   }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return []; }
 }
 
@@ -3105,7 +3048,7 @@ function updateSetupControlPanel(){
     if(inviteBtn) inviteBtn.disabled = (count <= 1);
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 }
@@ -3160,7 +3103,7 @@ function randomizeKillerNumbers(){
         osc.stop(t + 0.10);
       }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     }
@@ -3186,32 +3129,32 @@ function persistEmailAfterLogin(email){
     if(!em) return;
     try{ ngLSSet("ng_saved_email", em); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     try{ currentEmail = em; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     try{ if(typeof emailInput !== "undefined" && emailInput){ emailInput.value = em; } }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     try{ setHeaderPlayerLabel && setHeaderPlayerLabel(em); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     try{ listenForInvites && listenForInvites(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 }
@@ -3261,7 +3204,7 @@ function persistEmailAfterLogin(email){
           </div>`;
       }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     }
@@ -3390,25 +3333,25 @@ function persistEmailAfterLogin(email){
         const n = Number(v);
         return Number.isFinite(n) ? n : 0;
       }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return 0; }
     }
     function _setNumStat(playerEmail, gameName, key, val){
       try{ if(activeSession && activeSession.practice) return; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       try{ ngLSSet(_statKey(playerEmail, gameName, key), String(Math.max(0, Math.floor(val*1000)/1000))); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     }
     function _incNumStat(playerEmail, gameName, key, delta){
       try{ if(activeSession && activeSession.practice) return; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       const cur = _getNumStat(playerEmail, gameName, key);
@@ -3512,22 +3455,22 @@ function persistEmailAfterLogin(email){
 function startPracticeSession(){
   try{ if(!activeSession) activeSession = {}; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   try{ activeSession.practice = true; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   try{ activeSession.started = false; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   try{
@@ -3539,7 +3482,7 @@ function startPracticeSession(){
       "<div style='opacity:.82; margin-bottom:12px;'>Press <b>Begin</b> to start your practice game. Stats are not recorded.</div>";
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   // Configure controls for practice
@@ -3557,11 +3500,11 @@ function startPracticeSession(){
     }
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }try{ renderLobby && renderLobby(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 }
@@ -3592,7 +3535,7 @@ function renderLobby(){
         const p = (lastPeople||[]).find(x=>x && String(x.email||"").toLowerCase()===low);
         return (p && p.name) ? p.name : prettyNameFromEmail(low);
       }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  return String(em||""); }
     }
 
@@ -3617,7 +3560,7 @@ function renderLobby(){
       }
     }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
@@ -3637,7 +3580,7 @@ function renderLobby(){
     `;
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 }
@@ -3646,12 +3589,12 @@ function renderLobby(){
 function startPracticeGame(){
   try{ if(!activeSession) activeSession = {}; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   try{ activeSession.practice = true; activeSession.started = true; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   // Ensure we have at least one player in order list for display
@@ -3662,12 +3605,12 @@ function startPracticeGame(){
     }
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   try{
@@ -3679,17 +3622,17 @@ function startPracticeGame(){
       "<div style='opacity:.82;'>Game is running (practice mode). Stats are not recorded.</div>";
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     try{ const b=document.getElementById("lobbyStartBtn"); if(b){ b.style.display="none"; } }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 try{ renderLobby && renderLobby(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 }
@@ -3714,7 +3657,7 @@ async function startSession(){
     if(typeof show === "function") show("game_screen");
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   const dbx = (window.db) || (window.ngFirebase && window.ngFirebase.db);
@@ -3726,7 +3669,7 @@ async function startSession(){
     }, { merge:true });
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   try{
@@ -3736,17 +3679,17 @@ async function startSession(){
     if(lobbyBody) lobbyBody.innerHTML = "<div style='font-weight:1100; font-size:22px; margin-bottom:10px;'>Starting…</div><div style='opacity:.82;'>Game is live.</div>";
     try{ setTimeout(()=>{ renderLobby && renderLobby(); }, 600); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   try{ show("lobby"); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 }
@@ -3761,12 +3704,12 @@ async function endSession(){
     }, { merge:true });
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   try{ show("players"); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 }
@@ -3775,7 +3718,7 @@ async function endSession(){
 function startGameFromSession(){
   try{ startSession && startSession(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 }
@@ -3784,7 +3727,7 @@ function watchSessionDoc(){
       const db = (window.db) || (window.ngFirebase && window.ngFirebase.db);
       try{ if(__ngSessionUnsub){ __ngSessionUnsub(); __ngSessionUnsub=null; } }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       try{
@@ -3802,7 +3745,7 @@ function watchSessionDoc(){
               }
             }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
@@ -3810,12 +3753,12 @@ function watchSessionDoc(){
             if(data.randomizer && data.randomizer.state === "running"){
               try{ show("randomizer"); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
               try{ runSyncedRandomizer(data.randomizer); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
             }
@@ -3823,24 +3766,24 @@ function watchSessionDoc(){
             if(data.randomizer && data.randomizer.state === "done"){
               try{ show("lobby"); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
               try{ renderLobby && renderLobby(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
             }
           }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         });
       }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     }
@@ -3925,13 +3868,13 @@ function watchSessionDoc(){
             await setDoc(doc(db, "sessions", activeSessionId), { randomizer: Object.assign({}, r, { state:"done", doneAt: serverTimestamp() }) }, { merge:true });
         try{ watchSessionDoc(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
           }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         }
@@ -3964,7 +3907,7 @@ function watchSessionDoc(){
         await setDoc(doc(db, "sessions", activeSessionId), payload, { merge:true });
       }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     }
@@ -3984,7 +3927,7 @@ function watchSessionDoc(){
       };
       try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       listenSessionInvites();
@@ -4128,7 +4071,7 @@ ${ needsDartsOpts ? `
         summary.textContent = `${sel.length} selected`;
         try{ updateSetupControlPanel(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       }
@@ -4160,7 +4103,7 @@ ${ needsDartsOpts ? `
               if(now.size >= want){
                 try{ ping && ping(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
                 return;
@@ -4178,7 +4121,7 @@ ${ needsDartsOpts ? `
         // : invite button visibility
         try{ const ib=document.getElementById('lobbyInviteBtn'); if(ib) ib.style.display = (want>=2?'inline-flex':'none'); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         refreshSummary();
@@ -4236,13 +4179,13 @@ function setHeaderHeightVar(){
     document.documentElement.style.setProperty("--headerH", h+"px");
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 }
 window.addEventListener("resize", ()=>{ try{ setHeaderHeightVar(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 } });
 
@@ -4275,13 +4218,13 @@ function enforce(){
         // : make Lobby START work even before Setup START is pressed
         try{ window.__ngDoStart = doStart; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         // : expose start handler so Lobby START uses same path
         try{ window.__ngDoStart = doStart; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         // v768: Stable start behavior (no broken/partial calls)
@@ -4296,17 +4239,17 @@ function enforce(){
         // : Selection only — Start Game / Invite buttons control flow
         try{ activeSession.practice = (want <= 1); activeSession.started = false; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         try{ ngLSSet('ng_active_session', JSON.stringify(activeSession)); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         try{ updateSetupControlPanel && updateSetupControlPanel(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
@@ -4320,7 +4263,7 @@ function enforce(){
 
 try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
@@ -4328,12 +4271,12 @@ try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
         if(want <= 1){
           try{ activeSession.practice = true; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           try{
@@ -4343,18 +4286,18 @@ try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
             if(lobbyBody)  lobbyBody.innerHTML = "<div style='font-weight:1100; font-size:22px; margin-bottom:8px;'>Practice</div><div style='opacity:.82;'>Stats are not recorded in solo play.</div>";
           }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           show("lobby");
           try{ (startPracticeGame && startPracticeGame()) || (startPracticeSession && startPracticeSession()); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           try{ const b=document.getElementById("lobbyStartBtn"); if(b){ b.style.display="none"; } }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           return;
@@ -4372,13 +4315,13 @@ try{
     activeSession.createdAt = activeSession.createdAt || Date.now();
     try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
   }
 }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           try{
@@ -4389,12 +4332,12 @@ try{
 */
 await sendInvitesForSession(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           try{ listenSessionInvites && listenSessionInvites(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         }
@@ -4406,7 +4349,7 @@ await sendInvitesForSession(); }catch(e){
     function listenForInvites(){
       try{ if(invitesUnsub) invitesUnsub(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       invitesUnsub = null;
@@ -4430,12 +4373,12 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1232Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1337Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         const game = inv.game || "Game";
@@ -4461,21 +4404,21 @@ try{
             try{
               await setDoc(doc(db, "invites", docSnap.id), { status:"accepted", respondedAt: serverTimestamp() }, { merge:true });
             }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  alert(e.message||e); }
             // set local session + go waiting
             if(sessionId){
               activeSessionId = sessionId;
               try{ watchSessionDoc(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
               activeSession = { id: sessionId, game, host: inv.fromEmail||inv.from||"", setup:{ count, emails: invited } };
               try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       listenSessionInvites();
@@ -4497,7 +4440,7 @@ renderWaitingRoom();
             try{
               await setDoc(doc(db, "invites", docSnap.id), { status:"declined", respondedAt: serverTimestamp() }, { merge:true });
             }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  alert(e.message||e); }
             closeDetail();
           });
@@ -4513,7 +4456,7 @@ renderWaitingRoom();
     el.classList.toggle("inviteOk", !!ok);
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 }
@@ -4540,7 +4483,7 @@ async function sendInvitesForSession(){
           createdAt: serverTimestamp()
         }, { merge:true });
       }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  /* non-fatal */ }
 
       // create invite docs for non-host
@@ -4566,7 +4509,7 @@ async function sendInvitesForSession(){
     function listenSessionInvites(){
       try{ if(sessionInvitesUnsub) sessionInvitesUnsub(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       sessionInvitesUnsub = null;
@@ -4583,7 +4526,7 @@ async function sendInvitesForSession(){
           });
         }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
@@ -4630,7 +4573,7 @@ async function sendInvitesForSession(){
         window.__ngWaitOverlay.style.cssText = "position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:999999; background:rgba(0,0,0,.55);";
         window.__ngWaitOverlay.innerHTML = `
           <div style="width:min(560px,92vw); border-radius:20px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:18px 18px 16px; text-align:center; box-shadow:0 22px 46px rgba(0,0,0,.55);">
-            <div style="font-weight:1200; letter-spacing:.08em; font-size:22px; margin-bottom:10px; text-transform:uppercase;">Now that all players are present, gameplay will start in a moment.</div>
+            <div style="font-weight:1200; letter-spacing:.08em; font-size:22px; margin-bottom:10px; text-transform:uppercase;">WELCOME PLAYERS</div>
             <div style="opacity:.85; font-weight:1000;">Get ready…</div>
           </div>`;
         document.body.appendChild(window.__ngWaitOverlay);
@@ -4644,7 +4587,7 @@ async function sendInvitesForSession(){
           // play slam/lock sound (single audio controller)
           try{ window.ngAudio && window.ngAudio.playSlam && window.ngAudio.playSlam(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
@@ -4653,7 +4596,7 @@ async function sendInvitesForSession(){
             window.__ngWaitOverlay.style.display = "flex";
           }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
@@ -4661,40 +4604,40 @@ async function sendInvitesForSession(){
           setTimeout(()=>{
             try{ window.__ngWaitOverlay.style.opacity = "0"; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
             setTimeout(()=>{
               try{ window.__ngWaitOverlay.style.display = "none"; window.__ngWaitOverlay.style.opacity = "1"; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
               try{ show("randomizer"); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
               try{ hostTriggerRandomizer && hostTriggerRandomizer(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
               try{
                 lobbyTitle.textContent = (activeSession.game||"Game") + " • LIVE";
-                lobbyBody.innerHTML = "<div style='font-weight:1100; font-size:22px; margin-bottom:10px;'>Now that all players are present, gameplay will start in a moment.</div><div style='opacity:.82;'>Starting game…</div>";
+                lobbyBody.innerHTML = "<div style='font-weight:1100; font-size:22px; margin-bottom:10px;'>WELCOME PLAYERS</div><div style='opacity:.82;'>Let's get the game started</div>";
                 show("lobby");
               }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
             }, 250);
           }, 3000);
         }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       }
@@ -4720,7 +4663,7 @@ async function sendInvitesForSession(){
               // : show completion message + sound, then transition
               try{ __ngRunWaitCompleteTransition(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
               return;
@@ -4729,7 +4672,7 @@ async function sendInvitesForSession(){
         }
       }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     }
@@ -4738,7 +4681,8 @@ async function sendInvitesForSession(){
     const SEED = [
       { email: "stevewmoody@yahoo.com", name: "Steve Moody" },
       { email: "jmoody7712@gmail.com", name: "Jayce Moody" },
-      { email: "wmoody7931@aol.com", name: "Bill Moody" }
+      { email: "wmoody7931@aol.com", name: "Bill Moody" },
+      { email: "phyllis.wmoody@gmail.com", name: "Phyllis Moody" }
     ];
     async function seedRegistry(db){
       for(const u of SEED){
@@ -4813,7 +4757,7 @@ function renderPlayers(list){
           try{
             ms = ts && typeof ts.toMillis === "function" ? ts.toMillis() : Date.now();
           }catch(_e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  ms = Date.now(); }
           m.set(d.id, ms);
         });
@@ -4836,7 +4780,7 @@ function renderPlayers(list){
         // optimistic: show online immediately
         try { presenceMap.set(id, Date.now()); if(lastPeople && lastPeople.length) renderPlayers(lastPeople); } catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       }
@@ -4860,7 +4804,7 @@ function renderPlayers(list){
 
       const step = (s)=>{ try{ setDbg("AUTH", "step", s, ""); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 } };
 
@@ -4873,11 +4817,11 @@ function renderPlayers(list){
         currentUid = cred.user.uid;
         try{ dbgAuth.textContent = "anon uid " + currentUid.slice(0,6) + "…"; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       }catch(err){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 
         err.step = "signInAnonymously";
         throw err;
@@ -4891,12 +4835,12 @@ function renderPlayers(list){
           await seedRegistry(db);
           try{ ngLSSet("ng_seeded_registry","1"); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         }
       }catch(err){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 
         err.step = "seedRegistry";
         throw err;
@@ -4929,12 +4873,12 @@ function renderPlayers(list){
           // Refresh local cache so header render can use it immediately.
           try{ lastPeople = [...(lastPeople||[]).filter(p => p && (p.email||"").toLowerCase() !== currentEmail), {email: currentEmail, name}]; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
           try{ setHeaderPlayerLabel(currentEmail, name); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         } else {
@@ -4942,12 +4886,12 @@ function renderPlayers(list){
           const data = regSnap.data() || {};
           try{ setHeaderPlayerLabel(currentEmail, data.name || ""); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         }
       }catch(err){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 
         err.step = "registry-getDoc/setDoc";
         throw err;
@@ -4961,7 +4905,7 @@ function renderPlayers(list){
           lastLogin: serverTimestamp()
         }, { merge: true });
       }catch(err){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 
         err.step = "users-setDoc";
         throw err;
@@ -4970,7 +4914,7 @@ function renderPlayers(list){
       // remember last successful email on THIS device/browser
       try{ persistEmailAfterLogin && persistEmailAfterLogin(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
@@ -4979,7 +4923,7 @@ function renderPlayers(list){
         // 5) Presence + live listeners
         try { presenceMap.set(safeEmail(currentEmail), Date.now()); } catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
         await startPresence(db);
@@ -4987,11 +4931,11 @@ function renderPlayers(list){
         watchData(db);
         try{ listenForInvites && listenForInvites(); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       }catch(err){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", err); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 
         err.step = "presence/watch";
         throw err;
@@ -5002,26 +4946,6 @@ function renderPlayers(list){
       setDbg("OK", "auth", "connected", "none");
       try{ if(typeof ngFirebaseSelfTest==="function") ngFirebaseSelfTest(db, auth); }catch(e){ console.error(e); }
     }
-
-
-window.signInFlow = signInFlow;
-window.ngEnter = async function(rawEmail){
-  try{
-    const em = String(rawEmail || (emailInput && emailInput.value) || "").trim().toLowerCase();
-    if(!em){
-      try{ if(statusLine) statusLine.textContent = "Enter an email."; }catch(_){}
-      try{ if(emailInput) emailInput.focus(); }catch(_){}
-      try{ show("landing"); }catch(_){}
-      return;
-    }
-    try{ if(statusLine) statusLine.textContent = "Signing in…"; }catch(_){}
-    await signInFlow(auth, db, em);
-  }catch(err){
-    const msg = err && (err.message || err.code) ? (err.message || err.code) : String(err);
-    try{ if(statusLine) statusLine.textContent = "Firebase error."; }catch(_){}
-    try{ alert("Sign-in failed: " + msg); }catch(_){}
-  }
-};
 
     // Start Firebase and wire handlers
     try {
@@ -5070,18 +4994,18 @@ window.__ngHasDB = !!db;
     if(saved && saved === BILL_EMAIL){
       try{ emailInput.value = saved; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       try{ setHeaderPlayerLabel(saved); }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     }
   }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 });
@@ -5096,7 +5020,7 @@ window.__ngHasDB = !!db;
     if(!em){
       try{ statusLine && (statusLine.textContent = "Enter an email."); }catch(_){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
       return;
@@ -5107,11 +5031,11 @@ window.__ngHasDB = !!db;
     const msg = err?.code || err?.name || err?.message || String(err);
     try{ statusLine && (statusLine.textContent = "Firebase error."); }catch(_){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     try{ setDbg("FAIL", "auth", "fail", (err?.step?("step:"+err.step+" • "):"") + msg); }catch(_e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  console.log("[DBG] FAIL auth", msg); }
     alert("Firebase error (" + (err?.step||"unknown") + "): " + msg);
   }
@@ -5133,7 +5057,7 @@ async function sendInvite(){
       else if(Array.isArray(window.lastPeople)) opponents = window.lastPeople.slice();
     }catch(_e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     // Remove self if present (by name)
@@ -5164,7 +5088,7 @@ async function sendInvite(){
         try{
           await addDoc(invCol, {...payloadBase, toEmail: to, to});
         }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  console.log("[INVITE] addDoc failed", e); }
       }
       // Optional: mark session as waiting / store invite list
@@ -5177,7 +5101,7 @@ async function sendInvite(){
           });
         }
       }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  console.log("[INVITE] session update failed", e); }
     } else {
       console.log("[INVITE] Firestore helpers not available; invite not persisted.");
@@ -5187,19 +5111,19 @@ async function sendInvite(){
     try{ if(typeof listenForJoins === "function") if(typeof show==="function") show("waiting");
     await listenForJoins(sessionId); }catch(_e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
 
 // Route to Waiting Room
     try{ if(typeof show === "function") show("waiting"); else if(typeof showPage === "function") showPage("waiting"); }catch(_e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
 }
     alert(fromName + " challenged you to a game of " + gameName + ". (Invite sent)");
   }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} }
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
  console.log("[INVITE] error", e); alert("Invite failed: " + (e?.message||e)); }
 }
 
@@ -5573,9 +5497,10 @@ function ngUpdateBtn(){
 </script>
 
 
+
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1232";
+window.APP_VERSION = "v1337";
 (function(){
   try {
     // header version
@@ -5608,79 +5533,6 @@ window.APP_VERSION = "v1232";
       if(btn) btn.scrollIntoView({behavior:'smooth', block:'center'});
     } catch(e) {}
   });
-})();
-</script>
-
-
-<script>
-/* ===== PASS 3 STARTUP + LOGIN RECOVERY ===== */
-(function(){
-  function activate(which){
-    try{
-      if(typeof window.showScreen === "function"){ window.showScreen(which); return; }
-    }catch(_){}
-    try{
-      ["landing","players","setup","waiting","lobby","detail","leaderboard","randomizer"].forEach(function(id){
-        var el = document.getElementById(id);
-        if(el) el.classList.toggle("active", id === which);
-      });
-    }catch(_){}
-  }
-
-  function makeLandingVisible(){
-    try{
-      var pads = document.getElementById("landingPads");
-      var emailPad = document.getElementById("emailPad");
-      var enterBtn = document.getElementById("enterBtn");
-      var emailEcho = document.getElementById("emailEcho");
-      if(pads){
-        pads.style.display = "grid";
-        pads.style.pointerEvents = "auto";
-        pads.style.zIndex = "20";
-      }
-      if(emailPad){
-        emailPad.style.opacity = "1";
-        emailPad.style.visibility = "visible";
-      }
-      if(enterBtn){
-        enterBtn.style.opacity = "1";
-        enterBtn.style.visibility = "visible";
-        enterBtn.style.pointerEvents = "auto";
-      }
-      if(emailEcho){
-        emailEcho.style.display = "flex";
-      }
-    }catch(_){}
-  }
-
-  function bindEnter(){
-    try{
-      var enterBtn = document.getElementById("enterBtn");
-      var emailInput = document.getElementById("emailInput");
-      if(!enterBtn || enterBtn.__ngPass3Bound) return;
-      enterBtn.__ngPass3Bound = true;
-      enterBtn.addEventListener("click", function(e){
-        e.preventDefault();
-        if(typeof window.ngEnter === "function"){
-          window.ngEnter(emailInput ? emailInput.value : "");
-        }
-      });
-    }catch(_){}
-  }
-
-  function bootLanding(){
-    activate("landing");
-    makeLandingVisible();
-    bindEnter();
-  }
-
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", bootLanding);
-  } else {
-    bootLanding();
-  }
-  window.addEventListener("load", bootLanding);
-  setTimeout(bootLanding, 250);
 })();
 </script>
 
