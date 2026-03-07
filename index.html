@@ -28,6 +28,87 @@
   }
 
   body{
+    <!-- ===================== LANDING PAGE EMAIL INPUT ===================== -->
+<div id="landing-page" style="
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
+    width:100vw;
+    background-image:url('IMG_7390.jpeg');
+    background-size:cover;
+    background-position:center;
+">
+    <!-- Email Input Box -->
+    <input 
+        type="email" 
+        id="player-email" 
+        placeholder="Enter your email" 
+        style="
+            width:60%;
+            max-width:400px;
+            height:calc(var(--button-height) * 0.8);
+            border-radius:calc(var(--button-radius) * 0.8);
+            border:none;
+            padding:0 10px;
+            margin-bottom:15px;
+            font-size:1rem;
+            text-align:center;
+            background:rgba(255,255,255,0.15);
+            color:var(--text-color);
+            backdrop-filter:blur(5px);
+        "
+    />
+
+    <!-- Enter Button -->
+    <button 
+        id="enter-button" 
+        onclick="startLanding()" 
+        style="
+            width:50%;
+            max-width:300px;
+            height:var(--button-height);
+            border-radius:var(--button-radius);
+            border:none;
+            font-weight:bold;
+            font-size:1.1rem;
+            cursor:pointer;
+            background:rgba(255,255,255,0.15);
+            color:var(--text-color);
+            backdrop-filter:blur(5px);
+            margin-bottom:10px;
+        "
+    >
+        ENTER
+    </button>
+
+    <!-- Optional Hint Text -->
+    <small style="
+        color:var(--text-color);
+        margin-top:5px;
+        opacity:0.8;
+        font-style:italic;
+    ">
+        Please enter a valid email to continue
+    </small>
+</div>
+
+<script>
+function startLanding() {
+    const emailInput = document.getElementById('player-email');
+    const email = emailInput.value.trim();
+
+    if(!email) {
+        alert("Please enter your email to continue");
+        return;
+    }
+
+    console.log("Email entered:", email);
+    // TODO: Move to player selection page
+    // e.g., NG_addPlayer(email, email);
+}
+</script>
     margin:0;
     font-family:Arial, sans-serif;
     color:var(--text-color);
@@ -154,6 +235,111 @@
   <button id="enterBtn">ENTER</button>
   <audio id="introAudio" src="New Recording 2.m4a" preload="auto"></audio>
 </div>
+  <!-- LANDING PAGE EMAIL INPUT -->
+<div id="landing-email-container">
+  <input 
+    type="email" 
+    id="landing-email" 
+    placeholder="player@example.com" 
+    style="
+      width: 280px; 
+      padding: 12px; 
+      border-radius: 12px; 
+      border: none; 
+      font-size: 1rem;
+      backdrop-filter: blur(6px);
+      margin-bottom: 10px;
+      display: block;
+      color: var(--text-color);
+    "
+  >
+  <button 
+    id="landing-enter-button"
+    style="
+      width: 300px; 
+      padding: 12px; 
+      border-radius: 12px; 
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      background: rgba(255,255,255,0.2);
+      color: var(--text-color);
+      backdrop-filter: blur(6px);
+      margin-bottom:10px;
+    "
+  >
+    ENTER
+  </button>
+
+  <!-- Optional Hint Text -->
+  <small style="
+    color: var(--text-color);
+    margin-top:5px;
+    opacity:0.8;
+    font-style:italic;
+    display:block;
+  ">
+    Please enter a valid email
+  </small>
+</div>
+  <!-- PLAYERS SCREEN -->
+<div id="playersScreen">
+  <div id="NG_APP">
+
+    <!-- GAMES SECTION -->
+    <div class="NG_section" id="NG_games">
+      <h2>Games</h2>
+      <div id="NG_games_list">
+        <!-- JS will render games here, 2 visible at a time with scroll -->
+      </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <button id="NG_leaderboard_btn">Leaderboard</button>
+
+    <!-- DONATE BUTTON -->
+    <button id="NG_donate_btn" onclick="openDonate()">Help support future updates and development</button>
+
+    <!-- PLAYERS SECTION -->
+    <div class="NG_section" id="NG_players">
+      <h2>Players</h2>
+      <div id="NG_players_list">
+        <!-- JS will render players here, 2 visible at a time with scroll -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function startLanding() {
+    const enterBtn = document.getElementById("landing-enter-button");
+    const emailInput = document.getElementById("landing-email");
+
+    enterBtn.addEventListener("click", () => {
+        const emailValue = emailInput.value.trim();
+        if(emailValue === "") {
+            alert("Please enter a valid email.");
+            return;
+        }
+
+        // Play intro audio if available
+        if(typeof NG_ASSETS !== "undefined" && NG_ASSETS.INTRO_AUDIO){
+            const audio = new Audio(NG_ASSETS.INTRO_AUDIO);
+            audio.play();
+        }
+
+        // Transition to players page
+        if(typeof startPlayersPage === "function"){
+            startPlayersPage(emailValue);
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    startLanding();
+});
+</script>
 
 <!-- PLAYERS SCREEN -->
 <div id="playersScreen">
