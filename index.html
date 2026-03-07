@@ -6978,3 +6978,179 @@ document.addEventListener("DOMContentLoaded", function(){
 
 </body>
 </html>
+
+
+<!-- ===================== NIGHT GAMES v1414 LOGIN + PLAYER PATCH ===================== -->
+<script>
+(function(){
+
+  // --- VERSION UPDATE ---
+  document.title = "Night Games v1414";
+  try{
+    const vNodes = document.querySelectorAll(".ngVer");
+    vNodes.forEach(n=>n.textContent="v1414");
+  }catch(e){}
+
+  // --- PLAYER DATABASE (EDIT EMAILS HERE IF NEEDED) ---
+  const NG_PLAYERS = {
+    "steve@example.com": "Steve Moody",
+    "bill@example.com": "Bill Moody",
+    "jayce@example.com": "Jayce Moody",
+    "phyllis@example.com": "Phyllis Moody"
+  };
+
+  let currentPlayer = null;
+
+  // --- LOGIN FIX ---
+  window.runEnter = function(e){
+    if(e){ e.preventDefault(); }
+
+    const emailInput = document.getElementById("emailInput") || document.getElementById("email");
+    if(!emailInput) return;
+
+    const email = (emailInput.value || "").trim().toLowerCase();
+    if(!email) return;
+
+    const name = NG_PLAYERS[email];
+
+    if(!name){
+      alert("Unknown player email.");
+      return;
+    }
+
+    currentPlayer = name;
+    window.NG_CURRENT_PLAYER = name;
+
+    const header = document.getElementById("ngHeaderPlayer");
+    if(header) header.textContent = name;
+
+    showPlayers();
+  };
+
+  // --- SCREEN SWITCH ---
+  function showPlayers(){
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    const players = document.getElementById("players");
+    if(players) players.classList.add("active");
+  }
+
+  // --- PLAYERS LIST FIX ---
+  function buildPlayers(){
+
+    const list = document.getElementById("playersList");
+    if(!list) return;
+
+    const players = [
+      "Steve Moody",
+      "Bill Moody",
+      "Jayce Moody",
+      "Phyllis Moody"
+    ];
+
+    const online = currentPlayer;
+
+    list.innerHTML = "";
+
+    players
+      .sort((a,b)=>{
+        if(a===online) return -1;
+        if(b===online) return 1;
+        return a.localeCompare(b);
+      })
+      .forEach(p=>{
+
+        const row = document.createElement("div");
+        row.className = "itemLine";
+
+        const left = document.createElement("div");
+        left.className = "leftStack";
+
+        const dot = document.createElement("div");
+        dot.className = "dot" + (p===online ? " online" : "");
+
+        const name = document.createElement("div");
+        name.textContent = p;
+
+        left.appendChild(dot);
+        left.appendChild(name);
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const stats = document.createElement("button");
+        stats.className = "pill";
+        stats.textContent = "Stats";
+
+        const remove = document.createElement("button");
+        remove.className = "pill";
+        remove.textContent = "Remove";
+
+        actions.appendChild(stats);
+        actions.appendChild(remove);
+
+        row.appendChild(left);
+        row.appendChild(actions);
+
+        list.appendChild(row);
+      });
+  }
+
+  // --- GAME LIST ---
+  function buildGames(){
+
+    const list = document.getElementById("gamesList");
+    if(!list) return;
+
+    const games = [
+      "01",
+      "Cricket",
+      "Killer",
+      "Shanghai",
+      "Around The World",
+      "Half It"
+    ];
+
+    list.innerHTML = "";
+
+    games.forEach(g=>{
+
+      const row = document.createElement("div");
+      row.className = "itemLine";
+
+      const left = document.createElement("div");
+      left.className = "leftStack";
+      left.textContent = g;
+
+      const actions = document.createElement("div");
+      actions.className = "actions";
+
+      const play = document.createElement("button");
+      play.className = "pill";
+      play.textContent = "Play";
+
+      actions.appendChild(play);
+
+      row.appendChild(left);
+      row.appendChild(actions);
+
+      list.appendChild(row);
+
+    });
+
+  }
+
+  // --- PLAYERS PAGE BACKGROUND ---
+  const playersScreen = document.getElementById("players");
+  if(playersScreen){
+    playersScreen.style.setProperty("--bgStage","url('IMG_7315.jpeg')");
+  }
+
+  // --- INIT ---
+  window.addEventListener("load",()=>{
+    buildPlayers();
+    buildGames();
+  });
+
+})();
+</script>
+<!-- ===================== END v1414 PATCH ===================== -->
