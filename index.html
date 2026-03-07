@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1395</title>
-<!-- NIGHT GAMES v1395 -->
+<title>Night Games v1397</title>
+<!-- NIGHT GAMES v1397 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -2057,7 +2057,7 @@ button, .btn, .pill{
 #landing #landingLeaderboardBtn{ height:36px; width:50%; margin:0 auto; }
 
 
-/* ===== v1395 landing cleanup ===== */
+/* ===== v1397 landing cleanup ===== */
 #globalFooter,
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
@@ -2180,7 +2180,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== v1395 header + landing final polish ===== */
+/* ===== v1397 header + landing final polish ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2394,7 +2394,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== v1395 FINAL LANDING / HEADER PASS ===== */
+/* ===== v1397 FINAL LANDING / HEADER PASS ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2617,7 +2617,7 @@ html, body {
 }
 
 
-/* ===== v1395 FINAL HARDENING ===== */
+/* ===== v1397 FINAL HARDENING ===== */
 html, body {
   min-height: 100vh !important;
   min-height: 100dvh !important;
@@ -2656,7 +2656,7 @@ body {
 }
 
 
-/* ===== v1395 PRODUCTION CLEANUP ===== */
+/* ===== v1397 PRODUCTION CLEANUP ===== */
 html, body{
   height:100%;
   min-height:100vh;
@@ -2702,7 +2702,7 @@ body{
 }
 
 
-/* ===== v1395 FINAL RELEASE CLEANUP ===== */
+/* ===== v1397 FINAL RELEASE CLEANUP ===== */
 html, body{
   height:100% !important;
   min-height:100vh !important;
@@ -2738,7 +2738,7 @@ body{
 }
 
 
-/* ===== v1395 landing activation + email position tweak ===== */
+/* ===== v1397 landing activation + email position tweak ===== */
 #landing #landingPads{
   bottom:max(108px, calc(env(safe-area-inset-bottom) + 94px)) !important;
 }
@@ -2751,7 +2751,7 @@ body{
 }
 
 
-/* ===== v1395 enter + audio activation ===== */
+/* ===== v1397 enter + audio activation ===== */
 #landing #emailPad{ position:relative !important; z-index:40 !important; }
 #landing #emailInput{
   position:absolute !important; inset:0 !important;
@@ -2861,7 +2861,7 @@ function ngGuard(label, fn){
 
 
 
-<script id="ng-v1395-appcheck-hook">
+<script id="ng-v1397-appcheck-hook">
 window.NG_APP_CHECK = window.NG_APP_CHECK || {
   enabled:false,
   siteKey:"",
@@ -2888,7 +2888,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || {
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">v1395</div>
+<div id="ngVersionBelow">v1397</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -3027,7 +3027,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || {
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1395 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1397 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -3119,7 +3119,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || {
     }catch(_e){}
   };
 
-  window.ngBuild = "v1395";
+  window.ngBuild = "v1397";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -3144,7 +3144,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1395";
+window.ngBuild = "v1397";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -5130,7 +5130,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1395Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1397Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -6256,7 +6256,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1395";
+window.APP_VERSION = "v1397";
 (function(){
   try {
     // header version
@@ -6291,11 +6291,11 @@ window.APP_VERSION = "v1395";
 
 
 
-<script id="ng-v1395-landing-fix">
+<script id="ng-v1397-landing-fix">
 document.addEventListener("DOMContentLoaded", function(){
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1395";
+    if (vb) vb.textContent = "v1397";
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
     var status = document.getElementById("statusLine");
@@ -6342,83 +6342,32 @@ document.addEventListener("DOMContentLoaded", function(){
       } catch(e){}
     }
 
-    function runEnter(){
-      var v = ((email && email.value) || "").trim().toLowerCase();
-      if(!v) return;
-      if(typeof window.ngSignIn === "function") {
-        window.ngSignIn(v);
-        return;
-      }
-      if(typeof window.signInFlow === "function") {
-        try { window.signInFlow(window.ngAuth || window.auth, window.db || (window.ngFirebase && window.ngFirebase.db), v); } catch(e){}
-        return;
-      }
-      if(typeof window.show === "function") {
-        window.show("players");
-      } else if(typeof window.showScreen === "function") {
-        window.showScreen("players");
-      }
-    }
-
-    unlock();
-
-    var checks = 0;
-    var iv = setInterval(function(){
-      checks += 1;
-      if(window.db || window.ngFirebaseStatus === "FIREBASE_BOOT_SUCCESS"){
-        clearInterval(iv);
-        unlock();
-        return;
-      }
-      if(checks >= 15){
-        clearInterval(iv);
-        unlock();
-      }
-    }, 200);
-
-    if(email){
-      email.addEventListener("focus", playIntro, {once:true});
-      email.addEventListener("touchstart", playIntro, {once:true, passive:true});
-      email.addEventListener("click", playIntro, {once:true});
-      email.addEventListener("keydown", function(e){
-        if(e.key === "Enter"){ e.preventDefault(); runEnter(); }
-      });
-    }
-
-    if(enter){
-      enter.addEventListener("click", function(e){
-        e.preventDefault();
-        runEnter();
-      }, true);
-      enter.addEventListener("touchstart", function(){}, {passive:true});
-    }
-  } catch(e) {
-    console.error(e);
-  }
-});
-</script>
-
-
-
-
-
-<script id="ng-v1395-enter-fix">
-document.addEventListener("DOMContentLoaded", function(){
-  try {
-    var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "V1395";
-
-    var enter = document.getElementById("enterBtn");
-    var email = document.getElementById("emailInput");
-
     function runEnter(e){
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-
+      if(e){ e.preventDefault(); e.stopPropagation(); }
       var value = ((email && email.value) || "").trim().toLowerCase();
-      if (!value) return false;
+      if(!value) return false;
+
+      try{
+        if(typeof window.ngSignIn==="function"){
+          window.ngSignIn(value);
+        }
+      }catch(_){}
+
+      try{
+        if(typeof window.signInFlow==="function"){
+          window.signInFlow(window.ngAuth || window.auth,
+                            window.db || (window.ngFirebase && window.ngFirebase.db),
+                            value);
+        }
+      }catch(_){}
+
+      // guaranteed entry fallback
+      try{
+        if(typeof window.show==="function"){ window.show("players"); }
+        else if(typeof window.showScreen==="function"){ window.showScreen("players"); }
+      }catch(_){}
+
+      return false;
 
       try {
         if (typeof window.ngSignIn === "function") {
