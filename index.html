@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1386</title>
-<!-- NIGHT GAMES v1386 -->
+<title>Night Games v1388</title>
+<!-- NIGHT GAMES v1388 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -2057,7 +2057,7 @@ button, .btn, .pill{
 #landing #landingLeaderboardBtn{ height:36px; width:50%; margin:0 auto; }
 
 
-/* ===== v1386 landing cleanup ===== */
+/* ===== v1388 landing cleanup ===== */
 #globalFooter,
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
@@ -2180,7 +2180,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== v1386 header + landing final polish ===== */
+/* ===== V1388 header + landing final polish ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2394,7 +2394,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== v1386 FINAL LANDING / HEADER PASS ===== */
+/* ===== V1388 FINAL LANDING / HEADER PASS ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2617,7 +2617,7 @@ html, body {
 }
 
 
-/* ===== v1386 FINAL HARDENING ===== */
+/* ===== V1388 FINAL HARDENING ===== */
 html, body {
   min-height: 100vh !important;
   min-height: 100dvh !important;
@@ -2656,7 +2656,7 @@ body {
 }
 
 
-/* ===== v1386 PRODUCTION CLEANUP ===== */
+/* ===== V1388 PRODUCTION CLEANUP ===== */
 html, body{
   height:100%;
   min-height:100vh;
@@ -2702,7 +2702,7 @@ body{
 }
 
 
-/* ===== v1386 FINAL RELEASE CLEANUP ===== */
+/* ===== V1388 FINAL RELEASE CLEANUP ===== */
 html, body{
   height:100% !important;
   min-height:100vh !important;
@@ -2735,6 +2735,19 @@ body{
 }
 .logoFrame, #logoFrame, .logoWrap, #logoWrap, .heroLogo, #heroLogo, #landingLogo, #logo{
   max-height: clamp(64px, 8vh, 84px) !important;
+}
+
+
+/* ===== V1388 landing activation + email position tweak ===== */
+#landing #landingPads{
+  bottom:max(108px, calc(env(safe-area-inset-bottom) + 94px)) !important;
+}
+#landing #emailPad{
+  transform: translateY(-8px) !important;
+}
+#landing #emailInput,
+#landing #enterBtn{
+  pointer-events:auto !important;
 }
 
 </style>
@@ -2835,7 +2848,7 @@ function ngGuard(label, fn){
 
 
 
-<script id="ng-v1386-appcheck-hook">
+<script id="ng-v1388-appcheck-hook">
 window.NG_APP_CHECK = window.NG_APP_CHECK || {
   enabled:false,
   siteKey:"",
@@ -2858,11 +2871,11 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || {
   </div>
   <div class="ngBottomRow">
     <span class="ngBottomLeft"></span>
-    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title="" style="display:none;">v1386</span>
+    <span class="ngHeaderPlayer" id="ngHeaderPlayer" style="display:none;"></span>
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">v1386</div>
+<div id="ngVersionBelow">V1388</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -3001,7 +3014,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || {
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1386 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1388 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -3093,7 +3106,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || {
     }catch(_e){}
   };
 
-  window.ngBuild = "v1386";
+  window.ngBuild = "v1388";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -3118,7 +3131,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1386";
+window.ngBuild = "v1388";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -5104,7 +5117,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1386Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1388Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -6230,7 +6243,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1386";
+window.APP_VERSION = "v1388";
 (function(){
   try {
     // header version
@@ -6259,47 +6272,34 @@ window.APP_VERSION = "v1386";
 
 
 
-<script id="ng-v1386-landing-fix">
+
+
+
+<script id="ng-v1388-landing-fix">
 document.addEventListener("DOMContentLoaded", function(){
-  try {
-    var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1386";
+  try{
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
     var status = document.getElementById("statusLine");
-    var introPlayed = false;
-    var ticks = 0;
-    var maxTicks = 50;
 
     function setEnabled(flag){
       if(email){
         email.disabled = !flag;
-        email.style.pointerEvents = flag ? "auto" : "none";
+        email.readOnly = false;
+        email.removeAttribute("readonly");
+        email.style.pointerEvents = "auto";
       }
       if(enter){
         enter.disabled = !flag;
         enter.style.pointerEvents = flag ? "auto" : "none";
+        enter.style.opacity = "1";
+        enter.style.display = "block";
       }
       if(status) status.textContent = flag ? "Email-only sign-in (no password)." : "Connecting…";
     }
 
-    function playIntro(){
-      if(introPlayed) return;
-      introPlayed = true;
-      try {
-        if(window.__ngAudioCtl && typeof window.__ngAudioCtl.playIntro === "function") {
-          Promise.resolve(window.__ngAudioCtl.playIntro()).catch(function(){});
-        }
-      } catch (e) {
-        try {
-          if(window.NG_AUDIO_FALLBACK && window.NG_AUDIO_FALLBACK.silentOnFail){
-            /* silent fallback */
-          }
-        } catch (_) {}
-      }
-    }
-
     setEnabled(false);
+    var ticks = 0;
     var iv = setInterval(function(){
       ticks += 1;
       if(window.db || window.ngFirebaseStatus === "FIREBASE_BOOT_SUCCESS"){
@@ -6307,25 +6307,12 @@ document.addEventListener("DOMContentLoaded", function(){
         setEnabled(true);
         return;
       }
-      if(ticks >= maxTicks){
+      if(ticks >= 50){
         clearInterval(iv);
         if(status) status.textContent = "Connection timeout. Refresh to retry.";
       }
     }, 200);
-
-    if(email){
-      email.removeAttribute("readonly");
-      email.readOnly = false;
-      email.style.pointerEvents = "auto";
-      email.addEventListener("focus", playIntro, { once:true });
-      email.addEventListener("touchstart", playIntro, { once:true, passive:true });
-    }
-
-    if(enter){
-      enter.style.opacity = "1";
-      enter.style.display = "block";
-    }
-  } catch (e) {
+  }catch(e){
     console.error(e);
   }
 });
