@@ -2959,6 +2959,7 @@ function show(which){
 }
 }
     }
+    window.showScreen = show;
     function openDetail(title, html){
       detailTitle.textContent = title;
       detailBody.innerHTML = html;
@@ -5002,6 +5003,26 @@ function renderPlayers(list){
       try{ if(typeof ngFirebaseSelfTest==="function") ngFirebaseSelfTest(db, auth); }catch(e){ console.error(e); }
     }
 
+
+window.signInFlow = signInFlow;
+window.ngEnter = async function(rawEmail){
+  try{
+    const em = String(rawEmail || (emailInput && emailInput.value) || "").trim().toLowerCase();
+    if(!em){
+      try{ if(statusLine) statusLine.textContent = "Enter an email."; }catch(_){}
+      try{ if(emailInput) emailInput.focus(); }catch(_){}
+      try{ show("landing"); }catch(_){}
+      return;
+    }
+    try{ if(statusLine) statusLine.textContent = "Signing in…"; }catch(_){}
+    await signInFlow(auth, db, em);
+  }catch(err){
+    const msg = err && (err.message || err.code) ? (err.message || err.code) : String(err);
+    try{ if(statusLine) statusLine.textContent = "Firebase error."; }catch(_){}
+    try{ alert("Sign-in failed: " + msg); }catch(_){}
+  }
+};
+
     // Start Firebase and wire handlers
     try {
       const app = initializeApp(firebaseConfig);
@@ -5587,6 +5608,79 @@ window.APP_VERSION = "v1232";
       if(btn) btn.scrollIntoView({behavior:'smooth', block:'center'});
     } catch(e) {}
   });
+})();
+</script>
+
+
+<script>
+/* ===== PASS 3 STARTUP + LOGIN RECOVERY ===== */
+(function(){
+  function activate(which){
+    try{
+      if(typeof window.showScreen === "function"){ window.showScreen(which); return; }
+    }catch(_){}
+    try{
+      ["landing","players","setup","waiting","lobby","detail","leaderboard","randomizer"].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.classList.toggle("active", id === which);
+      });
+    }catch(_){}
+  }
+
+  function makeLandingVisible(){
+    try{
+      var pads = document.getElementById("landingPads");
+      var emailPad = document.getElementById("emailPad");
+      var enterBtn = document.getElementById("enterBtn");
+      var emailEcho = document.getElementById("emailEcho");
+      if(pads){
+        pads.style.display = "grid";
+        pads.style.pointerEvents = "auto";
+        pads.style.zIndex = "20";
+      }
+      if(emailPad){
+        emailPad.style.opacity = "1";
+        emailPad.style.visibility = "visible";
+      }
+      if(enterBtn){
+        enterBtn.style.opacity = "1";
+        enterBtn.style.visibility = "visible";
+        enterBtn.style.pointerEvents = "auto";
+      }
+      if(emailEcho){
+        emailEcho.style.display = "flex";
+      }
+    }catch(_){}
+  }
+
+  function bindEnter(){
+    try{
+      var enterBtn = document.getElementById("enterBtn");
+      var emailInput = document.getElementById("emailInput");
+      if(!enterBtn || enterBtn.__ngPass3Bound) return;
+      enterBtn.__ngPass3Bound = true;
+      enterBtn.addEventListener("click", function(e){
+        e.preventDefault();
+        if(typeof window.ngEnter === "function"){
+          window.ngEnter(emailInput ? emailInput.value : "");
+        }
+      });
+    }catch(_){}
+  }
+
+  function bootLanding(){
+    activate("landing");
+    makeLandingVisible();
+    bindEnter();
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", bootLanding);
+  } else {
+    bootLanding();
+  }
+  window.addEventListener("load", bootLanding);
+  setTimeout(bootLanding, 250);
 })();
 </script>
 
