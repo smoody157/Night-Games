@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1342</title>
-<!-- NIGHT GAMES v1342 -->
+<title>Night Games v1343</title>
+<!-- NIGHT GAMES v1343 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>:root vars) • COMPONENTS (
@@ -2068,103 +2068,10 @@ body.ngFadeIn{ animation: ngFadeIn .32s ease both; }
 .ngLbCloseRow{ display:flex; justify-content:center; margin-top:12px; }
 
 </style>
-<script id="ngGuards_v748">
-
-/* ===================== v1232 FIREBASE CONFIG GUARD (NO 404) ===================== */
-function ngValidateFirebaseConfig(firebaseConfig){
-  const missing = [];
-  if(!firebaseConfig || typeof firebaseConfig !== "object") missing.push("firebaseConfig");
-  else{
-    if(!firebaseConfig.apiKey) missing.push("apiKey");
-    if(!firebaseConfig.authDomain) missing.push("authDomain");
-    if(!firebaseConfig.projectId) missing.push("projectId");
-  }
-  return missing;
-}
-
-/* ===================== FLAT LOGGER ===================== */
-const NG_DEBUG = false;
-
-function ngLogError(label, err){
-  try{
-    if(NG_DEBUG) console.error(label, err);
-    if(typeof db!=="undefined" && typeof addDoc==="function" && typeof collection==="function"){
-      addDoc(collection(db,"error_logs"),{
-        label:String(label||"Error"),
-        message:String(err?.message||err),
-        stack:String(err?.stack||""),
-        at:new Date()
-      }).catch(()=>{});
-    }
-  }catch(_){ try{ window.ngLastError = String(_ && (_.message||_)); }catch(_e){} }
-}
-/* ===================== v1232 MASTER REPORTER ===================== */
-window.ngErr = (label, e) => {
-  console.warn(`[${label}]`, e);
-  if(typeof ngLogError === "function") ngLogError(label, e);
-};
-
-/* ===================== SAFE ERROR WRAPPER ===================== */
-function ngHandleError(label, e){
-  try{
-    if(typeof ngLogError === "function"){
-      try{ ngLogError(label, e); }catch(_le){ console.error(label, e); }
-    }else{
-      console.error(label, e);
-    }
-  }catch(_fatal){
-    try{ console.error(label, e); }catch(_ignore){}
-  }
-}
-
-/* ===================== PASS 3 (JS) : DEBUG + ERROR LOGGING ===================== */
-
-/* === : GLOBAL EXECUTION GUARD (STEP 4) === */
-function ngGuard(label, fn){
-  try{
-    return fn();
-  }catch(e){
-    if(typeof ngLogError === "function"){
-      try{ ngLogError(label || "Global_Error", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-    }else{
-      console.error("Critical Failure:", e);
-    }
-  }
-}
-
-/* =============================================================================
-   SECTION_UTILS: SAFETY GUARDS  [SECTION_UTILS]
-   - Prevents small errors from killing the whole app.
-   - Does NOT change normal behavior when everything is working.
-============================================================
-
-
-(function(){
-  // Safe wrapper for event handlers
-  window.ngSafe = function(fn, label){
-    return function(){
-      try { return fn.apply(this, arguments); }
-      catch (e) {
-        try {
-          if (window.ngErr) window.ngErr(label || "Handler error", e && (e.stack || e.message || String(e)));
-        } catch(_e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-      }
-    };
-  };
-
-  // Guard common DOM lookup usage
-  window.ng$ = function(sel){ return document.querySelector(sel); };
-  window.ngAll = function(sel){ return Array.from(document.querySelectorAll(sel)); };
-})();
-</script>
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1342</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1343</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2306,7 +2213,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1342 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1343 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2315,11 +2222,6 @@ function ngGuard(label, fn){
 <pre id="fatalMsg">No details.</pre>
 </div>
 </div>
-<script nomodule="">
-    // Very old browsers only
-    document.getElementById("fatal").style.display = "flex";
-    document.getElementById("fatalMsg").textContent = "Your browser doesn’t support ES Modules. Use a modern Safari/Chrome.";
-  </script>
 <script>
     // Debug UI toggle
     (function(){
@@ -2329,55 +2231,6 @@ function ngGuard(label, fn){
       document.getElementById("dbgUrl").textContent = location.href.slice(0, 48) + (location.href.length>48 ? "…" : "");
     })();
   </script>
-
-<script>
-/* ============================================================================
-  ENTER FALLBACK WIRING (non-module)
-  - Guarantees ENTER button does something even if module script/import fails.
-  - Calls window.ngEnter(email) when available.
-============================================================================ */
-(function(){
-  function qs(id){ return document.getElementById(id); }
-  const enterBtn = qs("enterBtn");
-  const emailInput = qs("emailInput");
-  const statusLine = qs("statusLine");
-  if(!enterBtn || !emailInput) return;
-
-  function setStatus(t){
-    try{ if(statusLine) statusLine.textContent = t; }catch(_){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-  }
-
-  let busy = false;
-  async function run(){
-    if(busy) return;
-    busy = true;
-    try{
-      if(typeof
-      }else{
-        setStatus("Loading…");
-        // small retry window
-        setTimeout(()=>{ busy=false; }, 600);
-        return;
-      }
-    }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-
-      console.log("ENTER fallback error:", e);
-      setStatus("Error.");
-    }
-    busy = false;
-  }
-
-  enterBtn.addEventListener("click", (e)=>{ e.preventDefault(); run(); });
-  emailInput.addEventListener("keydown", (e)=>{
-    if(e.key === "Enter"){ e.preventDefault(); run(); }
-  });
-})();
-</script>
 
 <script>
 // ===================== v1232 NO-MODULE BOOTSTRAP =====================
@@ -2398,7 +2251,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1342";
+  window.ngBuild = "v1343";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -2423,7 +2276,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1342";
+window.ngBuild = "v1343";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -2507,9 +2360,8 @@ const NG_STORE = {
     const fatalMsg = document.getElementById("fatalMsg");
     function failHard(msg, err){
       console.error(msg, err);
-      fatal.style.display = "flex";
-      fatalMsg.textContent = msg + (err ? ("\n\n" + (err.stack||err.message||String(err))) : "");
-      setDbg("FAIL", "—", "—", msg);
+      try{ setDbg("FAIL", "—", "—", msg); }catch(_e){}
+      try{ window.ngLastError = msg + (err ? (" :: " + (err.message||String(err))) : ""); }catch(_e){}
     }
 
     // ===== Config (from Steven) =====
@@ -2550,7 +2402,7 @@ const firebaseConfig = {
     // : email field defaults (no highlight/delete)
     try{
       const savedEmail = (ngLSGet("ng_saved_email")||"").trim().toLowerCase();
-      const isBill = (savedEmail && savedEmail === BILL_EMAIL);
+      const isBill = (savedEmail && savedEmail === ((ngLSGet("ng_bill_email") || "").trim().toLowerCase()));
       // Bill can keep his saved email in the field; everyone else gets an empty field + placeholder.
       if(isBill){
         emailInput.value = savedEmail;
@@ -4409,7 +4261,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1342Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1343Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -5536,7 +5388,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1342";
+window.APP_VERSION = "v1343";
 (function(){
   try {
     // header version
@@ -5975,6 +5827,15 @@ if(window.NG_startGame){
 }
 
 </script>
+
+
+<!-- v1343 cleanup:
+- removed malformed ngGuards script block
+- removed broken ENTER fallback block
+- removed nomodule fatal blocker block
+- softened fatal handler so startup errors do not hard-block UI
+- fixed early BILL_EMAIL reference in bootstrap
+-->
 
 </body>
 </html>
