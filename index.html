@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1383</title>
-<!-- NIGHT GAMES v1383 -->
+<title>Night Games v1384</title>
+<!-- NIGHT GAMES v1384 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -2057,7 +2057,7 @@ button, .btn, .pill{
 #landing #landingLeaderboardBtn{ height:36px; width:50%; margin:0 auto; }
 
 
-/* ===== v1383 landing cleanup ===== */
+/* ===== v1384 landing cleanup ===== */
 #globalFooter,
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
@@ -2180,7 +2180,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== V1383 header + landing final polish ===== */
+/* ===== V1384 header + landing final polish ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2394,7 +2394,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== V1383 FINAL LANDING / HEADER PASS ===== */
+/* ===== V1384 FINAL LANDING / HEADER PASS ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2617,7 +2617,7 @@ html, body {
 }
 
 
-/* ===== V1383 FINAL HARDENING ===== */
+/* ===== V1384 FINAL HARDENING ===== */
 html, body {
   min-height: 100vh !important;
   min-height: 100dvh !important;
@@ -2656,7 +2656,7 @@ body {
 }
 
 
-/* ===== V1383 PRODUCTION CLEANUP ===== */
+/* ===== V1384 PRODUCTION CLEANUP ===== */
 html, body{
   height:100%;
   min-height:100vh;
@@ -2699,6 +2699,42 @@ body{
 }
 #landing #landingFoot{
   bottom:max(16px, env(safe-area-inset-bottom)) !important;
+}
+
+
+/* ===== V1384 FINAL RELEASE CLEANUP ===== */
+html, body{
+  height:100% !important;
+  min-height:100vh !important;
+  min-height:100dvh !important;
+  margin:0 !important;
+  overflow:hidden !important;
+  -webkit-text-size-adjust:100% !important;
+}
+body{
+  display:flex !important;
+  flex-direction:column !important;
+  background:#000 !important;
+}
+#app{
+  flex:1 1 auto !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:flex-start !important;
+  align-items:stretch !important;
+  padding-top:76px !important;
+}
+#ngVersionBelow{
+  color: rgba(42,168,255,.98) !important;
+}
+#landing #landingPads{
+  bottom:max(92px, calc(env(safe-area-inset-bottom) + 78px)) !important;
+}
+#landing #landingFoot{
+  bottom:max(16px, env(safe-area-inset-bottom)) !important;
+}
+.logoFrame, #logoFrame, .logoWrap, #logoWrap, .heroLogo, #heroLogo, #landingLogo, #logo{
+  max-height: clamp(64px, 8vh, 84px) !important;
 }
 
 </style>
@@ -2796,11 +2832,18 @@ function ngGuard(label, fn){
 })();
 </script>
 
-<script id="ng-v1383-appcheck-hook">
+
+
+
+<script id="ng-v1384-appcheck-hook">
 window.NG_APP_CHECK = window.NG_APP_CHECK || {
   enabled:false,
   siteKey:"",
-  note:"Set siteKey and enable in Firebase Console App Check before launch."
+  note:"Enable Firebase App Check in Firebase Console before launch."
+};
+window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || {
+  intro: "New%20Recording%202.m4a",
+  silentOnFail: true
 };
 </script>
 
@@ -2815,11 +2858,11 @@ window.NG_APP_CHECK = window.NG_APP_CHECK || {
   </div>
   <div class="ngBottomRow">
     <span class="ngBottomLeft"></span>
-    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title="" style="display:none;">V1383</span>
+    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title="" style="display:none;">V1384</span>
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">V1383</div>
+<div id="ngVersionBelow">V1384</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2958,7 +3001,7 @@ window.NG_APP_CHECK = window.NG_APP_CHECK || {
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1383 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1384 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -3050,7 +3093,7 @@ window.NG_APP_CHECK = window.NG_APP_CHECK || {
     }catch(_e){}
   };
 
-  window.ngBuild = "v1383";
+  window.ngBuild = "v1384";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -3075,7 +3118,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1383";
+window.ngBuild = "v1384";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -5061,7 +5104,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1383Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1384Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -6187,7 +6230,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1383";
+window.APP_VERSION = "v1384";
 (function(){
   try {
     // header version
@@ -6213,17 +6256,20 @@ window.APP_VERSION = "v1383";
 
 
 
-<script id="ng-v1383-landing-fix">
+
+
+
+<script id="ng-v1384-landing-fix">
 document.addEventListener("DOMContentLoaded", function(){
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "V1383";
+    if (vb) vb.textContent = "V1384";
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
     var status = document.getElementById("statusLine");
     var introPlayed = false;
     var ticks = 0;
-    var maxTicks = 50; // 10 seconds @ 200ms
+    var maxTicks = 50;
 
     function setEnabled(flag){
       if(email){
@@ -6242,10 +6288,14 @@ document.addEventListener("DOMContentLoaded", function(){
       introPlayed = true;
       try {
         if(window.__ngAudioCtl && typeof window.__ngAudioCtl.playIntro === "function") {
-          window.__ngAudioCtl.playIntro();
+          Promise.resolve(window.__ngAudioCtl.playIntro()).catch(function(){});
         }
       } catch (e) {
-        console.error(e);
+        try {
+          if(window.NG_AUDIO_FALLBACK && window.NG_AUDIO_FALLBACK.silentOnFail){
+            /* silent fallback */
+          }
+        } catch (_) {}
       }
     }
 
