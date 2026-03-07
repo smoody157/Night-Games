@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1378</title>
-<!-- NIGHT GAMES v1378 -->
+<title>Night Games v1379</title>
+<!-- NIGHT GAMES v1379 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -2057,7 +2057,7 @@ button, .btn, .pill{
 #landing #landingLeaderboardBtn{ height:36px; width:50%; margin:0 auto; }
 
 
-/* ===== v1378 landing cleanup ===== */
+/* ===== v1379 landing cleanup ===== */
 #globalFooter,
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
@@ -2179,6 +2179,220 @@ button, .btn, .pill{
   display: none !important;
 }
 
+
+/* ===== V1379 header + landing final polish ===== */
+#landing .leaderboardSlot,
+#landing #leaderboardBtn,
+#landing #landingLeaderboardBtn,
+#landing .globalFooter,
+#landing #globalFooter {
+  display:none !important;
+}
+
+#ngHeaderBar{
+  position:fixed !important;
+  top:max(10px, env(safe-area-inset-top)) !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  width:min(760px,94vw) !important;
+  z-index:9999 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:4px !important;
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+#ngHeaderBar::before{display:none !important;}
+#ngHeaderBar .ngTopRow,
+#ngHeaderBar .ngBottomRow{
+  position:relative !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:10px !important;
+}
+#ngHeaderBar .ngHeaderLeft{
+  position:absolute !important;
+  left:0 !important;
+  max-width:38% !important;
+}
+#ngHeaderBar .ngHeaderCenter{
+  flex:0 0 auto !important;
+  text-align:center !important;
+  max-width:none !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+}
+#ngHeaderBar .ngHeaderRight{
+  position:absolute !important;
+  right:0 !important;
+  max-width:20% !important;
+  text-align:right !important;
+}
+#ngHeaderBar .ngTitle{
+  color:#d7b24a !important;
+  font-weight:1000 !important;
+  letter-spacing:.04em !important;
+  text-shadow:0 2px 10px rgba(0,0,0,.75) !important;
+}
+#ngHeaderBar .ngOnline, #ngHeaderRight{
+  color:rgba(60,255,160,.98) !important;
+  font-weight:1000 !important;
+  text-shadow:0 2px 10px rgba(0,0,0,.75) !important;
+}
+#ngVersionBelow{
+  position:fixed !important;
+  top:calc(max(10px, env(safe-area-inset-top)) + 34px) !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  z-index:9998 !important;
+  color:rgba(42,168,255,.98) !important;
+  font-weight:1100 !important;
+  font-size:14px !important;
+  letter-spacing:.12em !important;
+  text-shadow:0 2px 10px rgba(0,0,0,.75) !important;
+  pointer-events:none !important;
+}
+
+#landing #landingPads{
+  position:absolute !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  width:min(340px,82vw) !important;
+  max-width:340px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  gap:16px !important;
+  bottom:max(96px, calc(env(safe-area-inset-bottom) + 82px)) !important;
+  z-index:20 !important;
+  pointer-events:auto !important;
+}
+
+#landing #emailPad{
+  width:min(280px,72vw) !important;
+  height:44px !important;
+  margin:0 auto !important;
+  position:relative !important;
+  overflow:hidden !important;
+  border-radius:16px !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.04)) !important;
+  border:1px solid rgba(255,255,255,.42) !important;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -1px 0 rgba(255,255,255,.18),
+    inset 1px 0 0 rgba(255,255,255,.18),
+    inset -1px 0 0 rgba(255,255,255,.18) !important;
+  backdrop-filter:blur(8px) saturate(110%) !important;
+  -webkit-backdrop-filter:blur(8px) saturate(110%) !important;
+}
+#landing #emailPad::before{
+  content:"";
+  position:absolute;
+  left:-10%;
+  top:-45%;
+  width:120%;
+  height:80%;
+  background:linear-gradient(135deg, rgba(255,255,255,0), rgba(255,255,255,.22) 36%, rgba(255,255,255,.06) 56%, rgba(255,255,255,0) 76%);
+  transform:rotate(10deg);
+  pointer-events:none;
+}
+#landing #emailInput{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  opacity:1 !important;
+  color:rgba(255,255,255,.98) !important;
+  caret-color:rgba(255,255,255,.98) !important;
+  background:transparent !important;
+  border:0 !important;
+  outline:none !important;
+  text-align:center !important;
+  font-size:16px !important;
+  padding:0 12px !important;
+  pointer-events:auto !important;
+  -webkit-text-fill-color:rgba(255,255,255,.98) !important;
+}
+#landing #emailInput::placeholder{color:rgba(255,255,255,.74) !important;}
+#landing #emailEcho{display:none !important;}
+
+#landing #enterBtn{
+  width:min(340px,82vw) !important;
+  height:48px !important;
+  margin:0 auto !important;
+  position:relative !important;
+  overflow:hidden !important;
+  opacity:1 !important;
+  display:block !important;
+  pointer-events:auto !important;
+  cursor:pointer !important;
+  border-radius:16px !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.04)) !important;
+  border:1px solid rgba(255,255,255,.42) !important;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -1px 0 rgba(255,255,255,.18),
+    inset 1px 0 0 rgba(255,255,255,.18),
+    inset -1px 0 0 rgba(255,255,255,.18) !important;
+  backdrop-filter:blur(8px) saturate(110%) !important;
+  -webkit-backdrop-filter:blur(8px) saturate(110%) !important;
+}
+#landing #enterBtn::before{
+  content:"";
+  position:absolute;
+  left:-10%;
+  top:-45%;
+  width:120%;
+  height:80%;
+  background:linear-gradient(135deg, rgba(255,255,255,0), rgba(255,255,255,.22) 36%, rgba(255,255,255,.06) 56%, rgba(255,255,255,0) 76%);
+  transform:rotate(10deg);
+  pointer-events:none;
+}
+#landing #enterBtn .enterText{
+  position:absolute !important;
+  left:50% !important;
+  top:50% !important;
+  transform:translate(-50%,-60%) !important;
+  font-size:22px !important;
+  font-weight:1000 !important;
+  letter-spacing:2px !important;
+  color:rgba(255,255,255,.96) !important;
+  text-shadow:0 2px 14px rgba(0,0,0,.55) !important;
+}
+#landing #enterBtn .enterSub{
+  position:absolute !important;
+  left:50% !important;
+  top:50% !important;
+  transform:translate(-50%, 34%) !important;
+  width:92% !important;
+  text-align:center !important;
+  font-size:10px !important;
+  font-weight:900 !important;
+  opacity:.86 !important;
+  color:rgba(255,255,255,.88) !important;
+}
+
+#landing #landingFoot{
+  position:absolute !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  bottom:max(16px, env(safe-area-inset-bottom)) !important;
+  width:min(900px,96vw) !important;
+  text-align:center !important;
+  z-index:6 !important;
+  pointer-events:none !important;
+}
+#landing .landingCopy, #landing .landingFooter {
+  text-align:center !important;
+}
+
 </style>
 <script id="ngGuards_v748">
 
@@ -2276,7 +2490,19 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title="">V1378</span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">
+  <div class="ngTopRow">
+    <span class="ngHeaderLeft"><span class="ngTitle">Night Games</span></span>
+    <span class="ngHeaderCenter" id="ngHeaderCenter">Firebase • Firestore</span>
+    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>
+  </div>
+  <div class="ngBottomRow">
+    <span class="ngBottomLeft"></span>
+    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title="" style="display:none;">V1379</span>
+    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
+  </div>
+</div>
+<div id="ngVersionBelow">V1379</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2314,10 +2540,7 @@ function ngGuard(label, fn){
     </div>
 
     <button id="enterBtn" type="button" aria-label="Enter"><span class="enterText">ENTER</span><span class="enterSub" id="statusLine">Email-only sign-in (no password). Firebase stable build.</span></button>
-
-    <button id="landingLeaderboardBtn" type="button" aria-label="Leaderboard">LEADERBOARD</button>
-
-    <!-- Keep ONLY one hint line (matches artwork intent) -->
+<!-- Keep ONLY one hint line (matches artwork intent) -->
 </div>
 
   <!-- Footer at the foot (separate from hint) -->
@@ -2418,7 +2641,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1378 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1379 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2510,7 +2733,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1378";
+  window.ngBuild = "v1379";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -2535,7 +2758,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1378";
+window.ngBuild = "v1379";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -4521,7 +4744,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1378Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1379Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -5647,7 +5870,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1378";
+window.APP_VERSION = "v1379";
 (function(){
   try {
     // header version
@@ -5661,22 +5884,30 @@ window.APP_VERSION = "v1378";
 
 
 
-<script id="ng-v1378-landing-fix">
+
+
+
+<script id="ng-v1379-landing-fix">
 document.addEventListener("DOMContentLoaded", function(){
   try {
-    var ver = document.getElementById("ngHeaderPlayer");
-    if (ver) ver.textContent = "V1378";
-
+    var vb = document.getElementById("ngVersionBelow");
+    if (vb) vb.textContent = "V1379";
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
     var status = document.getElementById("statusLine");
     var introPlayed = false;
 
+    function setEnabled(flag){
+      if(email) email.disabled = !flag;
+      if(enter) enter.disabled = !flag;
+      if(status) status.textContent = flag ? "Email-only sign-in (no password)." : "Connecting…";
+    }
+
     function playIntro(){
-      if (introPlayed) return;
+      if(introPlayed) return;
       introPlayed = true;
       try {
-        if (window.__ngAudioCtl && typeof window.__ngAudioCtl.playIntro === "function") {
+        if(window.__ngAudioCtl && typeof window.__ngAudioCtl.playIntro === "function") {
           window.__ngAudioCtl.playIntro();
         }
       } catch (e) {
@@ -5684,29 +5915,24 @@ document.addEventListener("DOMContentLoaded", function(){
       }
     }
 
-    function setEnabled(flag){
-      if (email) email.disabled = !flag;
-      if (enter) enter.disabled = !flag;
-      if (status) status.textContent = flag ? "Email-only sign-in (no password)." : "Connecting…";
-    }
-
     setEnabled(false);
     var iv = setInterval(function(){
-      if (window.db || window.ngFirebaseStatus === "FIREBASE_BOOT_SUCCESS") {
+      if(window.db || window.ngFirebaseStatus === "FIREBASE_BOOT_SUCCESS"){
         clearInterval(iv);
         setEnabled(true);
       }
     }, 200);
 
-    if (email) {
-      email.addEventListener("focus", playIntro, { once: true });
-      email.addEventListener("touchstart", playIntro, { once: true, passive: true });
+    if(email){
+      email.removeAttribute("readonly");
+      email.style.pointerEvents = "auto";
+      email.addEventListener("focus", playIntro, { once:true });
+      email.addEventListener("touchstart", playIntro, { once:true, passive:true });
     }
 
-    if (enter && email) {
-      enter.addEventListener("click", function(e){
-        if (email.disabled) { e.preventDefault(); return; }
-      }, true);
+    if(enter){
+      enter.style.pointerEvents = "auto";
+      enter.style.opacity = "1";
     }
   } catch (e) {
     console.error(e);
