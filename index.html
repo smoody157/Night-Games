@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1388</title>
-<!-- NIGHT GAMES v1388 -->
+<title>Night Games v1389</title>
+<!-- NIGHT GAMES v1389 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -2057,7 +2057,7 @@ button, .btn, .pill{
 #landing #landingLeaderboardBtn{ height:36px; width:50%; margin:0 auto; }
 
 
-/* ===== v1388 landing cleanup ===== */
+/* ===== v1389 landing cleanup ===== */
 #globalFooter,
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
@@ -2180,7 +2180,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== V1388 header + landing final polish ===== */
+/* ===== v1389 header + landing final polish ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2394,7 +2394,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== V1388 FINAL LANDING / HEADER PASS ===== */
+/* ===== v1389 FINAL LANDING / HEADER PASS ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2617,7 +2617,7 @@ html, body {
 }
 
 
-/* ===== V1388 FINAL HARDENING ===== */
+/* ===== v1389 FINAL HARDENING ===== */
 html, body {
   min-height: 100vh !important;
   min-height: 100dvh !important;
@@ -2656,7 +2656,7 @@ body {
 }
 
 
-/* ===== V1388 PRODUCTION CLEANUP ===== */
+/* ===== v1389 PRODUCTION CLEANUP ===== */
 html, body{
   height:100%;
   min-height:100vh;
@@ -2702,7 +2702,7 @@ body{
 }
 
 
-/* ===== V1388 FINAL RELEASE CLEANUP ===== */
+/* ===== v1389 FINAL RELEASE CLEANUP ===== */
 html, body{
   height:100% !important;
   min-height:100vh !important;
@@ -2738,7 +2738,7 @@ body{
 }
 
 
-/* ===== V1388 landing activation + email position tweak ===== */
+/* ===== v1389 landing activation + email position tweak ===== */
 #landing #landingPads{
   bottom:max(108px, calc(env(safe-area-inset-bottom) + 94px)) !important;
 }
@@ -2748,6 +2748,31 @@ body{
 #landing #emailInput,
 #landing #enterBtn{
   pointer-events:auto !important;
+}
+
+
+/* ===== V1389 button activation fix ===== */
+#landing #emailPad{
+  position: relative !important;
+  z-index: 30 !important;
+}
+#landing #emailInput{
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 31 !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  color: rgba(255,255,255,.98) !important;
+  caret-color: rgba(255,255,255,.98) !important;
+}
+#landing #enterBtn{
+  position: relative !important;
+  z-index: 30 !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+}
+#landing #landingPads{
+  z-index: 30 !important;
 }
 
 </style>
@@ -2848,7 +2873,7 @@ function ngGuard(label, fn){
 
 
 
-<script id="ng-v1388-appcheck-hook">
+<script id="ng-v1389-appcheck-hook">
 window.NG_APP_CHECK = window.NG_APP_CHECK || {
   enabled:false,
   siteKey:"",
@@ -2875,7 +2900,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || {
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">V1388</div>
+<div id="ngVersionBelow">v1389</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -3014,7 +3039,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || {
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1388 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1389 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -3106,7 +3131,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || {
     }catch(_e){}
   };
 
-  window.ngBuild = "v1388";
+  window.ngBuild = "v1389";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -3131,7 +3156,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1388";
+window.ngBuild = "v1389";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -5117,7 +5142,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1388Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1389Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -6243,7 +6268,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1388";
+window.APP_VERSION = "v1389";
 (function(){
   try {
     // header version
@@ -6275,44 +6300,70 @@ window.APP_VERSION = "v1388";
 
 
 
-<script id="ng-v1388-landing-fix">
+
+
+
+<script id="ng-v1389-landing-fix">
 document.addEventListener("DOMContentLoaded", function(){
-  try{
+  try {
+    var vb = document.getElementById("ngVersionBelow");
+    if (vb) vb.textContent = "V1389";
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
     var status = document.getElementById("statusLine");
+    var introPlayed = false;
 
-    function setEnabled(flag){
+    function unlock(){
       if(email){
-        email.disabled = !flag;
+        email.disabled = false;
         email.readOnly = false;
         email.removeAttribute("readonly");
         email.style.pointerEvents = "auto";
+        email.style.opacity = "1";
       }
       if(enter){
-        enter.disabled = !flag;
-        enter.style.pointerEvents = flag ? "auto" : "none";
+        enter.disabled = false;
+        enter.style.pointerEvents = "auto";
         enter.style.opacity = "1";
         enter.style.display = "block";
       }
-      if(status) status.textContent = flag ? "Email-only sign-in (no password)." : "Connecting…";
+      if(status && (!status.textContent || /Connecting|timeout/i.test(status.textContent))){
+        status.textContent = "Email-only sign-in (no password).";
+      }
     }
 
-    setEnabled(false);
-    var ticks = 0;
+    function playIntro(){
+      if(introPlayed) return;
+      introPlayed = true;
+      try {
+        if(window.__ngAudioCtl && typeof window.__ngAudioCtl.playIntro === "function") {
+          Promise.resolve(window.__ngAudioCtl.playIntro()).catch(function(){});
+        }
+      } catch(e) {}
+    }
+
+    var checks = 0;
     var iv = setInterval(function(){
-      ticks += 1;
+      checks += 1;
       if(window.db || window.ngFirebaseStatus === "FIREBASE_BOOT_SUCCESS"){
         clearInterval(iv);
-        setEnabled(true);
+        unlock();
         return;
       }
-      if(ticks >= 50){
+      if(checks >= 15){
         clearInterval(iv);
-        if(status) status.textContent = "Connection timeout. Refresh to retry.";
+        unlock();
       }
     }, 200);
-  }catch(e){
+
+    unlock();
+
+    if(email){
+      email.addEventListener("focus", playIntro, {once:true});
+      email.addEventListener("touchstart", playIntro, {once:true, passive:true});
+      email.addEventListener("click", playIntro, {once:true});
+    }
+  } catch(e) {
     console.error(e);
   }
 });
