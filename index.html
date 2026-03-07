@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1341</title>
-<!-- NIGHT GAMES v1341 -->
+<title>Night Games v1342</title>
+<!-- NIGHT GAMES v1342 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>:root vars) • COMPONENTS (
@@ -2164,7 +2164,7 @@ function ngGuard(label, fn){
 </head>
 <body>
 
-<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1341</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
+<div id="ngHeaderBar">  <div class="ngTopRow">    <span class="ngHeaderLeft"><span class="ngTitle">Night Games v1342</span> <span class="ngVer"></span></span>    <span class="ngHeaderCenter">Firebase • Firestore</span>    <span class="ngHeaderRight ngOnline" id="ngHeaderRight">Online</span>  </div>  <div class="ngBottomRow">    <span class="ngBottomLeft"></span>    <span class="ngHeaderPlayer" id="ngHeaderPlayer" title=""></span>    <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>  </div></div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -2306,7 +2306,7 @@ function ngGuard(label, fn){
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1341 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1342 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -2398,7 +2398,7 @@ function ngGuard(label, fn){
     }catch(_e){}
   };
 
-  window.ngBuild = "v1341";
+  window.ngBuild = "v1342";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -2423,7 +2423,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1341";
+window.ngBuild = "v1342";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -4409,7 +4409,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1341Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1342Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -5536,7 +5536,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1341";
+window.APP_VERSION = "v1342";
 (function(){
   try {
     // header version
@@ -5736,6 +5736,243 @@ const __ngStartGame = window.NG_startGame.bind(window);
 window.NG_startGame = function(order){
   NG_FADE.swap(function(){ __ngStartGame(order); }, 220);
 };
+
+
+/* ===== GAME ENGINE START FLOW MODULE (v1342) =====
+   Connects the six game engines to the common multiplayer start flow.
+   Purpose: when order/randomizer finishes, initialize a usable per-game state,
+   push the app into the game screen, and hand off to any existing render hooks.
+========================================================================= */
+
+window.NG_ENGINE = window.NG_ENGINE || {};
+
+NG_ENGINE.games = {
+  "01": {
+    makeState(ctx){
+      const start = Number((ctx && ctx.zeroOneStart) || (window.activeSession && window.activeSession.zeroOneStart) || 501) || 501;
+      const mode  = (ctx && ctx.zeroOneMode) || (window.activeSession && window.activeSession.zeroOneMode) || "single_single";
+      const scores = {};
+      (ctx.order || []).forEach(email => { scores[email] = start; });
+      return {
+        key: "01",
+        title: "01",
+        startValue: start,
+        mode,
+        currentTurn: 0,
+        order: [...(ctx.order || [])],
+        scoresByPlayer: scores,
+        turns: [],
+        winnerEmail: null
+      };
+    }
+  },
+
+  "Cricket": {
+    makeState(ctx){
+      const marks = {};
+      const points = {};
+      (ctx.order || []).forEach(email => {
+        marks[email] = {15:0,16:0,17:0,18:0,19:0,20:0,bull:0};
+        points[email] = 0;
+      });
+      return {
+        key: "Cricket",
+        title: "Cricket",
+        currentTurn: 0,
+        order: [...(ctx.order || [])],
+        marksByPlayer: marks,
+        pointsByPlayer: points,
+        turns: [],
+        winnerEmail: null
+      };
+    }
+  },
+
+  "Killer": {
+    makeState(ctx){
+      const lives = {};
+      const nums  = {};
+      (ctx.order || []).forEach((email, i) => {
+        lives[email] = 3;
+        nums[email] = (ctx.killerNumbers && ctx.killerNumbers[email]) ? ctx.killerNumbers[email] : null;
+      });
+      return {
+        key: "Killer",
+        title: "Killer",
+        currentTurn: 0,
+        order: [...(ctx.order || [])],
+        livesByPlayer: lives,
+        killerNumbers: nums,
+        activeKillers: {},
+        turns: [],
+        winnerEmail: null
+      };
+    }
+  },
+
+  "Shanghai": {
+    makeState(ctx){
+      const scores = {};
+      (ctx.order || []).forEach(email => { scores[email] = 0; });
+      return {
+        key: "Shanghai",
+        title: "Shanghai",
+        currentTurn: 0,
+        order: [...(ctx.order || [])],
+        roundNumber: 1,
+        scoresByPlayer: scores,
+        turns: [],
+        winnerEmail: null
+      };
+    }
+  },
+
+  "ATW": {
+    makeState(ctx){
+      const target = {};
+      (ctx.order || []).forEach(email => { target[email] = 1; });
+      return {
+        key: "ATW",
+        title: "Around the World",
+        currentTurn: 0,
+        order: [...(ctx.order || [])],
+        targetByPlayer: target,
+        turns: [],
+        winnerEmail: null
+      };
+    }
+  },
+
+  "Half It": {
+    makeState(ctx){
+      const scores = {};
+      (ctx.order || []).forEach(email => { scores[email] = 0; });
+      return {
+        key: "Half It",
+        title: "Half It",
+        currentTurn: 0,
+        order: [...(ctx.order || [])],
+        roundIndex: 0,
+        scoresByPlayer: scores,
+        turns: [],
+        winnerEmail: null
+      };
+    }
+  }
+};
+
+NG_ENGINE.resolveSession = function(){
+  try{ if(window.activeSession) return window.activeSession; }catch(e){}
+  try{ if(typeof activeSession !== "undefined" && activeSession) return activeSession; }catch(e){}
+  try{
+    const raw = localStorage.getItem("ng_active_session");
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {};
+};
+
+NG_ENGINE.saveSession = function(session){
+  try{ window.activeSession = session; }catch(e){}
+  try{ if(typeof activeSession !== "undefined") activeSession = session; }catch(e){}
+  try{ localStorage.setItem("ng_active_session", JSON.stringify(session)); }catch(e){}
+};
+
+NG_ENGINE.resolveName = function(email){
+  try{
+    if(window.playersByEmail && window.playersByEmail[email] && window.playersByEmail[email].name) return window.playersByEmail[email].name;
+  }catch(e){}
+  try{
+    if(window.DEFAULT_PLAYERS && window.DEFAULT_PLAYERS[email] && window.DEFAULT_PLAYERS[email].name) return window.DEFAULT_PLAYERS[email].name;
+  }catch(e){}
+  return email;
+};
+
+NG_ENGINE.mountFallbackBoard = function(session){
+  const host = document.getElementById("detailBody") ||
+               document.getElementById("gameBody") ||
+               document.getElementById("gamePanelBody") ||
+               document.getElementById("detail") ||
+               null;
+  if(!host) return;
+  if(document.getElementById("ngEngineFallbackBoard")) return;
+
+  const wrap = document.createElement("div");
+  wrap.id = "ngEngineFallbackBoard";
+  wrap.style.marginTop = "14px";
+  wrap.innerHTML = `
+    <div class="fieldLabel">Current Game</div>
+    <div class="setupGameTitle">${session.gameName || session.game || "Game"}</div>
+    <div id="ngEngineTurn" style="font-weight:1100; margin-bottom:10px;"></div>
+    <div id="ngEnginePlayers"></div>
+  `;
+  host.appendChild(wrap);
+};
+
+NG_ENGINE.renderFallbackBoard = function(session){
+  NG_ENGINE.mountFallbackBoard(session);
+  const turnEl = document.getElementById("ngEngineTurn");
+  const listEl = document.getElementById("ngEnginePlayers");
+  if(!turnEl || !listEl) return;
+
+  const order = (session.engineState && session.engineState.order) || [];
+  const idx = Number((session.engineState && session.engineState.currentTurn) || 0) || 0;
+  const currentEmail = order[idx] || "";
+  const currentName = NG_ENGINE.resolveName(currentEmail);
+
+  turnEl.textContent = "Turn: " + (currentName || "Player");
+  listEl.innerHTML = order.map((email, i) => {
+    const name = NG_ENGINE.resolveName(email);
+    const active = i === idx ? ' style="opacity:1;font-weight:1200;"' : ' style="opacity:.84;"';
+    return `<div class="waitRow"><div class="waitLeft"><div class="statusIcon ok">•</div><div class="waitName"${active}>${name}</div></div><div class="waitMeta">${email}</div></div>`;
+  }).join("");
+};
+
+NG_ENGINE.start = function(order){
+  const session = NG_ENGINE.resolveSession() || {};
+  const gameKey = session.gameName || session.game || session.selectedGame || "01";
+  const engine = NG_ENGINE.games[gameKey] || NG_ENGINE.games["01"];
+
+  const ctx = {
+    order: Array.isArray(order) ? [...order] : (session.turnOrder || session.order || []),
+    zeroOneStart: session.zeroOneStart || session.selected01 || session.x01Start || 501,
+    zeroOneMode: session.zeroOneMode || session.selected01Mode || session.x01Mode || "single_single",
+    killerNumbers: session.killerNumbers || {}
+  };
+
+  session.game = gameKey;
+  session.gameName = gameKey;
+  session.turnOrder = [...ctx.order];
+  session.currentTurn = 0;
+  session.started = true;
+  session.practice = !!session.practice;
+  session.engineState = engine.makeState(ctx);
+  session.lastStartedAt = Date.now();
+
+  NG_ENGINE.saveSession(session);
+
+  try{
+    if(typeof show === "function") show("detail");
+    else if(typeof showPage === "function") showPage("detail");
+  }catch(e){}
+
+  try{ if(typeof renderCurrentGame === "function") renderCurrentGame(); }catch(e){ console.warn(e); }
+  try{ if(typeof renderGame === "function") renderGame(); }catch(e){ console.warn(e); }
+  try{ if(typeof renderSetup === "function") renderSetup(); }catch(e){ console.warn(e); }
+
+  NG_ENGINE.renderFallbackBoard(session);
+};
+
+if(window.NG_startGame){
+  const __ngEnginePrevStart = window.NG_startGame.bind(window);
+  window.NG_startGame = function(order){
+    try{ __ngEnginePrevStart(order); }catch(e){ console.warn(e); }
+    try{ NG_ENGINE.start(order); }catch(e){ console.warn(e); }
+  };
+}else{
+  window.NG_startGame = function(order){
+    try{ NG_ENGINE.start(order); }catch(e){ console.warn(e); }
+  };
+}
 
 </script>
 
