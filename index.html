@@ -20,7 +20,7 @@ margin:0;
     }
 
     /* Debug panel (toggle) */
-    .dbg{ display:none!important; }
+    .dbg{ display:none; }
     .dbgHead{
       padding: 10px 12px;
       display:flex;
@@ -2099,6 +2099,39 @@ body.ngFadeIn{ animation: ngFadeIn .32s ease both; }
 
 <!-- ngGuards removed in v1345 cleanup -->
 
+
+<style id="ng-clean-override">
+:root{
+  --txt: rgba(245,250,255,.94);
+  --bgStage: url("IMG_7390.jpeg");
+}
+html, body{
+  margin:0!important;
+  height:100%!important;
+  overflow:hidden!important;
+  background:#000!important;
+  color:var(--txt)!important;
+}
+.dbg, #dbg, .fatal{ display:none!important; }
+#app{
+  position:fixed!important;
+  inset:0!important;
+  overflow:hidden!important;
+}
+#app > .screen{
+  display:none!important;
+  position:absolute!important;
+  inset:0!important;
+}
+#app > .screen.active{
+  display:block!important;
+}
+#landing::before{ background-image:url("IMG_7390.jpeg")!important; }
+#players::before, #setup::before, #waiting::before, #lobby::before, #detail::before, #leaderboard::before, #randomizer::before{
+  background-image:url("IMG_7315.jpeg")!important;
+}
+</style>
+
 </head>
 <body>
 
@@ -2116,18 +2149,6 @@ body.ngFadeIn{ animation: ngFadeIn .32s ease both; }
   TIP: Use Ctrl/Cmd+F for the tags above to jump to the exact spot.
 ================================================================================
 -->
-<div class="dbg" id="dbg">
-<div class="dbgHead" id="dbgHead">
-<span style="opacity:.7;"></span>
-</div>
-<div class="dbgBody" id="dbgBody">
-<div class="kv"><span>URL</span><code id="dbgUrl"></code></div>
-<div class="kv"><span>Auth</span><code id="dbgAuth"></code></div>
-<div class="kv"><span>Firestore</span><code id="dbgFs"></code></div>
-<div class="kv"><span>Last error</span><code class="warn" id="dbgErr">none</code></div>
-<div style="margin-top:8px; opacity:.8;">If anything fails on iPhone, this box tells us exactly what.</div>
-</div>
-</div>
 <div id="app">
 
 <section class="screen active" id="landing">
@@ -2249,6 +2270,7 @@ body.ngFadeIn{ animation: ngFadeIn .32s ease both; }
 <!-- fatal blocker removed in v1345 cleanup -->
 
 <script>
+    // Debug UI toggle
     (function(){
       const dbg = document.getElementById("dbg");
       const head = document.getElementById("dbgHead");
@@ -6181,14 +6203,23 @@ window.NG_completeGame = function(result){
 
 
 <script>
-document.addEventListener("DOMContentLoaded",function(){
-  try{
-    const first = document.querySelector(".screen");
-    if(first && !document.querySelector(".screen.active")){
-      first.classList.add("active");
-    }
-  }catch(e){console.log(e);}
-});
+(function(){
+  function ngForceBoot(){
+    try{
+      var screens = Array.from(document.querySelectorAll('#app > .screen'));
+      screens.forEach(function(s){ s.classList.remove('active'); });
+      var landing = document.getElementById('landing') || screens[0];
+      if(landing) landing.classList.add('active');
+      var dbg = document.getElementById('dbg');
+      if(dbg) dbg.remove();
+    }catch(e){ console.log(e); }
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', ngForceBoot, {once:true});
+  }else{
+    ngForceBoot();
+  }
+})();
 </script>
 
 </body>
