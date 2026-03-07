@@ -1,1305 +1,641 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Night Games</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Night Games v1300 Assembled</title>
 <style>
-  :root{
-    --app-y-offset: 120px;
-    --app-x-offset: 0px;
-
-    --games-visible-rows: 2;
-    --players-visible-rows: 2;
-
-    --button-height: 48px;
-    --button-radius: 8px;
-
-    --accent-color: #00ff88;
-    --gold-color: #d4af37;
-    --text-color: #ffffff;
-
-    --glass-opacity: 0.85;
-  }
-
-  *{
-    box-sizing:border-box;
-  }
-
-  body{
-    <!-- ===================== LANDING PAGE EMAIL INPUT ===================== -->
-<div id="landing-page" style="
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    height:100vh;
-    width:100vw;
-    background-image:url('IMG_7390.jpeg');
-    background-size:cover;
-    background-position:center;
-">
-    <!-- Email Input Box -->
-    <input 
-        type="email" 
-        id="player-email" 
-        placeholder="Enter your email" 
-        style="
-            width:60%;
-            max-width:400px;
-            height:calc(var(--button-height) * 0.8);
-            border-radius:calc(var(--button-radius) * 0.8);
-            border:none;
-            padding:0 10px;
-            margin-bottom:15px;
-            font-size:1rem;
-            text-align:center;
-            background:rgba(255,255,255,0.15);
-            color:var(--text-color);
-            backdrop-filter:blur(5px);
-        "
-    />
-
-    <!-- Enter Button -->
-    <button 
-        id="enter-button" 
-        onclick="startLanding()" 
-        style="
-            width:50%;
-            max-width:300px;
-            height:var(--button-height);
-            border-radius:var(--button-radius);
-            border:none;
-            font-weight:bold;
-            font-size:1.1rem;
-            cursor:pointer;
-            background:rgba(255,255,255,0.15);
-            color:var(--text-color);
-            backdrop-filter:blur(5px);
-            margin-bottom:10px;
-        "
-    >
-        ENTER
-    </button>
-
-    <!-- Optional Hint Text -->
-    <small style="
-        color:var(--text-color);
-        margin-top:5px;
-        opacity:0.8;
-        font-style:italic;
-    ">
-        Please enter a valid email to continue
-    </small>
-</div>
-
-<script>
-function startLanding() {
-    const emailInput = document.getElementById('player-email');
-    const email = emailInput.value.trim();
-
-    if(!email) {
-        alert("Please enter your email to continue");
-        return;
-    }
-
-    console.log("Email entered:", email);
-    // TODO: Move to player selection page
-    // e.g., NG_addPlayer(email, email);
+:root{
+  --bg:#05070d; --glass:rgba(255,255,255,.14); --glass2:rgba(255,255,255,.08); --stroke:rgba(255,255,255,.16);
+  --text:#fff; --muted:#a7b0c0; --accent:#22c55e; --gold:#fbbf24; --danger:#ef4444;
+  --safePad:14px; --stageW:min(780px, calc(100vw - (var(--safePad) * 2))); --topPad:72px; --botPad:84px;
 }
-</script>
-    margin:0;
-    font-family:Arial, sans-serif;
-    color:var(--text-color);
-    background:#000;
-  }
-
-  #landingScreen,
-  #playersScreen{
-    min-height:100vh;
-    background-size:cover;
-    background-position:center;
-    display:none;
-  }
-
-  #landingScreen{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-    background-image:url("IMG_7390.jpeg");
-    padding:20px;
-    text-align:center;
-  }
-
-  #playersScreen{
-    background-image:url("IMG_7315.jpeg");
-    padding:20px;
-  }
-
-  #emailInput{
-    width:min(420px, 90%);
-    height:48px;
-    padding:0 14px;
-    border:none;
-    border-radius:999px;
-    font-size:16px;
-  }
-
-  #enterBtn{
-    margin-top:12px;
-    width:min(420px, 90%);
-    height:48px;
-    border:none;
-    border-radius:999px;
-    background:rgba(255,255,255,0.18);
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-  }
-
-  #NG_APP{
-    position:relative;
-    top:var(--app-y-offset);
-    left:var(--app-x-offset);
-    width:100%;
-    max-width:900px;
-    margin:0 auto;
-  }
-
-  .NG_section{
-    margin-bottom:20px;
-  }
-
-  .NG_section h2{
-    margin:0 0 10px 0;
-  }
-
-  .NG_list{
-    max-height:140px;
-    overflow-y:auto;
-  }
-
-  .NG_row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:10px;
-    margin-bottom:8px;
-    background:rgba(0,0,0,0.4);
-    border-radius:var(--button-radius);
-  }
-
-  .NG_name{
-    flex:1;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-
-  .NG_buttons{
-    display:flex;
-    gap:6px;
-    flex-wrap:nowrap;
-  }
-
-  .NG_buttons button,
-  #NG_leaderboard_btn,
-  #NG_donate_btn{
-    height:var(--button-height);
-    padding:0 12px;
-    border:none;
-    border-radius:var(--button-radius);
-    cursor:pointer;
-    font-weight:bold;
-  }
-
-  #NG_leaderboard_btn{
-    width:100%;
-  }
-
-  #NG_donate_btn{
-    width:100%;
-    background:var(--gold-color);
-    color:black;
-  }
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+.screen{position:fixed;inset:0;display:none;overflow:hidden;padding:var(--topPad) var(--safePad) var(--botPad);background-size:cover;background-position:center;background-repeat:no-repeat}
+.screen.active{display:flex;justify-content:center;align-items:flex-start}
+#loginScreen{background-image:url("IMG_7390.jpeg")}
+#hubScreen,#setupScreen,#waitingScreen,#randomizerScreen,#gameScreen{background-image:url("IMG_7315.jpeg")}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:99;display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;font-size:12px;text-shadow:0 2px 10px rgba(0,0,0,.65);pointer-events:none}
+.topbar .left{color:var(--gold)} .topbar .center{color:#e5e7eb} .topbar .right{color:var(--accent)}
+.versionTag{position:fixed;top:8px;left:14px;z-index:100;font-weight:900;font-size:12px;color:rgba(255,255,255,.95);text-shadow:0 2px 10px rgba(0,0,0,.85);pointer-events:none}
+.grid,.centerStack{width:var(--stageW);max-width:var(--stageW);display:flex;flex-direction:column;gap:14px}
+.centerStack{margin:auto auto 18px;align-items:center}
+.glass{background:linear-gradient(180deg,var(--glass),var(--glass2));border:1px solid var(--stroke);border-radius:24px;backdrop-filter:blur(16px);box-shadow:0 18px 50px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.26), inset 0 -1px 0 rgba(0,0,0,.20);position:relative;overflow:hidden}
+.glass::before{content:"";position:absolute;inset:0;background:radial-gradient(1200px 240px at 18% 0%, rgba(255,255,255,.42), rgba(255,255,255,0) 62%);pointer-events:none}
+.glassHeader{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.10);position:relative;z-index:1}
+.glassBody{padding:12px 14px;position:relative;z-index:1}
+input,select{width:100%;height:42px;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);color:#fff;font-size:15px;outline:none}
+option{color:#000}
+button{border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);color:#fff;font-weight:900;letter-spacing:.6px;text-transform:uppercase;cursor:pointer;padding:10px 16px}
+button.primary{background:rgba(255,255,255,.14)} button.ghost{background:rgba(255,255,255,.08)} button.danger{background:rgba(239,68,68,.20);border-color:rgba(239,68,68,.45)}
+button:disabled{opacity:.45;cursor:not-allowed}
+#enterBtn{width:92%;max-width:92%;height:44px}
+.scrollArea{max-height:260px;overflow:auto;-webkit-overflow-scrolling:touch;padding-right:6px}
+.listRow{display:flex;justify-content:flex-start;align-items:center;gap:10px;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,.08)}
+.listRow:last-child{border-bottom:none}
+.name{font-weight:900}.meta{color:var(--muted);font-size:12px;margin-top:2px}
+.dot{font-size:18px;color:#94a3b8;flex:0 0 auto}.dot.online{color:var(--accent)} .dot.ready{color:var(--accent)} .dot.pending{color:#f59e0b}
+.rowButtons{display:flex;gap:8px;justify-content:flex-end;align-items:center;margin-left:auto;flex-wrap:wrap}
+.rowButtons button{min-width:92px;height:32px;padding:6px 14px;font-size:12px}
+.gameName{font-weight:900}.gameSub{color:var(--muted);font-size:12px;margin-top:2px}
+.footerBar{width:var(--stageW);max-width:var(--stageW);margin:16px auto 0;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+.supportButton{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.10);color:#fff;text-decoration:none;font-weight:900;pointer-events:auto}
+.note{color:var(--muted);font-size:13px;line-height:1.35}
+.pillbar{display:flex;gap:8px;flex-wrap:wrap}
+.hidden{display:none!important}
+.statusGood{color:var(--accent)} .statusWarn{color:#f59e0b} .statusBad{color:#f87171}
+.inviteCheck{width:20px;height:20px;flex:0 0 auto}
+.modalWrap{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;padding:18px;z-index:200}
+.modalWrap.show{display:flex}
+.modal{width:min(560px,100%);background:linear-gradient(180deg,rgba(17,24,39,.96),rgba(8,11,18,.98));border:1px solid rgba(255,255,255,.16);border-radius:22px;box-shadow:0 18px 50px rgba(0,0,0,.55);padding:18px}
+.modal h2,.modal h3{margin:0 0 10px} .modal p{margin:0 0 10px;color:#d5dbe7}
+.modalBtns{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px}
+.stageCenter{width:var(--stageW);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:65vh;text-align:center}
+.bigSpin{font-size:42px;font-weight:900;letter-spacing:1px;text-shadow:0 0 18px rgba(255,255,255,.18)}
+.subSpin{color:var(--muted);font-size:15px}.miniCard{padding:12px 14px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.06)}
+.fadeIn{animation:fadeIn .35s ease both}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.scoreboard{display:grid;gap:10px}.playerCard{padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.06)}
+.playerCard.active{outline:2px solid rgba(34,197,94,.55)} .smallGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
 </style>
 </head>
 <body>
-
-<!-- LANDING SCREEN -->
-<div id="landingScreen">
-  <input id="emailInput" type="email" placeholder="Enter your email">
-  <button id="enterBtn">ENTER</button>
-  <audio id="introAudio" src="New Recording 2.m4a" preload="auto"></audio>
+<div class="versionTag">v1300-assembled</div>
+<div class="topbar">
+  <div class="left">Night Games</div>
+  <div class="center">Waiting Room • In-App Invite • Randomizer</div>
+  <div class="right" id="onlineText">BOOTING</div>
 </div>
-  <!-- LANDING PAGE EMAIL INPUT -->
-<div id="landing-email-container">
-  <input 
-    type="email" 
-    id="landing-email" 
-    placeholder="player@example.com" 
-    style="
-      width: 280px; 
-      padding: 12px; 
-      border-radius: 12px; 
-      border: none; 
-      font-size: 1rem;
-      backdrop-filter: blur(6px);
-      margin-bottom: 10px;
-      display: block;
-      color: var(--text-color);
-    "
-  >
-  <button 
-    id="landing-enter-button"
-    style="
-      width: 300px; 
-      padding: 12px; 
-      border-radius: 12px; 
-      font-weight: bold;
-      font-size: 1.1rem;
-      cursor: pointer;
-      background: rgba(255,255,255,0.2);
-      color: var(--text-color);
-      backdrop-filter: blur(6px);
-      margin-bottom:10px;
-    "
-  >
-    ENTER
-  </button>
 
-  <!-- Optional Hint Text -->
-  <small style="
-    color: var(--text-color);
-    margin-top:5px;
-    opacity:0.8;
-    font-style:italic;
-    display:block;
-  ">
-    Please enter a valid email
-  </small>
-</div>
-  <!-- PLAYERS SCREEN -->
-<div id="playersScreen">
-  <div id="NG_APP">
-
-    <!-- GAMES SECTION -->
-    <div class="NG_section" id="NG_games">
-      <h2>Games</h2>
-      <div id="NG_games_list">
-        <!-- JS will render games here, 2 visible at a time with scroll -->
-      </div>
-    </div>
-
-    <!-- LEADERBOARD -->
-    <button id="NG_leaderboard_btn">Leaderboard</button>
-
-    <!-- DONATE BUTTON -->
-    <button id="NG_donate_btn" onclick="openDonate()">Help support future updates and development</button>
-
-    <!-- PLAYERS SECTION -->
-    <div class="NG_section" id="NG_players">
-      <h2>Players</h2>
-      <div id="NG_players_list">
-        <!-- JS will render players here, 2 visible at a time with scroll -->
-      </div>
-    </div>
-
+<div id="loginScreen" class="screen active">
+  <div class="centerStack">
+    <input id="email" type="email" placeholder="player@example.com">
+    <button id="enterBtn" type="button" class="primary">ENTER</button>
   </div>
 </div>
 
-<script>
-function startLanding() {
-    const enterBtn = document.getElementById("landing-enter-button");
-    const emailInput = document.getElementById("landing-email");
-
-    enterBtn.addEventListener("click", () => {
-        const emailValue = emailInput.value.trim();
-        if(emailValue === "") {
-            alert("Please enter a valid email.");
-            return;
-        }
-
-        // Play intro audio if available
-        if(typeof NG_ASSETS !== "undefined" && NG_ASSETS.INTRO_AUDIO){
-            const audio = new Audio(NG_ASSETS.INTRO_AUDIO);
-            audio.play();
-        }
-
-        // Transition to players page
-        if(typeof startPlayersPage === "function"){
-            startPlayersPage(emailValue);
-        }
-    });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    startLanding();
-});
-</script>
-
-<!-- PLAYERS SCREEN -->
-<div id="playersScreen">
-  <div id="NG_APP">
-
-    <!-- GAMES SECTION -->
-    <div class="NG_section" id="NG_games_section">
-      <h2>Games</h2>
-      <div class="NG_list" id="NG_games_list"></div>
+<div id="hubScreen" class="screen">
+  <div class="grid fadeIn">
+    <div class="glass">
+      <div class="glassHeader"><div>Games</div><a class="supportButton" href="https://venmo.com/u/Steve-Moody-8" target="_blank" rel="noopener">❤️ Support</a></div>
+      <div class="glassBody">
+        <div id="gamesList" class="scrollArea"></div>
+      </div>
     </div>
-
-    <!-- LEADERBOARD BUTTON -->
-    <div class="NG_section" id="NG_leaderboard_section">
-      <button id="NG_leaderboard_btn">LEADERBOARD</button>
+    <div class="glass">
+      <div class="glassHeader"><div>Players</div><button id="hubBackBtn" class="ghost" type="button">Back</button></div>
+      <div class="glassBody"><div id="playerList" class="scrollArea"></div></div>
     </div>
+  </div>
+  <div class="footerBar"><button id="leaderboardBtn" class="ghost" type="button">Leaderboard</button><small>© 2026 The Dart Room</small></div>
+</div>
 
-    <!-- DONATE BUTTON -->
-    <div class="NG_section" id="NG_donate_section">
-      <button id="NG_donate_btn" onclick="NG_openDonate()">
-        Help support future updates and development
-      </button>
+<div id="setupScreen" class="screen">
+  <div class="grid fadeIn">
+    <div class="glass">
+      <div class="glassHeader"><div id="setupTitle">Game Setup</div><button id="setupBackBtn" class="ghost" type="button">Back</button></div>
+      <div class="glassBody">
+        <div class="smallGrid">
+          <div>
+            <div class="note" style="margin-bottom:6px">How many players?</div>
+            <select id="playerCountSelect">
+              <option value="1">1 Player</option>
+              <option value="2">2 Players</option>
+              <option value="3">3 Players</option>
+              <option value="4">4 Players</option>
+              <option value="5">5 Players</option>
+              <option value="6">6 Players</option>
+              <option value="7">7 Players</option>
+              <option value="8">8 Players</option>
+            </select>
+          </div>
+          <div id="zeroOneOptions" class="hidden">
+            <div class="note" style="margin-bottom:6px">01 game</div>
+            <select id="zeroOneScoreSelect">
+              <option value="301">301</option>
+              <option value="501" selected>501</option>
+              <option value="701">701</option>
+            </select>
+            <div style="height:8px"></div>
+            <select id="zeroOneModeSelect">
+              <option value="straight_straight">Straight In / Straight Out</option>
+              <option value="straight_double">Straight In / Double Out</option>
+              <option value="double_double">Double In / Double Out</option>
+            </select>
+          </div>
+        </div>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
+        <div class="note" style="margin-bottom:8px">Which players?</div>
+        <div id="setupPlayers" class="scrollArea"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+          <button id="startSoloBtn" class="primary" type="button">Start Solo</button>
+          <button id="sendInvitesBtn" class="primary" type="button">Send Invites</button>
+        </div>
+        <div id="setupStatus" class="note" style="margin-top:10px"></div>
+      </div>
     </div>
-
-    <!-- PLAYERS SECTION -->
-    <div class="NG_section" id="NG_players_section">
-      <h2>Players</h2>
-      <div class="NG_list" id="NG_players_list"></div>
-    </div>
-
   </div>
 </div>
 
-<script>
-const NG_PLAYERS = [];
-const NG_GAMES = [];
+<div id="waitingScreen" class="screen">
+  <div class="grid fadeIn">
+    <div class="glass">
+      <div class="glassHeader"><div>Waiting Room</div><button id="leaveWaitingBtn" class="ghost" type="button">Leave</button></div>
+      <div class="glassBody">
+        <div id="waitingHeadline" class="note">Waiting for players to join.</div>
+        <div id="waitingRoomMeta" class="note" style="margin-top:6px"></div>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
+        <div id="waitingList" class="scrollArea"></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+          <button id="startWaitingBtn" class="primary" type="button" disabled>Start</button>
+          <button id="reshuffleBtn" class="ghost hidden" type="button">Randomize Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-function NG_openDonate(){
-  window.open("https://venmo.com/u/Steve-Moody-8","_blank");
+<div id="randomizerScreen" class="screen">
+  <div class="stageCenter fadeIn">
+    <div class="bigSpin" id="spinPrimary">Steve Moody</div>
+    <div class="subSpin" id="spinLabel">Picking who goes first…</div>
+    <div id="spinSecondaryWrap" class="miniCard hidden">
+      <div class="subSpin" style="margin-bottom:8px">Killer numbers</div>
+      <div id="spinSecondary" class="bigSpin" style="font-size:34px">12</div>
+    </div>
+  </div>
+</div>
+
+<div id="gameScreen" class="screen">
+  <div class="grid fadeIn">
+    <div class="glass">
+      <div class="glassHeader"><div id="gameTitle">Game</div><button id="gameBackBtn" class="ghost" type="button">Hub</button></div>
+      <div class="glassBody">
+        <div id="turnDisplay" style="font-size:22px;font-weight:900;margin-bottom:10px">Turn:</div>
+        <div id="gameSummary" class="note"></div>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.12);margin:14px 0">
+        <div id="scoreboard" class="scoreboard"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="inviteModal" class="modalWrap">
+  <div class="modal">
+    <h2 id="inviteModalTitle">Game Invite</h2>
+    <p id="inviteModalBody"></p>
+    <div class="modalBtns"><button id="inviteDeclineBtn" class="ghost" type="button">No Thanks</button><button id="inviteAcceptBtn" class="primary" type="button">Join</button></div>
+  </div>
+</div>
+
+<div id="messageModal" class="modalWrap">
+  <div class="modal">
+    <h3 id="messageModalTitle">Welcome Players</h3>
+    <p id="messageModalBody">Let's get started.</p>
+    <div class="modalBtns"><button id="messageModalOk" class="primary" type="button">OK</button></div>
+  </div>
+</div>
+
+<audio id="introAudio" src="New Recording 2.m4a" preload="auto"></audio>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+import { getAuth, signInAnonymously } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+import { getFirestore, collection, doc, setDoc, getDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
+  authDomain: "night-games-8f3c1.firebaseapp.com",
+  projectId: "night-games-8f3c1",
+  storageBucket: "night-games-8f3c1.appspot.com",
+  messagingSenderId: "517441415740",
+  appId: "1:517441415740:web:0d5f0d4f7b38d0fe78ed0c"
+};
+
+const DEFAULT_PLAYERS = {
+  "stevewmoody@yahoo.com": { name:"Steve Moody" },
+  "jmoody7712@gmail.com":  { name:"Jayce Moody" },
+  "wmoody7931@aol.com":    { name:"Bill Moody" },
+  "taylor@email.com":      { name:"Taylor" }
+};
+const GAMES = [
+  { key:'01', label:'01', sub:'301 / 501 / 701' },
+  { key:'Cricket', label:'Cricket', sub:'Close 15–20 + Bull' },
+  { key:'Killer', label:'Killer', sub:'Multiplayer + number assignment' },
+  { key:'Shanghai', label:'Shanghai', sub:'Round-by-round target' },
+  { key:'ATW', label:'Around the World', sub:'Hit in order' },
+  { key:'Half It', label:'Half-It', sub:'Miss and lose half' }
+];
+
+let app, auth, db;
+let firebaseReady = false;
+let currentEmail = '';
+let currentPlayer = null;
+let players = { ...DEFAULT_PLAYERS };
+let currentGameKey = null;
+let currentRoomId = null;
+let currentRoom = null;
+let currentInviteId = null;
+let pendingInvite = null;
+let roomUnsub = null;
+let invitesUnsub = null;
+let playersUnsub = null;
+let sessionState = null;
+
+const $ = (id) => document.getElementById(id);
+const screenIds = ['loginScreen','hubScreen','setupScreen','waitingScreen','randomizerScreen','gameScreen'];
+const setOnlineText = (t, cls='') => { const el=$('onlineText'); el.textContent=t; el.className='right '+cls; };
+function showScreen(id){ for(const sid of screenIds){ $(sid).classList.toggle('active', sid===id); } }
+function safeJSON(v){ try{return JSON.stringify(v);}catch{return String(v);} }
+function saveLocal(k,v){ try{ localStorage.setItem(k, typeof v==='string'?v:JSON.stringify(v)); }catch{} }
+function loadLocal(k, fb=null){ try{ const v=localStorage.getItem(k); return v==null?fb:JSON.parse(v); }catch{return fb;} }
+function uid(){ return 'ng_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-5); }
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function pickUniqueNumbers(count){ return shuffle([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]).slice(0,count); }
+function capPlayersBySelection(selected, desired){ const uniq=[...new Set(selected)]; return uniq.slice(0, Math.max(1, desired)); }
+function currentName(){ return players[currentEmail]?.name || currentPlayer?.name || currentEmail || 'Player'; }
+
+function gameRulesText(key){
+  if(key==='01') return 'Pick players first, then 301 / 501 / 701, then Straight In / Straight Out, Straight In / Double Out, or Double In / Double Out.';
+  if(key==='Killer') return 'Players join the waiting room, order is randomized, then numbers are assigned 1–20.';
+  if(key==='Cricket') return 'Close 15–20 and Bull, then win on marks and points.';
+  if(key==='Shanghai') return 'Play one called number per round and score singles, doubles, and triples.';
+  if(key==='ATW') return 'Hit every number in order. First to finish wins.';
+  if(key==='Half It') return 'Hit the round target or your score is cut in half.';
+  return '';
 }
 
-function NG_addPlayer(name,email,online=false){
-  NG_PLAYERS.push({
-    name:name,
-    email:email,
-    online:online
-  });
-}
-
-function NG_removePlayer(email){
-  const index = NG_PLAYERS.findIndex(p => p.email === email);
-  if(index !== -1){
-    NG_PLAYERS.splice(index,1);
-    NG_renderPlayers();
+function renderGames(){
+  const list = $('gamesList'); list.innerHTML='';
+  for(const g of GAMES){
+    const row = document.createElement('div'); row.className='listRow';
+    row.innerHTML = `
+      <div class="gameInfo"><div class="gameName">${g.label}</div><div class="gameSub">${g.sub}</div></div>
+      <div class="rowButtons">
+        <button class="primary" data-enter="${g.key}" type="button">ENTER</button>
+        <button class="ghost" data-rules="${g.key}" type="button">RULES</button>
+        <button class="ghost" data-history="${g.key}" type="button">HISTORY</button>
+      </div>`;
+    list.appendChild(row);
   }
 }
 
-function NG_addGame(id,name){
-  NG_GAMES.push({
-    id:id,
-    name:name
-  });
-}
-
-function NG_renderPlayers(){
-  const list = document.getElementById("NG_players_list");
-  if(!list) return;
-
-  const players = [...NG_PLAYERS].sort((a,b)=>Number(b.online)-Number(a.online));
-  list.innerHTML = "";
-
-  players.forEach(player=>{
-    const row = document.createElement("div");
-    row.className = "NG_row";
+function renderPlayers(){
+  const list = $('playerList'); list.innerHTML='';
+  const emails = Object.keys(players).sort((a,b)=> (a===currentEmail?-1:b===currentEmail?1:players[a].name.localeCompare(players[b].name)));
+  for(const email of emails){
+    const row = document.createElement('div'); row.className='listRow';
+    const me = email===currentEmail;
+    const online = me || !!players[email].online;
     row.innerHTML = `
-      <div class="NG_name">${player.name}</div>
-      <div class="NG_buttons">
-        <button>STATS</button>
-        <button>HISTORY</button>
-        <button onclick="NG_removePlayer('${player.email}')">REMOVE</button>
+      <div style="display:flex;align-items:center;gap:10px;min-width:0">
+        <div class="dot ${online?'online':''}">●</div>
+        <div style="min-width:0">
+          <div class="name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${players[email].name}${me?' (You)':''}</div>
+          <div class="meta" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${email}</div>
+        </div>
       </div>
-    `;
+      <div class="rowButtons"><button class="ghost" type="button" data-stats="${email}">Stats</button><button class="ghost" type="button" data-phistory="${email}">History</button></div>`;
     list.appendChild(row);
-  });
+  }
 }
 
-function NG_renderGames(){
-  const list = document.getElementById("NG_games_list");
-  if(!list) return;
-
-  list.innerHTML = "";
-
-  NG_GAMES.forEach(game=>{
-    const row = document.createElement("div");
-    row.className = "NG_row";
-    row.innerHTML = `
-      <div class="NG_name">${game.name}</div>
-      <div class="NG_buttons">
-        <button>ENTER</button>
-        <button>RULES</button>
-        <button>HISTORY</button>
-      </div>
-    `;
-    list.appendChild(row);
-  });
+function renderSetup(){
+  $('setupTitle').textContent = `${currentGameKey} Setup`;
+  $('zeroOneOptions').classList.toggle('hidden', currentGameKey!=='01');
+  $('setupStatus').textContent = gameRulesText(currentGameKey);
+  const wrap = $('setupPlayers'); wrap.innerHTML='';
+  const emails = Object.keys(players).filter(e=>e!==currentEmail);
+  const self = document.createElement('div'); self.className='listRow';
+  self.innerHTML = `<label style="display:flex;gap:10px;align-items:center;width:100%"><input checked disabled class="inviteCheck" type="checkbox"><span><b>${currentName()}</b> <small style="color:var(--muted)">(${currentEmail})</small></span></label>`;
+  wrap.appendChild(self);
+  for(const email of emails){
+    const row = document.createElement('div'); row.className='listRow';
+    row.innerHTML = `<label style="display:flex;gap:10px;align-items:center;width:100%"><input class="inviteCheck" type="checkbox" data-setup-player="${email}"><span>${players[email].name} <small style="color:var(--muted)">(${email})</small></span></label>`;
+    wrap.appendChild(row);
+  }
+  $('playerCountSelect').value = '2';
 }
 
-function NG_boot(){
-  NG_addGame("killer","Killer");
-  NG_addGame("around_world","Around the World");
-  NG_addGame("cricket","Cricket");
-  NG_addGame("301","301");
-
-  NG_addPlayer("Steve Moody","steve@email.com",true);
-  NG_addPlayer("Taylor","taylor@email.com",false);
-
-  NG_renderGames();
-  NG_renderPlayers();
+function openMessage(title, body, onOk=null){
+  $('messageModalTitle').textContent = title;
+  $('messageModalBody').textContent = body;
+  $('messageModal').classList.add('show');
+  $('messageModalOk').onclick = () => { $('messageModal').classList.remove('show'); if(onOk) onOk(); };
 }
 
-document.getElementById("emailInput").addEventListener("focus",function(){
-  const audio = document.getElementById("introAudio");
-  audio.play().catch(()=>{});
-},{once:true});
+function openInviteModal(inv){
+  pendingInvite = inv;
+  currentInviteId = inv.id;
+  $('inviteModalTitle').textContent = `${inv.fromName || inv.from || 'Someone'} invited you to play`;
+  $('inviteModalBody').textContent = `${inv.game}${inv.game==='01' ? ` • ${inv.zeroOneScore||'501'} • ${prettyMode(inv.zeroOneMode)}`:''}`;
+  $('inviteModal').classList.add('show');
+}
 
-document.getElementById("enterBtn").addEventListener("click",function(){
-  document.getElementById("landingScreen").style.display = "none";
-  document.getElementById("playersScreen").style.display = "block";
-});
+function prettyMode(mode){
+  return ({straight_straight:'Straight In / Straight Out', straight_double:'Straight In / Double Out', double_double:'Double In / Double Out'})[mode] || mode || 'Standard';
+}
 
-document.addEventListener("DOMContentLoaded",function(){
-  NG_boot();
-});
-</script>
-  <script>
-/* =========================================================
-KILLER START + NUMBER ASSIGNMENT
-========================================================= */
+function selectedSetupPlayers(){
+  const wanted = Number($('playerCountSelect').value || 1);
+  const selected = [currentEmail];
+  document.querySelectorAll('[data-setup-player]').forEach(cb => { if(cb.checked) selected.push(cb.dataset.setupPlayer); });
+  return capPlayersBySelection(selected, wanted);
+}
 
-if (typeof NG_KILLER === "undefined") {
-  let NG_KILLER = {
-    players: [],
-    numbers: {},
-    lives: {},
-    killers: {},
-    currentTurn: 0
+async function login(){
+  const email = ($('email').value || '').trim().toLowerCase();
+  if(!email){ alert('Enter an email'); return; }
+  currentEmail = email;
+  if(!players[email]){ players[email] = { name: email.split('@')[0].replace(/[._-]+/g,' ').replace(/\b\w/g, s=>s.toUpperCase()) || 'Player' }; }
+  currentPlayer = players[email];
+  saveLocal('ng_email', email);
+  try{ if(firebaseReady){ await setDoc(doc(db,'players',email), { email, name: currentPlayer.name, online:true, lastSeen:serverTimestamp() }, { merge:true }); } }catch(e){ console.warn(e); }
+  renderPlayers(); renderGames(); listenForInvites(); listenForPlayers(); showScreen('hubScreen');
+}
+
+function chooseGame(gameKey){ currentGameKey = gameKey; renderSetup(); showScreen('setupScreen'); }
+
+async function startSolo(){
+  const picked = selectedSetupPlayers().slice(0,1);
+  const room = buildRoomPayload(picked, true);
+  currentRoom = room;
+  currentRoomId = null;
+  showGameFromRoom(room);
+}
+
+function buildRoomPayload(selected, practice=false){
+  return {
+    id: currentRoomId || uid(),
+    host: currentEmail,
+    hostName: currentName(),
+    game: currentGameKey,
+    players: selected.map(email => ({ email, name: players[email]?.name || email, ready: email===currentEmail, joined: email===currentEmail })),
+    playerEmails: selected,
+    playerCount: selected.length,
+    state: practice ? 'playing' : 'waiting',
+    createdAt: Date.now(),
+    practice,
+    zeroOneScore: currentGameKey==='01' ? Number($('zeroOneScoreSelect').value) : null,
+    zeroOneMode: currentGameKey==='01' ? $('zeroOneModeSelect').value : null,
+    turnOrder: [],
+    currentTurn: 0,
+    killerNumbers: {},
+    lastAction: 'created'
   };
 }
 
-function NG_startKiller(players){
-  NG_KILLER.players = [...players];
-  NG_KILLER.numbers = {};
-  NG_KILLER.lives = {};
-  NG_KILLER.killers = {};
-  NG_KILLER.currentTurn = 0;
-
-  players.forEach(playerEmail => {
-    NG_KILLER.lives[playerEmail] = 3;
-    NG_KILLER.killers[playerEmail] = false;
-  });
-}
-
-function NG_assignKillerNumbers(){
-  const availableNumbers = [12,13,14,15,16,17,18,19,20];
-  const shuffledPlayers = NG_shuffleArray([...NG_KILLER.players]);
-
-  shuffledPlayers.forEach((playerEmail, index) => {
-    NG_KILLER.numbers[playerEmail] = availableNumbers[index];
-  });
-
-  return NG_KILLER.numbers;
-}
-
-function NG_getCurrentPlayer(){
-  return NG_KILLER.players[NG_KILLER.currentTurn] || null;
-}
-
-function NG_nextTurn(){
-  NG_KILLER.currentTurn++;
-
-  if (NG_KILLER.currentTurn >= NG_KILLER.players.length) {
-    NG_KILLER.currentTurn = 0;
+async function sendInvites(){
+  const selected = selectedSetupPlayers();
+  if(selected.length < 2){ $('setupStatus').textContent = 'Pick at least 2 players for multiplayer.'; return; }
+  if(!firebaseReady){ $('setupStatus').textContent = 'Firebase is offline. Multiplayer invites are disabled right now.'; return; }
+  const room = buildRoomPayload(selected, false);
+  currentRoomId = room.id;
+  currentRoom = room;
+  await setDoc(doc(db,'rooms',room.id), { ...room, createdAt: serverTimestamp() });
+  const inviteTargets = selected.filter(e => e !== currentEmail);
+  for(const to of inviteTargets){
+    await addDoc(collection(db,'invites'), {
+      roomId: room.id,
+      from: currentEmail,
+      fromName: currentName(),
+      to,
+      game: room.game,
+      zeroOneScore: room.zeroOneScore || null,
+      zeroOneMode: room.zeroOneMode || null,
+      status: 'pending',
+      createdAt: serverTimestamp()
+    });
   }
-
-  return NG_getCurrentPlayer();
+  bindRoom(room.id);
+  showScreen('waitingScreen');
 }
 
-function NG_startKillerGame(){
-  const players = NG_getPlayers().map(p => p.email);
-
-  if (!players.length) return;
-
-  NG_startKiller(players);
-  NG_assignKillerNumbers();
-
-  if (typeof NG_renderKillerAll === "function") {
-    NG_renderKillerAll();
-  }
-}
-</script>
-  <script>
-
-/* =========================================================
-KILLER RENDER + TURN DISPLAY
-========================================================= */
-
-function NG_renderKillerTurn(){
-
-  const el = document.getElementById("NG_killer_current_player");
-  if(!el) return;
-
-  const player = NG_getCurrentPlayer();
-  el.textContent = player || "None";
-
-}
-
-function NG_renderKillerNumbers(){
-
-  const box = document.getElementById("NG_killer_numbers");
-  if(!box) return;
-
-  box.innerHTML = "";
-
-  Object.keys(NG_KILLER.numbers).forEach(playerEmail => {
-
-    const row = document.createElement("div");
-    row.className = "NG_killer_number_row";
-
-    row.innerHTML = `
-      <span>${playerEmail}</span>
-      <span>${NG_KILLER.numbers[playerEmail]}</span>
-      <span>Lives: ${NG_KILLER.lives[playerEmail] ?? 0}</span>
-      <span>${NG_KILLER.killers[playerEmail] ? "KILLER" : "NOT KILLER"}</span>
-    `;
-
-    box.appendChild(row);
-
-  });
-
-}
-
-function NG_renderKillerAll(){
-
-  NG_renderKillerTurn();
-  NG_renderKillerNumbers();
-
-}
-
-</script>
-  <script>
-
-/* =========================================================
-KILLER HIT + LIFE SYSTEM
-========================================================= */
-
-function NG_killerLoseLife(playerEmail){
-
-  if(typeof NG_KILLER.lives[playerEmail] === "undefined") return;
-
-  NG_KILLER.lives[playerEmail]--;
-
-  if(NG_KILLER.lives[playerEmail] < 0){
-    NG_KILLER.lives[playerEmail] = 0;
-  }
-
-  NG_renderKillerAll();
-
-}
-
-function NG_killerHit(){
-
-  const currentPlayer = NG_getCurrentPlayer();
-  if(!currentPlayer) return;
-
-  if(NG_KILLER.killers[currentPlayer] === false){
-
-    NG_KILLER.killers[currentPlayer] = true;
-
-  } else {
-
-    const targetIndex = (NG_KILLER.currentTurn + 1) % NG_KILLER.players.length;
-    const targetPlayer = NG_KILLER.players[targetIndex];
-
-    NG_killerLoseLife(targetPlayer);
-
-  }
-
-  NG_renderKillerAll();
-
-}
-
-function NG_killerNextTurn(){
-
-  NG_nextTurn();
-  NG_renderKillerAll();
-
-}
-
-</script>
-  <script>
-
-/* =========================================================
-KILLER UI SECTION
-========================================================= */
-
-function NG_mountKillerSection(){
-
-  const app = document.getElementById("NG_APP");
-  if(!app) return;
-
-  const section = document.createElement("div");
-  section.className = "NG_section";
-  section.id = "NG_killer_section";
-
-  section.innerHTML = `
-    <h2>Killer</h2>
-
-    <div id="NG_killer_box">
-
-      <div id="NG_killer_controls">
-
-        <button onclick="NG_startKillerGame()">
-          Start Killer
-        </button>
-
-        <button onclick="NG_killerNextTurn()">
-          Next Turn
-        </button>
-
-        <button onclick="NG_killerHit()">
-          Hit Number
-        </button>
-
-      </div>
-
-      <div id="NG_killer_turn_box">
-        Current Turn:
-        <span id="NG_killer_current_player">None</span>
-      </div>
-
-      <div id="NG_killer_numbers"></div>
-
-    </div>
-  `;
-
-  app.appendChild(section);
-
-}
-
-document.addEventListener("DOMContentLoaded", function(){
-
-  if(typeof NG_mountKillerSection === "function"){
-    NG_mountKillerSection();
-  }
-
-});
-
-</script>
-  <script>
-
-/* =========================================================
-KILLER BOOT HOOK
-========================================================= */
-
-document.addEventListener("DOMContentLoaded", function(){
-
-  if(typeof NG_mountKillerSection === "function"){
-    NG_mountKillerSection();
-  }
-
-  if(typeof NG_renderKillerAll === "function"){
-    NG_renderKillerAll();
-  }
-
-});
-
-</script>
-  <script>
-
-/* =========================================================
-KILLER PLAYER CONNECTOR
-========================================================= */
-
-function NG_getPlayers(){
-  return NG_PLAYERS || [];
-}
-
-function NG_getGames(){
-  return NG_GAMES || [];
-}
-
-function NG_killerPlayers(){
-  const players = NG_getPlayers();
-  return players.map(p => p.email);
-}
-
-</script>
-  <script>
-function NG_getPlayers(){
-  return NG_PLAYERS || [];
-}
-
-function NG_getGames(){
-  return NG_GAMES || [];
-}
-
-function NG_killerPlayers(){
-  return NG_getPlayers().map(p => p.email);
-}
-</script>
-  <script>
-/* =========================================================
-KILLER WIN CHECK
-========================================================= */
-
-function NG_checkKillerWinner(){
-
-  const alivePlayers = NG_KILLER.players.filter(playerEmail => {
-    return (NG_KILLER.lives[playerEmail] ?? 0) > 0;
-  });
-
-  if(alivePlayers.length === 1){
-    alert("Winner: " + alivePlayers[0]);
-    return alivePlayers[0];
-  }
-
-  return null;
-}
-
-function NG_killerLoseLife(playerEmail){
-
-  if(typeof NG_KILLER.lives[playerEmail] === "undefined") return;
-
-  NG_KILLER.lives[playerEmail]--;
-
-  if(NG_KILLER.lives[playerEmail] < 0){
-    NG_KILLER.lives[playerEmail] = 0;
-  }
-
-  NG_renderKillerAll();
-  NG_checkKillerWinner();
-}
-</script>
-  <script>
-
-/* =========================================================
-PLAYERS RENDER
-========================================================= */
-
-function NG_renderPlayers(){
-
-  const list = document.getElementById("NG_players_list");
-  if(!list) return;
-
-  const players = NG_getPlayers();
-  list.innerHTML = "";
-
-  players.forEach(player => {
-
-    const row = document.createElement("div");
-    row.className = "NG_row";
-
-    row.innerHTML = `
-      <div class="NG_name">${player.name}</div>
-      <div class="NG_buttons">
-        <button>STATS</button>
-        <button>HISTORY</button>
-        <button onclick="NG_removePlayer('${player.email}')">REMOVE</button>
-      </div>
-    `;
-
+function renderWaitingRoom(room){
+  $('waitingHeadline').textContent = room.state==='waiting' ? 'Waiting for players to join.' : room.state==='welcome' ? 'Welcome players.' : room.state==='randomizing' ? 'Randomizing player order…' : 'Ready.';
+  $('waitingRoomMeta').textContent = `${room.game}${room.game==='01' ? ` • ${room.zeroOneScore} • ${prettyMode(room.zeroOneMode)}` : ''} • ${room.playerCount} player${room.playerCount===1?'':'s'}`;
+  const list = $('waitingList'); list.innerHTML='';
+  const entries = Array.isArray(room.players) ? room.players : [];
+  for(const p of entries){
+    const ready = !!p.ready;
+    const row = document.createElement('div'); row.className='listRow';
+    row.innerHTML = `<div class="dot ${ready?'ready':'pending'}">${ready?'✅':'⏳'}</div><div><div class="name">${p.name}${p.email===room.host?' (Host)':''}</div><div class="meta">${p.email}</div></div>`;
     list.appendChild(row);
+  }
+  const allReady = entries.length>0 && entries.every(p => p.ready);
+  $('startWaitingBtn').disabled = !(allReady && currentEmail===room.host);
+  $('reshuffleBtn').classList.toggle('hidden', room.state!=='ready' && room.state!=='playing');
+}
 
+async function acceptInvite(){
+  if(!pendingInvite || !firebaseReady) return;
+  const roomRef = doc(db,'rooms', pendingInvite.roomId);
+  const snap = await getDoc(roomRef);
+  if(!snap.exists()){ $('inviteModal').classList.remove('show'); return; }
+  const room = snap.data();
+  const updatedPlayers = (room.players || []).map(p => p.email===currentEmail ? ({...p, ready:true, joined:true}) : p);
+  await updateDoc(roomRef, { players: updatedPlayers, lastAction:'joined' });
+  await updateDoc(doc(db,'invites', currentInviteId), { status:'accepted', respondedAt: serverTimestamp() });
+  $('inviteModal').classList.remove('show');
+  bindRoom(pendingInvite.roomId);
+  showScreen('waitingScreen');
+}
+
+async function declineInvite(){
+  if(!pendingInvite || !firebaseReady) return;
+  await updateDoc(doc(db,'invites', currentInviteId), { status:'declined', respondedAt: serverTimestamp() });
+  $('inviteModal').classList.remove('show');
+}
+
+async function leaveCurrentRoom(){
+  if(!currentRoomId || !firebaseReady){ showScreen('hubScreen'); return; }
+  try{
+    const roomRef = doc(db,'rooms', currentRoomId);
+    const snap = await getDoc(roomRef);
+    if(snap.exists()){
+      const room = snap.data();
+      if(currentEmail===room.host){ await deleteDoc(roomRef); }
+      else {
+        const players2 = (room.players || []).map(p => p.email===currentEmail ? ({...p, ready:false, joined:false}) : p);
+        await updateDoc(roomRef, { players: players2, state:'waiting', lastAction:'left' });
+      }
+    }
+  }catch(e){ console.warn(e); }
+  if(roomUnsub){ roomUnsub(); roomUnsub=null; }
+  currentRoomId = null; currentRoom = null; showScreen('hubScreen');
+}
+
+function bindRoom(roomId){
+  if(roomUnsub){ roomUnsub(); roomUnsub=null; }
+  currentRoomId = roomId;
+  roomUnsub = onSnapshot(doc(db,'rooms', roomId), async (snap) => {
+    if(!snap.exists()){ currentRoomId=null; currentRoom=null; showScreen('hubScreen'); return; }
+    const room = { id:snap.id, ...snap.data() };
+    currentRoom = room;
+    renderWaitingRoom(room);
+    if(room.state==='waiting'){ showScreen('waitingScreen'); }
+    if(room.state==='welcome'){
+      showScreen('waitingScreen');
+      openMessage('Welcome Players', 'All players are present. Let\'s get started.');
+    }
+    if(room.state==='randomizing'){ showRandomizer(room); }
+    if(room.state==='playing'){ showGameFromRoom(room); }
   });
-
 }
 
-
-/* =========================================================
-GAME REGISTRY
-========================================================= */
-
-function NG_registerDefaultGames(){
-
-  if(typeof NG_GAMES === "undefined"){
-    NG_GAMES = [];
+async function maybeAdvanceRoomToWelcome(room){
+  if(!firebaseReady || !room || currentEmail!==room.host) return;
+  const allReady = (room.players || []).length>0 && room.players.every(p => p.ready);
+  if(allReady && room.state==='waiting'){
+    await updateDoc(doc(db,'rooms', room.id), { state:'welcome', lastAction:'all_ready' });
   }
-
-  if(NG_GAMES.length > 0) return;
-
-  NG_GAMES.push({ id:"killer", name:"Killer" });
-  NG_GAMES.push({ id:"around_world", name:"Around the World" });
-  NG_GAMES.push({ id:"cricket", name:"Cricket" });
-  NG_GAMES.push({ id:"301", name:"301" });
-
 }
 
-
-/* =========================================================
-BOOT SYSTEM
-========================================================= */
-
-function NG_boot(){
-
-  if(typeof NG_registerDefaultGames === "function"){
-    NG_registerDefaultGames();
+async function startRoom(){
+  if(!firebaseReady || !currentRoom) return;
+  const order = shuffle([...(currentRoom.players||[])]).map(p => p.email);
+  const payload = { state:'randomizing', turnOrder:order, currentTurn:0, lastAction:'randomizing' };
+  if(currentRoom.game==='Killer'){
+    const nums = pickUniqueNumbers(order.length);
+    const killerNumbers = {};
+    order.forEach((email, i) => killerNumbers[email] = nums[i]);
+    payload.killerNumbers = killerNumbers;
   }
-
-  if(typeof NG_renderGames === "function"){
-    NG_renderGames();
-  }
-
-  if(typeof NG_renderPlayers === "function"){
-    NG_renderPlayers();
-  }
-
+  await updateDoc(doc(db,'rooms', currentRoom.id), payload);
+  setTimeout(async ()=>{
+    try{ await updateDoc(doc(db,'rooms', currentRoom.id), { state:'playing', lastAction:'playing' }); }catch(e){ console.warn(e); }
+  }, 3500);
 }
 
+function showRandomizer(room){
+  showScreen('randomizerScreen');
+  const names = (room.turnOrder || []).map(email => players[email]?.name || (room.players||[]).find(p=>p.email===email)?.name || email);
+  const primary = $('spinPrimary');
+  const secondaryWrap = $('spinSecondaryWrap');
+  const secondary = $('spinSecondary');
+  $('spinLabel').textContent = room.game==='Killer' ? 'Picking who goes first and assigning Killer numbers…' : 'Picking who goes first…';
+  let i = 0; const start = performance.now();
+  const timer = setInterval(()=>{
+    if(!names.length) return;
+    primary.textContent = names[i % names.length];
+    i++;
+    if(performance.now() - start > 2000){ clearInterval(timer); primary.textContent = names[0] || 'Player'; }
+  }, 90);
+  if(room.game==='Killer' && room.killerNumbers){
+    secondaryWrap.classList.remove('hidden');
+    const values = Object.values(room.killerNumbers);
+    let j = 0; const timer2 = setInterval(()=>{
+      if(!values.length) return;
+      secondary.textContent = values[j % values.length];
+      j++;
+      if(performance.now() - start > 2800){ clearInterval(timer2); secondary.textContent = values[0] ?? 12; }
+    }, 75);
+  } else secondaryWrap.classList.add('hidden');
+}
 
-/* =========================================================
-PAGE START
-========================================================= */
+function roomPlayersOrdered(room){
+  const entries = room.players || [];
+  const lookup = Object.fromEntries(entries.map(p=>[p.email,p]));
+  const order = room.turnOrder?.length ? room.turnOrder : entries.map(p=>p.email);
+  return order.map(email => lookup[email]).filter(Boolean);
+}
 
-document.addEventListener("DOMContentLoaded", function(){
-
-  if(typeof NG_boot === "function"){
-    NG_boot();
+function showGameFromRoom(room){
+  showScreen('gameScreen');
+  $('gameTitle').textContent = room.game;
+  const ordered = roomPlayersOrdered(room);
+  const activeEmail = (room.turnOrder && room.turnOrder[room.currentTurn || 0]) || ordered[0]?.email;
+  const activeName = players[activeEmail]?.name || ordered.find(p=>p.email===activeEmail)?.name || 'Player';
+  $('turnDisplay').textContent = `Turn: ${activeName}`;
+  $('gameSummary').textContent = room.game==='01'
+    ? `${room.zeroOneScore || 501} • ${prettyMode(room.zeroOneMode)} • ${room.practice ? 'Solo practice (stats off)' : 'Multiplayer synced room'}`
+    : `${room.practice ? 'Solo practice (stats off)' : 'Multiplayer synced room'}`;
+  const board = $('scoreboard'); board.innerHTML='';
+  for(const p of ordered){
+    const card = document.createElement('div'); card.className = 'playerCard' + (p.email===activeEmail ? ' active' : '');
+    const killerLine = room.game==='Killer' ? `<div class="meta">Number: ${room.killerNumbers?.[p.email] ?? '-'}</div>` : '';
+    const zeroOneLine = room.game==='01' ? `<div class="meta">Score: ${room.scores?.[p.email] ?? room.zeroOneScore ?? 501}</div>` : '';
+    card.innerHTML = `<div class="name">${p.name}</div><div class="meta">${p.email}</div>${killerLine}${zeroOneLine}`;
+    board.appendChild(card);
   }
+}
 
-});
+async function listenForInvites(){
+  if(invitesUnsub){ invitesUnsub(); invitesUnsub=null; }
+  if(!firebaseReady || !currentEmail) return;
+  invitesUnsub = onSnapshot(query(collection(db,'invites'), where('to','==',currentEmail), where('status','==','pending')), (snap) => {
+    if(snap.empty) return;
+    const docSnap = snap.docs[0];
+    openInviteModal({ id: docSnap.id, ...docSnap.data() });
+  });
+}
 
+function listenForPlayers(){
+  if(playersUnsub){ playersUnsub(); playersUnsub=null; }
+  if(!firebaseReady) return;
+  playersUnsub = onSnapshot(collection(db,'players'), (snap) => {
+    snap.forEach(d => {
+      const data = d.data() || {};
+      if(!players[d.id]) players[d.id] = { name: data.name || d.id };
+      players[d.id].name = data.name || players[d.id].name;
+      players[d.id].online = !!data.online;
+    });
+    renderPlayers();
+  });
+}
+
+async function initFirebase(){
+  try{
+    app = initializeApp(firebaseConfig); auth = getAuth(app); db = getFirestore(app);
+    await signInAnonymously(auth);
+    firebaseReady = true; setOnlineText('ONLINE', 'statusGood');
+  }catch(e){ console.warn(e); firebaseReady = false; setOnlineText('UI MODE', 'statusWarn'); }
+}
+
+function hookUI(){
+  const emailEl = $('email'); const introEl = $('introAudio'); let introPlayed = false;
+  const playOnce = () => { if(introPlayed) return; introPlayed=true; introEl.currentTime=0; introEl.play().catch(()=>{}); };
+  emailEl.addEventListener('focus', playOnce); emailEl.addEventListener('pointerdown', playOnce);
+  $('enterBtn').addEventListener('click', login);
+  $('hubBackBtn').addEventListener('click', ()=>showScreen('loginScreen'));
+  $('setupBackBtn').addEventListener('click', ()=>showScreen('hubScreen'));
+  $('leaveWaitingBtn').addEventListener('click', leaveCurrentRoom);
+  $('gameBackBtn').addEventListener('click', ()=>showScreen('hubScreen'));
+  $('startSoloBtn').addEventListener('click', startSolo);
+  $('sendInvitesBtn').addEventListener('click', sendInvites);
+  $('startWaitingBtn').addEventListener('click', startRoom);
+  $('reshuffleBtn').addEventListener('click', startRoom);
+  $('leaderboardBtn').addEventListener('click', ()=>alert('Leaderboard is still a placeholder in this assembled build.'));
+  $('inviteAcceptBtn').addEventListener('click', acceptInvite);
+  $('inviteDeclineBtn').addEventListener('click', declineInvite);
+  $('gamesList').addEventListener('click', (e)=>{
+    const enter = e.target.closest('[data-enter]');
+    const rules = e.target.closest('[data-rules]');
+    const hist = e.target.closest('[data-history]');
+    if(enter) chooseGame(enter.dataset.enter);
+    if(rules) alert(gameRulesText(rules.dataset.rules));
+    if(hist) alert(`History for ${hist.dataset.history} is still placeholder in this assembled build.`);
+  });
+  $('playerList').addEventListener('click', (e)=>{
+    const s = e.target.closest('[data-stats]'); const h = e.target.closest('[data-phistory]');
+    if(s) alert(`Stats placeholder for ${s.dataset.stats}`);
+    if(h) alert(`History placeholder for ${h.dataset.phistory}`);
+  });
+  window.addEventListener('beforeunload', ()=>{
+    if(firebaseReady && currentEmail){ setDoc(doc(db,'players',currentEmail), { online:false, lastSeen:serverTimestamp() }, { merge:true }).catch(()=>{}); }
+  });
+}
+
+(async function boot(){
+  renderGames(); renderPlayers(); hookUI();
+  const saved = loadLocal('ng_email', null); if(saved) $('email').value = saved;
+  await initFirebase();
+  if(saved) { /* leave manual enter so audio and identity stay explicit */ }
+})();
+
+// observe room changes after they are rendered
+const origRenderWaitingRoom = renderWaitingRoom;
+renderWaitingRoom = function(room){ origRenderWaitingRoom(room); maybeAdvanceRoomToWelcome(room).catch(()=>{}); };
 </script>
-  <script>
-
-/* =========================================================
-KILLER TURN DISPLAY FIX
-========================================================= */
-
-function NG_renderKillerTurn(){
-
-  const el = document.getElementById("NG_killer_current_player");
-  if(!el) return;
-
-  const player = NG_getCurrentPlayer();
-
-  if(player){
-    el.textContent = player;
-  } else {
-    el.textContent = "None";
-  }
-
-}
-
-
-/* =========================================================
-KILLER REFRESH ALL
-========================================================= */
-
-function NG_renderKillerAll(){
-
-  if(typeof NG_renderKillerTurn === "function"){
-    NG_renderKillerTurn();
-  }
-
-  if(typeof NG_renderKillerNumbers === "function"){
-    NG_renderKillerNumbers();
-  }
-
-}
-
-</script>
-
 </body>
-  <script>
-
-/* =========================================================
-FINAL PAGE INIT
-========================================================= */
-
-window.addEventListener("load", function(){
-
-  if(typeof NG_boot === "function"){
-    NG_boot();
-  }
-
-  if(typeof NG_renderKillerAll === "function"){
-    NG_renderKillerAll();
-  }
-
-});
-
-</script>
-  <script>
-
-/* =========================================================
-KILLER ENTER HOOK
-========================================================= */
-
-function NG_enterGame(gameId){
-
-  if(gameId === "killer"){
-    NG_startKillerGame();
-    return;
-  }
-
-  alert(gameId + " is not wired yet.");
-
-}
-
-function NG_renderGames(){
-
-  const list = document.getElementById("NG_games_list");
-  if(!list) return;
-
-  const games = NG_getGames();
-  list.innerHTML = "";
-
-  games.forEach(game => {
-
-    const row = document.createElement("div");
-    row.className = "NG_row";
-
-    row.innerHTML = `
-      <div class="NG_name">${game.name}</div>
-      <div class="NG_buttons">
-        <button onclick="NG_enterGame('${game.id}')">ENTER</button>
-        <button onclick="alert('Rules coming next')">RULES</button>
-        <button onclick="alert('History coming next')">HISTORY</button>
-      </div>
-    `;
-
-    list.appendChild(row);
-
-  });
-
-}
-
-</script>
-  <script>
-
-/* =========================================================
-KILLER GAME BUTTON WIRING
-========================================================= */
-
-function NG_registerDefaultGames(){
-
-  if(typeof NG_GAMES === "undefined"){
-    NG_GAMES = [];
-  }
-
-  if(NG_GAMES.length > 0) return;
-
-  NG_GAMES.push({ id:"killer", name:"Killer" });
-  NG_GAMES.push({ id:"around_world", name:"Around the World" });
-  NG_GAMES.push({ id:"cricket", name:"Cricket" });
-  NG_GAMES.push({ id:"301", name:"301" });
-
-}
-
-function NG_boot(){
-
-  if(typeof NG_registerDefaultGames === "function"){
-    NG_registerDefaultGames();
-  }
-
-  if(typeof NG_renderGames === "function"){
-    NG_renderGames();
-  }
-
-  if(typeof NG_renderPlayers === "function"){
-    NG_renderPlayers();
-  }
-
-}
-
-</script>
-  <script>
-
-/* =========================================================
-PLAYER SAFE DEFAULT
-========================================================= */
-
-if(typeof NG_PLAYERS === "undefined"){
-  var NG_PLAYERS = [];
-}
-
-function NG_addPlayer(name,email,online){
-
-  NG_PLAYERS.push({
-    name:name,
-    email:email,
-    online:online || false
-  });
-
-}
-
-function NG_removePlayer(email){
-
-  NG_PLAYERS = NG_PLAYERS.filter(p => p.email !== email);
-
-  if(typeof NG_renderPlayers === "function"){
-    NG_renderPlayers();
-  }
-
-}
-
-</script>
-  <script>
-
-/* =========================================================
-PLAYER SAFE DEFAULT
-========================================================= */
-
-if(typeof NG_PLAYERS === "undefined"){
-  var NG_PLAYERS = [];
-}
-
-function NG_addPlayer(name,email,online){
-
-  NG_PLAYERS.push({
-    name:name,
-    email:email,
-    online:online || false
-  });
-
-}
-
-function NG_removePlayer(email){
-
-  NG_PLAYERS = NG_PLAYERS.filter(p => p.email !== email);
-
-  if(typeof NG_renderPlayers === "function"){
-    NG_renderPlayers();
-  }
-
-}
-
-
-/* =========================================================
-GAME REGISTRY
-========================================================= */
-
-if(typeof NG_GAMES === "undefined"){
-  var NG_GAMES = [];
-}
-
-function NG_registerDefaultGames(){
-
-  if(NG_GAMES.length > 0) return;
-
-  NG_GAMES.push({ id:"killer", name:"Killer" });
-  NG_GAMES.push({ id:"around_world", name:"Around the World" });
-  NG_GAMES.push({ id:"cricket", name:"Cricket" });
-  NG_GAMES.push({ id:"301", name:"301" });
-
-}
-
-
-/* =========================================================
-GAME ENTER HOOK
-========================================================= */
-
-function NG_enterGame(gameId){
-
-  if(gameId === "killer"){
-    NG_startKillerGame();
-    return;
-  }
-
-  alert(gameId + " is not wired yet.");
-
-}
-
-
-/* =========================================================
-GAME RENDER
-========================================================= */
-
-function NG_renderGames(){
-
-  const list = document.getElementById("NG_games_list");
-  if(!list) return;
-
-  const games = NG_GAMES;
-  list.innerHTML = "";
-
-  games.forEach(game => {
-
-    const row = document.createElement("div");
-    row.className = "NG_row";
-
-    row.innerHTML = `
-      <div class="NG_name">${game.name}</div>
-      <div class="NG_buttons">
-        <button onclick="NG_enterGame('${game.id}')">ENTER</button>
-        <button onclick="alert('Rules coming next')">RULES</button>
-        <button onclick="alert('History coming next')">HISTORY</button>
-      </div>
-    `;
-
-    list.appendChild(row);
-
-  });
-
-}
-
-
-/* =========================================================
-BOOT SYSTEM
-========================================================= */
-
-function NG_boot(){
-
-  NG_registerDefaultGames();
-
-  if(typeof NG_renderGames === "function"){
-    NG_renderGames();
-  }
-
-  if(typeof NG_renderPlayers === "function"){
-    NG_renderPlayers();
-  }
-
-}
-
-
-/* =========================================================
-PAGE START
-========================================================= */
-
-window.addEventListener("load", function(){
-
-  if(typeof NG_boot === "function"){
-    NG_boot();
-  }
-
-});
-
-</script>
-  <script>
-
-/* =========================================================
-LEADERBOARD BUTTON + DONATE BUTTON
-========================================================= */
-
-function NG_openLeaderboard(){
-    alert("Leaderboard coming soon!");
-}
-
-function NG_openDonate(){
-    window.open("https://venmo.com/u/Steve-Moody-8","_blank");
-}
-
-function NG_mountControls(){
-
-    const app = document.getElementById("NG_APP");
-    if(!app) return;
-
-    const controlsSection = document.createElement("div");
-    controlsSection.id = "NG_controls_section";
-    controlsSection.style.marginTop = "20px";
-    controlsSection.style.display = "flex";
-    controlsSection.style.gap = "12px";
-
-    const leaderboardBtn = document.createElement("button");
-    leaderboardBtn.textContent = "Leaderboard";
-    leaderboardBtn.onclick = NG_openLeaderboard;
-
-    const donateBtn = document.createElement("button");
-    donateBtn.textContent = "Help support future updates and development";
-    donateBtn.onclick = NG_openDonate;
-
-    controlsSection.appendChild(leaderboardBtn);
-    controlsSection.appendChild(donateBtn);
-
-    app.appendChild(controlsSection);
-}
-
-/* =========================================================
-MULTIPLAYER INVITE HOOK
-========================================================= */
-
-function NG_invitePlayer(email){
-    alert(email + " has been invited to the game.");
-    // TODO: Connect with Firebase messaging for actual invites
-}
-
-function NG_sendInvites(selectedPlayers){
-    selectedPlayers.forEach(p => NG_invitePlayer(p.email));
-    alert("Invites sent to " + selectedPlayers.length + " player(s).");
-}
-
-/* =========================================================
-BOOT CONTROLS
-========================================================= */
-
-document.addEventListener("DOMContentLoaded", function(){
-    if(typeof NG_mountControls === "function"){
-        NG_mountControls();
-    }
-});
-
-</script>
-  <script>
-
-/* =========================================================
-KILLER AUTO-START + FINAL POLISH
-========================================================= */
-
-document.addEventListener("DOMContentLoaded", function(){
-
-    // Start the boot sequence
-    if(typeof NG_boot === "function"){
-        NG_boot();
-    }
-
-    // Render all Killer info
-    if(typeof NG_renderKillerAll === "function"){
-        NG_renderKillerAll();
-    }
-
-    // Optional: auto-start Killer if selected
-    const defaultGame = NG_getGames().find(g => g.id === "killer");
-    if(defaultGame){
-        NG_enterGame("killer");
-    }
-
-});
-
-</script>
-  <script>
-
-/* =========================================================
-KILLER RANDOMIZER + TURN LOGIC
-========================================================= */
-
-function NG_assignRandomKiller(){
-
-    const players = NG_killerPlayers();
-    if(players.length === 0) return;
-
-    const shuffled = NG_shuffleArray(players);
-
-    // Assign a random "Killer" for the round
-    NG_KILLER.killers = {};
-    shuffled.forEach(p => NG_KILLER.killers[p] = false);
-
-    const killerIndex = Math.floor(Math.random() * players.length);
-    NG_KILLER.killers[shuffled[killerIndex]] = true;
-
-    NG_renderKillerAll();
-}
-
-function NG_nextKillerTurn(){
-
-    NG_nextTurn();
-    NG_assignRandomKiller();
-    NG_renderKillerAll();
-
-}
-
-</script>
 </html>
-
