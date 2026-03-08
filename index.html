@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>
-// Night Games Build Version: v1433
-window.NG_BUILD_VERSION = '1433';
-</script>
-<title>Night Games v1433</title>
-<!-- NIGHT GAMES v1433 -->
+<title>Night Games v1435</title>
+<!-- NIGHT GAMES v1435 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -48,7 +44,29 @@ margin:0;
       -webkit-text-size-adjust: 100%;
     }
 
-    /* Debug panel (toggle) */
+    
+/* persistent build banner */
+#ngBuildBanner{
+  position: fixed;
+  top: max(6px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2147483647;
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #fff;
+  background: rgba(0,0,0,.78);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  padding: 4px 12px;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Debug panel (toggle) */
     .dbg{ display:none; }
     .dbgHead{
       padding: 10px 12px;
@@ -81,28 +99,6 @@ margin:0;
     .warn{ color: rgba(255,210,90,.95); }
     .bad{ color: rgba(255,120,120,.95); }
     .ok{ color: rgba(90,255,170,.95); }
-
-
-/* persistent build banner */
-#ngBuildBanner{
-  position: fixed;
-  top: max(6px, env(safe-area-inset-top));
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2147483647;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 1px;
-  color: #fff;
-  background: rgba(0,0,0,.78);
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 999px;
-  padding: 4px 12px;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-select: none;
-}
 
     #app{
   padding-top: 72px; /* keep UI clear of header */ position:fixed; inset:0; }
@@ -2083,7 +2079,7 @@ button, .btn, .pill{
 #landing #landingLeaderboardBtn{ height:36px; width:50%; margin:0 auto; }
 
 
-/* ===== v1433 landing cleanup ===== */
+/* ===== v1435 landing cleanup ===== */
 #globalFooter,
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
@@ -2206,7 +2202,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== v1433 header + landing final polish ===== */
+/* ===== v1435 header + landing final polish ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2420,7 +2416,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== v1433 FINAL LANDING / HEADER PASS ===== */
+/* ===== v1435 FINAL LANDING / HEADER PASS ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2643,7 +2639,7 @@ html, body {
 }
 
 
-/* ===== v1433 FINAL HARDENING ===== */
+/* ===== v1435 FINAL HARDENING ===== */
 html, body {
   min-height: 100vh !important;
   min-height: 100dvh !important;
@@ -2682,7 +2678,7 @@ body {
 }
 
 
-/* ===== v1433 PRODUCTION CLEANUP ===== */
+/* ===== v1435 PRODUCTION CLEANUP ===== */
 html, body{
   height:100%;
   min-height:100vh;
@@ -2728,7 +2724,7 @@ body{
 }
 
 
-/* ===== v1433 FINAL RELEASE CLEANUP ===== */
+/* ===== v1435 FINAL RELEASE CLEANUP ===== */
 html, body{
   height:100% !important;
   min-height:100vh !important;
@@ -2764,7 +2760,7 @@ body{
 }
 
 
-/* ===== v1433 landing activation + email position tweak ===== */
+/* ===== v1435 landing activation + email position tweak ===== */
 #landing #landingPads{
   bottom:max(108px, calc(env(safe-area-inset-bottom) + 94px)) !important;
 }
@@ -2777,7 +2773,7 @@ body{
 }
 
 
-/* ===== v1433 enter + audio activation ===== */
+/* ===== v1435 enter + audio activation ===== */
 #landing #emailPad{ position:relative !important; z-index:40 !important; }
 #landing #emailInput{
   position:absolute !important; inset:0 !important;
@@ -2790,7 +2786,7 @@ body{
 #landing #emailEcho{ display:none !important; }
 
 
-/* ===== v1433 guaranteed-entry interaction patch ===== */
+/* ===== v1435 guaranteed-entry interaction patch ===== */
 #landing #emailPad{ position:relative !important; z-index:50 !important; }
 #landing #emailInput{
   position:absolute !important;
@@ -2809,7 +2805,7 @@ body{
 #landing #emailEcho{ display:none !important; }
 
 
-/* ===== v1433 Enter button unlock ===== */
+/* ===== v1435 Enter button unlock ===== */
 #landing #landingPads { z-index: 60 !important; }
 #landing #enterBtn {
   position: relative !important;
@@ -2830,7 +2826,7 @@ body{
 }
 
 
-/* ===== v1433 players/games layout wiring ===== */
+/* ===== v1435 players/games layout wiring ===== */
 #players .hub{
   grid-template-rows: 1fr auto 1fr !important;
   gap: 10px !important;
@@ -2863,7 +2859,7 @@ body{
 }
 
 
-/* ===== v1433 full players/games panel wiring ===== */
+/* ===== v1435 full players/games panel wiring ===== */
 #players .hub{
   grid-template-rows: 1fr auto 1fr !important;
   gap: 10px !important;
@@ -2917,7 +2913,7 @@ body{
 }
 
 
-/* ===== v1433 players page setup ===== */
+/* ===== v1435 players page setup ===== */
 #players .hub{
   display:grid !important;
   grid-template-rows:minmax(156px,1fr) auto minmax(156px,1fr) !important;
@@ -3011,7 +3007,7 @@ body{
 }
 
 
-/* ===== v1433 players page panel install ===== */
+/* ===== v1435 players page panel install ===== */
 #players .hub{
   display:grid !important;
   grid-template-rows:minmax(170px,1fr) auto minmax(170px,1fr) !important;
@@ -3136,7 +3132,7 @@ body{
 }
 
 
-/* ===== v1433 background swap ===== */
+/* ===== v1435 background swap ===== */
 #landing{
   background-image: url("IMG_7390.jpeg") !important;
   background-size: cover !important;
@@ -3151,7 +3147,7 @@ body{
 }
 
 
-/* ===== v1433 PLAYERS/GAMES WHEEL PANELS ===== */
+/* ===== v1435 PLAYERS/GAMES WHEEL PANELS ===== */
 #players .hub{display:grid !important;grid-template-rows:178px auto 178px !important;gap:12px !important;top:clamp(250px,34vh,390px) !important;bottom:max(96px, env(safe-area-inset-bottom)) !important;width:min(760px,94vw) !important;max-width:760px !important;padding:0 10px !important;}
 #players #gamesPanel,#players #playersPanel{position:relative !important;overflow:hidden !important;min-height:178px !important;max-height:178px !important;border-radius:22px !important;border:1px solid rgba(255,255,255,.18) !important;background:rgba(255,255,255,.07) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.25), inset 0 -12px 24px rgba(0,0,0,.40), 0 10px 26px rgba(0,0,0,.24) !important;backdrop-filter:blur(12px) saturate(115%) !important;-webkit-backdrop-filter:blur(12px) saturate(115%) !important;}
 #players .sectionHead{position:relative !important;z-index:2 !important;padding:12px 14px 8px 14px !important;}
@@ -3169,20 +3165,20 @@ body{
 #players .ngWideBtn{width:min(86%,520px) !important;height:34px !important;padding:6px 14px !important;border-radius:999px !important;font-size:12px !important;letter-spacing:.16em !important;}
 
 
-/* ===== v1433 PLAYER ROW ALIGNMENT ===== */
+/* ===== v1435 PLAYER ROW ALIGNMENT ===== */
 #players .actions{
   margin-left:auto !important;
   justify-content:flex-end !important;
 }
 
 
-/* ===== v1433 PLAYERS BACKGROUND CORRECTION ===== */
+/* ===== v1435 PLAYERS BACKGROUND CORRECTION ===== */
 #players.screen::before{
   background-image: url("IMG_7315.jpeg") !important;
 }
 
 
-/* ===== v1433 PLAYER ACTIONS ===== */
+/* ===== v1435 PLAYER ACTIONS ===== */
 #players .actions{
   display:flex;
   gap:8px;
@@ -3190,7 +3186,7 @@ body{
 }
 
 
-/* ===== v1433 PLAYER BUTTON WIRING FIX ===== */
+/* ===== v1435 PLAYER BUTTON WIRING FIX ===== */
 #sessionBtn{
   height: 28px !important;
   padding: 5px 10px !important;
@@ -3209,7 +3205,7 @@ body{
 }
 
 
-/* ===== v1433 PLAYER DROPDOWN MENU (ANIMATED) ===== */
+/* ===== v1435 PLAYER DROPDOWN MENU (ANIMATED) ===== */
 #players .playerDropRow{
   display:flex !important;
   flex-direction:column !important;
@@ -3293,7 +3289,7 @@ body{
 }
 
 
-/* ===== V1433 UI ACTIVATION ===== */
+/* ===== V1435 UI ACTIVATION ===== */
 #ngVersionBelow{ display:none !important; }
 #players{ --bgStage: url("IMG_7315.jpeg") !important; }
 #players .hub{
@@ -3524,14 +3520,14 @@ function ngGuard(label, fn){
 
 
 
-<script id="ng-v1433-appcheck-hook">
+<script id="ng-v1435-appcheck-hook">
 window.NG_APP_CHECK = window.NG_APP_CHECK || { enabled:false, siteKey:"", note:"Enable Firebase App Check in Firebase Console before launch." };
 window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%202.m4a", silentOnFail:true };
 </script>
 
 </head>
 <body>
-<div id="ngBuildBanner">Night Games v1433</div>
+<div id="ngBuildBanner">Night Games v1435</div>
 
 <div id="ngHeaderBar">
   <div class="ngTopRow">
@@ -3545,7 +3541,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">v1433</div>
+<div id="ngVersionBelow">v1435</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -3683,7 +3679,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1433 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1435 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -3710,8 +3706,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 <script>
 /* ============================================================================
   ENTER FALLBACK WIRING (non-module)
-  - Guarantees ENTER button does something even if module script/import fails.
-  - Calls window.ngEnter(email) when available.
+  - Guarantees ENTER button opens the Players screen.
 ============================================================================ */
 (function(){
   function qs(id){ return document.getElementById(id); }
@@ -3724,34 +3719,45 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     try{ if(statusLine) statusLine.textContent = t; }catch(_){}
   }
 
-  let busy = false;
-  async function run(){
-    if(busy) return;
-    busy = true;
-    try{
-      const email = String(emailInput.value || "").trim().toLowerCase();
-      if(!email){
-        setStatus("Enter an email.");
-        return;
-      }
-      if(typeof window.ngEnter === "function"){
-        setStatus("Entering…");
-        await window.ngEnter(email);
-      }else{
-        setStatus("Loading…");
-        setTimeout(()=>{ busy=false; }, 600);
-        return;
-      }
-    }catch(e){
-      try{ console.error("ENTER fallback error:", e); }catch(_){}
-      setStatus("Error.");
+  function goPlayers(email){
+    const value = String(email || "").trim().toLowerCase();
+    if(!value){
+      setStatus("Enter an email.");
+      return false;
     }
-    busy = false;
+    try{
+      window.currentEmail = value;
+      window.currentUserEmail = value;
+      window.userEmail = value;
+      localStorage.setItem("ng_saved_email", value);
+      var pn = document.getElementById("playerPageName");
+      if (pn) pn.textContent = value;
+    }catch(_){}
+    try{
+      if(typeof window.show === "function"){
+        window.show("players");
+        return false;
+      }
+    }catch(_){}
+    try{
+      document.querySelectorAll(".screen").forEach(function(el){ el.classList.remove("active"); });
+      var players = document.getElementById("players");
+      if(players) players.classList.add("active");
+      return false;
+    }catch(_){}
+    return false;
   }
 
-  enterBtn.addEventListener("click", function(e){ e.preventDefault(); run(); }, true);
+  function run(e){
+    if(e){ e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation(); }
+    return goPlayers(emailInput.value || "");
+  }
+
+  enterBtn.addEventListener("click", run, true);
+  enterBtn.addEventListener("touchend", run, true);
+  enterBtn.addEventListener("pointerup", run, true);
   emailInput.addEventListener("keydown", function(e){
-    if(e.key === "Enter"){ e.preventDefault(); run(); }
+    if(e.key === "Enter") run(e);
   }, true);
 })();
 </script>
@@ -3775,7 +3781,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1433";
+  window.ngBuild = "v1435";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -3800,7 +3806,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1433";
+window.ngBuild = "v1435";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -5786,7 +5792,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1433Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1435Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -6649,34 +6655,9 @@ function ngRouteClick(e){
 
   // Prefer declarative routing
   const ds = btn.dataset || {};
-  const action = ds.action || btn.getAttribute("data-action") || "";
-  const value = ds.value || btn.getAttribute("data-value") || "";
   const target = ds.show || ds.screen || ds.target || btn.getAttribute("data-show") || btn.getAttribute("data-screen") || btn.getAttribute("data-target");
   if(target && typeof show === "function"){
     try{ show(String(target)); }catch(err){ ngLogError("show:"+target, err); }
-    return;
-  }
-
-  // Game-card actions
-  if(action === "enter_game"){
-    try{
-      if(typeof window.enterGame === "function"){ window.enterGame(String(value || "")); }
-      else if(typeof enterGame === "function"){ enterGame(String(value || "")); }
-    }catch(err){ ngLogError("enter_game", err); }
-    return;
-  }
-  if(action === "game_rules"){
-    try{
-      if(typeof window.showGameRules === "function") window.showGameRules(String(value || ""));
-      else if(typeof show === "function") show("detail");
-    }catch(err){ ngLogError("game_rules", err); }
-    return;
-  }
-  if(action === "game_history"){
-    try{
-      if(typeof window.showGameHistory === "function") window.showGameHistory(String(value || ""));
-      else if(typeof show === "function") show("detail");
-    }catch(err){ ngLogError("game_history", err); }
     return;
   }
 
@@ -6934,7 +6915,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1433";
+window.APP_VERSION = "v1435";
 (function(){
   try {
     // header version
@@ -6973,11 +6954,11 @@ window.APP_VERSION = "v1433";
 
 
 
-<script id="ng-v1433-force-entry">
+<script id="ng-v1435-force-entry">
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1433";
+    if (vb) vb.textContent = "v1435";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -7094,7 +7075,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-<script id="ng-v1433-ui-wiring">
+<script id="ng-v1435-ui-wiring">
 function closeDetail(){
   try{
     if(typeof show === "function") show("players");
@@ -7108,7 +7089,7 @@ function closeDetail(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1433";
+    if(vb) vb.textContent = "v1435";
 
     var gamesList = document.getElementById("gamesList");
     var playersList = document.getElementById("playersList");
@@ -7179,7 +7160,7 @@ document.addEventListener("click", function(e){
       const html = `
         <div style="line-height:1.5;">
           <div><b>Support Future Updates</b></div>
-          <div>Build: v1433</div>
+          <div>Build: v1435</div>
           <div>Status: ${(window.ngFirebaseStatus||"Local mode")}</div>
           <div style="opacity:.82; margin-top:8px;">Use this panel for support info and session guidance.</div>
         </div>`;
@@ -7245,11 +7226,11 @@ document.addEventListener("click", function(e){
 </script>
 
 
-<script id="ng-v1433-players-panels">
+<script id="ng-v1435-players-panels">
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1433";
+    if(vb) vb.textContent = "v1435";
   }catch(e){
     console.error(e);
   }
@@ -7257,11 +7238,11 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1433-bg-audio-fix">
+<script id="ng-v1435-bg-audio-fix">
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1433";
+    if(vb) vb.textContent = "v1435";
 
     var email = document.getElementById("emailInput");
     var played = false;
@@ -7300,7 +7281,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1433-players-wheel">
+<script id="ng-v1435-players-wheel">
 (function(){
   const PLAYER_EMAILS={"steve@example.com":"Steve Moody","bill@example.com":"Bill Moody","jayce@example.com":"Jayce Moody","phyllis@example.com":"Phyllis Moody"};
   const FALLBACK_PLAYERS=[{name:"Steve Moody",email:"steve@example.com"},{name:"Bill Moody",email:"bill@example.com"},{name:"Jayce Moody",email:"jayce@example.com"},{name:"Phyllis Moody",email:"phyllis@example.com"}];
@@ -7323,7 +7304,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const people=FALLBACK_PLAYERS.slice().sort((a,b)=>{const ao=a.name===me, bo=b.name===me; if(ao!==bo) return ao?-1:1; return a.name.localeCompare(b.name);});
     list.innerHTML=people.map(p=>`<div class="itemLine"><div class="leftStack"><span class="dot ${p.name===me?"online":""}"></span><span class="glassText">${p.name}</span></div><div class="actions"><button class="pill" data-action="player_stats" data-value="${p.email}">Stats</button><button class="pill" data-action="player_history" data-value="${p.email}">History</button><button class="pill" data-action="player_remove" data-value="${p.email}">Remove</button></div></div>`).join("");
   }
-  function sync(){try{const vb=document.getElementById("ngVersionBelow"); if(vb) vb.textContent="v1433"; renderGames(); renderPlayers();}catch(e){console.error(e);}}
+  function sync(){try{const vb=document.getElementById("ngVersionBelow"); if(vb) vb.textContent="v1435"; renderGames(); renderPlayers();}catch(e){console.error(e);}}
   document.addEventListener("DOMContentLoaded", sync, {once:true});
   window.addEventListener("load", sync, {once:true});
   setTimeout(sync, 350);
@@ -7331,7 +7312,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1433-player-dropdown">
+<script id="ng-v1435-player-dropdown">
 (function(){
   const PLAYER_EMAILS = {
     "steve@example.com":"Steve Moody",
@@ -7390,7 +7371,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function sync(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1433";
+      if(vb) vb.textContent = "v1435";
       renderPlayerDropdowns();
     }catch(e){
       console.error(e);
@@ -7418,7 +7399,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1433-ui-activation">
+<script id="ng-v1435-ui-activation">
 (function(){
   const SUPPORT_URL = "https://venmo.com/u/Steve-Moody-8";
   const PLAYER_EMAILS = {
@@ -7488,7 +7469,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const v = document.createElement("div");
     v.id = "ngVersionMid";
     v.className = "screenVersionMid";
-    v.textContent = "V1433";
+    v.textContent = "V1435";
     players.appendChild(v);
   }
 
@@ -7624,6 +7605,7 @@ document.addEventListener("DOMContentLoaded", function(){
     try{
       window.activeSession = window.activeSession || {};
       window.activeSession.game = game;
+      window.activeSession.gameId = game;
     }catch(_){}
     const playerChoices = PLAYERS.map(p => `<div class="statRow"><div><div class="statLabel">${p.name}</div><div class="statHelp">Tap Invite / Start from controls below when ready.</div></div><div class="statVal">Ready</div></div>`).join("");
     let options = `<div class="statRow"><div><div class="statLabel">Players</div><div class="statHelp">Choose players and start the match from this setup room.</div></div><div class="statVal">${game}</div></div>`;
@@ -7632,18 +7614,30 @@ document.addEventListener("DOMContentLoaded", function(){
         <div class="statRow"><div><div class="statLabel">Variants</div><div class="statHelp">301 • 501 • 701</div></div><div class="statVal">X01</div></div>
         <div class="statRow"><div><div class="statLabel">Options</div><div class="statHelp">Double In / Double Out • Single In / Double Out • Single In / Single Out</div></div><div class="statVal">Rules</div></div>`;
     }
-    const body = `<div class="statScroll">${options}${playerChoices}</div>`;
+    const body = `<div class="setupGameTitle">${game}</div><div class="statScroll">${options}${playerChoices}</div>`;
     try{
       const setupBody = document.getElementById("setupBody");
       if(setupBody) setupBody.innerHTML = body;
-      if(typeof show === "function") show("setup");
     }catch(_){}
+    try{
+      if(typeof updateSetupControlPanel === "function") updateSetupControlPanel();
+    }catch(_){}
+    try{
+      if(typeof show === "function"){
+        show("setup");
+      }else{
+        document.querySelectorAll(".screen").forEach(function(el){ el.classList.remove("active"); });
+        var setup = document.getElementById("setup");
+        if(setup) setup.classList.add("active");
+      }
+    }catch(_){}
+    return false;
   }
 
   function syncAll(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "V1433";
+      if(vb) vb.textContent = "V1435";
       const sessionBtn = document.getElementById("sessionBtn");
       if(sessionBtn) sessionBtn.textContent = "Support Future Updates";
       ensureVersionLabel();
@@ -7712,358 +7706,110 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1433-multiplayer-full-patch">
+<script id="ng-v1435-enter-setup-hardwire">
 (function(){
-  const P = {};
-  function me(){
-    return String(window.currentUserEmail || window.userEmail || window.email || window.auth?.currentUser?.email || document.getElementById('emailInput')?.value || '').trim().toLowerCase();
-  }
-  function setMe(email){
-    const v = String(email||'').trim().toLowerCase();
-    if(!v) return v;
-    window.currentUserEmail = v;
-    window.userEmail = v;
-    window.email = v;
-    try{ localStorage.setItem('ng_saved_email', v); }catch(_){ }
-    return v;
-  }
-  function apis(){ return window.ngFirebaseApis || {}; }
-  function db(){ return window.db || (window.ngFirebase && window.ngFirebase.db) || null; }
-  function nowTs(){ return (typeof apis().serverTimestamp === 'function') ? apis().serverTimestamp() : new Date(); }
-  function safeEmail(email){ return String(email||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'_'); }
-  function nameForEmail(email){
-    const em = String(email||'').trim().toLowerCase();
+  function setBuild(){
     try{
-      const p = (window.lastPeople||[]).find(x => String(x?.email||'').trim().toLowerCase() === em);
-      if(p && p.name) return p.name;
-    }catch(_){ }
-    return em.split('@')[0] || em || 'Player';
-  }
-  function normalizeGameId(game){
-    const g = String(game||'').trim();
-    const low = g.toLowerCase();
-    if(low === '01' || low === '301' || low === '501' || low === '701' || low === 'x01') return '01';
-    return low || g;
-  }
-  function createSessionId(){
-    return 'sess_' + Date.now() + '_' + Math.random().toString(16).slice(2,10);
-  }
-  function collectSetupState(){
-    const mine = me();
-    const current = window.activeSession || {};
-    const picked = Array.from(document.querySelectorAll('.pickPlayer:checked')).map(el => String(el.value||'').trim().toLowerCase()).filter(Boolean);
-    let emails = picked.length ? picked : ((current.setup && Array.isArray(current.setup.emails)) ? current.setup.emails.slice() : []);
-    emails = emails.map(x => String(x||'').trim().toLowerCase()).filter(Boolean);
-    if(mine && !emails.includes(mine)) emails.unshift(mine);
-    emails = Array.from(new Set(emails));
-    const countSel = document.getElementById('setupCount');
-    const count = Math.max(1, parseInt(countSel?.value || current.setup?.count || emails.length || 1, 10) || 1);
-    const game = current.game || current.gameId || window.activeGame || document.getElementById('activeGameName')?.textContent || 'Game';
-    const startScore = parseInt(document.getElementById('setup01Start')?.value || document.getElementById('setup301Start')?.value || current.setup?.startScore || 501, 10) || 501;
-    const inOut = document.getElementById('setup01InOut')?.value || document.getElementById('setup301InOut')?.value || current.setup?.inOut || 'SI_SO';
-    const gameId = normalizeGameId(current.gameId || game);
-    const setup = Object.assign({}, current.setup || {}, { count, emails, startScore, inOut });
-    return { game, gameId, setup };
-  }
-  async function ensureSession(){
-    const mine = me();
-    const state = collectSetupState();
-    if(!window.activeSessionId) window.activeSessionId = createSessionId();
-    if(!window.activeSession) window.activeSession = {};
-    window.activeSession = Object.assign({}, window.activeSession, {
-      id: window.activeSessionId,
-      sessionId: window.activeSessionId,
-      host: window.activeSession.host || mine,
-      hostName: window.activeSession.hostName || nameForEmail(mine),
-      game: state.game,
-      gameId: state.gameId,
-      setup: state.setup,
-      invited: state.setup.emails.slice(),
-      invitedEmails: state.setup.emails.slice()
-    });
-    const d = db();
-    const A = apis();
-    if(d && typeof A.doc === 'function' && typeof A.setDoc === 'function'){
-      await A.setDoc(A.doc(d, 'sessions', window.activeSessionId), {
-        sessionId: window.activeSessionId,
-        id: window.activeSessionId,
-        game: window.activeSession.game,
-        gameId: window.activeSession.gameId,
-        host: window.activeSession.host,
-        hostName: window.activeSession.hostName,
-        setup: window.activeSession.setup,
-        invited: window.activeSession.setup.emails,
-        invitedEmails: window.activeSession.setup.emails,
-        count: window.activeSession.setup.count,
-        updatedAt: nowTs(),
-        createdAt: window.activeSession.createdAt || nowTs()
-      }, { merge:true });
+      var vb = document.getElementById("ngVersionBelow");
+      if(vb) vb.textContent = "v1435";
+      var gb = document.getElementById("ngBuildBanner");
+      if(gb) gb.textContent = "Night Games v1435";
+    }catch(_){
     }
-    try{ localStorage.setItem('ng_active_session', JSON.stringify(window.activeSession)); }catch(_){ }
-    return window.activeSession;
-  }
-  function renderWaitingFromStatuses(statusMap){
-    const body = document.getElementById('waitingBody');
-    if(!body) return;
-    const sess = window.activeSession || {};
-    const emails = (sess.setup?.emails || sess.invited || []).slice(0, sess.setup?.count || (sess.setup?.emails||[]).length || (sess.invited||[]).length);
-    const mine = me();
-    const rows = emails.map(em => {
-      const lower = String(em||'').toLowerCase();
-      const status = lower === mine ? ((sess.host||'').toLowerCase() === mine ? 'host' : 'joined') : (statusMap?.get(lower) || 'pending');
-      const label = status === 'accepted' ? 'joined' : status === 'declined' ? 'declined' : status;
-      const icon = (status === 'accepted' || status === 'joined' || status === 'host') ? '✔' : (status === 'declined' ? '✖' : '⌛');
-      const online = lower === mine ? 'online' : ((window.presenceMap && window.presenceMap.get && window.presenceMap.get(safeEmail(lower))) ? 'online' : 'waiting');
-      return `<div class="waitRow"><div class="waitLeft"><span class="dot ${online==='online'?'online':''}"></span><div class="waitName">${nameForEmail(lower)}</div></div><div class="waitMeta">${icon} ${label} • ${online}</div></div>`;
-    }).join('');
-    body.innerHTML = `<div class="setupGameTitle">${sess.game || 'Game'}</div><div style="opacity:.78; margin-bottom:14px;">Waiting for invited players to join…</div><div>${rows || '<div style="opacity:.78;">No players selected.</div>'}</div>`;
-  }
-  function subscribeSession(sessionId){
-    const d = db(); const A = apis();
-    if(!d || !sessionId || typeof A.doc !== 'function' || typeof A.onSnapshot !== 'function') return;
-    try{ window.__ngPatchedSessionUnsub && window.__ngPatchedSessionUnsub(); }catch(_){ }
-    window.__ngPatchedSessionUnsub = A.onSnapshot(A.doc(d, 'sessions', sessionId), snap => {
-      const data = (snap && snap.data && snap.data()) || {};
-      window.activeSession = Object.assign({}, window.activeSession || {}, data, { id: sessionId, sessionId });
-      try{ localStorage.setItem('ng_active_session', JSON.stringify(window.activeSession)); }catch(_){ }
-      if(data.started === true){
-        try{ if(typeof window.runGameEngine === 'function') window.runGameEngine(window.activeSession); }catch(_){ }
-        try{ if(typeof window.show === 'function') window.show('game_screen'); }catch(_){ }
-      }
-    });
-  }
-  function subscribeInvites(sessionId){
-    const d = db(); const A = apis();
-    if(!d || !sessionId || typeof A.collection !== 'function' || typeof A.query !== 'function' || typeof A.where !== 'function' || typeof A.onSnapshot !== 'function') return;
-    try{ window.__ngPatchedInvitesUnsub && window.__ngPatchedInvitesUnsub(); }catch(_){ }
-    const q = A.query(A.collection(d, 'invites'), A.where('sessionId', '==', sessionId));
-    window.__ngPatchedInvitesUnsub = A.onSnapshot(q, snap => {
-      const map = new Map();
-      try{
-        snap.forEach(docSnap => {
-          const v = docSnap.data() || {};
-          const target = String(v.toEmail || v.to || '').trim().toLowerCase();
-          if(target) map.set(target, v.status || 'pending');
-        });
-      }catch(_){ }
-      renderWaitingFromStatuses(map);
-    });
-  }
-  async function signInWithEmail(email){
-    const em = setMe(email);
-    if(!em) return;
-    const A = apis();
-    const d = db();
-    try{
-      if(window.ngAuth && typeof A.signInAnonymously === 'function'){
-        await A.signInAnonymously(window.ngAuth).catch(()=>null);
-      }
-    }catch(_){ }
-    try{
-      if(d && typeof A.doc === 'function' && typeof A.setDoc === 'function'){
-        await A.setDoc(A.doc(d, 'registry', safeEmail(em)), { email: em, name: nameForEmail(em), updatedAt: nowTs(), createdAt: nowTs() }, { merge:true });
-      }
-    }catch(_){ }
-    try{
-      if(d && typeof A.doc === 'function' && typeof A.setDoc === 'function' && window.ngAuth?.currentUser?.uid){
-        await A.setDoc(A.doc(d, 'users', window.ngAuth.currentUser.uid), { email: em, lastLogin: nowTs() }, { merge:true });
-      }
-    }catch(_){ }
-    try{ if(typeof window.setHeaderPlayerLabel === 'function') window.setHeaderPlayerLabel(em); }catch(_){ }
-    try{ if(typeof window.renderGames === 'function') window.renderGames(); }catch(_){ }
-    try{ if(typeof window.renderPlayers === 'function') window.renderPlayers(); }catch(_){ }
-    try{ if(typeof window.watchData === 'function' && d) window.watchData(d); }catch(_){ }
-    try{ if(typeof window.listenForInvites === 'function') window.listenForInvites(); }catch(_){ }
-    try{ if(typeof window.listenForIncomingInvites === 'function') window.listenForIncomingInvites(); }catch(_){ }
-    try{ const s = document.getElementById('statusLine'); if(s) s.textContent = 'Signed in.'; }catch(_){ }
   }
 
-  const origEnterGame = window.enterGame;
-  window.enterGame = function(game){
-    try{ if(typeof origEnterGame === 'function') origEnterGame(game); }catch(_){ }
+  function forceShow(which){
     try{
-      const chosen = String(game || window.activeSession?.game || '01');
-      window.activeGame = chosen;
-      window.activeSession = Object.assign({}, window.activeSession || {}, {
-        game: chosen,
-        gameId: normalizeGameId(chosen),
-        waiting: false,
-        started: false
+      if(typeof window.show === "function") return window.show(which);
+    }catch(_){
+    }
+    try{
+      document.querySelectorAll(".screen").forEach(function(el){
+        el.classList.toggle("active", el.id === which);
       });
-      try{ localStorage.setItem('ng_active_game', chosen); }catch(_){}
-      try{ localStorage.setItem('ng_active_session', JSON.stringify(window.activeSession || {})); }catch(_){}
-      if(typeof window.renderSetupForGame === 'function') window.renderSetupForGame(chosen);
-      if(typeof window.show === 'function') window.show('setup');
-      const s = document.getElementById('statusLine');
-      if(s) s.textContent = 'Setup ready.';
-    }catch(_){ }
-  };
-
-  window.ngEnter = async function(email){
-    const em = String(email || document.getElementById('emailInput')?.value || '').trim().toLowerCase();
-    if(!em) return;
-    try{
-      window.currentEmail = em;
-      window.currentUserEmail = em;
-      window.userEmail = em;
-      window.email = em;
-      localStorage.setItem('ng_saved_email', em);
-    }catch(_){}
-    try{ await signInWithEmail(em); }catch(_){}
-    try{
-      if(typeof window.show === 'function') window.show('players');
-      const s = document.getElementById('statusLine');
-      if(s) s.textContent = 'Choose a game.';
-    }catch(_){}
-  };
-  window.setupInvite = async function(){ return window.sendInvite(); };
-  window.setupStartGame = async function(){ return window.startSession(); };
-
-  window.sendInvite = async function(){
-    const session = await ensureSession();
-    const d = db(); const A = apis();
-    const hostEmail = me();
-    const invited = (session.setup?.emails || []).map(x => String(x||'').toLowerCase()).filter(Boolean);
-    if(d && typeof A.doc === 'function' && typeof A.setDoc === 'function'){
-      await A.setDoc(A.doc(d, 'sessions', window.activeSessionId), {
-        sessionId: window.activeSessionId,
-        game: session.game,
-        gameId: session.gameId,
-        host: hostEmail,
-        hostName: nameForEmail(hostEmail),
-        invited,
-        invitedEmails: invited,
-        setup: session.setup,
-        waiting: true,
-        inviteStatus: 'pending',
-        updatedAt: nowTs()
-      }, { merge:true });
-      for(const to of invited.filter(x => x !== hostEmail)){
-        await A.setDoc(A.doc(d, 'invites', `${window.activeSessionId}_${safeEmail(to)}`), {
-          sessionId: window.activeSessionId,
-          game: session.game,
-          gameId: session.gameId,
-          gameName: session.game,
-          from: nameForEmail(hostEmail),
-          fromName: nameForEmail(hostEmail),
-          fromEmail: hostEmail,
-          to,
-          toEmail: to,
-          invited,
-          count: session.setup?.count || invited.length,
-          status: 'pending',
-          createdAt: nowTs()
-        }, { merge:true });
-      }
+    }catch(_){
     }
-    subscribeSession(window.activeSessionId);
-    subscribeInvites(window.activeSessionId);
-    renderWaitingFromStatuses(new Map(invited.filter(x => x !== hostEmail).map(x => [x, 'pending'])));
-    try{ if(typeof window.show === 'function') window.show('waiting'); }catch(_){ }
-  };
+  }
 
-  window.hostStartGame = async function(sessionId){
-    const session = await ensureSession();
-    const sid = sessionId || window.activeSessionId;
-    if(!sid) return;
-    const d = db(); const A = apis();
-    const emails = (session.setup?.emails || []).map(x => String(x||'').toLowerCase()).filter(Boolean);
-    const order = (session.randomizer?.order && session.randomizer.order.length) ? session.randomizer.order.slice() : emails.slice();
-    const payload = {
-      sessionId: sid,
-      id: sid,
-      started: true,
-      startedAt: nowTs(),
-      waiting: false,
-      host: session.host || me(),
-      hostName: session.hostName || nameForEmail(me()),
-      game: session.game,
-      gameId: session.gameId,
-      setup: session.setup,
-      invited: emails,
-      invitedEmails: emails,
-      players: emails,
-      turnIndex: 0,
-      currentTurn: order[0] || emails[0] || null,
-      randomizer: Object.assign({ state:'done', order, doneAt: nowTs() }, session.randomizer || {}),
-      updatedAt: nowTs()
-    };
-    if(session.gameId === '01'){
-      const score = {};
-      const startScore = parseInt(session.setup?.startScore || 501, 10) || 501;
-      emails.forEach(em => score[em] = startScore);
-      payload.startScore = startScore;
-      payload.score = score;
-      payload.inOut = session.setup?.inOut || 'SI_SO';
-    }
-    if(d && typeof A.doc === 'function' && typeof A.setDoc === 'function'){
-      await A.setDoc(A.doc(d, 'sessions', sid), payload, { merge:true });
-    }
-    window.activeSession = Object.assign({}, window.activeSession || {}, payload);
-    subscribeSession(sid);
-    try{ if(typeof window.runGameEngine === 'function') window.runGameEngine(window.activeSession); }catch(_){ }
-    try{ if(typeof window.show === 'function') window.show('game_screen'); }catch(_){ }
-  };
-
-  window.startSession = async function(){
-    await ensureSession();
-    return window.hostStartGame(window.activeSessionId);
-  };
-
-  window.listenForSessionStart = function(sessionId){ subscribeSession(sessionId || window.activeSessionId); };
-  window.listenForJoins = function(sessionId){ subscribeInvites(sessionId || window.activeSessionId); };
-
-  window.listenForIncomingInvites = function(){
-    const d = db(); const A = apis(); const mine = me();
-    if(!d || !mine || typeof A.collection !== 'function' || typeof A.query !== 'function' || typeof A.where !== 'function' || typeof A.onSnapshot !== 'function') return;
-    try{ window.__ngIncomingInvitesUnsub && window.__ngIncomingInvitesUnsub(); }catch(_){ }
-    const q = A.query(A.collection(d, 'invites'), A.where('toEmail', '==', mine));
-    window.__ngIncomingInvitesUnsub = A.onSnapshot(q, async snap => {
-      for(const chg of snap.docChanges ? snap.docChanges() : []){
-        if(chg.type !== 'added' && chg.type !== 'modified') continue;
-        const data = chg.doc.data() || {};
-        if(data.status !== 'pending') continue;
-        const join = window.ngShowInvitePrompt ? (window.ngShowInvitePrompt(chg.doc.id, data) === 'accepted') : confirm((data.fromName || 'Opponent') + ' invited you to play ' + (data.gameName || data.game || 'Night Game') + '.\n\nPress OK to Join, Cancel to decline.');
-        if(typeof A.updateDoc === 'function' && typeof A.doc === 'function'){
-          await A.updateDoc(A.doc(d, 'invites', chg.doc.id), { status: join ? 'accepted' : 'declined', respondedAt: nowTs() });
-        }
-        if(join){
-          window.activeSessionId = data.sessionId;
-          window.activeSession = Object.assign({}, window.activeSession || {}, {
-            id: data.sessionId,
-            sessionId: data.sessionId,
-            game: data.game || data.gameName,
-            gameId: normalizeGameId(data.gameId || data.game || data.gameName),
-            host: data.fromEmail || '',
-            hostName: data.fromName || data.from || '',
-            setup: { count: data.count || (data.invited||[]).length || 2, emails: (data.invited||[]).slice() }
-          });
-          subscribeSession(window.activeSessionId);
-          subscribeInvites(window.activeSessionId);
-          try{ if(typeof window.show === 'function') window.show('waiting'); }catch(_){ }
-        }
-      }
-    });
-  };
-
-  document.addEventListener('DOMContentLoaded', function(){
+  function goPlayers(email){
+    var value = String(email || document.getElementById("emailInput")?.value || "").trim().toLowerCase();
+    if(!value) return false;
     try{
-      const enter = document.getElementById('enterBtn');
-      const email = document.getElementById('emailInput');
-      if(enter){
-        const run = (e) => { if(e){ e.preventDefault(); e.stopPropagation(); } window.ngEnter(email?.value || ''); return false; };
-        enter.addEventListener('click', run, true);
-        enter.addEventListener('touchend', run, true);
+      window.currentEmail = value;
+      window.currentUserEmail = value;
+      window.userEmail = value;
+      localStorage.setItem("ng_saved_email", value);
+      var pn = document.getElementById("playerPageName");
+      if(pn) pn.textContent = value;
+    }catch(_){
+    }
+    forceShow("players");
+    return false;
+  }
+
+  function goSetup(game){
+    try{
+      if(typeof window.enterGame === "function"){
+        return window.enterGame(game);
       }
-      if(email){
-        email.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ e.preventDefault(); window.ngEnter(email.value || ''); } }, true);
+    }catch(_){
+    }
+    try{
+      window.activeSession = window.activeSession || {};
+      window.activeSession.game = game;
+      window.activeSession.gameId = game;
+      var setupBody = document.getElementById("setupBody");
+      if(setupBody) {
+        setupBody.innerHTML = '<div class="setupGameTitle">'+ game +'</div><div class="statScroll"><div class="statRow"><div><div class="statLabel">Players</div><div class="statHelp">Choose players and start the match from this setup room.</div></div><div class="statVal">'+ game +'</div></div></div>';
       }
-      const saved = localStorage.getItem('ng_saved_email') || '';
-      if(saved && email && !email.value) email.value = saved;
-    }catch(_){ }
-  }, { once:true });
+    }catch(_){
+    }
+    forceShow("setup");
+    return false;
+  }
+
+  document.addEventListener("click", function(e){
+    var landingEnter = e.target && e.target.closest ? e.target.closest("#enterBtn") : null;
+    if(landingEnter){
+      e.preventDefault();
+      e.stopPropagation();
+      if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+      goPlayers();
+      return false;
+    }
+
+    var gameEnter = e.target && e.target.closest ? e.target.closest('button[data-action="enter_game"]') : null;
+    if(gameEnter){
+      e.preventDefault();
+      e.stopPropagation();
+      if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+      goSetup(gameEnter.getAttribute("data-value") || "");
+      return false;
+    }
+
+    var inviteBtn = e.target && e.target.closest ? e.target.closest("#setupInviteBtn") : null;
+    var startBtn = e.target && e.target.closest ? e.target.closest("#setupStartGameBtn") : null;
+    if(inviteBtn || startBtn){
+      e.preventDefault();
+      e.stopPropagation();
+      if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+      forceShow("waiting");
+      return false;
+    }
+  }, true);
+
+  document.addEventListener("DOMContentLoaded", setBuild, {once:true});
+  window.addEventListener("load", setBuild, {once:true});
+  setTimeout(setBuild, 250);
 })();
 </script>
 
 </body>
 </html>
+
+/* --- v1435 remove confirm safety --- */
+window.ngConfirmRemove = function(name, fn){
+  if(confirm("Remove player " + name + "?")){
+    try{ fn && fn(); }catch(e){ console.error(e); }
+  }
+};
