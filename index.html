@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1479</title>
+<title>Night Games v1480</title>
 <!-- NIGHT GAMES v1479 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -6377,7 +6377,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1479Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1480 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -6856,22 +6856,25 @@ function renderPlayers(list){
         if(!regSnap.exists()) {
           statusLine.textContent = "New player…";
           step("3b:new-player");
-          const entered = prompt("Welcome! Please enter your name:", "");
-          const name = (entered||"").trim();
+          const firstName = String(prompt("Welcome! Enter first name:", "") || "").trim();
+          const lastName = String(prompt("Enter last name:", "") || "").trim();
+          const name = [firstName, lastName].filter(Boolean).join(" ").trim();
           if(!name){
             statusLine.textContent = "Name required.";
             setDbg("FAIL", "auth", "name-missing", currentEmail);
-            alert("Name is required to register.");
+            alert("First and last name are required to register.");
             return;
           }
           await setDoc(regRef, {
             email: currentEmail,
+            firstName: firstName,
+            lastName: lastName,
             name: name,
             createdAt: serverTimestamp()
           }, { merge: true });
 
           // Refresh local cache so header render can use it immediately.
-          try{ lastPeople = [...(lastPeople||[]).filter(p => p && (p.email||"").toLowerCase() !== currentEmail), {email: currentEmail, name}]; }catch(e){
+          try{ lastPeople = [...(lastPeople||[]).filter(p => p && (p.email||"").toLowerCase() !== currentEmail), {email: currentEmail, firstName, lastName, name}]; }catch(e){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
   try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
 }
@@ -7543,7 +7546,7 @@ window.APP_VERSION = "v1479";
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1479";
+    if (vb) vb.textContent = "v1480";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -7678,7 +7681,7 @@ function closeDetail(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1479";
+    if(vb) vb.textContent = "v1480";
 
     var gamesList = document.getElementById("gamesList");
     var playersList = document.getElementById("playersList");
@@ -7819,7 +7822,7 @@ document.addEventListener("click", function(e){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1479";
+    if(vb) vb.textContent = "v1480";
   }catch(e){
     console.error(e);
   }
@@ -7831,7 +7834,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1479";
+    if(vb) vb.textContent = "v1480";
 
     var email = document.getElementById("emailInput");
     var played = false;
@@ -7960,7 +7963,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function sync(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1479";
+      if(vb) vb.textContent = "v1480";
       renderPlayerDropdowns();
     }catch(e){
       console.error(e);
@@ -8058,7 +8061,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const v = document.createElement("div");
     v.id = "ngVersionMid";
     v.className = "screenVersionMid";
-    v.textContent = "v1479";
+    v.textContent = "v1480";
     players.appendChild(v);
   }
 
@@ -8213,7 +8216,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncAll(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1479";
+      if(vb) vb.textContent = "v1480";
       const sessionBtn = document.getElementById("sessionBtn");
       if(sessionBtn) sessionBtn.textContent = "Help Support Updates and Future Projects";
       ensureVersionLabel();
@@ -8335,9 +8338,9 @@ document.addEventListener("DOMContentLoaded", function(){
   function setVersion(){
     try {
       const v1 = document.querySelector("#ngHeaderBlock .ver");
-      if (v1) v1.textContent = "v1479";
+      if (v1) v1.textContent = "v1480";
       const v2 = document.getElementById("ngVersionBelow");
-      if (v2) v2.textContent = "v1479";
+      if (v2) v2.textContent = "v1480";
     } catch (_) {}
   }
 
@@ -8577,7 +8580,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1479";
+      if(v) v.textContent = "v1480";
     } catch(_ ) {}
   }
 
@@ -8696,7 +8699,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1479";
+      if(v) v.textContent = "v1480";
     } catch(_ ) {}
   }
 
@@ -8832,7 +8835,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1479";
+      if(v) v.textContent = "v1480";
     } catch(_ ) {}
   }
 
@@ -8907,7 +8910,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1479";
+      if(v) v.textContent = "v1480";
     } catch(_ ) {}
   }
 
@@ -8959,17 +8962,23 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       const v = document.getElementById("ngVersionBelow");
-      if (v) v.textContent = "v1479";
+      if (v) v.textContent = "v1480";
     } catch (_ ) {}
   }
 
   function getRoster(){
     try {
       if (Array.isArray(window.PLAYERS) && window.PLAYERS.length) {
-        return window.PLAYERS.slice(0,4).map(p => ({name:p.name, email:(p.email||"").toLowerCase()}));
+        return window.PLAYERS
+          .map(p => ({name: p.name || [p.firstName, p.lastName].filter(Boolean).join(" ").trim(), email:(p.email||"").toLowerCase()}))
+          .filter(p => p.email)
+          .sort((a,b)=> String(a.name||a.email).localeCompare(String(b.name||b.email)));
       }
     } catch (_ ) {}
-    return REAL_PLAYERS.slice(0,4).map(p => ({name:p.name, email:(p.email||"").toLowerCase()}));
+    return (REAL_PLAYERS || [])
+      .map(p => ({name: p.name || [p.firstName, p.lastName].filter(Boolean).join(" ").trim(), email:(p.email||"").toLowerCase()}))
+      .filter(p => p.email)
+      .sort((a,b)=> String(a.name||a.email).localeCompare(String(b.name||b.email)));
   }
 
   function ensurePlayerByEmail(email){
@@ -8978,10 +8987,12 @@ document.addEventListener("DOMContentLoaded", function(){
     let roster = getRoster();
     let found = roster.find(p => p.email === em);
     if (found) return found;
-    const defaultName = em.split("@")[0] || "Player";
-    const entered = window.prompt ? window.prompt("Enter your name") : defaultName;
-    const name = String(entered || defaultName).trim() || defaultName;
-    const newPlayer = { name, email: em };
+    const fallbackFirst = (em.split("@")[0] || "Player").replace(/[^a-zA-Z]+/g, " ").trim().split(/\s+/)[0] || "Player";
+    const first = String(window.prompt ? window.prompt("New player. Enter first name:", fallbackFirst) : fallbackFirst || "").trim();
+    if (!first) return null;
+    const last = String(window.prompt ? window.prompt("Enter last name:", "") : "").trim();
+    const name = [first, last].filter(Boolean).join(" ").trim() || fallbackFirst;
+    const newPlayer = { name, firstName:first, lastName:last, email: em };
     try {
       if (!Array.isArray(window.PLAYERS)) window.PLAYERS = [];
       window.PLAYERS.push(newPlayer);
@@ -8991,6 +9002,116 @@ document.addEventListener("DOMContentLoaded", function(){
       window.FALLBACK_PLAYERS.push(newPlayer);
     } catch (_ ) {}
     return newPlayer;
+  }
+
+  function injectV1480Styles(){
+    try {
+      if (document.getElementById("ngV1480Style")) return;
+      const style = document.createElement("style");
+      style.id = "ngV1480Style";
+      style.textContent = `
+        #setupBody, #playersList, .pickerBody{
+          scrollbar-width: thin;
+          scrollbar-color: rgba(255,255,255,.55) rgba(255,255,255,.10);
+        }
+        #setupBody::-webkit-scrollbar, #playersList::-webkit-scrollbar, .pickerBody::-webkit-scrollbar{ width: 12px; }
+        #setupBody::-webkit-scrollbar-track, #playersList::-webkit-scrollbar-track, .pickerBody::-webkit-scrollbar-track{
+          background: rgba(255,255,255,.08);
+          border-radius: 999px;
+        }
+        #setupBody::-webkit-scrollbar-thumb, #playersList::-webkit-scrollbar-thumb, .pickerBody::-webkit-scrollbar-thumb{
+          background: rgba(255,255,255,.55);
+          border-radius: 999px;
+          border: 2px solid rgba(255,255,255,.10);
+        }
+        #setupBody{
+          min-height: 0 !important;
+          overflow-y: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+          overscroll-behavior: contain;
+          touch-action: pan-y;
+          padding-left: 4px !important;
+          padding-right: 4px !important;
+        }
+        #setup .detailWrap{
+          left: max(14px, env(safe-area-inset-left)) !important;
+          right: max(14px, env(safe-area-inset-right)) !important;
+        }
+        .setupSelectWrap{
+          margin-top: 10px;
+          margin-bottom: 6px;
+          padding: 0 2px;
+        }
+        .setupTapRow, .setupSelectWrap .setupSelect, #openPlayerPicker.glassBtn{
+          width: 100% !important;
+          min-height: 58px !important;
+          border-radius: 18px !important;
+          box-sizing: border-box !important;
+        }
+        #setup .glassBtn,
+        #setup .glassSelect,
+        #setup .pickerCard,
+        #setup .pickerRow,
+        #playersList .itemLine,
+        #setupPlayersWrap .ngPickerChip{
+          background: rgba(255,255,255,.14) !important;
+          backdrop-filter: blur(16px) saturate(1.15) !important;
+          -webkit-backdrop-filter: blur(16px) saturate(1.15) !important;
+          border: 1px solid rgba(255,255,255,.34) !important;
+          box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 12px 32px rgba(0,0,0,.18) !important;
+        }
+        #setup .glassSelect{
+          color: rgba(255,255,255,.98) !important;
+          padding-left: 16px !important;
+          padding-right: 16px !important;
+        }
+        #playersList .itemLine{
+          margin-left: 4px !important;
+          margin-right: 4px !important;
+        }
+        .pickerModal{
+          padding: 16px !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+        .pickerCard{
+          width: min(92vw, 620px) !important;
+          max-height: min(78vh, 720px) !important;
+          overflow: hidden !important;
+        }
+        .pickerBody{
+          overflow-y: auto !important;
+          max-height: min(52vh, 420px) !important;
+          padding-right: 4px !important;
+        }
+        .pickerRow{
+          grid-template-columns: minmax(0,1fr) auto !important;
+          gap: 12px !important;
+          align-items: center !important;
+          margin-bottom: 10px !important;
+          padding: 12px 14px !important;
+        }
+        .pickerRow .nm, .pickerRow .em, .ngPickerName, .ngPickerEmail{
+          white-space: normal !important;
+          overflow: visible !important;
+          text-overflow: clip !important;
+          word-break: break-word !important;
+        }
+        .ngPickerChip{
+          display: flex !important;
+          align-items: center !important;
+          gap: 12px !important;
+          padding: 12px 14px !important;
+          border-radius: 18px !important;
+          margin-bottom: 10px !important;
+        }
+        .ngPickerMeta{ display:flex !important; flex-direction:column !important; min-width:0; }
+        .ngPickerName{ font-weight: 1000 !important; }
+        .ngPickerEmail{ opacity: .74 !important; font-size: 13px !important; font-weight: 700 !important; }
+        .pickerToggleBtn[disabled]{ opacity: .86 !important; }
+      `;
+      document.head.appendChild(style);
+    } catch (_ ) {}
   }
 
   function updateDonateText(){
@@ -9045,15 +9166,38 @@ document.addEventListener("DOMContentLoaded", function(){
     const setupBody = document.getElementById("setupBody");
     if (!setupBody) return;
 
-    const roster = getRoster();
+    const me = String(window.currentEmail || window.currentUserEmail || "").trim().toLowerCase();
+    const seen = new Set();
+    let roster = getRoster().filter(function(p){
+      const email = String((p && p.email) || "").trim().toLowerCase();
+      if (!email || seen.has(email)) return false;
+      seen.add(email);
+      return true;
+    }).map(function(p){
+      const email = String(p.email || "").trim().toLowerCase();
+      const full = String(p.name || [p.firstName, p.lastName].filter(Boolean).join(" ") || email.split("@")[0] || email).trim();
+      return { name: full, email: email };
+    });
+    if (me && !roster.some(function(p){ return p.email === me; })) {
+      roster.unshift({ name: (me.split("@")[0] || "You"), email: me });
+    }
+    roster.sort(function(a,b){
+      if (a.email === me) return -1;
+      if (b.email === me) return 1;
+      return String(a.name || a.email).localeCompare(String(b.name || b.email));
+    });
+
     const is01 = (game === "01" || game === "301");
 
-    const opts = roster.map((p, i) => `
-      <label class="chip ngPickerChip">
-        <input type="checkbox" class="pickPlayer" value="${p.email}" ${i < 1 ? "checked" : ""}/>
-        <span>${p.name}</span>
-      </label>
-    `).join("");
+    const opts = roster.map(function(p){
+      const isMe = p.email === me;
+      return `
+        <label class="chip ngPickerChip" data-email="${p.email}">
+          <input type="checkbox" class="pickPlayer" value="${p.email}" ${isMe ? "checked" : ""} ${isMe ? "data-fixed-self=\"1\"" : ""}/>
+          <span class="ngPickerMeta"><span class="ngPickerName">${p.name}${isMe ? " (You)" : ""}</span><span class="ngPickerEmail">${p.email}</span></span>
+        </label>
+      `;
+    }).join("");
 
     setupBody.innerHTML = `
       <div class="setupGameTitle">${game}</div>
@@ -9067,7 +9211,7 @@ document.addEventListener("DOMContentLoaded", function(){
         </button>
         <div id="setupCountWrap" class="setupSelectWrap" style="display:none;">
           <select id="setupCount" class="glassSelect setupSelect">
-            ${[1,2,3,4,5,6,7,8].map(n => `<option value="${n}">${n}</option>`).join("")}
+            ${[1,2,3,4,5,6,7,8].map(function(n){ return `<option value="${n}">${n}</option>`; }).join("")}
           </select>
         </div>
 
@@ -9154,17 +9298,49 @@ document.addEventListener("DOMContentLoaded", function(){
     const inOutSelectWrap = document.getElementById("setup01InOutSelectWrap");
     const inOutToggle = document.getElementById("toggle01InOut");
     const inOutSummary = document.getElementById("inOutPickSummary");
+    const fixedEmail = me;
+    let snapshotSelected = new Set();
+    let autoCloseTimer = null;
 
-    function toggleWrap(el, force){
-      if (!el) return;
-      const willShow = (typeof force === "boolean") ? force : (el.style.display === "none");
-      el.style.display = willShow ? "block" : "none";
+    function openOnly(target){
+      [countWrap, scoreWrap, inOutSelectWrap].forEach(function(el){
+        if (!el) return;
+        el.style.display = (el === target) ? "block" : "none";
+      });
     }
-    function getSelectedEmails(){ return checks.filter(c => c.checked).map(c => c.value); }
-    function setSelectedEmails(set){ checks.forEach(c => c.checked = set.has(c.value)); }
+    function closeSections(){ openOnly(null); }
+    function closeModal(){
+      if (!modal) return;
+      modal.style.display = "none";
+      modal.setAttribute("aria-hidden", "true");
+    }
+    function openModal(){
+      if (!modal) return;
+      modal.style.display = "flex";
+      modal.setAttribute("aria-hidden", "false");
+    }
+    function getSelectedEmails(){
+      return checks.filter(function(c){ return c.checked; }).map(function(c){ return c.value; });
+    }
+    function setSelectedEmails(set){
+      checks.forEach(function(c){
+        if (c.value === fixedEmail && fixedEmail) {
+          c.checked = true;
+          return;
+        }
+        c.checked = set.has(c.value);
+      });
+    }
+    function selectedNames(){
+      return checks.filter(function(c){ return c.checked; }).map(function(c){
+        const chip = c.closest("label");
+        return ((chip && chip.querySelector(".ngPickerName") && chip.querySelector(".ngPickerName").textContent) || c.value).replace(/\s*\(You\)\s*$/, "").trim();
+      }).filter(Boolean);
+    }
     function refreshSummary(){
-      const labels = checks.filter(c => c.checked).map(c => ((c.closest("label")?.querySelector("span")?.textContent) || "").trim()).filter(Boolean);
-      summary.textContent = labels.length ? labels.join(", ") : "Choose players";
+      const names = selectedNames();
+      if (!summary) return;
+      summary.textContent = names.length ? names.join(", ") : "Choose players";
     }
     function refreshCountSummary(){
       const want = parseInt(countSel.value || "1", 10) || 1;
@@ -9180,42 +9356,10 @@ document.addEventListener("DOMContentLoaded", function(){
     }
     function enforce(){
       const want = parseInt(countSel.value || "1", 10) || 1;
-      let picks = getSelectedEmails();
-      if (picks.length > want) picks = picks.slice(0, want);
-      checks.forEach(c => c.checked = picks.includes(c.value));
-      refreshSummary();
-      refreshCountSummary();
-    }
-    function rebuildPicker(){
-      body.innerHTML = "";
-      const want = parseInt(countSel.value || "1", 10) || 1;
-      const selected = new Set(getSelectedEmails());
-      checks.forEach(c => {
-        const email = c.value;
-        const nm = ((c.closest("label")?.querySelector("span")?.textContent) || "").trim() || email;
-        const row = document.createElement("div");
-        row.className = "pickerRow";
-        row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "pill";
-        btn.style.padding = "10px 12px";
-        btn.textContent = selected.has(email) ? "Selected" : "Select";
-        btn.addEventListener("click", function(){
-          const now = new Set(getSelectedEmails());
-          if (now.has(email)) now.delete(email);
-          else {
-            if (now.size >= want) return;
-            now.add(email);
-          }
-          setSelectedEmails(now);
-          enforce();
-          rebuildPicker();
-          syncActiveSetup();
-        });
-        row.appendChild(btn);
-        body.appendChild(row);
-      });
+      let picks = getSelectedEmails().filter(Boolean);
+      if (fixedEmail && !picks.includes(fixedEmail)) picks.unshift(fixedEmail);
+      picks = picks.slice(0, Math.max(1, want));
+      checks.forEach(function(c){ c.checked = picks.includes(c.value); });
       refreshSummary();
       refreshCountSummary();
     }
@@ -9242,81 +9386,142 @@ document.addEventListener("DOMContentLoaded", function(){
         }
       } catch (_ ) {}
     }
+    function rebuildPicker(){
+      if (!body) return;
+      body.innerHTML = "";
+      const want = parseInt(countSel.value || "1", 10) || 1;
+      const selected = new Set(getSelectedEmails());
+      checks.forEach(function(c){
+        const email = c.value;
+        const chip = c.closest("label");
+        const nm = ((chip && chip.querySelector(".ngPickerName") && chip.querySelector(".ngPickerName").textContent) || email).trim();
+        const row = document.createElement("div");
+        row.className = "pickerRow";
+        row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "pill pickerToggleBtn";
+        btn.style.padding = "10px 12px";
+        const isSelf = email === fixedEmail && !!fixedEmail;
+        btn.textContent = isSelf ? "You" : (selected.has(email) ? "Selected" : "Select");
+        btn.disabled = isSelf;
+        btn.addEventListener("click", function(){
+          const now = new Set(getSelectedEmails());
+          if (now.has(email)) now.delete(email);
+          else {
+            if (now.size >= want) return;
+            now.add(email);
+          }
+          setSelectedEmails(now);
+          enforce();
+          rebuildPicker();
+          syncActiveSetup();
+          if (autoCloseTimer) clearTimeout(autoCloseTimer);
+          if (getSelectedEmails().length === want) {
+            autoCloseTimer = setTimeout(function(){ closeModal(); }, 180);
+          }
+        });
+        row.appendChild(btn);
+        body.appendChild(row);
+      });
+      refreshSummary();
+      refreshCountSummary();
+    }
 
-    let snapshotSelected = new Set(getSelectedEmails());
     countSel.value = "1";
-    checks.forEach((c, i) => c.checked = (i === 0));
+    checks.forEach(function(c){ c.checked = (c.value === fixedEmail); });
+    if (!checks.some(function(c){ return c.checked; }) && checks[0]) checks[0].checked = true;
     enforce();
     refresh01Summaries();
     sync01Visibility();
     syncActiveSetup();
 
-    if (countToggle) countToggle.addEventListener("click", function(){ toggleWrap(countWrap); });
-    if (scoreToggle) scoreToggle.addEventListener("click", function(){ toggleWrap(scoreWrap); });
-    if (inOutToggle) inOutToggle.addEventListener("click", function(){ toggleWrap(inOutSelectWrap); });
+    if (countToggle) countToggle.addEventListener("click", function(){
+      const opening = !(countWrap && countWrap.style.display === "block");
+      openOnly(opening ? countWrap : null);
+    });
+    if (scoreToggle) scoreToggle.addEventListener("click", function(){
+      const opening = !(scoreWrap && scoreWrap.style.display === "block");
+      openOnly(opening ? scoreWrap : null);
+    });
+    if (inOutToggle) inOutToggle.addEventListener("click", function(){
+      const opening = !(inOutSelectWrap && inOutSelectWrap.style.display === "block");
+      openOnly(opening ? inOutSelectWrap : null);
+    });
 
-    openBtn.addEventListener("click", function(){
+    if (openBtn) openBtn.addEventListener("click", function(){
       snapshotSelected = new Set(getSelectedEmails());
       rebuildPicker();
-      modal.style.display = "flex";
-      modal.setAttribute("aria-hidden", "false");
+      closeSections();
+      openModal();
     });
+
     [cancelBtn, closeBtn].forEach(function(btn){
       btn && btn.addEventListener("click", function(){
         setSelectedEmails(snapshotSelected);
         enforce();
-        modal.style.display = "none";
-        modal.setAttribute("aria-hidden", "true");
+        closeModal();
         syncActiveSetup();
       });
     });
-    doneBtn.addEventListener("click", function(){
-      modal.style.display = "none";
-      modal.setAttribute("aria-hidden", "true");
+    if (doneBtn) doneBtn.addEventListener("click", function(){
+      closeModal();
       refreshSummary();
       syncActiveSetup();
     });
-    modal.addEventListener("click", function(e){
+    if (modal) modal.addEventListener("click", function(e){
       if (e.target === modal) {
         setSelectedEmails(snapshotSelected);
         enforce();
-        modal.style.display = "none";
-        modal.setAttribute("aria-hidden", "true");
+        closeModal();
         syncActiveSetup();
       }
     });
     countSel.addEventListener("change", function(){
       enforce();
       refreshCountSummary();
-      if (modal.style.display === "flex") rebuildPicker();
+      closeSections();
+      if (modal && modal.style.display === "flex") rebuildPicker();
       syncActiveSetup();
     });
     if (scoreSel) {
       scoreSel.addEventListener("change", function(){
         refresh01Summaries();
         sync01Visibility();
+        closeSections();
         syncActiveSetup();
       });
     }
     if (inOutSel) {
       inOutSel.addEventListener("change", function(){
         refresh01Summaries();
+        closeSections();
         syncActiveSetup();
       });
     }
+
+    try {
+      setupBody.scrollTop = 0;
+      setupBody.style.overflowY = "auto";
+      setupBody.style.paddingRight = "6px";
+      setupBody.style.webkitOverflowScrolling = "touch";
+    } catch (_ ) {}
 
     const startBtn = document.getElementById("setupStartGameBtn");
     if (startBtn) startBtn.textContent = "1 PLAYER";
   }
 
+
   document.addEventListener("DOMContentLoaded", function(){
 
     syncVersion();
+    injectV1480Styles();
     patchLandingEnter();
     updateDonateText();
   });
   window.addEventListener("load", function(){
     syncVersion();
+    injectV1480Styles();
     patchLandingEnter();
     updateDonateText();
   });
@@ -9328,7 +9533,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </body>
 </html>
 
-/* --- v1479 remove confirm safety --- */
+/* --- v1480 remove confirm safety --- */
 window.ngConfirmRemove = function(name, fn){
   if(confirm("Remove player " + name + "?")){
     try{ fn && fn(); }catch(e){ console.error(e); }
