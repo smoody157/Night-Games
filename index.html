@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1435</title>
-<!-- NIGHT GAMES v1435 -->
+<script>
+window.NG_BUILD_VERSION="1436";
+window.NG_BUILD_LABEL="Night Games v1436";
+</script>
+<title>Night Games v1436</title>
+<!-- NIGHT GAMES v1436 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -45,25 +49,32 @@ margin:0;
     }
 
     
-/* persistent build banner */
-#ngBuildBanner{
-  position: fixed;
-  top: max(6px, env(safe-area-inset-top));
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2147483647;
-  font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 1px;
-  color: #fff;
-  background: rgba(0,0,0,.78);
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 999px;
-  padding: 4px 12px;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-select: none;
+/* top centered firebase/firestore + build label */
+#ngHeaderBlock{
+  position:fixed;
+  top:max(6px, env(safe-area-inset-top));
+  left:50%;
+  transform:translateX(-50%);
+  z-index:2147483647;
+  text-align:center;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  pointer-events:none;
+  user-select:none;
+  -webkit-user-select:none;
+}
+#ngHeaderBlock .ff{
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:1px;
+  text-shadow:0 1px 2px rgba(0,0,0,.45);
+}
+#ngHeaderBlock .ver{
+  color:#2a7fff;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:1px;
+  text-shadow:0 1px 2px rgba(0,0,0,.35);
 }
 
 /* Debug panel (toggle) */
@@ -2079,7 +2090,7 @@ button, .btn, .pill{
 #landing #landingLeaderboardBtn{ height:36px; width:50%; margin:0 auto; }
 
 
-/* ===== v1435 landing cleanup ===== */
+/* ===== v1436 landing cleanup ===== */
 #globalFooter,
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
@@ -2202,7 +2213,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== v1435 header + landing final polish ===== */
+/* ===== v1436 header + landing final polish ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2416,7 +2427,7 @@ button, .btn, .pill{
 }
 
 
-/* ===== v1435 FINAL LANDING / HEADER PASS ===== */
+/* ===== v1436 FINAL LANDING / HEADER PASS ===== */
 #landing .leaderboardSlot,
 #landing #leaderboardBtn,
 #landing #landingLeaderboardBtn,
@@ -2639,7 +2650,7 @@ html, body {
 }
 
 
-/* ===== v1435 FINAL HARDENING ===== */
+/* ===== v1436 FINAL HARDENING ===== */
 html, body {
   min-height: 100vh !important;
   min-height: 100dvh !important;
@@ -2678,7 +2689,7 @@ body {
 }
 
 
-/* ===== v1435 PRODUCTION CLEANUP ===== */
+/* ===== v1436 PRODUCTION CLEANUP ===== */
 html, body{
   height:100%;
   min-height:100vh;
@@ -2724,7 +2735,7 @@ body{
 }
 
 
-/* ===== v1435 FINAL RELEASE CLEANUP ===== */
+/* ===== v1436 FINAL RELEASE CLEANUP ===== */
 html, body{
   height:100% !important;
   min-height:100vh !important;
@@ -2760,7 +2771,7 @@ body{
 }
 
 
-/* ===== v1435 landing activation + email position tweak ===== */
+/* ===== v1436 landing activation + email position tweak ===== */
 #landing #landingPads{
   bottom:max(108px, calc(env(safe-area-inset-bottom) + 94px)) !important;
 }
@@ -2773,7 +2784,7 @@ body{
 }
 
 
-/* ===== v1435 enter + audio activation ===== */
+/* ===== v1436 enter + audio activation ===== */
 #landing #emailPad{ position:relative !important; z-index:40 !important; }
 #landing #emailInput{
   position:absolute !important; inset:0 !important;
@@ -2786,7 +2797,7 @@ body{
 #landing #emailEcho{ display:none !important; }
 
 
-/* ===== v1435 guaranteed-entry interaction patch ===== */
+/* ===== v1436 guaranteed-entry interaction patch ===== */
 #landing #emailPad{ position:relative !important; z-index:50 !important; }
 #landing #emailInput{
   position:absolute !important;
@@ -2805,7 +2816,7 @@ body{
 #landing #emailEcho{ display:none !important; }
 
 
-/* ===== v1435 Enter button unlock ===== */
+/* ===== v1436 Enter button unlock ===== */
 #landing #landingPads { z-index: 60 !important; }
 #landing #enterBtn {
   position: relative !important;
@@ -2826,7 +2837,7 @@ body{
 }
 
 
-/* ===== v1435 players/games layout wiring ===== */
+/* ===== v1436 players/games layout wiring ===== */
 #players .hub{
   grid-template-rows: 1fr auto 1fr !important;
   gap: 10px !important;
@@ -2859,7 +2870,7 @@ body{
 }
 
 
-/* ===== v1435 full players/games panel wiring ===== */
+/* ===== v1436 full players/games panel wiring ===== */
 #players .hub{
   grid-template-rows: 1fr auto 1fr !important;
   gap: 10px !important;
@@ -2913,7 +2924,7 @@ body{
 }
 
 
-/* ===== v1435 players page setup ===== */
+/* ===== v1436 players page setup ===== */
 #players .hub{
   display:grid !important;
   grid-template-rows:minmax(156px,1fr) auto minmax(156px,1fr) !important;
@@ -3007,7 +3018,7 @@ body{
 }
 
 
-/* ===== v1435 players page panel install ===== */
+/* ===== v1436 players page panel install ===== */
 #players .hub{
   display:grid !important;
   grid-template-rows:minmax(170px,1fr) auto minmax(170px,1fr) !important;
@@ -3132,7 +3143,7 @@ body{
 }
 
 
-/* ===== v1435 background swap ===== */
+/* ===== v1436 background swap ===== */
 #landing{
   background-image: url("IMG_7390.jpeg") !important;
   background-size: cover !important;
@@ -3147,7 +3158,7 @@ body{
 }
 
 
-/* ===== v1435 PLAYERS/GAMES WHEEL PANELS ===== */
+/* ===== v1436 PLAYERS/GAMES WHEEL PANELS ===== */
 #players .hub{display:grid !important;grid-template-rows:178px auto 178px !important;gap:12px !important;top:clamp(250px,34vh,390px) !important;bottom:max(96px, env(safe-area-inset-bottom)) !important;width:min(760px,94vw) !important;max-width:760px !important;padding:0 10px !important;}
 #players #gamesPanel,#players #playersPanel{position:relative !important;overflow:hidden !important;min-height:178px !important;max-height:178px !important;border-radius:22px !important;border:1px solid rgba(255,255,255,.18) !important;background:rgba(255,255,255,.07) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.25), inset 0 -12px 24px rgba(0,0,0,.40), 0 10px 26px rgba(0,0,0,.24) !important;backdrop-filter:blur(12px) saturate(115%) !important;-webkit-backdrop-filter:blur(12px) saturate(115%) !important;}
 #players .sectionHead{position:relative !important;z-index:2 !important;padding:12px 14px 8px 14px !important;}
@@ -3165,20 +3176,20 @@ body{
 #players .ngWideBtn{width:min(86%,520px) !important;height:34px !important;padding:6px 14px !important;border-radius:999px !important;font-size:12px !important;letter-spacing:.16em !important;}
 
 
-/* ===== v1435 PLAYER ROW ALIGNMENT ===== */
+/* ===== v1436 PLAYER ROW ALIGNMENT ===== */
 #players .actions{
   margin-left:auto !important;
   justify-content:flex-end !important;
 }
 
 
-/* ===== v1435 PLAYERS BACKGROUND CORRECTION ===== */
+/* ===== v1436 PLAYERS BACKGROUND CORRECTION ===== */
 #players.screen::before{
   background-image: url("IMG_7315.jpeg") !important;
 }
 
 
-/* ===== v1435 PLAYER ACTIONS ===== */
+/* ===== v1436 PLAYER ACTIONS ===== */
 #players .actions{
   display:flex;
   gap:8px;
@@ -3186,7 +3197,7 @@ body{
 }
 
 
-/* ===== v1435 PLAYER BUTTON WIRING FIX ===== */
+/* ===== v1436 PLAYER BUTTON WIRING FIX ===== */
 #sessionBtn{
   height: 28px !important;
   padding: 5px 10px !important;
@@ -3205,7 +3216,7 @@ body{
 }
 
 
-/* ===== v1435 PLAYER DROPDOWN MENU (ANIMATED) ===== */
+/* ===== v1436 PLAYER DROPDOWN MENU (ANIMATED) ===== */
 #players .playerDropRow{
   display:flex !important;
   flex-direction:column !important;
@@ -3289,7 +3300,7 @@ body{
 }
 
 
-/* ===== V1435 UI ACTIVATION ===== */
+/* ===== V1436 UI ACTIVATION ===== */
 #ngVersionBelow{ display:none !important; }
 #players{ --bgStage: url("IMG_7315.jpeg") !important; }
 #players .hub{
@@ -3520,14 +3531,14 @@ function ngGuard(label, fn){
 
 
 
-<script id="ng-v1435-appcheck-hook">
+<script id="ng-v1436-appcheck-hook">
 window.NG_APP_CHECK = window.NG_APP_CHECK || { enabled:false, siteKey:"", note:"Enable Firebase App Check in Firebase Console before launch." };
 window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%202.m4a", silentOnFail:true };
 </script>
 
 </head>
 <body>
-<div id="ngBuildBanner">Night Games v1435</div>
+<div id="ngHeaderBlock"><div class="ff">Firebase • Firestore</div><div class="ver">v1436</div></div>
 
 <div id="ngHeaderBar">
   <div class="ngTopRow">
@@ -3541,7 +3552,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">v1435</div>
+<div id="ngVersionBelow">v1436</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -3679,7 +3690,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1435 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1436 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -3706,7 +3717,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 <script>
 /* ============================================================================
   ENTER FALLBACK WIRING (non-module)
-  - Guarantees ENTER button opens the Players screen.
+  - Guarantees ENTER button does something even if module script/import fails.
+  - Calls window.ngEnter(email) when available.
 ============================================================================ */
 (function(){
   function qs(id){ return document.getElementById(id); }
@@ -3716,49 +3728,38 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   if(!enterBtn || !emailInput) return;
 
   function setStatus(t){
-    try{ if(statusLine) statusLine.textContent = t; }catch(_){}
+    try{ if(statusLine) statusLine.textContent = t; }catch(_){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
+}
+}
   }
 
-  function goPlayers(email){
-    const value = String(email || "").trim().toLowerCase();
-    if(!value){
-      setStatus("Enter an email.");
-      return false;
-    }
+  let busy = false;
+  async function run(){
+    if(busy) return;
+    busy = true;
     try{
-      window.currentEmail = value;
-      window.currentUserEmail = value;
-      window.userEmail = value;
-      localStorage.setItem("ng_saved_email", value);
-      var pn = document.getElementById("playerPageName");
-      if (pn) pn.textContent = value;
-    }catch(_){}
-    try{
-      if(typeof window.show === "function"){
-        window.show("players");
-        return false;
+      if(typeof
+      }else{
+        setStatus("Loading…");
+        // small retry window
+        setTimeout(()=>{ busy=false; }, 600);
+        return;
       }
-    }catch(_){}
-    try{
-      document.querySelectorAll(".screen").forEach(function(el){ el.classList.remove("active"); });
-      var players = document.getElementById("players");
-      if(players) players.classList.add("active");
-      return false;
-    }catch(_){}
-    return false;
+    }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
+
+      console.log("ENTER fallback error:", e);
+      setStatus("Error.");
+    }
+    busy = false;
   }
 
-  function run(e){
-    if(e){ e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation(); }
-    return goPlayers(emailInput.value || "");
-  }
-
-  enterBtn.addEventListener("click", run, true);
-  enterBtn.addEventListener("touchend", run, true);
-  enterBtn.addEventListener("pointerup", run, true);
-  emailInput.addEventListener("keydown", function(e){
-    if(e.key === "Enter") run(e);
-  }, true);
+  enterBtn.addEventListener("click", (e)=>{ e.preventDefault(); run(); });
+  emailInput.addEventListener("keydown", (e)=>{
+    if(e.key === "Enter"){ e.preventDefault(); run(); }
+  });
 })();
 </script>
 
@@ -3781,7 +3782,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1435";
+  window.ngBuild = "v1436";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -3806,7 +3807,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1435";
+window.ngBuild = "v1436";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -5792,7 +5793,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1435Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1436Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -6915,7 +6916,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1435";
+window.APP_VERSION = "v1436";
 (function(){
   try {
     // header version
@@ -6954,11 +6955,11 @@ window.APP_VERSION = "v1435";
 
 
 
-<script id="ng-v1435-force-entry">
+<script id="ng-v1436-force-entry">
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1435";
+    if (vb) vb.textContent = "v1436";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -7075,7 +7076,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-<script id="ng-v1435-ui-wiring">
+<script id="ng-v1436-ui-wiring">
 function closeDetail(){
   try{
     if(typeof show === "function") show("players");
@@ -7089,7 +7090,7 @@ function closeDetail(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1435";
+    if(vb) vb.textContent = "v1436";
 
     var gamesList = document.getElementById("gamesList");
     var playersList = document.getElementById("playersList");
@@ -7160,7 +7161,7 @@ document.addEventListener("click", function(e){
       const html = `
         <div style="line-height:1.5;">
           <div><b>Support Future Updates</b></div>
-          <div>Build: v1435</div>
+          <div>Build: v1436</div>
           <div>Status: ${(window.ngFirebaseStatus||"Local mode")}</div>
           <div style="opacity:.82; margin-top:8px;">Use this panel for support info and session guidance.</div>
         </div>`;
@@ -7226,11 +7227,11 @@ document.addEventListener("click", function(e){
 </script>
 
 
-<script id="ng-v1435-players-panels">
+<script id="ng-v1436-players-panels">
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1435";
+    if(vb) vb.textContent = "v1436";
   }catch(e){
     console.error(e);
   }
@@ -7238,11 +7239,11 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1435-bg-audio-fix">
+<script id="ng-v1436-bg-audio-fix">
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1435";
+    if(vb) vb.textContent = "v1436";
 
     var email = document.getElementById("emailInput");
     var played = false;
@@ -7281,7 +7282,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1435-players-wheel">
+<script id="ng-v1436-players-wheel">
 (function(){
   const PLAYER_EMAILS={"steve@example.com":"Steve Moody","bill@example.com":"Bill Moody","jayce@example.com":"Jayce Moody","phyllis@example.com":"Phyllis Moody"};
   const FALLBACK_PLAYERS=[{name:"Steve Moody",email:"steve@example.com"},{name:"Bill Moody",email:"bill@example.com"},{name:"Jayce Moody",email:"jayce@example.com"},{name:"Phyllis Moody",email:"phyllis@example.com"}];
@@ -7304,7 +7305,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const people=FALLBACK_PLAYERS.slice().sort((a,b)=>{const ao=a.name===me, bo=b.name===me; if(ao!==bo) return ao?-1:1; return a.name.localeCompare(b.name);});
     list.innerHTML=people.map(p=>`<div class="itemLine"><div class="leftStack"><span class="dot ${p.name===me?"online":""}"></span><span class="glassText">${p.name}</span></div><div class="actions"><button class="pill" data-action="player_stats" data-value="${p.email}">Stats</button><button class="pill" data-action="player_history" data-value="${p.email}">History</button><button class="pill" data-action="player_remove" data-value="${p.email}">Remove</button></div></div>`).join("");
   }
-  function sync(){try{const vb=document.getElementById("ngVersionBelow"); if(vb) vb.textContent="v1435"; renderGames(); renderPlayers();}catch(e){console.error(e);}}
+  function sync(){try{const vb=document.getElementById("ngVersionBelow"); if(vb) vb.textContent="v1436"; renderGames(); renderPlayers();}catch(e){console.error(e);}}
   document.addEventListener("DOMContentLoaded", sync, {once:true});
   window.addEventListener("load", sync, {once:true});
   setTimeout(sync, 350);
@@ -7312,7 +7313,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1435-player-dropdown">
+<script id="ng-v1436-player-dropdown">
 (function(){
   const PLAYER_EMAILS = {
     "steve@example.com":"Steve Moody",
@@ -7371,7 +7372,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function sync(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1435";
+      if(vb) vb.textContent = "v1436";
       renderPlayerDropdowns();
     }catch(e){
       console.error(e);
@@ -7399,7 +7400,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1435-ui-activation">
+<script id="ng-v1436-ui-activation">
 (function(){
   const SUPPORT_URL = "https://venmo.com/u/Steve-Moody-8";
   const PLAYER_EMAILS = {
@@ -7469,7 +7470,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const v = document.createElement("div");
     v.id = "ngVersionMid";
     v.className = "screenVersionMid";
-    v.textContent = "V1435";
+    v.textContent = "V1436";
     players.appendChild(v);
   }
 
@@ -7605,7 +7606,6 @@ document.addEventListener("DOMContentLoaded", function(){
     try{
       window.activeSession = window.activeSession || {};
       window.activeSession.game = game;
-      window.activeSession.gameId = game;
     }catch(_){}
     const playerChoices = PLAYERS.map(p => `<div class="statRow"><div><div class="statLabel">${p.name}</div><div class="statHelp">Tap Invite / Start from controls below when ready.</div></div><div class="statVal">Ready</div></div>`).join("");
     let options = `<div class="statRow"><div><div class="statLabel">Players</div><div class="statHelp">Choose players and start the match from this setup room.</div></div><div class="statVal">${game}</div></div>`;
@@ -7614,30 +7614,18 @@ document.addEventListener("DOMContentLoaded", function(){
         <div class="statRow"><div><div class="statLabel">Variants</div><div class="statHelp">301 • 501 • 701</div></div><div class="statVal">X01</div></div>
         <div class="statRow"><div><div class="statLabel">Options</div><div class="statHelp">Double In / Double Out • Single In / Double Out • Single In / Single Out</div></div><div class="statVal">Rules</div></div>`;
     }
-    const body = `<div class="setupGameTitle">${game}</div><div class="statScroll">${options}${playerChoices}</div>`;
+    const body = `<div class="statScroll">${options}${playerChoices}</div>`;
     try{
       const setupBody = document.getElementById("setupBody");
       if(setupBody) setupBody.innerHTML = body;
+      if(typeof show === "function") show("setup");
     }catch(_){}
-    try{
-      if(typeof updateSetupControlPanel === "function") updateSetupControlPanel();
-    }catch(_){}
-    try{
-      if(typeof show === "function"){
-        show("setup");
-      }else{
-        document.querySelectorAll(".screen").forEach(function(el){ el.classList.remove("active"); });
-        var setup = document.getElementById("setup");
-        if(setup) setup.classList.add("active");
-      }
-    }catch(_){}
-    return false;
   }
 
   function syncAll(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "V1435";
+      if(vb) vb.textContent = "V1436";
       const sessionBtn = document.getElementById("sessionBtn");
       if(sessionBtn) sessionBtn.textContent = "Support Future Updates";
       ensureVersionLabel();
@@ -7706,108 +7694,164 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1435-enter-setup-hardwire">
+<script id="ng-v1436-setup-waiting-hook">
 (function(){
-  function setBuild(){
-    try{
-      var vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1435";
-      var gb = document.getElementById("ngBuildBanner");
-      if(gb) gb.textContent = "Night Games v1435";
-    }catch(_){
-    }
+  function getCurrentEmail(){
+    return String(window.currentEmail || window.currentUserEmail || window.userEmail || document.getElementById("emailInput")?.value || "").trim().toLowerCase();
   }
-
-  function forceShow(which){
+  function ensureSession(game){
     try{
-      if(typeof window.show === "function") return window.show(which);
-    }catch(_){
-    }
-    try{
-      document.querySelectorAll(".screen").forEach(function(el){
-        el.classList.toggle("active", el.id === which);
-      });
-    }catch(_){
-    }
-  }
-
-  function goPlayers(email){
-    var value = String(email || document.getElementById("emailInput")?.value || "").trim().toLowerCase();
-    if(!value) return false;
-    try{
-      window.currentEmail = value;
-      window.currentUserEmail = value;
-      window.userEmail = value;
-      localStorage.setItem("ng_saved_email", value);
-      var pn = document.getElementById("playerPageName");
-      if(pn) pn.textContent = value;
-    }catch(_){
-    }
-    forceShow("players");
-    return false;
-  }
-
-  function goSetup(game){
-    try{
-      if(typeof window.enterGame === "function"){
-        return window.enterGame(game);
+      if(typeof createSessionForGame === "function"){
+        if(!window.activeSession || !window.activeSession.id || window.activeSession.game !== game){
+          createSessionForGame(game);
+        }
       }
-    }catch(_){
-    }
+    }catch(_){}
     try{
       window.activeSession = window.activeSession || {};
+      if(!window.activeSession.id) window.activeSession.id = window.activeSessionId || ("sess_" + Date.now());
+      window.activeSession.game = game || window.activeSession.game || "Game";
+      window.activeSession.gameId = game || window.activeSession.gameId || "Game";
+      window.activeSession.host = getCurrentEmail();
+      window.activeSession.setup = window.activeSession.setup || {};
+      if(!Array.isArray(window.activeSession.setup.emails)) window.activeSession.setup.emails = [];
+      if(!window.activeSession.setup.emails.length && getCurrentEmail()){
+        window.activeSession.setup.emails = [getCurrentEmail()];
+      }
+      window.activeSession.setup.count = parseInt(window.activeSession.setup.count || window.activeSession.setup.emails.length || 1, 10) || 1;
+    }catch(_){}
+    try{
+      if(window.activeSession && window.activeSession.id) window.activeSessionId = window.activeSession.id;
+    }catch(_){}
+  }
+
+  function selectedEmailsFromDom(){
+    const picks = Array.from(document.querySelectorAll("#setupBody .pickPlayer:checked")).map(el => String(el.value||"").trim().toLowerCase()).filter(Boolean);
+    const me = getCurrentEmail();
+    const set = new Set(picks);
+    if(me) set.add(me);
+    return Array.from(set);
+  }
+
+  function collectSetupState(){
+    const game = (window.activeSession && window.activeSession.game) || "Game";
+    ensureSession(game);
+    const countEl = document.getElementById("setupCount");
+    const score01 = document.getElementById("setup01Start");
+    const score301 = document.getElementById("setup301Start");
+    const inOut01 = document.getElementById("setup01InOut");
+    const inOut301 = document.getElementById("setup301InOut");
+    const emails = selectedEmailsFromDom();
+    const count = Math.max(1, parseInt((countEl && countEl.value) || emails.length || 1, 10) || 1);
+    const setup = Object.assign({}, (window.activeSession && window.activeSession.setup) || {}, {
+      count: count,
+      emails: emails.slice(0, count),
+      startScore: (score01 && score01.value) || (score301 && score301.value) || null,
+      inOut: (inOut01 && inOut01.value) || (inOut301 && inOut301.value) || null
+    });
+    try{
+      window.activeSession = window.activeSession || {};
+      window.activeSession.setup = setup;
+      window.activeSession.waiting = true;
+      window.activeSession.stage = "waiting";
+      if(window.activeSession.id) window.activeSessionId = window.activeSession.id;
+    }catch(_){}
+    try{ if(typeof updateSetupControlPanel === "function") updateSetupControlPanel(); }catch(_){}
+    return window.activeSession;
+  }
+
+  function waitingRows(session){
+    const emails = (((session||{}).setup||{}).emails || []).filter(Boolean);
+    if(!emails.length) return '<div style="opacity:.78;">No players selected yet.</div>';
+    return emails.map(function(em, i){
+      const nm = (typeof emailToName === "function") ? emailToName(em) : (em.split("@")[0] || em);
+      const isHost = (em === String((session.host||"")).toLowerCase());
+      return '<div class="statRow"><div><div class="statLabel">'+nm+(isHost?' • Host':'')+'</div><div class="statHelp">'+em+'</div></div><div class="statVal">'+(i===0?'Ready':'Invited')+'</div></div>';
+    }).join("");
+  }
+
+  function renderWaiting(session){
+    const waitingBody = document.getElementById("waitingBody");
+    if(!waitingBody) return;
+    const game = (session && session.game) || "Game";
+    const count = (((session||{}).setup||{}).count) || 1;
+    const score = (((session||{}).setup||{}).startScore) || "";
+    const inOut = (((session||{}).setup||{}).inOut) || "";
+    waitingBody.innerHTML = ''
+      + '<div class="setupGameTitle">'+game+'</div>'
+      + '<div style="opacity:.82; margin-bottom:12px;">Waiting for invited players to join.</div>'
+      + '<div class="statScroll">'
+      + '<div class="statRow"><div><div class="statLabel">Match Setup</div><div class="statHelp">'+count+' player'+(count===1?'':'s')+(score?(' • '+score):'')+(inOut?(' • '+inOut.replaceAll('_',' / ')):'')+'</div></div><div class="statVal">Live</div></div>'
+      + waitingRows(session)
+      + '</div>';
+  }
+
+  function openSetup(game){
+    ensureSession(game);
+    try{
+      if(typeof renderSetupForGame === "function"){
+        renderSetupForGame(game);
+      }else{
+        const setupBody = document.getElementById("setupBody");
+        if(setupBody) setupBody.innerHTML = '<div class="setupGameTitle">'+game+'</div><div style="opacity:.82;">Game setup connected.</div>';
+      }
+    }catch(_){}
+    try{
       window.activeSession.game = game;
       window.activeSession.gameId = game;
-      var setupBody = document.getElementById("setupBody");
-      if(setupBody) {
-        setupBody.innerHTML = '<div class="setupGameTitle">'+ game +'</div><div class="statScroll"><div class="statRow"><div><div class="statLabel">Players</div><div class="statHelp">Choose players and start the match from this setup room.</div></div><div class="statVal">'+ game +'</div></div></div>';
+    }catch(_){}
+    try{ if(typeof show === "function") show("setup"); }catch(_){}
+  }
+
+  async function setupToWaiting(){
+    const session = collectSetupState();
+    renderWaiting(session);
+    try{ if(typeof listenSessionInvites === "function") listenSessionInvites(); }catch(_){}
+    try{ if(typeof listenForSessionStart === "function" && window.activeSessionId) listenForSessionStart(window.activeSessionId); }catch(_){}
+    try{ if(typeof show === "function") show("waiting"); }catch(_){}
+    try{
+      if(session && session.setup && session.setup.count > 1 && typeof sendInvitesForSession === "function"){
+        await sendInvitesForSession();
       }
-    }catch(_){
-    }
-    forceShow("setup");
+    }catch(_){}
     return false;
   }
 
   document.addEventListener("click", function(e){
-    var landingEnter = e.target && e.target.closest ? e.target.closest("#enterBtn") : null;
-    if(landingEnter){
+    const gameBtn = e.target && e.target.closest ? e.target.closest('[data-action="enter_game"]') : null;
+    if(gameBtn){
       e.preventDefault();
       e.stopPropagation();
       if(e.stopImmediatePropagation) e.stopImmediatePropagation();
-      goPlayers();
+      openSetup(gameBtn.getAttribute("data-value") || "Game");
       return false;
     }
 
-    var gameEnter = e.target && e.target.closest ? e.target.closest('button[data-action="enter_game"]') : null;
-    if(gameEnter){
+    const inviteBtn = e.target && e.target.closest ? e.target.closest("#setupInviteBtn") : null;
+    if(inviteBtn){
       e.preventDefault();
       e.stopPropagation();
       if(e.stopImmediatePropagation) e.stopImmediatePropagation();
-      goSetup(gameEnter.getAttribute("data-value") || "");
+      setupToWaiting();
       return false;
     }
 
-    var inviteBtn = e.target && e.target.closest ? e.target.closest("#setupInviteBtn") : null;
-    var startBtn = e.target && e.target.closest ? e.target.closest("#setupStartGameBtn") : null;
-    if(inviteBtn || startBtn){
+    const startBtn = e.target && e.target.closest ? e.target.closest("#setupStartGameBtn") : null;
+    if(startBtn){
       e.preventDefault();
       e.stopPropagation();
       if(e.stopImmediatePropagation) e.stopImmediatePropagation();
-      forceShow("waiting");
+      setupToWaiting();
       return false;
     }
   }, true);
-
-  document.addEventListener("DOMContentLoaded", setBuild, {once:true});
-  window.addEventListener("load", setBuild, {once:true});
-  setTimeout(setBuild, 250);
 })();
 </script>
 
 </body>
 </html>
 
-/* --- v1435 remove confirm safety --- */
+/* --- v1436 remove confirm safety --- */
 window.ngConfirmRemove = function(name, fn){
   if(confirm("Remove player " + name + "?")){
     try{ fn && fn(); }catch(e){ console.error(e); }
