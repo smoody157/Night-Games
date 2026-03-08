@@ -7659,12 +7659,335 @@ document.addEventListener("DOMContentLoaded", function(){
 })();
 </script>
 
+
+<script id="ng-v1431-multiplayer-full-patch">
+(function(){
+  const P = {};
+  function me(){
+    return String(window.currentUserEmail || window.userEmail || window.email || window.auth?.currentUser?.email || document.getElementById('emailInput')?.value || '').trim().toLowerCase();
+  }
+  function setMe(email){
+    const v = String(email||'').trim().toLowerCase();
+    if(!v) return v;
+    window.currentUserEmail = v;
+    window.userEmail = v;
+    window.email = v;
+    try{ localStorage.setItem('ng_saved_email', v); }catch(_){ }
+    return v;
+  }
+  function apis(){ return window.ngFirebaseApis || {}; }
+  function db(){ return window.db || (window.ngFirebase && window.ngFirebase.db) || null; }
+  function nowTs(){ return (typeof apis().serverTimestamp === 'function') ? apis().serverTimestamp() : new Date(); }
+  function safeEmail(email){ return String(email||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'_'); }
+  function nameForEmail(email){
+    const em = String(email||'').trim().toLowerCase();
+    try{
+      const p = (window.lastPeople||[]).find(x => String(x?.email||'').trim().toLowerCase() === em);
+      if(p && p.name) return p.name;
+    }catch(_){ }
+    return em.split('@')[0] || em || 'Player';
+  }
+  function normalizeGameId(game){
+    const g = String(game||'').trim();
+    const low = g.toLowerCase();
+    if(low === '01' || low === '301' || low === '501' || low === '701' || low === 'x01') return '01';
+    return low || g;
+  }
+  function createSessionId(){
+    return 'sess_' + Date.now() + '_' + Math.random().toString(16).slice(2,10);
+  }
+  function collectSetupState(){
+    const mine = me();
+    const current = window.activeSession || {};
+    const picked = Array.from(document.querySelectorAll('.pickPlayer:checked')).map(el => String(el.value||'').trim().toLowerCase()).filter(Boolean);
+    let emails = picked.length ? picked : ((current.setup && Array.isArray(current.setup.emails)) ? current.setup.emails.slice() : []);
+    emails = emails.map(x => String(x||'').trim().toLowerCase()).filter(Boolean);
+    if(mine && !emails.includes(mine)) emails.unshift(mine);
+    emails = Array.from(new Set(emails));
+    const countSel = document.getElementById('setupCount');
+    const count = Math.max(1, parseInt(countSel?.value || current.setup?.count || emails.length || 1, 10) || 1);
+    const game = current.game || current.gameId || window.activeGame || document.getElementById('activeGameName')?.textContent || 'Game';
+    const startScore = parseInt(document.getElementById('setup01Start')?.value || document.getElementById('setup301Start')?.value || current.setup?.startScore || 501, 10) || 501;
+    const inOut = document.getElementById('setup01InOut')?.value || document.getElementById('setup301InOut')?.value || current.setup?.inOut || 'SI_SO';
+    const gameId = normalizeGameId(current.gameId || game);
+    const setup = Object.assign({}, current.setup || {}, { count, emails, startScore, inOut });
+    return { game, gameId, setup };
+  }
+  async function ensureSession(){
+    const mine = me();
+    const state = collectSetupState();
+    if(!window.activeSessionId) window.activeSessionId = createSessionId();
+    if(!window.activeSession) window.activeSession = {};
+    window.activeSession = Object.assign({}, window.activeSession, {
+      id: window.activeSessionId,
+      sessionId: window.activeSessionId,
+      host: window.activeSession.host || mine,
+      hostName: window.activeSession.hostName || nameForEmail(mine),
+      game: state.game,
+      gameId: state.gameId,
+      setup: state.setup,
+      invited: state.setup.emails.slice(),
+      invitedEmails: state.setup.emails.slice()
+    });
+    const d = db();
+    const A = apis();
+    if(d && typeof A.doc === 'function' && typeof A.setDoc === 'function'){
+      await A.setDoc(A.doc(d, 'sessions', window.activeSessionId), {
+        sessionId: window.activeSessionId,
+        id: window.activeSessionId,
+        game: window.activeSession.game,
+        gameId: window.activeSession.gameId,
+        host: window.activeSession.host,
+        hostName: window.activeSession.hostName,
+        setup: window.activeSession.setup,
+        invited: window.activeSession.setup.emails,
+        invitedEmails: window.activeSession.setup.emails,
+        count: window.activeSession.setup.count,
+        updatedAt: nowTs(),
+        createdAt: window.activeSession.createdAt || nowTs()
+      }, { merge:true });
+    }
+    try{ localStorage.setItem('ng_active_session', JSON.stringify(window.activeSession)); }catch(_){ }
+    return window.activeSession;
+  }
+  function renderWaitingFromStatuses(statusMap){
+    const body = document.getElementById('waitingBody');
+    if(!body) return;
+    const sess = window.activeSession || {};
+    const emails = (sess.setup?.emails || sess.invited || []).slice(0, sess.setup?.count || (sess.setup?.emails||[]).length || (sess.invited||[]).length);
+    const mine = me();
+    const rows = emails.map(em => {
+      const lower = String(em||'').toLowerCase();
+      const status = lower === mine ? ((sess.host||'').toLowerCase() === mine ? 'host' : 'joined') : (statusMap?.get(lower) || 'pending');
+      const label = status === 'accepted' ? 'joined' : status === 'declined' ? 'declined' : status;
+      const icon = (status === 'accepted' || status === 'joined' || status === 'host') ? '✔' : (status === 'declined' ? '✖' : '⌛');
+      const online = lower === mine ? 'online' : ((window.presenceMap && window.presenceMap.get && window.presenceMap.get(safeEmail(lower))) ? 'online' : 'waiting');
+      return `<div class="waitRow"><div class="waitLeft"><span class="dot ${online==='online'?'online':''}"></span><div class="waitName">${nameForEmail(lower)}</div></div><div class="waitMeta">${icon} ${label} • ${online}</div></div>`;
+    }).join('');
+    body.innerHTML = `<div class="setupGameTitle">${sess.game || 'Game'}</div><div style="opacity:.78; margin-bottom:14px;">Waiting for invited players to join…</div><div>${rows || '<div style="opacity:.78;">No players selected.</div>'}</div>`;
+  }
+  function subscribeSession(sessionId){
+    const d = db(); const A = apis();
+    if(!d || !sessionId || typeof A.doc !== 'function' || typeof A.onSnapshot !== 'function') return;
+    try{ window.__ngPatchedSessionUnsub && window.__ngPatchedSessionUnsub(); }catch(_){ }
+    window.__ngPatchedSessionUnsub = A.onSnapshot(A.doc(d, 'sessions', sessionId), snap => {
+      const data = (snap && snap.data && snap.data()) || {};
+      window.activeSession = Object.assign({}, window.activeSession || {}, data, { id: sessionId, sessionId });
+      try{ localStorage.setItem('ng_active_session', JSON.stringify(window.activeSession)); }catch(_){ }
+      if(data.started === true){
+        try{ if(typeof window.runGameEngine === 'function') window.runGameEngine(window.activeSession); }catch(_){ }
+        try{ if(typeof window.show === 'function') window.show('game_screen'); }catch(_){ }
+      }
+    });
+  }
+  function subscribeInvites(sessionId){
+    const d = db(); const A = apis();
+    if(!d || !sessionId || typeof A.collection !== 'function' || typeof A.query !== 'function' || typeof A.where !== 'function' || typeof A.onSnapshot !== 'function') return;
+    try{ window.__ngPatchedInvitesUnsub && window.__ngPatchedInvitesUnsub(); }catch(_){ }
+    const q = A.query(A.collection(d, 'invites'), A.where('sessionId', '==', sessionId));
+    window.__ngPatchedInvitesUnsub = A.onSnapshot(q, snap => {
+      const map = new Map();
+      try{
+        snap.forEach(docSnap => {
+          const v = docSnap.data() || {};
+          const target = String(v.toEmail || v.to || '').trim().toLowerCase();
+          if(target) map.set(target, v.status || 'pending');
+        });
+      }catch(_){ }
+      renderWaitingFromStatuses(map);
+    });
+  }
+  async function signInWithEmail(email){
+    const em = setMe(email);
+    if(!em) return;
+    const A = apis();
+    const d = db();
+    try{
+      if(window.ngAuth && typeof A.signInAnonymously === 'function'){
+        await A.signInAnonymously(window.ngAuth).catch(()=>null);
+      }
+    }catch(_){ }
+    try{
+      if(d && typeof A.doc === 'function' && typeof A.setDoc === 'function'){
+        await A.setDoc(A.doc(d, 'registry', safeEmail(em)), { email: em, name: nameForEmail(em), updatedAt: nowTs(), createdAt: nowTs() }, { merge:true });
+      }
+    }catch(_){ }
+    try{
+      if(d && typeof A.doc === 'function' && typeof A.setDoc === 'function' && window.ngAuth?.currentUser?.uid){
+        await A.setDoc(A.doc(d, 'users', window.ngAuth.currentUser.uid), { email: em, lastLogin: nowTs() }, { merge:true });
+      }
+    }catch(_){ }
+    try{ if(typeof window.setHeaderPlayerLabel === 'function') window.setHeaderPlayerLabel(em); }catch(_){ }
+    try{ if(typeof window.renderGames === 'function') window.renderGames(); }catch(_){ }
+    try{ if(typeof window.renderPlayers === 'function') window.renderPlayers(); }catch(_){ }
+    try{ if(typeof window.watchData === 'function' && d) window.watchData(d); }catch(_){ }
+    try{ if(typeof window.listenForInvites === 'function') window.listenForInvites(); }catch(_){ }
+    try{ if(typeof window.listenForIncomingInvites === 'function') window.listenForIncomingInvites(); }catch(_){ }
+    try{ if(typeof window.show === 'function') window.show('players'); }catch(_){ }
+    try{ const s = document.getElementById('statusLine'); if(s) s.textContent = 'Signed in.'; }catch(_){ }
+  }
+
+  const origEnterGame = window.enterGame;
+  window.enterGame = function(game){
+    try{ if(typeof origEnterGame === 'function') origEnterGame(game); }catch(_){ }
+    try{
+      window.activeSession = Object.assign({}, window.activeSession || {}, { game, gameId: normalizeGameId(game) });
+      if(typeof window.renderSetupForGame === 'function') window.renderSetupForGame(game);
+      if(typeof window.show === 'function') window.show('setup');
+    }catch(_){ }
+  };
+
+  window.ngEnter = async function(email){
+    return signInWithEmail(email || document.getElementById('emailInput')?.value || '');
+  };
+  window.setupInvite = async function(){ return window.sendInvite(); };
+  window.setupStartGame = async function(){ return window.startSession(); };
+
+  window.sendInvite = async function(){
+    const session = await ensureSession();
+    const d = db(); const A = apis();
+    const hostEmail = me();
+    const invited = (session.setup?.emails || []).map(x => String(x||'').toLowerCase()).filter(Boolean);
+    if(d && typeof A.doc === 'function' && typeof A.setDoc === 'function'){
+      await A.setDoc(A.doc(d, 'sessions', window.activeSessionId), {
+        sessionId: window.activeSessionId,
+        game: session.game,
+        gameId: session.gameId,
+        host: hostEmail,
+        hostName: nameForEmail(hostEmail),
+        invited,
+        invitedEmails: invited,
+        setup: session.setup,
+        waiting: true,
+        inviteStatus: 'pending',
+        updatedAt: nowTs()
+      }, { merge:true });
+      for(const to of invited.filter(x => x !== hostEmail)){
+        await A.setDoc(A.doc(d, 'invites', `${window.activeSessionId}_${safeEmail(to)}`), {
+          sessionId: window.activeSessionId,
+          game: session.game,
+          gameId: session.gameId,
+          gameName: session.game,
+          from: nameForEmail(hostEmail),
+          fromName: nameForEmail(hostEmail),
+          fromEmail: hostEmail,
+          to,
+          toEmail: to,
+          invited,
+          count: session.setup?.count || invited.length,
+          status: 'pending',
+          createdAt: nowTs()
+        }, { merge:true });
+      }
+    }
+    subscribeSession(window.activeSessionId);
+    subscribeInvites(window.activeSessionId);
+    renderWaitingFromStatuses(new Map(invited.filter(x => x !== hostEmail).map(x => [x, 'pending'])));
+    try{ if(typeof window.show === 'function') window.show('waiting'); }catch(_){ }
+  };
+
+  window.hostStartGame = async function(sessionId){
+    const session = await ensureSession();
+    const sid = sessionId || window.activeSessionId;
+    if(!sid) return;
+    const d = db(); const A = apis();
+    const emails = (session.setup?.emails || []).map(x => String(x||'').toLowerCase()).filter(Boolean);
+    const order = (session.randomizer?.order && session.randomizer.order.length) ? session.randomizer.order.slice() : emails.slice();
+    const payload = {
+      sessionId: sid,
+      id: sid,
+      started: true,
+      startedAt: nowTs(),
+      waiting: false,
+      host: session.host || me(),
+      hostName: session.hostName || nameForEmail(me()),
+      game: session.game,
+      gameId: session.gameId,
+      setup: session.setup,
+      invited: emails,
+      invitedEmails: emails,
+      players: emails,
+      turnIndex: 0,
+      currentTurn: order[0] || emails[0] || null,
+      randomizer: Object.assign({ state:'done', order, doneAt: nowTs() }, session.randomizer || {}),
+      updatedAt: nowTs()
+    };
+    if(session.gameId === '01'){
+      const score = {};
+      const startScore = parseInt(session.setup?.startScore || 501, 10) || 501;
+      emails.forEach(em => score[em] = startScore);
+      payload.startScore = startScore;
+      payload.score = score;
+      payload.inOut = session.setup?.inOut || 'SI_SO';
+    }
+    if(d && typeof A.doc === 'function' && typeof A.setDoc === 'function'){
+      await A.setDoc(A.doc(d, 'sessions', sid), payload, { merge:true });
+    }
+    window.activeSession = Object.assign({}, window.activeSession || {}, payload);
+    subscribeSession(sid);
+    try{ if(typeof window.runGameEngine === 'function') window.runGameEngine(window.activeSession); }catch(_){ }
+    try{ if(typeof window.show === 'function') window.show('game_screen'); }catch(_){ }
+  };
+
+  window.startSession = async function(){
+    await ensureSession();
+    return window.hostStartGame(window.activeSessionId);
+  };
+
+  window.listenForSessionStart = function(sessionId){ subscribeSession(sessionId || window.activeSessionId); };
+  window.listenForJoins = function(sessionId){ subscribeInvites(sessionId || window.activeSessionId); };
+
+  window.listenForIncomingInvites = function(){
+    const d = db(); const A = apis(); const mine = me();
+    if(!d || !mine || typeof A.collection !== 'function' || typeof A.query !== 'function' || typeof A.where !== 'function' || typeof A.onSnapshot !== 'function') return;
+    try{ window.__ngIncomingInvitesUnsub && window.__ngIncomingInvitesUnsub(); }catch(_){ }
+    const q = A.query(A.collection(d, 'invites'), A.where('toEmail', '==', mine));
+    window.__ngIncomingInvitesUnsub = A.onSnapshot(q, async snap => {
+      for(const chg of snap.docChanges ? snap.docChanges() : []){
+        if(chg.type !== 'added' && chg.type !== 'modified') continue;
+        const data = chg.doc.data() || {};
+        if(data.status !== 'pending') continue;
+        const join = window.ngShowInvitePrompt ? (window.ngShowInvitePrompt(chg.doc.id, data) === 'accepted') : confirm((data.fromName || 'Opponent') + ' invited you to play ' + (data.gameName || data.game || 'Night Game') + '.\n\nPress OK to Join, Cancel to decline.');
+        if(typeof A.updateDoc === 'function' && typeof A.doc === 'function'){
+          await A.updateDoc(A.doc(d, 'invites', chg.doc.id), { status: join ? 'accepted' : 'declined', respondedAt: nowTs() });
+        }
+        if(join){
+          window.activeSessionId = data.sessionId;
+          window.activeSession = Object.assign({}, window.activeSession || {}, {
+            id: data.sessionId,
+            sessionId: data.sessionId,
+            game: data.game || data.gameName,
+            gameId: normalizeGameId(data.gameId || data.game || data.gameName),
+            host: data.fromEmail || '',
+            hostName: data.fromName || data.from || '',
+            setup: { count: data.count || (data.invited||[]).length || 2, emails: (data.invited||[]).slice() }
+          });
+          subscribeSession(window.activeSessionId);
+          subscribeInvites(window.activeSessionId);
+          try{ if(typeof window.show === 'function') window.show('waiting'); }catch(_){ }
+        }
+      }
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    try{
+      const enter = document.getElementById('enterBtn');
+      const email = document.getElementById('emailInput');
+      if(enter){
+        const run = (e) => { if(e){ e.preventDefault(); e.stopPropagation(); } window.ngEnter(email?.value || ''); return false; };
+        enter.addEventListener('click', run, true);
+        enter.addEventListener('touchend', run, true);
+      }
+      if(email){
+        email.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ e.preventDefault(); window.ngEnter(email.value || ''); } }, true);
+      }
+      const saved = localStorage.getItem('ng_saved_email') || '';
+      if(saved && email && !email.value) email.value = saved;
+    }catch(_){ }
+  }, { once:true });
+})();
+</script>
+
 </body>
 </html>
-
-/* --- v1431 remove confirm safety --- */
-window.ngConfirmRemove = function(name, fn){
-  if(confirm("Remove player " + name + "?")){
-    try{ fn && fn(); }catch(e){ console.error(e); }
-  }
-};
