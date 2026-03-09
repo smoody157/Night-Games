@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1510</title>
-<!-- NIGHT GAMES v1510 -->
+<title>Night Games v1512</title>
+<!-- NIGHT GAMES v1512 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -4101,7 +4101,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1510-crystal-unified">
+<style id="ng-v1512-crystal-unified">
 :root{
   --ng-crystal-bg: rgba(255,255,255,0.055);
   --ng-crystal-border: rgba(255,255,255,0.40);
@@ -4247,9 +4247,9 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<!-- BUILD SANITY CHECK: THIS FILE IS v1510 -->
+<!-- BUILD SANITY CHECK: THIS FILE IS v1512 -->
 
-<style id="ng-v1510-presentable-pass">
+<style id="ng-v1512-presentable-pass">
 /* unified panel system */
 .hub,
 #players .hub,
@@ -4316,8 +4316,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1510-crystal-cleanup">
-/* ===== v1510 crystal cleanup pass ===== */
+<style id="ng-v1512-crystal-cleanup">
+/* ===== v1512 crystal cleanup pass ===== */
 
 /* top header center */
 .ngTopRow{ position:relative !important; }
@@ -4471,8 +4471,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1510-layout-fix">
-/* ===== v1510 exact layout cleanup ===== */
+<style id="ng-v1512-layout-fix">
+/* ===== v1512 exact layout cleanup ===== */
 
 /* crystal should be clear, not frosted */
 #gamesPanel, #playersPanel,
@@ -4614,8 +4614,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1510-players-panel-pass">
-/* ===== v1510: players panel really matched to games + donate only on players ===== */
+<style id="ng-v1512-players-panel-pass">
+/* ===== v1512: players panel really matched to games + donate only on players ===== */
 
 /* Games and Players panels must be identical shells */
 #gamesPanel,
@@ -4693,6 +4693,221 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 #donateSlot{
   display: none !important;
 }
+</style>
+
+
+<style id="ng-v1512-polish-pass">
+/* ===== v1512 polish pass ===== */
+
+/* Crystal-clear uniform panels */
+#gamesPanel, #playersPanel,
+#setup .panel, #waiting .panel, #lobby .panel, #detail .panel,
+.pickerCard, .panel{
+  background: rgba(255,255,255,0.003) !important;
+  border: 1px solid rgba(255,255,255,.78) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.34),
+    inset 0 3px 10px rgba(255,255,255,.88),
+    inset 0 -3px 8px rgba(255,255,255,.18),
+    inset 1px 0 0 rgba(255,255,255,.28),
+    inset -1px 0 0 rgba(255,255,255,.28),
+    0 0 24px rgba(110,200,255,.10) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: hidden !important;
+}
+
+/* Games + Players panels identical */
+#gamesPanel,
+#playersPanel{
+  width:100% !important;
+  min-height:208px !important;
+  height:208px !important;
+  max-height:208px !important;
+  margin:0 auto !important;
+  box-sizing:border-box !important;
+}
+
+/* Lists contained cleanly */
+#players .list, #games .list, #playersList, #gamesList{
+  top: 64px !important;
+  bottom: 8px !important;
+  left: 0 !important;
+  right: 0 !important;
+  padding: 8px 12px 12px 12px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  box-sizing: border-box !important;
+}
+#players .itemLine, #games .itemLine{
+  width:100% !important;
+  max-width:100% !important;
+  min-height:64px !important;
+  margin:0 !important;
+  padding:10px 6px !important;
+  box-sizing:border-box !important;
+  border-bottom:1px solid rgba(255,255,255,.15) !important;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+}
+#players .leftStack, #games .leftStack{
+  flex:1 1 auto !important;
+  min-width:0 !important;
+  justify-content:flex-start !important;
+}
+#players .actions, #games .actions{
+  flex:0 0 auto !important;
+  width:auto !important;
+  display:flex !important;
+  gap:8px !important;
+}
+
+/* Leaderboard between games and players */
+.leaderboardSlot{
+  display:flex !important;
+  justify-content:center !important;
+  margin: 12px 0 !important;
+  padding: 0 !important;
+}
+#leaderboardBtn{
+  width:min(92%, 520px) !important;
+  min-height:40px !important;
+  height:40px !important;
+  border-radius:14px !important;
+}
+
+/* Donation button below players only */
+#donateSlot{
+  position: fixed !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  bottom: calc(env(safe-area-inset-bottom) + 54px) !important;
+  z-index:9992 !important;
+  width:min(92vw,560px) !important;
+}
+#donateBtnBottom{
+  width:100% !important;
+  min-height:40px !important;
+  height:40px !important;
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.60) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.04)) !important;
+  color: rgba(245,250,255,.96) !important;
+  letter-spacing:.10em !important;
+  font-weight:900 !important;
+  font-size:12px !important;
+  text-transform:uppercase !important;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.26),
+    inset 0 2px 6px rgba(255,255,255,.74),
+    inset 0 -3px 6px rgba(255,255,255,.16) !important;
+}
+
+/* Raised glass buttons/text */
+.pill, .glassBtn, #openPlayerPicker.glassBtn, #leaderboardBtn, #donateBtnBottom{
+  text-shadow:
+    0 0 4px rgba(255,255,255,.55),
+    0 0 10px rgba(145,220,255,.34),
+    0 1px 4px rgba(0,0,0,.60) !important;
+}
+.title, .setupGameTitle, .playerPageName, .waitName,
+#ngHeaderBar .ngHeaderLeft, #ngHeaderBar .ngHeaderCenter, #ngHeaderBar .ngHeaderRight{
+  text-shadow:
+    0 0 6px rgba(255,255,255,.60),
+    0 0 14px rgba(145,220,255,.30),
+    0 2px 8px rgba(0,0,0,.72) !important;
+}
+
+/* Header center and version directly underneath */
+#ngHeaderBar{ overflow: visible !important; }
+.ngTopRow{
+  position: relative !important;
+  min-height: 28px !important;
+}
+#ngHeaderBar .ngHeaderCenter{
+  position:absolute !important;
+  left:50% !important;
+  top:0 !important;
+  transform:translateX(-50%) !important;
+  width:max-content !important;
+  max-width:70% !important;
+  text-align:center !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  pointer-events:none !important;
+}
+#ngHeaderBar .ngVer{
+  position:absolute !important;
+  left:50% !important;
+  top:16px !important;
+  transform:translateX(-50%) !important;
+  display:inline-block !important;
+  color: rgba(0,210,255,.95) !important;
+  font-weight:1000 !important;
+  font-size:12px !important;
+  line-height:1 !important;
+  text-shadow:0 2px 10px rgba(0,0,0,.75) !important;
+  white-space:nowrap !important;
+  pointer-events:none !important;
+  z-index:2 !important;
+}
+
+/* Waiting room neat and uniform */
+#waiting .detailBody{
+  text-align:left !important;
+}
+.waitRow{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  padding:12px 10px !important;
+  border-bottom:1px solid rgba(255,255,255,.10) !important;
+}
+.waitLeft{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  min-width:0 !important;
+}
+.waitName{
+  font-weight:1050 !important;
+  font-size:20px !important;
+  letter-spacing:.2px !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+.waitMeta{
+  opacity:.88 !important;
+  font-weight:900 !important;
+  font-size:13px !important;
+  white-space:nowrap !important;
+}
+.waitGameMeta{
+  display:grid !important;
+  gap:8px !important;
+  margin:0 0 14px 0 !important;
+}
+.waitMetaRow{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  padding:10px 12px !important;
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  background:rgba(255,255,255,.02) !important;
+}
+.statusIcon.ok{ color: rgba(90,255,170,.98) !important; text-shadow:0 0 12px rgba(90,255,170,.45) !important; }
+.statusIcon.wait{ color: rgba(255,210,90,.98) !important; text-shadow:0 0 12px rgba(255,210,90,.35) !important; }
+.statusIcon.no{ color: rgba(255,120,120,.98) !important; text-shadow:0 0 12px rgba(255,120,120,.35) !important; }
 </style>
 
 </head>
@@ -4848,7 +5063,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1510 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1512 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -4940,7 +5155,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1510";
+  window.ngBuild = "v1512";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -4965,7 +5180,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1510";
+window.ngBuild = "v1512";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -6979,7 +7194,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1510 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1512 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -8105,7 +8320,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1510";
+window.APP_VERSION = "v1512";
 (function(){
   try {
     // header version
@@ -8148,7 +8363,7 @@ window.APP_VERSION = "v1510";
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1510";
+    if (vb) vb.textContent = "v1512";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -8283,7 +8498,7 @@ function closeDetail(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1510";
+    if(vb) vb.textContent = "v1512";
 
     var gamesList = document.getElementById("gamesList");
     var playersList = document.getElementById("playersList");
@@ -8424,7 +8639,7 @@ document.addEventListener("click", function(e){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1510";
+    if(vb) vb.textContent = "v1512";
   }catch(e){
     console.error(e);
   }
@@ -8436,7 +8651,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1510";
+    if(vb) vb.textContent = "v1512";
 
     var email = document.getElementById("emailInput");
     var played = false;
@@ -8565,7 +8780,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function sync(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1510";
+      if(vb) vb.textContent = "v1512";
       renderPlayerDropdowns();
     }catch(e){
       console.error(e);
@@ -8663,7 +8878,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const v = document.createElement("div");
     v.id = "ngVersionMid";
     v.className = "screenVersionMid";
-    v.textContent = "v1510";
+    v.textContent = "v1512";
     players.appendChild(v);
   }
 
@@ -8818,7 +9033,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncAll(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1510";
+      if(vb) vb.textContent = "v1512";
       const sessionBtn = document.getElementById("sessionBtn");
       if(sessionBtn) sessionBtn.textContent = "Session";
       ensureVersionLabel();
@@ -8940,9 +9155,9 @@ document.addEventListener("DOMContentLoaded", function(){
   function setVersion(){
     try {
       const v1 = document.querySelector("#ngHeaderBlock .ver");
-      if (v1) v1.textContent = "v1510";
+      if (v1) v1.textContent = "v1512";
       const v2 = document.getElementById("ngVersionBelow");
-      if (v2) v2.textContent = "v1510";
+      if (v2) v2.textContent = "v1512";
     } catch (_) {}
   }
 
@@ -9182,7 +9397,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1510";
+      if(v) v.textContent = "v1512";
     } catch(_ ) {}
   }
 
@@ -9301,7 +9516,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1510";
+      if(v) v.textContent = "v1512";
     } catch(_ ) {}
   }
 
@@ -9437,7 +9652,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1510";
+      if(v) v.textContent = "v1512";
     } catch(_ ) {}
   }
 
@@ -9512,7 +9727,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1510";
+      if(v) v.textContent = "v1512";
     } catch(_ ) {}
   }
 
@@ -9564,7 +9779,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       const v = document.getElementById("ngVersionBelow");
-      if (v) v.textContent = "v1510";
+      if (v) v.textContent = "v1512";
     } catch (_ ) {}
   }
 
@@ -10133,7 +10348,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1510-hardening-patch">
+<script id="ng-v1512-hardening-patch">
 (function(){
   function qs(id){ return document.getElementById(id); }
 
@@ -10153,10 +10368,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
   function hardWire(){
     try{
-      var style = document.getElementById("ng-v1510-style");
+      var style = document.getElementById("ng-v1512-style");
       if(!style){
         style = document.createElement("style");
-        style.id = "ng-v1510-style";
+        style.id = "ng-v1512-style";
         style.textContent = `
           .detailWrap, .hub, .pickerCard{
             width:min(520px,92vw) !important;
@@ -10311,7 +10526,7 @@ document.addEventListener("DOMContentLoaded", function(){
       });
 
       // fix visible version labels
-      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1510"; });
+      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1512"; });
     }catch(_){}
   }
 
@@ -10326,7 +10541,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1510-unified-wiring">
+<script id="ng-v1512-unified-wiring">
 (function(){
   function qs(id){ return document.getElementById(id); }
   function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
@@ -10488,21 +10703,21 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1510-presentable-guard">
+<script id="ng-v1512-presentable-guard">
 (function(){
   const REQUIRED_EMAIL = true;
 
   function setVersionOnce(){
     try{
       var title = document.title || "";
-      document.title = title.replace(/Night Games v\d+/g, "Night Games v1510");
+      document.title = title.replace(/Night Games v\d+/g, "Night Games v1512");
       var header = document.querySelector("#ngHeaderBar .ngTitle");
       if(header && !document.getElementById("ngOneVersion")){
         var span = document.createElement("span");
         span.id = "ngOneVersion";
         span.className = "ngVer";
         span.style.marginLeft = "8px";
-        span.textContent = "v1510";
+        span.textContent = "v1512";
         header.parentNode.appendChild(span);
       }
     }catch(_e){}
@@ -10626,7 +10841,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<style id="ng-v1510-authoritative-pass">
+<style id="ng-v1512-authoritative-pass">
 /* -------- One visible version only -------- */
 #ngVersionBelow, .buildBadge, .dbg, .sessionPill{ display:none !important; }
 #sessionBtn{ display:none !important; }
@@ -10736,7 +10951,7 @@ document.addEventListener("DOMContentLoaded", function(){
 #ngHeaderBar .ngVer{ display:inline-block !important; }
 </style>
 
-<script id="ng-v1510-finalize">
+<script id="ng-v1512-finalize">
 (function(){
   function prettyIo(v){
     const map = {
@@ -10761,11 +10976,11 @@ document.addEventListener("DOMContentLoaded", function(){
           ex.style.marginLeft = "8px";
           host.parentNode.appendChild(ex);
         }
-        ex.textContent = "v1510";
+        ex.textContent = "v1512";
       }
       var vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1510";
-      document.title = "Night Games v1510";
+      if(vb) vb.textContent = "v1512";
+      document.title = "Night Games v1512";
     }catch(_e){}
   }
 
@@ -10887,7 +11102,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1510-cleanup-js">
+<script id="ng-v1512-cleanup-js">
 (function(){
   function removeDuplicateLeaderboard(){
     try{
@@ -10933,7 +11148,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1510-layout-fix-js">
+<script id="ng-v1512-layout-fix-js">
 (function(){
   function removeDuplicateLeaderboard(){
     try{
@@ -10981,7 +11196,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1510-players-panel-pass-js">
+<script id="ng-v1512-players-panel-pass-js">
 (function(){
   function toggleDonateByScreen(){
     try{
@@ -11025,7 +11240,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1510-setup-player-seed">
+<script id="ng-v1512-setup-player-seed">
 (function(){
   const REGISTERED_PLAYERS = [
     {name:"Steve Moody",   email:"steve@example.com"},
@@ -11122,10 +11337,151 @@ document.addEventListener("DOMContentLoaded", function(){
 })();
 </script>
 
+
+<script id="ng-v1512-polish-pass-js">
+(function(){
+  function removeDuplicateLeaderboards(){
+    try{
+      const buttons = Array.from(document.querySelectorAll('button, .pill, .ngWideBtn'));
+      const matches = buttons.filter(el => /^leaderboard$/i.test((el.textContent || '').trim()));
+      if(matches.length > 1){
+        matches.slice(1).forEach(function(el){
+          try{
+            const wrap = el.closest('.leaderboardSlot') || el;
+            wrap.remove();
+          }catch(_e){}
+        });
+      }
+    }catch(_e){}
+  }
+
+  function ensureDonateButton(){
+    try{
+      let slot = document.getElementById('donateSlot');
+      if(!slot){
+        slot = document.createElement('div');
+        slot.id = 'donateSlot';
+        slot.innerHTML = '<button id="donateBtnBottom">HELP SUPPORT UPDATES AND FUTURE PROJECTS</button>';
+        document.body.appendChild(slot);
+      }
+      const btn = document.getElementById('donateBtnBottom');
+      if(btn) btn.textContent = 'HELP SUPPORT UPDATES AND FUTURE PROJECTS';
+    }catch(_e){}
+  }
+
+  function toggleDonateByScreen(){
+    try{
+      var slot = document.getElementById('donateSlot');
+      if(!slot) return;
+      var players = document.getElementById('players');
+      var isPlayers = !!(players && players.classList.contains('active'));
+      slot.style.display = isPlayers ? 'block' : 'none';
+    }catch(_e){}
+  }
+
+  function currentSelectedEmails(){
+    try{
+      const s = (window.activeSession && activeSession.setup) ? activeSession.setup : {};
+      return (s.emails || []).slice(0, s.count || (s.emails||[]).length);
+    }catch(_e){ return []; }
+  }
+
+  function currentGame(){
+    try{ return (window.activeSession && activeSession.game) || 'Game'; }
+    catch(_e){ return 'Game'; }
+  }
+
+  function displayNameForEmail(em){
+    try{
+      const lower = String(em || '').toLowerCase();
+      const p = (window.people || window.lastPeople || []).find(x => String((x && x.email) || '').toLowerCase() === lower);
+      return (p && p.name) ? p.name : (lower.split('@')[0] || em);
+    }catch(_e){ return em; }
+  }
+
+  function renderWaitingRoomOverride(){
+    try{
+      const waitingBody = document.getElementById('waitingBody');
+      if(!waitingBody) return;
+      const game = currentGame();
+      const s = (window.activeSession && activeSession.setup) ? activeSession.setup : {};
+      const selected = currentSelectedEmails();
+
+      const meta = [];
+      meta.push(['Game', game || 'Game']);
+      if(game === '01'){
+        meta.push(['Format', String(s.startScore || s.variant || 501)]);
+        meta.push(['Rules', String(s.inOut || s.io || s.rules || 'Choose rules')]);
+      } else if(game === 'Killer'){
+        meta.push(['Format', 'Killer']);
+        meta.push(['Randomizer 1', 'Order of play']);
+        meta.push(['Randomizer 2', 'Assigned number 1–20']);
+      } else if(game){
+        meta.push(['Format', game]);
+      }
+      meta.push(['Players', String(selected.length || s.count || 0)]);
+
+      const metaHtml = meta.map(pair =>
+        '<div class="waitMetaRow"><div class="waitMetaLabel">'+pair[0]+'</div><div class="waitMetaVal">'+pair[1]+'</div></div>'
+      ).join('');
+
+      const rows = selected.map(function(em){
+        const lower = String(em || '').toLowerCase();
+        const name = displayNameForEmail(lower);
+        const status = (window.inviteStatusCache && window.inviteStatusCache.get(lower)) || ((lower === String(window.currentEmail || '').toLowerCase()) ? 'accepted' : 'pending');
+        const label = status === 'accepted' ? 'joined' : status === 'declined' ? 'declined' : 'waiting';
+        const icon = status === 'accepted' ? '✔' : status === 'declined' ? '✖' : '⌛';
+        const cls = status === 'accepted' ? 'ok' : status === 'declined' ? 'no' : 'wait';
+        return '<div class="waitRow"><div class="waitLeft"><span class="dot '+(status === 'accepted' ? 'online':'')+'"></span><div class="waitName">'+name+'</div></div><div class="waitMeta"><span class="statusIcon '+cls+'">'+icon+'</span> '+label+'</div></div>';
+      }).join('');
+
+      waitingBody.innerHTML =
+        '<div class="setupGameTitle">'+game+'</div>'
+        + '<div style="opacity:.84; margin-bottom:10px;">Waiting room</div>'
+        + '<div class="waitGameMeta">'+metaHtml+'</div>'
+        + '<div class="waitStatusLegend"><span><span class="statusIcon ok">✔</span> joined</span><span><span class="statusIcon wait">⌛</span> waiting</span><span><span class="statusIcon no">✖</span> declined</span></div>'
+        + '<div>'+(rows || '<div style="opacity:.78;">No players selected.</div>')+'</div>';
+    }catch(_e){}
+  }
+
+  function init(){
+    removeDuplicateLeaderboards();
+    ensureDonateButton();
+    toggleDonateByScreen();
+    try{ window.renderWaitingRoom = renderWaitingRoomOverride; }catch(_e){}
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    init();
+    setTimeout(init, 150);
+    setTimeout(init, 500);
+  });
+
+  window.addEventListener('load', function(){
+    init();
+    setTimeout(init, 150);
+    setTimeout(init, 500);
+  });
+
+  try{
+    var origShow = window.show;
+    if(typeof origShow === 'function' && !window.__ng1512WrappedShow){
+      window.__ng1512WrappedShow = true;
+      window.show = function(which){
+        var r = origShow.apply(this, arguments);
+        setTimeout(toggleDonateByScreen, 40);
+        setTimeout(toggleDonateByScreen, 200);
+        return r;
+      };
+    }
+  }catch(_e){}
+})();
+</script>
+
 </body>
 </html>
 
-/* --- v1510 remove confirm safety --- */
+/* --- v1512 remove confirm safety --- */
 window.ngConfirmRemove = function(name, fn){
   if(confirm("Remove player " + name + "?")){
     try{ fn && fn(); }catch(e){ console.error(e); }
