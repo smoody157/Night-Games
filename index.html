@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1500</title>
-<!-- NIGHT GAMES v1500 -->
+<title>Night Games v1506</title>
+<!-- NIGHT GAMES v1506 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -4101,7 +4101,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1500-crystal-unified">
+<style id="ng-v1506-crystal-unified">
 :root{
   --ng-crystal-bg: rgba(255,255,255,0.055);
   --ng-crystal-border: rgba(255,255,255,0.40);
@@ -4247,9 +4247,9 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<!-- BUILD SANITY CHECK: THIS FILE IS v1500 -->
+<!-- BUILD SANITY CHECK: THIS FILE IS v1506 -->
 
-<style id="ng-v1500-presentable-pass">
+<style id="ng-v1506-presentable-pass">
 /* unified panel system */
 .hub,
 #players .hub,
@@ -4313,6 +4313,129 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 }
 #ngHeaderBar .ngVer, .ngVer, .buildBadge b, #ngVersionBelow{ display:none !important; } /* one visible version only */
 #landing #statusLine{ white-space: normal !important; }
+</style>
+
+
+<style id="ng-v1506-setup-crystal-fix">
+/* ===== v1506: setup panel scroll + crystal panel enforcement ===== */
+
+/* centered shell */
+.hub,
+#players .hub,
+#games .hub,
+#setup .detailWrap,
+#waiting .detailWrap,
+#lobby .detailWrap,
+#detail .detailWrap{
+  width:min(760px,94vw) !important;
+  max-width:760px !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  box-sizing:border-box !important;
+}
+
+/* force same crystal panel look everywhere */
+.panel,
+#gamesPanel,
+#playersPanel,
+#setup .panel,
+#waiting .panel,
+#lobby .panel,
+#detail .panel,
+.pickerCard,
+#setup .detailWrap > .panel,
+#waiting .detailWrap > .panel,
+#lobby .detailWrap > .panel,
+#detail .detailWrap > .panel{
+  width:100% !important;
+  max-width:none !important;
+  margin:0 auto !important;
+  box-sizing:border-box !important;
+  border-radius:18px !important;
+  background:rgba(255,255,255,0.015) !important;
+  border:1px solid rgba(255,255,255,.62) !important;
+  box-shadow:
+    0 14px 32px rgba(0,0,0,.35),
+    inset 0 3px 10px rgba(255,255,255,.65),
+    inset 0 -3px 8px rgba(255,255,255,.18),
+    inset 1px 0 0 rgba(255,255,255,.22),
+    inset -1px 0 0 rgba(255,255,255,.22),
+    0 0 24px rgba(160,220,255,.18) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  overflow:hidden !important;
+}
+
+/* keep setup panel lower and fully usable */
+#setup .detailWrap{
+  top: clamp(190px, 22vh, 300px) !important;
+  bottom: max(78px, env(safe-area-inset-bottom)) !important;
+  min-height:0 !important;
+}
+
+#setup .detailWrap > .panel{
+  display:flex !important;
+  flex-direction:column !important;
+  min-height:0 !important;
+}
+
+/* critical fix: the setup content must scroll inside the panel */
+#setup .detailBody,
+#setupBody{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  -webkit-overflow-scrolling:touch !important;
+  overscroll-behavior:contain !important;
+  touch-action:pan-y !important;
+  padding-right:6px !important;
+  box-sizing:border-box !important;
+}
+
+/* setup rows stay inside the panel */
+#setup .itemLine,
+#setup .list,
+#setup .detailBody .itemLine,
+#setup .detailBody .list{
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
+
+/* uniform buttons in setup too */
+.pill,
+#setup .pill,
+#waiting .pill,
+#lobby .pill,
+#detail .pill,
+#leaderboardBtn{
+  min-height:44px !important;
+  height:44px !important;
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.60) !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.04)) !important;
+  color:rgba(245,250,255,.96) !important;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.28),
+    inset 0 2px 6px rgba(255,255,255,.72),
+    inset 0 -3px 6px rgba(255,255,255,.16) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+/* rows inside games/players stay neat */
+#players .itemLine,
+#games .itemLine{
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  padding:12px 6px !important;
+}
 </style>
 
 </head>
@@ -4468,7 +4591,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1500 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1506 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -4560,7 +4683,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1500";
+  window.ngBuild = "v1506";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -4585,7 +4708,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1500";
+window.ngBuild = "v1506";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -6599,7 +6722,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1500 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1506 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -7725,7 +7848,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1500";
+window.APP_VERSION = "v1506";
 (function(){
   try {
     // header version
@@ -7768,7 +7891,7 @@ window.APP_VERSION = "v1500";
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1500";
+    if (vb) vb.textContent = "v1506";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -7903,7 +8026,7 @@ function closeDetail(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1500";
+    if(vb) vb.textContent = "v1506";
 
     var gamesList = document.getElementById("gamesList");
     var playersList = document.getElementById("playersList");
@@ -8044,7 +8167,7 @@ document.addEventListener("click", function(e){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1500";
+    if(vb) vb.textContent = "v1506";
   }catch(e){
     console.error(e);
   }
@@ -8056,7 +8179,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1500";
+    if(vb) vb.textContent = "v1506";
 
     var email = document.getElementById("emailInput");
     var played = false;
@@ -8185,7 +8308,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function sync(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1500";
+      if(vb) vb.textContent = "v1506";
       renderPlayerDropdowns();
     }catch(e){
       console.error(e);
@@ -8283,7 +8406,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const v = document.createElement("div");
     v.id = "ngVersionMid";
     v.className = "screenVersionMid";
-    v.textContent = "v1500";
+    v.textContent = "v1506";
     players.appendChild(v);
   }
 
@@ -8438,7 +8561,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncAll(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1500";
+      if(vb) vb.textContent = "v1506";
       const sessionBtn = document.getElementById("sessionBtn");
       if(sessionBtn) sessionBtn.textContent = "Session";
       ensureVersionLabel();
@@ -8560,9 +8683,9 @@ document.addEventListener("DOMContentLoaded", function(){
   function setVersion(){
     try {
       const v1 = document.querySelector("#ngHeaderBlock .ver");
-      if (v1) v1.textContent = "v1500";
+      if (v1) v1.textContent = "v1506";
       const v2 = document.getElementById("ngVersionBelow");
-      if (v2) v2.textContent = "v1500";
+      if (v2) v2.textContent = "v1506";
     } catch (_) {}
   }
 
@@ -8802,7 +8925,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1500";
+      if(v) v.textContent = "v1506";
     } catch(_ ) {}
   }
 
@@ -8921,7 +9044,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1500";
+      if(v) v.textContent = "v1506";
     } catch(_ ) {}
   }
 
@@ -9057,7 +9180,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1500";
+      if(v) v.textContent = "v1506";
     } catch(_ ) {}
   }
 
@@ -9132,7 +9255,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1500";
+      if(v) v.textContent = "v1506";
     } catch(_ ) {}
   }
 
@@ -9184,7 +9307,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       const v = document.getElementById("ngVersionBelow");
-      if (v) v.textContent = "v1500";
+      if (v) v.textContent = "v1506";
     } catch (_ ) {}
   }
 
@@ -9753,7 +9876,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1500-hardening-patch">
+<script id="ng-v1506-hardening-patch">
 (function(){
   function qs(id){ return document.getElementById(id); }
 
@@ -9773,10 +9896,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
   function hardWire(){
     try{
-      var style = document.getElementById("ng-v1500-style");
+      var style = document.getElementById("ng-v1506-style");
       if(!style){
         style = document.createElement("style");
-        style.id = "ng-v1500-style";
+        style.id = "ng-v1506-style";
         style.textContent = `
           .detailWrap, .hub, .pickerCard{
             width:min(520px,92vw) !important;
@@ -9931,7 +10054,7 @@ document.addEventListener("DOMContentLoaded", function(){
       });
 
       // fix visible version labels
-      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1500"; });
+      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1506"; });
     }catch(_){}
   }
 
@@ -9946,7 +10069,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1500-unified-wiring">
+<script id="ng-v1506-unified-wiring">
 (function(){
   function qs(id){ return document.getElementById(id); }
   function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
@@ -10108,21 +10231,21 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1500-presentable-guard">
+<script id="ng-v1506-presentable-guard">
 (function(){
   const REQUIRED_EMAIL = true;
 
   function setVersionOnce(){
     try{
       var title = document.title || "";
-      document.title = title.replace(/Night Games v\d+/g, "Night Games v1500");
+      document.title = title.replace(/Night Games v\d+/g, "Night Games v1506");
       var header = document.querySelector("#ngHeaderBar .ngTitle");
       if(header && !document.getElementById("ngOneVersion")){
         var span = document.createElement("span");
         span.id = "ngOneVersion";
         span.className = "ngVer";
         span.style.marginLeft = "8px";
-        span.textContent = "v1500";
+        span.textContent = "v1506";
         header.parentNode.appendChild(span);
       }
     }catch(_e){}
@@ -10246,7 +10369,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<style id="ng-v1500-authoritative-pass">
+<style id="ng-v1506-authoritative-pass">
 /* -------- One visible version only -------- */
 #ngVersionBelow, .buildBadge, .dbg, .sessionPill{ display:none !important; }
 #sessionBtn{ display:none !important; }
@@ -10356,7 +10479,7 @@ document.addEventListener("DOMContentLoaded", function(){
 #ngHeaderBar .ngVer{ display:inline-block !important; }
 </style>
 
-<script id="ng-v1500-finalize">
+<script id="ng-v1506-finalize">
 (function(){
   function prettyIo(v){
     const map = {
@@ -10381,11 +10504,11 @@ document.addEventListener("DOMContentLoaded", function(){
           ex.style.marginLeft = "8px";
           host.parentNode.appendChild(ex);
         }
-        ex.textContent = "v1500";
+        ex.textContent = "v1506";
       }
       var vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1500";
-      document.title = "Night Games v1500";
+      if(vb) vb.textContent = "v1506";
+      document.title = "Night Games v1506";
     }catch(_e){}
   }
 
@@ -10509,7 +10632,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </body>
 </html>
 
-/* --- v1500 remove confirm safety --- */
+/* --- v1506 remove confirm safety --- */
 window.ngConfirmRemove = function(name, fn){
   if(confirm("Remove player " + name + "?")){
     try{ fn && fn(); }catch(e){ console.error(e); }
