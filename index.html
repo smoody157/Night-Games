@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1497</title>
-<!-- NIGHT GAMES v1497 -->
+<title>Night Games v1498</title>
+<!-- NIGHT GAMES v1498 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3541,7 +3541,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1479";window.NG_BUILD_LABEL="Night Games v1497";</script>
+<script>window.NG_BUILD_VERSION="1479";window.NG_BUILD_LABEL="Night Games v1479";</script>
 
 <style id="ng-v1479-header-style">
 #ngHeaderBlock{
@@ -4248,6 +4248,113 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 
 <!-- BUILD SANITY CHECK: THIS FILE IS v1493 -->
+
+<style id="ng-v1498-uniform-panels">
+/* one shared panel system */
+.hub,
+#players .hub,
+#games .hub,
+#setup .detailWrap,
+#waiting .detailWrap,
+#lobby .detailWrap,
+#detail .detailWrap{
+  width:min(760px,94vw) !important;
+  max-width:760px !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  box-sizing:border-box !important;
+}
+
+.panel,
+#gamesPanel,
+#playersPanel,
+#setup .panel,
+#waiting .panel,
+#lobby .panel,
+#detail .panel{
+  width:100% !important;
+  max-width:none !important;
+  margin:0 auto !important;
+  box-sizing:border-box !important;
+  border-radius:18px !important;
+  background:rgba(255,255,255,.045) !important;
+  border:1px solid rgba(255,255,255,.28) !important;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.50),
+    inset 0 -1px 0 rgba(255,255,255,.12) !important;
+  backdrop-filter: blur(8px) saturate(115%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(115%) !important;
+  overflow:hidden !important;
+}
+
+/* normalize row widths so nothing hangs outside the panel */
+.itemLine,
+#games .itemLine,
+#players .itemLine{
+  width:100% !important;
+  max-width:100% !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  box-sizing:border-box !important;
+  padding:12px 6px !important;
+}
+
+.leftStack,
+.actions{
+  box-sizing:border-box !important;
+}
+
+.actions .pill,
+#setup .pill,
+#waiting .pill,
+#lobby .pill,
+#detail .pill{
+  height:40px !important;
+  min-height:40px !important;
+  border-radius:12px !important;
+  border:1px solid rgba(255,255,255,.28) !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.04)) !important;
+}
+
+.waitGameMeta{
+  display:grid;
+  gap:8px;
+  margin: 0 0 14px 0;
+}
+.waitMetaRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+}
+.waitMetaLabel{
+  font-weight:1000;
+  opacity:.88;
+}
+.waitMetaVal{
+  font-weight:1100;
+  text-align:right;
+}
+.waitStatusLegend{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin: 10px 0 14px 0;
+  opacity:.92;
+  font-weight:900;
+  font-size:12px;
+}
+.waitStatusLegend span{ white-space:nowrap; }
+</style>
+
 </head>
 <body>
 
@@ -4401,7 +4508,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1497 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1498 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -4493,7 +4600,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1497";
+  window.ngBuild = "v1498";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -4518,7 +4625,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1497";
+window.ngBuild = "v1498";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -6532,7 +6639,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1497 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1498 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -7658,7 +7765,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1497";
+window.APP_VERSION = "v1498";
 (function(){
   try {
     // header version
@@ -10041,205 +10148,96 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1497-stability-override">
+<script id="ng-v1498-waiting-room-upgrade">
 (function(){
-  function qs(sel){ return document.querySelector(sel); }
-  function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
-
-  function setOneVisibleVersion(){
-    var targets = qsa("#ngHeaderBar .ngVer, .ngVer, .buildBadge b, [data-version-label]");
-    targets.forEach(function(el){ try{ el.textContent = "v1497"; }catch(_e){} });
-  }
-
-  function forceShow(which){
-    try{
-      if(typeof window.show === "function") return window.show(which);
-    }catch(_e){}
-    try{
-      if(typeof window.ngShowScreen === "function") return window.ngShowScreen(which);
-    }catch(_e){}
-    try{
-      document.querySelectorAll(".screen").forEach(function(s){ s.classList.remove("active"); });
-      var id = which[0] === "#" ? which.slice(1) : which;
-      var el = document.getElementById(id);
-      if(el) el.classList.add("active");
-    }catch(_e){}
-  }
-
-  function playerNameFromEmail(email){
-    try{
-      email = String(email||"").trim().toLowerCase();
-      var src = (window.lastPeople||window.peopleList&&window.peopleList()||[]);
-      var hit = (src||[]).find(function(p){ return String((p&&p.email)||"").trim().toLowerCase() === email; });
-      if(hit){
-        return String(hit.name || [hit.firstName, hit.lastName].filter(Boolean).join(" ") || email.split("@")[0] || email).trim();
-      }
-    }catch(_e){}
-    return String(email||"").trim();
-  }
-
-  function doFastSignIn(){
-    var emailInput = document.getElementById("emailInput");
-    var statusLine = document.getElementById("statusLine");
-    var em = String((emailInput && emailInput.value) || localStorage.getItem("ng_saved_email") || "").trim().toLowerCase();
-    if(!em){
-      try{ if(statusLine) statusLine.textContent = "Enter an email."; }catch(_e){}
-      return false;
-    }
-    try{
-      window.currentEmail = em;
-      window.currentUserEmail = em;
-      window.userEmail = em;
-      localStorage.setItem("ng_saved_email", em);
-      var pn = document.getElementById("playerPageName");
-      if(pn) pn.textContent = playerNameFromEmail(em);
-      if(statusLine) statusLine.textContent = "Signed in.";
-    }catch(_e){}
-    try{ if(typeof window.renderPlayerDropdowns === "function") window.renderPlayerDropdowns(); }catch(_e){}
-    forceShow("players");
-    return false;
-  }
-
-  function bindLanding(){
-    var emailInput = document.getElementById("emailInput");
-    var enterBtn = document.getElementById("enterBtn");
-    if(emailInput){
-      try{
-        var saved = localStorage.getItem("ng_saved_email") || "";
-        if(!emailInput.value && saved) emailInput.value = saved;
-      }catch(_e){}
-      if(!emailInput.dataset.ng1497){
-        emailInput.dataset.ng1497 = "1";
-        emailInput.addEventListener("keydown", function(e){
-          if(e.key === "Enter"){ e.preventDefault(); doFastSignIn(); }
-        }, true);
-      }
-    }
-    if(enterBtn && !enterBtn.dataset.ng1497){
-      enterBtn.dataset.ng1497 = "1";
-      enterBtn.addEventListener("click", function(e){ e.preventDefault(); doFastSignIn(); }, true);
-      enterBtn.addEventListener("touchend", function(e){ e.preventDefault(); doFastSignIn(); }, true);
-    }
-  }
-
-  function enterGame(game){
-    try{
-      if(typeof window.renderSetupForGame === "function"){ window.renderSetupForGame(game); }
-      else if(typeof window.renderSetup === "function"){ window.renderSetup(game); }
-    }catch(_e){}
-    forceShow("setup");
-  }
-
-  function openRules(game){
-    try{
-      if(typeof window.openDetail === "function"){
-        if(typeof window.GAME_RULES === "object" && window.GAME_RULES && window.GAME_RULES[game]){
-          return window.openDetail(game + " Rules", window.GAME_RULES[game]);
-        }
-        return window.openDetail(game + " Rules", "<div class='ng-note'>Rules for " + game + ".</div>");
-      }
-    }catch(_e){}
-  }
-
-  function openHistory(label){
-    try{
-      if(typeof window.openDetail === "function"){
-        return window.openDetail(label + " History", "<div class='ng-note'>History for " + label + ".</div>");
-      }
-    }catch(_e){}
-  }
-
-  function setupInvite(){
-    try{
-      forceShow("waiting");
-      var wb = document.getElementById("waitingBody");
-      if(wb){
-        wb.innerHTML = "<div class='ng-note'>Waiting room</div>";
-      }
-    }catch(_e){}
-  }
-
-  function setupStart(){
-    try{
-      if(typeof window.openDetail === "function"){
-        window.openDetail("Game Start", "<div class='ng-note'>Game start flow for the selected game.</div>");
-      }else{
-        forceShow("lobby");
-      }
-    }catch(_e){}
-  }
-
-  function bindFixedButtons(){
+  function ioLabel(v){
     var map = {
-      "setupHomeBtn": function(){ forceShow("players"); },
-      "setupResetBtn": function(){
-        try{
-          var t = document.querySelector(".setupGameTitle, .ngSetupTitle");
-          var g = (t && t.textContent || "").trim() || "01";
-          enterGame(g);
-        }catch(_e){ enterGame("01"); }
-      },
-      "setupInviteBtn": setupInvite,
-      "setupStartGameBtn": setupStart,
-      "waitingBackBtn": function(){ forceShow("setup"); },
-      "backBtn": function(){ forceShow("players"); },
-      "homeBtn": function(){ forceShow("players"); },
-      "leaderboardBtn": function(){
-        try{
-          if(typeof window.openDetail === "function") window.openDetail("Leaderboard", "<div class='ng-note'>Leaderboard view.</div>");
-        }catch(_e){}
-      },
-      "lobbyInviteBtn": setupInvite,
-      "lobbyStartBtn": function(){
-        try{
-          if(typeof window.openDetail === "function") window.openDetail("Randomizers", "<div class='ng-note'>Welcome Players → Randomizer → Shoot Well → Game.</div>");
-        }catch(_e){}
-      },
-      "lobbyEndBtn": function(){ forceShow("players"); }
+      "DI_DO":"Double In / Double Out",
+      "SI_SO":"Single In / Single Out",
+      "SI_DO":"Single In / Double Out"
     };
-    Object.keys(map).forEach(function(id){
-      var el = document.getElementById(id);
-      if(!el) return;
-      if(el.dataset.ng1497bound === "1") return;
-      el.dataset.ng1497bound = "1";
-      el.addEventListener("click", function(e){ e.preventDefault(); map[id](); }, true);
-      el.addEventListener("touchend", function(e){ e.preventDefault(); map[id](); }, true);
-    });
+    return map[v] || v || "";
   }
 
-  document.addEventListener("click", function(e){
-    var btn = e.target.closest && e.target.closest("[data-action]");
-    if(!btn) return;
-    var action = btn.getAttribute("data-action");
-    var value = btn.getAttribute("data-value") || "";
-    if(action === "enter_game"){ e.preventDefault(); enterGame(value); }
-    if(action === "game_rules"){ e.preventDefault(); openRules(value); }
-    if(action === "game_history"){ e.preventDefault(); openHistory(value); }
-    if(action === "player_stats"){ e.preventDefault(); openHistory(value + " Stats"); }
-    if(action === "player_history"){ e.preventDefault(); openHistory(value); }
-    if(action === "player_remove"){ e.preventDefault(); openHistory("Remove " + value); }
-    if(action === "show_leaderboard"){ e.preventDefault(); var lb=document.getElementById("leaderboardBtn"); if(lb) lb.click(); }
-  }, true);
-
-  function init(){
-    setOneVisibleVersion();
-    bindLanding();
-    bindFixedButtons();
-  }
-
-  document.addEventListener("DOMContentLoaded", init);
-  window.addEventListener("load", function(){ init(); setTimeout(init, 200); setTimeout(init, 800); });
-
-  try{
-    var origShow = window.show;
-    if(typeof origShow === "function"){
-      window.show = function(which){
-        var r = origShow.apply(this, arguments);
-        setTimeout(init, 50);
-        return r;
-      };
+  function gameFormatLines(game, s){
+    var rows = [];
+    rows.push(["Game", game || "Game"]);
+    if((game||"") === "01"){
+      rows.push(["Format", String((s && s.startScore) || 501)]);
+      rows.push(["Rules", ioLabel(s && s.inOut) || "Choose rules"]);
+    } else if((game||"") === "Killer"){
+      rows.push(["Format", "Killer"]);
+      rows.push(["Randomizer 1", "Order of play"]);
+      rows.push(["Randomizer 2", "Assigned number 1–20"]);
+    } else if(game){
+      rows.push(["Format", game]);
     }
-  }catch(_e){}
+    var count = (s && (s.count || (s.emails||[]).length)) || 0;
+    rows.push(["Players", String(count)]);
+    return rows;
+  }
+
+  function ensureWaitOverlayText(){
+    try{
+      if(window.__ngWaitOverlay){
+        window.__ngWaitOverlay.innerHTML = `
+          <div style="width:min(560px,92vw); border-radius:20px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:18px 18px 16px; text-align:center; box-shadow:0 22px 46px rgba(0,0,0,.55);">
+            <div style="font-weight:1200; letter-spacing:.08em; font-size:22px; margin-bottom:10px; text-transform:uppercase;">Welcome Players</div>
+            <div style="opacity:.90; font-weight:1000;">Let's get the game set up</div>
+          </div>`;
+      }
+    }catch(_e){}
+  }
+
+  function upgradedRenderWaitingRoom(){
+    try{
+      const waitingBody = document.getElementById("waitingBody");
+      if(!waitingBody) return;
+      const game = (window.activeSession && activeSession.game) ? activeSession.game : "Game";
+      const s = (window.activeSession && activeSession.setup) ? activeSession.setup : {emails:[],count:0};
+      const emails = (s.emails||[]).slice(0, s.count||s.emails.length);
+
+      const rows = emails.map(function(em){
+        const p = (window.lastPeople||[]).find(function(x){ return (x.email||"").toLowerCase()===String(em||"").toLowerCase(); });
+        const name = p ? (p.name||em.split("@")[0]||em) : (em.split("@")[0]||em);
+        const lower = String(em||"").toLowerCase();
+        const online = (p && typeof isOnline === "function" && isOnline(p)) || (lower === String(window.currentEmail||"").toLowerCase());
+        const status = (lower === String(window.currentEmail||"").toLowerCase()) ? "accepted" : ((window.inviteStatusCache && inviteStatusCache.get(lower)) || "pending");
+        const statusLabel = status==="accepted" ? "joined" : status==="declined" ? "declined" : "waiting";
+        const icon = status==="accepted" ? "✔" : status==="declined" ? "✖" : "⌛";
+        const iconClass = status==="accepted" ? "ok" : status==="declined" ? "no" : "wait";
+        return `<div class="waitRow">
+          <div class="waitLeft">
+            <span class="dot ${online ? "online" : ""}"></span>
+            <div class="waitName">${name}</div>
+          </div>
+          <div class="waitMeta"><span class="statusIcon ${iconClass}">${icon}</span> ${statusLabel}</div>
+        </div>`;
+      }).join("");
+
+      const metaRows = gameFormatLines(game, s).map(function(pair){
+        return `<div class="waitMetaRow"><div class="waitMetaLabel">${pair[0]}</div><div class="waitMetaVal">${pair[1]}</div></div>`;
+      }).join("");
+
+      waitingBody.innerHTML = `
+        <div class="setupGameTitle">${game}</div>
+        <div style="opacity:.84; margin-bottom:10px;">Waiting room</div>
+        <div class="waitGameMeta">${metaRows}</div>
+        <div class="waitStatusLegend">
+          <span><span class="statusIcon ok">✔</span> joined</span>
+          <span><span class="statusIcon wait">⌛</span> waiting</span>
+          <span><span class="statusIcon no">✖</span> declined</span>
+        </div>
+        <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
+      `;
+
+      ensureWaitOverlayText();
+    }catch(_e){}
+  }
+
+  window.renderWaitingRoom = upgradedRenderWaitingRoom;
+  document.addEventListener("DOMContentLoaded", function(){ ensureWaitOverlayText(); });
+  window.addEventListener("load", function(){ ensureWaitOverlayText(); });
 })();
 </script>
 
