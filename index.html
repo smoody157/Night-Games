@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1494</title>
-<!-- NIGHT GAMES v1494 -->
+<title>Night Games v1496</title>
+<!-- NIGHT GAMES v1496 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3534,7 +3534,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1479";window.NG_BUILD_LABEL="Night Games v1494";</script>
+<script>window.NG_BUILD_VERSION="1479";window.NG_BUILD_LABEL="Night Games v1496";</script>
 
 <style id="ng-v1479-header-style">
 #ngHeaderBlock{
@@ -4203,6 +4203,94 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 }
 </style>
 
+
+<style id="ng-v1495-touchpad-fix">
+/* Final landing touch target alignment fix */
+#landing #landingPads{
+  position:absolute !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  width:min(340px,82vw) !important;
+  max-width:min(340px,82vw) !important;
+  bottom:max(108px, calc(env(safe-area-inset-bottom) + 92px)) !important;
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:14px !important;
+  z-index:20 !important;
+  pointer-events:none !important;
+}
+
+#landing #emailPad,
+#landing #enterBtn{
+  width:100% !important;
+  margin:0 auto !important;
+  pointer-events:auto !important;
+  position:relative !important;
+  left:auto !important;
+  right:auto !important;
+  transform:none !important;
+}
+
+#landing #emailPad{
+  height:48px !important;
+  min-height:48px !important;
+}
+
+#landing #enterBtn{
+  height:52px !important;
+  min-height:52px !important;
+  display:block !important;
+}
+
+#landing #emailInput{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  opacity:0.001 !important;
+  pointer-events:auto !important;
+  z-index:3 !important;
+}
+
+#landing #emailEcho{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  position:absolute !important;
+  inset:0 !important;
+  transform:none !important;
+  z-index:2 !important;
+}
+
+#landing #enterBtn .enterText{
+  position:absolute !important;
+  left:50% !important;
+  top:50% !important;
+  transform:translate(-50%,-64%) !important;
+  width:100% !important;
+  text-align:center !important;
+  z-index:2 !important;
+}
+
+#landing #enterBtn .enterSub{
+  position:absolute !important;
+  left:50% !important;
+  top:50% !important;
+  transform:translate(-50%,34%) !important;
+  width:92% !important;
+  text-align:center !important;
+  z-index:2 !important;
+}
+
+/* Remove older strange offsets from hit areas */
+#landing #emailPad,
+#landing #enterBtn,
+#landing #emailEcho,
+#landing #statusLine{
+  translate:none !important;
+}
+</style>
+
 </head>
 <body>
 
@@ -4356,7 +4444,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1494 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1496 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -4448,7 +4536,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1494";
+  window.ngBuild = "v1496";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -4473,7 +4561,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1494";
+window.ngBuild = "v1496";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -6487,7 +6575,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1494 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1496 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -7613,7 +7701,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1494";
+window.APP_VERSION = "v1496";
 (function(){
   try {
     // header version
@@ -9988,6 +10076,255 @@ button.pill, .pill{
   window.addEventListener("load", watch);
   const mo = new MutationObserver(()=>watch());
   window.addEventListener("load", ()=>{ try{ mo.observe(document.body,{childList:true,subtree:true}); }catch(_){} });
+})();
+</script>
+
+
+<script id="ng-v1496-full-button-wiring">
+(function(){
+  function gameTitle(){
+    try{
+      var t = document.querySelector(".setupGameTitle, .ngSetupTitle");
+      return (t && t.textContent || "").trim() || ((window.activeSession && activeSession.game) ? activeSession.game : "Game");
+    }catch(_e){ return (window.activeSession && activeSession.game) ? activeSession.game : "Game"; }
+  }
+
+  function selectedEmailsFromSetup(){
+    try{
+      var picks = Array.from(document.querySelectorAll(".pickPlayer:checked")).map(function(x){ return String(x.value||"").toLowerCase(); });
+      if(typeof _ensureCurrentInList === "function") picks = _ensureCurrentInList(picks);
+      return picks.filter(Boolean);
+    }catch(_e){ return []; }
+  }
+
+  function selectedCountFromSetup(){
+    try{
+      var el = document.getElementById("setupCount");
+      return Math.max(1, parseInt((el && el.value) || "1", 10) || 1);
+    }catch(_e){ return 1; }
+  }
+
+  function persistSession(){
+    try{ if(typeof ngLSSet === "function") ngLSSet("ng_active_session", JSON.stringify(activeSession||{})); }catch(_e){}
+  }
+
+  function buildSessionFromSetup(){
+    window.activeSession = window.activeSession || {};
+    activeSession.game = gameTitle();
+    activeSession.gameId = String(activeSession.game || "").toLowerCase().replace(/\s+/g,"_");
+    activeSession.setup = activeSession.setup || {};
+    activeSession.setup.count = selectedCountFromSetup();
+    activeSession.setup.emails = selectedEmailsFromSetup().slice(0, activeSession.setup.count);
+
+    var scoreSel = document.getElementById("setup01Start");
+    var ioSel = document.getElementById("setup01InOut");
+    if(scoreSel && scoreSel.value){
+      activeSession.setup.startScore = parseInt(scoreSel.value,10) || 501;
+    }
+    if(ioSel && ioSel.value){
+      activeSession.setup.inOut = ioSel.value;
+    }
+    persistSession();
+  }
+
+  function startPracticeFlow(){
+    buildSessionFromSetup();
+    activeSession.practice = true;
+    activeSession.started = true;
+    persistSession();
+    try{ if(typeof show === "function") show("lobby"); }catch(_e){}
+    try{ if(typeof startPracticeGame === "function") startPracticeGame(); }catch(_e){}
+    try{ if(typeof renderLobby === "function") renderLobby(); }catch(_e){}
+    try{
+      var b = document.getElementById("lobbyStartBtn");
+      if(b) b.style.display = "none";
+    }catch(_e){}
+  }
+
+  async function inviteFlow(){
+    buildSessionFromSetup();
+    activeSession.practice = false;
+    activeSession.started = false;
+    if(!window.activeSessionId && typeof newSessionId === "function"){
+      window.activeSessionId = newSessionId();
+    }
+    activeSession.id = window.activeSessionId || activeSession.id || ("sess_" + Date.now());
+    activeSession.host = String(window.currentEmail || activeSession.host || "").toLowerCase();
+    activeSession.createdAt = activeSession.createdAt || Date.now();
+    persistSession();
+
+    try{ if(typeof show === "function") show("waiting"); }catch(_e){}
+    try{ if(typeof renderWaitingRoom === "function") renderWaitingRoom(); }catch(_e){}
+    try{ if(typeof sendInvitesForSession === "function") await sendInvitesForSession(); }catch(_e){}
+    try{ if(typeof listenSessionInvites === "function") listenSessionInvites(); }catch(_e){}
+    try{ if(typeof watchSessionDoc === "function") watchSessionDoc(); }catch(_e){}
+  }
+
+  function leaderboardFlow(){
+    try{
+      if(typeof openDetail === "function"){
+        openDetail("LEADERBOARD", '<div id="leaderboardBody"></div>');
+        if(typeof renderLeaderboard === "function") renderLeaderboard();
+      }else if(typeof show === "function"){
+        show("detail");
+        var t=document.getElementById("detailTitle"), b=document.getElementById("detailBody");
+        if(t) t.textContent="LEADERBOARD";
+        if(b){ b.innerHTML='<div id="leaderboardBody"></div>'; }
+        if(typeof renderLeaderboard === "function") renderLeaderboard();
+      }
+    }catch(_e){}
+  }
+
+  function rulesFlow(game){
+    try{
+      var html = "";
+      if(typeof GAME_RULES === "object" && GAME_RULES && GAME_RULES[game]){
+        html = GAME_RULES[game];
+        if(typeof html !== "string"){
+          try{ html = JSON.stringify(html, null, 2); }catch(_e){}
+          html = "<pre style='white-space:pre-wrap;'>" + html + "</pre>";
+        }
+      }else{
+        html = "<div style='opacity:.82;'>Rules for <b>" + game + "</b> will appear here.</div>";
+      }
+      if(typeof openDetail === "function") openDetail(game + " Rules", html);
+    }catch(_e){}
+  }
+
+  function historyFlow(label){
+    try{
+      if(typeof openDetail === "function"){
+        openDetail(label + " History", "<div style='opacity:.82;'>No history recorded yet for <b>" + label + "</b>.</div>");
+      }
+    }catch(_e){}
+  }
+
+  function playerStatsFlow(name){
+    try{
+      if(typeof openDetail === "function"){
+        openDetail(name + " Stats", "<div style='opacity:.82;'>Stats page for <b>" + name + "</b>.</div>");
+      }
+    }catch(_e){}
+  }
+
+  function playerRemoveFlow(name){
+    try{
+      if(typeof openDetail === "function"){
+        openDetail("Remove Player", "<div style='opacity:.82;'>Remove flow for <b>" + name + "</b>.</div>");
+      }
+    }catch(_e){}
+  }
+
+  function gameEnterFlow(game){
+    try{
+      if(typeof createSessionForGame === "function") createSessionForGame(game);
+    }catch(_e){}
+    try{
+      window.activeSession = window.activeSession || {};
+      activeSession.game = game;
+      activeSession.gameId = String(game||"").toLowerCase().replace(/\s+/g,"_");
+      persistSession();
+    }catch(_e){}
+    try{ if(typeof show === "function") show("setup"); }catch(_e){}
+    try{ if(typeof renderSetupForGame === "function") renderSetupForGame(game); }catch(_e){}
+    setTimeout(bindButtons, 20);
+  }
+
+  async function lobbyStartFlow(){
+    try{
+      window.activeSession = window.activeSession || {};
+      activeSession.randomizer = activeSession.randomizer || {};
+      if(typeof randomizeOrder === "function") randomizeOrder();
+      if(String(activeSession.game||"").toLowerCase() === "killer" && typeof randomizeKillerNumbers === "function"){
+        randomizeKillerNumbers();
+        try{
+          activeSession.randomizer.killerNumbers = (activeSession.setup && activeSession.setup.killerNumbers) || activeSession.randomizer.killerNumbers;
+        }catch(_e){}
+      }
+      persistSession();
+      if(typeof renderLobby === "function") renderLobby();
+    }catch(_e){}
+    try{ if(typeof startSession === "function") await startSession(); }catch(_e){}
+  }
+
+  function bindId(id, fn){
+    try{
+      var el = document.getElementById(id);
+      if(!el) return;
+      var clean = el.cloneNode(true);
+      el.parentNode.replaceChild(clean, el);
+      clean.addEventListener("click", fn, true);
+      clean.addEventListener("touchend", function(e){ e.preventDefault(); fn(e); }, true);
+      clean.addEventListener("pointerup", function(e){ e.preventDefault(); fn(e); }, true);
+    }catch(_e){}
+  }
+
+  function bindButtons(){
+    bindId("leaderboardBtn", function(e){ e.preventDefault(); leaderboardFlow(); });
+    bindId("sessionBtn", function(e){ e.preventDefault(); try{ if(typeof openDetail==="function") openDetail("Session", "<div style='opacity:.82;'>Session / support area.</div>"); }catch(_e){} });
+
+    bindId("setupHomeBtn", function(e){ e.preventDefault(); try{ if(typeof show==="function") show("players"); }catch(_e){} });
+    bindId("setupResetBtn", function(e){ e.preventDefault(); try{ if(typeof renderSetupForGame==="function") renderSetupForGame(gameTitle()); }catch(_e){} setTimeout(bindButtons, 20); });
+    bindId("setupStartGameBtn", function(e){ e.preventDefault(); startPracticeFlow(); });
+    bindId("setupInviteBtn", function(e){ e.preventDefault(); inviteFlow(); });
+    bindId("waitingBackBtn", function(e){ e.preventDefault(); try{ if(typeof show==="function") show("setup"); }catch(_e){} });
+    bindId("lobbyInviteBtn", function(e){ e.preventDefault(); inviteFlow(); });
+    bindId("lobbyStartBtn", function(e){ e.preventDefault(); lobbyStartFlow(); });
+    bindId("lobbyEndBtn", function(e){ e.preventDefault(); try{ if(typeof show==="function") show("players"); }catch(_e){} });
+    bindId("backBtn", function(e){ e.preventDefault(); try{ if(typeof closeDetail==="function") closeDetail(); else if(typeof show==="function") show("players"); }catch(_e){} });
+    bindId("homeBtn", function(e){ e.preventDefault(); try{ if(typeof show==="function") show("players"); }catch(_e){} });
+  }
+
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest("[data-action]");
+    if(!btn) return;
+    var action = btn.getAttribute("data-action");
+    var value = btn.getAttribute("data-value") || "";
+    if(action === "enter_game"){ e.preventDefault(); gameEnterFlow(value); return; }
+    if(action === "game_rules"){ e.preventDefault(); rulesFlow(value); return; }
+    if(action === "game_history"){ e.preventDefault(); historyFlow(value); return; }
+    if(action === "player_stats"){ e.preventDefault(); playerStatsFlow(value); return; }
+    if(action === "player_history"){ e.preventDefault(); historyFlow(value); return; }
+    if(action === "player_remove"){ e.preventDefault(); playerRemoveFlow(value); return; }
+    if(action === "show_leaderboard"){ e.preventDefault(); leaderboardFlow(); return; }
+    if(action === "show_session"){ e.preventDefault(); try{ if(typeof openDetail==="function") openDetail("Session", "<div style='opacity:.82;'>Session / support area.</div>"); }catch(_e){} return; }
+  }, true);
+
+  document.addEventListener("DOMContentLoaded", function(){
+    bindButtons();
+    setTimeout(bindButtons, 80);
+    setTimeout(bindButtons, 400);
+  });
+
+  window.addEventListener("load", function(){
+    bindButtons();
+    setTimeout(bindButtons, 80);
+    setTimeout(bindButtons, 400);
+  });
+
+  try{
+    var __origShow = window.show;
+    if(typeof __origShow === "function"){
+      window.show = function(which){
+        var r = __origShow.apply(this, arguments);
+        setTimeout(bindButtons, 20);
+        return r;
+      };
+    }
+  }catch(_e){}
+
+  try{
+    var __origRenderSetup = window.renderSetupForGame;
+    if(typeof __origRenderSetup === "function"){
+      window.renderSetupForGame = function(game){
+        var r = __origRenderSetup.apply(this, arguments);
+        setTimeout(bindButtons, 20);
+        return r;
+      };
+    }
+  }catch(_e){}
+
+  window.ngBindButtons = bindButtons;
 })();
 </script>
 
