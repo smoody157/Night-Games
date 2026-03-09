@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1493</title>
-<!-- NIGHT GAMES v1493 -->
+<title>Night Games v1494</title>
+<!-- NIGHT GAMES v1494 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -4101,7 +4101,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1493-crystal-unified">
+<style id="ng-v1494-crystal-unified">
 :root{
   --ng-crystal-bg: rgba(255,255,255,0.055);
   --ng-crystal-border: rgba(255,255,255,0.40);
@@ -4247,7 +4247,198 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<!-- BUILD SANITY CHECK: THIS FILE IS v1493 -->
+<!-- BUILD SANITY CHECK: THIS FILE IS v1494 -->
+
+<style id="ng-v1494-crystal-system">
+:root{
+  --ngx-bg: rgba(255,255,255,.040);
+  --ngx-bg-2: rgba(255,255,255,.020);
+  --ngx-brd: rgba(255,255,255,.38);
+  --ngx-shadow: 0 10px 24px rgba(0,0,0,.24);
+  --ngx-radius: 18px;
+}
+#players .hub,
+#setup .detailWrap,
+#waiting .detailWrap,
+#detail .detailWrap,
+#lobby .detailWrap{
+  width:min(720px,92vw) !important;
+  max-width:min(720px,92vw) !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  box-sizing:border-box !important;
+}
+#players .hub{ gap:12px !important; top: clamp(225px, 30vh, 350px) !important; }
+#setup .detailWrap, #waiting .detailWrap, #detail .detailWrap, #lobby .detailWrap{
+  top: clamp(190px, 22vh, 300px) !important;
+  gap: 12px !important;
+  padding: 0 4px !important;
+}
+.panel,
+#gamesPanel,
+#playersPanel,
+#setup .panel,
+#waiting .panel,
+#detail .panel,
+#lobby .panel,
+.pickerCard{
+  position:relative !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.045) 40%, rgba(255,255,255,.015)) !important;
+  border:1px solid var(--ngx-brd) !important;
+  border-radius:var(--ngx-radius) !important;
+  box-shadow:
+    var(--ngx-shadow),
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -1px 0 rgba(255,255,255,.16),
+    inset 1px 0 0 rgba(255,255,255,.12),
+    inset -1px 0 0 rgba(255,255,255,.12) !important;
+  backdrop-filter: blur(10px) saturate(110%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(110%) !important;
+  overflow:hidden !important;
+}
+.panel::before,
+.pickerCard::before,
+#gamesPanel::before,
+#playersPanel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,.08) 35%, rgba(255,255,255,.02) 78%),
+    radial-gradient(120px 60px at 10% 0%, rgba(0,210,255,.12), transparent 72%),
+    radial-gradient(120px 60px at 90% 0%, rgba(255,170,0,.10), transparent 72%);
+  pointer-events:none;
+}
+.sectionHead{ padding:10px 12px 8px 12px !important; }
+.title{
+  font-size: clamp(19px, 2.6vh, 24px) !important;
+  letter-spacing: 2px !important;
+  padding-bottom: 4px !important;
+}
+.list{
+  top:48px !important;
+  padding: 8px 10px 12px 10px !important;
+}
+.itemLine{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:10px !important;
+  padding: 8px 4px !important;
+  border-bottom:1px solid rgba(255,255,255,.12) !important;
+}
+.leftStack{ width:auto !important; justify-content:flex-start !important; }
+.actions{
+  width:auto !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  flex: 0 0 auto !important;
+}
+.pill, .actions .pill, .controlsRow3 .pill, .pickerFoot .pill, .pickerHead .pill, .pillMini{
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 8px 12px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  letter-spacing: .06em !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.05)) !important;
+  border: 1px solid rgba(255,255,255,.32) !important;
+  box-shadow:
+    0 6px 14px rgba(0,0,0,.16),
+    inset 0 1px 0 rgba(255,255,255,.46),
+    inset 0 -1px 0 rgba(255,255,255,.12) !important;
+}
+#sessionBtn{ max-width: 240px; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+#leaderboardBtn{ width:min(92%,520px) !important; }
+#setup .detailBody, #waiting .detailBody, #detail .detailBody, #lobby .detailBody{
+  padding: 10px 12px 14px 12px !important;
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+}
+#setupBody{
+  max-height: calc(100vh - 310px) !important;
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+}
+#setup .fieldLabel{
+  display:block !important;
+  margin: 6px 0 6px 0 !important;
+  padding: 0 !important;
+  border:none !important;
+  background:none !important;
+  box-shadow:none !important;
+  color: rgba(245,250,255,.92) !important;
+  font-weight: 1000 !important;
+  font-size: 13px !important;
+  letter-spacing: .04em !important;
+}
+#setup .glassSelect,
+#setup .glassBtn,
+#setup #openPlayerPicker.glassBtn,
+#setup select,
+#setup input{
+  width:100% !important;
+  min-height: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+  background: rgba(255,255,255,.05) !important;
+  border:1px solid rgba(255,255,255,.26) !important;
+  color: rgba(245,250,255,.96) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.26),
+    inset 0 -1px 0 rgba(255,255,255,.08) !important;
+}
+#setup .glassBtn .sub{ max-width: 58% !important; }
+#setup .setupGameTitle{
+  font-size: 24px !important;
+  margin-bottom: 6px !important;
+}
+#setup .ng-compact-wrap{
+  display:grid;
+  gap:8px;
+}
+#setup .ng-compact-row{
+  display:grid;
+  grid-template-columns: minmax(110px, 150px) 1fr;
+  align-items:center;
+  gap:10px;
+  padding:8px 10px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.20);
+  background: rgba(255,255,255,.04);
+}
+#setup .ng-compact-label{
+  font-weight:1000;
+  font-size:13px;
+  letter-spacing:.04em;
+}
+#setup .pickerModal{ padding:10px !important; }
+#setup .pickerBody{ max-height:40vh !important; }
+#setup .pickerRow{
+  padding:10px 12px !important;
+  border-radius:12px !important;
+  background: rgba(255,255,255,.035) !important;
+}
+#waitingBody .ng-status-row{
+  display:grid;
+  grid-template-columns: 1fr auto;
+  align-items:center;
+  gap:10px;
+  padding:8px 10px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.04);
+  margin-bottom:8px;
+}
+#waitingBody .statusIcon.ok{ color: rgba(90,255,170,.98) !important; text-shadow: 0 0 10px rgba(90,255,170,.35); }
+#waitingBody .statusIcon.wait{ color: rgba(255,210,90,.96) !important; text-shadow: 0 0 10px rgba(255,210,90,.28); }
+#waitingBody .statusIcon.no{ color: rgba(255,120,120,.96) !important; text-shadow: 0 0 10px rgba(255,120,120,.28); }
+</style>
+
 </head>
 <body>
 
@@ -4401,7 +4592,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1493 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1494 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -4493,7 +4684,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1493";
+  window.ngBuild = "v1494";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -4518,7 +4709,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1493";
+window.ngBuild = "v1494";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -6532,7 +6723,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1493 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1494 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -7658,7 +7849,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1493";
+window.APP_VERSION = "v1494";
 (function(){
   try {
     // header version
@@ -7701,7 +7892,7 @@ window.APP_VERSION = "v1493";
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1493";
+    if (vb) vb.textContent = "v1494";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -7836,7 +8027,7 @@ function closeDetail(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1493";
+    if(vb) vb.textContent = "v1494";
 
     var gamesList = document.getElementById("gamesList");
     var playersList = document.getElementById("playersList");
@@ -7977,7 +8168,7 @@ document.addEventListener("click", function(e){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1493";
+    if(vb) vb.textContent = "v1494";
   }catch(e){
     console.error(e);
   }
@@ -7989,7 +8180,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1493";
+    if(vb) vb.textContent = "v1494";
 
     var email = document.getElementById("emailInput");
     var played = false;
@@ -8118,7 +8309,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function sync(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1493";
+      if(vb) vb.textContent = "v1494";
       renderPlayerDropdowns();
     }catch(e){
       console.error(e);
@@ -8216,7 +8407,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const v = document.createElement("div");
     v.id = "ngVersionMid";
     v.className = "screenVersionMid";
-    v.textContent = "v1493";
+    v.textContent = "v1494";
     players.appendChild(v);
   }
 
@@ -8371,7 +8562,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncAll(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1493";
+      if(vb) vb.textContent = "v1494";
       const sessionBtn = document.getElementById("sessionBtn");
       if(sessionBtn) sessionBtn.textContent = "Help Support Updates and Future Projects";
       ensureVersionLabel();
@@ -8493,9 +8684,9 @@ document.addEventListener("DOMContentLoaded", function(){
   function setVersion(){
     try {
       const v1 = document.querySelector("#ngHeaderBlock .ver");
-      if (v1) v1.textContent = "v1493";
+      if (v1) v1.textContent = "v1494";
       const v2 = document.getElementById("ngVersionBelow");
-      if (v2) v2.textContent = "v1493";
+      if (v2) v2.textContent = "v1494";
     } catch (_) {}
   }
 
@@ -8735,7 +8926,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1493";
+      if(v) v.textContent = "v1494";
     } catch(_ ) {}
   }
 
@@ -8854,7 +9045,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1493";
+      if(v) v.textContent = "v1494";
     } catch(_ ) {}
   }
 
@@ -8990,7 +9181,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1493";
+      if(v) v.textContent = "v1494";
     } catch(_ ) {}
   }
 
@@ -9065,7 +9256,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1493";
+      if(v) v.textContent = "v1494";
     } catch(_ ) {}
   }
 
@@ -9117,7 +9308,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       const v = document.getElementById("ngVersionBelow");
-      if (v) v.textContent = "v1493";
+      if (v) v.textContent = "v1494";
     } catch (_ ) {}
   }
 
@@ -9686,7 +9877,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1493-hardening-patch">
+<script id="ng-v1494-hardening-patch">
 (function(){
   function qs(id){ return document.getElementById(id); }
 
@@ -9706,10 +9897,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
   function hardWire(){
     try{
-      var style = document.getElementById("ng-v1493-style");
+      var style = document.getElementById("ng-v1494-style");
       if(!style){
         style = document.createElement("style");
-        style.id = "ng-v1493-style";
+        style.id = "ng-v1494-style";
         style.textContent = `
           .detailWrap, .hub, .pickerCard{
             width:min(520px,92vw) !important;
@@ -9864,7 +10055,7 @@ document.addEventListener("DOMContentLoaded", function(){
       });
 
       // fix visible version labels
-      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1493"; });
+      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1494"; });
     }catch(_){}
   }
 
@@ -9879,7 +10070,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1493-unified-wiring">
+<script id="ng-v1494-unified-wiring">
 (function(){
   function qs(id){ return document.getElementById(id); }
   function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
@@ -10040,10 +10231,157 @@ document.addEventListener("DOMContentLoaded", function(){
 })();
 </script>
 
+
+<script id="ng-v1494-ui-wiring">
+(function(){
+  function qs(id){ return document.getElementById(id); }
+  function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
+  const screens=["landing","players","setup","waiting","lobby","detail"];
+  let currentGame="";
+  function showScreen(id){
+    screens.forEach(function(s){ const el=qs(s); if(el) el.classList.toggle("active", s===id); });
+  }
+  function peopleList(){
+    try{
+      if(Array.isArray(window.lastPeople) && window.lastPeople.length){
+        return window.lastPeople.map(function(p){
+          const email = String((p&&p.email)||"").toLowerCase();
+          const raw = String((p&&p.name)||"").trim();
+          const name = raw || (email ? email.split("@")[0].replace(/[._-]+/g," ") : "Player");
+          return { email: email, name: name.replace(/\b\w/g, c=>c.toUpperCase()) };
+        }).filter(Boolean);
+      }
+    }catch(_){}
+    return qsa("#playersList .itemLine").map(function(line){
+      const nm = ((line.querySelector(".glassText")||{}).textContent||"Player").trim();
+      return { email: nm.toLowerCase().replace(/\s+/g,'.')+"@example.com", name: nm };
+    });
+  }
+  function detail(title, html){
+    const t=qs("detailTitle"), b=qs("detailBody");
+    if(t) t.textContent=title;
+    if(b) b.innerHTML=html;
+    showScreen("detail");
+  }
+  function normalizeMainButtons(){
+    qsa('#gamesList [data-action="enter_game"]').forEach(function(btn){ btn.textContent="Setup"; });
+  }
+  function compactSelect(id, opts, selected){
+    const html = opts.map(function(o){
+      const value = typeof o==="string" ? o : o.value;
+      const label = typeof o==="string" ? o : o.label;
+      const sel = value===selected ? " selected" : "";
+      return '<option value="'+String(value).replace(/"/g,'&quot;')+'"'+sel+'>'+label+'</option>';
+    }).join("");
+    return '<select id="'+id+'">'+html+'</select>';
+  }
+  function renderSetupCompact(game){
+    currentGame = game || currentGame || "01";
+    const body=qs("setupBody");
+    if(!body){ setTimeout(function(){ renderSetupCompact(game); }, 50); return; }
+    const players=peopleList();
+    const names=players.map(p=>p.name);
+    const nameOpts=names.length?names:["Player 1","Player 2"];
+    let html = '<div class="setupGameTitle">'+currentGame+'</div>';
+    html += '<div class="ng-compact-wrap">';
+    html += '<div class="ng-compact-row"><div class="ng-compact-label">How Many Players</div><div>'+compactSelect('ngCount',[1,2,3,4],2)+'</div></div>';
+    html += '<div class="ng-compact-row"><div class="ng-compact-label">Which Players</div><div id="ngPlayersHolder"></div></div>';
+    if(currentGame==="01"){
+      html += '<div class="ng-compact-row"><div class="ng-compact-label">Variation</div><div>'+compactSelect('ngVar',['301','501','701'],'501')+'</div></div>';
+      html += '<div class="ng-compact-row"><div class="ng-compact-label">In</div><div>'+compactSelect('ngIn',['Straight In','Double In'],'Straight In')+'</div></div>';
+      html += '<div class="ng-compact-row"><div class="ng-compact-label">Out</div><div>'+compactSelect('ngOut',['Straight Out','Double Out'],'Double Out')+'</div></div>';
+    }
+    if(currentGame==="Killer"){
+      html += '<div class="ng-compact-row"><div class="ng-compact-label">Players</div><div>All invited players join the same waiting room.</div></div>';
+      html += '<div class="ng-compact-row"><div class="ng-compact-label">Randomizer 1</div><div>Shooting Order</div></div>';
+      html += '<div class="ng-compact-row"><div class="ng-compact-label">Randomizer 2</div><div>Assigned Number (1–20)</div></div>';
+    }
+    html += '</div>';
+    body.innerHTML = html;
+    function fillPlayers(){
+      const n = parseInt((qs('ngCount')||{}).value || '2',10);
+      const holder = qs('ngPlayersHolder');
+      if(!holder) return;
+      const rows = [];
+      for(let i=0;i<n;i++){
+        rows.push(compactSelect('ngPlayer'+i, nameOpts, nameOpts[i]||nameOpts[0]));
+      }
+      holder.innerHTML = '<div style="display:grid;gap:8px;">'+rows.join('')+'</div>';
+    }
+    const countSel=qs('ngCount');
+    if(countSel){ countSel.onchange=fillPlayers; }
+    fillPlayers();
+    showScreen("setup");
+  }
+  function waitingRoom(){
+    const wb=qs("waitingBody");
+    const names=qsa('#ngPlayersHolder select').map(s=>s.value).filter(Boolean);
+    const players=names.length?names:(peopleList().slice(0,2).map(p=>p.name));
+    if(wb){
+      wb.innerHTML = '<div class="ng-note">Everyone in the match sees the same waiting room.</div>' +
+        players.map(n=>'<div class="ng-status-row"><div>'+n+'</div><div><span class="statusIcon ok">✔</span> Ready</div></div>').join('') +
+        '<div class="ng-note" style="margin-top:8px;">When the last player joins: Welcome Players → Randomizer → Shoot Well → Game.</div>';
+    }
+    showScreen("waiting");
+  }
+  function leaderboard(){ detail("Leaderboard", "<div class='ng-note'>Leaderboard view.</div>"); }
+  function stats(name){ detail("Player Stats", "<div class='ng-note'>Stats for "+name+".</div>"); }
+  function history(label){ detail(label+" History", "<div class='ng-note'>No history entries yet.</div>"); }
+  function rules(game){
+    let html = "<div class='ng-note'>Rules for "+game+".</div>";
+    if(game==="01"){
+      html += "<div class='ng-compact-wrap'><div class='ng-compact-row'><div class='ng-compact-label'>Variation</div><div>301 / 501 / 701</div></div><div class='ng-compact-row'><div class='ng-compact-label'>In</div><div>Straight In / Double In</div></div><div class='ng-compact-row'><div class='ng-compact-label'>Out</div><div>Straight Out / Double Out</div></div></div>";
+    }
+    if(game==="Killer"){
+      html += "<div class='ng-compact-wrap'><div class='ng-compact-row'><div class='ng-compact-label'>Randomizer 1</div><div>Shooting Order</div></div><div class='ng-compact-row'><div class='ng-compact-label'>Randomizer 2</div><div>Assigned Number (1–20)</div></div></div>";
+    }
+    detail(game+" Rules", html);
+  }
+
+  // Strong capture delegation so old handlers do not win.
+  document.addEventListener("click", function(e){
+    const btn = e.target.closest("[data-action]");
+    if(!btn) return;
+    const action=btn.getAttribute("data-action");
+    const value=btn.getAttribute("data-value")||"";
+    if(!action) return;
+    if(["enter_game","game_rules","game_history","player_stats","player_history","player_remove","show_leaderboard","show_session"].includes(action)){
+      e.preventDefault(); e.stopPropagation();
+    }
+    if(action==="enter_game"){ renderSetupCompact(value); return; }
+    if(action==="game_rules"){ rules(value); return; }
+    if(action==="game_history"){ history(value); return; }
+    if(action==="player_stats"){ stats(value); return; }
+    if(action==="player_history"){ history(value); return; }
+    if(action==="player_remove"){ detail("Remove Player","<div class='ng-note'>Remove "+value+".</div>"); return; }
+    if(action==="show_leaderboard"){ leaderboard(); return; }
+    if(action==="show_session"){ detail("Support","<div class='ng-note'>Support / updates panel.</div>"); return; }
+  }, true);
+
+  function bind(id, fn){ const el=qs(id); if(el) el.onclick=fn; }
+  bind("leaderboardBtn", leaderboard);
+  bind("setupHomeBtn", function(){ showScreen("players"); });
+  bind("setupResetBtn", function(){ renderSetupCompact(currentGame || "01"); });
+  bind("setupInviteBtn", waitingRoom);
+  bind("setupStartGameBtn", function(){ detail("Game Start","<div class='ng-note'>Welcome Players → Randomizer → Shoot Well → Game.</div>"); });
+  bind("waitingBackBtn", function(){ showScreen("setup"); });
+  bind("homeBtn", function(){ showScreen("players"); });
+  bind("backBtn", function(){ showScreen("players"); });
+  bind("lobbyInviteBtn", waitingRoom);
+  bind("lobbyStartBtn", function(){ detail("Randomizers","<div class='ng-note'>Randomizer 1 = shooting order. Killer Randomizer 2 = assigned number 1–20.</div>"); });
+  bind("lobbyEndBtn", function(){ showScreen("players"); });
+
+  // expose + normalize repeatedly in case main renderers repaint
+  window.renderSetupForGame = renderSetupCompact;
+  normalizeMainButtons();
+  setInterval(normalizeMainButtons, 500);
+})();
+</script>
+
 </body>
 </html>
 
-/* --- v1493 remove confirm safety --- */
+/* --- v1494 remove confirm safety --- */
 window.ngConfirmRemove = function(name, fn){
   if(confirm("Remove player " + name + "?")){
     try{ fn && fn(); }catch(e){ console.error(e); }
