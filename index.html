@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1508</title>
-<!-- NIGHT GAMES v1508 -->
+<title>Night Games v1509</title>
+<!-- NIGHT GAMES v1509 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -4101,7 +4101,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1508-crystal-unified">
+<style id="ng-v1509-crystal-unified">
 :root{
   --ng-crystal-bg: rgba(255,255,255,0.055);
   --ng-crystal-border: rgba(255,255,255,0.40);
@@ -4247,9 +4247,9 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<!-- BUILD SANITY CHECK: THIS FILE IS v1508 -->
+<!-- BUILD SANITY CHECK: THIS FILE IS v1509 -->
 
-<style id="ng-v1508-presentable-pass">
+<style id="ng-v1509-presentable-pass">
 /* unified panel system */
 .hub,
 #players .hub,
@@ -4316,8 +4316,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1508-crystal-cleanup">
-/* ===== v1508 crystal cleanup pass ===== */
+<style id="ng-v1509-crystal-cleanup">
+/* ===== v1509 crystal cleanup pass ===== */
 
 /* top header center */
 .ngTopRow{ position:relative !important; }
@@ -4471,8 +4471,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1508-layout-fix">
-/* ===== v1508 exact layout cleanup ===== */
+<style id="ng-v1509-layout-fix">
+/* ===== v1509 exact layout cleanup ===== */
 
 /* crystal should be clear, not frosted */
 #gamesPanel, #playersPanel,
@@ -4610,6 +4610,88 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     0 0 4px rgba(255,255,255,.55),
     0 0 10px rgba(145,220,255,.34),
     0 1px 4px rgba(0,0,0,.60) !important;
+}
+</style>
+
+
+<style id="ng-v1509-players-panel-pass">
+/* ===== v1509: players panel really matched to games + donate only on players ===== */
+
+/* Games and Players panels must be identical shells */
+#gamesPanel,
+#playersPanel{
+  width: 100% !important;
+  min-height: 208px !important;
+  height: 208px !important;
+  max-height: 208px !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+  background: rgba(255,255,255,0.006) !important;
+  border: 1px solid rgba(255,255,255,.70) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.34),
+    inset 0 3px 10px rgba(255,255,255,.76),
+    inset 0 -3px 8px rgba(255,255,255,.18),
+    inset 1px 0 0 rgba(255,255,255,.24),
+    inset -1px 0 0 rgba(255,255,255,.24),
+    0 0 24px rgba(90,190,255,.14) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: hidden !important;
+}
+
+/* Players list container must behave exactly like games */
+#players .list,
+#playersList{
+  top: 64px !important;
+  bottom: 8px !important;
+  left: 0 !important;
+  right: 0 !important;
+  padding: 8px 12px 12px 12px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  box-sizing: border-box !important;
+}
+
+/* Player rows fixed and contained */
+#players .itemLine{
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 64px !important;
+  padding: 10px 6px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  border-bottom: 1px solid rgba(255,255,255,.15) !important;
+}
+
+#players .leftStack{
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  justify-content: flex-start !important;
+  width: auto !important;
+}
+
+#players .actions{
+  flex: 0 0 auto !important;
+  width: auto !important;
+  display: flex !important;
+  gap: 8px !important;
+}
+
+#players .actions .pill{
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+}
+
+/* Donate button should not appear on landing */
+#donateSlot{
+  display: none !important;
 }
 </style>
 
@@ -4766,7 +4848,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1508 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1509 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -4858,7 +4940,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1508";
+  window.ngBuild = "v1509";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -4883,7 +4965,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1508";
+window.ngBuild = "v1509";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -6897,7 +6979,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1508 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1509 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -8023,7 +8105,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1508";
+window.APP_VERSION = "v1509";
 (function(){
   try {
     // header version
@@ -8066,7 +8148,7 @@ window.APP_VERSION = "v1508";
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1508";
+    if (vb) vb.textContent = "v1509";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -8201,7 +8283,7 @@ function closeDetail(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1508";
+    if(vb) vb.textContent = "v1509";
 
     var gamesList = document.getElementById("gamesList");
     var playersList = document.getElementById("playersList");
@@ -8342,7 +8424,7 @@ document.addEventListener("click", function(e){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1508";
+    if(vb) vb.textContent = "v1509";
   }catch(e){
     console.error(e);
   }
@@ -8354,7 +8436,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1508";
+    if(vb) vb.textContent = "v1509";
 
     var email = document.getElementById("emailInput");
     var played = false;
@@ -8483,7 +8565,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function sync(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1508";
+      if(vb) vb.textContent = "v1509";
       renderPlayerDropdowns();
     }catch(e){
       console.error(e);
@@ -8581,7 +8663,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const v = document.createElement("div");
     v.id = "ngVersionMid";
     v.className = "screenVersionMid";
-    v.textContent = "v1508";
+    v.textContent = "v1509";
     players.appendChild(v);
   }
 
@@ -8736,7 +8818,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncAll(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1508";
+      if(vb) vb.textContent = "v1509";
       const sessionBtn = document.getElementById("sessionBtn");
       if(sessionBtn) sessionBtn.textContent = "Session";
       ensureVersionLabel();
@@ -8858,9 +8940,9 @@ document.addEventListener("DOMContentLoaded", function(){
   function setVersion(){
     try {
       const v1 = document.querySelector("#ngHeaderBlock .ver");
-      if (v1) v1.textContent = "v1508";
+      if (v1) v1.textContent = "v1509";
       const v2 = document.getElementById("ngVersionBelow");
-      if (v2) v2.textContent = "v1508";
+      if (v2) v2.textContent = "v1509";
     } catch (_) {}
   }
 
@@ -9100,7 +9182,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1508";
+      if(v) v.textContent = "v1509";
     } catch(_ ) {}
   }
 
@@ -9219,7 +9301,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1508";
+      if(v) v.textContent = "v1509";
     } catch(_ ) {}
   }
 
@@ -9355,7 +9437,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1508";
+      if(v) v.textContent = "v1509";
     } catch(_ ) {}
   }
 
@@ -9430,7 +9512,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1508";
+      if(v) v.textContent = "v1509";
     } catch(_ ) {}
   }
 
@@ -9482,7 +9564,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       const v = document.getElementById("ngVersionBelow");
-      if (v) v.textContent = "v1508";
+      if (v) v.textContent = "v1509";
     } catch (_ ) {}
   }
 
@@ -10051,7 +10133,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1508-hardening-patch">
+<script id="ng-v1509-hardening-patch">
 (function(){
   function qs(id){ return document.getElementById(id); }
 
@@ -10071,10 +10153,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
   function hardWire(){
     try{
-      var style = document.getElementById("ng-v1508-style");
+      var style = document.getElementById("ng-v1509-style");
       if(!style){
         style = document.createElement("style");
-        style.id = "ng-v1508-style";
+        style.id = "ng-v1509-style";
         style.textContent = `
           .detailWrap, .hub, .pickerCard{
             width:min(520px,92vw) !important;
@@ -10229,7 +10311,7 @@ document.addEventListener("DOMContentLoaded", function(){
       });
 
       // fix visible version labels
-      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1508"; });
+      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1509"; });
     }catch(_){}
   }
 
@@ -10244,7 +10326,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1508-unified-wiring">
+<script id="ng-v1509-unified-wiring">
 (function(){
   function qs(id){ return document.getElementById(id); }
   function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
@@ -10406,21 +10488,21 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1508-presentable-guard">
+<script id="ng-v1509-presentable-guard">
 (function(){
   const REQUIRED_EMAIL = true;
 
   function setVersionOnce(){
     try{
       var title = document.title || "";
-      document.title = title.replace(/Night Games v\d+/g, "Night Games v1508");
+      document.title = title.replace(/Night Games v\d+/g, "Night Games v1509");
       var header = document.querySelector("#ngHeaderBar .ngTitle");
       if(header && !document.getElementById("ngOneVersion")){
         var span = document.createElement("span");
         span.id = "ngOneVersion";
         span.className = "ngVer";
         span.style.marginLeft = "8px";
-        span.textContent = "v1508";
+        span.textContent = "v1509";
         header.parentNode.appendChild(span);
       }
     }catch(_e){}
@@ -10544,7 +10626,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<style id="ng-v1508-authoritative-pass">
+<style id="ng-v1509-authoritative-pass">
 /* -------- One visible version only -------- */
 #ngVersionBelow, .buildBadge, .dbg, .sessionPill{ display:none !important; }
 #sessionBtn{ display:none !important; }
@@ -10654,7 +10736,7 @@ document.addEventListener("DOMContentLoaded", function(){
 #ngHeaderBar .ngVer{ display:inline-block !important; }
 </style>
 
-<script id="ng-v1508-finalize">
+<script id="ng-v1509-finalize">
 (function(){
   function prettyIo(v){
     const map = {
@@ -10679,11 +10761,11 @@ document.addEventListener("DOMContentLoaded", function(){
           ex.style.marginLeft = "8px";
           host.parentNode.appendChild(ex);
         }
-        ex.textContent = "v1508";
+        ex.textContent = "v1509";
       }
       var vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1508";
-      document.title = "Night Games v1508";
+      if(vb) vb.textContent = "v1509";
+      document.title = "Night Games v1509";
     }catch(_e){}
   }
 
@@ -10805,7 +10887,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1508-cleanup-js">
+<script id="ng-v1509-cleanup-js">
 (function(){
   function removeDuplicateLeaderboard(){
     try{
@@ -10851,7 +10933,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1508-layout-fix-js">
+<script id="ng-v1509-layout-fix-js">
 (function(){
   function removeDuplicateLeaderboard(){
     try{
@@ -10898,10 +10980,54 @@ document.addEventListener("DOMContentLoaded", function(){
 })();
 </script>
 
+
+<script id="ng-v1509-players-panel-pass-js">
+(function(){
+  function toggleDonateByScreen(){
+    try{
+      var slot = document.getElementById('donateSlot');
+      if(!slot) return;
+      var players = document.getElementById('players');
+      var isPlayers = !!(players && players.classList.contains('active'));
+      slot.style.display = isPlayers ? 'block' : 'none';
+    }catch(_e){}
+  }
+
+  function init1509(){
+    toggleDonateByScreen();
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    init1509();
+    setTimeout(init1509, 150);
+    setTimeout(init1509, 500);
+  });
+
+  window.addEventListener('load', function(){
+    init1509();
+    setTimeout(init1509, 150);
+    setTimeout(init1509, 500);
+  });
+
+  try{
+    var origShow = window.show;
+    if(typeof origShow === 'function' && !window.__ng1509WrappedShow){
+      window.__ng1509WrappedShow = true;
+      window.show = function(which){
+        var r = origShow.apply(this, arguments);
+        setTimeout(toggleDonateByScreen, 40);
+        setTimeout(toggleDonateByScreen, 200);
+        return r;
+      };
+    }
+  }catch(_e){}
+})();
+</script>
+
 </body>
 </html>
 
-/* --- v1508 remove confirm safety --- */
+/* --- v1509 remove confirm safety --- */
 window.ngConfirmRemove = function(name, fn){
   if(confirm("Remove player " + name + "?")){
     try{ fn && fn(); }catch(e){ console.error(e); }
