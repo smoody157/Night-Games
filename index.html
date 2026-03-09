@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1496</title>
-<!-- NIGHT GAMES v1496 -->
+<title>Night Games v1497</title>
+<!-- NIGHT GAMES v1497 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -662,7 +662,14 @@ border: 1px solid rgba(255,255,255,.22);
   text-shadow: 0 2px 14px rgba(0,0,0,.65), 0 0 22px rgba(0,210,255,.18);
 }
 /* Make "advance" buttons readable */
-.pill
+.pill {
+  height:44px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  white-space:nowrap;
+}
 
 /* Prevent duplicated controls from stacking/overlapping inside setup body */
 
@@ -3534,7 +3541,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1479";window.NG_BUILD_LABEL="Night Games v1496";</script>
+<script>window.NG_BUILD_VERSION="1479";window.NG_BUILD_LABEL="Night Games v1497";</script>
 
 <style id="ng-v1479-header-style">
 #ngHeaderBlock{
@@ -4094,203 +4101,153 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1494-uniform-panel-fix">
+<style id="ng-v1493-crystal-unified">
 :root{
-  --ngUiW: min(760px, 94vw);
-  --ngGlassBg: rgba(255,255,255,.045);
-  --ngGlassBorder: rgba(255,255,255,.34);
-  --ngGlassShadow:
-    0 10px 26px rgba(0,0,0,.24),
-    inset 0 1px 0 rgba(255,255,255,.52),
-    inset 0 -1px 0 rgba(255,255,255,.12),
-    0 0 0 1px rgba(255,255,255,.05);
-}
-#players .hub{
-  width: var(--ngUiW) !important;
-  max-width: 760px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  padding-left: 12px !important;
-  padding-right: 12px !important;
-  box-sizing: border-box !important;
-}
-#players #gamesPanel,
-#players #playersPanel{
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  border-radius: 22px !important;
-  border: 1px solid var(--ngGlassBorder) !important;
-  background: var(--ngGlassBg) !important;
-  box-shadow: var(--ngGlassShadow) !important;
-  backdrop-filter: blur(10px) saturate(118%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(118%) !important;
-  overflow: hidden !important;
-}
-#players #gamesPanel::before,
-#players #playersPanel::before{
-  content:"" !important;
-  position:absolute !important;
-  inset:0 !important;
-  border-radius:inherit !important;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.04) 32%, rgba(255,255,255,.01) 76%),
-    radial-gradient(120% 85% at 0% 0%, rgba(0,210,255,.18), transparent 42%),
-    radial-gradient(120% 85% at 100% 0%, rgba(255,165,70,.14), transparent 42%) !important;
-  pointer-events:none !important;
-}
-#players #gamesPanel .title,
-#players #playersPanel .title{
-  letter-spacing: 2px !important;
-}
-#players #gamesPanel .list,
-#players #playersPanel .list{
-  padding-left: 14px !important;
-  padding-right: 14px !important;
-}
-#players #gamesPanel .itemLine,
-#players #playersPanel .itemLine{
-  padding: 12px 4px !important;
-}
-#players .donationRow,
-#players .leaderboardSlot,
-#players #sessionRow{
-  width: 100% !important;
-  max-width: 100% !important;
-}
-#players .donationRow .pill,
-#players .leaderboardSlot .pill,
-#players #sessionBtn{
-  width: min(92%, 520px) !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+  --ng-crystal-bg: rgba(255,255,255,0.055);
+  --ng-crystal-border: rgba(255,255,255,0.40);
+  --ng-crystal-shadow: 0 12px 28px rgba(0,0,0,.22);
+  --ng-crystal-radius: 18px;
 }
 .panel,
-#gamesPanel,
-#playersPanel,
+.pickerCard,
+#detail .panel,
 #setup .panel,
 #waiting .panel,
-#detail .panel,
 #lobby .panel,
-.pickerCard{
-  border-radius: 22px !important;
-  border: 1px solid var(--ngGlassBorder) !important;
-  background: var(--ngGlassBg) !important;
-  box-shadow: var(--ngGlassShadow) !important;
-  backdrop-filter: blur(10px) saturate(118%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(118%) !important;
+#players .panel{
+  position: relative !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.035)) !important;
+  border: 1px solid var(--ng-crystal-border) !important;
+  border-radius: var(--ng-crystal-radius) !important;
+  box-shadow:
+    var(--ng-crystal-shadow),
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -1px 0 rgba(255,255,255,.16),
+    inset 1px 0 0 rgba(255,255,255,.12),
+    inset -1px 0 0 rgba(255,255,255,.12) !important;
+  backdrop-filter: blur(10px) saturate(115%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(115%) !important;
+  overflow: hidden !important;
+}
+.panel::before,
+.pickerCard::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.06) 35%, rgba(255,255,255,.01) 80%),
+    linear-gradient(135deg, rgba(255,255,255,.18), transparent 28%, transparent 70%, rgba(255,255,255,.06));
+  pointer-events:none;
+}
+#players .hub{
+  top: clamp(235px, 31vh, 350px) !important;
+  gap: 12px !important;
+}
+.itemLine{
+  display:flex !important;
+  flex-direction: row !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:10px !important;
+  padding: 10px 6px !important;
+}
+.leftStack{ width:auto !important; justify-content:flex-start !important; }
+.actions{
+  width:auto !important;
+  flex: 0 0 auto !important;
+  display:flex !important;
+  gap:8px !important;
 }
 .actions .pill,
 .controlsRow3 .pill,
-#detail .pill,
-#waiting .pill,
-#lobby .pill,
-#players .actions .pill{
-  height: 40px !important;
-  min-height: 40px !important;
+#detail .detailBody .pill,
+#waiting .detailBody .pill,
+#lobby .detailBody .pill{
+  height: 38px !important;
+  min-height: 38px !important;
   padding: 8px 12px !important;
+  font-size: 12px !important;
   border-radius: 12px !important;
-  border: 1px solid rgba(255,255,255,.32) !important;
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04)) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.05)) !important;
+  border: 1px solid rgba(255,255,255,.35) !important;
   box-shadow:
-    0 6px 14px rgba(0,0,0,.18),
-    inset 0 1px 0 rgba(255,255,255,.42),
-    inset 0 -1px 0 rgba(255,255,255,.10) !important;
+    0 6px 16px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -1px 0 rgba(255,255,255,.12) !important;
+}
+#gamesPanel, #playersPanel, #setup .panel, #waiting .panel, #lobby .panel, #detail .panel{
+  width: min(720px, 92vw) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+#setup .detailWrap, #waiting .detailWrap, #lobby .detailWrap, #detail .detailWrap{
+  top: clamp(200px, 24vh, 320px) !important;
+  gap: 12px !important;
+}
+#setup .detailBody, #waiting .detailBody, #lobby .detailBody, #detail .detailBody{
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+  padding: 10px 12px 14px 12px !important;
+}
+.title{
+  font-size: clamp(20px, 2.8vh, 26px) !important;
+  letter-spacing: 2px !important;
+}
+#setupBody{
+  max-height: calc(100vh - 320px) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+.ng-setup-group{
+  display:grid;
+  gap:8px;
+}
+.ng-setup-row{
+  display:grid;
+  grid-template-columns: minmax(110px, 150px) 1fr;
+  align-items:center;
+  gap:10px;
+  padding:8px 10px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.20);
+  background: rgba(255,255,255,.05);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+}
+.ng-setup-label{
+  font-weight: 1000;
+  font-size: 13px;
+  letter-spacing: .03em;
+  opacity: .95;
+}
+.ng-setup-value, .ng-setup-row select, .ng-setup-row input{
+  width:100%;
+  min-height:36px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.06);
+  color: rgba(245,250,255,.95);
+  padding: 6px 10px;
+  box-sizing:border-box;
+}
+.ng-player-grid{
+  display:grid;
+  gap:8px;
+}
+.ng-note{
+  font-size: 12px;
+  opacity:.78;
+  margin: 0 0 8px 0;
+}
+#ngHeaderBar{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 </style>
 
 
-<style id="ng-v1495-touchpad-fix">
-/* Final landing touch target alignment fix */
-#landing #landingPads{
-  position:absolute !important;
-  left:50% !important;
-  transform:translateX(-50%) !important;
-  width:min(340px,82vw) !important;
-  max-width:min(340px,82vw) !important;
-  bottom:max(108px, calc(env(safe-area-inset-bottom) + 92px)) !important;
-  display:grid !important;
-  grid-template-columns:1fr !important;
-  gap:14px !important;
-  z-index:20 !important;
-  pointer-events:none !important;
-}
-
-#landing #emailPad,
-#landing #enterBtn{
-  width:100% !important;
-  margin:0 auto !important;
-  pointer-events:auto !important;
-  position:relative !important;
-  left:auto !important;
-  right:auto !important;
-  transform:none !important;
-}
-
-#landing #emailPad{
-  height:48px !important;
-  min-height:48px !important;
-}
-
-#landing #enterBtn{
-  height:52px !important;
-  min-height:52px !important;
-  display:block !important;
-}
-
-#landing #emailInput{
-  position:absolute !important;
-  inset:0 !important;
-  width:100% !important;
-  height:100% !important;
-  opacity:0.001 !important;
-  pointer-events:auto !important;
-  z-index:3 !important;
-}
-
-#landing #emailEcho{
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  position:absolute !important;
-  inset:0 !important;
-  transform:none !important;
-  z-index:2 !important;
-}
-
-#landing #enterBtn .enterText{
-  position:absolute !important;
-  left:50% !important;
-  top:50% !important;
-  transform:translate(-50%,-64%) !important;
-  width:100% !important;
-  text-align:center !important;
-  z-index:2 !important;
-}
-
-#landing #enterBtn .enterSub{
-  position:absolute !important;
-  left:50% !important;
-  top:50% !important;
-  transform:translate(-50%,34%) !important;
-  width:92% !important;
-  text-align:center !important;
-  z-index:2 !important;
-}
-
-/* Remove older strange offsets from hit areas */
-#landing #emailPad,
-#landing #enterBtn,
-#landing #emailEcho,
-#landing #statusLine{
-  translate:none !important;
-}
-</style>
-
+<!-- BUILD SANITY CHECK: THIS FILE IS v1493 -->
 </head>
 <body>
 
@@ -4444,7 +4401,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1496 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1497 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -4536,7 +4493,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1496";
+  window.ngBuild = "v1497";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -4561,7 +4518,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1496";
+window.ngBuild = "v1497";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -6575,7 +6532,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1496 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1497 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -7701,7 +7658,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1496";
+window.APP_VERSION = "v1497";
 (function(){
   try {
     // header version
@@ -7744,7 +7701,7 @@ window.APP_VERSION = "v1496";
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1494";
+    if (vb) vb.textContent = "v1493";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -7879,7 +7836,7 @@ function closeDetail(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1494";
+    if(vb) vb.textContent = "v1493";
 
     var gamesList = document.getElementById("gamesList");
     var playersList = document.getElementById("playersList");
@@ -8020,7 +7977,7 @@ document.addEventListener("click", function(e){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1494";
+    if(vb) vb.textContent = "v1493";
   }catch(e){
     console.error(e);
   }
@@ -8032,7 +7989,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1494";
+    if(vb) vb.textContent = "v1493";
 
     var email = document.getElementById("emailInput");
     var played = false;
@@ -8161,7 +8118,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function sync(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1494";
+      if(vb) vb.textContent = "v1493";
       renderPlayerDropdowns();
     }catch(e){
       console.error(e);
@@ -8259,7 +8216,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const v = document.createElement("div");
     v.id = "ngVersionMid";
     v.className = "screenVersionMid";
-    v.textContent = "v1494";
+    v.textContent = "v1493";
     players.appendChild(v);
   }
 
@@ -8414,7 +8371,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncAll(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1494";
+      if(vb) vb.textContent = "v1493";
       const sessionBtn = document.getElementById("sessionBtn");
       if(sessionBtn) sessionBtn.textContent = "Help Support Updates and Future Projects";
       ensureVersionLabel();
@@ -8536,9 +8493,9 @@ document.addEventListener("DOMContentLoaded", function(){
   function setVersion(){
     try {
       const v1 = document.querySelector("#ngHeaderBlock .ver");
-      if (v1) v1.textContent = "v1494";
+      if (v1) v1.textContent = "v1493";
       const v2 = document.getElementById("ngVersionBelow");
-      if (v2) v2.textContent = "v1494";
+      if (v2) v2.textContent = "v1493";
     } catch (_) {}
   }
 
@@ -8778,7 +8735,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1494";
+      if(v) v.textContent = "v1493";
     } catch(_ ) {}
   }
 
@@ -8897,7 +8854,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1494";
+      if(v) v.textContent = "v1493";
     } catch(_ ) {}
   }
 
@@ -9033,7 +8990,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1494";
+      if(v) v.textContent = "v1493";
     } catch(_ ) {}
   }
 
@@ -9108,7 +9065,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1494";
+      if(v) v.textContent = "v1493";
     } catch(_ ) {}
   }
 
@@ -9160,7 +9117,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       const v = document.getElementById("ngVersionBelow");
-      if (v) v.textContent = "v1494";
+      if (v) v.textContent = "v1493";
     } catch (_ ) {}
   }
 
@@ -9202,11 +9159,11 @@ document.addEventListener("DOMContentLoaded", function(){
     return newPlayer;
   }
 
-  function injectV1484Styles(){
+  function injectV1480Styles(){
     try {
-      if (document.getElementById("ngV1484Style")) return;
+      if (document.getElementById("ngV1480Style")) return;
       const style = document.createElement("style");
-      style.id = "ngV1484Style";
+      style.id = "ngV1480Style";
       style.textContent = `
         #setupBody, #playersList, .pickerBody{
           scrollbar-width: thin;
@@ -9713,13 +9670,13 @@ document.addEventListener("DOMContentLoaded", function(){
   document.addEventListener("DOMContentLoaded", function(){
 
     syncVersion();
-    injectV1484Styles();
+    injectV1480Styles();
     patchLandingEnter();
     updateDonateText();
   });
   window.addEventListener("load", function(){
     syncVersion();
-    injectV1484Styles();
+    injectV1480Styles();
     patchLandingEnter();
     updateDonateText();
   });
@@ -9729,609 +9686,567 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<style id="ng-v1494-unified-panels">
-:root{
-  --ng-unified-w: min(420px, calc(100vw - 34px));
-  --ng-unified-bg: rgba(255,255,255,.10);
-  --ng-unified-brd: rgba(255,255,255,.24);
-  --ng-unified-row: rgba(255,255,255,.07);
-  --ng-unified-row-brd: rgba(255,255,255,.14);
-  --ng-unified-btn: rgba(255,255,255,.10);
-}
-.detailWrap,
-.hub{
-  width:min(760px,94vw) !important;
-  max-width:760px !important;
-  left:50% !important;
-  transform:translateX(-50%) !important;
-  padding-left:12px !important;
-  padding-right:12px !important;
-  box-sizing:border-box !important;
-}
-.panel,
-.pickerCard,
-#detail .panel,
-#setup .panel,
-#waiting .panel,
-#lobby .panel{
-  width:var(--ng-unified-w) !important;
-  max-width:var(--ng-unified-w) !important;
-  margin:0 auto !important;
-  border-radius:16px !important;
-  background:rgba(255,255,255,.10) !important;
-  border:1px solid rgba(255,255,255,.24) !important;
-  backdrop-filter:blur(16px) saturate(120%) !important;
-  -webkit-backdrop-filter:blur(16px) saturate(120%) !important;
-  box-sizing:border-box !important;
-  overflow:hidden !important;
-}
-.sectionHead{padding:10px 12px 8px 12px !important;}
-.title{font-size:18px !important; letter-spacing:1.2px !important;}
-.detailBody, .list, .pickerBody{
-  padding:10px 10px 12px 10px !important;
-  box-sizing:border-box !important;
-}
-.statRow, .pickerRow, .itemLine{
-  width:100% !important;
-  max-width:100% !important;
-  min-height:42px !important;
-  padding:10px 12px !important;
-  margin:0 0 8px 0 !important;
-  border-radius:12px !important;
-  box-sizing:border-box !important;
-  background:rgba(255,255,255,.07) !important;
-  border:1px solid rgba(255,255,255,.14) !important;
-  overflow:hidden !important;
-}
-.pickerRow{
-  gap:10px !important;
-  align-items:center !important;
-}
-.pickerRow > div:first-child{
-  min-width:0 !important;
-  flex:1 1 auto !important;
-  overflow:hidden !important;
-}
-.pickerRow .nm{
-  font-size:14px !important;
-  line-height:1.1 !important;
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-}
-.pickerRow .em{display:none !important;}
-.pickerRow .pill,
-.statRow .pill,
-.itemLine .pill,
-.actions .pill,
-.pickerFoot .pill,
-.detailBody .pill{
-  min-width:74px !important;
-  max-width:96px !important;
-  height:32px !important;
-  padding:8px 10px !important;
-  font-size:11px !important;
-  border-radius:10px !important;
-  flex:0 0 auto !important;
-  box-sizing:border-box !important;
-}
-.itemLine{
-  flex-direction:row !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-  gap:10px !important;
-}
-.itemLine .leftStack{
-  min-width:0 !important;
-  flex:1 1 auto !important;
-  justify-content:flex-start !important;
-}
-.itemLine .actions{
-  width:auto !important;
-  flex:0 0 auto !important;
-  display:flex !important;
-  gap:8px !important;
-}
-.statRow{
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-  gap:10px !important;
-}
-.statRow > div:first-child{
-  min-width:0 !important;
-  flex:1 1 auto !important;
-  overflow:hidden !important;
-}
-.statLabel, .statHelp{
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-}
-.statVal{
-  flex:0 0 auto !important;
-  min-width:auto !important;
-  max-width:110px !important;
-  text-align:right !important;
-  font-size:12px !important;
-}
-#setup .detailBody, #waiting .detailBody, #detail .detailBody, #lobby .detailBody{
-  max-height:54vh !important;
-  overflow-y:auto !important;
-  -webkit-overflow-scrolling:touch !important;
-}
-#setup .detailWrap, #waiting .detailWrap, #detail .detailWrap, #lobby .detailWrap{
-  top:clamp(190px,24vh,320px) !important;
-}
-#players .hub{
-  top:clamp(235px,31vh,360px) !important;
-}
-.gameDropHead, .gameDropMenu, .gameDropRow{
-  width:100% !important;
-  max-width:100% !important;
-  box-sizing:border-box !important;
-}
-.gameDropMenu{
-  padding:8px 10px 10px !important;
-}
-.gameDropMenu .pill{
-  height:34px !important;
-  min-width:78px !important;
-  font-size:11px !important;
-}
-#openPlayerPicker.glassBtn{
-  min-height:42px !important;
-  height:42px !important;
-  padding:8px 12px !important;
-  border-radius:12px !important;
-  background:rgba(255,255,255,.08) !important;
-  border:1px solid rgba(255,255,255,.20) !important;
-}
-#openPlayerPicker.glassBtn .sub{
-  max-width:58% !important;
-  font-size:12px !important;
-}
-.pickerModal{padding:14px !important;}
-.pickerCard{width:min(390px, calc(100vw - 28px)) !important;}
-.controlsRow3>.pill, .controlsRow3>.cpBtn, .controlsRow3>button{
-  height:38px !important;
-  border-radius:12px !important;
-}
-button.pill, .pill{
-  background:rgba(255,255,255,.10) !important;
-  border:1px solid rgba(255,255,255,.22) !important;
-  color:rgba(245,250,255,.96) !important;
-}
-#lobbyInviteBtn, #setupInviteBtn{
-  background:rgba(43,108,255,.88) !important;
-  color:#fff !important;
-}
-#homeBtn, #backBtn, #waitingBackBtn, #setupHomeBtn, #setupResetBtn{
-  background:rgba(255,255,255,.10) !important;
-}
-</style>
-<script id="ng-v1494-wire-everything">
+<script id="ng-v1493-hardening-patch">
 (function(){
-  function safeShow(which){
-    try{ if(typeof show === "function") return show(which); }catch(_){}
-    document.querySelectorAll(".screen").forEach(el=>el.classList.remove("active"));
-    const el=document.getElementById(which);
-    if(el) el.classList.add("active");
-  }
-  function normEmail(v){ return String(v||"").trim().toLowerCase(); }
-  function currentEmail(){
-    return normEmail(window.currentEmail || window.currentUserEmail || window.userEmail || window.NG_CURRENT_EMAIL || (window.auth&&window.auth.currentUser&&window.auth.currentUser.email) || "");
-  }
-  function displayNameForEmail(email){
+  function qs(id){ return document.getElementById(id); }
+
+  function hardShow(screen){
     try{
-      if(typeof playerNameFromEmail === "function"){
-        const n = playerNameFromEmail(email);
-        if(n && !/@/.test(n)) return n;
-      }
+      if(typeof show === "function"){ show(screen); return true; }
     }catch(_){}
     try{
-      const players = window.PLAYERS || [];
-      const hit = players.find(p => normEmail(p.email) === normEmail(email));
-      if(hit && hit.name) return hit.name;
+      ["landing","players","setup","waiting","lobby","detail","leaderboard","randomizer"].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.classList.toggle("active", id === screen);
+      });
+      return true;
     }catch(_){}
-    const em = normEmail(email);
-    if(!em) return "Player";
-    const left = em.split("@")[0].replace(/[._-]+/g," ").trim();
-    return left.replace(/\b\w/g, s => s.toUpperCase());
+    return false;
   }
-  function selectedEmails(){
-    const out = [];
+
+  function hardWire(){
     try{
-      if(typeof getSelectedEmails === "function"){
-        return (getSelectedEmails()||[]).map(normEmail).filter(Boolean);
+      var style = document.getElementById("ng-v1493-style");
+      if(!style){
+        style = document.createElement("style");
+        style.id = "ng-v1493-style";
+        style.textContent = `
+          .detailWrap, .hub, .pickerCard{
+            width:min(520px,92vw) !important;
+            max-width:min(520px,92vw) !important;
+            margin-left:auto !important;
+            margin-right:auto !important;
+            left:50% !important;
+            transform:translateX(-50%) !important;
+            box-sizing:border-box !important;
+          }
+          .playerDropRow, .gameDropRow, .itemLine, .pickerRow, .statRow{
+            width:100% !important;
+            max-width:100% !important;
+            box-sizing:border-box !important;
+            overflow:hidden !important;
+          }
+          .playerDropHead, .gameDropHead, .pickerRow, .itemLine{
+            gap:8px !important;
+          }
+          .playerDropMenu, .gameDropMenu, .actions{
+            width:100% !important;
+            max-width:100% !important;
+            box-sizing:border-box !important;
+            display:grid !important;
+            grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+            gap:8px !important;
+          }
+          .playerDropMenu .pill, .gameDropMenu .pill, .actions .pill{
+            width:100% !important;
+            min-width:0 !important;
+            box-sizing:border-box !important;
+            padding:10px 8px !important;
+            font-size:12px !important;
+            overflow:hidden !important;
+            text-overflow:ellipsis !important;
+          }
+          .playerNameBtn, .gameNameBtn, .glassText, .nm{
+            display:block !important;
+            max-width:100% !important;
+            overflow:hidden !important;
+            text-overflow:ellipsis !important;
+            white-space:nowrap !important;
+          }
+          .pickerCard, .detailWrap > div:first-child, .hub > div{
+            background: rgba(255,255,255,.08) !important;
+            border: 1px solid rgba(255,255,255,.16) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border-radius: 16px !important;
+          }
+          #players .actions, #players .playerDropMenu, #players .gameDropMenu{
+            align-items:stretch !important;
+          }
+          #players .hub{
+            top: clamp(230px, 30vh, 340px) !important;
+          }
+          #setup .detailBody, #waiting .detailBody, #detail .detailBody, #leaderboard .detailBody{
+            max-height:58vh !important;
+            overflow-y:auto !important;
+            -webkit-overflow-scrolling:touch !important;
+          }
+        `;
+        document.head.appendChild(style);
       }
+
+      // Force player list to use names only
+      try{
+        if(typeof renderPlayers === "function"){ renderPlayers(); }
+        if(typeof renderGames === "function"){ renderGames(); }
+      }catch(_){}
+
+      // Button wiring
+      var bind = function(id, fn){
+        var el = qs(id);
+        if(!el) return;
+        el.onclick = null;
+        el.addEventListener("click", fn, true);
+      };
+
+      bind("setupHomeBtn", function(e){ e.preventDefault(); hardShow("players"); });
+      bind("homeBtn", function(e){ e.preventDefault(); hardShow("players"); });
+      bind("backBtn", function(e){ e.preventDefault(); hardShow("players"); });
+      bind("waitingBackBtn", function(e){ e.preventDefault(); hardShow("players"); });
+
+      bind("setupInviteBtn", function(e){
+        e.preventDefault();
+        try{
+          window.activeSession = window.activeSession || {};
+          window.activeSession.stage = "waiting";
+          var wb = qs("waitingBody");
+          if(wb){
+            var players = [];
+            try{
+              players = (window.selectedPlayers || []).slice();
+            }catch(_){}
+            var host = "";
+            try{ host = (typeof currentName === "function" ? currentName() : "") || ""; }catch(_){}
+            var names = [];
+            if(host) names.push(host);
+            players.forEach(function(p){
+              if(!p) return;
+              if(typeof p === "string"){ names.push(p); }
+              else if(p.name){ names.push(p.name); }
+            });
+            names = names.filter(Boolean);
+            if(!names.length){ names = ["Waiting for players"]; }
+            wb.innerHTML = names.map(function(n, i){
+              return '<div class="waitRow"><div class="waitLeft"><span class="statusIcon '+(i===0?'ok':'wait')+'">✓</span><span class="waitName">'+n+'</span></div><span class="waitMeta">'+(i===0?'HOST':'INVITED')+'</span></div>';
+            }).join("") + '<div id="waitingInviteStatus" class="inviteOk" style="margin-top:12px;text-align:center;font-weight:1000;">Waiting room ready.</div>';
+          }
+        }catch(_){}
+        hardShow("waiting");
+      });
+
+      bind("lobbyInviteBtn", function(e){
+        e.preventDefault();
+        hardShow("waiting");
+      });
+
+      // Ensure stats/history buttons route
+      document.querySelectorAll('[data-action="player_stats"]').forEach(function(btn){
+        btn.onclick = null;
+        btn.addEventListener("click", function(e){
+          e.preventDefault();
+          var email = btn.getAttribute("data-value") || "";
+          try{ if(typeof openPlayerStats === "function") openPlayerStats(email); else hardShow("detail"); }catch(_){}
+        }, true);
+      });
+      document.querySelectorAll('[data-action="player_history"]').forEach(function(btn){
+        btn.onclick = null;
+        btn.addEventListener("click", function(e){
+          e.preventDefault();
+          var email = btn.getAttribute("data-value") || "";
+          try{ if(typeof openPlayerHistory === "function") openPlayerHistory(email); else hardShow("detail"); }catch(_){}
+        }, true);
+      });
+      document.querySelectorAll('[data-action="game_history"]').forEach(function(btn){
+        btn.onclick = null;
+        btn.addEventListener("click", function(e){
+          e.preventDefault();
+          var game = btn.getAttribute("data-value") || "";
+          try{ if(typeof openGameHistory === "function") openGameHistory(game); else hardShow("detail"); }catch(_){}
+        }, true);
+      });
+      document.querySelectorAll('[data-action="enter_game"]').forEach(function(btn){
+        btn.onclick = null;
+        btn.addEventListener("click", function(e){
+          e.preventDefault();
+          var game = btn.getAttribute("data-value") || "";
+          try{ if(typeof enterGame === "function") enterGame(game); else hardShow("setup"); }catch(_){ hardShow("setup"); }
+        }, true);
+      });
+
+      // fix visible version labels
+      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1493"; });
     }catch(_){}
-    document.querySelectorAll('.pickerRow [aria-pressed="true"], .pickerRow .isSelected, .pickerRow .selected, .pickerRow input:checked').forEach(el=>{
-      const row = el.closest('.pickerRow');
-      const em = row && row.getAttribute('data-email');
-      if(em) out.push(normEmail(em));
-    });
-    try{
-      const st = window.activeSession && window.activeSession.setup;
-      if(Array.isArray(st && st.selectedEmails)) return st.selectedEmails.map(normEmail).filter(Boolean);
-      if(Array.isArray(st && st.playersEmail)) return st.playersEmail.map(normEmail).filter(Boolean);
-      if(Array.isArray(st && st.players)) return st.players.map(normEmail).filter(Boolean);
-    }catch(_){}
-    return Array.from(new Set(out));
   }
-  function selectedNames(){
-    let emails = selectedEmails();
-    if(!emails.length){
-      const me = currentEmail();
-      if(me) emails = [me];
-    }
-    return emails.map(displayNameForEmail);
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", hardWire, {once:true});
+  }else{
+    hardWire();
   }
-  function ensureSession(){
-    window.activeSession = window.activeSession || {};
-    window.activeSession.setup = window.activeSession.setup || {};
-    if(!window.activeSession.game && window.activeGameId) window.activeSession.game = window.activeGameId;
-    const me = currentEmail();
-    let emails = selectedEmails();
-    if(me && !emails.includes(me)) emails.unshift(me);
-    window.activeSession.setup.selectedEmails = emails;
-    window.activeSession.setup.players = emails.map(displayNameForEmail);
-    window.activeSession.invitedEmails = emails.filter(e => e !== me);
-    return window.activeSession;
-  }
-  function renderWaitingNow(){
-    const waitingBody = document.getElementById("waitingBody");
-    if(!waitingBody) return;
-    const session = ensureSession();
-    const game = session.game || session.gameId || "Game";
-    const emails = (session.setup && session.setup.selectedEmails) || [];
-    const rows = emails.map((em, idx)=>{
-      const isMe = normEmail(em) === currentEmail();
-      const name = displayNameForEmail(em);
-      return '<div class="waitRow"><div class="waitLeft"><span class="statusIcon ok">✓</span><div class="waitName">'+name+(isMe?' (Host)':'')+'</div></div><div class="waitMeta">'+(idx===0?'Ready':'Invited')+'</div></div>';
-    }).join("") || '<div style="opacity:.82;">Waiting for players…</div>';
-    waitingBody.innerHTML = '<div class="statScroll"><div class="statRow"><div><div class="statLabel">'+game+'</div><div class="statHelp">Waiting room</div></div><div class="statVal">'+emails.length+' Players</div></div>'+rows+'</div>';
-  }
-  function openWaitingRoom(){
-    try{ ensureSession(); }catch(_){}
-    try{ renderWaitingNow(); }catch(_){}
-    safeShow("waiting");
-  }
-  function openPlayerStatsSafe(email){
-    try{ if(typeof openPlayerStats === "function") return openPlayerStats(email); }catch(_){}
-    const player = displayNameForEmail(email);
-    const body = '<div class="statScroll"><div class="statRow"><div><div class="statLabel">'+player+'</div><div class="statHelp">Player stats</div></div><div class="statVal">Live</div></div></div>';
-    if(typeof openPanel === "function") openPanel("Player Stats", body);
-    else { const b=document.getElementById("detailBody"), t=document.getElementById("detailTitle"); if(t)t.textContent="Player Stats"; if(b)b.innerHTML=body; safeShow("detail"); }
-  }
-  function openPlayerHistorySafe(email){
-    try{ if(typeof openPlayerHistory === "function") return openPlayerHistory(email); }catch(_){}
-    const player = displayNameForEmail(email);
-    const body = '<div class="statScroll"><div class="statRow"><div><div class="statLabel">'+player+'</div><div class="statHelp">Player history</div></div><div class="statVal">Live</div></div></div>';
-    if(typeof openPanel === "function") openPanel("Player History", body);
-    else { const b=document.getElementById("detailBody"), t=document.getElementById("detailTitle"); if(t)t.textContent="Player History"; if(b)b.innerHTML=body; safeShow("detail"); }
-  }
-  function bindCoreButtons(){
-    const map = [
-      ["backBtn", ()=>safeShow("players")],
-      ["homeBtn", ()=>safeShow("players")],
-      ["waitingBackBtn", ()=>safeShow("players")],
-      ["setupHomeBtn", ()=>safeShow("players")],
-      ["setupResetBtn", ()=>safeShow("players")],
-      ["setupInviteBtn", openWaitingRoom],
-      ["lobbyInviteBtn", openWaitingRoom],
-      ["lobbyEndBtn", ()=>safeShow("players")]
-    ];
-    map.forEach(([id, fn])=>{
-      const el = document.getElementById(id);
-      if(!el) return;
-      el.onclick = function(e){ if(e){ e.preventDefault(); e.stopPropagation(); } return fn(); };
-      el.addEventListener("click", function(e){ if(e){ e.preventDefault(); e.stopPropagation(); } return fn(); }, true);
-    });
-  }
-  function bindActionDelegates(){
-    document.addEventListener("click", function(e){
-      const btn = e.target && e.target.closest ? e.target.closest("button") : null;
-      if(!btn) return;
-      const act = btn.getAttribute("data-action") || "";
-      const val = btn.getAttribute("data-value") || btn.getAttribute("data-player-stats") || btn.getAttribute("data-player-history") || "";
-      if(act === "player_stats" || btn.hasAttribute("data-player-stats")){
-        e.preventDefault(); e.stopPropagation(); openPlayerStatsSafe(val); return;
-      }
-      if(act === "player_history" || btn.hasAttribute("data-player-history")){
-        e.preventDefault(); e.stopPropagation(); openPlayerHistorySafe(val); return;
-      }
-      if(act === "game_history"){
-        e.preventDefault(); e.stopPropagation();
-        try{ if(typeof openGameHistory === "function") openGameHistory(val); }catch(_){}
-        return;
-      }
-      if(act === "game_rules"){
-        e.preventDefault(); e.stopPropagation();
-        try{ if(typeof openGameRules === "function") openGameRules(val); }catch(_){}
-        return;
-      }
-      if(act === "enter_game"){
-        e.preventDefault(); e.stopPropagation();
-        try{ if(typeof enterGame === "function") enterGame(val); }catch(_){}
-        return;
-      }
-    }, true);
-  }
-  function tidyVisibleNames(){
-    document.querySelectorAll('.pickerRow .em').forEach(el=>el.style.display='none');
-    document.querySelectorAll('.pickerRow .nm, .waitName, .statLabel').forEach(el=>{
-      const txt = (el.textContent||"").trim();
-      if(!txt) return;
-      if(txt.includes("@")) el.textContent = displayNameForEmail(txt);
-      el.textContent = el.textContent.replace(/\b([A-Z])[A-Z]+\./g, '$1.').replace(/\s+/g,' ').trim();
-    });
-  }
-  function watch(){
-    bindCoreButtons();
-    bindActionDelegates();
-    tidyVisibleNames();
-  }
-  document.addEventListener("DOMContentLoaded", watch);
-  window.addEventListener("load", watch);
-  const mo = new MutationObserver(()=>watch());
-  window.addEventListener("load", ()=>{ try{ mo.observe(document.body,{childList:true,subtree:true}); }catch(_){} });
+  window.addEventListener("load", hardWire, {once:true});
+  setTimeout(hardWire, 300);
 })();
 </script>
 
 
-<script id="ng-v1496-full-button-wiring">
+<script id="ng-v1493-unified-wiring">
 (function(){
-  function gameTitle(){
+  function qs(id){ return document.getElementById(id); }
+  function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
+  const screens = ["landing","players","setup","waiting","lobby","detail"];
+  let __ngCurrentScreen = "players";
+  let __ngCurrentGame = "";
+  let __ngSelectedPlayers = [];
+  let __ngPlayerCount = 1;
+
+  function showScreen(id){
+    screens.forEach(function(s){
+      var el = qs(s);
+      if(el) el.classList.toggle("active", s===id);
+    });
+    __ngCurrentScreen = id;
+  }
+
+  function peopleList(){
     try{
-      var t = document.querySelector(".setupGameTitle, .ngSetupTitle");
-      return (t && t.textContent || "").trim() || ((window.activeSession && activeSession.game) ? activeSession.game : "Game");
-    }catch(_e){ return (window.activeSession && activeSession.game) ? activeSession.game : "Game"; }
-  }
-
-  function selectedEmailsFromSetup(){
-    try{
-      var picks = Array.from(document.querySelectorAll(".pickPlayer:checked")).map(function(x){ return String(x.value||"").toLowerCase(); });
-      if(typeof _ensureCurrentInList === "function") picks = _ensureCurrentInList(picks);
-      return picks.filter(Boolean);
-    }catch(_e){ return []; }
-  }
-
-  function selectedCountFromSetup(){
-    try{
-      var el = document.getElementById("setupCount");
-      return Math.max(1, parseInt((el && el.value) || "1", 10) || 1);
-    }catch(_e){ return 1; }
-  }
-
-  function persistSession(){
-    try{ if(typeof ngLSSet === "function") ngLSSet("ng_active_session", JSON.stringify(activeSession||{})); }catch(_e){}
-  }
-
-  function buildSessionFromSetup(){
-    window.activeSession = window.activeSession || {};
-    activeSession.game = gameTitle();
-    activeSession.gameId = String(activeSession.game || "").toLowerCase().replace(/\s+/g,"_");
-    activeSession.setup = activeSession.setup || {};
-    activeSession.setup.count = selectedCountFromSetup();
-    activeSession.setup.emails = selectedEmailsFromSetup().slice(0, activeSession.setup.count);
-
-    var scoreSel = document.getElementById("setup01Start");
-    var ioSel = document.getElementById("setup01InOut");
-    if(scoreSel && scoreSel.value){
-      activeSession.setup.startScore = parseInt(scoreSel.value,10) || 501;
-    }
-    if(ioSel && ioSel.value){
-      activeSession.setup.inOut = ioSel.value;
-    }
-    persistSession();
-  }
-
-  function startPracticeFlow(){
-    buildSessionFromSetup();
-    activeSession.practice = true;
-    activeSession.started = true;
-    persistSession();
-    try{ if(typeof show === "function") show("lobby"); }catch(_e){}
-    try{ if(typeof startPracticeGame === "function") startPracticeGame(); }catch(_e){}
-    try{ if(typeof renderLobby === "function") renderLobby(); }catch(_e){}
-    try{
-      var b = document.getElementById("lobbyStartBtn");
-      if(b) b.style.display = "none";
-    }catch(_e){}
-  }
-
-  async function inviteFlow(){
-    buildSessionFromSetup();
-    activeSession.practice = false;
-    activeSession.started = false;
-    if(!window.activeSessionId && typeof newSessionId === "function"){
-      window.activeSessionId = newSessionId();
-    }
-    activeSession.id = window.activeSessionId || activeSession.id || ("sess_" + Date.now());
-    activeSession.host = String(window.currentEmail || activeSession.host || "").toLowerCase();
-    activeSession.createdAt = activeSession.createdAt || Date.now();
-    persistSession();
-
-    try{ if(typeof show === "function") show("waiting"); }catch(_e){}
-    try{ if(typeof renderWaitingRoom === "function") renderWaitingRoom(); }catch(_e){}
-    try{ if(typeof sendInvitesForSession === "function") await sendInvitesForSession(); }catch(_e){}
-    try{ if(typeof listenSessionInvites === "function") listenSessionInvites(); }catch(_e){}
-    try{ if(typeof watchSessionDoc === "function") watchSessionDoc(); }catch(_e){}
-  }
-
-  function leaderboardFlow(){
-    try{
-      if(typeof openDetail === "function"){
-        openDetail("LEADERBOARD", '<div id="leaderboardBody"></div>');
-        if(typeof renderLeaderboard === "function") renderLeaderboard();
-      }else if(typeof show === "function"){
-        show("detail");
-        var t=document.getElementById("detailTitle"), b=document.getElementById("detailBody");
-        if(t) t.textContent="LEADERBOARD";
-        if(b){ b.innerHTML='<div id="leaderboardBody"></div>'; }
-        if(typeof renderLeaderboard === "function") renderLeaderboard();
+      if(Array.isArray(window.lastPeople) && window.lastPeople.length){
+        return window.lastPeople.map(function(p){
+          return {
+            email: String((p && p.email) || "").toLowerCase(),
+            name: String((p && p.name) || (p && p.email) || "").trim()
+          };
+        }).filter(function(p){ return p.email || p.name; });
       }
-    }catch(_e){}
+    }catch(_){}
+    return qsa("#playersList .itemLine").map(function(line){
+      const name = (line.querySelector(".glassText") || {}).textContent || "Player";
+      return { email: name.toLowerCase().replace(/\s+/g,'.')+"@example.com", name: name.trim() };
+    });
   }
 
-  function rulesFlow(game){
-    try{
-      var html = "";
-      if(typeof GAME_RULES === "object" && GAME_RULES && GAME_RULES[game]){
-        html = GAME_RULES[game];
-        if(typeof html !== "string"){
-          try{ html = JSON.stringify(html, null, 2); }catch(_e){}
-          html = "<pre style='white-space:pre-wrap;'>" + html + "</pre>";
+  function detail(title, html){
+    var dt = qs("detailTitle"), db = qs("detailBody");
+    if(dt) dt.textContent = title;
+    if(db) db.innerHTML = html;
+    showScreen("detail");
+  }
+
+  function gameRulesHtml(game){
+    const map = {
+      "01": "<div class='ng-note'>Get to zero exactly.</div><div class='ng-setup-group'><div class='ng-setup-row'><div class='ng-setup-label'>Variation</div><div>301 / 501 / 701</div></div><div class='ng-setup-row'><div class='ng-setup-label'>In</div><div>Straight In or Double In</div></div><div class='ng-setup-row'><div class='ng-setup-label'>Out</div><div>Straight Out or Double Out</div></div></div>",
+      "Killer": "<div class='ng-note'>Everyone gets a target number.</div><div class='ng-setup-group'><div class='ng-setup-row'><div class='ng-setup-label'>Randomizer 1</div><div>Shooting Order</div></div><div class='ng-setup-row'><div class='ng-setup-label'>Randomizer 2</div><div>Assigned Number (1–20)</div></div></div>"
+    };
+    return map[game] || ("<div class='ng-note'>Rules for "+game+".</div>");
+  }
+
+  function historyHtml(label){
+    return "<div class='ng-note'>Newest at the top.</div><div class='ng-setup-group'><div class='ng-setup-row'><div class='ng-setup-label'>History</div><div>No entries yet for "+label+".</div></div></div>";
+  }
+
+  function statsHtml(name){
+    return "<div class='ng-note'>Player stats will appear here.</div><div class='ng-setup-group'><div class='ng-setup-row'><div class='ng-setup-label'>Player</div><div>"+name+"</div></div><div class='ng-setup-row'><div class='ng-setup-label'>Games</div><div>0</div></div><div class='ng-setup-row'><div class='ng-setup-label'>Wins</div><div>0</div></div></div>";
+  }
+
+  function renderSetup(game){
+    __ngCurrentGame = game || __ngCurrentGame || "01";
+    var body = qs("setupBody");
+    if(!body){ setTimeout(function(){ renderSetup(game); }, 50); return; }
+
+    var players = peopleList();
+    var options = players.map(function(p){
+      return '<option value="'+p.name.replace(/"/g,'&quot;')+'">'+p.name+'</option>';
+    }).join("");
+
+    var html = "";
+    html += "<div class='ng-note'>Compact setup for "+__ngCurrentGame+".</div>";
+    html += "<div class='ng-setup-group'>";
+    html += "<div class='ng-setup-row'><div class='ng-setup-label'>How Many Players</div><div><select id='ngPlayerCount'><option>1</option><option selected>2</option><option>3</option><option>4</option></select></div></div>";
+    html += "<div class='ng-setup-row'><div class='ng-setup-label'>Which Players</div><div class='ng-player-grid' id='ngPlayerGrid'><select class='ngPlayerSelect'>"+options+"</select><select class='ngPlayerSelect'>"+options+"</select></div></div>";
+
+    if(__ngCurrentGame === "01"){
+      html += "<div class='ng-setup-row'><div class='ng-setup-label'>Variation</div><div><select id='ng01Var'><option>301</option><option selected>501</option><option>701</option></select></div></div>";
+      html += "<div class='ng-setup-row'><div class='ng-setup-label'>In</div><div><select id='ng01In'><option selected>Straight In</option><option>Double In</option></select></div></div>";
+      html += "<div class='ng-setup-row'><div class='ng-setup-label'>Out</div><div><select id='ng01Out'><option>Straight Out</option><option selected>Double Out</option></select></div></div>";
+    }
+
+    if(__ngCurrentGame === "Killer"){
+      html += "<div class='ng-setup-row'><div class='ng-setup-label'>Randomizer 1</div><div>Shooting Order</div></div>";
+      html += "<div class='ng-setup-row'><div class='ng-setup-label'>Randomizer 2</div><div>Assigned Numbers 1–20</div></div>";
+    }
+
+    html += "</div>";
+    body.innerHTML = html;
+
+    var countSel = qs("ngPlayerCount");
+    if(countSel){
+      countSel.onchange = function(){
+        var n = parseInt(this.value || "1",10);
+        __ngPlayerCount = n;
+        var grid = qs("ngPlayerGrid");
+        if(!grid) return;
+        var rows = [];
+        for(var i=0;i<n;i++){
+          rows.push("<select class='ngPlayerSelect'>"+options+"</select>");
         }
-      }else{
-        html = "<div style='opacity:.82;'>Rules for <b>" + game + "</b> will appear here.</div>";
-      }
-      if(typeof openDetail === "function") openDetail(game + " Rules", html);
-    }catch(_e){}
+        grid.innerHTML = rows.join("");
+      };
+      countSel.dispatchEvent(new Event("change"));
+    }
+    showScreen("setup");
   }
 
-  function historyFlow(label){
-    try{
-      if(typeof openDetail === "function"){
-        openDetail(label + " History", "<div style='opacity:.82;'>No history recorded yet for <b>" + label + "</b>.</div>");
-      }
-    }catch(_e){}
+  function waitingRoom(){
+    var wb = qs("waitingBody");
+    if(!wb){ showScreen("waiting"); return; }
+    var names = qsa(".ngPlayerSelect").map(function(s){ return s.value; }).filter(Boolean);
+    if(!names.length){
+      names = [peopleList()[0]?.name || "Player 1", peopleList()[1]?.name || "Player 2"];
+    }
+    var html = "<div class='ng-note'>Everyone in the match sees this same room.</div>";
+    names.forEach(function(n){
+      html += "<div class='ng-setup-row'><div class='ng-setup-label'>"+n+"</div><div><span class='statusIcon ok'>✔</span> Ready</div></div>";
+    });
+    wb.innerHTML = html;
+    showScreen("waiting");
   }
 
-  function playerStatsFlow(name){
-    try{
-      if(typeof openDetail === "function"){
-        openDetail(name + " Stats", "<div style='opacity:.82;'>Stats page for <b>" + name + "</b>.</div>");
-      }
-    }catch(_e){}
-  }
-
-  function playerRemoveFlow(name){
-    try{
-      if(typeof openDetail === "function"){
-        openDetail("Remove Player", "<div style='opacity:.82;'>Remove flow for <b>" + name + "</b>.</div>");
-      }
-    }catch(_e){}
-  }
-
-  function gameEnterFlow(game){
-    try{
-      if(typeof createSessionForGame === "function") createSessionForGame(game);
-    }catch(_e){}
-    try{
-      window.activeSession = window.activeSession || {};
-      activeSession.game = game;
-      activeSession.gameId = String(game||"").toLowerCase().replace(/\s+/g,"_");
-      persistSession();
-    }catch(_e){}
-    try{ if(typeof show === "function") show("setup"); }catch(_e){}
-    try{ if(typeof renderSetupForGame === "function") renderSetupForGame(game); }catch(_e){}
-    setTimeout(bindButtons, 20);
-  }
-
-  async function lobbyStartFlow(){
-    try{
-      window.activeSession = window.activeSession || {};
-      activeSession.randomizer = activeSession.randomizer || {};
-      if(typeof randomizeOrder === "function") randomizeOrder();
-      if(String(activeSession.game||"").toLowerCase() === "killer" && typeof randomizeKillerNumbers === "function"){
-        randomizeKillerNumbers();
-        try{
-          activeSession.randomizer.killerNumbers = (activeSession.setup && activeSession.setup.killerNumbers) || activeSession.randomizer.killerNumbers;
-        }catch(_e){}
-      }
-      persistSession();
-      if(typeof renderLobby === "function") renderLobby();
-    }catch(_e){}
-    try{ if(typeof startSession === "function") await startSession(); }catch(_e){}
-  }
-
-  function bindId(id, fn){
-    try{
-      var el = document.getElementById(id);
-      if(!el) return;
-      var clean = el.cloneNode(true);
-      el.parentNode.replaceChild(clean, el);
-      clean.addEventListener("click", fn, true);
-      clean.addEventListener("touchend", function(e){ e.preventDefault(); fn(e); }, true);
-      clean.addEventListener("pointerup", function(e){ e.preventDefault(); fn(e); }, true);
-    }catch(_e){}
-  }
-
-  function bindButtons(){
-    bindId("leaderboardBtn", function(e){ e.preventDefault(); leaderboardFlow(); });
-    bindId("sessionBtn", function(e){ e.preventDefault(); try{ if(typeof openDetail==="function") openDetail("Session", "<div style='opacity:.82;'>Session / support area.</div>"); }catch(_e){} });
-
-    bindId("setupHomeBtn", function(e){ e.preventDefault(); try{ if(typeof show==="function") show("players"); }catch(_e){} });
-    bindId("setupResetBtn", function(e){ e.preventDefault(); try{ if(typeof renderSetupForGame==="function") renderSetupForGame(gameTitle()); }catch(_e){} setTimeout(bindButtons, 20); });
-    bindId("setupStartGameBtn", function(e){ e.preventDefault(); startPracticeFlow(); });
-    bindId("setupInviteBtn", function(e){ e.preventDefault(); inviteFlow(); });
-    bindId("waitingBackBtn", function(e){ e.preventDefault(); try{ if(typeof show==="function") show("setup"); }catch(_e){} });
-    bindId("lobbyInviteBtn", function(e){ e.preventDefault(); inviteFlow(); });
-    bindId("lobbyStartBtn", function(e){ e.preventDefault(); lobbyStartFlow(); });
-    bindId("lobbyEndBtn", function(e){ e.preventDefault(); try{ if(typeof show==="function") show("players"); }catch(_e){} });
-    bindId("backBtn", function(e){ e.preventDefault(); try{ if(typeof closeDetail==="function") closeDetail(); else if(typeof show==="function") show("players"); }catch(_e){} });
-    bindId("homeBtn", function(e){ e.preventDefault(); try{ if(typeof show==="function") show("players"); }catch(_e){} });
-  }
-
+  // delegate game/player row buttons
   document.addEventListener("click", function(e){
     var btn = e.target.closest("[data-action]");
     if(!btn) return;
     var action = btn.getAttribute("data-action");
     var value = btn.getAttribute("data-value") || "";
-    if(action === "enter_game"){ e.preventDefault(); gameEnterFlow(value); return; }
-    if(action === "game_rules"){ e.preventDefault(); rulesFlow(value); return; }
-    if(action === "game_history"){ e.preventDefault(); historyFlow(value); return; }
-    if(action === "player_stats"){ e.preventDefault(); playerStatsFlow(value); return; }
-    if(action === "player_history"){ e.preventDefault(); historyFlow(value); return; }
-    if(action === "player_remove"){ e.preventDefault(); playerRemoveFlow(value); return; }
-    if(action === "show_leaderboard"){ e.preventDefault(); leaderboardFlow(); return; }
-    if(action === "show_session"){ e.preventDefault(); try{ if(typeof openDetail==="function") openDetail("Session", "<div style='opacity:.82;'>Session / support area.</div>"); }catch(_e){} return; }
+
+    if(action === "enter_game"){ e.preventDefault(); renderSetup(value); return; }
+    if(action === "game_rules"){ e.preventDefault(); detail(value+" Rules", gameRulesHtml(value)); return; }
+    if(action === "game_history"){ e.preventDefault(); detail(value+" History", historyHtml(value)); return; }
+    if(action === "player_stats"){ e.preventDefault(); detail("Player Stats", statsHtml(value)); return; }
+    if(action === "player_history"){ e.preventDefault(); detail("Player History", historyHtml(value)); return; }
+    if(action === "player_remove"){ e.preventDefault(); detail("Remove Player", "<div class='ng-note'>Remove flow for "+value+".</div>"); return; }
+    if(action === "show_leaderboard"){ e.preventDefault(); detail("Leaderboard", "<div class='ng-note'>Leaderboard view.</div>"); return; }
+    if(action === "show_session"){ e.preventDefault(); detail("Support", "<div class='ng-note'>Support updates and future projects.</div>"); return; }
   }, true);
 
-  document.addEventListener("DOMContentLoaded", function(){
-    bindButtons();
-    setTimeout(bindButtons, 80);
-    setTimeout(bindButtons, 400);
-  });
+  function bind(id, fn){
+    var el = qs(id);
+    if(el) el.onclick = fn;
+  }
 
-  window.addEventListener("load", function(){
-    bindButtons();
-    setTimeout(bindButtons, 80);
-    setTimeout(bindButtons, 400);
-  });
+  bind("setupHomeBtn", function(){ showScreen("players"); });
+  bind("setupResetBtn", function(){ renderSetup(__ngCurrentGame); });
+  bind("setupInviteBtn", function(){ waitingRoom(); });
+  bind("setupStartGameBtn", function(){ detail("Game Start", "<div class='ng-note'>Game start flow for "+(__ngCurrentGame||"Game")+".</div>"); });
+  bind("waitingBackBtn", function(){ showScreen("setup"); });
+  bind("backBtn", function(){ showScreen("players"); });
+  bind("homeBtn", function(){ showScreen("players"); });
+  bind("leaderboardBtn", function(){ detail("Leaderboard", "<div class='ng-note'>Leaderboard view.</div>"); });
+  bind("lobbyInviteBtn", function(){ waitingRoom(); });
+  bind("lobbyStartBtn", function(){ detail("Randomizers", "<div class='ng-note'>Welcome Players → Randomizer → Shoot Well → Game.</div>"); });
+  bind("lobbyEndBtn", function(){ showScreen("players"); });
+
+  // expose helper
+  window.renderSetupForGame = renderSetup;
+  window.ngShowScreen = showScreen;
+})();
+</script>
+
+
+<script id="ng-v1497-stability-override">
+(function(){
+  function qs(sel){ return document.querySelector(sel); }
+  function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
+
+  function setOneVisibleVersion(){
+    var targets = qsa("#ngHeaderBar .ngVer, .ngVer, .buildBadge b, [data-version-label]");
+    targets.forEach(function(el){ try{ el.textContent = "v1497"; }catch(_e){} });
+  }
+
+  function forceShow(which){
+    try{
+      if(typeof window.show === "function") return window.show(which);
+    }catch(_e){}
+    try{
+      if(typeof window.ngShowScreen === "function") return window.ngShowScreen(which);
+    }catch(_e){}
+    try{
+      document.querySelectorAll(".screen").forEach(function(s){ s.classList.remove("active"); });
+      var id = which[0] === "#" ? which.slice(1) : which;
+      var el = document.getElementById(id);
+      if(el) el.classList.add("active");
+    }catch(_e){}
+  }
+
+  function playerNameFromEmail(email){
+    try{
+      email = String(email||"").trim().toLowerCase();
+      var src = (window.lastPeople||window.peopleList&&window.peopleList()||[]);
+      var hit = (src||[]).find(function(p){ return String((p&&p.email)||"").trim().toLowerCase() === email; });
+      if(hit){
+        return String(hit.name || [hit.firstName, hit.lastName].filter(Boolean).join(" ") || email.split("@")[0] || email).trim();
+      }
+    }catch(_e){}
+    return String(email||"").trim();
+  }
+
+  function doFastSignIn(){
+    var emailInput = document.getElementById("emailInput");
+    var statusLine = document.getElementById("statusLine");
+    var em = String((emailInput && emailInput.value) || localStorage.getItem("ng_saved_email") || "").trim().toLowerCase();
+    if(!em){
+      try{ if(statusLine) statusLine.textContent = "Enter an email."; }catch(_e){}
+      return false;
+    }
+    try{
+      window.currentEmail = em;
+      window.currentUserEmail = em;
+      window.userEmail = em;
+      localStorage.setItem("ng_saved_email", em);
+      var pn = document.getElementById("playerPageName");
+      if(pn) pn.textContent = playerNameFromEmail(em);
+      if(statusLine) statusLine.textContent = "Signed in.";
+    }catch(_e){}
+    try{ if(typeof window.renderPlayerDropdowns === "function") window.renderPlayerDropdowns(); }catch(_e){}
+    forceShow("players");
+    return false;
+  }
+
+  function bindLanding(){
+    var emailInput = document.getElementById("emailInput");
+    var enterBtn = document.getElementById("enterBtn");
+    if(emailInput){
+      try{
+        var saved = localStorage.getItem("ng_saved_email") || "";
+        if(!emailInput.value && saved) emailInput.value = saved;
+      }catch(_e){}
+      if(!emailInput.dataset.ng1497){
+        emailInput.dataset.ng1497 = "1";
+        emailInput.addEventListener("keydown", function(e){
+          if(e.key === "Enter"){ e.preventDefault(); doFastSignIn(); }
+        }, true);
+      }
+    }
+    if(enterBtn && !enterBtn.dataset.ng1497){
+      enterBtn.dataset.ng1497 = "1";
+      enterBtn.addEventListener("click", function(e){ e.preventDefault(); doFastSignIn(); }, true);
+      enterBtn.addEventListener("touchend", function(e){ e.preventDefault(); doFastSignIn(); }, true);
+    }
+  }
+
+  function enterGame(game){
+    try{
+      if(typeof window.renderSetupForGame === "function"){ window.renderSetupForGame(game); }
+      else if(typeof window.renderSetup === "function"){ window.renderSetup(game); }
+    }catch(_e){}
+    forceShow("setup");
+  }
+
+  function openRules(game){
+    try{
+      if(typeof window.openDetail === "function"){
+        if(typeof window.GAME_RULES === "object" && window.GAME_RULES && window.GAME_RULES[game]){
+          return window.openDetail(game + " Rules", window.GAME_RULES[game]);
+        }
+        return window.openDetail(game + " Rules", "<div class='ng-note'>Rules for " + game + ".</div>");
+      }
+    }catch(_e){}
+  }
+
+  function openHistory(label){
+    try{
+      if(typeof window.openDetail === "function"){
+        return window.openDetail(label + " History", "<div class='ng-note'>History for " + label + ".</div>");
+      }
+    }catch(_e){}
+  }
+
+  function setupInvite(){
+    try{
+      forceShow("waiting");
+      var wb = document.getElementById("waitingBody");
+      if(wb){
+        wb.innerHTML = "<div class='ng-note'>Waiting room</div>";
+      }
+    }catch(_e){}
+  }
+
+  function setupStart(){
+    try{
+      if(typeof window.openDetail === "function"){
+        window.openDetail("Game Start", "<div class='ng-note'>Game start flow for the selected game.</div>");
+      }else{
+        forceShow("lobby");
+      }
+    }catch(_e){}
+  }
+
+  function bindFixedButtons(){
+    var map = {
+      "setupHomeBtn": function(){ forceShow("players"); },
+      "setupResetBtn": function(){
+        try{
+          var t = document.querySelector(".setupGameTitle, .ngSetupTitle");
+          var g = (t && t.textContent || "").trim() || "01";
+          enterGame(g);
+        }catch(_e){ enterGame("01"); }
+      },
+      "setupInviteBtn": setupInvite,
+      "setupStartGameBtn": setupStart,
+      "waitingBackBtn": function(){ forceShow("setup"); },
+      "backBtn": function(){ forceShow("players"); },
+      "homeBtn": function(){ forceShow("players"); },
+      "leaderboardBtn": function(){
+        try{
+          if(typeof window.openDetail === "function") window.openDetail("Leaderboard", "<div class='ng-note'>Leaderboard view.</div>");
+        }catch(_e){}
+      },
+      "lobbyInviteBtn": setupInvite,
+      "lobbyStartBtn": function(){
+        try{
+          if(typeof window.openDetail === "function") window.openDetail("Randomizers", "<div class='ng-note'>Welcome Players → Randomizer → Shoot Well → Game.</div>");
+        }catch(_e){}
+      },
+      "lobbyEndBtn": function(){ forceShow("players"); }
+    };
+    Object.keys(map).forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      if(el.dataset.ng1497bound === "1") return;
+      el.dataset.ng1497bound = "1";
+      el.addEventListener("click", function(e){ e.preventDefault(); map[id](); }, true);
+      el.addEventListener("touchend", function(e){ e.preventDefault(); map[id](); }, true);
+    });
+  }
+
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest && e.target.closest("[data-action]");
+    if(!btn) return;
+    var action = btn.getAttribute("data-action");
+    var value = btn.getAttribute("data-value") || "";
+    if(action === "enter_game"){ e.preventDefault(); enterGame(value); }
+    if(action === "game_rules"){ e.preventDefault(); openRules(value); }
+    if(action === "game_history"){ e.preventDefault(); openHistory(value); }
+    if(action === "player_stats"){ e.preventDefault(); openHistory(value + " Stats"); }
+    if(action === "player_history"){ e.preventDefault(); openHistory(value); }
+    if(action === "player_remove"){ e.preventDefault(); openHistory("Remove " + value); }
+    if(action === "show_leaderboard"){ e.preventDefault(); var lb=document.getElementById("leaderboardBtn"); if(lb) lb.click(); }
+  }, true);
+
+  function init(){
+    setOneVisibleVersion();
+    bindLanding();
+    bindFixedButtons();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+  window.addEventListener("load", function(){ init(); setTimeout(init, 200); setTimeout(init, 800); });
 
   try{
-    var __origShow = window.show;
-    if(typeof __origShow === "function"){
+    var origShow = window.show;
+    if(typeof origShow === "function"){
       window.show = function(which){
-        var r = __origShow.apply(this, arguments);
-        setTimeout(bindButtons, 20);
+        var r = origShow.apply(this, arguments);
+        setTimeout(init, 50);
         return r;
       };
     }
   }catch(_e){}
-
-  try{
-    var __origRenderSetup = window.renderSetupForGame;
-    if(typeof __origRenderSetup === "function"){
-      window.renderSetupForGame = function(game){
-        var r = __origRenderSetup.apply(this, arguments);
-        setTimeout(bindButtons, 20);
-        return r;
-      };
-    }
-  }catch(_e){}
-
-  window.ngBindButtons = bindButtons;
 })();
 </script>
 
 </body>
 </html>
 
-/* --- v1494 remove confirm safety --- */
+/* --- v1493 remove confirm safety --- */
 window.ngConfirmRemove = function(name, fn){
   if(confirm("Remove player " + name + "?")){
     try{ fn && fn(); }catch(e){ console.error(e); }
