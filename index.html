@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1494</title>
-<!-- NIGHT GAMES v1494 -->
+<title>Night Games v1495</title>
+<!-- NIGHT GAMES v1495 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3541,7 +3541,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1479";window.NG_BUILD_LABEL="Night Games v1479";</script>
+<script>window.NG_BUILD_VERSION="1479";window.NG_BUILD_LABEL="Night Games v1495";</script>
 
 <style id="ng-v1479-header-style">
 #ngHeaderBlock{
@@ -4101,32 +4101,41 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1494-crystal-unified">
+<style id="ng-v1495-crystal-overrides">
 :root{
-  --ng-crystal-bg: rgba(255,255,255,0.055);
-  --ng-crystal-border: rgba(255,255,255,0.40);
-  --ng-crystal-shadow: 0 12px 28px rgba(0,0,0,.22);
-  --ng-crystal-radius: 18px;
+  --ngPanelW: min(92vw, 720px);
+}
+#players .hub,
+#setup .detailWrap,
+#waiting .detailWrap,
+#detail .detailWrap,
+#lobby .detailWrap{
+  width: var(--ngPanelW) !important;
+  max-width: 720px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 .panel,
-.pickerCard,
-#detail .panel,
+#gamesPanel,
+#playersPanel,
 #setup .panel,
 #waiting .panel,
+#detail .panel,
 #lobby .panel,
-#players .panel{
+.pickerCard{
   position: relative !important;
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.035)) !important;
-  border: 1px solid var(--ng-crystal-border) !important;
-  border-radius: var(--ng-crystal-radius) !important;
+  width: 100% !important;
+  max-width: none !important;
+  border-radius: 18px !important;
+  background: rgba(255,255,255,.035) !important;
+  border: 1px solid rgba(255,255,255,.34) !important;
   box-shadow:
-    var(--ng-crystal-shadow),
-    inset 0 1px 0 rgba(255,255,255,.55),
-    inset 0 -1px 0 rgba(255,255,255,.16),
-    inset 1px 0 0 rgba(255,255,255,.12),
-    inset -1px 0 0 rgba(255,255,255,.12) !important;
-  backdrop-filter: blur(10px) saturate(115%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(115%) !important;
+    0 10px 24px rgba(0,0,0,.22),
+    inset 0 1px 0 rgba(255,255,255,.48),
+    inset 0 -1px 0 rgba(255,255,255,.14),
+    0 0 0 1px rgba(255,255,255,.06) !important;
+  backdrop-filter: blur(10px) saturate(118%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(118%) !important;
   overflow: hidden !important;
 }
 .panel::before,
@@ -4136,239 +4145,101 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   inset:0;
   border-radius:inherit;
   background:
-    linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.06) 35%, rgba(255,255,255,.01) 80%),
-    linear-gradient(135deg, rgba(255,255,255,.18), transparent 28%, transparent 70%, rgba(255,255,255,.06));
+    linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.05) 28%, rgba(255,255,255,.01) 72%),
+    radial-gradient(120% 80% at 0% 0%, rgba(0,210,255,.22), transparent 42%),
+    radial-gradient(120% 80% at 100% 0%, rgba(255,170,70,.18), transparent 42%);
   pointer-events:none;
 }
-#players .hub{
-  top: clamp(235px, 31vh, 350px) !important;
-  gap: 12px !important;
+#setup .detailWrap{
+  top: clamp(190px, 24vh, 310px) !important;
+}
+#setupBody{
+  max-height: calc(100vh - 310px) !important;
+  overflow-y: auto !important;
+  padding-right: 6px !important;
+}
+.title{
+  letter-spacing: 2px !important;
 }
 .itemLine{
-  display:flex !important;
-  flex-direction: row !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-  gap:10px !important;
-  padding: 10px 6px !important;
-}
-.leftStack{ width:auto !important; justify-content:flex-start !important; }
-.actions{
-  width:auto !important;
-  flex: 0 0 auto !important;
-  display:flex !important;
-  gap:8px !important;
+  padding: 9px 6px !important;
+  gap: 10px !important;
 }
 .actions .pill,
 .controlsRow3 .pill,
-#detail .detailBody .pill,
-#waiting .detailBody .pill,
-#lobby .detailBody .pill{
+#detail .pill,
+#waiting .pill,
+#lobby .pill{
   height: 38px !important;
   min-height: 38px !important;
   padding: 8px 12px !important;
-  font-size: 12px !important;
   border-radius: 12px !important;
-  background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.05)) !important;
-  border: 1px solid rgba(255,255,255,.35) !important;
+  border: 1px solid rgba(255,255,255,.34) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.04)) !important;
   box-shadow:
-    0 6px 16px rgba(0,0,0,.18),
-    inset 0 1px 0 rgba(255,255,255,.55),
-    inset 0 -1px 0 rgba(255,255,255,.12) !important;
+    0 6px 14px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.46),
+    inset 0 -1px 0 rgba(255,255,255,.10) !important;
 }
-#gamesPanel, #playersPanel, #setup .panel, #waiting .panel, #lobby .panel, #detail .panel{
-  width: min(720px, 92vw) !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+.fieldLabel{ display:none !important; }
+.glassSelect, .glassBtn{
+  border-radius: 12px !important;
+  border: 1px solid rgba(255,255,255,.25) !important;
+  background: rgba(255,255,255,.055) !important;
+  color: rgba(245,250,255,.96) !important;
 }
-#setup .detailWrap, #waiting .detailWrap, #lobby .detailWrap, #detail .detailWrap{
-  top: clamp(200px, 24vh, 320px) !important;
-  gap: 12px !important;
+.ng-setup-game{
+  font-size: 28px;
+  font-weight: 1200;
+  letter-spacing: .04em;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  color: rgba(245,250,255,.96);
+  text-shadow: 0 2px 14px rgba(0,0,0,.45);
 }
-#setup .detailBody, #waiting .detailBody, #lobby .detailBody, #detail .detailBody{
-  font-size: 15px !important;
-  line-height: 1.35 !important;
-  padding: 10px 12px 14px 12px !important;
-}
-.title{
-  font-size: clamp(20px, 2.8vh, 26px) !important;
-  letter-spacing: 2px !important;
-}
-#setupBody{
-  max-height: calc(100vh - 320px) !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
+.ng-setup-note{
+  font-size: 12px;
+  opacity: .82;
+  margin: 0 0 10px 0;
 }
 .ng-setup-group{
-  display:grid;
-  gap:8px;
+  display: grid;
+  gap: 8px;
 }
 .ng-setup-row{
-  display:grid;
-  grid-template-columns: minmax(110px, 150px) 1fr;
-  align-items:center;
-  gap:10px;
-  padding:8px 10px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.20);
-  background: rgba(255,255,255,.05);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.18);
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.04);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
 }
 .ng-setup-label{
   font-weight: 1000;
   font-size: 13px;
-  letter-spacing: .03em;
-  opacity: .95;
+  letter-spacing: .02em;
+  color: rgba(245,250,255,.96);
 }
-.ng-setup-value, .ng-setup-row select, .ng-setup-row input{
-  width:100%;
-  min-height:36px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,.25);
-  background: rgba(255,255,255,.06);
-  color: rgba(245,250,255,.95);
-  padding: 6px 10px;
-  box-sizing:border-box;
+.ng-setup-input{ min-width: 0; }
+.ng-player-row{ margin-bottom: 6px; }
+.ng-player-row:last-child{ margin-bottom: 0; }
+.ng-setup-select,
+.ng-setup-static{
+  width: 100%;
+  min-height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.055);
+  color: rgba(245,250,255,.96);
+  box-sizing: border-box;
+  padding: 7px 10px;
 }
-.ng-player-grid{
-  display:grid;
-  gap:8px;
-}
-.ng-note{
-  font-size: 12px;
-  opacity:.78;
-  margin: 0 0 8px 0;
-}
-#ngHeaderBar{
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-</style>
-
-
-<!-- BUILD SANITY CHECK: THIS FILE IS v1494 -->
-
-<style id="ng-v1494-force">
-:root{
-  --ngGlassBorder: rgba(255,255,255,.38);
-  --ngGlassFill: rgba(255,255,255,.055);
-}
-#players .panel,
-#setup .panel,
-#waiting .panel,
-#detail .panel,
-#leaderboard .panel,
-#lobby .panel,
-.pickerCard{
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.03)) !important;
-  border: 1px solid var(--ngGlassBorder) !important;
-  border-radius: 18px !important;
-  box-shadow:
-    0 12px 28px rgba(0,0,0,.22),
-    inset 0 1px 0 rgba(255,255,255,.55),
-    inset 0 -1px 0 rgba(255,255,255,.12),
-    inset 1px 0 0 rgba(255,255,255,.10),
-    inset -1px 0 0 rgba(255,255,255,.10) !important;
-  backdrop-filter: blur(10px) saturate(115%) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(115%) !important;
-}
-#players .panel::before,
-#setup .panel::before,
-#waiting .panel::before,
-#detail .panel::before,
-.pickerCard::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  pointer-events:none;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.04) 40%, rgba(255,255,255,0) 100%),
-    linear-gradient(135deg, rgba(80,180,255,.12), transparent 28%, transparent 72%, rgba(255,170,90,.10));
-}
-#players .panel, #setup .panel, #waiting .panel, #detail .panel{
-  width: min(720px, 92vw) !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  overflow: hidden !important;
-}
-#players .hub{ gap: 12px !important; }
-#players .itemLine{
-  flex-direction: row !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-  gap:10px !important;
-  padding: 10px 8px !important;
-}
-#players .leftStack{ width:auto !important; justify-content:flex-start !important; }
-#players .actions{ width:auto !important; }
-#players .actions .pill{
-  height: 36px !important;
-  padding: 8px 12px !important;
-  border-radius: 12px !important;
-  font-size: 12px !important;
-}
-#setup .detailWrap, #waiting .detailWrap, #detail .detailWrap, #lobby .detailWrap{
-  top: clamp(195px, 24vh, 315px) !important;
-}
-#setup .detailBody, #waiting .detailBody, #detail .detailBody{
-  padding: 10px 12px 14px !important;
-  overflow-y:auto !important;
-  -webkit-overflow-scrolling: touch !important;
-}
-#setupBody .setupGameTitle{
-  font-size: 26px !important;
-  margin-bottom: 6px !important;
-}
-#setupBody > .fieldLabel{ display:none !important; }
-#setupBody .glassSelect, #setupBody .glassBtn{
-  width: 100% !important;
-  min-height: 38px !important;
-  border-radius: 11px !important;
-  background: rgba(255,255,255,.06) !important;
-  border: 1px solid rgba(255,255,255,.24) !important;
-  color: rgba(245,250,255,.95) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.18) !important;
-}
-#setupBody .glassBtn{ justify-content:space-between !important; padding: 8px 10px !important; }
-.ngSetupCompact{
-  display: grid !important;
-  gap: 8px !important;
-  margin-top: 10px !important;
-}
-.ngSetupRow{
-  display:grid !important;
-  grid-template-columns: minmax(110px, 150px) 1fr !important;
-  gap:10px !important;
-  align-items:center !important;
-  padding:8px 10px !important;
-  border-radius: 14px !important;
-  background: rgba(255,255,255,.045) !important;
-  border: 1px solid rgba(255,255,255,.20) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.14) !important;
-}
-.ngSetupLabel{
-  font-size: 13px !important;
-  font-weight: 1000 !important;
-  letter-spacing: .03em !important;
-  opacity:.95 !important;
-}
-.ngSplit2{
-  display:grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap:8px !important;
-}
-.ngHiddenOriginal{ display:none !important; }
-#setup .controlsRow3 .pill{
-  height:38px !important;
-  border-radius:12px !important;
-  padding:8px 10px !important;
-  font-size:12px !important;
-}
-#waiting .statusIcon.ok, #waiting .statusIcon.wait{
-  color: rgba(90,255,170,.98) !important;
-  text-shadow: 0 0 12px rgba(90,255,170,.45), 0 0 22px rgba(90,255,170,.22) !important;
+.ng-setup-static{
+  display:flex;
+  align-items:center;
 }
 </style>
 
@@ -4525,7 +4396,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1494 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1495 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -4617,7 +4488,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1494";
+  window.ngBuild = "v1495";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -4642,7 +4513,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1494";
+window.ngBuild = "v1495";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -5689,7 +5560,7 @@ function persistEmailAfterLogin(email){
         <div class="itemLine">
           <div class="leftStack"><div class="gameLabelWrap">${g==="ATW" ? `<span class="glassText">ATW</span><span class="emojiGlobe">🌎</span>` : `<span class="glassText">${g}</span>`}</div></div>
           <div class="actions">
-            <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
+            <button class="pill" data-action="enter_game" data-value="${g}">Setup</button>
             <button class="pill" data-action="game_rules" data-value="${g}">Rules</button>
             <button class="pill" data-action="game_history" data-value="${g}">History</button>
 
@@ -6200,432 +6071,115 @@ function watchSessionDoc(){
   GAME SETUP  [SECTION_SETUP]
 ================================================================================
 */
+
 function renderSetupForGame(game){
       if(!game) return;
-      if(typeof setupBody === 'undefined' || !setupBody){  return; }
+      if(typeof setupBody === 'undefined' || !setupBody){
+        setTimeout(function(){ renderSetupForGame(game); }, 50);
+        return;
+      }
 
       const people = (lastPeople||[]).slice();
-      // ensure current user exists as a selectable option
       const me = (currentEmail||"").toLowerCase();
       if(me && !people.some(p => (p.email||"").toLowerCase()===me)){
         people.unshift({ email: me, name: (me.split("@")[0]||"Me") });
       }
 
-      const opts = people.map(p=>{
+      const playerOptionHtml = people.map(p=>{
         const em = (p.email||"").toLowerCase();
-        const nm = p.name || (em.split("@")[0]||em);
-        return `<label class="chip" style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.05); margin:0 0 10px 0;">
-          <input type="checkbox" class="pickPlayer" value="${em}" style="transform:scale(1.1)"/>
-          <span style="flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:900;">${nm}</span>
-        </label>`;
+        const nm = String(p.name || (em.split("@")[0]||em) || "Player").trim();
+        return `<option value="${em}">${nm}</option>`;
       }).join("");
 
-            const needsDartsOpts = (game === "01");
-      const scoreId = "setup01Start";
-      const inOutId  = "setup01InOut";
-      const scoreLabel = "Which Version of 01";
+      const needs01 = (game === "01");
+      const needsKiller = (game === "Killer");
 
-setupBody.innerHTML = `
-        <div class="setupGameTitle">${game}</div>
-        <div style="opacity:.78; margin-bottom:14px;">Choose how many players are in the game, then pick the registered players.</div>
+      setupBody.innerHTML = `
+        <div class="ng-setup-game">${game}</div>
+        <div class="ng-setup-note">Compact setup. Same system throughout the whole app.</div>
 
-
-        <div class="fieldLabel">Number of Players</div>
-        <select id="setupCount" class="glassSelect">
-          ${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}">${n}</option>`).join("")}
-        </select>
-
-        <div class="fieldLabel" style="margin-top:14px;">Which Players</div>
-        <button type="button" id="openPlayerPicker" class="glassBtn">
-          <span>Which Players</span>
-          <span class="sub" id="playerPickSummary">1 player selected</span>
-        </button>
-        <div id="setupPlayersWrapHolder" style="display:none;">
-          <div id="setupPlayersWrap" style="max-height:280px; overflow:auto; padding-right:4px;">
-            ${opts}
-          </div>
-
-
-</div>
-
-${ needsDartsOpts ? `
-<div class="fieldLabel" style="margin-top:14px;">${scoreLabel}</div>
-<select id="${scoreId}" class="glassSelect">
-  <option value="">Select 01 version</option>
-  <option value="301">301</option>
-  <option value="501">501</option>
-  <option value="701">701</option>
-</select>
-
-<div id="setup01InOutWrap" style="display:none;">
-<div class="fieldLabel" style="margin-top:14px;">01 In / Out</div>
-<select id="${inOutId}" class="glassSelect">
-  <option value="">Select In / Out</option>
-  <option value="DI_DO">Double In / Double Out</option>
-  <option value="SI_SO">Single In / Single Out</option>
-  <option value="SI_DO">Single In / Double Out</option>
-</select>
-</div>
-` : `` }
-
-        <!-- v768 player picker modal -->
-        <div class="pickerModal" id="playerPickerModal" aria-hidden="true">
-          <div class="pickerCard">
-            <div class="pickerHead">
-              <div>
-                <div class="t">Which Players</div>
-                <div class="c" id="pickerCountLabel">1 / 1 selected</div>
-              </div>
-              <button class="pill" id="pickerCloseTop" type="button" style="padding:10px 14px;">Close</button>
-            </div>
-            <div class="pickerBody" id="pickerBody"></div>
-            <div class="pickerFoot">
-              <button class="pill" id="pickerCancel" type="button" style="opacity:.85;">Cancel</button>
-              <button class="pill" id="pickerDone" type="button">Done</button>
+        <div class="ng-setup-group">
+          <div class="ng-setup-row">
+            <div class="ng-setup-label">How Many Players</div>
+            <div class="ng-setup-input">
+              <select id="setupCount" class="ng-setup-select">
+                ${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}" ${n===1 ? "selected" : ""}>${n}</option>`).join("")}
+              </select>
             </div>
           </div>
-        </div>
 
-        <div style="display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;">
-<button class="pill" id="setupCancelBtn" type="button" style="opacity:.85;">Cancel</button>
+          <div class="ng-setup-row">
+            <div class="ng-setup-label">Which Players</div>
+            <div class="ng-setup-input" id="ngPlayerRows"></div>
+          </div>
+
+          ${needs01 ? `
+          <div class="ng-setup-row">
+            <div class="ng-setup-label">Variation</div>
+            <div class="ng-setup-input">
+              <select id="setup01Var" class="ng-setup-select">
+                <option value="301">301</option>
+                <option value="501" selected>501</option>
+                <option value="701">701</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ng-setup-row">
+            <div class="ng-setup-label">In</div>
+            <div class="ng-setup-input">
+              <select id="setup01In" class="ng-setup-select">
+                <option value="SI" selected>Straight In</option>
+                <option value="DI">Double In</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ng-setup-row">
+            <div class="ng-setup-label">Out</div>
+            <div class="ng-setup-input">
+              <select id="setup01Out" class="ng-setup-select">
+                <option value="SO">Straight Out</option>
+                <option value="DO" selected>Double Out</option>
+              </select>
+            </div>
+          </div>
+          ` : ``}
+
+          ${needsKiller ? `
+          <div class="ng-setup-row">
+            <div class="ng-setup-label">Randomizer 1</div>
+            <div class="ng-setup-input"><div class="ng-setup-static">Shooting Order</div></div>
+          </div>
+          <div class="ng-setup-row">
+            <div class="ng-setup-label">Randomizer 2</div>
+            <div class="ng-setup-input"><div class="ng-setup-static">Assigned Number (1–20)</div></div>
+          </div>
+          ` : ``}
         </div>
       `;
 
       const countSel = document.getElementById("setupCount");
-      const startInlineBtn = document.getElementById("setupStartInlineBtn");
-      const startCtrlBtn = document.getElementById("setupStartBtn");
-      const cancelBtn = document.getElementById("setupCancelBtn");
-      // : 01/301 setup defaults
-      const setupScoreSel = document.getElementById(scoreId);
-      const setupInOutSel = document.getElementById(inOutId);
-      if(needsDartsOpts){
-        if(setupScoreSel && !setupScoreSel.value) setupScoreSel.value = "";
-        if(setupInOutSel && !setupInOutSel.value) setupInOutSel.value = "";
+      const playerRows = document.getElementById("ngPlayerRows");
+
+      function rebuildPlayerRows(){
+        if(!playerRows || !countSel) return;
+        const count = Math.max(1, parseInt(countSel.value || "1", 10));
+        playerRows.innerHTML = Array.from({length: count}).map((_,i)=>`
+          <div class="ng-player-row">
+            <select class="ng-setup-select ng-player-select" data-slot="${i}">
+              ${playerOptionHtml}
+            </select>
+          </div>
+        `).join("");
       }
 
-// defaults
-      countSel.value = "1";
-      const checks = Array.from(document.querySelectorAll(".pickPlayer"));
-      // v768 picker wiring (dropdown-style player selector)
-      const openBtn = document.getElementById("openPlayerPicker");
-      const modal = document.getElementById("playerPickerModal");
-      const body = document.getElementById("pickerBody");
-      const doneBtn = document.getElementById("pickerDone");
-      const pickerCancelBtn = document.getElementById("pickerCancel");
-      const closeTop = document.getElementById("pickerCloseTop");
-      const summary = document.getElementById("playerPickSummary");
-      const countLabel = document.getElementById("pickerCountLabel");
-
-      let snapshotSelected = new Set();
-
-      function getSelectedEmails(){
-        return checks.filter(c=>c.checked).map(c=>c.value);
+      if(countSel){
+        countSel.addEventListener("change", rebuildPlayerRows);
       }
-      function setSelectedEmails(set){
-        checks.forEach(c=>{ c.checked = set.has(c.value); });
-      }
-      function refreshSummary(){
-        const sel = getSelectedEmails();
-        summary.textContent = `${sel.length} player${sel.length===1?"":"s"} selected`;
-        try{
-          const chosenNames = checks.filter(c=>c.checked).map(c=>{
-            const label = c.closest("label");
-            return (label ? ((label.querySelector("span")?.textContent||"").trim()) : c.value) || c.value;
-          });
-          if(chosenNames.length){
-            summary.textContent = `${sel.length} player${sel.length===1?"":"s"}: ${chosenNames.join(", ")}`;
-          }
-        }catch(_e){}
-        try{ updateSetupControlPanel(); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-      }
-      function refreshCountLabel(want){
-        const sel = getSelectedEmails().length;
-        countLabel.textContent = `${sel} / ${want} selected`;
-      }
-      function sync01OptionVisibility(){
-        try{
-          const wrap = document.getElementById("setup01InOutWrap");
-          if(!wrap || !setupScoreSel) return;
-          wrap.style.display = setupScoreSel.value ? "block" : "none";
-          if(!setupScoreSel.value && setupInOutSel) setupInOutSel.value = "";
-        }catch(_e){}
-      }
-      function rebuildPicker(want){
-        body.innerHTML = "";
-        const sel = new Set(getSelectedEmails());
-        checks.forEach(c=>{
-          const email = c.value;
-          const label = c.closest("label");
-          const nm = label ? ((label.querySelector("span")?.textContent||"").trim() || email) : email;
-          const row = document.createElement("div");
-          row.className = "pickerRow";
-          row.innerHTML = `<div><div class="nm">${nm}</div><div class="em">${email}</div></div>`;
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "pill";
-          btn.style.padding = "10px 12px";
-          btn.textContent = sel.has(email) ? "Selected" : "Select";
-          btn.addEventListener("click", ()=>{
-            const now = new Set(getSelectedEmails());
-            const isOn = now.has(email);
-            if(isOn){
-              now.delete(email);
-            }else{
-              if(now.size >= want){
-                try{ ping && ping(); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-                return;
-              }
-              now.add(email);
-            }
-            setSelectedEmails(now);
-            enforce();
-            rebuildPicker(want);
-          });
-          row.appendChild(btn);
-          body.appendChild(row);
-        });
-        refreshCountLabel(want);
-        // : invite button visibility
-        try{ const ib=document.getElementById('lobbyInviteBtn'); if(ib) ib.style.display = (want>=2?'inline-flex':'none'); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-        refreshSummary();
-      }
-      function openPicker(want){
-        snapshotSelected = new Set(getSelectedEmails());
-        rebuildPicker(want);
-        modal.style.display = "flex";
-        modal.setAttribute("aria-hidden","false");
-      }
-      function closePicker(){
-        modal.style.display = "none";
-        modal.setAttribute("aria-hidden","true");
-      }
-      if(openBtn){
-        openBtn.addEventListener("click", ()=>{
-          const want = parseInt((document.getElementById("setupCount")?.value)||"1",10) || 1;
-          openPicker(want);
-        });
-      }
-      [pickerCancelBtn, closeTop].forEach(b=> b && b.addEventListener("click", ()=>{
-        setSelectedEmails(snapshotSelected);
-        enforce();
-        refreshSummary();
-        closePicker();
-      }));
-      if(doneBtn){
-        doneBtn.addEventListener("click", ()=>{
-          closePicker();
-          refreshSummary();
-        });
-      }
-      if(modal){
-        modal.addEventListener("click", (e)=>{
-          if(e.target === modal){
-            setSelectedEmails(snapshotSelected);
-            enforce();
-            refreshSummary();
-            closePicker();
-          }
-        });
-      }
-      refreshSummary();
-      sync01OptionVisibility();
-      if(setupScoreSel){ setupScoreSel.addEventListener("change", sync01OptionVisibility); }
+      rebuildPlayerRows();
+    }
 
-      // default select current user
-      checks.forEach(c=>{ if(c.value === me) c.checked = true; });
-      enforce();
-      refreshSummary();
-      refreshCountLabel(parseInt(countSel.value||"1",10) || 1);
-
-
-// : dynamic header height -> CSS var so panels never overlap logo
-function setHeaderHeightVar(){
-  try{
-    const header = document.getElementById("header") || document.querySelector(".header") || document.querySelector("#topHeader");
-    if(!header) return;
-    const h = Math.max(200, Math.round(header.getBoundingClientRect().height));
-    document.documentElement.style.setProperty("--headerH", h+"px");
-  }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-}
-window.addEventListener("resize", ()=>{ try{ setHeaderHeightVar(); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-} });
-
-function enforce(){
-        const want = parseInt(countSel.value||"1",10) || 1;
-        const picked = checks.filter(c=>c.checked).map(c=>c.value);
-        // always keep me selected
-        const fixed = _ensureCurrentInList(picked);
-        // trim to count
-        const trimmed = fixed.slice(0, want);
-        checks.forEach(c=>{ c.checked = trimmed.includes(c.value); });
-      }
-
-      countSel.addEventListener("change", ()=>{
-        enforce();
-        const want = parseInt(countSel.value||"1",10) || 1;
-        refreshSummary();
-        refreshCountLabel(want);
-        if(modal && modal.style.display === "flex"){
-          rebuildPicker(want);
-        }
-      });
-      checks.forEach(c=>c.addEventListener("change", enforce));
-
-      cancelBtn.addEventListener("click", ()=>{
-        show("players");
-      });
-
-      const doStart = async ()=>{
-        // : make Lobby START work even before Setup START is pressed
-        try{ window.__ngDoStart = doStart; }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-        // : expose start handler so Lobby START uses same path
-        try{ window.__ngDoStart = doStart; }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-        // v768: Stable start behavior (no broken/partial calls)
-        enforce();
-        const want = parseInt(countSel.value||"1",10) || 1;
-        const picked = checks.filter(c=>c.checked).map(c=>c.value);
-        const emails = _ensureCurrentInList(picked).slice(0, want);
-
-        activeSession = activeSession || {};
-        activeSession.game = game;
-        activeSession.setup = { count: want, emails };
-        // : Selection only — Start Game / Invite buttons control flow
-        try{ activeSession.practice = (want <= 1); activeSession.started = false; }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-        try{ ngLSSet('ng_active_session', JSON.stringify(activeSession)); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-        try{ updateSetupControlPanel && updateSetupControlPanel(); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-
-        // : 01/301 rule options captured for engine
-        if(needsDartsOpts){
-          const startScoreRaw = (document.getElementById(scoreId)?.value)||"";
-          const inOut = (document.getElementById(inOutId)?.value)||"";
-          if(!startScoreRaw){ alert("Please choose which version of 01."); return; }
-          if(!inOut){ alert("Please choose the 01 In / Out option."); return; }
-          const startScore = parseInt(startScoreRaw,10) || 501;
-          activeSession.setup.startScore = startScore;
-          activeSession.setup.inOut = inOut;
-        }
-
-try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-
-        // If solo -> PRACTICE mode: skip waiting + randomizer + stats. If multiplayer -> go to waiting room.
-        if(want <= 1){
-          try{ activeSession.practice = true; }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-          try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-          try{
-            const lobbyTitle = document.getElementById("lobbyTitle");
-            const lobbyBody  = document.getElementById("lobbyBody");
-            if(lobbyTitle) lobbyTitle.textContent = (activeSession.game||"Game") + " • PRACTICE";
-            if(lobbyBody)  lobbyBody.innerHTML = "<div style='font-weight:1100; font-size:22px; margin-bottom:8px;'>Practice</div><div style='opacity:.82;'>Stats are not recorded in solo play.</div>";
-          }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-          show("lobby");
-          try{ (startPracticeGame && startPracticeGame()) || (startPracticeSession && startPracticeSession()); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-          try{ const b=document.getElementById("lobbyStartBtn"); if(b){ b.style.display="none"; } }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-          return;
-        }else{
-          show("waiting");
-
-// : ensure session id exists BEFORE sending invites
-try{
-  if(!activeSessionId){
-    activeSessionId = newSessionId();
-    activeSession = activeSession || {};
-    activeSession.id = activeSessionId;
-    activeSession.game = activeSession.game || game;
-    activeSession.host = (currentEmail||"").toLowerCase();
-    activeSession.createdAt = activeSession.createdAt || Date.now();
-    try{ ngLSSet("ng_active_session", JSON.stringify(activeSession)); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-  }
-}catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-          try{
-/*
-================================================================================
-  INVITES  [SECTION_INVITES]
-================================================================================
-*/
-await sendInvitesForSession(); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-          try{ listenSessionInvites && listenSessionInvites(); }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){} } }
-}
-}
-        }
-      };
-}
 
     // v768: invites (in-app) — Join / No Thanks
     let invitesUnsub = null;
@@ -6656,7 +6210,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1494 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1495 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -7782,7 +7336,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1494";
+window.APP_VERSION = "v1495";
 (function(){
   try {
     // header version
@@ -7825,7 +7379,7 @@ window.APP_VERSION = "v1494";
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1494";
+    if (vb) vb.textContent = "v1490";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -7960,7 +7514,7 @@ function closeDetail(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1494";
+    if(vb) vb.textContent = "v1490";
 
     var gamesList = document.getElementById("gamesList");
     var playersList = document.getElementById("playersList");
@@ -7978,7 +7532,7 @@ document.addEventListener("DOMContentLoaded", function(){
               <span class="glassText">${g.name}</span>
             </div>
             <div class="actions">
-              <button class="pill" data-action="enter_game" data-value="${g.name}">Enter</button>
+              <button class="pill" data-action="enter_game" data-value="${g.name}">Setup</button>
               <button class="pill" data-action="game_rules" data-value="${g.name}">Rules</button>
               <button class="pill" data-action="game_history" data-value="${g.name}">History</button>
             </div>
@@ -8101,7 +7655,7 @@ document.addEventListener("click", function(e){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1494";
+    if(vb) vb.textContent = "v1490";
   }catch(e){
     console.error(e);
   }
@@ -8113,7 +7667,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1494";
+    if(vb) vb.textContent = "v1490";
 
     var email = document.getElementById("emailInput");
     var played = false;
@@ -8167,7 +7721,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const list=document.getElementById("gamesList"); if(!list) return;
     const active=activeGame();
     const games=GAME_ORDER.slice().sort((a,b)=>a===active?-1:b===active?1:0);
-    list.innerHTML=games.map(g=>`<div class="itemLine"><div class="leftStack"><span class="glassText">${g}</span></div><div class="actions"><button class="pill" data-action="enter_game" data-value="${g}">Enter</button><button class="pill" data-action="game_rules" data-value="${g}">Rules</button><button class="pill" data-action="game_history" data-value="${g}">History</button></div></div>`).join("");
+    list.innerHTML=games.map(g=>`<div class="itemLine"><div class="leftStack"><span class="glassText">${g}</span></div><div class="actions"><button class="pill" data-action="enter_game" data-value="${g}">Setup</button><button class="pill" data-action="game_rules" data-value="${g}">Rules</button><button class="pill" data-action="game_history" data-value="${g}">History</button></div></div>`).join("");
   }
   function renderPlayers(){
     const list=document.getElementById("playersList"); if(!list) return;
@@ -8242,7 +7796,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function sync(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1494";
+      if(vb) vb.textContent = "v1490";
       renderPlayerDropdowns();
     }catch(e){
       console.error(e);
@@ -8340,7 +7894,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const v = document.createElement("div");
     v.id = "ngVersionMid";
     v.className = "screenVersionMid";
-    v.textContent = "v1494";
+    v.textContent = "v1490";
     players.appendChild(v);
   }
 
@@ -8421,7 +7975,7 @@ document.addEventListener("DOMContentLoaded", function(){
           <span class="gameChevron">▼</span>
         </div>
         <div class="gameDropMenu">
-          <button class="pill" data-action="enter_game" data-value="${g}">Enter</button>
+          <button class="pill" data-action="enter_game" data-value="${g}">Setup</button>
           <button class="pill" data-action="game_rules" data-value="${g}">Rules</button>
           <button class="pill" data-action="game_history" data-value="${g}">History</button>
         </div>
@@ -8495,7 +8049,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncAll(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1494";
+      if(vb) vb.textContent = "v1490";
       const sessionBtn = document.getElementById("sessionBtn");
       if(sessionBtn) sessionBtn.textContent = "Help Support Updates and Future Projects";
       ensureVersionLabel();
@@ -8617,9 +8171,9 @@ document.addEventListener("DOMContentLoaded", function(){
   function setVersion(){
     try {
       const v1 = document.querySelector("#ngHeaderBlock .ver");
-      if (v1) v1.textContent = "v1494";
+      if (v1) v1.textContent = "v1490";
       const v2 = document.getElementById("ngVersionBelow");
-      if (v2) v2.textContent = "v1494";
+      if (v2) v2.textContent = "v1490";
     } catch (_) {}
   }
 
@@ -8859,7 +8413,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1494";
+      if(v) v.textContent = "v1490";
     } catch(_ ) {}
   }
 
@@ -8978,7 +8532,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1494";
+      if(v) v.textContent = "v1490";
     } catch(_ ) {}
   }
 
@@ -9114,7 +8668,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1494";
+      if(v) v.textContent = "v1490";
     } catch(_ ) {}
   }
 
@@ -9189,7 +8743,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1494";
+      if(v) v.textContent = "v1490";
     } catch(_ ) {}
   }
 
@@ -9241,7 +8795,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       const v = document.getElementById("ngVersionBelow");
-      if (v) v.textContent = "v1494";
+      if (v) v.textContent = "v1490";
     } catch (_ ) {}
   }
 
@@ -9810,7 +9364,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1494-hardening-patch">
+<script id="ng-v1490-hardening-patch">
 (function(){
   function qs(id){ return document.getElementById(id); }
 
@@ -9830,10 +9384,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
   function hardWire(){
     try{
-      var style = document.getElementById("ng-v1494-style");
+      var style = document.getElementById("ng-v1490-style");
       if(!style){
         style = document.createElement("style");
-        style.id = "ng-v1494-style";
+        style.id = "ng-v1490-style";
         style.textContent = `
           .detailWrap, .hub, .pickerCard{
             width:min(520px,92vw) !important;
@@ -9988,7 +9542,7 @@ document.addEventListener("DOMContentLoaded", function(){
       });
 
       // fix visible version labels
-      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1494"; });
+      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1490"; });
     }catch(_){}
   }
 
@@ -10002,172 +9556,10 @@ document.addEventListener("DOMContentLoaded", function(){
 })();
 </script>
 
-
-<script id="ng-v1494-unified-wiring">
-(function(){
-  function qs(id){ return document.getElementById(id); }
-  function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
-  const screens = ["landing","players","setup","waiting","lobby","detail"];
-  let __ngCurrentScreen = "players";
-  let __ngCurrentGame = "";
-  let __ngSelectedPlayers = [];
-  let __ngPlayerCount = 1;
-
-  function showScreen(id){
-    screens.forEach(function(s){
-      var el = qs(s);
-      if(el) el.classList.toggle("active", s===id);
-    });
-    __ngCurrentScreen = id;
-  }
-
-  function peopleList(){
-    try{
-      if(Array.isArray(window.lastPeople) && window.lastPeople.length){
-        return window.lastPeople.map(function(p){
-          return {
-            email: String((p && p.email) || "").toLowerCase(),
-            name: String((p && p.name) || (p && p.email) || "").trim()
-          };
-        }).filter(function(p){ return p.email || p.name; });
-      }
-    }catch(_){}
-    return qsa("#playersList .itemLine").map(function(line){
-      const name = (line.querySelector(".glassText") || {}).textContent || "Player";
-      return { email: name.toLowerCase().replace(/\s+/g,'.')+"@example.com", name: name.trim() };
-    });
-  }
-
-  function detail(title, html){
-    var dt = qs("detailTitle"), db = qs("detailBody");
-    if(dt) dt.textContent = title;
-    if(db) db.innerHTML = html;
-    showScreen("detail");
-  }
-
-  function gameRulesHtml(game){
-    const map = {
-      "01": "<div class='ng-note'>Get to zero exactly.</div><div class='ng-setup-group'><div class='ng-setup-row'><div class='ng-setup-label'>Variation</div><div>301 / 501 / 701</div></div><div class='ng-setup-row'><div class='ng-setup-label'>In</div><div>Straight In or Double In</div></div><div class='ng-setup-row'><div class='ng-setup-label'>Out</div><div>Straight Out or Double Out</div></div></div>",
-      "Killer": "<div class='ng-note'>Everyone gets a target number.</div><div class='ng-setup-group'><div class='ng-setup-row'><div class='ng-setup-label'>Randomizer 1</div><div>Shooting Order</div></div><div class='ng-setup-row'><div class='ng-setup-label'>Randomizer 2</div><div>Assigned Number (1–20)</div></div></div>"
-    };
-    return map[game] || ("<div class='ng-note'>Rules for "+game+".</div>");
-  }
-
-  function historyHtml(label){
-    return "<div class='ng-note'>Newest at the top.</div><div class='ng-setup-group'><div class='ng-setup-row'><div class='ng-setup-label'>History</div><div>No entries yet for "+label+".</div></div></div>";
-  }
-
-  function statsHtml(name){
-    return "<div class='ng-note'>Player stats will appear here.</div><div class='ng-setup-group'><div class='ng-setup-row'><div class='ng-setup-label'>Player</div><div>"+name+"</div></div><div class='ng-setup-row'><div class='ng-setup-label'>Games</div><div>0</div></div><div class='ng-setup-row'><div class='ng-setup-label'>Wins</div><div>0</div></div></div>";
-  }
-
-  function renderSetup(game){
-    __ngCurrentGame = game || __ngCurrentGame || "01";
-    var body = qs("setupBody");
-    if(!body){ setTimeout(function(){ renderSetup(game); }, 50); return; }
-
-    var players = peopleList();
-    var options = players.map(function(p){
-      return '<option value="'+p.name.replace(/"/g,'&quot;')+'">'+p.name+'</option>';
-    }).join("");
-
-    var html = "";
-    html += "<div class='ng-note'>Compact setup for "+__ngCurrentGame+".</div>";
-    html += "<div class='ng-setup-group'>";
-    html += "<div class='ng-setup-row'><div class='ng-setup-label'>How Many Players</div><div><select id='ngPlayerCount'><option>1</option><option selected>2</option><option>3</option><option>4</option></select></div></div>";
-    html += "<div class='ng-setup-row'><div class='ng-setup-label'>Which Players</div><div class='ng-player-grid' id='ngPlayerGrid'><select class='ngPlayerSelect'>"+options+"</select><select class='ngPlayerSelect'>"+options+"</select></div></div>";
-
-    if(__ngCurrentGame === "01"){
-      html += "<div class='ng-setup-row'><div class='ng-setup-label'>Variation</div><div><select id='ng01Var'><option>301</option><option selected>501</option><option>701</option></select></div></div>";
-      html += "<div class='ng-setup-row'><div class='ng-setup-label'>In</div><div><select id='ng01In'><option selected>Straight In</option><option>Double In</option></select></div></div>";
-      html += "<div class='ng-setup-row'><div class='ng-setup-label'>Out</div><div><select id='ng01Out'><option>Straight Out</option><option selected>Double Out</option></select></div></div>";
-    }
-
-    if(__ngCurrentGame === "Killer"){
-      html += "<div class='ng-setup-row'><div class='ng-setup-label'>Randomizer 1</div><div>Shooting Order</div></div>";
-      html += "<div class='ng-setup-row'><div class='ng-setup-label'>Randomizer 2</div><div>Assigned Numbers 1–20</div></div>";
-    }
-
-    html += "</div>";
-    body.innerHTML = html;
-
-    var countSel = qs("ngPlayerCount");
-    if(countSel){
-      countSel.onchange = function(){
-        var n = parseInt(this.value || "1",10);
-        __ngPlayerCount = n;
-        var grid = qs("ngPlayerGrid");
-        if(!grid) return;
-        var rows = [];
-        for(var i=0;i<n;i++){
-          rows.push("<select class='ngPlayerSelect'>"+options+"</select>");
-        }
-        grid.innerHTML = rows.join("");
-      };
-      countSel.dispatchEvent(new Event("change"));
-    }
-    showScreen("setup");
-  }
-
-  function waitingRoom(){
-    var wb = qs("waitingBody");
-    if(!wb){ showScreen("waiting"); return; }
-    var names = qsa(".ngPlayerSelect").map(function(s){ return s.value; }).filter(Boolean);
-    if(!names.length){
-      names = [peopleList()[0]?.name || "Player 1", peopleList()[1]?.name || "Player 2"];
-    }
-    var html = "<div class='ng-note'>Everyone in the match sees this same room.</div>";
-    names.forEach(function(n){
-      html += "<div class='ng-setup-row'><div class='ng-setup-label'>"+n+"</div><div><span class='statusIcon ok'>✔</span> Ready</div></div>";
-    });
-    wb.innerHTML = html;
-    showScreen("waiting");
-  }
-
-  // delegate game/player row buttons
-  document.addEventListener("click", function(e){
-    var btn = e.target.closest("[data-action]");
-    if(!btn) return;
-    var action = btn.getAttribute("data-action");
-    var value = btn.getAttribute("data-value") || "";
-
-    if(action === "enter_game"){ e.preventDefault(); renderSetup(value); return; }
-    if(action === "game_rules"){ e.preventDefault(); detail(value+" Rules", gameRulesHtml(value)); return; }
-    if(action === "game_history"){ e.preventDefault(); detail(value+" History", historyHtml(value)); return; }
-    if(action === "player_stats"){ e.preventDefault(); detail("Player Stats", statsHtml(value)); return; }
-    if(action === "player_history"){ e.preventDefault(); detail("Player History", historyHtml(value)); return; }
-    if(action === "player_remove"){ e.preventDefault(); detail("Remove Player", "<div class='ng-note'>Remove flow for "+value+".</div>"); return; }
-    if(action === "show_leaderboard"){ e.preventDefault(); detail("Leaderboard", "<div class='ng-note'>Leaderboard view.</div>"); return; }
-    if(action === "show_session"){ e.preventDefault(); detail("Support", "<div class='ng-note'>Support updates and future projects.</div>"); return; }
-  }, true);
-
-  function bind(id, fn){
-    var el = qs(id);
-    if(el) el.onclick = fn;
-  }
-
-  bind("setupHomeBtn", function(){ showScreen("players"); });
-  bind("setupResetBtn", function(){ renderSetup(__ngCurrentGame); });
-  bind("setupInviteBtn", function(){ waitingRoom(); });
-  bind("setupStartGameBtn", function(){ detail("Game Start", "<div class='ng-note'>Game start flow for "+(__ngCurrentGame||"Game")+".</div>"); });
-  bind("waitingBackBtn", function(){ showScreen("setup"); });
-  bind("backBtn", function(){ showScreen("players"); });
-  bind("homeBtn", function(){ showScreen("players"); });
-  bind("leaderboardBtn", function(){ detail("Leaderboard", "<div class='ng-note'>Leaderboard view.</div>"); });
-  bind("lobbyInviteBtn", function(){ waitingRoom(); });
-  bind("lobbyStartBtn", function(){ detail("Randomizers", "<div class='ng-note'>Welcome Players → Randomizer → Shoot Well → Game.</div>"); });
-  bind("lobbyEndBtn", function(){ showScreen("players"); });
-
-  // expose helper
-  window.renderSetupForGame = renderSetup;
-  window.ngShowScreen = showScreen;
-})();
-</script>
-
 </body>
 </html>
 
-/* --- v1494 remove confirm safety --- */
+/* --- v1490 remove confirm safety --- */
 window.ngConfirmRemove = function(name, fn){
   if(confirm("Remove player " + name + "?")){
     try{ fn && fn(); }catch(e){ console.error(e); }
