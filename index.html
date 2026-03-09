@@ -4249,8 +4249,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 <!-- BUILD SANITY CHECK: THIS FILE IS v1493 -->
 
-<style id="ng-v1498-uniform-panels">
-/* one shared panel system */
+<style id="ng-v1498-presentable-pass">
+/* unified panel system */
 .hub,
 #players .hub,
 #games .hub,
@@ -4266,21 +4266,21 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   margin-right:auto !important;
   box-sizing:border-box !important;
 }
-
 .panel,
 #gamesPanel,
 #playersPanel,
 #setup .panel,
 #waiting .panel,
 #lobby .panel,
-#detail .panel{
+#detail .panel,
+.pickerCard{
   width:100% !important;
   max-width:none !important;
   margin:0 auto !important;
   box-sizing:border-box !important;
   border-radius:18px !important;
   background:rgba(255,255,255,.045) !important;
-  border:1px solid rgba(255,255,255,.28) !important;
+  border:1px solid rgba(255,255,255,.30) !important;
   box-shadow:
     0 10px 24px rgba(0,0,0,.22),
     inset 0 1px 0 rgba(255,255,255,.50),
@@ -4289,8 +4289,6 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   -webkit-backdrop-filter: blur(8px) saturate(115%) !important;
   overflow:hidden !important;
 }
-
-/* normalize row widths so nothing hangs outside the panel */
 .itemLine,
 #games .itemLine,
 #players .itemLine{
@@ -4301,12 +4299,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   box-sizing:border-box !important;
   padding:12px 6px !important;
 }
-
-.leftStack,
-.actions{
-  box-sizing:border-box !important;
-}
-
+.leftStack,.actions{box-sizing:border-box !important;}
 .actions .pill,
 #setup .pill,
 #waiting .pill,
@@ -4318,41 +4311,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   border:1px solid rgba(255,255,255,.28) !important;
   background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.04)) !important;
 }
-
-.waitGameMeta{
-  display:grid;
-  gap:8px;
-  margin: 0 0 14px 0;
-}
-.waitMetaRow{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:10px 12px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.04);
-}
-.waitMetaLabel{
-  font-weight:1000;
-  opacity:.88;
-}
-.waitMetaVal{
-  font-weight:1100;
-  text-align:right;
-}
-.waitStatusLegend{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin: 10px 0 14px 0;
-  opacity:.92;
-  font-weight:900;
-  font-size:12px;
-}
-.waitStatusLegend span{ white-space:nowrap; }
+#ngHeaderBar .ngVer, .ngVer, .buildBadge b, #ngVersionBelow{ display:none !important; } /* one visible version only */
+#landing #statusLine{ white-space: normal !important; }
 </style>
 
 </head>
@@ -4422,7 +4382,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   <div class="panel" id="gamesPanel">
     <div class="sectionHead headerRow">
       <div class="title">Games</div>
-      <div style="display:flex; gap:10px; align-items:center;"><button class="pill pillMini sessionPill" data-action="show_session" id="sessionBtn" type="button">Help Support Updates and Future Projects</button></div>
+      <div style="display:flex; gap:10px; align-items:center;"><button class="pill pillMini sessionPill" data-action="show_session" id="sessionBtn" type="button">Session</button></div>
     </div>
     <div class="list" id="gamesList"></div>
   </div>
@@ -8013,7 +7973,7 @@ document.addEventListener("click", function(e){
       e.preventDefault();
       const html = `
         <div style="line-height:1.5;">
-          <div><b>Help Support Updates and Future Projects</b></div>
+          <div><b>Session</b></div>
           <div>Build: v1479</div>
           <div>Status: ${(window.ngFirebaseStatus||"Local mode")}</div>
           <div style="opacity:.82; margin-top:8px;">Use this panel for support info and session guidance.</div>
@@ -8255,7 +8215,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 <script id="ng-v1479-ui-activation">
 (function(){
-  const SUPPORT_URL = "https://venmo.com/u/Steve-Moody-8";
+  const SUPPORT_URL = "";
   const PLAYER_EMAILS = {
     "steve@example.com":"Steve Moody",
     "bill@example.com":"Bill Moody",
@@ -8480,7 +8440,7 @@ document.addEventListener("DOMContentLoaded", function(){
       const vb = document.getElementById("ngVersionBelow");
       if(vb) vb.textContent = "v1493";
       const sessionBtn = document.getElementById("sessionBtn");
-      if(sessionBtn) sessionBtn.textContent = "Help Support Updates and Future Projects";
+      if(sessionBtn) sessionBtn.textContent = "Session";
       ensureVersionLabel();
       renderGames();
       renderPlayers();
@@ -8491,7 +8451,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const support = e.target.closest("#sessionBtn");
     if(support){
       e.preventDefault();
-      window.open(SUPPORT_URL, "_blank", "noopener");
+      if (typeof openDetail === "function") { openDetail("Session", "<div class=\"statSection\"><div class=\"statRow\"><div><div class=\"statLabel\">Session</div><div class=\"statHelp\">Session / help panel.</div></div><div class=\"statVal\">Info</div></div></div>"); }
       return;
     }
 
@@ -8928,7 +8888,7 @@ document.addEventListener("DOMContentLoaded", function(){
         playersPanel.insertAdjacentElement("afterend", row);
       }
       row.appendChild(sessionBtn);
-      sessionBtn.textContent = "Help Support Updates and Future Projects";
+      sessionBtn.textContent = "Session";
     } catch(_ ) {}
   }
 
@@ -8977,7 +8937,7 @@ document.addEventListener("DOMContentLoaded", function(){
         playersPanel.insertAdjacentElement("afterend", row);
       }
       row.appendChild(sessionBtn);
-      sessionBtn.textContent = "Help Support Updates and Future Projects";
+      sessionBtn.textContent = "Session";
     } catch(_ ) {}
   }
 
@@ -9080,7 +9040,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
   function fixDonationText(){
     var btn=document.querySelector(".donationRow .pill");
-    if(btn) btn.textContent="Help Support Updates and Future Projects";
+    if(btn) btn.textContent="Session";
   }
 
   document.addEventListener("DOMContentLoaded",function(){
@@ -9149,7 +9109,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function fixDonationText(){
     try {
       var btn = document.querySelector(".donationRow .pill");
-      if(btn) btn.textContent = "Help Support Updates and Future Projects";
+      if(btn) btn.textContent = "Session";
     } catch(_ ) {}
   }
 
@@ -9379,7 +9339,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function updateDonateText(){
     try {
       const sessionBtn = document.getElementById("sessionBtn");
-      if (sessionBtn) sessionBtn.textContent = "Help Support Updates and Future Projects";
+      if (sessionBtn) sessionBtn.textContent = "Session";
     } catch (_ ) {}
   }
 
@@ -10148,96 +10108,140 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1498-waiting-room-upgrade">
+<script id="ng-v1498-presentable-guard">
 (function(){
-  function ioLabel(v){
-    var map = {
-      "DI_DO":"Double In / Double Out",
-      "SI_SO":"Single In / Single Out",
-      "SI_DO":"Single In / Double Out"
-    };
-    return map[v] || v || "";
-  }
+  const REQUIRED_EMAIL = true;
 
-  function gameFormatLines(game, s){
-    var rows = [];
-    rows.push(["Game", game || "Game"]);
-    if((game||"") === "01"){
-      rows.push(["Format", String((s && s.startScore) || 501)]);
-      rows.push(["Rules", ioLabel(s && s.inOut) || "Choose rules"]);
-    } else if((game||"") === "Killer"){
-      rows.push(["Format", "Killer"]);
-      rows.push(["Randomizer 1", "Order of play"]);
-      rows.push(["Randomizer 2", "Assigned number 1–20"]);
-    } else if(game){
-      rows.push(["Format", game]);
-    }
-    var count = (s && (s.count || (s.emails||[]).length)) || 0;
-    rows.push(["Players", String(count)]);
-    return rows;
-  }
-
-  function ensureWaitOverlayText(){
+  function setVersionOnce(){
     try{
-      if(window.__ngWaitOverlay){
-        window.__ngWaitOverlay.innerHTML = `
-          <div style="width:min(560px,92vw); border-radius:20px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); padding:18px 18px 16px; text-align:center; box-shadow:0 22px 46px rgba(0,0,0,.55);">
-            <div style="font-weight:1200; letter-spacing:.08em; font-size:22px; margin-bottom:10px; text-transform:uppercase;">Welcome Players</div>
-            <div style="opacity:.90; font-weight:1000;">Let's get the game set up</div>
-          </div>`;
+      var title = document.title || "";
+      document.title = title.replace(/Night Games v\d+/g, "Night Games v1498");
+      var header = document.querySelector("#ngHeaderBar .ngTitle");
+      if(header && !document.getElementById("ngOneVersion")){
+        var span = document.createElement("span");
+        span.id = "ngOneVersion";
+        span.className = "ngVer";
+        span.style.marginLeft = "8px";
+        span.textContent = "v1498";
+        header.parentNode.appendChild(span);
       }
     }catch(_e){}
   }
 
-  function upgradedRenderWaitingRoom(){
+  function hardShow(which){
     try{
-      const waitingBody = document.getElementById("waitingBody");
-      if(!waitingBody) return;
-      const game = (window.activeSession && activeSession.game) ? activeSession.game : "Game";
-      const s = (window.activeSession && activeSession.setup) ? activeSession.setup : {emails:[],count:0};
-      const emails = (s.emails||[]).slice(0, s.count||s.emails.length);
-
-      const rows = emails.map(function(em){
-        const p = (window.lastPeople||[]).find(function(x){ return (x.email||"").toLowerCase()===String(em||"").toLowerCase(); });
-        const name = p ? (p.name||em.split("@")[0]||em) : (em.split("@")[0]||em);
-        const lower = String(em||"").toLowerCase();
-        const online = (p && typeof isOnline === "function" && isOnline(p)) || (lower === String(window.currentEmail||"").toLowerCase());
-        const status = (lower === String(window.currentEmail||"").toLowerCase()) ? "accepted" : ((window.inviteStatusCache && inviteStatusCache.get(lower)) || "pending");
-        const statusLabel = status==="accepted" ? "joined" : status==="declined" ? "declined" : "waiting";
-        const icon = status==="accepted" ? "✔" : status==="declined" ? "✖" : "⌛";
-        const iconClass = status==="accepted" ? "ok" : status==="declined" ? "no" : "wait";
-        return `<div class="waitRow">
-          <div class="waitLeft">
-            <span class="dot ${online ? "online" : ""}"></span>
-            <div class="waitName">${name}</div>
-          </div>
-          <div class="waitMeta"><span class="statusIcon ${iconClass}">${icon}</span> ${statusLabel}</div>
-        </div>`;
-      }).join("");
-
-      const metaRows = gameFormatLines(game, s).map(function(pair){
-        return `<div class="waitMetaRow"><div class="waitMetaLabel">${pair[0]}</div><div class="waitMetaVal">${pair[1]}</div></div>`;
-      }).join("");
-
-      waitingBody.innerHTML = `
-        <div class="setupGameTitle">${game}</div>
-        <div style="opacity:.84; margin-bottom:10px;">Waiting room</div>
-        <div class="waitGameMeta">${metaRows}</div>
-        <div class="waitStatusLegend">
-          <span><span class="statusIcon ok">✔</span> joined</span>
-          <span><span class="statusIcon wait">⌛</span> waiting</span>
-          <span><span class="statusIcon no">✖</span> declined</span>
-        </div>
-        <div>${rows || `<div style="opacity:.78;">No players selected.</div>`}</div>
-      `;
-
-      ensureWaitOverlayText();
+      document.querySelectorAll(".screen").forEach(function(el){
+        el.classList.toggle("active", el.id === which);
+      });
     }catch(_e){}
   }
 
-  window.renderWaitingRoom = upgradedRenderWaitingRoom;
-  document.addEventListener("DOMContentLoaded", function(){ ensureWaitOverlayText(); });
-  window.addEventListener("load", function(){ ensureWaitOverlayText(); });
+  function hasSignedIn(){
+    try{
+      return !!(window.currentEmail && String(window.currentEmail).trim());
+    }catch(_e){ return false; }
+  }
+
+  function syncPlayerLabel(email){
+    try{
+      const pn = document.getElementById("playerPageName");
+      if(pn) pn.textContent = String(email || "").trim().toLowerCase();
+    }catch(_e){}
+  }
+
+  function runSignIn(e){
+    if(e){ e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation(); }
+    const emailInput = document.getElementById("emailInput");
+    const statusLine = document.getElementById("statusLine");
+    const email = String(emailInput && emailInput.value || "").trim().toLowerCase();
+    if(!email){
+      if(statusLine) statusLine.textContent = "Enter an email.";
+      return false;
+    }
+    try{
+      window.currentEmail = email;
+      window.currentUserEmail = email;
+      window.userEmail = email;
+      syncPlayerLabel(email);
+      if(statusLine) statusLine.textContent = "Signed in.";
+    }catch(_e){}
+    try{
+      if(typeof window.renderPlayerDropdowns === "function") window.renderPlayerDropdowns();
+    }catch(_e){}
+    try{
+      if(typeof window.show === "function") window.show("players");
+      else hardShow("players");
+    }catch(_e){ hardShow("players"); }
+    return false;
+  }
+
+  function guardShow(){
+    try{
+      if(typeof window.show === "function" && !window.__ng1498WrappedShow){
+        window.__ng1498WrappedShow = true;
+        const orig = window.show;
+        window.show = function(which){
+          if(REQUIRED_EMAIL && !hasSignedIn() && which !== "landing"){
+            return orig.call(this, "landing");
+          }
+          return orig.apply(this, arguments);
+        };
+      }
+    }catch(_e){}
+  }
+
+  function bindLanding(){
+    const enterBtn = document.getElementById("enterBtn");
+    const emailInput = document.getElementById("emailInput");
+    if(enterBtn && !enterBtn.dataset.ng1498bound){
+      enterBtn.dataset.ng1498bound = "1";
+      const clone = enterBtn.cloneNode(true);
+      enterBtn.parentNode.replaceChild(clone, enterBtn);
+      clone.addEventListener("click", runSignIn, true);
+      clone.addEventListener("touchend", runSignIn, true);
+    }
+    const freshInput = document.getElementById("emailInput");
+    if(freshInput && !freshInput.dataset.ng1498bound){
+      freshInput.dataset.ng1498bound = "1";
+      freshInput.value = "";
+      freshInput.addEventListener("keydown", function(e){
+        if(e.key === "Enter") return runSignIn(e);
+      }, true);
+    }
+  }
+
+  function bindSessionBtn(){
+    const btn = document.getElementById("sessionBtn");
+    if(btn) btn.textContent = "Session";
+  }
+
+  function normalizeWaitingBack(){
+    const btn = document.getElementById("waitingBackBtn");
+    if(btn && !btn.dataset.ng1498bound){
+      btn.dataset.ng1498bound = "1";
+      btn.addEventListener("click", function(e){
+        e.preventDefault();
+        try{ if(typeof window.show === "function") window.show("setup"); else hardShow("setup"); }catch(_e){}
+      }, true);
+    }
+  }
+
+  function init(){
+    setVersionOnce();
+    guardShow();
+    bindLanding();
+    bindSessionBtn();
+    normalizeWaitingBack();
+    if(REQUIRED_EMAIL && !hasSignedIn()){
+      try{
+        if(typeof window.show === "function") window.show("landing");
+        else hardShow("landing");
+      }catch(_e){ hardShow("landing"); }
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){ init(); setTimeout(init, 200); });
+  window.addEventListener("load", function(){ init(); setTimeout(init, 400); });
 })();
 </script>
 
