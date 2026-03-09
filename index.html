@@ -12014,12 +12014,140 @@ document.addEventListener("DOMContentLoaded", function(){
 })();
 </script>
 
-</body>
-</html>
 
+<style id="ng-v1219-crystal-clear-pass">
+/* ===== v1219 crystal-clear panel + luminous glass text pass ===== */
+
+:root{
+  --ngCrystalStroke: rgba(255,255,255,.86);
+  --ngCrystalGlow: rgba(140,220,255,.18);
+  --ngCrystalTextA: rgba(244,252,255,.98);
+  --ngCrystalTextB: rgba(170,235,255,.96);
+}
+
+/* Clear panels — no frost, no gray haze */
+#gamesPanel,
+#playersPanel,
+#setup .panel,
+#waiting .panel,
+#lobby .panel,
+#detail .panel,
+#leaderboard .panel,
+#randomizer .panel,
+.panel,
+.detailWrap > .panel,
+.hub > .panel,
+.pickerCard,
+#ngErrToast .card,
+.fatal .card{
+  background: rgba(255,255,255,.015) !important;
+  background-color: rgba(255,255,255,.015) !important;
+  border: 1px solid var(--ngCrystalStroke) !important;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.28),
+    inset 0 2px 9px rgba(255,255,255,.78),
+    inset 0 -2px 7px rgba(255,255,255,.12),
+    inset 1px 0 0 rgba(255,255,255,.22),
+    inset -1px 0 0 rgba(255,255,255,.22),
+    0 0 18px var(--ngCrystalGlow) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: hidden !important;
+}
+
+/* Remove frosted inner fills */
+#players .list, #games .list, #playersList, #gamesList,
+#setup .detailBody, #waiting .detailBody, #lobby .detailBody,
+#detail .detailBody, #leaderboard .detailBody, #randomizer .detailBody,
+.pickerBody, .pickerRow, .waitMetaRow, .statRow, .statGameBtn,
+.fieldLabel, .glassSelect, select.glassSelect, .glassBtn,
+.field3d, .btn3d, .pill, .sessionPill, .dbgBody{
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Keep interiors clear but still readable */
+#players .list, #games .list, #playersList, #gamesList,
+#setup .detailBody, #waiting .detailBody, #lobby .detailBody,
+#detail .detailBody, #leaderboard .detailBody, #randomizer .detailBody,
+.pickerBody, .pickerRow, .waitMetaRow, .statRow, .statGameBtn{
+  background: rgba(255,255,255,.01) !important;
+  background-color: rgba(255,255,255,.01) !important;
+  box-shadow: none !important;
+}
+
+/* Buttons and select surfaces: clear-glass, not frosted */
+.pill, .glassBtn, .field3d, .btn3d, .sessionPill, .pickerFoot .pill, .pickerRow .pill,
+.glassSelect, select.glassSelect{
+  background: rgba(255,255,255,.02) !important;
+  border: 1px solid rgba(255,255,255,.78) !important;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.24),
+    inset 0 2px 8px rgba(255,255,255,.72),
+    inset 0 -2px 6px rgba(255,255,255,.12),
+    0 0 14px rgba(140,220,255,.12) !important;
+}
+
+/* Luminous glass text */
+.title,
+.setupGameTitle,
+.playerPageName,
+.waitName,
+.waitMeta,
+.waitMetaLabel,
+.waitMetaVal,
+.fieldLabel,
+.pill,
+.glassBtn,
+.leftStack,
+.nm, .em,
+.statLabel, .statVal, .statSectionTitle, .statHelp,
+#ngHeaderBar span,
+#emailEcho,
+#landing .landingHint,
+#landing .landingFooter,
+#landing .landingCopy,
+#landing #enterBtn .enterText,
+#landing #enterBtn .enterSub,
+.sectionHead,
+.hint{
+  color: var(--ngCrystalTextA) !important;
+  text-shadow:
+    0 0 6px rgba(255,255,255,.82),
+    0 0 14px rgba(145,220,255,.42),
+    0 1px 4px rgba(0,0,0,.60) !important;
+}
+
+@supports (-webkit-background-clip:text){
+  .title,
+  .setupGameTitle,
+  .playerPageName,
+  .waitName,
+  .fieldLabel,
+  #ngHeaderBar span,
+  #landing .landingFooter,
+  #landing #enterBtn .enterText{
+    background: linear-gradient(180deg, var(--ngCrystalTextA) 0%, var(--ngCrystalTextB) 55%, rgba(120,210,255,.94) 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+}
+
+/* Make titles feel lit from within */
+.title::after{
+  opacity: .95 !important;
+  box-shadow: 0 0 10px rgba(120,210,255,.35) !important;
+}
+</style>
+
+<script id="ng-v1219-tail-repair">
 /* --- v1513 remove confirm safety --- */
 window.ngConfirmRemove = function(name, fn){
   if(confirm("Remove player " + name + "?")){
     try{ fn && fn(); }catch(e){ console.error(e); }
   }
 };
+</script>
+
+</body>
+</html>
