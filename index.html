@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1512</title>
-<!-- NIGHT GAMES v1512 -->
+<title>Night Games v1513</title>
+<!-- NIGHT GAMES v1513 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -4101,7 +4101,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1512-crystal-unified">
+<style id="ng-v1513-crystal-unified">
 :root{
   --ng-crystal-bg: rgba(255,255,255,0.055);
   --ng-crystal-border: rgba(255,255,255,0.40);
@@ -4247,9 +4247,9 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<!-- BUILD SANITY CHECK: THIS FILE IS v1512 -->
+<!-- BUILD SANITY CHECK: THIS FILE IS v1513 -->
 
-<style id="ng-v1512-presentable-pass">
+<style id="ng-v1513-presentable-pass">
 /* unified panel system */
 .hub,
 #players .hub,
@@ -4316,8 +4316,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1512-crystal-cleanup">
-/* ===== v1512 crystal cleanup pass ===== */
+<style id="ng-v1513-crystal-cleanup">
+/* ===== v1513 crystal cleanup pass ===== */
 
 /* top header center */
 .ngTopRow{ position:relative !important; }
@@ -4471,8 +4471,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1512-layout-fix">
-/* ===== v1512 exact layout cleanup ===== */
+<style id="ng-v1513-layout-fix">
+/* ===== v1513 exact layout cleanup ===== */
 
 /* crystal should be clear, not frosted */
 #gamesPanel, #playersPanel,
@@ -4614,8 +4614,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1512-players-panel-pass">
-/* ===== v1512: players panel really matched to games + donate only on players ===== */
+<style id="ng-v1513-players-panel-pass">
+/* ===== v1513: players panel really matched to games + donate only on players ===== */
 
 /* Games and Players panels must be identical shells */
 #gamesPanel,
@@ -4696,8 +4696,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1512-polish-pass">
-/* ===== v1512 polish pass ===== */
+<style id="ng-v1513-polish-pass">
+/* ===== v1513 polish pass ===== */
 
 /* Crystal-clear uniform panels */
 #gamesPanel, #playersPanel,
@@ -4910,6 +4910,113 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 .statusIcon.no{ color: rgba(255,120,120,.98) !important; text-shadow:0 0 12px rgba(255,120,120,.35) !important; }
 </style>
 
+
+<style id="ng-v1513-bruteforce-clear-crystal">
+/* ===== v1513: brute-force clear crystal override ===== */
+#gamesPanel,
+#playersPanel,
+#setup .panel,
+#waiting .panel,
+#lobby .panel,
+#detail .panel,
+.pickerCard,
+.panel,
+.detailWrap > .panel,
+.hub > .panel,
+#games .panel,
+#players .panel{
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 1px solid rgba(255,255,255,.86) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.34),
+    inset 0 3px 12px rgba(255,255,255,.92),
+    inset 0 -3px 8px rgba(255,255,255,.18),
+    inset 1px 0 0 rgba(255,255,255,.30),
+    inset -1px 0 0 rgba(255,255,255,.30),
+    0 0 18px rgba(105,195,255,.16) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  overflow: hidden !important;
+}
+
+/* Strip darker inner frosted layers */
+#playersPanel .list,
+#gamesPanel .list,
+#players .list,
+#games .list,
+#playersList,
+#gamesList,
+#setup .detailBody,
+#waiting .detailBody,
+#lobby .detailBody,
+#detail .detailBody,
+#leaderboard .detailBody,
+#randomizer .detailBody,
+.pickerBody,
+.pickerRow,
+.waitMetaRow,
+.statRow,
+.statGameBtn{
+  background: transparent !important;
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* Players and Games panels identical */
+#gamesPanel,
+#playersPanel{
+  width:100% !important;
+  min-height:208px !important;
+  height:208px !important;
+  max-height:208px !important;
+  margin:0 auto !important;
+  box-sizing:border-box !important;
+}
+
+/* Rows contained inside panels */
+#players .itemLine,
+#games .itemLine,
+#playersList .itemLine,
+#gamesList .itemLine,
+.itemLine{
+  width:100% !important;
+  max-width:100% !important;
+  margin:0 !important;
+  box-sizing:border-box !important;
+  border-bottom:1px solid rgba(255,255,255,.14) !important;
+}
+
+/* Shiny raised crystal buttons */
+.pill,
+.glassBtn,
+#openPlayerPicker.glassBtn,
+#leaderboardBtn,
+#donateBtnBottom{
+  background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.03)) !important;
+  border:1px solid rgba(255,255,255,.72) !important;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.28),
+    inset 0 2px 8px rgba(255,255,255,.84),
+    inset 0 -3px 6px rgba(255,255,255,.16) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+/* Glowing glass text */
+.title, .setupGameTitle, .playerPageName, .waitName,
+#ngHeaderBar .ngHeaderLeft, #ngHeaderBar .ngHeaderCenter, #ngHeaderBar .ngHeaderRight,
+.pill, .glassBtn, .waitMeta, .fieldLabel, .leftStack{
+  text-shadow:
+    0 0 5px rgba(255,255,255,.62),
+    0 0 12px rgba(145,220,255,.34),
+    0 1px 4px rgba(0,0,0,.62) !important;
+}
+</style>
+
 </head>
 <body>
 
@@ -5063,7 +5170,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1512 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1513 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -5155,7 +5262,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1512";
+  window.ngBuild = "v1513";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -5180,7 +5287,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1512";
+window.ngBuild = "v1513";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -7194,7 +7301,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1512 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1513 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -8320,7 +8427,7 @@ function ngUpdateBtn(){
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1512";
+window.APP_VERSION = "v1513";
 (function(){
   try {
     // header version
@@ -8363,7 +8470,7 @@ window.APP_VERSION = "v1512";
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1512";
+    if (vb) vb.textContent = "v1513";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -8498,7 +8605,7 @@ function closeDetail(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1512";
+    if(vb) vb.textContent = "v1513";
 
     var gamesList = document.getElementById("gamesList");
     var playersList = document.getElementById("playersList");
@@ -8639,7 +8746,7 @@ document.addEventListener("click", function(e){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1512";
+    if(vb) vb.textContent = "v1513";
   }catch(e){
     console.error(e);
   }
@@ -8651,7 +8758,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1512";
+    if(vb) vb.textContent = "v1513";
 
     var email = document.getElementById("emailInput");
     var played = false;
@@ -8780,7 +8887,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function sync(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1512";
+      if(vb) vb.textContent = "v1513";
       renderPlayerDropdowns();
     }catch(e){
       console.error(e);
@@ -8878,7 +8985,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const v = document.createElement("div");
     v.id = "ngVersionMid";
     v.className = "screenVersionMid";
-    v.textContent = "v1512";
+    v.textContent = "v1513";
     players.appendChild(v);
   }
 
@@ -9033,7 +9140,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncAll(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1512";
+      if(vb) vb.textContent = "v1513";
       const sessionBtn = document.getElementById("sessionBtn");
       if(sessionBtn) sessionBtn.textContent = "Session";
       ensureVersionLabel();
@@ -9155,9 +9262,9 @@ document.addEventListener("DOMContentLoaded", function(){
   function setVersion(){
     try {
       const v1 = document.querySelector("#ngHeaderBlock .ver");
-      if (v1) v1.textContent = "v1512";
+      if (v1) v1.textContent = "v1513";
       const v2 = document.getElementById("ngVersionBelow");
-      if (v2) v2.textContent = "v1512";
+      if (v2) v2.textContent = "v1513";
     } catch (_) {}
   }
 
@@ -9397,7 +9504,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1512";
+      if(v) v.textContent = "v1513";
     } catch(_ ) {}
   }
 
@@ -9516,7 +9623,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1512";
+      if(v) v.textContent = "v1513";
     } catch(_ ) {}
   }
 
@@ -9652,7 +9759,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1512";
+      if(v) v.textContent = "v1513";
     } catch(_ ) {}
   }
 
@@ -9727,7 +9834,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1512";
+      if(v) v.textContent = "v1513";
     } catch(_ ) {}
   }
 
@@ -9779,7 +9886,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       const v = document.getElementById("ngVersionBelow");
-      if (v) v.textContent = "v1512";
+      if (v) v.textContent = "v1513";
     } catch (_ ) {}
   }
 
@@ -10348,7 +10455,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1512-hardening-patch">
+<script id="ng-v1513-hardening-patch">
 (function(){
   function qs(id){ return document.getElementById(id); }
 
@@ -10368,10 +10475,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
   function hardWire(){
     try{
-      var style = document.getElementById("ng-v1512-style");
+      var style = document.getElementById("ng-v1513-style");
       if(!style){
         style = document.createElement("style");
-        style.id = "ng-v1512-style";
+        style.id = "ng-v1513-style";
         style.textContent = `
           .detailWrap, .hub, .pickerCard{
             width:min(520px,92vw) !important;
@@ -10526,7 +10633,7 @@ document.addEventListener("DOMContentLoaded", function(){
       });
 
       // fix visible version labels
-      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1512"; });
+      document.querySelectorAll("#ngVersionMid, #ngVersionBelow").forEach(function(el){ el.textContent = "v1513"; });
     }catch(_){}
   }
 
@@ -10541,7 +10648,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1512-unified-wiring">
+<script id="ng-v1513-unified-wiring">
 (function(){
   function qs(id){ return document.getElementById(id); }
   function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
@@ -10703,21 +10810,21 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1512-presentable-guard">
+<script id="ng-v1513-presentable-guard">
 (function(){
   const REQUIRED_EMAIL = true;
 
   function setVersionOnce(){
     try{
       var title = document.title || "";
-      document.title = title.replace(/Night Games v\d+/g, "Night Games v1512");
+      document.title = title.replace(/Night Games v\d+/g, "Night Games v1513");
       var header = document.querySelector("#ngHeaderBar .ngTitle");
       if(header && !document.getElementById("ngOneVersion")){
         var span = document.createElement("span");
         span.id = "ngOneVersion";
         span.className = "ngVer";
         span.style.marginLeft = "8px";
-        span.textContent = "v1512";
+        span.textContent = "v1513";
         header.parentNode.appendChild(span);
       }
     }catch(_e){}
@@ -10841,7 +10948,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<style id="ng-v1512-authoritative-pass">
+<style id="ng-v1513-authoritative-pass">
 /* -------- One visible version only -------- */
 #ngVersionBelow, .buildBadge, .dbg, .sessionPill{ display:none !important; }
 #sessionBtn{ display:none !important; }
@@ -10951,7 +11058,7 @@ document.addEventListener("DOMContentLoaded", function(){
 #ngHeaderBar .ngVer{ display:inline-block !important; }
 </style>
 
-<script id="ng-v1512-finalize">
+<script id="ng-v1513-finalize">
 (function(){
   function prettyIo(v){
     const map = {
@@ -10976,11 +11083,11 @@ document.addEventListener("DOMContentLoaded", function(){
           ex.style.marginLeft = "8px";
           host.parentNode.appendChild(ex);
         }
-        ex.textContent = "v1512";
+        ex.textContent = "v1513";
       }
       var vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1512";
-      document.title = "Night Games v1512";
+      if(vb) vb.textContent = "v1513";
+      document.title = "Night Games v1513";
     }catch(_e){}
   }
 
@@ -11102,7 +11209,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1512-cleanup-js">
+<script id="ng-v1513-cleanup-js">
 (function(){
   function removeDuplicateLeaderboard(){
     try{
@@ -11148,7 +11255,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1512-layout-fix-js">
+<script id="ng-v1513-layout-fix-js">
 (function(){
   function removeDuplicateLeaderboard(){
     try{
@@ -11196,7 +11303,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1512-players-panel-pass-js">
+<script id="ng-v1513-players-panel-pass-js">
 (function(){
   function toggleDonateByScreen(){
     try{
@@ -11240,7 +11347,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1512-setup-player-seed">
+<script id="ng-v1513-setup-player-seed">
 (function(){
   const REGISTERED_PLAYERS = [
     {name:"Steve Moody",   email:"steve@example.com"},
@@ -11338,7 +11445,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<script id="ng-v1512-polish-pass-js">
+<script id="ng-v1513-polish-pass-js">
 (function(){
   function removeDuplicateLeaderboards(){
     try{
@@ -11481,7 +11588,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </body>
 </html>
 
-/* --- v1512 remove confirm safety --- */
+/* --- v1513 remove confirm safety --- */
 window.ngConfirmRemove = function(name, fn){
   if(confirm("Remove player " + name + "?")){
     try{ fn && fn(); }catch(e){ console.error(e); }
