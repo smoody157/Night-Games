@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1605</title>
-<!-- NIGHT GAMES v1605 -->
+<title>Night Games v1611</title>
+<!-- NIGHT GAMES v1611 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -10135,7 +10135,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<style id="ng-v1605-clear-crystal">
+<style id="ng-v1611-clear-crystal">
 :root{
   --ng1220-panel-w: min(560px, 92vw);
   --ng1220-panel-bg: rgba(255,255,255,0.018);
@@ -10208,7 +10208,7 @@ document.addEventListener("DOMContentLoaded", function(){
 }
 </style>
 
-<script id="ng-v1605-master-patch">
+<script id="ng-v1611-master-patch">
 (function(){
   const BUILD = "1605";
   const firebaseConfig = {
@@ -10682,4 +10682,87 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 </body>
+
+<!-- ====================== v1611 SYSTEM UPDATES ====================== -->
+<script>
+
+/* Global App State */
+window.appState = {
+  session:null,
+  game:null,
+  players:[],
+  lastRandomResult:null,
+  ui:{activeScreen:null}
+};
+
+/* Router */
+function showScreen(id){
+  document.querySelectorAll(".screen,.ng-panel").forEach(p=>p.classList.remove("active"));
+  const el=document.getElementById(id);
+  if(el){
+    el.classList.add("active");
+    appState.ui.activeScreen=id;
+  }
+}
+
+/* Back button unifier */
+document.addEventListener("click",e=>{
+  if(e.target.dataset && e.target.dataset.back){
+    showScreen(e.target.dataset.back);
+  }
+});
+
+/* Game engine wiring */
+function initializeGame(gameType){
+  switch(gameType){
+    case "501":
+      start501(); break;
+    case "cricket":
+      startCricket(); break;
+    case "around_world":
+      startAroundWorld(); break;
+  }
+}
+
+function start501(){
+  appState.game={type:"501",score:501,turn:0};
+}
+
+function startCricket(){
+  appState.game={
+    type:"cricket",
+    marks:{20:0,19:0,18:0,17:0,16:0,15:0,25:0},
+    score:0
+  };
+}
+
+function startAroundWorld(){
+  appState.game={type:"around_world",target:1};
+}
+
+/* Randomizer persistence */
+async function saveRandomResult(sessionId,result){
+  if(!window.db) return;
+  try{
+    await db.collection("sessions").doc(sessionId).set(
+      {lastResult:result},{merge:true}
+    );
+  }catch(e){}
+}
+
+/* Invite override */
+function maybeShowInvite(invite){
+  if(!window.activeSession){
+    showInviteNotification(invite);
+  }
+}
+
+/* Production error logger */
+function ngLogError(err){
+  console.error("NightGames:",err);
+}
+
+</script>
+<!-- ====================== END v1611 SYSTEM UPDATES ====================== -->
+
 </html>
