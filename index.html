@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1220</title>
-<!-- NIGHT GAMES v1220 -->
+<title>Night Games v1520</title>
+<!-- NIGHT GAMES v1520 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -10592,6 +10592,237 @@ document.addEventListener("DOMContentLoaded", function(){
   window.startSinglePlayerNow = startSinglePlayerNow;
   window.startMultiplayerFlow = startMultiplayerFlow;
   window.renderWaitingRoomV1220 = renderWaitingRoomV1220;
+})();
+</script>
+
+
+<style id="ng-v1520-uniform-panel-master">
+:root{
+  --ng1520-panel-w: min(520px, 90vw);
+  --ng1520-panel-radius: 16px;
+  --ng1520-panel-pad: 12px 14px;
+  --ng1520-panel-bg: rgba(255,255,255,.022);
+  --ng1520-panel-brd: rgba(255,255,255,.52);
+  --ng1520-panel-shadow:
+    0 10px 26px rgba(0,0,0,.30),
+    inset 0 2px 10px rgba(255,255,255,.42),
+    inset 0 -2px 8px rgba(255,255,255,.12);
+  --ng1520-body-max: min(58vh, 520px);
+}
+
+/* hide technical/debug surfaces */
+.dbg,
+#ngHeaderBlock,
+#ngErrToast .detail{
+  display:none !important;
+}
+#ngHeaderBar .ngHeaderCenter{
+  opacity:.55 !important;
+  filter: blur(.2px);
+}
+
+/* keep all primary panels the same width and feel */
+.hub{
+  width: var(--ng1520-panel-w) !important;
+  max-width: var(--ng1520-panel-w) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  top: clamp(210px, 26vh, 300px) !important;
+  bottom: max(92px, env(safe-area-inset-bottom)) !important;
+  gap: 14px !important;
+  padding: 0 6px !important;
+}
+.detailWrap{
+  width: var(--ng1520-panel-w) !important;
+  max-width: var(--ng1520-panel-w) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  top: clamp(165px, 22vh, 290px) !important;
+  bottom: max(92px, env(safe-area-inset-bottom)) !important;
+  gap: 14px !important;
+  padding: 0 6px 82px !important;
+  grid-template-rows: minmax(0,1fr) auto !important;
+}
+
+/* canonical panel look */
+.ng-panel,
+.panel,
+.hub > *,
+.detailWrap > *,
+#players .panel,
+#games .panel,
+#setup .panel,
+#waiting .panel,
+#lobby .panel,
+#detail .panel,
+#leaderboard .panel,
+#randomizer .panel,
+.pickerCard,
+.statRow,
+.statGameBtn,
+.waitRow,
+.pickerRow{
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  border-radius: var(--ng1520-panel-radius) !important;
+  background: var(--ng1520-panel-bg) !important;
+  border: 1px solid var(--ng1520-panel-brd) !important;
+  box-shadow: var(--ng1520-panel-shadow) !important;
+  backdrop-filter: blur(1.5px) saturate(108%) !important;
+  -webkit-backdrop-filter: blur(1.5px) saturate(108%) !important;
+  overflow: hidden !important;
+}
+
+/* make all scrollers actually usable on small screens */
+.list,
+.detailBody,
+#setupBody,
+#waitingBody,
+#detailBody,
+#leaderboardBody,
+#randomizerBody,
+#lobbyBody,
+.pickerBody{
+  max-height: var(--ng1520-body-max) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain !important;
+  touch-action: pan-y !important;
+  padding-right: 4px !important;
+  box-sizing: border-box !important;
+}
+
+/* setup/waiting are the most important problem screens */
+#setup .detailBody,
+#waiting .detailBody,
+#detail .detailBody,
+#leaderboard .detailBody,
+#randomizer .detailBody,
+#lobby .detailBody{
+  max-height: var(--ng1520-body-max) !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+}
+
+/* smaller, cleaner rows */
+.itemLine,
+.waitRow,
+.statRow,
+.pickerRow{
+  padding: 10px 10px !important;
+  gap: 10px !important;
+  min-height: 48px !important;
+}
+.actions{
+  display:flex !important;
+  gap:8px !important;
+  width:auto !important;
+  flex: 0 0 auto !important;
+}
+.leftStack{
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+/* controls should fit instead of exploding the panel */
+.controlsRow3,
+.controlsRow,
+.actions{
+  flex-wrap: wrap !important;
+}
+button.pill,
+.pill,
+.pillMini,
+.ngWideBtn,
+#leaderboardBtn,
+#ngUpdateBtn{
+  height: 40px !important;
+  min-height: 40px !important;
+  padding: 10px 14px !important;
+  font-size: 12px !important;
+  border-radius: 14px !important;
+}
+
+/* forms/selectors need to fit on screen */
+select,
+input,
+textarea,
+#openPlayerPicker.glassBtn{
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  min-height: 44px !important;
+  font-size: 15px !important;
+}
+#openPlayerPicker.glassBtn .sub{
+  max-width: 52% !important;
+  font-size: 12px !important;
+}
+
+/* tighten headings so the content has more room */
+.title{
+  font-size: clamp(18px, 2.4vh, 24px) !important;
+  letter-spacing: 2px !important;
+  padding-bottom: 4px !important;
+}
+.sectionHead{
+  padding: 10px 12px 8px 12px !important;
+}
+.setupGameTitle,
+.playerPageName,
+#ngHeaderPlayer{
+  font-size: clamp(18px, 2.2vh, 22px) !important;
+}
+
+/* waiting room checks should be obvious */
+.statusIcon.ok,
+.statusIcon.wait{
+  color: rgba(90,255,170,.98) !important;
+  text-shadow: 0 0 12px rgba(90,255,170,.55), 0 0 20px rgba(90,255,170,.25) !important;
+  filter: drop-shadow(0 0 8px rgba(90,255,170,.35)) !important;
+}
+.statusIcon.no{
+  color: rgba(255,120,120,.96) !important;
+  text-shadow: 0 0 10px rgba(255,120,120,.35) !important;
+}
+.waitName{
+  font-size: 18px !important;
+}
+
+/* stop giant panel growth on narrow phones */
+@media (max-width: 640px){
+  :root{
+    --ng1520-panel-w: min(94vw, 500px);
+    --ng1520-body-max: min(54vh, 480px);
+  }
+  .hub{
+    top: clamp(185px, 24vh, 260px) !important;
+    bottom: max(86px, env(safe-area-inset-bottom)) !important;
+  }
+  .detailWrap{
+    top: clamp(145px, 19vh, 240px) !important;
+    bottom: max(86px, env(safe-area-inset-bottom)) !important;
+    padding-bottom: 78px !important;
+  }
+  .title{
+    font-size: 20px !important;
+  }
+}
+</style>
+
+<script id="ng-v1520-version-fix">
+(function(){
+  try{ document.title = "Night Games v1520"; }catch(_){}
+  try{ window.NG_BUILD_VERSION = "1520"; }catch(_){}
+  try{ window.NG_BUILD_LABEL = "Night Games v1520"; }catch(_){}
+  try{
+    document.querySelectorAll('*').forEach(function(el){
+      if(el.childNodes && el.childNodes.length===1 && el.childNodes[0].nodeType===3){
+        if((el.textContent||'').trim()==='1220'){ el.textContent='1520'; }
+      }
+    });
+  }catch(_){}
 })();
 </script>
 
