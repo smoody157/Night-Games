@@ -3430,29 +3430,63 @@ body{
 }
 
 
-/* === v1645 UNLOCK PATCH === */
-html,body{
+/* ===== v1645 unlock + visibility pass ===== */
+html, body, div, section{
   background: transparent !important;
 }
-
-.screen{
-  opacity:1 !important;
-  visibility:visible !important;
-}
-
-.screen::before{
-  z-index:-1 !important;
-}
-
-.screen, .ng-panel, .ngHeaderBar{
-  position:relative !important;
-  z-index:999 !important;
-}
-
-body{
-  background-image: var(--bgStage) !important;
+html, body{
+  background-attachment: fixed !important;
+  background-position: center top !important;
   background-size: cover !important;
-  background-position:center !important;
+}
+.screen{
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  background: transparent !important;
+  position: relative !important;
+  z-index: 999999 !important;
+}
+.screen.active{
+  z-index: 1000000 !important;
+}
+#ngHeaderBar{
+  position: relative !important;
+  z-index: 1000000 !important;
+}
+.screen::before{
+  z-index: -1 !important;
+  background-image: var(--bgStage) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: center top !important;
+}
+.card,
+.ng-panel,
+#players #gamesPanel,
+#players #playersPanel,
+#setup .panel,
+#waiting .panel,
+#lobby .panel,
+#leaderboard .panel,
+#randomizer .panel,
+#detail .panel,
+#game_screen .panel{
+  background: rgba(11, 26, 46, 0.80) !important;
+}
+:root{
+  --ngBtnH: 54px;
+}
+.btn,
+.pill,
+.ngPad,
+.enterBtn,
+.hitBtn,
+.btn3d{
+  height: var(--ngBtnH) !important;
+  min-height: var(--ngBtnH) !important;
+  line-height: var(--ngBtnH) !important;
+  box-sizing: border-box !important;
 }
 
 </style>
@@ -13059,7 +13093,7 @@ html, body{
       var screens = Array.from(document.querySelectorAll(".screen"));
       screens.forEach(function(s){ s.classList.add("ng-panel"); });
 
-      if(typeof window.show === "function" && !window.__v1645ShowPatched){
+      if(typeof window.show === "function" && !window.__v1643ShowPatched){
         var oldShow = window.show;
         window.show = function(id){
           screens.forEach(function(s){
@@ -13080,7 +13114,7 @@ html, body{
 
           return oldShow(id);
         };
-        window.__v1645ShowPatched = true;
+        window.__v1643ShowPatched = true;
       }
     }catch(e){}
   }
@@ -13097,7 +13131,7 @@ html, body{
   function patchEnterRescue(){
     try{
       var enterBtn = document.getElementById("enterBtn");
-      if(enterBtn && !enterBtn.dataset.v1645Bound){
+      if(enterBtn && !enterBtn.dataset.v1643Bound){
         enterBtn.addEventListener("click", function(){
           setTimeout(function(){
             try{
@@ -13105,7 +13139,7 @@ html, body{
             }catch(e){}
           }, 0);
         }, true);
-        enterBtn.dataset.v1645Bound = "1";
+        enterBtn.dataset.v1643Bound = "1";
       }
     }catch(e){}
   }
@@ -13130,7 +13164,7 @@ html, body{
   }
 
   function patchCricketMarksUI(){
-    if(typeof window.renderGameScreen !== "function" || window.__v1645MarksPatched) return;
+    if(typeof window.renderGameScreen !== "function" || window.__v1643MarksPatched) return;
     var oldRender = window.renderGameScreen;
     window.renderGameScreen = function(){
       var out = oldRender.apply(this, arguments);
@@ -13147,14 +13181,14 @@ html, body{
       }catch(e){}
       return out;
     };
-    window.__v1645MarksPatched = true;
+    window.__v1643MarksPatched = true;
   }
 
   function patchHomeCleanup(){
     try{
       ["gameHomeBtn", "waitingBackBtn", "lobbyBackBtn"].forEach(function(id){
         var btn = document.getElementById(id);
-        if(btn && !btn.dataset.v1645Cleanup){
+        if(btn && !btn.dataset.v1643Cleanup){
           btn.addEventListener("click", function(){
             try{
               if(window.turnUnsub){
@@ -13163,7 +13197,7 @@ html, body{
               }
             }catch(e){}
           }, true);
-          btn.dataset.v1645Cleanup = "1";
+          btn.dataset.v1643Cleanup = "1";
         }
       });
     }catch(e){}
@@ -13196,14 +13230,108 @@ html, body{
 </script>
 
 <script>
-/* === v1645 FORCE LANDING === */
-setTimeout(function(){
-  try{
-    if(!document.querySelector('.screen.active')){
-      if(typeof show === 'function'){ show('landing'); }
-    }
-  }catch(e){}
-},200);
+
+(function(){
+  function setVersion1645(){
+    try{
+      document.title = "Night Games v1645";
+      ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.textContent = "v1645";
+      });
+      document.querySelectorAll(".version,.ngVer,[data-app-version]").forEach(function(el){
+        el.textContent = "v1645";
+      });
+    }catch(e){}
+  }
+
+  function showDirect(id){
+    try{
+      document.querySelectorAll('.screen').forEach(function(s){
+        s.classList.remove('active');
+        s.style.display = 'block';
+        s.style.opacity = '1';
+        s.style.visibility = 'visible';
+      });
+      var target = document.getElementById(id);
+      if(target){
+        target.classList.add('active');
+        target.style.display = 'block';
+        target.style.opacity = '1';
+        target.style.visibility = 'visible';
+      }
+      document.body.setAttribute('data-ng-screen', id);
+    }catch(e){}
+  }
+
+  function forceLanding(){
+    try{
+      if(!document.querySelector('.screen.active')){
+        if(typeof window.show === 'function'){
+          try{ window.show('landing'); }catch(e){ showDirect('landing'); }
+        }else{
+          showDirect('landing');
+        }
+      }
+    }catch(e){}
+  }
+
+  function restoreLocalStateHardLock(){
+    try{
+      var saved = localStorage.getItem('ng_active_session');
+      if(saved){
+        window.__ngForceLocalState = true;
+        window.activeSession = JSON.parse(saved);
+        if(typeof window.renderGameScreen === 'function'){
+          try{ window.renderGameScreen(); }catch(e){}
+        }
+      }
+    }catch(e){}
+  }
+
+  function forceEnter(){
+    try{
+      var enterBtn = document.getElementById('enterBtn');
+      if(enterBtn && !enterBtn.dataset.v1645Force){
+        enterBtn.addEventListener('click', function(ev){
+          ev.preventDefault();
+          ev.stopPropagation();
+          showDirect('players');
+        }, true);
+        enterBtn.dataset.v1645Force = '1';
+      }
+    }catch(e){}
+  }
+
+  function patchRowButtonsHeight(){
+    try{
+      document.querySelectorAll('#gamesList .actions .pill, #playersList .actions .pill').forEach(function(el){
+        el.style.height = '54px';
+        el.style.minHeight = '54px';
+        el.style.lineHeight = '54px';
+        el.style.boxSizing = 'border-box';
+      });
+    }catch(e){}
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setVersion1645();
+    restoreLocalStateHardLock();
+    forceEnter();
+    patchRowButtonsHeight();
+    setTimeout(forceLanding, 100);
+    setTimeout(forceLanding, 500);
+  }, {once:true});
+
+  window.addEventListener('pageshow', function(){
+    setVersion1645();
+    restoreLocalStateHardLock();
+    forceEnter();
+    patchRowButtonsHeight();
+    setTimeout(forceLanding, 100);
+  });
+})();
+
 </script>
 </body>
 </html>
