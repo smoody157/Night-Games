@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1520</title>
-<!-- NIGHT GAMES v1520 -->
+<title>Night Games v1582</title>
+<!-- NIGHT GAMES v1582 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -10058,595 +10058,52 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<style id="ng-v1220-clear-crystal">
+<style id="ng-v1582-from1481-uniform-panels">
 :root{
-  --ng1220-panel-w: min(560px, 92vw);
-  --ng1220-panel-bg: rgba(255,255,255,0.018);
-  --ng1220-panel-brd: rgba(255,255,255,0.58);
-  --ng1220-panel-r: 18px;
-}
-#players .hub,
-#setup .detailWrap,
-#waiting .detailWrap,
-#lobby .detailWrap,
-#detail .detailWrap,
-#leaderboard .detailWrap,
-#randomizer .detailWrap{
-  width: var(--ng1220-panel-w) !important;
-  max-width: var(--ng1220-panel-w) !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
-}
-#playersPanel, #gamesPanel, 
-#setup .panel, #waiting .panel, #lobby .panel, #detail .panel, #leaderboard .panel, #randomizer .panel,
-.pickerCard, .statRow, .statGameBtn, .ng-panel{
-  width: 100% !important;
-  background: var(--ng1220-panel-bg) !important;
-  background-color: var(--ng1220-panel-bg) !important;
-  border: 1px solid var(--ng1220-panel-brd) !important;
-  border-radius: var(--ng1220-panel-r) !important;
-  box-shadow:
-    0 10px 28px rgba(0,0,0,.28),
-    inset 0 2px 10px rgba(255,255,255,.60),
-    inset 0 -2px 8px rgba(255,255,255,.10),
-    inset 1px 0 0 rgba(255,255,255,.16),
-    inset -1px 0 0 rgba(255,255,255,.16) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-#setup .detailBody, #waiting .detailBody, #lobby .detailBody, #detail .detailBody,
-#leaderboard .detailBody, #randomizer .detailBody,
-#players .list, #games .list, #playersList, #gamesList{
-  background: transparent !important;
-  box-shadow:none !important;
-  backdrop-filter:none !important;
-  -webkit-backdrop-filter:none !important;
-}
-.title, .fieldLabel, .playerPageName, #ngHeaderPlayer, .waitName, .statLabel, .pill, .glassText{
-  text-shadow:
-    0 1px 0 rgba(255,255,255,.25),
-    0 0 10px rgba(180,235,255,.32),
-    0 0 20px rgba(100,220,255,.16) !important;
-}
-.itemLine, .waitRow{
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-  gap:12px !important;
-}
-.leftStack{ flex:1 1 auto !important; min-width:0 !important; }
-.actions{ flex:0 0 auto !important; display:flex !important; gap:8px !important; width:auto !important; }
-.waitRow{
-  padding:14px 10px !important;
-  border-bottom:1px solid rgba(255,255,255,.12) !important;
-}
-.waitName{ font-size:20px !important; font-weight:1100 !important; }
-.statusIcon{ font-size:18px !important; width:28px !important; text-align:center !important; }
-.statusIcon.ok{ color:rgba(90,255,170,.98) !important; text-shadow:0 0 12px rgba(90,255,170,.55) !important; }
-.statusIcon.wait{ color:rgba(255,210,90,.95) !important; text-shadow:0 0 12px rgba(255,210,90,.28) !important; }
-.statusIcon.no{ color:rgba(255,120,120,.95) !important; text-shadow:0 0 12px rgba(255,120,120,.28) !important; }
-.dot.online{
-  background: rgba(60,255,160,.98) !important;
-  box-shadow: 0 0 18px rgba(60,255,160,.72), 0 0 0 1px rgba(60,255,160,.40) !important;
-}
-</style>
-
-<script id="ng-v1220-master-patch">
-(function(){
-  const BUILD = "1220";
-  const firebaseConfig = {
-    apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-    authDomain: "gamenightdarts-e7601.firebaseapp.com",
-    projectId: "gamenightdarts-e7601",
-    storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-    messagingSenderId: "270045452251",
-    appId: "1:270045452251:web:393956ce18b43316e939fe",
-    measurementId: "G-LQEHF02ZVR"
-  };
-  window.firebaseConfig = firebaseConfig;
-  window.__firebaseConfig = firebaseConfig;
-  window.ngBuild = "v" + BUILD;
-  window.NG_BUILD_VERSION = BUILD;
-  window.NG_BUILD_LABEL = "Night Games v" + BUILD;
-  try{ document.title = "Night Games v" + BUILD; }catch(_){}
-
-  const state = {
-    inviteUnsub: null,
-    sessionUnsub: null,
-    waitingBound: false
-  };
-
-  function byId(id){ return document.getElementById(id); }
-  function safeEmail(v){ return String(v||"").trim().toLowerCase().replace(/[^a-z0-9]/g,"_"); }
-  function uniq(arr){ return Array.from(new Set((arr||[]).filter(Boolean))); }
-  function nowId(){ return "ng_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2,8); }
-  function currentEmailSafe(){
-    return String(window.currentEmail || window.currentUserEmail || window.userEmail || localStorage.getItem("ng_saved_email") || "").trim().toLowerCase();
-  }
-  function people(){ return Array.isArray(window.lastPeople) ? window.lastPeople : []; }
-  function prettyName(em){
-    const lower = String(em||"").toLowerCase();
-    const p = people().find(x => String((x && x.email) || "").toLowerCase() === lower);
-    if(p && p.name) return p.name;
-    return lower.includes("@") ? (lower.split("@")[0] || lower) : (lower || "Player");
-  }
-  function gameIdFromName(game){
-    const g = String(game||"").toLowerCase();
-    if(g.includes("cricket")) return "cricket";
-    if(g.includes("killer")) return "killer";
-    if(g.includes("shanghai")) return "shanghai";
-    if(g.includes("01") || g.includes("301") || g.includes("501") || g.includes("701")) return "01";
-    return g.replace(/\s+/g,"_") || "01";
-  }
-  function readSetupCount(){
-    const sessionCount = parseInt(window.activeSession && window.activeSession.setup && window.activeSession.setup.count, 10);
-    const domCount = parseInt((byId("setupCount") && byId("setupCount").value) || "", 10);
-    return sessionCount || domCount || 1;
-  }
-  function normalizeSetup(){
-    window.activeSession = window.activeSession || {};
-    window.activeSession.setup = window.activeSession.setup || {};
-
-    const me = currentEmailSafe();
-    const count = readSetupCount();
-    let emails = [];
-    if(Array.isArray(window.activeSession.setup.emails)) emails = window.activeSession.setup.emails.slice();
-    else if(Array.isArray(window.activeSession.setup.players)) {
-      emails = window.activeSession.setup.players.map(v=>{
-        if(String(v).includes("@")) return String(v).toLowerCase();
-        const p = people().find(x => String((x && x.name) || "").toLowerCase() === String(v).toLowerCase());
-        return p && p.email ? String(p.email).toLowerCase() : null;
-      }).filter(Boolean);
-    } else {
-      emails = [];
-    }
-
-    const checked = Array.from(document.querySelectorAll(".pickPlayer:checked")).map(el=>String(el.value||"").toLowerCase()).filter(Boolean);
-    if(checked.length) emails = checked;
-
-    if(!emails.length && me) emails = [me];
-    if(me && !emails.includes(me)) emails.unshift(me);
-    emails = uniq(emails);
-
-    if(count <= 1) emails = me ? [me] : emails.slice(0,1);
-    else emails = emails.slice(0, Math.max(count, 2));
-
-    window.activeSession.host = me;
-    window.activeSession.hostName = prettyName(me);
-    window.activeSession.setup.count = count;
-    window.activeSession.setup.emails = emails;
-    window.activeSession.setup.players = emails.map(prettyName);
-
-    const game = window.activeSession.game || window.currentGame || "01";
-    window.activeSession.game = game;
-    window.activeSession.gameId = gameIdFromName(game);
-
-    const startSel = byId("setup01Start");
-    const inOutSel = byId("setup01InOut");
-    if(startSel && startSel.value) window.activeSession.startScore = parseInt(startSel.value,10) || 501;
-    if(inOutSel && inOutSel.value) window.activeSession.inOut = inOutSel.value;
-
-    try{ localStorage.setItem("ng_active_session", JSON.stringify(window.activeSession)); }catch(_){}
-    return window.activeSession;
-  }
-
-  function updateLabels(){
-    try{
-      document.querySelectorAll("title").forEach(el=>el.textContent = "Night Games v" + BUILD);
-      document.querySelectorAll("*").forEach(el=>{
-        if(el.childNodes && el.childNodes.length===1 && el.childNodes[0].nodeType===3){
-          const t = el.textContent || "";
-          if(/Night Games v\d+/i.test(t)) el.textContent = t.replace(/Night Games v\d+/ig, "Night Games v" + BUILD);
-          else if(/\bv1\d{3}\b/i.test(t)) el.textContent = t.replace(/\bv1\d{3}\b/ig, "v" + BUILD);
-        }
-      });
-    }catch(_){}
-  }
-
-  function showScreen(id){
-    try{
-      if(typeof window.show === "function") return window.show(id);
-    }catch(_){}
-    document.querySelectorAll(".screen").forEach(el=>el.classList.toggle("active", el.id === id));
-  }
-
-  function renderWaitingRoomV1220(){
-    const body = byId("waitingBody");
-    if(!body) return;
-    const s = normalizeSetup();
-    const emails = (s.setup && s.setup.emails) ? s.setup.emails : [];
-    const me = currentEmailSafe();
-
-    const joined = (s.joined || {});
-    const declined = (s.declined || {});
-    const rows = emails.map(em=>{
-      const lower = String(em||"").toLowerCase();
-      const isHost = lower === String(s.host||me).toLowerCase();
-      const isJoined = !!joined[lower] || isHost;
-      const isDeclined = !!declined[lower];
-      const icon = isDeclined ? "✖" : (isJoined ? "✔" : "⌛");
-      const iconClass = isDeclined ? "no" : (isJoined ? "ok" : "wait");
-      const label = isDeclined ? "no thanks" : (isJoined ? "joined" : "invited");
-      return `<div class="waitRow">
-        <div class="waitLeft">
-          <span class="dot ${isJoined ? "online" : ""}"></span>
-          <div class="waitName">${prettyName(lower)}</div>
-        </div>
-        <div class="waitMeta"><span class="statusIcon ${iconClass}">${icon}</span> ${label}</div>
-      </div>`;
-    }).join("");
-
-    body.innerHTML = `
-      <div class="setupGameTitle">${s.game || "Game"}</div>
-      <div style="opacity:.82; margin-bottom:14px;">Welcome players, let's get started.</div>
-      <div>${rows || `<div style="opacity:.76;">No players selected.</div>`}</div>
-      <div id="waitingInviteStatus" style="margin-top:14px; opacity:.84;"></div>
-      <div id="waitingRandomizerBlock" style="margin-top:16px;"></div>
-    `;
-  }
-
-  async function ensureDb(){
-    if(window.db) return window.db;
-    if(window.ngFirebase && window.ngFirebase.db) return window.ngFirebase.db;
-    return null;
-  }
-
-  async function createOrUpdateSession(started){
-    const db = await ensureDb();
-    const s = normalizeSetup();
-    if(!db || typeof window.setDoc !== "function" || typeof window.doc !== "function") return s;
-    if(!window.activeSessionId) window.activeSessionId = s.id || nowId();
-    s.id = window.activeSessionId;
-
-    const joined = Object.assign({}, s.joined || {});
-    joined[String(s.host||currentEmailSafe()).toLowerCase()] = true;
-    s.joined = joined;
-
-    const payload = {
-      sessionId: s.id,
-      game: s.game || "Game",
-      gameId: s.gameId || gameIdFromName(s.game),
-      host: s.host || currentEmailSafe(),
-      hostName: s.hostName || prettyName(s.host || currentEmailSafe()),
-      invited: s.setup.emails || [],
-      count: s.setup.count || 1,
-      setup: s.setup || {},
-      joined: s.joined || {},
-      declined: s.declined || {},
-      practice: !!s.practice,
-      started: !!started,
-      updatedAt: typeof window.serverTimestamp === "function" ? window.serverTimestamp() : new Date()
-    };
-    await window.setDoc(window.doc(db, "sessions", s.id), payload, { merge:true });
-    try{ localStorage.setItem("ng_active_session", JSON.stringify(s)); }catch(_){}
-    return s;
-  }
-
-  async function writeInviteDocs(){
-    const db = await ensureDb();
-    const s = normalizeSetup();
-    if(!db || typeof window.setDoc !== "function" || typeof window.doc !== "function") return;
-    const hostEmail = String(s.host || currentEmailSafe()).toLowerCase();
-    for(const to of (s.setup.emails || []).filter(em => String(em).toLowerCase() !== hostEmail)){
-      const invId = `${s.id}_${safeEmail(to)}`;
-      await window.setDoc(window.doc(db, "invites", invId), {
-        sessionId: s.id,
-        game: s.game || "Game",
-        from: s.hostName || prettyName(hostEmail),
-        fromEmail: hostEmail,
-        to: String(to).toLowerCase(),
-        invited: s.setup.emails || [],
-        count: s.setup.count || 1,
-        status: "pending",
-        createdAt: typeof window.serverTimestamp === "function" ? window.serverTimestamp() : new Date()
-      }, { merge:true });
-    }
-  }
-
-  function runOrderRandomizer(){
-    const holder = byId("waitingRandomizerBlock");
-    const s = normalizeSetup();
-    const players = (s.setup.emails || []).slice().sort(()=>Math.random()-0.5);
-    s.setup.turnOrder = players;
-    const orderHtml = players.map((em, i)=>`${i+1}. <span class="glassText">${prettyName(em)}</span>`).join("<br>");
-    if(holder){
-      holder.innerHTML = `<div class="fieldLabel" style="margin-top:14px;">Order of Play</div><div class="statRow"><div><div class="statLabel">Randomizer</div><div class="statHelp">${orderHtml}</div></div><div class="statVal">Live</div></div>`;
-    }
-    if((s.gameId || "").toLowerCase() === "killer"){
-      const nums = players.map((em,i)=>({em, n: (Array.from({length:20},(_,x)=>x+1).sort(()=>Math.random()-0.5)[i])}));
-      s.setup.killerNumbers = nums;
-      if(holder){
-        holder.innerHTML += `<div class="fieldLabel" style="margin-top:14px;">Killer Numbers</div>` + nums.map(x=>`<div class="statRow"><div><div class="statLabel">${prettyName(x.em)}</div><div class="statHelp">Assigned number</div></div><div class="statVal">${x.n}</div></div>`).join("");
-      }
-    }
-    try{ localStorage.setItem("ng_active_session", JSON.stringify(s)); }catch(_){}
-  }
-
-  async function startSinglePlayerNow(ev){
-    if(ev){ ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation && ev.stopImmediatePropagation(); }
-    const s = normalizeSetup();
-    s.practice = true;
-    s.local = true;
-    s.started = true;
-    s.setup.count = 1;
-    s.setup.emails = [currentEmailSafe()];
-    window.activeSession = s;
-    try{ localStorage.setItem("ng_local_session", JSON.stringify(s)); }catch(_){}
-    try{
-      if(typeof window.runGameEngine === "function") window.runGameEngine(s);
-    }catch(_){}
-    try{
-      const gid = String(s.gameId||"");
-      if(gid === "cricket" && typeof window.initCricket === "function") window.initCricket();
-      else if(gid === "killer" && typeof window.initKiller === "function") window.initKiller();
-      else if(typeof window.initStandardScoreboard === "function") window.initStandardScoreboard();
-    }catch(_){}
-    showScreen("game_screen");
-    return false;
-  }
-
-  async function startMultiplayerFlow(ev){
-    if(ev){ ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation && ev.stopImmediatePropagation(); }
-    const s = normalizeSetup();
-    s.practice = false;
-    s.local = false;
-    await createOrUpdateSession(false);
-    await writeInviteDocs();
-    renderWaitingRoomV1220();
-    showScreen("waiting");
-    listenForSession(window.activeSessionId);
-    listenForInvitesMe();
-    const st = byId("waitingInviteStatus");
-    if(st) st.textContent = "Invites sent.";
-    return false;
-  }
-
-  async function acceptInvite(inv, inviteId){
-    const db = await ensureDb();
-    if(!db || !inv) return;
-    const me = currentEmailSafe();
-    window.activeSessionId = inv.sessionId;
-    window.activeSession = window.activeSession || {};
-    window.activeSession.game = inv.game || "Game";
-    window.activeSession.gameId = gameIdFromName(inv.game);
-    window.activeSession.id = inv.sessionId;
-    window.activeSession.host = String(inv.fromEmail || "").toLowerCase();
-    window.activeSession.hostName = inv.from || prettyName(inv.fromEmail);
-    window.activeSession.setup = window.activeSession.setup || {};
-    window.activeSession.setup.emails = uniq((inv.invited || []).concat([me]));
-    window.activeSession.setup.count = inv.count || window.activeSession.setup.emails.length;
-    try{
-      await window.setDoc(window.doc(db, "invites", inviteId), {
-        status: "accepted",
-        respondedAt: typeof window.serverTimestamp === "function" ? window.serverTimestamp() : new Date()
-      }, { merge:true });
-      await window.setDoc(window.doc(db, "sessions", inv.sessionId), {
-        joined: { [me]: true },
-        declined: { [me]: false },
-        updatedAt: typeof window.serverTimestamp === "function" ? window.serverTimestamp() : new Date()
-      }, { merge:true });
-    }catch(err){
-      console.error(err);
-    }
-    renderWaitingRoomV1220();
-    showScreen("waiting");
-    listenForSession(inv.sessionId);
-  }
-
-  async function declineInvite(inviteId){
-    const db = await ensureDb();
-    const me = currentEmailSafe();
-    if(!db || !inviteId) return;
-    try{
-      await window.setDoc(window.doc(db, "invites", inviteId), {
-        status: "declined",
-        respondedAt: typeof window.serverTimestamp === "function" ? window.serverTimestamp() : new Date()
-      }, { merge:true });
-    }catch(err){ console.error(err); }
-    try{ if(typeof window.closeDetail === "function") window.closeDetail(); }catch(_){}
-  }
-
-  function listenForInvitesMe(){
-    if(state.inviteUnsub){ try{ state.inviteUnsub(); }catch(_){} }
-    const db = window.db || (window.ngFirebase && window.ngFirebase.db);
-    if(!db || typeof window.collection !== "function" || typeof window.query !== "function" || typeof window.where !== "function" || typeof window.onSnapshot !== "function") return;
-    const me = currentEmailSafe();
-    if(!me) return;
-    const q = window.query(window.collection(db, "invites"), window.where("to", "==", me), window.where("status", "==", "pending"));
-    state.inviteUnsub = window.onSnapshot(q, snap=>{
-      if(!snap || snap.empty) return;
-      const d = snap.docs[0];
-      const inv = d.data() || {};
-      const title = `${inv.game || "Game"} Invite`;
-      const html = `
-        <div style="font-size:20px; font-weight:1100; margin-bottom:10px;">${inv.from || "Host"} invited you to play ${inv.game || "Game"}.</div>
-        <div style="opacity:.82; margin-bottom:14px;">Join the waiting room or no thanks.</div>
-        <div class="actions" style="display:flex; gap:10px; width:100%;">
-          <button class="pill" id="ngJoinInviteBtn">Join</button>
-          <button class="pill" id="ngDeclineInviteBtn">No Thanks</button>
-        </div>`;
-      try{
-        if(typeof window.openDetail === "function") window.openDetail(title, html);
-        else alert(`${inv.from || "Host"} invited you to play ${inv.game || "Game"}.`);
-        setTimeout(()=>{
-          const j = byId("ngJoinInviteBtn");
-          const n = byId("ngDeclineInviteBtn");
-          if(j) j.onclick = ()=>acceptInvite(inv, d.id);
-          if(n) n.onclick = ()=>declineInvite(d.id);
-        }, 20);
-      }catch(err){ console.error(err); }
-    });
-  }
-
-  function allPlayersResolved(session){
-    const invited = ((session && session.setup && session.setup.emails) || session.invited || []).filter(Boolean);
-    const joined = session.joined || {};
-    const declined = session.declined || {};
-    if(!invited.length) return false;
-    return invited.every(em => joined[String(em).toLowerCase()] || declined[String(em).toLowerCase()]);
-  }
-
-  function allJoinedNoDeclines(session){
-    const invited = ((session && session.setup && session.setup.emails) || session.invited || []).filter(Boolean);
-    const joined = session.joined || {};
-    const declined = session.declined || {};
-    if(!invited.length) return false;
-    return invited.every(em => joined[String(em).toLowerCase()]) && !invited.some(em => declined[String(em).toLowerCase()]);
-  }
-
-  async function maybeAdvanceWaiting(session){
-    if(!session || session.__startedBy1220) return;
-    if(!allPlayersResolved(session)) return;
-    renderWaitingRoomV1220();
-    if(allJoinedNoDeclines(session)){
-      runOrderRandomizer();
-      const holder = byId("waitingRandomizerBlock");
-      if(holder){
-        holder.innerHTML = `<div class="statRow"><div><div class="statLabel">Welcome players, let's get started.</div><div class="statHelp">Shoot well.</div></div><div class="statVal">GO</div></div>` + holder.innerHTML;
-      }
-      session.__startedBy1220 = true;
-      try{
-        const db = await ensureDb();
-        if(db && window.activeSessionId){
-          await window.setDoc(window.doc(db, "sessions", window.activeSessionId), { started:true }, { merge:true });
-        }
-      }catch(_){}
-      setTimeout(()=>showScreen("game_screen"), 1800);
-    }
-  }
-
-  function listenForSession(sessionId){
-    if(state.sessionUnsub){ try{ state.sessionUnsub(); }catch(_){} }
-    const db = window.db || (window.ngFirebase && window.ngFirebase.db);
-    if(!db || !sessionId || typeof window.onSnapshot !== "function" || typeof window.doc !== "function") return;
-    state.sessionUnsub = window.onSnapshot(window.doc(db, "sessions", sessionId), snap=>{
-      const data = snap && snap.data ? (snap.data() || {}) : {};
-      window.activeSession = Object.assign({}, window.activeSession || {}, data);
-      if(data.setup) window.activeSession.setup = data.setup;
-      if(byId("waiting").classList.contains("active")) renderWaitingRoomV1220();
-      if(data.started === true){
-        setTimeout(()=>showScreen("game_screen"), 300);
-      }else{
-        maybeAdvanceWaiting(window.activeSession);
-      }
-    });
-
-    try{
-      const q = window.query(window.collection(db, "invites"), window.where("sessionId", "==", sessionId));
-      window.onSnapshot(q, snap=>{
-        const s = window.activeSession = window.activeSession || {};
-        s.joined = s.joined || {};
-        s.declined = s.declined || {};
-        snap && snap.docs && snap.docs.forEach(d=>{
-          const v = d.data() || {};
-          const em = String(v.to || "").toLowerCase();
-          if(!em) return;
-          if(v.status === "accepted") s.joined[em] = true;
-          if(v.status === "declined") s.declined[em] = true;
-        });
-        if(byId("waiting").classList.contains("active")) renderWaitingRoomV1220();
-        maybeAdvanceWaiting(s);
-      });
-    }catch(_){}
-  }
-
-  function bindActionButtons(){
-    const startBtn = byId("setupStartGameBtn");
-    const inviteBtn = byId("setupInviteBtn");
-    if(startBtn && !startBtn.__ng1220){
-      startBtn.__ng1220 = true;
-      startBtn.addEventListener("click", function(ev){
-        const count = readSetupCount();
-        if(count <= 1) startSinglePlayerNow(ev);
-      }, true);
-    }
-    if(inviteBtn && !inviteBtn.__ng1220){
-      inviteBtn.__ng1220 = true;
-      inviteBtn.addEventListener("click", function(ev){
-        const count = readSetupCount();
-        if(count > 1) startMultiplayerFlow(ev);
-      }, true);
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", function(){
-    updateLabels();
-    bindActionButtons();
-    listenForInvitesMe();
-    try{
-      const saved = localStorage.getItem("ng_active_session");
-      if(saved && !window.activeSession) window.activeSession = JSON.parse(saved);
-    }catch(_){}
-  });
-  window.addEventListener("load", function(){
-    updateLabels();
-    bindActionButtons();
-  });
-
-  window.ngConfirmRemove = function(name, fn){
-    if(confirm("Remove player " + name + "?")){
-      try{ fn && fn(); }catch(e){ console.error(e); }
-    }
-  };
-
-  window.startSinglePlayerNow = startSinglePlayerNow;
-  window.startMultiplayerFlow = startMultiplayerFlow;
-  window.renderWaitingRoomV1220 = renderWaitingRoomV1220;
-})();
-</script>
-
-
-<style id="ng-v1520-uniform-panel-master">
-:root{
-  --ng1520-panel-w: min(520px, 90vw);
-  --ng1520-panel-radius: 16px;
-  --ng1520-panel-pad: 12px 14px;
-  --ng1520-panel-bg: rgba(255,255,255,.022);
-  --ng1520-panel-brd: rgba(255,255,255,.52);
-  --ng1520-panel-shadow:
-    0 10px 26px rgba(0,0,0,.30),
-    inset 0 2px 10px rgba(255,255,255,.42),
-    inset 0 -2px 8px rgba(255,255,255,.12);
-  --ng1520-body-max: min(58vh, 520px);
+  --ng-panel-w: min(500px, 90vw);
+  --ng-panel-r: 16px;
+  --ng-panel-bg: rgba(255,255,255,.028);
+  --ng-panel-brd: rgba(255,255,255,.50);
+  --ng-panel-shadow:
+    0 10px 24px rgba(0,0,0,.28),
+    inset 0 2px 10px rgba(255,255,255,.40),
+    inset 0 -2px 7px rgba(255,255,255,.10);
+  --ng-body-max: min(56vh, 500px);
 }
 
-/* hide technical/debug surfaces */
+/* hide obvious build/debug surfaces */
 .dbg,
 #ngHeaderBlock,
 #ngErrToast .detail{
   display:none !important;
 }
-#ngHeaderBar .ngHeaderCenter{
-  opacity:.55 !important;
-  filter: blur(.2px);
+
+/* make the main shells uniform */
+.hub,
+.detailWrap{
+  width: var(--ng-panel-w) !important;
+  max-width: var(--ng-panel-w) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+  gap: 14px !important;
 }
 
-/* keep all primary panels the same width and feel */
 .hub{
-  width: var(--ng1520-panel-w) !important;
-  max-width: var(--ng1520-panel-w) !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  top: clamp(210px, 26vh, 300px) !important;
-  bottom: max(92px, env(safe-area-inset-bottom)) !important;
-  gap: 14px !important;
-  padding: 0 6px !important;
+  top: clamp(200px, 25vh, 290px) !important;
+  bottom: max(88px, env(safe-area-inset-bottom)) !important;
 }
+
 .detailWrap{
-  width: var(--ng1520-panel-w) !important;
-  max-width: var(--ng1520-panel-w) !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  top: clamp(165px, 22vh, 290px) !important;
-  bottom: max(92px, env(safe-area-inset-bottom)) !important;
-  gap: 14px !important;
-  padding: 0 6px 82px !important;
-  grid-template-rows: minmax(0,1fr) auto !important;
+  top: clamp(150px, 20vh, 255px) !important;
+  bottom: max(88px, env(safe-area-inset-bottom)) !important;
+  padding-bottom: 78px !important;
 }
 
 /* canonical panel look */
-.ng-panel,
 .panel,
+.ng-panel,
 .hub > *,
 .detailWrap > *,
 #players .panel,
@@ -10659,22 +10116,20 @@ document.addEventListener("DOMContentLoaded", function(){
 #randomizer .panel,
 .pickerCard,
 .statRow,
-.statGameBtn,
-.waitRow,
-.pickerRow{
+.statGameBtn{
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
-  border-radius: var(--ng1520-panel-radius) !important;
-  background: var(--ng1520-panel-bg) !important;
-  border: 1px solid var(--ng1520-panel-brd) !important;
-  box-shadow: var(--ng1520-panel-shadow) !important;
+  border-radius: var(--ng-panel-r) !important;
+  background: var(--ng-panel-bg) !important;
+  border: 1px solid var(--ng-panel-brd) !important;
+  box-shadow: var(--ng-panel-shadow) !important;
   backdrop-filter: blur(1.5px) saturate(108%) !important;
   -webkit-backdrop-filter: blur(1.5px) saturate(108%) !important;
   overflow: hidden !important;
 }
 
-/* make all scrollers actually usable on small screens */
+/* make oversized screens usable */
 .list,
 .detailBody,
 #setupBody,
@@ -10684,7 +10139,7 @@ document.addEventListener("DOMContentLoaded", function(){
 #randomizerBody,
 #lobbyBody,
 .pickerBody{
-  max-height: var(--ng1520-body-max) !important;
+  max-height: var(--ng-body-max) !important;
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch !important;
   overscroll-behavior: contain !important;
@@ -10693,44 +10148,36 @@ document.addEventListener("DOMContentLoaded", function(){
   box-sizing: border-box !important;
 }
 
-/* setup/waiting are the most important problem screens */
 #setup .detailBody,
 #waiting .detailBody,
 #detail .detailBody,
 #leaderboard .detailBody,
 #randomizer .detailBody,
 #lobby .detailBody{
-  max-height: var(--ng1520-body-max) !important;
+  max-height: var(--ng-body-max) !important;
   min-height: 0 !important;
   overflow-y: auto !important;
 }
 
-/* smaller, cleaner rows */
+/* player picker / setup rows */
 .itemLine,
 .waitRow,
 .statRow,
 .pickerRow{
   padding: 10px 10px !important;
   gap: 10px !important;
-  min-height: 48px !important;
+  min-height: 46px !important;
 }
+
+/* keep buttons tidy */
 .actions{
   display:flex !important;
   gap:8px !important;
   width:auto !important;
-  flex: 0 0 auto !important;
-}
-.leftStack{
-  min-width: 0 !important;
-  flex: 1 1 auto !important;
-}
-
-/* controls should fit instead of exploding the panel */
-.controlsRow3,
-.controlsRow,
-.actions{
+  flex:0 0 auto !important;
   flex-wrap: wrap !important;
 }
+
 button.pill,
 .pill,
 .pillMini,
@@ -10744,7 +10191,13 @@ button.pill,
   border-radius: 14px !important;
 }
 
-/* forms/selectors need to fit on screen */
+/* controls and selectors fit instead of blowing up */
+.controlsRow3,
+.controlsRow,
+.actions{
+  flex-wrap: wrap !important;
+}
+
 select,
 input,
 textarea,
@@ -10755,14 +10208,15 @@ textarea,
   min-height: 44px !important;
   font-size: 15px !important;
 }
+
 #openPlayerPicker.glassBtn .sub{
   max-width: 52% !important;
   font-size: 12px !important;
 }
 
-/* tighten headings so the content has more room */
+/* headings slightly tighter */
 .title{
-  font-size: clamp(18px, 2.4vh, 24px) !important;
+  font-size: clamp(18px, 2.3vh, 24px) !important;
   letter-spacing: 2px !important;
   padding-bottom: 4px !important;
 }
@@ -10775,56 +10229,46 @@ textarea,
   font-size: clamp(18px, 2.2vh, 22px) !important;
 }
 
-/* waiting room checks should be obvious */
+/* checks visible */
 .statusIcon.ok,
 .statusIcon.wait{
   color: rgba(90,255,170,.98) !important;
-  text-shadow: 0 0 12px rgba(90,255,170,.55), 0 0 20px rgba(90,255,170,.25) !important;
-  filter: drop-shadow(0 0 8px rgba(90,255,170,.35)) !important;
+  text-shadow: 0 0 12px rgba(90,255,170,.55), 0 0 20px rgba(90,255,170,.22) !important;
+  filter: drop-shadow(0 0 8px rgba(90,255,170,.30)) !important;
 }
 .statusIcon.no{
   color: rgba(255,120,120,.96) !important;
-  text-shadow: 0 0 10px rgba(255,120,120,.35) !important;
-}
-.waitName{
-  font-size: 18px !important;
+  text-shadow: 0 0 10px rgba(255,120,120,.30) !important;
 }
 
-/* stop giant panel growth on narrow phones */
 @media (max-width: 640px){
   :root{
-    --ng1520-panel-w: min(94vw, 500px);
-    --ng1520-body-max: min(54vh, 480px);
+    --ng-panel-w: min(94vw, 500px);
+    --ng-body-max: min(54vh, 470px);
   }
   .hub{
-    top: clamp(185px, 24vh, 260px) !important;
-    bottom: max(86px, env(safe-area-inset-bottom)) !important;
+    top: clamp(180px, 23vh, 250px) !important;
   }
   .detailWrap{
-    top: clamp(145px, 19vh, 240px) !important;
-    bottom: max(86px, env(safe-area-inset-bottom)) !important;
-    padding-bottom: 78px !important;
-  }
-  .title{
-    font-size: 20px !important;
+    top: clamp(138px, 18vh, 225px) !important;
   }
 }
 </style>
 
-<script id="ng-v1520-version-fix">
+<script id="ng-v1582-version-fix">
 (function(){
-  try{ document.title = "Night Games v1520"; }catch(_){}
-  try{ window.NG_BUILD_VERSION = "1520"; }catch(_){}
-  try{ window.NG_BUILD_LABEL = "Night Games v1520"; }catch(_){}
-  try{
-    document.querySelectorAll('*').forEach(function(el){
-      if(el.childNodes && el.childNodes.length===1 && el.childNodes[0].nodeType===3){
-        if((el.textContent||'').trim()==='1220'){ el.textContent='1520'; }
-      }
-    });
-  }catch(_){}
+  try{ document.title = "Night Games v1582"; }catch(_){}
+  try{ window.NG_BUILD_VERSION = "1582"; }catch(_){}
+  try{ window.NG_BUILD_LABEL = "Night Games v1582"; }catch(_){}
 })();
 </script>
 
 </body>
 </html>
+
+/* --- v1481 remove confirm safety --- */
+window.ngConfirmRemove = function(name, fn){
+  if(confirm("Remove player " + name + "?")){
+    try{ fn && fn(); }catch(e){ console.error(e); }
+  }
+};
