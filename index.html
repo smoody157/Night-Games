@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1582</title>
-<!-- NIGHT GAMES v1582 -->
+<title>Night Games v1583</title>
+<!-- NIGHT GAMES v1583 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -10058,7 +10058,7 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<style id="ng-v1582-from1481-uniform-panels">
+<style id="ng-v1583-from1481-uniform-panels">
 :root{
   --ng-panel-w: min(500px, 90vw);
   --ng-panel-r: 16px;
@@ -10255,20 +10255,23 @@ textarea,
 }
 </style>
 
-<script id="ng-v1582-version-fix">
+<script id="ng-v1583-bootfix-and-version">
 (function(){
-  try{ document.title = "Night Games v1582"; }catch(_){}
-  try{ window.NG_BUILD_VERSION = "1582"; }catch(_){}
-  try{ window.NG_BUILD_LABEL = "Night Games v1582"; }catch(_){}
+  // Ensure no stray JS lives outside <script> tags (a prior issue).
+  try{ document.title = "Night Games v1583"; }catch(_){}
+  try{ window.NG_BUILD_VERSION = "1583"; }catch(_){}
+  try{ window.NG_BUILD_LABEL = "Night Games v1583"; }catch(_){}
+
+  // Safe confirm helper (kept inside script tag so it never breaks HTML parsing).
+  window.ngConfirmRemove = function(name, fn){
+    try{
+      if(window.confirm("Remove player " + name + "?")){
+        try{ fn && fn(); }catch(e){ console.error(e); }
+      }
+    }catch(e){ console.error(e); }
+  };
 })();
 </script>
 
 </body>
 </html>
-
-/* --- v1481 remove confirm safety --- */
-window.ngConfirmRemove = function(name, fn){
-  if(confirm("Remove player " + name + "?")){
-    try{ fn && fn(); }catch(e){ console.error(e); }
-  }
-};
