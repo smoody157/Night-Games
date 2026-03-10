@@ -12046,5 +12046,208 @@ button.pill,.pill,.pillMini,.ngWideBtn,#leaderboardBtn,#ngUpdateBtn,.ng1614-chip
 })();
 </script>
 
+
+<style id="ng-v1614-landing-rescue">
+/* ===== v1614 landing rescue patch ===== */
+body[data-ng-screen="landing"] #ngHeaderBar,
+body[data-ng-screen="landing"] #ngVersionBelow{
+  display:none !important;
+}
+body[data-ng-screen="landing"] #globalFooter{
+  display:block !important;
+}
+body[data-ng-screen]:not([data-ng-screen="landing"]) #ngHeaderBar{
+  display:flex !important;
+}
+body[data-ng-screen]:not([data-ng-screen="landing"]) #ngVersionBelow{
+  display:block !important;
+}
+#landing{
+  z-index: 50 !important;
+}
+#landing #landingPads{
+  position:absolute !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  width:min(340px,82vw) !important;
+  bottom:max(92px, calc(env(safe-area-inset-bottom) + 92px)) !important;
+  display:grid !important;
+  gap:12px !important;
+  z-index:90 !important;
+  pointer-events:auto !important;
+}
+#landing #emailPad,
+#landing #enterBtn{
+  display:block !important;
+  width:100% !important;
+  margin:0 auto !important;
+  border-radius:18px !important;
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(255,255,255,.38) !important;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.35),
+    inset 0 -10px 20px rgba(0,0,0,.28) !important;
+  backdrop-filter: blur(8px) saturate(110%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(110%) !important;
+}
+#landing #emailPad{
+  position:relative !important;
+  height:48px !important;
+  overflow:hidden !important;
+}
+#landing #emailInput{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  opacity:.01 !important;
+  color:transparent !important;
+  background:transparent !important;
+  border:0 !important;
+  z-index:3 !important;
+  pointer-events:auto !important;
+}
+#landing #emailEcho{
+  display:flex !important;
+  position:absolute !important;
+  inset:0 !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:0 16px !important;
+  font-size:17px !important;
+  font-weight:1000 !important;
+  color:rgba(255,255,255,.95) !important;
+  text-shadow:0 2px 10px rgba(0,0,0,.65) !important;
+  opacity:1 !important;
+  z-index:2 !important;
+}
+#landing #enterBtn{
+  position:relative !important;
+  height:52px !important;
+  opacity:1 !important;
+  cursor:pointer !important;
+  pointer-events:auto !important;
+}
+#landing #enterBtn .enterText{
+  position:absolute !important;
+  left:50% !important;
+  top:50% !important;
+  transform:translate(-50%,-58%) !important;
+  font-size:24px !important;
+  font-weight:1000 !important;
+  letter-spacing:2px !important;
+  color:rgba(255,255,255,.96) !important;
+  text-shadow:0 2px 12px rgba(0,0,0,.7) !important;
+}
+#landing #enterBtn .enterSub{
+  position:absolute !important;
+  left:50% !important;
+  top:50% !important;
+  width:92% !important;
+  transform:translate(-50%,42%) !important;
+  text-align:center !important;
+  font-size:11px !important;
+  font-weight:900 !important;
+  color:rgba(255,255,255,.88) !important;
+  text-shadow:0 2px 10px rgba(0,0,0,.7) !important;
+  white-space:normal !important;
+}
+#landingFoot{
+  z-index: 85 !important;
+}
+</style>
+<script id="ng-v1614-landing-rescue-script">
+(function(){
+  function setScreenChrome(id){
+    try{
+      document.body.setAttribute("data-ng-screen", id || "landing");
+      var header = document.getElementById("ngHeaderBar");
+      var ver = document.getElementById("ngVersionBelow");
+      if(header) header.style.display = (id === "landing" ? "none" : "flex");
+      if(ver) ver.style.display = (id === "landing" ? "none" : "block");
+    }catch(e){}
+  }
+
+  function forceLanding(){
+    try{
+      ["landing","players","setup","waiting","lobby","detail","leaderboard","randomizer","game"].forEach(function(id){
+        var el = document.getElementById(id);
+        if(!el) return;
+        var on = (id === "landing");
+        el.classList.toggle("active", on);
+        el.style.display = on ? "block" : "";
+      });
+      setScreenChrome("landing");
+      var vb = document.getElementById("ngVersionBelow");
+      if(vb) vb.textContent = "v1614";
+      var status = document.getElementById("statusLine");
+      if(status) status.textContent = "Email-only sign-in (no password).";
+      var enter = document.getElementById("enterBtn");
+      if(enter){
+        enter.style.display = "block";
+        enter.style.opacity = "1";
+        enter.style.pointerEvents = "auto";
+      }
+      var email = document.getElementById("emailInput");
+      var echo = document.getElementById("emailEcho");
+      if(email){
+        email.disabled = false;
+        email.readOnly = false;
+        email.removeAttribute("readonly");
+        email.style.pointerEvents = "auto";
+        var syncEcho = function(){
+          if(echo) echo.textContent = (email.value || "Player@example.com");
+        };
+        email.addEventListener("input", syncEcho);
+        email.addEventListener("change", syncEcho);
+        syncEcho();
+      }
+    }catch(e){}
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    forceLanding();
+    var oldShow = window.showScreen;
+    if(typeof oldShow === "function" && !oldShow.__ngWrapped){
+      var wrapped = function(id){
+        var out = oldShow.apply(this, arguments);
+        setScreenChrome(id);
+        return out;
+      };
+      wrapped.__ngWrapped = true;
+      window.showScreen = wrapped;
+    }
+
+    var oldShow2 = window.show;
+    if(typeof oldShow2 === "function" && !oldShow2.__ngWrapped){
+      var wrapped2 = function(id){
+        var out = oldShow2.apply(this, arguments);
+        setScreenChrome(id);
+        return out;
+      };
+      wrapped2.__ngWrapped = true;
+      window.show = wrapped2;
+    }
+
+    var enter = document.getElementById("enterBtn");
+    var email = document.getElementById("emailInput");
+    if(enter && !enter.dataset.ngLandingRescue){
+      enter.dataset.ngLandingRescue = "1";
+      enter.addEventListener("click", function(){
+        setTimeout(function(){ setScreenChrome("players"); }, 30);
+      }, true);
+    }
+    if(email){
+      email.addEventListener("keydown", function(e){
+        if(e.key === "Enter"){
+          setTimeout(function(){ setScreenChrome("players"); }, 30);
+        }
+      }, true);
+    }
+  }, {once:true});
+})();
+</script>
+
 </body>
 </html>
