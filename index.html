@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1585</title>
-<!-- NIGHT GAMES v1585 -->
+<title>Night Games v1586</title>
+<!-- NIGHT GAMES v1586 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script id="ng-config-v1585">
-window.NG_BUILD_VERSION="1585";
-window.NG_BUILD_LABEL="Night Games v1585";
+window.NG_BUILD_VERSION="1586";
+window.NG_BUILD_LABEL="Night Games v1586";
 window.firebaseConfig = {
   apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
   authDomain: "gamenightdarts-e7601.firebaseapp.com",
@@ -3548,7 +3548,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1481";window.NG_BUILD_LABEL="Night Games v1585";</script>
+<script>window.NG_BUILD_VERSION="1481";window.NG_BUILD_LABEL="Night Games v1586";</script>
 
 <style id="ng-v1585-header-style">
 #ngHeaderBlock{
@@ -4260,7 +4260,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1585 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1586 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -4352,7 +4352,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1585";
+  window.ngBuild = "v1586";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -4377,7 +4377,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1585";
+window.ngBuild = "v1586";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -6391,7 +6391,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1585 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1586 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -10044,7 +10044,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
     try{
       const gv = document.getElementById("globalFooter");
-      if(gv && !new RegExp("v"+BUILD).test(gv.textContent||"")) gv.textContent = "Night Games v1585 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gv && !new RegExp("v"+BUILD).test(gv.textContent||"")) gv.textContent = "Night Games v1586 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(_){}
   }
 
@@ -10129,6 +10129,264 @@ button.pill, .pill, .pillMini, .ngWideBtn, #leaderboardBtn, #ngUpdateBtn{
   .detailWrap{ top: clamp(135px, 18vh, 220px)!important; }
 }
 </style>
+
+
+<style id="ng-v1586-targeted-layout-rebuild">
+/* Screenshot-driven fixes:
+   - hide tech header
+   - shrink setup stack
+   - force inner scrolling
+   - reduce controls panel height
+   - keep footer visible
+   - uniform smaller panels
+*/
+#ngHeaderBlock,
+#ngHeaderBar .ngHeaderCenter,
+#ngHeaderRight{
+  display:none !important;
+}
+
+:root{
+  --ng1586-w: min(500px, 90vw);
+  --ng1586-r: 16px;
+  --ng1586-pad: 10px 12px;
+  --ng1586-bg: rgba(255,255,255,.025);
+  --ng1586-brd: rgba(255,255,255,.48);
+  --ng1586-shadow:
+    0 10px 22px rgba(0,0,0,.26),
+    inset 0 2px 8px rgba(255,255,255,.36),
+    inset 0 -2px 6px rgba(255,255,255,.08);
+}
+
+/* one width system, slightly smaller */
+.hub,
+.detailWrap{
+  width: var(--ng1586-w) !important;
+  max-width: var(--ng1586-w) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+  gap: 12px !important;
+}
+
+#setup .detailWrap{
+  top: clamp(132px, 16vh, 185px) !important;
+  bottom: max(118px, calc(env(safe-area-inset-bottom) + 104px)) !important;
+  padding-bottom: 84px !important;
+  grid-template-rows: minmax(0,1fr) auto !important;
+}
+
+#waiting .detailWrap,
+#detail .detailWrap,
+#leaderboard .detailWrap,
+#randomizer .detailWrap,
+#lobby .detailWrap{
+  top: clamp(138px, 17vh, 195px) !important;
+  bottom: max(102px, calc(env(safe-area-inset-bottom) + 90px)) !important;
+  padding-bottom: 82px !important;
+}
+
+.hub{
+  top: clamp(178px, 22vh, 245px) !important;
+  bottom: max(96px, calc(env(safe-area-inset-bottom) + 84px)) !important;
+}
+
+/* all main cards */
+.panel,
+.ng-panel,
+.hub > *,
+.detailWrap > *,
+.pickerCard,
+.statRow,
+.statGameBtn,
+.waitRow,
+.pickerRow{
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  border-radius: var(--ng1586-r) !important;
+  background: var(--ng1586-bg) !important;
+  border: 1px solid var(--ng1586-brd) !important;
+  box-shadow: var(--ng1586-shadow) !important;
+  backdrop-filter: blur(1px) saturate(106%) !important;
+  -webkit-backdrop-filter: blur(1px) saturate(106%) !important;
+  overflow: hidden !important;
+}
+
+/* shrink the main setup card */
+#setup .detailWrap > :first-child{
+  min-height: 0 !important;
+}
+#setup .detailBody{
+  padding: 10px 10px 12px 10px !important;
+  max-height: min(39vh, 360px) !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain !important;
+  touch-action: pan-y !important;
+}
+
+/* make inner sections smaller */
+#setup .detailBody > *{
+  margin-bottom: 10px !important;
+}
+#setup .setupGameTitle{
+  font-size: clamp(17px, 2.2vh, 22px) !important;
+  margin-bottom: 6px !important;
+}
+#setup .detailBody p,
+#setup .detailBody .sub,
+#setup .detailBody .help,
+#setup .detailBody .muted{
+  font-size: 13px !important;
+  line-height: 1.28 !important;
+}
+#setup .fieldLabel{
+  margin: 0 0 8px 0 !important;
+  padding: 8px 10px !important;
+  font-size: 12px !important;
+}
+#setup select,
+#setup input,
+#setup textarea,
+#openPlayerPicker.glassBtn{
+  min-height: 42px !important;
+  height: 42px !important;
+  font-size: 14px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+#openPlayerPicker.glassBtn{
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+#openPlayerPicker.glassBtn .sub{
+  max-width: 46% !important;
+  font-size: 11px !important;
+}
+
+/* control box: shorter and tighter */
+#setup .detailWrap > :last-child{
+  align-self: end !important;
+}
+.controlsRow3,
+.controlsRow,
+.actions{
+  display:flex !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+.controlsRow3 > *,
+.controlsRow > *,
+.actions > *{
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+}
+button.pill,
+.pill,
+.pillMini,
+.ngWideBtn,
+#leaderboardBtn,
+#ngUpdateBtn{
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 8px 10px !important;
+  font-size: 11px !important;
+  border-radius: 13px !important;
+  letter-spacing: 1px !important;
+}
+
+/* compact section headers */
+.title{
+  font-size: clamp(17px, 2.2vh, 23px) !important;
+  letter-spacing: 2px !important;
+  padding-bottom: 4px !important;
+}
+.sectionHead{
+  padding: 9px 12px 7px 12px !important;
+}
+
+/* keep footer visible */
+.globalFooter,
+#globalFooter{
+  bottom: calc(env(safe-area-inset-bottom) + 6px) !important;
+  font-size: 10px !important;
+  opacity: .78 !important;
+}
+#landing #landingFoot{
+  bottom: calc(env(safe-area-inset-bottom) + 6px) !important;
+}
+
+/* waiting room checks brighter */
+.statusIcon.ok,
+.statusIcon.wait{
+  color: rgba(90,255,170,.98) !important;
+  text-shadow: 0 0 12px rgba(90,255,170,.55), 0 0 18px rgba(90,255,170,.18) !important;
+  filter: drop-shadow(0 0 8px rgba(90,255,170,.28)) !important;
+}
+
+/* very small phones */
+@media (max-width: 430px){
+  :root{
+    --ng1586-w: min(94vw, 490px);
+  }
+  #setup .detailWrap{
+    top: clamp(124px, 15vh, 170px) !important;
+    bottom: max(112px, calc(env(safe-area-inset-bottom) + 98px)) !important;
+  }
+  #setup .detailBody{
+    max-height: min(36vh, 330px) !important;
+  }
+  button.pill,
+  .pill,
+  .pillMini{
+    font-size: 10px !important;
+    padding: 8px 8px !important;
+  }
+}
+</style>
+
+<script id="ng-v1586-postload-fixes">
+(function(){
+  try{ document.title = "Night Games v1586"; }catch(_){}
+  try{ window.NG_BUILD_VERSION = "1586"; }catch(_){}
+  try{ window.NG_BUILD_LABEL = "Night Games v1586"; }catch(_){}
+
+  function hideTech(){
+    try{
+      var ids = ["ngHeaderBlock"];
+      ids.forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.style.display = "none";
+      });
+      var center = document.querySelector("#ngHeaderBar .ngHeaderCenter");
+      if(center) center.style.display = "none";
+      var right = document.getElementById("ngHeaderRight");
+      if(right) right.style.display = "none";
+    }catch(e){}
+  }
+
+  function forceVersionText(){
+    try{
+      document.querySelectorAll("*").forEach(function(el){
+        if(el && el.childNodes && el.childNodes.length===1 && el.childNodes[0].nodeType===3){
+          var t = (el.textContent||"").trim();
+          if(t === "v1481" || t === "1481" || t === "v1585"){ el.textContent = "v1586"; }
+        }
+      });
+    }catch(e){}
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", function(){ hideTech(); forceVersionText(); }, {once:true});
+  } else {
+    hideTech(); forceVersionText();
+  }
+})();
+</script>
 
 </body>
 </html>
