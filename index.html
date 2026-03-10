@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1583</title>
-<!-- NIGHT GAMES v1583 -->
+<title>Night Games v1584</title>
+<!-- NIGHT GAMES v1584 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3534,7 +3534,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1481";window.NG_BUILD_LABEL="Night Games v1481";</script>
+<script>window.NG_BUILD_VERSION="1584";window.NG_BUILD_LABEL="Night Games v1584";</script>
 
 <style id="ng-v1481-header-style">
 #ngHeaderBlock{
@@ -4338,7 +4338,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     }catch(_e){}
   };
 
-  window.ngBuild = "v1481";
+  window.ngBuild = "v1584";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -10058,50 +10058,52 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 
-<style id="ng-v1583-from1481-uniform-panels">
+<style id="ng-v1584-master-polish">
 :root{
-  --ng-panel-w: min(500px, 90vw);
-  --ng-panel-r: 16px;
-  --ng-panel-bg: rgba(255,255,255,.028);
-  --ng-panel-brd: rgba(255,255,255,.50);
-  --ng-panel-shadow:
+  --ng-master-w: min(510px, 91vw);
+  --ng-master-r: 16px;
+  --ng-master-pad: 12px 14px;
+  --ng-master-bg: rgba(255,255,255,.028);
+  --ng-master-brd: rgba(255,255,255,.52);
+  --ng-master-shadow:
     0 10px 24px rgba(0,0,0,.28),
-    inset 0 2px 10px rgba(255,255,255,.40),
+    inset 0 2px 10px rgba(255,255,255,.42),
     inset 0 -2px 7px rgba(255,255,255,.10);
-  --ng-body-max: min(56vh, 500px);
+  --ng-master-body-max: min(56vh, 500px);
 }
 
-/* hide obvious build/debug surfaces */
+/* hide obvious tech/debug surfaces */
 .dbg,
 #ngHeaderBlock,
 #ngErrToast .detail{
   display:none !important;
 }
+#ngHeaderBar .ngHeaderCenter{
+  opacity:.55 !important;
+}
 
-/* make the main shells uniform */
+/* one clean width system */
 .hub,
 .detailWrap{
-  width: var(--ng-panel-w) !important;
-  max-width: var(--ng-panel-w) !important;
+  width: var(--ng-master-w) !important;
+  max-width: var(--ng-master-w) !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   padding-left: 6px !important;
   padding-right: 6px !important;
   gap: 14px !important;
 }
-
 .hub{
-  top: clamp(200px, 25vh, 290px) !important;
+  top: clamp(195px, 25vh, 285px) !important;
   bottom: max(88px, env(safe-area-inset-bottom)) !important;
 }
-
 .detailWrap{
-  top: clamp(150px, 20vh, 255px) !important;
+  top: clamp(145px, 19vh, 245px) !important;
   bottom: max(88px, env(safe-area-inset-bottom)) !important;
-  padding-bottom: 78px !important;
+  padding-bottom: 80px !important;
 }
 
-/* canonical panel look */
+/* all major panels share the same shape */
 .panel,
 .ng-panel,
 .hub > *,
@@ -10116,50 +10118,37 @@ document.addEventListener("DOMContentLoaded", function(){
 #randomizer .panel,
 .pickerCard,
 .statRow,
-.statGameBtn{
+.statGameBtn,
+.waitRow,
+.pickerRow{
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
-  border-radius: var(--ng-panel-r) !important;
-  background: var(--ng-panel-bg) !important;
-  border: 1px solid var(--ng-panel-brd) !important;
-  box-shadow: var(--ng-panel-shadow) !important;
+  border-radius: var(--ng-master-r) !important;
+  background: var(--ng-master-bg) !important;
+  border: 1px solid var(--ng-master-brd) !important;
+  box-shadow: var(--ng-master-shadow) !important;
   backdrop-filter: blur(1.5px) saturate(108%) !important;
   -webkit-backdrop-filter: blur(1.5px) saturate(108%) !important;
   overflow: hidden !important;
 }
 
-/* make oversized screens usable */
-.list,
-.detailBody,
-#setupBody,
-#waitingBody,
-#detailBody,
-#leaderboardBody,
-#randomizerBody,
-#lobbyBody,
-.pickerBody{
-  max-height: var(--ng-body-max) !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  overscroll-behavior: contain !important;
-  touch-action: pan-y !important;
-  padding-right: 4px !important;
-  box-sizing: border-box !important;
+/* smaller headings = more room */
+.title{
+  font-size: clamp(18px, 2.35vh, 24px) !important;
+  letter-spacing: 2px !important;
+  padding-bottom: 4px !important;
+}
+.sectionHead{
+  padding: 10px 12px 8px 12px !important;
+}
+.setupGameTitle,
+.playerPageName,
+#ngHeaderPlayer{
+  font-size: clamp(18px, 2.2vh, 22px) !important;
 }
 
-#setup .detailBody,
-#waiting .detailBody,
-#detail .detailBody,
-#leaderboard .detailBody,
-#randomizer .detailBody,
-#lobby .detailBody{
-  max-height: var(--ng-body-max) !important;
-  min-height: 0 !important;
-  overflow-y: auto !important;
-}
-
-/* player picker / setup rows */
+/* compact rows/buttons */
 .itemLine,
 .waitRow,
 .statRow,
@@ -10168,8 +10157,6 @@ document.addEventListener("DOMContentLoaded", function(){
   gap: 10px !important;
   min-height: 46px !important;
 }
-
-/* keep buttons tidy */
 .actions{
   display:flex !important;
   gap:8px !important;
@@ -10177,7 +10164,10 @@ document.addEventListener("DOMContentLoaded", function(){
   flex:0 0 auto !important;
   flex-wrap: wrap !important;
 }
-
+.leftStack{
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
 button.pill,
 .pill,
 .pillMini,
@@ -10191,13 +10181,36 @@ button.pill,
   border-radius: 14px !important;
 }
 
-/* controls and selectors fit instead of blowing up */
-.controlsRow3,
-.controlsRow,
-.actions{
-  flex-wrap: wrap !important;
+/* let long setup screens scroll instead of growing */
+.list,
+.detailBody,
+#setupBody,
+#waitingBody,
+#detailBody,
+#leaderboardBody,
+#randomizerBody,
+#lobbyBody,
+.pickerBody{
+  max-height: var(--ng-master-body-max) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain !important;
+  touch-action: pan-y !important;
+  padding-right: 4px !important;
+  box-sizing: border-box !important;
+}
+#setup .detailBody,
+#waiting .detailBody,
+#detail .detailBody,
+#leaderboard .detailBody,
+#randomizer .detailBody,
+#lobby .detailBody{
+  max-height: var(--ng-master-body-max) !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
 }
 
+/* inputs/selectors should fit the panel */
 select,
 input,
 textarea,
@@ -10208,28 +10221,12 @@ textarea,
   min-height: 44px !important;
   font-size: 15px !important;
 }
-
 #openPlayerPicker.glassBtn .sub{
   max-width: 52% !important;
   font-size: 12px !important;
 }
 
-/* headings slightly tighter */
-.title{
-  font-size: clamp(18px, 2.3vh, 24px) !important;
-  letter-spacing: 2px !important;
-  padding-bottom: 4px !important;
-}
-.sectionHead{
-  padding: 10px 12px 8px 12px !important;
-}
-.setupGameTitle,
-.playerPageName,
-#ngHeaderPlayer{
-  font-size: clamp(18px, 2.2vh, 22px) !important;
-}
-
-/* checks visible */
+/* bright waiting-room checks */
 .statusIcon.ok,
 .statusIcon.wait{
   color: rgba(90,255,170,.98) !important;
@@ -10240,29 +10237,94 @@ textarea,
   color: rgba(255,120,120,.96) !important;
   text-shadow: 0 0 10px rgba(255,120,120,.30) !important;
 }
+.waitName{
+  font-size: 18px !important;
+}
 
 @media (max-width: 640px){
   :root{
-    --ng-panel-w: min(94vw, 500px);
-    --ng-body-max: min(54vh, 470px);
+    --ng-master-w: min(94vw, 500px);
+    --ng-master-body-max: min(54vh, 470px);
   }
   .hub{
     top: clamp(180px, 23vh, 250px) !important;
   }
   .detailWrap{
-    top: clamp(138px, 18vh, 225px) !important;
+    top: clamp(135px, 18vh, 220px) !important;
   }
 }
 </style>
 
-<script id="ng-v1583-bootfix-and-version">
+<script id="ng-v1584-master-enhance">
 (function(){
-  // Ensure no stray JS lives outside <script> tags (a prior issue).
-  try{ document.title = "Night Games v1583"; }catch(_){}
-  try{ window.NG_BUILD_VERSION = "1583"; }catch(_){}
-  try{ window.NG_BUILD_LABEL = "Night Games v1583"; }catch(_){}
+  try{ document.title = "Night Games v1584"; }catch(_){}
+  try{ window.NG_BUILD_VERSION = "1584"; }catch(_){}
+  try{ window.NG_BUILD_LABEL = "Night Games v1584"; }catch(_){}
 
-  // Safe confirm helper (kept inside script tag so it never breaks HTML parsing).
+  function ensureDonateAndLeaderboard(){
+    try{
+      var supportUrl = "https://venmo.com/u/Steve-Moody-8";
+
+      var leaderboardBtn = document.getElementById("leaderboardBtn");
+      if(leaderboardBtn){
+        leaderboardBtn.style.display = "inline-flex";
+        leaderboardBtn.style.visibility = "visible";
+      }
+
+      if(!document.getElementById("donateBtn")){
+        var target =
+          document.querySelector(".leaderboardSlot") ||
+          document.getElementById("players") ||
+          document.body;
+
+        var wrap = document.createElement("div");
+        wrap.className = "leaderboardSlot";
+        wrap.style.display = "flex";
+        wrap.style.justifyContent = "center";
+        wrap.style.gap = "10px";
+        wrap.style.margin = "10px 0 6px 0";
+
+        var a = document.createElement("a");
+        a.id = "donateBtn";
+        a.href = supportUrl;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.style.textDecoration = "none";
+
+        var b = document.createElement("button");
+        b.className = "pill ngWideBtn";
+        b.textContent = "Donate";
+        a.appendChild(b);
+
+        if(leaderboardBtn && leaderboardBtn.parentElement){
+          var cloneWrap = document.createElement("div");
+          cloneWrap.className = "leaderboardSlot";
+          cloneWrap.style.display = "flex";
+          cloneWrap.style.justifyContent = "center";
+          cloneWrap.style.gap = "10px";
+          cloneWrap.style.margin = "10px 0 6px 0";
+          cloneWrap.appendChild(leaderboardBtn);
+          cloneWrap.appendChild(a);
+          if(!leaderboardBtn.parentElement.classList.contains("leaderboardSlot")){
+            leaderboardBtn.parentElement.replaceWith(cloneWrap);
+          } else {
+            leaderboardBtn.parentElement.appendChild(a);
+          }
+        } else if(target && target.appendChild){
+          wrap.appendChild(a);
+          target.appendChild(wrap);
+        }
+      }
+    }catch(e){ console.error(e); }
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", ensureDonateAndLeaderboard, {once:true});
+  } else {
+    ensureDonateAndLeaderboard();
+  }
+
+  // keep the old remove helper valid but inside a script tag
   window.ngConfirmRemove = function(name, fn){
     try{
       if(window.confirm("Remove player " + name + "?")){
