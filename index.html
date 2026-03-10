@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Night Games v1612</title>
+<title>Night Games v1613</title>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -16,9 +16,16 @@
 *{box-sizing:border-box}
 body{
   margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:radial-gradient(1200px 700px at 40% 0%, #10335f 0%, var(--bg) 55%);
+  background-color:var(--bg);
+  background-image: radial-gradient(1200px 700px at 40% 0%, rgba(16,51,95,.72) 0%, rgba(11,26,46,.86) 55%), url("IMG_7390.jpeg");
+  background-size: cover;
+  background-position:center top;
+  background-repeat:no-repeat;
   color:var(--text);
 }
+#app{opacity:0; transition: opacity 0.3s ease-in-out;}
+#app.page-active{opacity:1;}
+body.adminMode .adminOnly{display:inline-flex !important;}
 .topbar{
   position:sticky;top:0;z-index:10;
   display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -144,7 +151,7 @@ input, select{
 <body>
 <div class="topbar">
   <div class="brand">
-    <div class="t">Night Games <span class="versionTag">v1612</span></div>
+    <div class="t">Night Games <span class="versionTag">v1613</span></div>
     <div class="s">Simplified setup build • Uniform rows for games, players, and subpanels</div>
   </div>
   <div>
@@ -177,6 +184,13 @@ function now(){ return new Date().getTime(); }
 const appEl = document.getElementById("app");
 const homeBtn = document.getElementById("homeBtn");
 const signOutBtn = document.getElementById("signOutBtn");
+const brandTitleEl = document.querySelector(".brand .t");
+
+function mountApp(html){
+  appEl.classList.remove("page-active");
+  mountApp(html);
+  requestAnimationFrame(()=>appEl.classList.add("page-active"));
+}
 
 let toastMsg="";
 let screen="auth";
@@ -184,6 +198,8 @@ let meUser=null;
 let match=null;
 let setupState={game:"shanghai", picked:[]};
 let subPanelOpen=false;
+let adminMode=false;
+let pressTimer=null;
 
 // ===== Firebase Operations =====
 async function getPlayers(){
@@ -385,10 +401,10 @@ button.pill,
 <script id="ng-v1594-force-version">
 (function(){
   const V="1594", VTXT="v1594";
-  try{ document.title = "Night Games " + VTXT; }catch(_{}){}
-  try{ window.NG_BUILD_VERSION = V; }catch(_{}){}
-  try{ window.NG_BUILD_LABEL = "Night Games " + VTXT; }catch(_{}){}
-  try{ window.ngBuild = VTXT; }catch(_{}){}
+  try{ document.title = "Night Games " + VTXT; }catch(_e){}
+  try{ window.NG_BUILD_VERSION = V; }catch(_e){}
+  try{ window.NG_BUILD_LABEL = "Night Games " + VTXT; }catch(_e){}
+  try{ window.ngBuild = VTXT; }catch(_e){}
   try{
     document.querySelectorAll("body *").forEach(function(el){
       if (!el || !el.childNodes || el.childNodes.length !== 1) return;
@@ -398,7 +414,7 @@ button.pill,
       if (/^v\d{4}$/.test(s)) el.textContent = VTXT;
       if (/^\d{4}$/.test(s)) el.textContent = V;
     });
-  }catch(_{}){}
+  }catch(_e){}
 })();
 </script>
 
@@ -412,9 +428,10 @@ function pts(hit){ return hit==="T"?3 : hit==="D"?2 : hit==="S"?1 : 0; }
 
 function targetLabel(t){ return t==="B"?"BULL":String(t); }
 
-function newMatch(players){
+function newMatch(players, gameId){
+  const targets = gameId === "around_world" ? Array.from({length:20}, (_,i)=>i+1) : TARGETS.slice();
   let m={
-    gameId:"shanghai",
+    gameId:gameId || "shanghai",
     players:[],
     turnIndex:0,
     targetIndex:0,
@@ -423,14 +440,18 @@ function newMatch(players){
     finished:false,
     startedAt:now(),
     endedAt:null,
-    snaps:[]
+    snaps:[],
+    targets:targets,
+    lastThrow:null
   };
   for(let i=0;i<players.length;i++){
-    m.players.push({name:players[i].name,email:players[i].email,total:0});
+    const base = {name:players[i].name,email:players[i].email,total:0};
+    if(gameId === "501") base.score = 501;
+    m.players.push(base);
     m.grid[players[i].email]={};
-    for(let j=0;j<TARGETS.length;j++){
-      const k=String(TARGETS[j]);
-      m.grid[players[i].email][k]={throws:[],points:0,shanghai:false};
+    for(let j=0;j<targets.length;j++){
+      const k=String(targets[j]);
+      m.grid[players[i].email][k]={throws:[],points:0,shanghai:false,marks:0,closed:false};
     }
   }
   return m;
@@ -454,40 +475,92 @@ function popSnap(){
 
 function addThrow(m,hit){
   if(m.finished) return;
+  const targets = m.targets || TARGETS;
   const p=m.players[m.turnIndex];
-  const t=TARGETS[m.targetIndex];
+  const t=targets[m.targetIndex];
   const key=String(t);
-  const cell=m.grid[p.email][key];
+  const cell=m.grid[p.email][key] || (m.grid[p.email][key]={throws:[],points:0,shanghai:false,marks:0,closed:false});
+  const value = pts(hit);
+  m.lastThrow = {hit, target:t, by:p.email};
 
-  cell.throws.push(hit);
-  cell.points+=pts(hit);
-  p.total+=pts(hit);
-
-  if(cell.throws.length===3){
-    let hasS=false,hasD=false,hasT=false;
-    for(const h of cell.throws){
-      if(h==="S") hasS=true;
-      if(h==="D") hasD=true;
-      if(h==="T") hasT=true;
+  switch(m.gameId){
+    case "cricket": {
+      cell.throws.push(hit);
+      cell.marks = Math.min(3, (cell.marks||0) + value);
+      cell.closed = cell.marks >= 3;
+      if((cell.marks||0) + value > 3){
+        const overflow = ((cell.marks||0) + value) - 3;
+        const canScore = m.players.some(op => op.email !== p.email && ((m.grid[op.email][key]?.marks||0) < 3));
+        if(canScore && overflow > 0){
+          const ptsVal = t === "B" ? 25 : Number(t);
+          cell.points += overflow * ptsVal;
+          p.total += overflow * ptsVal;
+        }
+      }
+      break;
     }
-    if(hasS && hasT && hasD && cell.throws[2]==="D"){
-      cell.shanghai=true;
-      cell.points+=5;
-      p.total+=5;
+    case "around_world": {
+      cell.throws.push(hit);
+      cell.points += value;
+      p.total += value;
+      if(hit !== "M" && value > 0){
+        m.targetIndex += value;
+        if(m.targetIndex >= targets.length){
+          m.targetIndex = targets.length - 1;
+          m.finished = true;
+          m.endedAt = now();
+        }
+      }
+      break;
+    }
+    case "501": {
+      cell.throws.push(hit);
+      const deduct = hit === "M" ? 0 : (Number(t) === 25 ? value * 25 : value * Number(t || 0));
+      p.score = Math.max(0, (p.score||501) - deduct);
+      p.total += deduct;
+      cell.points += deduct;
+      if(p.score === 0){
+        m.finished = true;
+        m.endedAt = now();
+      }
+      break;
+    }
+    default: {
+      cell.throws.push(hit);
+      cell.points+=value;
+      p.total+=value;
+      if(cell.throws.length===3){
+        let hasS=false,hasD=false,hasT=false;
+        for(const h of cell.throws){
+          if(h==="S") hasS=true;
+          if(h==="D") hasD=true;
+          if(h==="T") hasT=true;
+        }
+        if(hasS && hasT && hasD && cell.throws[2]==="D"){
+          cell.shanghai=true;
+          cell.points+=5;
+          p.total+=5;
+        }
+      }
     }
   }
 
   m.dartInTurn++;
-  if(m.dartInTurn>=3){
-    m.dartInTurn=0;
-    m.turnIndex=(m.turnIndex+1) % m.players.length;
-    if(m.turnIndex===0){
-      m.targetIndex++;
-      if(m.targetIndex>=TARGETS.length){
-        m.finished=true;
-        m.endedAt=now();
+  if(m.gameId !== "around_world" || hit === "M"){
+    if(m.dartInTurn>=3){
+      m.dartInTurn=0;
+      m.turnIndex=(m.turnIndex+1) % m.players.length;
+      if(m.gameId !== "cricket" && m.gameId !== "501" && m.turnIndex===0){
+        m.targetIndex++;
+        if(m.targetIndex>=targets.length){
+          m.finished=true;
+          m.endedAt=now();
+        }
       }
     }
+  } else {
+    m.dartInTurn = 0;
+    m.turnIndex=(m.turnIndex+1) % m.players.length;
   }
 }
 
@@ -574,6 +647,7 @@ const GAME_ROWS = [
   {id:"killer",label:"Killer"},
   {id:"shanghai",label:"Shanghai"},
   {id:"cricket",label:"Cricket"},
+  {id:"around_world",label:"Around the World"},
   {id:"501",label:"501"}
 ];
 
@@ -620,6 +694,7 @@ function gameRulesHtml(gameId){
     killer:`<div class="card"><div class="h1">Killer Rules</div><div class="sub">Each player is assigned a number. Hit your own number three times to become a killer, then take lives from the other players. Last player alive wins.</div></div>`,
     shanghai:`<div class="card"><div class="h1">Shanghai Rules</div><div class="sub">Players throw at numbers in order. A Shanghai is a single, double, and triple of the active number in the same round.</div></div>`,
     cricket:`<div class="card"><div class="h1">Cricket Rules</div><div class="sub">Close 20 through 15 and bull. Extra marks score points until every player has closed that number.</div></div>`,
+    around_world:`<div class="card"><div class="h1">Around the World Rules</div><div class="sub">Hit the active number to advance from 1 through 20. Singles advance one target, doubles advance two, triples advance three.</div></div>`,
     "501":`<div class="card"><div class="h1">501 Rules</div><div class="sub">Start at 501 and count down to exactly zero. Standard out rules can be added later.</div></div>`
   };
   return m[gameId] || `<div class="card"><div class="sub">Rules coming soon.</div></div>`;
@@ -660,8 +735,8 @@ function startGameFromHub(gameId, allPlayers){
     if(pl) players.push({name:pl.name,email:pl.email});
   });
   setupState.game = gameId;
-  if(gameId === "shanghai"){
-    match = newMatch(players);
+  if(["shanghai","cricket","around_world","501"].includes(gameId)){
+    match = newMatch(players, gameId);
     match.snaps = [];
     match.gameType = gameId;
     pushSnap();
@@ -669,8 +744,34 @@ function startGameFromHub(gameId, allPlayers){
     render();
     return;
   }
-  toastMsg = `${GAME_ROWS.find(g=>g.id===gameId)?.label || gameId} row setup is ready. Play engine can be layered next.`;
+  toastMsg = `${GAME_ROWS.find(g=>g.id===gameId)?.label || gameId} row setup is ready.`;
   render();
+}
+
+
+async function saveCompletedMatch(){
+  if(!match) return;
+  const winner = [...match.players].sort((a,b)=>(b.total||0)-(a.total||0))[0];
+  const entry = {
+    game: match.gameId,
+    players: match.players.map(p=>p.email),
+    playerNames: match.players.map(p=>p.name),
+    winner: winner ? winner.name : "",
+    startedAt: match.startedAt || now(),
+    endedAt: match.endedAt || now(),
+    result: winner ? `${winner.name} won` : "Completed"
+  };
+  try{ await saveHistoryEntry(entry); }catch(e){}
+  for(const p of match.players){
+    try{
+      const s = await getStats(p.email);
+      await saveStats(p.email, {
+        games:(s.games||0)+1,
+        wins:(s.wins||0)+(winner && winner.email===p.email ? 1 : 0),
+        highScore: Math.max(s.highScore||0, p.total||0)
+      });
+    }catch(e){}
+  }
 }
 
 // ===== UI Rendering =====
@@ -701,7 +802,7 @@ async function render() {
         </div>
       </div>
     `;
-    appEl.innerHTML = html;
+    mountApp(html);
 
     document.getElementById("goBtn").onclick = async () => {
       toastMsg = "";
@@ -810,7 +911,7 @@ async function render() {
         `).join("") : `<div class="card"><div class="sub">Everyone is already added.</div></div>`}
       </div>
     `;
-    appEl.innerHTML = html;
+    mountApp(html);
 
     document.querySelectorAll("[data-enter-game]").forEach(btn=>{
       btn.onclick = () => startGameFromHub(btn.getAttribute("data-enter-game"), allPlayers);
@@ -874,7 +975,7 @@ async function render() {
         </div>
       </div>
     `;
-    appEl.innerHTML = html;
+    mountApp(html);
 
     let picked = [];
     const redrawPicked = () => {
@@ -936,7 +1037,7 @@ if(screen==="playPlaceholder"){
       </div>
     </div>
   `;
-  appEl.innerHTML = html;
+  mountApp(html);
   document.getElementById("backHub").onclick = () => { screen="home"; render(); };
   return;
 }
@@ -945,7 +1046,8 @@ if(screen==="playPlaceholder"){
 if(screen==="play"){
   if(!match){ screen="home"; render(); return; }
 
-  const t = TARGETS[match.targetIndex];
+  const targets = match.targets || TARGETS;
+  const t = targets[Math.min(match.targetIndex, targets.length-1)];
   const active = match.players[match.turnIndex];
 
   // Build table headers
@@ -957,7 +1059,7 @@ if(screen==="play"){
 
   // Build table body
   let tbody = '';
-  TARGETS.forEach(r => {
+  targets.forEach(r => {
     const key = String(r);
     tbody += `<tr><td class="l"><span class="badge">${esc(targetLabel(r))}</span></td>`;
     match.players.forEach(p => {
@@ -974,13 +1076,13 @@ if(screen==="play"){
     <div class="card">
       <div class="row">
         <button class="btn ghost" id="backHome">Back</button>
-        <button class="btn danger" id="resetBtn">Reset</button>
+        <button class="btn danger adminOnly" id="resetBtn" style="display:none;">Reset</button>
       </div>
     </div>
     <div class="card">
-      <span class="pill">Shanghai (Accuracy)</span>
+      <span class="pill">${esc((GAME_ROWS.find(g=>g.id===match.gameId)?.label)||match.gameId)}</span>
       <div class="divider"></div>
-      <div class="sub">Target: <b>${esc(targetLabel(t))}</b> • Turn: <b>${esc(active.name)}</b> • Dart ${match.dartInTurn+1}/3</div>
+      <div class="sub">${match.gameId === "501" ? `Score: <b>${esc(active.score||0)}</b>` : `Target: <b>${esc(targetLabel(t))}</b>`} • Turn: <b>${esc(active.name)}</b> • Dart ${match.dartInTurn+1}/3</div>
       <div class="divider"></div>
       <div class="boardBox">${dartboardSVG(t)}</div>
       <div class="divider"></div>
@@ -1008,27 +1110,41 @@ if(screen==="play"){
     </div>
   `;
 
-  appEl.innerHTML = html;
+  mountApp(html);
 
-  function onHit(h){
+  async function syncTurnState(){
+    try{
+      if(window.db && match && match.sessionId){
+        await window.db.collection("sessions").doc(match.sessionId).update({
+          turnIndex: match.turnIndex,
+          dartInTurn: match.dartInTurn,
+          updatedAt: now()
+        });
+      }
+    }catch(e){}
+  }
+
+  async function onHit(h){
     if(match.finished) return;
     pushSnap();
     addThrow(match,h);
-    if(match.finished) saveCompletedMatch();
+    await syncTurnState();
+    if(match.finished && typeof saveCompletedMatch === "function") saveCompletedMatch();
     render();
   }
 
-  document.getElementById("hitT").onclick = ()=>onHit("T");
-  document.getElementById("hitS").onclick = ()=>onHit("S");
-  document.getElementById("hitD").onclick = ()=>onHit("D");
-  document.getElementById("hitM").onclick = ()=>onHit("M");
+  document.getElementById("hitT").onclick = ()=>{ onHit("T"); };
+  document.getElementById("hitS").onclick = ()=>{ onHit("S"); };
+  document.getElementById("hitD").onclick = ()=>{ onHit("D"); };
+  document.getElementById("hitM").onclick = ()=>{ onHit("M"); };
 
   document.getElementById("undoBtn").onclick = () => { popSnap(); render(); };
 
-  document.getElementById("nextBtn").onclick = () => {
+  document.getElementById("nextBtn").onclick = async () => {
     if(match.finished) return;
     while(match.dartInTurn<3){ pushSnap(); addThrow(match,"M"); }
-    if(match.finished) saveCompletedMatch();
+    await syncTurnState();
+    if(match.finished && typeof saveCompletedMatch === "function") saveCompletedMatch();
     render();
   };
 
@@ -1044,4 +1160,18 @@ if(screen==="play"){
 }
 </script>
 
-<script>document.getElementById("homeBtn").onclick=()=>{ screen="home"; render(); }; document.getElementById("signOutBtn").onclick=()=>{ signOut(); render(); };</script>
+<script>
+document.getElementById("homeBtn").onclick=()=>{ screen="home"; render(); };
+document.getElementById("signOutBtn").onclick=()=>{ signOut(); render(); };
+function bindAdminGesture(){
+  if(!brandTitleEl) return;
+  const start=()=>{ clearTimeout(pressTimer); pressTimer=setTimeout(()=>{ adminMode=!adminMode; document.body.classList.toggle("adminMode", adminMode); render(); }, 700); };
+  const stop=()=>{ clearTimeout(pressTimer); };
+  brandTitleEl.onmousedown = start;
+  brandTitleEl.ontouchstart = start;
+  brandTitleEl.onmouseup = stop;
+  brandTitleEl.onmouseleave = stop;
+  brandTitleEl.ontouchend = stop;
+}
+bindAdminGesture();
+</script>
