@@ -8160,11 +8160,23 @@ document.addEventListener("DOMContentLoaded", function(){
     },
     "Killer": {
       title: "Killer Rules",
-      body: `<div class="statSection"><div class="statRow"><div><div class="statLabel">Objective</div><div class="statHelp">Each player gets a number. Hit your own number to gain lives; hit others to remove their lives.</div></div><div class="statVal">Killer</div></div></div>`
+      body: `
+        <div class="statSection">
+          <div class="statRow"><div><div class="statLabel">Setup</div><div class="statHelp">Each player is assigned a target number and starts with 3 lives.</div></div><div class="statVal">3 Lives</div></div>
+          <div class="statRow"><div><div class="statLabel">Become a Killer</div><div class="statHelp">Hit your own target number 3 times. Singles count 1, doubles 2, triples 3.</div></div><div class="statVal">Arm Up</div></div>
+          <div class="statRow"><div><div class="statLabel">Attack</div><div class="statHelp">Once you are a Killer, hits on an opponent's target remove that many lives from them.</div></div><div class="statVal">Take Lives</div></div>
+          <div class="statRow"><div><div class="statLabel">Win</div><div class="statHelp">The last player with lives remaining wins the match.</div></div><div class="statVal">Last Up</div></div>
+        </div>`
     },
     "Shanghai": {
       title: "Shanghai Rules",
-      body: `<div class="statSection"><div class="statRow"><div><div class="statLabel">Objective</div><div class="statHelp">Hit the target number for the current round. A single, double, and triple in one round is a Shanghai.</div></div><div class="statVal">Shanghai</div></div></div>`
+      body: `
+        <div class="statSection">
+          <div class="statRow"><div><div class="statLabel">Rounds</div><div class="statHelp">Play progresses from 1 through 20, one target number per round.</div></div><div class="statVal">1→20</div></div>
+          <div class="statRow"><div><div class="statLabel">Scoring</div><div class="statHelp">Only the current round number scores. Single = 1x, Double = 2x, Triple = 3x.</div></div><div class="statVal">Marks</div></div>
+          <div class="statRow"><div><div class="statLabel">Shanghai</div><div class="statHelp">Hit a single, a double, and a triple of the current number in the same round for an instant Shanghai win.</div></div><div class="statVal">Instant Win</div></div>
+          <div class="statRow"><div><div class="statLabel">No Instant Win</div><div class="statHelp">If nobody hits a Shanghai, the highest total score after round 20 wins.</div></div><div class="statVal">High Score</div></div>
+        </div>`
     },
     "Around the World": {
       title: "Around the World Rules",
@@ -9869,11 +9881,12 @@ document.addEventListener("DOMContentLoaded", function(){
   }
 
   async function getMergedHistory(opts){
-    let rows = getLocalHistory().map(mapLocalHistoryRow).filter(Boolean);
+    const local = getLocalHistory().map(mapLocalHistoryRow).filter(Boolean);
+    let cloud = [];
     try{
-      const cloud = await fetchCloudHistory(opts || {});
-      rows = mergeUniqueById(rows.concat(cloud));
-    }catch(_){ rows = mergeUniqueById(rows); }
+      cloud = await fetchCloudHistory(opts || {});
+    }catch(_){}
+    let rows = mergeUniqueById([...local, ...cloud]);
 
     if(opts && opts.game){
       const g = gameKey(opts.game);
@@ -9883,6 +9896,7 @@ document.addEventListener("DOMContentLoaded", function(){
       const em = emailKey(opts.email);
       rows = rows.filter(r => (r.playerEmails||[]).includes(em) || (r.players||[]).includes(playerNameFromEmailSafe(em)));
     }
+    try{ window.ngMergedHistoryCache = rows.slice(0,200); }catch(_){}
     return rows.slice(0,200);
   }
 
@@ -10177,6 +10191,21 @@ document.addEventListener("DOMContentLoaded", function(){
       }catch(_){}
     }, SESSION_WATCH_MS);
   }
+
+  async function preloadMergedHistory(){
+    try{
+      const local = getLocalHistory().map(mapLocalHistoryRow).filter(Boolean);
+      const cloud = await fetchCloudHistory({});
+      const combined = mergeUniqueById([...local, ...cloud]);
+      try{ window.ngMergedHistoryCache = combined.slice(0,200); }catch(_){}
+    }catch(_){
+      try{ window.ngMergedHistoryCache = getLocalHistory().map(mapLocalHistoryRow).filter(Boolean).slice(0,200); }catch(__){}
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    preloadMergedHistory();
+  }, { once:true });
 
   patchRecord01();
   patchDelegatedButtons();
