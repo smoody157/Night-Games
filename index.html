@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1705 COMPLETE - Phase 2 Clean</title>
-<!-- NIGHT GAMES v1705 COMPLETE | PHASE 2 CLEANUP -->
+<title>Night Games v1707 COMPLETE - Phase 3 Clean</title>
+<!-- NIGHT GAMES v1707 COMPLETE | PHASE 3 CLEANUP -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -37,7 +37,7 @@
 
       min-height: 100dvh; /* iOS/iPadOS Safari dynamic viewport */
 margin:0;
-      background:#070b14;
+      background:transparent;
       color:var(--txt);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
       overflow:hidden;
@@ -2485,7 +2485,7 @@ html, body {
   text-align:center !important;
 }
 
-/* ===== v1705 FINAL HARDENING ===== */
+/* ===== v1707 FINAL HARDENING ===== */
 html, body {
   min-height: 100vh !important;
   min-height: 100dvh !important;
@@ -2523,7 +2523,7 @@ body {
   font-size: 16px !important;
 }
 
-/* ===== v1705 PRODUCTION CLEANUP ===== */
+/* ===== v1707 PRODUCTION CLEANUP ===== */
 html, body{
   height:100%;
   min-height:100vh;
@@ -2568,7 +2568,7 @@ body{
   bottom:max(16px, env(safe-area-inset-bottom)) !important;
 }
 
-/* ===== v1705 FINAL RELEASE CLEANUP ===== */
+/* ===== v1707 FINAL RELEASE CLEANUP ===== */
 html, body{
   height:100% !important;
   min-height:100vh !important;
@@ -3775,10 +3775,10 @@ function ngGuard(label, fn){
   --ng-pill-border: rgba(255,255,255,.24);
 }
 
-/* one single page background layer */
+/* one single app background layer */
 html{
-  min-height:100%;
-  background:#070b14 !important;
+  min-height:100% !important;
+  background:transparent !important;
 }
 body{
   min-height:100vh !important;
@@ -3787,29 +3787,20 @@ body{
   position:relative !important;
   isolation:isolate !important;
 }
-body::before{
-  content:"" !important;
+
+/* app shell owns the stage background directly */
+#app{
   position:fixed !important;
   inset:0 !important;
-  z-index:0 !important;
-  pointer-events:none !important;
+  z-index:1 !important;
+  background-color:transparent !important;
   background-image:
-    linear-gradient(rgba(8,12,22,.60), rgba(8,12,22,.60)),
+    linear-gradient(rgba(8,12,22,.28), rgba(8,12,22,.28)),
     var(--ng-stage-image) !important;
   background-size:cover !important;
   background-position:center center !important;
   background-repeat:no-repeat !important;
   background-attachment:fixed !important;
-  filter:saturate(1.05) contrast(1.02) !important;
-}
-
-/* app shell must stay above the stage background */
-#app{
-  position:fixed !important;
-  inset:0 !important;
-  z-index:1 !important;
-  background:transparent !important;
-  background-color:transparent !important;
 }
 #root, .app, .appShell, .screen, .container, main, .page, .wrapper, .screen.active{
   background:transparent !important;
@@ -3824,7 +3815,9 @@ body::before{
 main::before,
 main::after,
 #app::before,
-#app::after{
+#app::after,
+body::before,
+body::after{
   content:none !important;
   display:none !important;
   background:none !important;
@@ -11494,15 +11487,23 @@ body{
   }
 
   function applyTransparencyCleanup(){
-    document.documentElement.style.background = "#070b14";
+    document.documentElement.style.background = "transparent";
     document.body.style.background = "transparent";
     [
-      "#app", "#root", ".app", ".screen", ".container", "main", ".page", ".wrapper"
+      "#root", ".app", ".screen", ".container", "main", ".page", ".wrapper"
     ].forEach(function(sel){
       document.querySelectorAll(sel).forEach(function(el){
         el.style.background = "transparent";
         el.style.backgroundColor = "transparent";
       });
+    });
+    document.querySelectorAll("#app").forEach(function(el){
+      el.style.backgroundColor = "transparent";
+      el.style.backgroundImage = 'linear-gradient(rgba(8,12,22,.28), rgba(8,12,22,.28)), var(--ng-stage-image)';
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center center';
+      el.style.backgroundRepeat = 'no-repeat';
+      el.style.backgroundAttachment = 'fixed';
     });
   }
 
