@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1713 CLEAN BASE</title>
+<title>Night Games v1714 BLOCKER STRIP</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3283,7 +3283,7 @@ main::after{
 </style>
 <!-- removed broken script block 1 in v1713 -->
 
-<script>window.NG_BUILD_VERSION="1712";window.NG_BUILD_LABEL="Night Games v1713";</script>
+<script>window.NG_BUILD_VERSION="1712";window.NG_BUILD_LABEL="Night Games v1714";</script>
 
 <style id="ng-v1713-header-style">
 #ngHeaderBlock{
@@ -3896,7 +3896,7 @@ main::after{
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">v1713</div>
+<div id="ngVersionBelow">v1714</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -4034,7 +4034,7 @@ main::after{
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1713 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1714 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -6547,7 +6547,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
     try{
       const gv = document.getElementById("globalFooter");
-      if(gv && !/v1713/.test(gv.textContent||"")) gv.textContent = "Night Games v1713 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gv && !/v1713/.test(gv.textContent||"")) gv.textContent = "Night Games v1714 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(_){}
   }
 
@@ -7216,7 +7216,7 @@ body{
 
   function setVersion(){
     try{
-      document.title = "Night Games v1713";
+      document.title = "Night Games v1714";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1713";
@@ -7225,7 +7225,7 @@ body{
         el.textContent = "v1713";
       });
       var gf = document.getElementById("globalFooter");
-      if(gf) gf.textContent = "Night Games v1713 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gf) gf.textContent = "Night Games v1714 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(e){}
   }
 
@@ -7573,7 +7573,7 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1713";
+      document.title = "Night Games v1714";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1713";
@@ -7763,7 +7763,7 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1713";
+      document.title = "Night Games v1714";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1713";
@@ -7883,7 +7883,7 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1713";
+      document.title = "Night Games v1714";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1713";
@@ -7960,7 +7960,7 @@ body{
 (function(){
   function setVersion1647(){
     try{
-      document.title = "Night Games v1713";
+      document.title = "Night Games v1714";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1713";
@@ -8131,74 +8131,19 @@ body{
 })();
 </script>
 
-<script id="ng-v1713-root-guard">
-(function(){
-  function killBlockers(){
-    ["fatal","ngWaitOverlay"].forEach(function(id){
-      var el = document.getElementById(id);
-      if(el){
-        el.style.display = "none";
-        el.style.opacity = "0";
-        el.style.pointerEvents = "none";
-      }
-    });
-  }
 
-  function forceRootBackground(){
-    var app = document.getElementById("app");
-    if(!app) return;
-    app.style.background = 'linear-gradient(rgba(8,12,22,.22), rgba(8,12,22,.22)), var(--bgStage) center center / cover no-repeat';
-    app.style.backgroundColor = 'transparent';
-    app.style.position = 'fixed';
-    app.style.inset = '0';
-    app.style.zIndex = '1';
-  }
-
-  function forceLanding(){
-    var landing = document.getElementById("landing");
-    if(!landing) return;
-    document.querySelectorAll(".screen").forEach(function(s){
-      if(s.id === "landing"){
-        s.classList.add("active");
-        s.style.display = "block";
-        s.style.visibility = "visible";
-        s.style.opacity = "1";
-      }else{
-        s.style.background = "transparent";
-        s.style.backgroundColor = "transparent";
-      }
-    });
-  }
-
-  function run(){
-    forceRootBackground();
-    killBlockers();
-    forceLanding();
-  }
-
-  document.addEventListener("DOMContentLoaded", run, {once:true});
-  window.addEventListener("load", run);
-  window.addEventListener("pageshow", run);
-  setTimeout(run, 150);
-  setTimeout(run, 800);
-})();
-</script>
-
-<style id="ng-v1713-final-access">
+<style id="ng-v1714-blocker-strip">
+:root{
+  --bgStageColor:#080c16 !important;
+  --bgStageImage:url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg") !important;
+}
 html, body{
   margin:0 !important;
-  min-height:100% !important;
+  width:100% !important;
   height:100% !important;
-  background-color:var(--bgStageColor) !important;
-}
-body{
+  min-height:100vh !important;
+  min-height:100dvh !important;
   overflow:hidden !important;
-}
-#app{
-  position:fixed !important;
-  inset:0 !important;
-  z-index:1 !important;
-  padding-top:72px !important;
   background-color:var(--bgStageColor) !important;
   background-image:linear-gradient(rgba(8,12,22,.22), rgba(8,12,22,.22)), var(--bgStageImage) !important;
   background-position:center center !important;
@@ -8206,44 +8151,81 @@ body{
   background-repeat:no-repeat !important;
   background-attachment:scroll !important;
 }
-#fatal, .fatal, #ngWaitOverlay, [data-blocker], [data-overlay="startup"]{
-  display:none !important;
-  opacity:0 !important;
-  visibility:hidden !important;
-  pointer-events:none !important;
+#app{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:10 !important;
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  min-height:100vh !important;
+  min-height:100dvh !important;
+  padding-top:72px !important;
+  overflow:hidden !important;
+  background-color:var(--bgStageColor) !important;
+  background-image:linear-gradient(rgba(8,12,22,.22), rgba(8,12,22,.22)), var(--bgStageImage) !important;
+  background-position:center center !important;
+  background-size:cover !important;
+  background-repeat:no-repeat !important;
+  background-attachment:scroll !important;
 }
-body::before, body::after, #app::before, #app::after, .screen::before, .screen::after{
+#root, .app, .appShell, .screen, .screen.active, .container, main, .page, .wrapper, .panelShell,
+.hub, #landing, #players, #setup, #waiting, #game_screen{
+  background-color:transparent !important;
+}
+body::before, body::after, #app::before, #app::after, .screen::before, .screen::after,
+.hub::before, .hub::after, .panel::before, .panel::after, .modal::before, .modal::after{
   content:none !important;
   display:none !important;
   background:none !important;
 }
-.screen{
+#fatal, .fatal, #ngWaitOverlay, #overlay, #loader, #startupOverlay, #splash, #bootOverlay,
+[data-blocker], [data-overlay], [class*="overlay"], [id*="overlay"]{
+  pointer-events:none !important;
+}
+#fatal, .fatal, #ngWaitOverlay, #overlay, #loader, #startupOverlay, #splash, #bootOverlay{
   display:none !important;
-  background:transparent !important;
-  background-color:transparent !important;
+  opacity:0 !important;
+  visibility:hidden !important;
 }
-.screen.active{
-  display:block !important;
-  visibility:visible !important;
-  opacity:1 !important;
-}
-#landing.screen, #landing.screen.active{
-  display:block !important;
-}
+.screen{ display:none !important; }
+.screen.active{ display:block !important; visibility:visible !important; opacity:1 !important; pointer-events:auto !important; }
+#landing.screen, #landing.screen.active{ display:block !important; visibility:visible !important; opacity:1 !important; pointer-events:auto !important; z-index:11 !important; }
 </style>
-<script id="ng-v1713-final-access-script">
+<script id="ng-v1714-blocker-strip-script">
 (function(){
-  function setVersion(){
-    try{ document.title = 'Night Games v1713'; }catch(e){}
-    try{ ['ngVersionBelow','ngVersionMid','ngOneVersion'].forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent='v1713'; }); }catch(e){}
+  function hideKnownBlockers(){
+    [
+      "fatal","ngWaitOverlay","overlay","loader","startupOverlay","splash","bootOverlay"
+    ].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el){
+        el.style.display = "none";
+        el.style.opacity = "0";
+        el.style.visibility = "hidden";
+        el.style.pointerEvents = "none";
+      }
+    });
+    document.querySelectorAll('[data-blocker],[data-overlay],[class*="overlay"],[id*="overlay"]').forEach(function(el){
+      if(el.id === 'app' || el.id === 'landing') return;
+      if(el.closest && el.closest('#app') && el.classList.contains('screen')) return;
+      el.style.pointerEvents = 'none';
+      if(el.id === 'fatal' || el.id === 'ngWaitOverlay' || /overlay|loader|splash/i.test(el.id + ' ' + el.className)){
+        el.style.display = 'none';
+        el.style.opacity = '0';
+        el.style.visibility = 'hidden';
+      }
+    });
+    try{
+      window.failHard = function(msg, err){
+        console.error('failHard suppressed', msg, err || '');
+      };
+    }catch(_){}
   }
-  function root(){
+
+  function forceBackground(){
     var app = document.getElementById('app');
     if(!app) return;
-    app.style.position = 'fixed';
-    app.style.inset = '0';
-    app.style.zIndex = '1';
-    app.style.paddingTop = '72px';
     app.style.backgroundColor = 'var(--bgStageColor)';
     app.style.backgroundImage = 'linear-gradient(rgba(8,12,22,.22), rgba(8,12,22,.22)), var(--bgStageImage)';
     app.style.backgroundPosition = 'center center';
@@ -8251,22 +8233,12 @@ body::before, body::after, #app::before, #app::after, .screen::before, .screen::
     app.style.backgroundRepeat = 'no-repeat';
     app.style.backgroundAttachment = 'scroll';
   }
-  function hideBlockers(){
-    ['fatal','ngWaitOverlay'].forEach(function(id){
-      var el = document.getElementById(id);
-      if(el){
-        el.style.display='none';
-        el.style.opacity='0';
-        el.style.visibility='hidden';
-        el.style.pointerEvents='none';
-      }
-    });
-    try{ if(window.__ngWaitOverlay){ window.__ngWaitOverlay.style.display='none'; window.__ngWaitOverlay.style.opacity='0'; window.__ngWaitOverlay.style.visibility='hidden'; window.__ngWaitOverlay.style.pointerEvents='none'; } }catch(e){}
-    try{ window.failHard = function(msg, err){ console.error('failHard suppressed', msg, err || ''); }; }catch(e){}
-  }
-  function showScreen(id){
+
+  function showLandingOnly(){
+    var found = false;
     document.querySelectorAll('.screen').forEach(function(el){
-      var on = el.id === id;
+      var on = el.id === 'landing';
+      if(on) found = true;
       el.classList.toggle('active', on);
       el.style.display = on ? 'block' : 'none';
       el.style.visibility = on ? 'visible' : 'hidden';
@@ -8275,30 +8247,64 @@ body::before, body::after, #app::before, #app::after, .screen::before, .screen::
       el.style.background = 'transparent';
       el.style.backgroundColor = 'transparent';
     });
+    if(found){
+      var landing = document.getElementById('landing');
+      if(landing){
+        landing.style.zIndex = '11';
+        landing.style.position = 'absolute';
+        landing.style.inset = '0';
+      }
+    }
   }
+
   function wireEnter(){
     var enter = document.getElementById('enterBtn');
-    if(!enter || enter.__ng1712wired) return;
-    enter.__ng1712wired = true;
+    if(!enter || enter.__ng1714wired) return;
+    enter.__ng1714wired = true;
     enter.addEventListener('click', function(ev){
       ev.preventDefault();
       ev.stopPropagation();
-      showScreen('players');
+      var players = document.getElementById('players');
+      document.querySelectorAll('.screen').forEach(function(el){
+        var on = el.id === 'players';
+        el.classList.toggle('active', on);
+        el.style.display = on ? 'block' : 'none';
+        el.style.visibility = on ? 'visible' : 'hidden';
+        el.style.opacity = on ? '1' : '0';
+        el.style.pointerEvents = on ? 'auto' : 'none';
+      });
+      if(players){
+        players.style.background = 'transparent';
+        players.style.backgroundColor = 'transparent';
+      }
     }, true);
   }
+
   function run(){
-    setVersion();
-    root();
-    hideBlockers();
-    showScreen('landing');
+    try{ document.title = 'Night Games v1714'; }catch(_){}
+    ['ngVersionBelow','ngVersionMid','ngOneVersion'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.textContent = 'v1714';
+    });
+    forceBackground();
+    hideKnownBlockers();
+    showLandingOnly();
     wireEnter();
   }
+
   document.addEventListener('DOMContentLoaded', run, {once:true});
   window.addEventListener('load', run);
   window.addEventListener('pageshow', run);
   setTimeout(run, 50);
   setTimeout(run, 250);
   setTimeout(run, 1000);
+
+  try{
+    var mo = new MutationObserver(function(){ hideKnownBlockers(); });
+    window.addEventListener('load', function(){
+      if(document.body) mo.observe(document.body, {childList:true, subtree:true, attributes:true});
+    });
+  }catch(_){}
 })();
 </script>
 
