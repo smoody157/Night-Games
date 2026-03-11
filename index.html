@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1702 COMPLETE</title>
-<!-- NIGHT GAMES v1702 COMPLETE -->
+<title>Night Games v1703 COMPLETE</title>
+<!-- NIGHT GAMES v1703 COMPLETE -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -4187,8 +4187,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1702-final-visual-fix">
-/* ===== v1702 FINAL VISUAL + BACKGROUND CLEANUP ===== */
+<style id="ng-v1703-final-visual-fix">
+/* ===== v1703 FINAL VISUAL + BACKGROUND CLEANUP ===== */
 :root{
   --ng-stage-image: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg");
   --ng-panel-bg: rgba(255,255,255,.10);
@@ -13955,114 +13955,136 @@ html,body{
 </script>
 
 
-<!-- NG v1702 COMPLETE BACKGROUND / MERGE LOCK -->
-<style id="ng-v1702-complete-background-lock">
+
+<!-- NG v1703 FINAL CLEAN BACKGROUND + ROWS + EXIT SAFETY -->
+<style id="ng-v1703-final-clean">
 :root{
   --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg") !important;
+  --ngBtnH: 54px;
 }
 
-/* One true page background */
+/* Global transparency unlock */
 html, body{
   margin: 0 !important;
   min-height: 100% !important;
   background: transparent !important;
-  background-image: none !important;
+  background-color: transparent !important;
 }
 
+/* Single true stage */
 body::before{
-  content: "" !important;
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: -999 !important;
+  content:"" !important;
+  position:fixed !important;
+  inset:0 !important;
+  z-index:-1 !important;
   background-image: var(--bgStage) !important;
-  background-repeat: no-repeat !important;
-  background-size: cover !important;
-  background-position: center top !important;
-  background-attachment: fixed !important;
-  transform: translateZ(0) !important;
-  pointer-events: none !important;
+  background-repeat:no-repeat !important;
+  background-size:cover !important;
+  background-position:center center !important;
+  background-attachment:fixed !important;
+  pointer-events:none !important;
+  transform:translateZ(0) !important;
 }
 
-/* Outer app layers must never black out the page */
-#app,
-.screen,
-.screen.active,
-#landing,
-#players,
-#setup,
-#waiting,
-#lobby,
-#leaderboard,
-#randomizer,
-#detail,
-#game_screen,
-main,
-.container,
-.wrapper,
-.page{
+/* App always above background */
+#app, #root, .app, .screen, .screen.active, main, .container, .wrapper, .page,
+#landing, #players, #setup, #waiting, #lobby, #leaderboard, #randomizer, #detail, #game_screen{
   background: transparent !important;
+  background-color: transparent !important;
+  position: relative !important;
+  z-index: 10 !important;
 }
 
-/* Keep stage visible behind each screen */
-.screen::before{
-  z-index: 0 !important;
-  opacity: 1 !important;
-  background-image: var(--bgStage) !important;
-  background-repeat: no-repeat !important;
-  background-size: cover !important;
-  background-position: center top !important;
+/* Kill any black curtain pseudo layers */
+html::before, html::after, body::after,
+.screen::before, .screen::after,
+.container::before, .container::after,
+.wrapper::before, .wrapper::after,
+.page::before, .page::after,
+main::before, main::after{
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
 }
 
-.screen::after{
-  z-index: 0 !important;
+/* Crystal glass panels */
+.card, .panel, .ng-panel, .glassPanel,
+#players #gamesPanel, #players #playersPanel,
+#setup .panel, #waiting .panel, #lobby .panel, #leaderboard .panel,
+#randomizer .panel, #detail .panel, #game_screen .panel{
+  background: rgba(255,255,255,.09) !important;
+  border: 1px solid rgba(255,255,255,.22) !important;
+  border-radius: 24px !important;
+  backdrop-filter: blur(18px) saturate(175%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(175%) !important;
+  box-shadow:
+    0 12px 34px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.22) !important;
 }
 
-/* All actual UI stays above the stage */
-#app > *,
-.screen > *{
-  position: relative;
-  z-index: 1;
+/* Direct game rows */
+#gamesList .gameDropRow,
+#gamesList .ngGameRow{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+  align-items:center !important;
+  gap:14px !important;
+  padding:14px 16px !important;
+  margin:0 0 10px 0 !important;
+  border-radius:20px !important;
+  background: rgba(255,255,255,.06) !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+}
+
+#gamesList .gameDropHead,
+#gamesList .gameDropLeft,
+#gamesList .gameDropMenu,
+#gamesList .ngGameActions{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+}
+
+#gamesList [data-toggle-game],
+#gamesList .gameChevron,
+#gamesList .dropdown,
+#gamesList .chevron{
+  display:none !important;
+}
+
+#gamesList .gameNameBtn,
+#gamesList .ngGameName{
+  background: transparent !important;
+  border: 0 !important;
+  color: #eaf6ff !important;
+  font-weight: 900 !important;
+  font-size: 1.2rem !important;
+  letter-spacing: .3px !important;
+  text-shadow: 0 0 12px rgba(185,230,255,.32) !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+}
+
+#gamesList .pill,
+#gamesList .ngAction,
+.pill{
+  height: var(--ngBtnH) !important;
+  min-height: var(--ngBtnH) !important;
+  line-height: var(--ngBtnH) !important;
+  padding: 0 18px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+  background: rgba(255,255,255,.10) !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.24),
+    0 8px 22px rgba(0,0,0,.24) !important;
 }
 </style>
 
-<script id="ng-v1702-complete-background-lock-script">
-(function(){
-  function unlockBackground(){
-    try{
-      var ids = ['app','landing','players','setup','waiting','lobby','leaderboard','randomizer','detail','game_screen'];
-      ids.forEach(function(id){
-        var el = document.getElementById(id);
-        if(el) el.style.background = 'transparent';
-      });
-      document.querySelectorAll('.screen').forEach(function(el){
-        el.style.background = 'transparent';
-        el.style.opacity = '1';
-        el.style.visibility = 'visible';
-      });
-      document.body.style.background = 'transparent';
-      document.documentElement.style.background = 'transparent';
-    }catch(e){}
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    unlockBackground();
-    setTimeout(unlockBackground, 50);
-    setTimeout(unlockBackground, 250);
-    setTimeout(unlockBackground, 1000);
-  });
-  window.addEventListener('load', function(){
-    unlockBackground();
-    setTimeout(unlockBackground, 150);
-  });
-  window.addEventListener('pageshow', function(){
-    unlockBackground();
-    setTimeout(unlockBackground, 150);
-  });
-})();
-</script>
-
-
-<script id="ng-v1702-direct-rows-patch">
+<script id="ng-v1703-final-clean-script">
 (function(){
   const DEFAULT_GAMES = ["01","Cricket","Killer","Shanghai","Around the World","Half It"];
 
@@ -14080,12 +14102,31 @@ main,
     }catch(_){ return ""; }
   }
 
+  function unlockBackground(){
+    try{
+      document.documentElement.style.background = "transparent";
+      document.documentElement.style.backgroundColor = "transparent";
+      document.body.style.background = "transparent";
+      document.body.style.backgroundColor = "transparent";
+      [
+        "#app","#root",".app",".screen","main",".container",".wrapper",".page",
+        "#landing","#players","#setup","#waiting","#lobby","#leaderboard","#randomizer","#detail","#game_screen"
+      ].forEach(function(sel){
+        document.querySelectorAll(sel).forEach(function(el){
+          el.style.background = "transparent";
+          el.style.backgroundColor = "transparent";
+          el.style.zIndex = "10";
+          if(getComputedStyle(el).position === "static") el.style.position = "relative";
+        });
+      });
+    }catch(e){}
+  }
+
   function buildRows(){
     const list = document.getElementById("gamesList");
     if(!list) return false;
-    const games = getGames();
     const active = activeGame();
-    const ordered = games.slice().sort((a,b)=>{
+    const ordered = getGames().slice().sort((a,b)=>{
       if(a === active) return -1;
       if(b === active) return 1;
       return 0;
@@ -14099,46 +14140,88 @@ main,
             </div>
           </div>
           <div class="gameDropMenu ngGameActions">
-            <button class="pill ngAction" type="button" data-action="enter_game" data-value="${g}">Enter</button>
-            <button class="pill ngAction" type="button" data-action="game_rules" data-value="${g}">Rules</button>
-            <button class="pill ngAction" type="button" data-action="game_history" data-value="${g}">History</button>
+            <button class="pill ngAction" type="button" data-action="enter_game" data-value="${g}" style="height:var(--ngBtnH);min-height:var(--ngBtnH);line-height:var(--ngBtnH);">Enter</button>
+            <button class="pill ngAction" type="button" data-action="game_rules" data-value="${g}" style="height:var(--ngBtnH);min-height:var(--ngBtnH);line-height:var(--ngBtnH);">Rules</button>
+            <button class="pill ngAction" type="button" data-action="game_history" data-value="${g}" style="height:var(--ngBtnH);min-height:var(--ngBtnH);line-height:var(--ngBtnH);">History</button>
           </div>
         </div>`;
     }).join("");
     return true;
   }
 
-  function applyTransparencyCleanup(){
-    [
-      "#app", "#root", ".app", ".screen", ".container", "main", ".page", ".wrapper"
-    ].forEach(function(sel){
-      document.querySelectorAll(sel).forEach(function(el){
-        el.style.background = "transparent";
-        el.style.backgroundColor = "transparent";
+  function markSymbol(v){
+    const n = Number(v);
+    if(n >= 3) return "⦻";
+    if(n === 2) return "X";
+    if(n === 1) return "/";
+    return "";
+  }
+
+  function patchCricketMarksUI(){
+    try{
+      const selectors = [
+        '[data-cricket-marks]','[data-mark-value]','.cricketMark','.markCell','.marksCell',
+        'td','div','span'
+      ];
+      document.querySelectorAll(selectors.join(',')).forEach(function(el){
+        const raw = (el.getAttribute('data-mark-value') || el.getAttribute('data-cricket-marks') || '').trim() || '';
+        const txt = (el.textContent || '').trim();
+        const val = raw || txt;
+        if(/^[0-3]$/.test(val) && /cricket|mark/i.test((el.className || '') + ' ' + (el.closest('[id],[class]')?.id || '') + ' ' + (el.closest('[id],[class]')?.className || ''))){
+          el.textContent = markSymbol(val);
+        }
       });
-    });
+    }catch(e){}
+  }
+
+  function safeTurnUnsub(){
+    try{
+      if(window.turnUnsub){
+        window.turnUnsub();
+        window.turnUnsub = null;
+      }
+    }catch(e){}
+  }
+
+  function wireExitSafety(){
+    try{
+      document.querySelectorAll('[data-action="back"], [data-action="home"], .backBtn, .homeBtn, #backBtn, #homeBtn').forEach(function(btn){
+        if(btn.dataset.ngExitSafe === '1') return;
+        btn.dataset.ngExitSafe = '1';
+        btn.addEventListener('click', safeTurnUnsub, true);
+      });
+    }catch(e){}
   }
 
   function boot(){
-    applyTransparencyCleanup();
+    unlockBackground();
     buildRows();
+    patchCricketMarksUI();
+    wireExitSafety();
   }
 
-  document.addEventListener("DOMContentLoaded", boot);
-  window.addEventListener("load", function(){
+  document.addEventListener('DOMContentLoaded', function(){
+    boot();
+    setTimeout(boot, 50);
+    setTimeout(boot, 250);
+    setTimeout(boot, 1000);
+  });
+  window.addEventListener('load', function(){
     boot();
     setTimeout(boot, 150);
     setTimeout(boot, 600);
     setTimeout(boot, 1200);
   });
+  window.addEventListener('pageshow', function(){
+    boot();
+    setTimeout(boot, 150);
+  });
 
   const mo = new MutationObserver(function(){
-    const list = document.getElementById("gamesList");
-    if(!list) return;
-    if(list.querySelector("[data-toggle-game], .gameChevron")) buildRows();
+    boot();
   });
-  window.addEventListener("load", function(){
-    mo.observe(document.body, {childList:true, subtree:true});
+  window.addEventListener('load', function(){
+    try{ mo.observe(document.body, {childList:true, subtree:true}); }catch(e){}
   });
 })();
 </script>
