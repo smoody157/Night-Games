@@ -8332,3 +8332,20 @@ html, body {
 #fatal, #ngWaitOverlay, #startupOverlay, .overlay, .modal-backdrop {
   display:none !important;
 }
+
+
+/* ==== v1721 FIX: restore stage background and remove blank screen ==== */
+html,body{
+  background: var(--bgStageColor) !important;
+}
+
+#app{
+  background:
+    linear-gradient(rgba(8,12,22,.22), rgba(8,12,22,.22)),
+    var(--bgStageImage) center center / cover no-repeat !important;
+}
+
+/* ensure no fullscreen blockers remain */
+#fatal,#ngWaitOverlay,#startupOverlay,.overlay,.modal-backdrop{
+  display:none !important;
+}
