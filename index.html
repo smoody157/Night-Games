@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1728 CLEAN RESTORE</title>
+<title>Night Games v1730 CLEAN RESTORE</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3283,7 +3283,7 @@ main::after{
 </style>
 <!-- removed broken script block 1 in v1713 -->
 
-<script>window.NG_BUILD_VERSION="1728";window.NG_BUILD_LABEL="Night Games v1728";</script>
+<script>window.NG_BUILD_VERSION="1730";window.NG_BUILD_LABEL="Night Games v1730";</script>
 
 <style id="ng-v1713-header-style">
 #ngHeaderBlock{
@@ -3901,29 +3901,74 @@ html, body{
 </style>
 
 
-<style id="ng-v1728-visibility-fix">
-#fatal,.fatal{ display:none !important; }
+<!-- NightGames v1730 Firebase + visibility bridge -->
+<script type="module" id="ng-v1730-firebase-bridge">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+  import {
+    getFirestore, collection, doc, addDoc, setDoc, getDocs, getDoc,
+    query, where, orderBy, limit, onSnapshot, serverTimestamp, increment
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-html,body{
-  background: var(--bgStageColor) !important;
-}
+  const firebaseConfig = {
+    apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
+    authDomain: "gamenightdarts-e7601.firebaseapp.com",
+    projectId: "gamenightdarts-e7601",
+    storageBucket: "gamenightdarts-e7601.firebasestorage.app",
+    messagingSenderId: "270045452251",
+    appId: "1:270045452251:web:5a4a661140a60780e939fe",
+    measurementId: "G-M60TDFYBW0"
+  };
 
-#app{
-  position: fixed !important;
-  inset: 0 !important;
-  min-height: 100vh !important;
-  background-color: var(--bgStageColor) !important;
-  background-image:
-    linear-gradient(rgba(8,12,22,.22), rgba(8,12,22,.22)),
-    var(--bgStageImage) !important;
-  background-position: center center !important;
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-}
+  try{
+    const app = initializeApp(firebaseConfig);
+    let analytics = null;
+    try{ analytics = getAnalytics(app); }catch(_){}
+    const db = getFirestore(app);
 
-.screen{ display:none; }
-.screen.active{ display:block; }
-#landing{ display:block !important; }
+    window.firebaseConfig = firebaseConfig;
+    window.__firebaseConfig = firebaseConfig;
+    window.firebaseApp = app;
+    window.db = db;
+    window.ngFirebase = { app, db, analytics };
+    window.ngFirebaseApis = {
+      collection, doc, addDoc, setDoc, getDocs, getDoc,
+      query, where, orderBy, limit, onSnapshot, serverTimestamp, increment
+    };
+
+    // Also expose the commonly used names directly.
+    Object.assign(window, {
+      collection, doc, addDoc, setDoc, getDocs, getDoc,
+      query, where, orderBy, limit, onSnapshot, serverTimestamp, increment
+    });
+  }catch(err){
+    console.error("NightGames v1730 Firebase bridge failed:", err);
+  }
+</script>
+
+<style id="ng-v1730-visibility-fix">
+  #fatal, .fatal { display:none !important; }
+
+  html, body{
+    background: var(--bgStageColor) !important;
+  }
+
+  #app{
+    position: fixed !important;
+    inset: 0 !important;
+    min-height: 100vh !important;
+    background-color: var(--bgStageColor) !important;
+    background-image:
+      linear-gradient(rgba(8,12,22,.22), rgba(8,12,22,.22)),
+      var(--bgStageImage) !important;
+    background-position: center center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+  }
+
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+  #landing{ display:block !important; }
 </style>
 
 </head>
@@ -3941,7 +3986,7 @@ html,body{
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">v1728</div>
+<div id="ngVersionBelow">v1730</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -4079,7 +4124,7 @@ html,body{
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1728 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1730 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -4109,7 +4154,7 @@ html,body{
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1728";
+window.APP_VERSION = "v1730";
 (function(){
   try {
     // header version
@@ -4125,7 +4170,7 @@ window.APP_VERSION = "v1728";
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1728";
+    if (vb) vb.textContent = "v1730";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -4253,7 +4298,7 @@ function closeDetail(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1728";
+    if(vb) vb.textContent = "v1730";
 
     var gamesList = document.getElementById("gamesList");
     var playersList = document.getElementById("playersList");
@@ -4393,7 +4438,7 @@ document.addEventListener("click", function(e){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1728";
+    if(vb) vb.textContent = "v1730";
   }catch(e){
     console.error(e);
   }
@@ -4404,7 +4449,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1728";
+    if(vb) vb.textContent = "v1730";
 
     var email = document.getElementById("emailInput");
     var played = false;
@@ -4465,7 +4510,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const people=FALLBACK_PLAYERS.slice().sort((a,b)=>{const ao=a.name===me, bo=b.name===me; if(ao!==bo) return ao?-1:1; return a.name.localeCompare(b.name);});
     list.innerHTML=people.map(p=>`<div class="itemLine"><div class="leftStack"><span class="dot ${p.name===me?"online":""}"></span><span class="glassText">${p.name}</span></div><div class="actions"><button class="pill" data-action="player_stats" data-value="${p.email}">Stats</button><button class="pill" data-action="player_history" data-value="${p.email}">History</button><button class="pill" data-action="player_remove" data-value="${p.email}">Remove</button></div></div>`).join("");
   }
-  function sync(){try{const vb=document.getElementById("ngVersionBelow"); if(vb) vb.textContent="v1728"; renderGames(); renderPlayers();}catch(e){console.error(e);}}
+  function sync(){try{const vb=document.getElementById("ngVersionBelow"); if(vb) vb.textContent="v1730"; renderGames(); renderPlayers();}catch(e){console.error(e);}}
   document.addEventListener("DOMContentLoaded", sync, {once:true});
   window.addEventListener("load", sync, {once:true});
   setTimeout(sync, 350);
@@ -4531,7 +4576,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function sync(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1728";
+      if(vb) vb.textContent = "v1730";
       renderPlayerDropdowns();
     }catch(e){
       console.error(e);
@@ -4628,7 +4673,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const v = document.createElement("div");
     v.id = "ngVersionMid";
     v.className = "screenVersionMid";
-    v.textContent = "v1728";
+    v.textContent = "v1730";
     players.appendChild(v);
   }
 
@@ -4783,7 +4828,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncAll(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1728";
+      if(vb) vb.textContent = "v1730";
       const sessionBtn = document.getElementById("sessionBtn");
       if(sessionBtn) sessionBtn.textContent = "Help Support Updates and Future Projects";
       ensureVersionLabel();
@@ -4904,9 +4949,9 @@ document.addEventListener("DOMContentLoaded", function(){
   function setVersion(){
     try {
       const v1 = document.querySelector("#ngHeaderBlock .ver");
-      if (v1) v1.textContent = "v1728";
+      if (v1) v1.textContent = "v1730";
       const v2 = document.getElementById("ngVersionBelow");
-      if (v2) v2.textContent = "v1728";
+      if (v2) v2.textContent = "v1730";
     } catch (_) {}
   }
 
@@ -5145,7 +5190,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1728";
+      if(v) v.textContent = "v1730";
     } catch(_ ) {}
   }
 
@@ -5263,7 +5308,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1728";
+      if(v) v.textContent = "v1730";
     } catch(_ ) {}
   }
 
@@ -5397,7 +5442,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1728";
+      if(v) v.textContent = "v1730";
     } catch(_ ) {}
   }
 
@@ -5471,7 +5516,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1728";
+      if(v) v.textContent = "v1730";
     } catch(_ ) {}
   }
 
@@ -5522,7 +5567,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       const v = document.getElementById("ngVersionBelow");
-      if (v) v.textContent = "v1728";
+      if (v) v.textContent = "v1730";
     } catch (_ ) {}
   }
 
@@ -6592,7 +6637,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
     try{
       const gv = document.getElementById("globalFooter");
-      if(gv && !/v1713/.test(gv.textContent||"")) gv.textContent = "Night Games v1728 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gv && !/v1713/.test(gv.textContent||"")) gv.textContent = "Night Games v1730 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(_){}
   }
 
@@ -7261,16 +7306,16 @@ body{
 
   function setVersion(){
     try{
-      document.title = "Night Games v1728";
+      document.title = "Night Games v1730";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
-        if(el) el.textContent = "v1728";
+        if(el) el.textContent = "v1730";
       });
       document.querySelectorAll(".version,.ngVer,[data-app-version]").forEach(function(el){
-        el.textContent = "v1728";
+        el.textContent = "v1730";
       });
       var gf = document.getElementById("globalFooter");
-      if(gf) gf.textContent = "Night Games v1728 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gf) gf.textContent = "Night Games v1730 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(e){}
   }
 
@@ -7618,13 +7663,13 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1728";
+      document.title = "Night Games v1730";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
-        if(el) el.textContent = "v1728";
+        if(el) el.textContent = "v1730";
       });
       document.querySelectorAll(".version,.ngVer,[data-app-version]").forEach(function(el){
-        el.textContent = "v1728";
+        el.textContent = "v1730";
       });
     }catch(e){}
   }
@@ -7808,13 +7853,13 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1728";
+      document.title = "Night Games v1730";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
-        if(el) el.textContent = "v1728";
+        if(el) el.textContent = "v1730";
       });
       document.querySelectorAll(".version,.ngVer,[data-app-version]").forEach(function(el){
-        el.textContent = "v1728";
+        el.textContent = "v1730";
       });
     }catch(e){}
   }
@@ -7928,13 +7973,13 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1728";
+      document.title = "Night Games v1730";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
-        if(el) el.textContent = "v1728";
+        if(el) el.textContent = "v1730";
       });
       document.querySelectorAll(".version,.ngVer,[data-app-version]").forEach(function(el){
-        el.textContent = "v1728";
+        el.textContent = "v1730";
       });
     }catch(e){}
   }
@@ -8064,16 +8109,17 @@ body{
 })();
 </script>
 
-<script id="ng-v1728-landing-fix">
+<script id="ng-v1730-landing-guard">
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var fatal = document.getElementById("fatal");
     if(fatal) fatal.style.display = "none";
-    document.querySelectorAll(".screen").forEach(function(el){
-      if(el.id === "landing"){ el.classList.add("active"); el.style.display = "block"; }
-      else { el.classList.remove("active"); el.style.display = "none"; }
-    });
-  }catch(e){}
+    var landing = document.getElementById("landing");
+    if(landing){
+      landing.classList.add("active");
+      landing.style.display = "block";
+    }
+  }catch(_){}
 }, {once:true});
 </script>
 
