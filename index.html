@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1727 CLEAN RESTORE</title>
+<title>Night Games v1728 CLEAN RESTORE</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3283,7 +3283,7 @@ main::after{
 </style>
 <!-- removed broken script block 1 in v1713 -->
 
-<script>window.NG_BUILD_VERSION="1727";window.NG_BUILD_LABEL="Night Games v1727";</script>
+<script>window.NG_BUILD_VERSION="1728";window.NG_BUILD_LABEL="Night Games v1728";</script>
 
 <style id="ng-v1713-header-style">
 #ngHeaderBlock{
@@ -3900,6 +3900,32 @@ html, body{
 }
 </style>
 
+
+<style id="ng-v1728-visibility-fix">
+#fatal,.fatal{ display:none !important; }
+
+html,body{
+  background: var(--bgStageColor) !important;
+}
+
+#app{
+  position: fixed !important;
+  inset: 0 !important;
+  min-height: 100vh !important;
+  background-color: var(--bgStageColor) !important;
+  background-image:
+    linear-gradient(rgba(8,12,22,.22), rgba(8,12,22,.22)),
+    var(--bgStageImage) !important;
+  background-position: center center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+}
+
+.screen{ display:none; }
+.screen.active{ display:block; }
+#landing{ display:block !important; }
+</style>
+
 </head>
 <body>
 
@@ -3915,7 +3941,7 @@ html, body{
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">v1727</div>
+<div id="ngVersionBelow">v1728</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -4053,7 +4079,7 @@ html, body{
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1727 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1728 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -4083,7 +4109,7 @@ html, body{
 
 <script>
 /* ===== Version + landing enforce (v1232) ===== */
-window.APP_VERSION = "v1727";
+window.APP_VERSION = "v1728";
 (function(){
   try {
     // header version
@@ -4099,7 +4125,7 @@ window.APP_VERSION = "v1727";
 document.addEventListener("DOMContentLoaded", function () {
   try {
     var vb = document.getElementById("ngVersionBelow");
-    if (vb) vb.textContent = "v1727";
+    if (vb) vb.textContent = "v1728";
 
     var email = document.getElementById("emailInput");
     var enter = document.getElementById("enterBtn");
@@ -4227,7 +4253,7 @@ function closeDetail(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1727";
+    if(vb) vb.textContent = "v1728";
 
     var gamesList = document.getElementById("gamesList");
     var playersList = document.getElementById("playersList");
@@ -4367,7 +4393,7 @@ document.addEventListener("click", function(e){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1727";
+    if(vb) vb.textContent = "v1728";
   }catch(e){
     console.error(e);
   }
@@ -4378,7 +4404,7 @@ document.addEventListener("DOMContentLoaded", function(){
 document.addEventListener("DOMContentLoaded", function(){
   try{
     var vb = document.getElementById("ngVersionBelow");
-    if(vb) vb.textContent = "v1727";
+    if(vb) vb.textContent = "v1728";
 
     var email = document.getElementById("emailInput");
     var played = false;
@@ -4439,7 +4465,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const people=FALLBACK_PLAYERS.slice().sort((a,b)=>{const ao=a.name===me, bo=b.name===me; if(ao!==bo) return ao?-1:1; return a.name.localeCompare(b.name);});
     list.innerHTML=people.map(p=>`<div class="itemLine"><div class="leftStack"><span class="dot ${p.name===me?"online":""}"></span><span class="glassText">${p.name}</span></div><div class="actions"><button class="pill" data-action="player_stats" data-value="${p.email}">Stats</button><button class="pill" data-action="player_history" data-value="${p.email}">History</button><button class="pill" data-action="player_remove" data-value="${p.email}">Remove</button></div></div>`).join("");
   }
-  function sync(){try{const vb=document.getElementById("ngVersionBelow"); if(vb) vb.textContent="v1727"; renderGames(); renderPlayers();}catch(e){console.error(e);}}
+  function sync(){try{const vb=document.getElementById("ngVersionBelow"); if(vb) vb.textContent="v1728"; renderGames(); renderPlayers();}catch(e){console.error(e);}}
   document.addEventListener("DOMContentLoaded", sync, {once:true});
   window.addEventListener("load", sync, {once:true});
   setTimeout(sync, 350);
@@ -4505,7 +4531,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function sync(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1727";
+      if(vb) vb.textContent = "v1728";
       renderPlayerDropdowns();
     }catch(e){
       console.error(e);
@@ -4602,7 +4628,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const v = document.createElement("div");
     v.id = "ngVersionMid";
     v.className = "screenVersionMid";
-    v.textContent = "v1727";
+    v.textContent = "v1728";
     players.appendChild(v);
   }
 
@@ -4757,7 +4783,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncAll(){
     try{
       const vb = document.getElementById("ngVersionBelow");
-      if(vb) vb.textContent = "v1727";
+      if(vb) vb.textContent = "v1728";
       const sessionBtn = document.getElementById("sessionBtn");
       if(sessionBtn) sessionBtn.textContent = "Help Support Updates and Future Projects";
       ensureVersionLabel();
@@ -4878,9 +4904,9 @@ document.addEventListener("DOMContentLoaded", function(){
   function setVersion(){
     try {
       const v1 = document.querySelector("#ngHeaderBlock .ver");
-      if (v1) v1.textContent = "v1727";
+      if (v1) v1.textContent = "v1728";
       const v2 = document.getElementById("ngVersionBelow");
-      if (v2) v2.textContent = "v1727";
+      if (v2) v2.textContent = "v1728";
     } catch (_) {}
   }
 
@@ -5119,7 +5145,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1727";
+      if(v) v.textContent = "v1728";
     } catch(_ ) {}
   }
 
@@ -5237,7 +5263,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1727";
+      if(v) v.textContent = "v1728";
     } catch(_ ) {}
   }
 
@@ -5371,7 +5397,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1727";
+      if(v) v.textContent = "v1728";
     } catch(_ ) {}
   }
 
@@ -5445,7 +5471,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       var v = document.getElementById("ngVersionBelow");
-      if(v) v.textContent = "v1727";
+      if(v) v.textContent = "v1728";
     } catch(_ ) {}
   }
 
@@ -5496,7 +5522,7 @@ document.addEventListener("DOMContentLoaded", function(){
   function syncVersion(){
     try {
       const v = document.getElementById("ngVersionBelow");
-      if (v) v.textContent = "v1727";
+      if (v) v.textContent = "v1728";
     } catch (_ ) {}
   }
 
@@ -6566,7 +6592,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
     try{
       const gv = document.getElementById("globalFooter");
-      if(gv && !/v1713/.test(gv.textContent||"")) gv.textContent = "Night Games v1727 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gv && !/v1713/.test(gv.textContent||"")) gv.textContent = "Night Games v1728 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(_){}
   }
 
@@ -7235,16 +7261,16 @@ body{
 
   function setVersion(){
     try{
-      document.title = "Night Games v1727";
+      document.title = "Night Games v1728";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
-        if(el) el.textContent = "v1727";
+        if(el) el.textContent = "v1728";
       });
       document.querySelectorAll(".version,.ngVer,[data-app-version]").forEach(function(el){
-        el.textContent = "v1727";
+        el.textContent = "v1728";
       });
       var gf = document.getElementById("globalFooter");
-      if(gf) gf.textContent = "Night Games v1727 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gf) gf.textContent = "Night Games v1728 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(e){}
   }
 
@@ -7592,13 +7618,13 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1727";
+      document.title = "Night Games v1728";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
-        if(el) el.textContent = "v1727";
+        if(el) el.textContent = "v1728";
       });
       document.querySelectorAll(".version,.ngVer,[data-app-version]").forEach(function(el){
-        el.textContent = "v1727";
+        el.textContent = "v1728";
       });
     }catch(e){}
   }
@@ -7782,13 +7808,13 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1727";
+      document.title = "Night Games v1728";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
-        if(el) el.textContent = "v1727";
+        if(el) el.textContent = "v1728";
       });
       document.querySelectorAll(".version,.ngVer,[data-app-version]").forEach(function(el){
-        el.textContent = "v1727";
+        el.textContent = "v1728";
       });
     }catch(e){}
   }
@@ -7902,13 +7928,13 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1727";
+      document.title = "Night Games v1728";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
-        if(el) el.textContent = "v1727";
+        if(el) el.textContent = "v1728";
       });
       document.querySelectorAll(".version,.ngVer,[data-app-version]").forEach(function(el){
-        el.textContent = "v1727";
+        el.textContent = "v1728";
       });
     }catch(e){}
   }
@@ -8037,32 +8063,19 @@ body{
   });
 })();
 </script>
+
+<script id="ng-v1728-landing-fix">
+document.addEventListener("DOMContentLoaded", function(){
+  try{
+    var fatal = document.getElementById("fatal");
+    if(fatal) fatal.style.display = "none";
+    document.querySelectorAll(".screen").forEach(function(el){
+      if(el.id === "landing"){ el.classList.add("active"); el.style.display = "block"; }
+      else { el.classList.remove("active"); el.style.display = "none"; }
+    });
+  }catch(e){}
+}, {once:true});
+</script>
+
 </body>
 </html>
-
-
-
-/* ==== v1727 VISIBILITY FIX ==== */
-#fatal,.fatal{ display:none !important; }
-
-html,body{
-  background: var(--bgStageColor) !important;
-}
-
-#app{
-  position:fixed !important;
-  inset:0 !important;
-  min-height:100vh !important;
-  background-color: var(--bgStageColor) !important;
-  background-image:
-    linear-gradient(rgba(8,12,22,.22), rgba(8,12,22,.22)),
-    var(--bgStageImage) !important;
-  background-position:center center !important;
-  background-size:cover !important;
-  background-repeat:no-repeat !important;
-}
-
-/* ensure one screen visible */
-.screen{ display:none !important; }
-#landing{ display:block !important; }
-
