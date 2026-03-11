@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1734 COMPLETE</title>
+<title>Night Games v1735 COMPLETE</title>
 <!-- NIGHT GAMES v1700 COMPLETE -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -3535,7 +3535,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1734";window.NG_BUILD_LABEL="Night Games v1734";</script>
+<script>window.NG_BUILD_VERSION="1735";window.NG_BUILD_LABEL="Night Games v1735";</script>
 
 <style id="ng-v1651-header-style">
 #ngHeaderBlock{
@@ -4139,19 +4139,7 @@ body::before{
   background-color:transparent !important;
 }
 
-/* kill fullscreen overlay blockers from earlier builds */
-.screen::before,
-.screen::after,
-.container::before,
-.container::after,
-main::before,
-main::after,
-#app::before,
-#app::after{
-  content:none !important;
-  display:none !important;
-  background:none !important;
-}
+
 
 /* crystal panels */
 .card,
@@ -4288,6 +4276,59 @@ main::after,
   #gamesList .ngGameName{
     font-size:24px !important;
   }
+}
+</style>
+
+
+<style id="ng-v1735-background-restore">
+#fatal,.fatal{ display:none !important; }
+
+html, body{
+  background:#080c16 !important;
+}
+
+.screen{
+  position:absolute !important;
+  inset:0 !important;
+}
+
+.screen::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:0 !important;
+  pointer-events:none !important;
+  background-image: var(--bgStage) !important;
+  background-repeat:no-repeat !important;
+  background-size:cover !important;
+  background-position:center top !important;
+}
+
+.screen::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:0 !important;
+  pointer-events:none !important;
+  background:
+    radial-gradient(130% 110% at 50% 25%, rgba(0,0,0,0), rgba(0,0,0,.22) 60%, rgba(0,0,0,.52) 100%) !important;
+}
+
+.screen > *{
+  position:relative !important;
+  z-index:1 !important;
+}
+
+#landing{
+  display:block !important;
+}
+
+#landing::before{
+  background-image: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg") !important;
+}
+
+#app{
+  background:transparent !important;
 }
 </style>
 
@@ -10754,6 +10795,6 @@ main,
 </script>
 
 
-<!-- NightGames v1734: removed 3 corrupted script blocks from v1701_COMPLETE_READY -->
+<!-- NightGames v1735: removed 3 corrupted script blocks from v1701_COMPLETE_READY -->
 </body>
 </html>
