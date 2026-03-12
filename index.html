@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>NIGHT GAMES v1810 COMPLETE</title>
-<!-- NIGHT GAMES v1810 COMPLETE -->
+<title>Night Games v1810 COMPLETE</title>
+<!-- Night Games v1810 COMPLETE -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -32,7 +32,17 @@
 }
 
 
-    html, 
+    html, body{
+      height:100%;
+
+      min-height: 100dvh; /* iOS/iPadOS Safari dynamic viewport */
+margin:0;
+      background:#080c16;
+      color:var(--txt);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      overflow:hidden;
+      -webkit-text-size-adjust: 100%;
+    }
 
     /* Debug panel (toggle) */
     .dbg{ display:none; }
@@ -327,10 +337,27 @@ border: 1px solid rgba(255,255,255,.22);
     }
 
     
-    
-    
-    
-    
+    .fatal .card{
+      width: min(720px, 92vw);
+      border-radius: 22px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 22px 46px rgba(0,0,0,.55);
+      padding: 16px 16px 18px 16px;
+    }
+    .fatal h2{ margin:0 0 8px 0; font-size: 18px; letter-spacing:1px; text-transform: uppercase; }
+    .fatal p{ margin:0 0 10px 0; opacity:.88; line-height:1.45; }
+    .fatal pre{
+      margin:0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 13px;
+      opacity: .9;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 10px 12px;
+      border-radius: 14px;
+    }
 
     /* v1810: header row + mini pill */
     .headerRow{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
@@ -1670,7 +1697,10 @@ border: 1px solid rgba(255,255,255,.22);
 ============================================================================= */
 
 /* Keep the app shell locked; scrolling happens inside panels/lists. */
-html, 
+html, body{
+  height: 100%;
+  overflow: hidden;
+}
 
 /* Prevent a parent overflow rule from killing child scroll. */
 .screen,
@@ -2646,7 +2676,14 @@ body {
 
 
 /* ===== v1810 PRODUCTION CLEANUP ===== */
-html, 
+html, body{
+  height:100%;
+  min-height:100vh;
+  min-height:100dvh;
+  margin:0;
+  overflow:hidden;
+  -webkit-text-size-adjust:100%;
+}
 
 body{
   display:flex !important;
@@ -2685,7 +2722,14 @@ body{
 
 
 /* ===== v1810 FINAL RELEASE CLEANUP ===== */
-html, 
+html, body{
+  height:100% !important;
+  min-height:100vh !important;
+  min-height:100dvh !important;
+  margin:0 !important;
+  overflow:hidden !important;
+  -webkit-text-size-adjust:100% !important;
+}
 body{
   display:flex !important;
   flex-direction:column !important;
@@ -3482,7 +3526,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1805";window.NG_BUILD_LABEL="NIGHT GAMES v1810";</script>
+<script>window.NG_BUILD_VERSION="1805";window.NG_BUILD_LABEL="Night Games v1810";</script>
 
 <style id="ng-v1810-header-style">
 #ngHeaderBlock{
@@ -4042,10 +4086,16 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 <style id="ng-v1810-background-simplified">
-  /* NIGHT GAMES v1810: single background path */
-  
+  /* Night Games v1810: single background path */
+  #fatal, 
 
-  html, 
+  html, body{
+    height:100% !important;
+    min-height:100dvh !important;
+    margin:0 !important;
+    background:#080c16 !important;
+    overflow:hidden !important;
+  }
 
   #app{
     position:fixed !important;
@@ -4096,6 +4146,45 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     display:block !important;
   }
 </style>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, addDoc, collection, getDocs, onSnapshot, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
+  authDomain: "gamenightdarts-e7601.firebaseapp.com",
+  projectId: "gamenightdarts-e7601",
+  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
+  messagingSenderId: "270045452251",
+  appId: "1:270045452251:web:5a4a661140a60780e939fe",
+  measurementId: "G-M60TDFYBW0"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.app = app;
+window.auth = auth;
+window.db = db;
+
+window.signInAnonymously = signInAnonymously;
+window.onAuthStateChanged = onAuthStateChanged;
+window.doc = doc;
+window.setDoc = setDoc;
+window.getDoc = getDoc;
+window.updateDoc = updateDoc;
+window.addDoc = addDoc;
+window.collection = collection;
+window.getDocs = getDocs;
+window.onSnapshot = onSnapshot;
+window.query = query;
+window.where = where;
+window.serverTimestamp = serverTimestamp;
+</script>
 
 </head>
 <body>
@@ -4250,7 +4339,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">NIGHT GAMES v1810 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1810 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -6765,7 +6854,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
     try{
       const gv = document.getElementById("globalFooter");
-      if(gv && !/v1810/.test(gv.textContent||"")) gv.textContent = "NIGHT GAMES v1810 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gv && !/v1810/.test(gv.textContent||"")) gv.textContent = "Night Games v1810 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(_){}
   }
 
@@ -6875,8 +6964,8 @@ document.addEventListener("DOMContentLoaded", function(){
     projectId: "gamenightdarts-e7601",
     storageBucket: "gamenightdarts-e7601.firebasestorage.app",
     messagingSenderId: "270045452251",
-    appId: "1:270045452251:web:5a4a661140a60780e939fe",
-    measurementId: "G-M60TDFYBW0"
+    appId: "1:270045452251:web:393956ce18b43316e939fe",
+    measurementId: "G-LQEHF02ZVR"
   };
   window.firebaseConfig = firebaseConfig;
   window.__firebaseConfig = firebaseConfig;
@@ -7434,7 +7523,7 @@ body{
 
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1810";
+      document.title = "Night Games v1810";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1810";
@@ -7443,7 +7532,7 @@ body{
         el.textContent = "v1810";
       });
       var gf = document.getElementById("globalFooter");
-      if(gf) gf.textContent = "NIGHT GAMES v1810 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gf) gf.textContent = "Night Games v1810 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(e){}
   }
 
@@ -7791,7 +7880,7 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1810";
+      document.title = "Night Games v1810";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1810";
@@ -7969,7 +8058,7 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1810";
+      document.title = "Night Games v1810";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1810";
@@ -8256,7 +8345,7 @@ html, body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1810";
+      document.title = "Night Games v1810";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1810";
@@ -8394,7 +8483,7 @@ html, body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1810";
+      document.title = "Night Games v1810";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1810";
