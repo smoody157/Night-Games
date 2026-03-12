@@ -8665,5 +8665,56 @@ html, body{
 })();
 </script>
 
+
+<script id="ng-v1810-runtime-fix">
+(function(){
+
+  console.log("NightGames v1810 runtime patch loaded");
+
+  window.addEventListener("error", function(e){
+    try{
+      console.log("NightGames runtime error:", e.error || e.message);
+
+      let box = document.getElementById("ngRuntimeBox");
+
+      if(!box){
+        box = document.createElement("div");
+        box.id = "ngRuntimeBox";
+        box.style.position="fixed";
+        box.style.left="0";
+        box.style.right="0";
+        box.style.bottom="0";
+        box.style.background="rgba(0,0,0,.9)";
+        box.style.color="#ff8080";
+        box.style.fontFamily="monospace";
+        box.style.fontSize="12px";
+        box.style.padding="10px";
+        box.style.zIndex="999999";
+        box.style.maxHeight="40vh";
+        box.style.overflow="auto";
+        document.body.appendChild(box);
+      }
+
+      const msg = (e.error && (e.error.stack || e.error.message)) || e.message;
+
+      const line = document.createElement("div");
+      line.textContent = msg;
+
+      box.appendChild(line);
+
+    }catch(_){}
+  });
+
+  const checkFirebase = setInterval(function(){
+    if(window.db && window.auth){
+      const fatal = document.getElementById("fatal");
+      if(fatal) fatal.style.display="none";
+      clearInterval(checkFirebase);
+    }
+  },500);
+
+})();
+</script>
+
 </body>
 </html>
