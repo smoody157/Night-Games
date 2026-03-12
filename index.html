@@ -13932,6 +13932,45 @@ main,
   });
 })();
 </script>
+  <script id="ng-v1810-unblock-ui">
+(function(){
+
+  console.log("NightGames UI unblock running");
+
+  function unblock(){
+
+    try{
+
+      const fatal = document.getElementById("fatal");
+      if(fatal){
+        fatal.style.display = "none";
+      }
+
+      const wait = document.getElementById("ngWaitOverlay");
+      if(wait){
+        wait.remove();
+      }
+
+      document.querySelectorAll(".screen").forEach(function(s){
+        s.style.display = "block";
+        s.style.visibility = "visible";
+        s.style.opacity = "1";
+      });
+
+      document.body.style.overflow = "auto";
+
+    }catch(e){
+      console.log("unblock error:", e);
+    }
+
+  }
+
+  setTimeout(unblock,200);
+  setTimeout(unblock,800);
+  setTimeout(unblock,1500);
+
+})();
+</script>
 
 </body>
 </html>
