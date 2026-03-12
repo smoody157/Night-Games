@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1810 COMPLETE</title>
-<!-- Night Games v1810 COMPLETE -->
+<title>NIGHT GAMES v1810 COMPLETE</title>
+<!-- NIGHT GAMES v1810 COMPLETE -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -336,7 +336,16 @@ border: 1px solid rgba(255,255,255,.22);
       opacity: .92;
     }
 
-    
+    .fatal{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.82);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 20px;
+      z-index: 99999;
+    }
     .fatal .card{
       width: min(720px, 92vw);
       border-radius: 22px;
@@ -2025,7 +2034,7 @@ button, .btn, .pill{
 }
 .btnAdvance:active, .btn-advance:active{ transform: translateY(1px); }
 
-
+#fatal{display:none !important;}
 
 /* ===========================
    Landing crystal neon polish (v1810)
@@ -3526,7 +3535,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1805";window.NG_BUILD_LABEL="Night Games v1810";</script>
+<script>window.NG_BUILD_VERSION="1810";window.NG_BUILD_LABEL="NIGHT GAMES v1810";</script>
 
 <style id="ng-v1810-header-style">
 #ngHeaderBlock{
@@ -4086,8 +4095,8 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 <style id="ng-v1810-background-simplified">
-  /* Night Games v1810: single background path */
-  #fatal, 
+  /* NIGHT GAMES v1810: single background path */
+  #fatal, .fatal { display:none !important; }
 
   html, body{
     height:100% !important;
@@ -4146,45 +4155,6 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     display:block !important;
   }
 </style>
-
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, addDoc, collection, getDocs, onSnapshot, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-  projectId: "gamenightdarts-e7601",
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-  messagingSenderId: "270045452251",
-  appId: "1:270045452251:web:5a4a661140a60780e939fe",
-  measurementId: "G-M60TDFYBW0"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-window.app = app;
-window.auth = auth;
-window.db = db;
-
-window.signInAnonymously = signInAnonymously;
-window.onAuthStateChanged = onAuthStateChanged;
-window.doc = doc;
-window.setDoc = setDoc;
-window.getDoc = getDoc;
-window.updateDoc = updateDoc;
-window.addDoc = addDoc;
-window.collection = collection;
-window.getDocs = getDocs;
-window.onSnapshot = onSnapshot;
-window.query = query;
-window.where = where;
-window.serverTimestamp = serverTimestamp;
-</script>
 
 </head>
 <body>
@@ -4339,9 +4309,9 @@ window.serverTimestamp = serverTimestamp;
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1810 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">NIGHT GAMES v1810 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
-<div class="fatal" id="fatal">
+<div class="fatal" id="fatal" style="display:none;">
 <div class="card">
 <h2>Firebase didn’t start</h2>
 <p>This page uses Firebase modules. If you’re on a web link and still see this, the host is blocking module imports or Firebase is blocked.</p>
@@ -6409,9 +6379,9 @@ document.addEventListener("DOMContentLoaded", function(){
 
 <script id="ng-v1810-full-wire">
 (function(){
-  const BUILD = "1481";
-  const HISTORY_KEY = "ng_match_history_v1481";
-  const STATS_KEY = "ng_player_stats_v1481";
+  const BUILD = "1810";
+  const HISTORY_KEY = "ng_match_history_v1810";
+  const STATS_KEY = "ng_player_stats_v1810";
   const SESSION_WATCH_MS = 900;
 
   function esc(v){
@@ -6846,7 +6816,7 @@ document.addEventListener("DOMContentLoaded", function(){
     try{ if(window.NG_DEBUG === true && window.console && typeof window.console.info === "function") window.console.info.apply(window.console, arguments); }catch(__nglogerr){}
   };
     try{ if(window.NG_BUILD_VERSION) window.NG_BUILD_VERSION = BUILD; }catch(_){}
-    try{ if(window.NG_BUILD_LABEL) window.NG_BUILD_LABEL = "Night Games v" + BUILD; }catch(_){}
+    try{ if(window.NG_BUILD_LABEL) window.NG_BUILD_LABEL="NIGHT GAMES v1810" + BUILD; }catch(_){}
     ["ngVersionMid","ngVersionBelow","landingCopy","globalFooter"].forEach(function(id){
       const el = document.getElementById(id);
       if(!el) return;
@@ -6854,7 +6824,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
     try{
       const gv = document.getElementById("globalFooter");
-      if(gv && !/v1810/.test(gv.textContent||"")) gv.textContent = "Night Games v1810 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gv && !/v1810/.test(gv.textContent||"")) gv.textContent = "NIGHT GAMES v1810 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(_){}
   }
 
@@ -6957,21 +6927,21 @@ document.addEventListener("DOMContentLoaded", function(){
 
 <script id="ng-v1810-master-patch">
 (function(){
-  const BUILD = "1605";
+  const BUILD = "1810";
   const firebaseConfig = {
     apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
     authDomain: "gamenightdarts-e7601.firebaseapp.com",
     projectId: "gamenightdarts-e7601",
     storageBucket: "gamenightdarts-e7601.firebasestorage.app",
     messagingSenderId: "270045452251",
-    appId: "1:270045452251:web:393956ce18b43316e939fe",
-    measurementId: "G-LQEHF02ZVR"
+    appId: "1:270045452251:web:5a4a661140a60780e939fe",
+    measurementId: "G-M60TDFYBW0"
   };
   window.firebaseConfig = firebaseConfig;
   window.__firebaseConfig = firebaseConfig;
   window.ngBuild = "v" + BUILD;
   window.NG_BUILD_VERSION = BUILD;
-  window.NG_BUILD_LABEL = "Night Games v" + BUILD;
+  window.NG_BUILD_LABEL="NIGHT GAMES v1810" + BUILD;
   try{ document.title = "Night Games v" + BUILD; }catch(_){}
 
   const state = {
@@ -7523,7 +7493,7 @@ body{
 
   function setVersion(){
     try{
-      document.title = "Night Games v1810";
+      document.title = "NIGHT GAMES v1810";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1810";
@@ -7532,7 +7502,7 @@ body{
         el.textContent = "v1810";
       });
       var gf = document.getElementById("globalFooter");
-      if(gf) gf.textContent = "Night Games v1810 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gf) gf.textContent = "NIGHT GAMES v1810 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(e){}
   }
 
@@ -7880,7 +7850,7 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1810";
+      document.title = "NIGHT GAMES v1810";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1810";
@@ -8058,7 +8028,7 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1810";
+      document.title = "NIGHT GAMES v1810";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1810";
@@ -8345,7 +8315,7 @@ html, body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1810";
+      document.title = "NIGHT GAMES v1810";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1810";
@@ -8483,7 +8453,7 @@ html, body{
 (function(){
   function setVersion(){
     try{
-      document.title = "Night Games v1810";
+      document.title = "NIGHT GAMES v1810";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1810";
@@ -8592,5 +8562,108 @@ html, body{
 </script>
 <!-- NG FULL CRYSTAL GLASS PATCH -->
 <!-- NG v1810 COMPLETE BACKGROUND / MERGE LOCK -->
+
+<script id="ng-v1810-firebase-bootstrap">
+/* v1810 Firebase bootstrap for GitHub Pages / iPhone Safari */
+(function(){
+  const CFG = {
+    apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
+    authDomain: "gamenightdarts-e7601.firebaseapp.com",
+    projectId: "gamenightdarts-e7601",
+    storageBucket: "gamenightdarts-e7601.firebasestorage.app",
+    messagingSenderId: "270045452251",
+    appId: "1:270045452251:web:5a4a661140a60780e939fe",
+    measurementId: "G-M60TDFYBW0"
+  };
+  window.firebaseConfig = CFG;
+  window.__firebaseConfig = CFG;
+  window.ngFirebaseStatus = "BOOTING";
+
+  function hideFatal(){
+    try{
+      var fatal = document.getElementById("fatal");
+      if(fatal) fatal.style.display = "none";
+    }catch(_){}
+  }
+  function showFatal(msg){
+    try{
+      var fatal = document.getElementById("fatal");
+      var fatalMsg = document.getElementById("fatalMsg");
+      if(fatalMsg) fatalMsg.textContent = String(msg || "No details.");
+      if(fatal) fatal.style.display = "flex";
+    }catch(_){}
+  }
+
+  window.addEventListener("DOMContentLoaded", hideFatal);
+
+  (async function(){
+    try{
+      const appMod = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js");
+      const authMod = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js");
+      const fsMod = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js");
+      let analyticsMod = null;
+      try{
+        analyticsMod = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js");
+      }catch(_){}
+
+      const app = appMod.initializeApp(CFG);
+      const auth = authMod.getAuth(app);
+      const db = fsMod.getFirestore(app);
+
+      try{
+        if (analyticsMod && typeof analyticsMod.getAnalytics === "function") {
+          window.analytics = analyticsMod.getAnalytics(app);
+        }
+      }catch(_){}
+
+      window.app = app;
+      window.auth = auth;
+      window.db = db;
+      window.ngAuth = auth;
+      window.ngDb = db;
+      window.ngFirebase = { app, auth, db };
+
+      window.signInAnonymously = authMod.signInAnonymously;
+      window.onAuthStateChanged = authMod.onAuthStateChanged;
+      window.signOut = authMod.signOut;
+
+      window.doc = fsMod.doc;
+      window.setDoc = fsMod.setDoc;
+      window.getDoc = fsMod.getDoc;
+      window.updateDoc = fsMod.updateDoc;
+      window.addDoc = fsMod.addDoc;
+      window.collection = fsMod.collection;
+      window.getDocs = fsMod.getDocs;
+      window.deleteDoc = fsMod.deleteDoc;
+      window.onSnapshot = fsMod.onSnapshot;
+      window.query = fsMod.query;
+      window.where = fsMod.where;
+      window.serverTimestamp = fsMod.serverTimestamp;
+
+      window.ngFirebaseStatus = "READY";
+      hideFatal();
+
+      try{
+        if(!auth.currentUser && typeof authMod.signInAnonymously === "function"){
+          await authMod.signInAnonymously(auth);
+        }
+      }catch(e){
+        console.log("Anonymous auth failed:", e);
+      }
+    }catch(e){
+      window.ngFirebaseStatus = "ERROR";
+      console.log("Firebase bootstrap failed:", e);
+      showFatal(e && (e.stack || e.message || String(e)));
+    }
+  })();
+
+  setTimeout(function(){
+    if(window.ngFirebaseStatus !== "READY"){
+      showFatal("Firebase boot timed out before READY.");
+    }
+  }, 8000);
+})();
+</script>
+
 </body>
 </html>
