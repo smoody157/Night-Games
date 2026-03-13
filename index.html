@@ -4355,18 +4355,7 @@ window.__firebaseConfig = window.firebaseConfig;
 </div>
 <div class="globalFooter" id="globalFooter">NIGHT GAMES v1811 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
-<div class="fatal" id="fatal">
-<div class="card">
-<h2>Firebase didn’t start</h2>
-<p>This page uses Firebase modules. If you’re on a web link and still see this, the host is blocking module imports or Firebase is blocked.</p>
-<pre id="fatalMsg">No details.</pre>
-</div>
-</div>
-<script nomodule="">
-    // Very old browsers only
-    document.getElementById("fatal").style.display = "flex";
-    document.getElementById("fatalMsg").textContent = "Your browser doesn’t support ES Modules. Use a modern Safari/Chrome.";
-  </script>
+
 <script>
     // Debug UI toggle
     (function(){
@@ -4377,54 +4366,7 @@ window.__firebaseConfig = window.firebaseConfig;
     })();
   </script>
 
-<script>
-/* ============================================================================
-  ENTER FALLBACK WIRING (non-module)
-  - Guarantees ENTER button does something even if module script/import fails.
-  - Calls window.ngEnter(email) when available.
-============================================================================ */
-(function(){
-  function qs(id){ return document.getElementById(id); }
-  const enterBtn = qs("enterBtn");
-  const emailInput = qs("emailInput");
-  const statusLine = qs("statusLine");
-  if(!enterBtn || !emailInput) return;
 
-  function setStatus(t){
-    try{ if(statusLine) statusLine.textContent = t; }catch(_){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){ if(typeof ngLogError==="function") ngLogError("Catch", _e); } } }
-}
-}
-  }
-
-  let busy = false;
-  async function run(){
-    if(busy) return;
-    busy = true;
-    try{
-      if(typeof
-      }else{
-        setStatus("Loading…");
-        // small retry window
-        setTimeout(()=>{ busy=false; }, 600);
-        return;
-      }
-    }catch(e){
-  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){ if(typeof ngLogError==="function") ngLogError("Catch", _e); } } }
-
-      window.ngProdLog("ENTER fallback error:", e);
-      setStatus("Error.");
-    }
-    busy = false;
-  }
-
-  enterBtn.addEventListener("click", (e)=>{ e.preventDefault(); run(); });
-  emailInput.addEventListener("keydown", (e)=>{
-    if(e.key === "Enter"){ e.preventDefault(); run(); }
-  });
-})();
-</script>
 
 <script>
 // ===================== v1232 NO-MODULE BOOTSTRAP =====================
@@ -4445,7 +4387,7 @@ window.__firebaseConfig = window.firebaseConfig;
     }catch(_e){ if(typeof ngLogError==="function") ngLogError("Catch", _e); }
   };
 
-  window.ngBuild="v1811";
+  window.ngBuild = "v1811";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -4470,7 +4412,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild="v1811";
+window.ngBuild = "v1811";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -13874,6 +13816,51 @@ main,
   window.addEventListener('pageshow', function(){
     unlockBackground();
     setTimeout(unlockBackground, 150);
+  });
+})();
+</script>
+
+
+<script id="ng-v1811-runtime-catcher">
+(function(){
+  function ensureBox(color){
+    var box = document.getElementById("ngRuntimeBox");
+    if(!box){
+      box = document.createElement("div");
+      box.id = "ngRuntimeBox";
+      box.style.position = "fixed";
+      box.style.left = "0";
+      box.style.right = "0";
+      box.style.bottom = "0";
+      box.style.zIndex = "999999";
+      box.style.background = "rgba(0,0,0,.92)";
+      box.style.color = color || "#ff8a8a";
+      box.style.fontFamily = "monospace";
+      box.style.fontSize = "12px";
+      box.style.lineHeight = "1.35";
+      box.style.padding = "10px 12px";
+      box.style.maxHeight = "40vh";
+      box.style.overflow = "auto";
+      document.body.appendChild(box);
+    }
+    return box;
+  }
+  window.addEventListener("error", function(e){
+    try{
+      var box = ensureBox("#ff8a8a");
+      var line = document.createElement("div");
+      line.textContent = (e.error && (e.error.stack || e.error.message)) || e.message || "Unknown runtime error";
+      box.appendChild(line);
+    }catch(_){}
+  });
+  window.addEventListener("unhandledrejection", function(e){
+    try{
+      var box = ensureBox("#ffd27a");
+      var line = document.createElement("div");
+      var reason = e.reason;
+      line.textContent = "Promise: " + (reason && (reason.stack || reason.message || String(reason)));
+      box.appendChild(line);
+    }catch(_){}
   });
 })();
 </script>
