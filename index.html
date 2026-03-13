@@ -4387,7 +4387,7 @@ window.__firebaseConfig = window.firebaseConfig;
     }catch(_e){ if(typeof ngLogError==="function") ngLogError("Catch", _e); }
   };
 
-  window.ngBuild = "v1811";
+  window.ngBuild="v1811";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -4412,7 +4412,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild = "v1811";
+window.ngBuild="v1811";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -13816,51 +13816,6 @@ main,
   window.addEventListener('pageshow', function(){
     unlockBackground();
     setTimeout(unlockBackground, 150);
-  });
-})();
-</script>
-
-
-<script id="ng-v1811-runtime-catcher">
-(function(){
-  function ensureBox(color){
-    var box = document.getElementById("ngRuntimeBox");
-    if(!box){
-      box = document.createElement("div");
-      box.id = "ngRuntimeBox";
-      box.style.position = "fixed";
-      box.style.left = "0";
-      box.style.right = "0";
-      box.style.bottom = "0";
-      box.style.zIndex = "999999";
-      box.style.background = "rgba(0,0,0,.92)";
-      box.style.color = color || "#ff8a8a";
-      box.style.fontFamily = "monospace";
-      box.style.fontSize = "12px";
-      box.style.lineHeight = "1.35";
-      box.style.padding = "10px 12px";
-      box.style.maxHeight = "40vh";
-      box.style.overflow = "auto";
-      document.body.appendChild(box);
-    }
-    return box;
-  }
-  window.addEventListener("error", function(e){
-    try{
-      var box = ensureBox("#ff8a8a");
-      var line = document.createElement("div");
-      line.textContent = (e.error && (e.error.stack || e.error.message)) || e.message || "Unknown runtime error";
-      box.appendChild(line);
-    }catch(_){}
-  });
-  window.addEventListener("unhandledrejection", function(e){
-    try{
-      var box = ensureBox("#ffd27a");
-      var line = document.createElement("div");
-      var reason = e.reason;
-      line.textContent = "Promise: " + (reason && (reason.stack || reason.message || String(reason)));
-      box.appendChild(line);
-    }catch(_){}
   });
 })();
 </script>
