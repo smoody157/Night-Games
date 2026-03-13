@@ -1,2739 +1,407 @@
-<!-- ===================================================================== -->
-<!-- NIGHT GAMES — MASTER REBUILT                                         -->
-<!-- AUTHOR: Steve Moody                                                   -->
-<!--                                                                       -->
-<!-- Night Games is owned by The Dart Room                                 -->
-<!-- The Dart Room is designed by Steve's Graphic Designs                  -->
-<!--                                                                       -->
-<!-- MASTER REBUILD PROJECT                                                -->
-<!-- Repository: https://github.com/smoody157/Night-Games                  -->
-<!-- ===================================================================== -->
+<!DOCTYPE html>
+<html>
+<head>
 
+<title>Night Games v1807</title>
 
-<!-- ===================================================================== -->
-<!-- SECTION 1 — APP METADATA / BUILD INFO                                 -->
-<!-- Paste Section 1 directly below this line                              -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 1 — APP METADATA / BUILD INFO                                 -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   APPLICATION METADATA
-   Defines the identity of this build.
-   ========================================================= */
-
-const APP_META = {
-
-    appName: "Night Games",
-    buildTitle: "Master Rebuilt",
-    version: "1836",
-
-    author: "Steve Moody",
-
-    ownership: {
-        owner: "The Dart Room",
-        design: "Steve's Graphic Designs"
-    },
-
-    repository: "https://github.com/smoody157/Night-Games",
-
-    created: new Date().toISOString()
-
-};
-
-
-/* =========================================================
-   GLOBAL APPLICATION CONFIGURATION
-   All shared assets and constants are centralized here.
-   ========================================================= */
-
-const APP_CONFIG = {
-
-    backgrounds: {
-
-        landing:
-        "https://raw.githubusercontent.com/smoody157/Night-Games/main/7390.jpeg",
-
-        main:
-        "https://raw.githubusercontent.com/smoody157/Night-Games/main/7315.jpeg"
-
-    },
-
-    audio: {
-
-        intro:
-        "https://raw.githubusercontent.com/smoody157/Night-Games/main/intro.mpa"
-
-    },
-
-    firestoreCollections: {
-
-        sessions: "sessions",
-        players: "players",
-        games: "games",
-        history: "history"
-
-    }
-
-};
-
-
-/* =========================================================
-   GLOBAL APPLICATION STATE
-   Runtime values used across the entire system.
-   ========================================================= */
-
-const APP_STATE = {
-
-    player: {
-        id: null,
-        name: null
-    },
-
-    session: {
-        id: null,
-        host: null
-    },
-
-    game: {
-        id: null,
-        active: false
-    }
-
-};
-
-
-/* =========================================================
-   DEVELOPMENT LOGGER
-   Helpful while building and debugging.
-   ========================================================= */
-
-function devLog(message){
-
-    console.log("[Night Games]", message);
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 1                                                         -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 2 — VISUAL FOUNDATION                                         -->
-<!-- Global styles, layout system, fonts                                   -->
-<!-- Paste Section 2 directly below this line                              -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 2 — VISUAL FOUNDATION                                         -->
-<!-- ===================================================================== -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 
-/* =========================================================
-   GLOBAL PAGE FOUNDATION
-   Establishes base layout and typography.
-   ========================================================= */
+/* ---------- GLOBAL ---------- */
 
-html, body {
-
-  margin: 0;
-  padding: 0;
-
-  width: 100%;
-  height: 100%;
-
-  font-family: Arial, Helvetica, sans-serif;
-
-  background: #0b1220;
-  color: #ffffff;
-
-  overflow-x: hidden;
-
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:#080c16;
+color:white;
+overflow:hidden;
 }
 
-
-/* =========================================================
-   ROOT APPLICATION CONTAINER
-   ========================================================= */
-
-#app {
-
-  position: relative;
-
-  width: 100%;
-  height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-
+#app{
+position:fixed;
+inset:0;
 }
 
+/* ---------- SCREENS ---------- */
 
-/* =========================================================
-   SCREEN SYSTEM BASE
-   ========================================================= */
-
-.screen {
-
-  display: none;
-
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-
-  padding: 40px;
-
-  box-sizing: border-box;
-
-  overflow-y: auto;
-
+.screen{
+display:none;
+position:absolute;
+inset:0;
+padding:30px;
+box-sizing:border-box;
 }
 
-.screen.active {
-
-  display: block;
-
+.screen.active{
+display:block;
 }
 
+/* ---------- BACKGROUND ---------- */
 
-/* =========================================================
-   CONTENT WRAPPER
-   ========================================================= */
-
-.content {
-
-  position: relative;
-
-  max-width: 1200px;
-
-  margin: auto;
-
-  z-index: 5;
-
+.background{
+position:absolute;
+inset:0;
+background-image:url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg");
+background-size:cover;
+background-position:center top;
+z-index:0;
 }
 
+/* ---------- CONTENT ---------- */
 
-/* =========================================================
-   BUTTON STYLING
-   ========================================================= */
-
-button {
-
-  padding: 12px 18px;
-
-  border: none;
-  border-radius: 6px;
-
-  background: #1f3a66;
-
-  color: white;
-
-  font-size: 16px;
-
-  cursor: pointer;
-
-  margin-top: 10px;
-
+.content{
+position:relative;
+z-index:1;
+max-width:800px;
+margin:auto;
 }
 
-button:hover {
+/* ---------- BUTTONS ---------- */
 
-  background: #2d4f8d;
-
+button{
+padding:14px 18px;
+border:none;
+border-radius:8px;
+background:#2c5cff;
+color:white;
+font-size:16px;
+cursor:pointer;
+margin-top:10px;
 }
 
-
-/* =========================================================
-   INPUT FIELD STYLING
-   ========================================================= */
-
-input {
-
-  padding: 10px;
-
-  border-radius: 6px;
-  border: none;
-
-  font-size: 16px;
-
-  margin-top: 10px;
-
+button:hover{
+background:#4671ff;
 }
 
+/* ---------- INPUT ---------- */
 
-/* =========================================================
-   CARD / PANEL STYLE
-   ========================================================= */
-
-.card {
-
-  background: rgba(0,0,0,.45);
-
-  padding: 14px;
-
-  border-radius: 8px;
-
-  margin-bottom: 12px;
-
+input{
+padding:12px;
+font-size:16px;
+border-radius:8px;
+border:none;
+margin-top:10px;
 }
 
+/* ---------- PANEL ---------- */
 
-/* =========================================================
-   MOBILE RESPONSIVE ADJUSTMENTS
-   ========================================================= */
-
-@media(max-width:700px){
-
-  .screen{
-    padding:20px;
-  }
-
-  button{
-    width:100%;
-  }
-
+.panel{
+background:rgba(0,0,0,.45);
+padding:16px;
+border-radius:12px;
+margin-top:10px;
 }
 
 </style>
 
-<!-- ===================================================================== -->
-<!-- END SECTION 2                                                         -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 3 — BACKGROUND SYSTEM                                         -->
-<!-- Landing background (7390)                                             -->
-<!-- Main app background (7315)                                            -->
-<!-- Paste Section 3 directly below this line                              -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 3 — BACKGROUND SYSTEM                                         -->
-<!-- ===================================================================== -->
-
-<style>
-
-/* =========================================================
-   LANDING PAGE BACKGROUND
-   Uses image 7390 from the Night Games repo.
-   ========================================================= */
-
-#screen_landing{
-
-  background-image:
-  url("https://raw.githubusercontent.com/smoody157/Night-Games/main/7390.jpeg");
-
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-}
-
-
-/* =========================================================
-   MAIN APPLICATION BACKGROUND
-   Used by all app screens except the landing screen.
-   ========================================================= */
-
-.app-background{
-
-  background-image:
-  url("https://raw.githubusercontent.com/smoody157/Night-Games/main/7315.jpeg");
-
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-}
-
-
-/* =========================================================
-   BACKGROUND OVERLAY
-   Dark layer so text stays readable over images.
-   ========================================================= */
-
-.background-overlay{
-
-  position:absolute;
-  top:0;
-  left:0;
-
-  width:100%;
-  height:100%;
-
-  background:rgba(0,0,0,.45);
-
-  pointer-events:none;
-
-}
-
-
-/* =========================================================
-   BACKGROUND LAYER CONTAINER
-   Allows stacking background + UI safely.
-   ========================================================= */
-
-.background-layer{
-
-  position:absolute;
-
-  top:0;
-  left:0;
-
-  width:100%;
-  height:100%;
-
-  z-index:0;
-
-}
-
-
-/* =========================================================
-   CONTENT LAYER
-   UI always sits above background layers.
-   ========================================================= */
-
-.content-layer{
-
-  position:relative;
-
-  z-index:5;
-
-}
-
-</style>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 3                                                         -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 4 — SCREEN SYSTEM                                             -->
-<!-- Screen routing / show-hide logic                                      -->
-<!-- Prevents black screen issues                                          -->
-<!-- Paste Section 4 directly below this line                              -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 4 — SCREEN SYSTEM                                             -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   SCREEN REGISTRY
-   Keeps track of every screen in the application.
-   ========================================================= */
-
-const SCREEN_REGISTRY = {
-
-    landing: "screen_landing",
-    hub: "screen_hub",
-    waiting: "screen_waiting",
-    game: "screen_game",
-    history: "screen_history"
-
-};
-
-
-/* =========================================================
-   SCREEN UTILITY
-   Returns a screen element safely.
-   ========================================================= */
-
-function getScreen(id){
-
-    return document.getElementById(id);
-
-}
-
-
-/* =========================================================
-   HIDE ALL SCREENS
-   Used before activating a new one.
-   ========================================================= */
-
-function hideAllScreens(){
-
-    const screens = document.querySelectorAll(".screen");
-
-    screens.forEach(function(screen){
-
-        screen.classList.remove("active");
-
-    });
-
-}
-
-
-/* =========================================================
-   SHOW SCREEN
-   Main routing function used across the app.
-   ========================================================= */
-
-function showScreen(screenId){
-
-    hideAllScreens();
-
-    const screen = getScreen(screenId);
-
-    if(!screen){
-
-        console.error("Screen not found:", screenId);
-        return;
-
-    }
-
-    screen.classList.add("active");
-
-}
-
-
-/* =========================================================
-   SAFE SCREEN BOOT
-   Prevents the application from starting on a blank page.
-   ========================================================= */
-
-function bootScreenSystem(){
-
-    const firstScreen = getScreen(SCREEN_REGISTRY.landing);
-
-    if(!firstScreen){
-
-        console.error("Landing screen missing.");
-        return;
-
-    }
-
-    showScreen(SCREEN_REGISTRY.landing);
-
-}
-
-
-/* =========================================================
-   SCREEN DEBUG LOGGER
-   ========================================================= */
-
-function logScreenChange(screen){
-
-    console.log("[Screen Change]", screen);
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 4                                                         -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 5 — CORE APP CONTAINER                                        -->
-<!-- Main application container                                            -->
-<!-- Paste Section 5 directly below this line                              -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 5 — CORE APP CONTAINER                                        -->
-<!-- ===================================================================== -->
-
-<!--
-This section defines the primary application container and the
-base layout structure that every screen will live inside.
-
-All screens (landing, hub, waiting room, game, history) are placed
-inside the #app container so the screen router can control them.
--->
+</head>
+<body>
 
 <div id="app">
 
+<div class="background"></div>
 
-    <!-- ========================================================= -->
-    <!-- LANDING SCREEN                                            -->
-    <!-- ========================================================= -->
+<!-- LANDING -->
 
-    <div id="screen_landing" class="screen">
+<div id="screen_landing" class="screen active">
 
-        <div class="background-overlay"></div>
+<div class="content">
 
-        <div class="content">
+<h1>Night Games</h1>
 
-            <h1>Night Games</h1>
+<input id="playerName" placeholder="Enter your name">
 
-            <input
-                id="playerNameInput"
-                type="text"
-                placeholder="Enter your name or email"
-            >
+<br>
 
-            <br>
-
-            <button id="enterAppButton">
-                Enter
-            </button>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- ========================================================= -->
-    <!-- HUB SCREEN                                                -->
-    <!-- ========================================================= -->
-
-    <div id="screen_hub" class="screen app-background">
-
-        <div class="background-overlay"></div>
-
-        <div class="content">
-
-            <h2>Game Hub</h2>
-
-            <button id="createSessionButton">
-                Create Game
-            </button>
-
-            <div id="sessionListContainer"></div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- ========================================================= -->
-    <!-- WAITING ROOM SCREEN                                       -->
-    <!-- ========================================================= -->
-
-    <div id="screen_waiting" class="screen app-background">
-
-        <div class="background-overlay"></div>
-
-        <div class="content">
-
-            <h2>Waiting Room</h2>
-
-            <div id="playerListContainer"></div>
-
-            <button id="leaveWaitingRoomButton">
-                Leave Room
-            </button>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- ========================================================= -->
-    <!-- GAME SCREEN                                               -->
-    <!-- ========================================================= -->
-
-    <div id="screen_game" class="screen app-background">
-
-        <div class="background-overlay"></div>
-
-        <div class="content">
-
-            <h2>Game Screen</h2>
-
-            <div id="gameInterface"></div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- ========================================================= -->
-    <!-- HISTORY SCREEN                                            -->
-    <!-- ========================================================= -->
-
-    <div id="screen_history" class="screen app-background">
-
-        <div class="background-overlay"></div>
-
-        <div class="content">
-
-            <h2>Game History</h2>
-
-            <div id="historyContainer"></div>
-
-        </div>
-
-    </div>
-
+<button onclick="enterApp()">Enter</button>
 
 </div>
 
-<!-- ===================================================================== -->
-<!-- END SECTION 5                                                         -->
-<!-- ===================================================================== -->
+</div>
 
+<!-- HUB -->
 
-<!-- ===================================================================== -->
-<!-- SECTION 6 — LANDING SCREEN                                            -->
-<!-- Email / name entry                                                    -->
-<!-- Intro sound trigger                                                   -->
-<!-- Paste Section 6 directly below this line                              -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 6 — LANDING SCREEN LOGIC                                      -->
-<!-- ===================================================================== -->
+<div id="screen_hub" class="screen">
 
-<script>
+<div class="content">
 
-/* =========================================================
-   LANDING INPUT ELEMENTS
-   ========================================================= */
+<h2>Game Hub</h2>
 
-const playerInput =
-document.getElementById("playerNameInput");
+<button onclick="createSession()">Create Game</button>
 
-const enterButton =
-document.getElementById("enterAppButton");
+<div id="sessionList" class="panel"></div>
 
+</div>
 
-/* =========================================================
-   INTRO AUDIO SYSTEM
-   ========================================================= */
+</div>
 
-const introAudio =
-new Audio(APP_CONFIG.audio.intro);
+<!-- WAITING -->
 
-let introPlayed = false;
+<div id="screen_waiting" class="screen">
 
+<div class="content">
 
-/* =========================================================
-   PLAY INTRO AUDIO WHEN PLAYER TOUCHES INPUT
-   ========================================================= */
+<h2>Waiting Room</h2>
 
-if(playerInput){
+<div id="playerList" class="panel"></div>
 
-    playerInput.addEventListener("focus", function(){
+<button onclick="startGame()">Start Game</button>
+<button onclick="leaveRoom()">Leave</button>
 
-        if(introPlayed) return;
+</div>
 
-        introPlayed = true;
+</div>
 
-        introAudio.play().catch(function(){
-            console.log("Audio blocked until interaction.");
-        });
+<!-- GAME -->
 
-    });
+<div id="screen_game" class="screen">
 
-}
+<div class="content">
 
+<h2>Game</h2>
 
-/* =========================================================
-   ENTER APPLICATION
-   Saves player name and opens the hub screen.
-   ========================================================= */
+<div id="gameArea" class="panel"></div>
 
-function enterApplication(){
+<button onclick="nextTurn()">Next Turn</button>
+<button onclick="endGame()">End Game</button>
 
-    const playerName = playerInput.value.trim();
+</div>
 
-    if(!playerName){
+</div>
 
-        alert("Please enter your name.");
-        return;
+<!-- HISTORY -->
 
-    }
+<div id="screen_history" class="screen">
 
-    APP_STATE.player.name = playerName;
+<div class="content">
 
-    localStorage.setItem(
-        "nightgames_player_name",
-        playerName
-    );
+<h2>History</h2>
 
-    showScreen(SCREEN_REGISTRY.hub);
+<div id="history"></div>
 
-}
+<button onclick="goHub()">Back</button>
 
+</div>
 
-/* =========================================================
-   ENTER BUTTON EVENT
-   ========================================================= */
+</div>
 
-if(enterButton){
-
-    enterButton.addEventListener("click", enterApplication);
-
-}
-
-
-/* =========================================================
-   AUTOLOAD PLAYER NAME IF SAVED
-   ========================================================= */
-
-const savedName =
-localStorage.getItem("nightgames_player_name");
-
-if(savedName && playerInput){
-
-    playerInput.value = savedName;
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 6                                                         -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 7 — HUB SCREEN                                                -->
-<!-- Session creation / session list                                       -->
-<!-- Paste Section 7 directly below this line                              -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 7 — HUB SYSTEM                                                -->
-<!-- ===================================================================== -->
+</div>
 
 <script>
 
-/* =========================================================
-   HUB ELEMENT REFERENCES
-   ========================================================= */
+/* ---------- STATE ---------- */
 
-const createSessionButton =
-document.getElementById("createSessionButton");
+let playerName=null
+let sessions=[]
+let currentSession=null
+let players=[]
+let turn=0
 
-const sessionListContainer =
-document.getElementById("sessionListContainer");
+/* ---------- SCREEN ROUTER ---------- */
 
+function showScreen(id){
 
-/* =========================================================
-   SESSION LIST STATE
-   ========================================================= */
+document.querySelectorAll(".screen")
+.forEach(s=>s.classList.remove("active"))
 
-let SESSION_LIST = [];
-
-
-/* =========================================================
-   RENDER SESSION LIST
-   ========================================================= */
-
-function renderSessionList(){
-
-    if(!sessionListContainer) return;
-
-    sessionListContainer.innerHTML = "";
-
-    if(SESSION_LIST.length === 0){
-
-        sessionListContainer.innerHTML =
-        "<div class='card'>No active games</div>";
-
-        return;
-    }
-
-    SESSION_LIST.forEach(function(session){
-
-        const card = document.createElement("div");
-
-        card.className = "card";
-
-        card.innerHTML =
-        "<strong>Host:</strong> " + session.host +
-        "<br>" +
-        "<button onclick='joinSession(\"" + session.id + "\")'>Join Game</button>";
-
-        sessionListContainer.appendChild(card);
-
-    });
+document.getElementById(id).classList.add("active")
 
 }
 
+/* ---------- LANDING ---------- */
 
-/* =========================================================
-   CREATE SESSION
-   ========================================================= */
+function enterApp(){
+
+playerName=document.getElementById("playerName").value.trim()
+
+if(!playerName){
+
+alert("Enter name")
+
+return
+
+}
+
+showScreen("screen_hub")
+
+renderSessions()
+
+}
+
+/* ---------- HUB ---------- */
 
 function createSession(){
 
-    const newSession = {
+let session={
+id:"session_"+Date.now(),
+host:playerName,
+players:[playerName]
+}
 
-        id: "session_" + Date.now(),
+sessions.push(session)
 
-        host: APP_STATE.player.name,
+joinSession(session.id)
 
-        created: Date.now(),
-
-        players: []
-
-    };
-
-    SESSION_LIST.push(newSession);
-
-    renderSessionList();
-
-    console.log("Session created:", newSession);
+renderSessions()
 
 }
 
+function joinSession(id){
 
-/* =========================================================
-   JOIN SESSION
-   ========================================================= */
+currentSession=sessions.find(s=>s.id===id)
 
-function joinSession(sessionId){
+players=currentSession.players
 
-    const session =
-    SESSION_LIST.find(s => s.id === sessionId);
+renderPlayers()
 
-    if(!session) return;
-
-    APP_STATE.session.id = sessionId;
-    APP_STATE.session.host = session.host;
-
-    console.log("Joined session:", sessionId);
-
-    showScreen(SCREEN_REGISTRY.waiting);
+showScreen("screen_waiting")
 
 }
 
+function renderSessions(){
 
-/* =========================================================
-   CREATE SESSION BUTTON EVENT
-   ========================================================= */
+let box=document.getElementById("sessionList")
 
-if(createSessionButton){
+box.innerHTML=""
 
-    createSessionButton.addEventListener(
-        "click",
-        createSession
-    );
+if(sessions.length===0){
 
-}
+box.innerHTML="No games"
 
-
-/* =========================================================
-   INITIAL HUB LOAD
-   ========================================================= */
-
-function loadHub(){
-
-    renderSessionList();
+return
 
 }
 
-</script>
+sessions.forEach(s=>{
 
-<!-- ===================================================================== -->
-<!-- END SECTION 7                                                         -->
-<!-- ===================================================================== -->
+let div=document.createElement("div")
 
+div.innerHTML=
 
-<!-- ===================================================================== -->
-<!-- SECTION 8 — WAITING ROOM                                              -->
-<!-- Player list / ready system                                            -->
-<!-- Paste Section 8 directly below this line                              -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 8 — WAITING ROOM SYSTEM                                       -->
-<!-- ===================================================================== -->
+"<b>"+s.host+"</b><br>"+
+"<button onclick='joinSession(\""+s.id+"\")'>Join</button>"
 
-<script>
+box.appendChild(div)
 
-/* =========================================================
-   WAITING ROOM ELEMENTS
-   ========================================================= */
-
-const playerListContainer =
-document.getElementById("playerListContainer");
-
-const leaveWaitingRoomButton =
-document.getElementById("leaveWaitingRoomButton");
-
-
-/* =========================================================
-   CURRENT ROOM PLAYER LIST
-   ========================================================= */
-
-let WAITING_ROOM_PLAYERS = [];
-
-
-/* =========================================================
-   ENTER WAITING ROOM
-   ========================================================= */
-
-function enterWaitingRoom(){
-
-    const playerName = APP_STATE.player.name;
-
-    if(!playerName) return;
-
-    WAITING_ROOM_PLAYERS.push(playerName);
-
-    renderWaitingRoomPlayers();
+})
 
 }
 
+/* ---------- WAITING ---------- */
 
-/* =========================================================
-   RENDER WAITING ROOM PLAYER LIST
-   ========================================================= */
+function renderPlayers(){
 
-function renderWaitingRoomPlayers(){
+let box=document.getElementById("playerList")
 
-    if(!playerListContainer) return;
+box.innerHTML=""
 
-    playerListContainer.innerHTML = "";
+players.forEach(p=>{
 
-    WAITING_ROOM_PLAYERS.forEach(function(player){
+let div=document.createElement("div")
 
-        const card = document.createElement("div");
+div.textContent=p
 
-        card.className = "card";
+box.appendChild(div)
 
-        card.innerHTML = player;
-
-        playerListContainer.appendChild(card);
-
-    });
+})
 
 }
 
+function leaveRoom(){
 
-/* =========================================================
-   LEAVE WAITING ROOM
-   ========================================================= */
-
-function leaveWaitingRoom(){
-
-    const playerName = APP_STATE.player.name;
-
-    WAITING_ROOM_PLAYERS =
-    WAITING_ROOM_PLAYERS.filter(function(p){
-
-        return p !== playerName;
-
-    });
-
-    renderWaitingRoomPlayers();
-
-    showScreen(SCREEN_REGISTRY.hub);
+showScreen("screen_hub")
 
 }
 
-
-/* =========================================================
-   LEAVE ROOM BUTTON EVENT
-   ========================================================= */
-
-if(leaveWaitingRoomButton){
-
-    leaveWaitingRoomButton.addEventListener(
-        "click",
-        leaveWaitingRoom
-    );
-
-}
-
-
-/* =========================================================
-   WAITING ROOM BOOT
-   ========================================================= */
-
-function bootWaitingRoom(){
-
-    enterWaitingRoom();
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 8                                                         -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 9 — GAME SCREEN                                               -->
-<!-- Game UI / scoreboard                                                  -->
-<!-- Paste Section 9 directly below this line                              -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 9 — GAME SCREEN SYSTEM                                        -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   GAME SCREEN ELEMENTS
-   ========================================================= */
-
-const gameInterface =
-document.getElementById("gameInterface");
-
-
-/* =========================================================
-   CURRENT GAME STATE
-   ========================================================= */
-
-let GAME_STATE = {
-
-    activeGame: null,
-
-    players: [],
-
-    turnIndex: 0,
-
-    round: 1
-
-};
-
-
-/* =========================================================
-   START GAME
-   ========================================================= */
+/* ---------- GAME ---------- */
 
 function startGame(){
 
-    GAME_STATE.activeGame = {
+turn=0
 
-        id: "game_" + Date.now(),
+renderGame()
 
-        started: Date.now()
-
-    };
-
-    GAME_STATE.players = [...WAITING_ROOM_PLAYERS];
-
-    GAME_STATE.turnIndex = 0;
-
-    GAME_STATE.round = 1;
-
-    renderGameInterface();
-
-    showScreen(SCREEN_REGISTRY.game);
+showScreen("screen_game")
 
 }
-
-
-/* =========================================================
-   NEXT TURN
-   ========================================================= */
-
-function nextTurn(){
-
-    if(GAME_STATE.players.length === 0) return;
-
-    GAME_STATE.turnIndex++;
-
-    if(GAME_STATE.turnIndex >= GAME_STATE.players.length){
-
-        GAME_STATE.turnIndex = 0;
-
-        GAME_STATE.round++;
-
-    }
-
-    renderGameInterface();
-
-}
-
-
-/* =========================================================
-   RENDER GAME INTERFACE
-   ========================================================= */
-
-function renderGameInterface(){
-
-    if(!gameInterface) return;
-
-    const currentPlayer =
-    GAME_STATE.players[GAME_STATE.turnIndex];
-
-    gameInterface.innerHTML =
-
-        "<div class='card'>" +
-
-        "<h3>Round " + GAME_STATE.round + "</h3>" +
-
-        "<p><strong>Current Player:</strong> " +
-        currentPlayer + "</p>" +
-
-        "<button onclick='nextTurn()'>Next Turn</button>" +
-
-        "</div>";
-
-}
-
-
-/* =========================================================
-   END GAME
-   ========================================================= */
-
-function endGame(){
-
-    GAME_STATE.activeGame = null;
-
-    GAME_STATE.players = [];
-
-    GAME_STATE.turnIndex = 0;
-
-    GAME_STATE.round = 1;
-
-    showScreen(SCREEN_REGISTRY.hub);
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 9                                                         -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 10 — RULE SYSTEM                                              -->
-<!-- Game rules and rule loading                                           -->
-<!-- Paste Section 10 directly below this line                             -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 10 — RULE SYSTEM                                              -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   GAME RULE DEFINITIONS
-   ========================================================= */
-
-const GAME_RULES = [
-
-    {
-        id: "301",
-        name: "301",
-        description: "Players start at 301 and race to zero.",
-        startingScore: 301
-    },
-
-    {
-        id: "501",
-        name: "501",
-        description: "Players start at 501 and race to zero.",
-        startingScore: 501
-    },
-
-    {
-        id: "cricket",
-        name: "Cricket",
-        description: "Close numbers 15–20 and bullseye."
-    }
-
-];
-
-
-/* =========================================================
-   CURRENT RULE
-   ========================================================= */
-
-let ACTIVE_RULE = null;
-
-
-/* =========================================================
-   SELECT RULE
-   ========================================================= */
-
-function selectRule(ruleId){
-
-    const rule =
-    GAME_RULES.find(r => r.id === ruleId);
-
-    if(!rule){
-
-        console.error("Rule not found:", ruleId);
-        return;
-
-    }
-
-    ACTIVE_RULE = rule;
-
-    console.log("Rule selected:", rule.name);
-
-}
-
-
-/* =========================================================
-   APPLY RULE TO GAME STATE
-   ========================================================= */
-
-function applyRuleToGame(){
-
-    if(!ACTIVE_RULE) return;
-
-    if(ACTIVE_RULE.startingScore){
-
-        GAME_STATE.players = GAME_STATE.players.map(function(player){
-
-            return {
-                name: player,
-                score: ACTIVE_RULE.startingScore
-            };
-
-        });
-
-    }
-
-}
-
-
-/* =========================================================
-   LIST RULES
-   ========================================================= */
-
-function listRules(){
-
-    console.log("Available Rules:");
-
-    GAME_RULES.forEach(function(rule){
-
-        console.log(rule.name + " — " + rule.description);
-
-    });
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 10                                                        -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 11 — RANDOMIZER SYSTEM                                        -->
-<!-- Random game selection                                                 -->
-<!-- Paste Section 11 directly below this line                             -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 11 — RANDOMIZER SYSTEM                                        -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   GAME RANDOMIZER LIST
-   ========================================================= */
-
-const RANDOM_GAME_POOL = [
-
-    "301",
-    "501",
-    "Cricket",
-    "Around the Clock",
-    "Killer",
-    "Shanghai"
-
-];
-
-
-/* =========================================================
-   CURRENT RANDOM GAME
-   ========================================================= */
-
-let CURRENT_RANDOM_GAME = null;
-
-
-/* =========================================================
-   RANDOM GAME GENERATOR
-   ========================================================= */
-
-function randomizeGame(){
-
-    const index =
-    Math.floor(Math.random() * RANDOM_GAME_POOL.length);
-
-    CURRENT_RANDOM_GAME =
-    RANDOM_GAME_POOL[index];
-
-    console.log("Random Game Selected:", CURRENT_RANDOM_GAME);
-
-    return CURRENT_RANDOM_GAME;
-
-}
-
-
-/* =========================================================
-   RANDOMIZER WITH TRANSITION EFFECT
-   ========================================================= */
-
-function spinRandomizer(){
-
-    if(!gameInterface) return;
-
-    gameInterface.innerHTML =
-        "<div class='card'><h3>Spinning Randomizer...</h3></div>";
-
-    setTimeout(function(){
-
-        const game = randomizeGame();
-
-        gameInterface.innerHTML =
-            "<div class='card'>" +
-            "<h3>Selected Game</h3>" +
-            "<p><strong>" + game + "</strong></p>" +
-            "<button onclick='startGame()'>Start Game</button>" +
-            "</div>";
-
-    }, 1200);
-
-}
-
-
-/* =========================================================
-   RANDOMIZER DEBUG TOOL
-   ========================================================= */
-
-function testRandomizer(){
-
-    console.log("Testing randomizer...");
-
-    for(let i = 0; i < 5; i++){
-
-        console.log(randomizeGame());
-
-    }
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 11                                                        -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 12 — HISTORY SYSTEM                                           -->
-<!-- Past games and statistics                                             -->
-<!-- Paste Section 12 directly below this line                             -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 12 — GAME HISTORY SYSTEM                                      -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   HISTORY STORAGE
-   Stores completed games locally and prepares for Firebase.
-   ========================================================= */
-
-let GAME_HISTORY = [];
-
-
-/* =========================================================
-   HISTORY ELEMENT
-   ========================================================= */
-
-const historyContainer =
-document.getElementById("historyContainer");
-
-
-/* =========================================================
-   SAVE GAME TO HISTORY
-   ========================================================= */
-
-function saveGameToHistory(){
-
-    if(!GAME_STATE.activeGame) return;
-
-    const historyEntry = {
-
-        gameId: GAME_STATE.activeGame.id,
-
-        players: GAME_STATE.players,
-
-        roundsPlayed: GAME_STATE.round,
-
-        finished: Date.now()
-
-    };
-
-    GAME_HISTORY.push(historyEntry);
-
-    localStorage.setItem(
-        "nightgames_history",
-        JSON.stringify(GAME_HISTORY)
-    );
-
-}
-
-
-/* =========================================================
-   LOAD HISTORY FROM STORAGE
-   ========================================================= */
-
-function loadHistory(){
-
-    const storedHistory =
-    localStorage.getItem("nightgames_history");
-
-    if(storedHistory){
-
-        GAME_HISTORY =
-        JSON.parse(storedHistory);
-
-    }
-
-}
-
-
-/* =========================================================
-   RENDER HISTORY
-   ========================================================= */
-
-function renderHistory(){
-
-    if(!historyContainer) return;
-
-    historyContainer.innerHTML = "";
-
-    if(GAME_HISTORY.length === 0){
-
-        historyContainer.innerHTML =
-        "<div class='card'>No games played yet.</div>";
-
-        return;
-
-    }
-
-    GAME_HISTORY.forEach(function(game){
-
-        const card =
-        document.createElement("div");
-
-        card.className = "card";
-
-        card.innerHTML =
-
-            "<strong>Game ID:</strong> " +
-            game.gameId +
-
-            "<br><strong>Players:</strong> " +
-            game.players.map(p => p.name || p).join(", ") +
-
-            "<br><strong>Rounds:</strong> " +
-            game.roundsPlayed;
-
-        historyContainer.appendChild(card);
-
-    });
-
-}
-
-
-/* =========================================================
-   OPEN HISTORY SCREEN
-   ========================================================= */
-
-function openHistory(){
-
-    renderHistory();
-
-    showScreen(SCREEN_REGISTRY.history);
-
-}
-
-
-/* =========================================================
-   HISTORY BOOT
-   ========================================================= */
-
-function bootHistory(){
-
-    loadHistory();
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 12                                                        -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 13 — PLAYER SYSTEM                                            -->
-<!-- Player creation / player ID                                           -->
-<!-- Paste Section 13 directly below this line                             -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 13 — PLAYER SYSTEM                                            -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   PLAYER REGISTRY
-   Tracks all players participating in the session.
-   ========================================================= */
-
-let PLAYER_REGISTRY = [];
-
-
-/* =========================================================
-   CREATE PLAYER
-   ========================================================= */
-
-function createPlayer(playerName){
-
-    const player = {
-
-        id: "player_" + Date.now(),
-
-        name: playerName,
-
-        joined: Date.now(),
-
-        stats: {
-            wins: 0,
-            losses: 0,
-            gamesPlayed: 0
-        }
-
-    };
-
-    PLAYER_REGISTRY.push(player);
-
-    APP_STATE.player.id = player.id;
-    APP_STATE.player.name = player.name;
-
-    console.log("Player created:", player);
-
-    return player;
-
-}
-
-
-/* =========================================================
-   GET PLAYER BY ID
-   ========================================================= */
-
-function getPlayer(playerId){
-
-    return PLAYER_REGISTRY.find(function(p){
-
-        return p.id === playerId;
-
-    });
-
-}
-
-
-/* =========================================================
-   ADD PLAYER TO SESSION
-   ========================================================= */
-
-function addPlayerToSession(player){
-
-    if(!APP_STATE.session.id) return;
-
-    if(!GAME_STATE.players) GAME_STATE.players = [];
-
-    GAME_STATE.players.push(player);
-
-    console.log("Player added to session:", player.name);
-
-}
-
-
-/* =========================================================
-   REMOVE PLAYER
-   ========================================================= */
-
-function removePlayer(playerId){
-
-    PLAYER_REGISTRY =
-    PLAYER_REGISTRY.filter(function(p){
-
-        return p.id !== playerId;
-
-    });
-
-}
-
-
-/* =========================================================
-   PLAYER STAT UPDATE
-   ========================================================= */
-
-function updatePlayerStats(playerId, result){
-
-    const player = getPlayer(playerId);
-
-    if(!player) return;
-
-    player.stats.gamesPlayed++;
-
-    if(result === "win"){
-
-        player.stats.wins++;
-
-    }
-
-    if(result === "loss"){
-
-        player.stats.losses++;
-
-    }
-
-}
-
-
-/* =========================================================
-   LIST PLAYERS
-   ========================================================= */
-
-function listPlayers(){
-
-    console.log("Current Players:");
-
-    PLAYER_REGISTRY.forEach(function(player){
-
-        console.log(player.name);
-
-    });
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 13                                                        -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 14 — SESSION SYSTEM                                           -->
-<!-- Create / join / leave session                                         -->
-<!-- Paste Section 14 directly below this line                             -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 14 — SESSION SYSTEM                                           -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   SESSION REGISTRY
-   ========================================================= */
-
-let SESSION_REGISTRY = [];
-
-
-/* =========================================================
-   CREATE SESSION
-   ========================================================= */
-
-function createSession(){
-
-    const session = {
-
-        id: "session_" + Date.now(),
-
-        host: APP_STATE.player.name,
-
-        players: [],
-
-        created: Date.now(),
-
-        active: true
-
-    };
-
-    SESSION_REGISTRY.push(session);
-
-    APP_STATE.session.id = session.id;
-    APP_STATE.session.host = session.host;
-
-    console.log("Session created:", session);
-
-    return session;
-
-}
-
-
-/* =========================================================
-   FIND SESSION
-   ========================================================= */
-
-function getSession(sessionId){
-
-    return SESSION_REGISTRY.find(function(s){
-
-        return s.id === sessionId;
-
-    });
-
-}
-
-
-/* =========================================================
-   JOIN SESSION
-   ========================================================= */
-
-function joinSession(sessionId){
-
-    const session = getSession(sessionId);
-
-    if(!session) return;
-
-    const player = {
-
-        id: APP_STATE.player.id,
-        name: APP_STATE.player.name
-
-    };
-
-    session.players.push(player);
-
-    APP_STATE.session.id = sessionId;
-
-    console.log("Joined session:", sessionId);
-
-}
-
-
-/* =========================================================
-   LEAVE SESSION
-   ========================================================= */
-
-function leaveSession(){
-
-    const session =
-    getSession(APP_STATE.session.id);
-
-    if(!session) return;
-
-    session.players =
-    session.players.filter(function(p){
-
-        return p.id !== APP_STATE.player.id;
-
-    });
-
-    APP_STATE.session.id = null;
-
-    showScreen(SCREEN_REGISTRY.hub);
-
-}
-
-
-/* =========================================================
-   END SESSION
-   ========================================================= */
-
-function endSession(sessionId){
-
-    const session = getSession(sessionId);
-
-    if(!session) return;
-
-    session.active = false;
-
-    console.log("Session ended:", sessionId);
-
-}
-
-
-/* =========================================================
-   LIST SESSIONS
-   ========================================================= */
-
-function listSessions(){
-
-    console.log("Active Sessions:");
-
-    SESSION_REGISTRY.forEach(function(session){
-
-        if(session.active){
-
-            console.log(session.id + " — Host: " + session.host);
-
-        }
-
-    });
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 14                                                        -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 15 — FIREBASE SYSTEM                                          -->
-<!-- Firebase initialization                                               -->
-<!-- Paste Section 15 directly below this line                             -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 15 — FIREBASE SYSTEM                                          -->
-<!-- ===================================================================== -->
-
-<script type="module">
-
-/* =========================================================
-   FIREBASE IMPORTS
-   ========================================================= */
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-
-import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, onSnapshot }
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-
-import { getAnalytics }
-from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
-
-
-/* =========================================================
-   FIREBASE CONFIGURATION
-   ========================================================= */
-
-const firebaseConfig = {
-
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-
-  projectId: "gamenightdarts-e7601",
-
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-
-  messagingSenderId: "270045452251",
-
-  appId: "1:270045452251:web:5a4a661140a60780e939fe",
-
-  measurementId: "G-M60TDFYBW0"
-
-};
-
-
-/* =========================================================
-   FIREBASE INITIALIZATION
-   ========================================================= */
-
-const firebaseApp = initializeApp(firebaseConfig);
-
-const db = getFirestore(firebaseApp);
-
-const analytics = getAnalytics(firebaseApp);
-
-console.log("Firebase initialized");
-
-
-/* =========================================================
-   SESSION COLLECTION
-   ========================================================= */
-
-const sessionsCollection =
-collection(db, "sessions");
-
-
-/* =========================================================
-   CREATE SESSION IN FIRESTORE
-   ========================================================= */
-
-async function createFirebaseSession(hostName){
-
-  const session = {
-
-    host: hostName,
-
-    created: Date.now(),
-
-    players: []
-
-  };
-
-  const docRef = await addDoc(sessionsCollection, session);
-
-  console.log("Session created:", docRef.id);
-
-  return docRef.id;
-
-}
-
-
-/* =========================================================
-   LIST ACTIVE SESSIONS
-   ========================================================= */
-
-async function fetchSessions(){
-
-  const snapshot = await getDocs(sessionsCollection);
-
-  const sessions = [];
-
-  snapshot.forEach(function(doc){
-
-    sessions.push({
-
-      id: doc.id,
-      ...doc.data()
-
-    });
-
-  });
-
-  return sessions;
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 15                                                        -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 16 — REALTIME LISTENERS                                       -->
-<!-- Firestore realtime updates                                            -->
-<!-- Paste Section 16 directly below this line                             -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 16 — REALTIME FIREBASE LISTENERS                              -->
-<!-- ===================================================================== -->
-
-<script type="module">
-
-/* =========================================================
-   REALTIME SESSION LISTENER
-   Watches the sessions collection and updates the hub.
-   ========================================================= */
-
-import {
-  collection,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-
-
-function listenForSessions(){
-
-  const sessionsRef = collection(db, "sessions");
-
-  onSnapshot(sessionsRef, function(snapshot){
-
-    SESSION_LIST = [];
-
-    snapshot.forEach(function(doc){
-
-      SESSION_LIST.push({
-
-        id: doc.id,
-        ...doc.data()
-
-      });
-
-    });
-
-    renderSessionList();
-
-    console.log("Sessions updated");
-
-  });
-
-}
-
-
-/* =========================================================
-   REALTIME PLAYER LISTENER
-   Watches players inside the current session.
-   ========================================================= */
-
-function listenForPlayers(sessionId){
-
-  const playersRef =
-  collection(db, "sessions", sessionId, "players");
-
-  onSnapshot(playersRef, function(snapshot){
-
-    WAITING_ROOM_PLAYERS = [];
-
-    snapshot.forEach(function(doc){
-
-      WAITING_ROOM_PLAYERS.push(doc.data().name);
-
-    });
-
-    renderWaitingRoomPlayers();
-
-    console.log("Players updated");
-
-  });
-
-}
-
-
-/* =========================================================
-   START REALTIME LISTENERS
-   ========================================================= */
-
-function startRealtimeListeners(){
-
-  listenForSessions();
-
-  if(APP_STATE.session.id){
-
-    listenForPlayers(APP_STATE.session.id);
-
-  }
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 16                                                        -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 17 — UI RENDER SYSTEM                                         -->
-<!-- Rendering UI components                                               -->
-<!-- Paste Section 17 directly below this line                             -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 17 — UI RENDER SYSTEM                                         -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   UI UPDATE CONTROLLER
-   This system refreshes UI elements when state changes.
-   ========================================================= */
-
-function refreshUI(){
-
-    renderSessionList();
-
-    renderWaitingRoomPlayers();
-
-    renderGameInterface();
-
-    renderHistory();
-
-}
-
-
-/* =========================================================
-   HUB RENDER
-   ========================================================= */
-
-function renderHub(){
-
-    if(!sessionListContainer) return;
-
-    renderSessionList();
-
-}
-
-
-/* =========================================================
-   WAITING ROOM RENDER
-   ========================================================= */
-
-function renderWaitingRoom(){
-
-    renderWaitingRoomPlayers();
-
-}
-
-
-/* =========================================================
-   GAME RENDER
-   ========================================================= */
 
 function renderGame(){
 
-    renderGameInterface();
+let current=players[turn]
+
+document.getElementById("gameArea").innerHTML=
+
+"<b>Turn:</b> "+current
 
 }
 
+function nextTurn(){
 
-/* =========================================================
-   HISTORY RENDER
-   ========================================================= */
+turn++
 
-function renderHistoryScreen(){
+if(turn>=players.length) turn=0
 
-    renderHistory();
-
-}
-
-
-/* =========================================================
-   GLOBAL RENDER ROUTER
-   Decides what to render based on current screen.
-   ========================================================= */
-
-function renderCurrentScreen(){
-
-    const activeScreen =
-    document.querySelector(".screen.active");
-
-    if(!activeScreen) return;
-
-    const id = activeScreen.id;
-
-    if(id === "screen_hub"){
-
-        renderHub();
-
-    }
-
-    if(id === "screen_waiting"){
-
-        renderWaitingRoom();
-
-    }
-
-    if(id === "screen_game"){
-
-        renderGame();
-
-    }
-
-    if(id === "screen_history"){
-
-        renderHistoryScreen();
-
-    }
+renderGame()
 
 }
 
+function endGame(){
 
-/* =========================================================
-   RENDER LOOP
-   Keeps UI synchronized with application state.
-   ========================================================= */
+saveHistory()
 
-setInterval(function(){
+showScreen("screen_hub")
 
-    renderCurrentScreen();
+}
 
-}, 1000);
+/* ---------- HISTORY ---------- */
+
+let history=[]
+
+function saveHistory(){
+
+history.push({
+
+players:[...players],
+date:new Date().toLocaleString()
+
+})
+
+}
+
+function renderHistory(){
+
+let box=document.getElementById("history")
+
+box.innerHTML=""
+
+history.forEach(h=>{
+
+let div=document.createElement("div")
+
+div.innerHTML=h.players.join(", ")+" — "+h.date
+
+box.appendChild(div)
+
+})
+
+}
+
+function goHub(){
+
+showScreen("screen_hub")
+
+}
+
+/* ---------- FIREBASE HOOKS ---------- */
+
+/*
+Place Firebase multiplayer code here if needed.
+The local system above works without it.
+*/
 
 </script>
 
-<!-- ===================================================================== -->
-<!-- END SECTION 17                                                        -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 18 — EVENT HANDLERS                                           -->
-<!-- Buttons / input actions                                               -->
-<!-- Paste Section 18 directly below this line                             -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 18 — EVENT HANDLERS                                           -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   BUTTON EVENT REGISTRY
-   Central location where button actions are wired.
-   ========================================================= */
-
-function wireEventHandlers(){
-
-    /* ---------------------------------------------
-       ENTER APP BUTTON
-    --------------------------------------------- */
-
-    if(enterButton){
-
-        enterButton.addEventListener(
-            "click",
-            enterApplication
-        );
-
-    }
-
-
-    /* ---------------------------------------------
-       CREATE SESSION BUTTON
-    --------------------------------------------- */
-
-    if(createSessionButton){
-
-        createSessionButton.addEventListener(
-            "click",
-            function(){
-
-                createSession();
-
-                renderSessionList();
-
-            }
-        );
-
-    }
-
-
-    /* ---------------------------------------------
-       LEAVE WAITING ROOM BUTTON
-    --------------------------------------------- */
-
-    if(leaveWaitingRoomButton){
-
-        leaveWaitingRoomButton.addEventListener(
-            "click",
-            function(){
-
-                leaveWaitingRoom();
-
-                renderHub();
-
-            }
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   INPUT EVENTS
-   ========================================================= */
-
-function wireInputHandlers(){
-
-    if(playerInput){
-
-        playerInput.addEventListener(
-            "keypress",
-            function(event){
-
-                if(event.key === "Enter"){
-
-                    enterApplication();
-
-                }
-
-            }
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   GAME EVENTS
-   ========================================================= */
-
-function wireGameHandlers(){
-
-    if(!gameInterface) return;
-
-    gameInterface.addEventListener(
-        "click",
-        function(event){
-
-            const target = event.target;
-
-            if(target.matches(".next-turn")){
-
-                nextTurn();
-
-            }
-
-            if(target.matches(".end-game")){
-
-                endGame();
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   MASTER EVENT BOOT
-   ========================================================= */
-
-function bootEventSystem(){
-
-    wireEventHandlers();
-
-    wireInputHandlers();
-
-    wireGameHandlers();
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 18                                                        -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 19 — AUDIO SYSTEM                                             -->
-<!-- Intro sound / gameplay sounds                                         -->
-<!-- Paste Section 19 directly below this line                             -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 19 — AUDIO SYSTEM                                             -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   AUDIO REGISTRY
-   Central location for all game sounds.
-   ========================================================= */
-
-const AUDIO_SYSTEM = {
-
-    intro: new Audio(APP_CONFIG.audio.intro),
-
-    click: null,
-
-    win: null
-
-};
-
-
-/* =========================================================
-   PLAY INTRO AUDIO
-   Triggered when player focuses the name/email field.
-   ========================================================= */
-
-function playIntroAudio(){
-
-    if(!AUDIO_SYSTEM.intro) return;
-
-    AUDIO_SYSTEM.intro.volume = 0.7;
-
-    AUDIO_SYSTEM.intro.play()
-    .catch(function(){
-
-        console.log("Intro audio blocked until interaction");
-
-    });
-
-}
-
-
-/* =========================================================
-   STOP INTRO AUDIO
-   ========================================================= */
-
-function stopIntroAudio(){
-
-    if(!AUDIO_SYSTEM.intro) return;
-
-    AUDIO_SYSTEM.intro.pause();
-
-    AUDIO_SYSTEM.intro.currentTime = 0;
-
-}
-
-
-/* =========================================================
-   GENERIC AUDIO PLAYER
-   ========================================================= */
-
-function playSound(sound){
-
-    if(!sound) return;
-
-    sound.currentTime = 0;
-
-    sound.play().catch(function(){
-
-        console.log("Audio blocked");
-
-    });
-
-}
-
-
-/* =========================================================
-   AUDIO BOOT SYSTEM
-   ========================================================= */
-
-function bootAudioSystem(){
-
-    if(playerInput){
-
-        playerInput.addEventListener(
-
-            "focus",
-
-            function(){
-
-                playIntroAudio();
-
-            }
-
-        );
-
-    }
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 19                                                        -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 20 — UTILITIES                                                -->
-<!-- Helper functions                                                      -->
-<!-- Paste Section 20 directly below this line                             -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 20 — UTILITIES                                                -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   UNIQUE ID GENERATOR
-   ========================================================= */
-
-function generateId(prefix){
-
-    return prefix + "_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-
-}
-
-
-/* =========================================================
-   TIME FORMATTER
-   Converts timestamps into readable time.
-   ========================================================= */
-
-function formatTime(timestamp){
-
-    const date = new Date(timestamp);
-
-    return date.toLocaleString();
-
-}
-
-
-/* =========================================================
-   SAFE ELEMENT SELECTOR
-   ========================================================= */
-
-function safeGet(id){
-
-    const element = document.getElementById(id);
-
-    if(!element){
-
-        console.warn("Element not found:", id);
-
-    }
-
-    return element;
-
-}
-
-
-/* =========================================================
-   CLEAR ELEMENT
-   ========================================================= */
-
-function clearElement(element){
-
-    if(!element) return;
-
-    element.innerHTML = "";
-
-}
-
-
-/* =========================================================
-   CREATE CARD COMPONENT
-   ========================================================= */
-
-function createCard(content){
-
-    const card = document.createElement("div");
-
-    card.className = "card";
-
-    card.innerHTML = content;
-
-    return card;
-
-}
-
-
-/* =========================================================
-   ARRAY SHUFFLE (for randomizers)
-   ========================================================= */
-
-function shuffleArray(array){
-
-    for(let i = array.length - 1; i > 0; i--){
-
-        const j = Math.floor(Math.random() * (i + 1));
-
-        [array[i], array[j]] = [array[j], array[i]];
-
-    }
-
-    return array;
-
-}
-
-
-/* =========================================================
-   DEBUG LOGGER
-   ========================================================= */
-
-function debugLog(message, data){
-
-    console.log("[NightGames Debug]", message, data || "");
-
-}
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 20                                                        -->
-<!-- ===================================================================== -->
-
-
-<!-- ===================================================================== -->
-<!-- SECTION 21 — APP BOOT SYSTEM                                          -->
-<!-- Startup order                                                         -->
-<!-- Paste Section 21 directly below this line                             -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
-<!-- SECTION 21 — APP BOOT SYSTEM                                          -->
-<!-- ===================================================================== -->
-
-<script>
-
-/* =========================================================
-   APPLICATION BOOT SEQUENCE
-   Starts all systems in the correct order.
-   ========================================================= */
-
-function bootApplication(){
-
-    console.log("Booting Night Games...");
-
-    /* -----------------------------------------
-       Boot Screen System
-    ----------------------------------------- */
-
-    bootScreenSystem();
-
-
-    /* -----------------------------------------
-       Boot History
-    ----------------------------------------- */
-
-    if(typeof bootHistory === "function"){
-
-        bootHistory();
-
-    }
-
-
-    /* -----------------------------------------
-       Boot Audio
-    ----------------------------------------- */
-
-    if(typeof bootAudioSystem === "function"){
-
-        bootAudioSystem();
-
-    }
-
-
-    /* -----------------------------------------
-       Wire Events
-    ----------------------------------------- */
-
-    if(typeof bootEventSystem === "function"){
-
-        bootEventSystem();
-
-    }
-
-
-    /* -----------------------------------------
-       Start Firebase Listeners
-    ----------------------------------------- */
-
-    if(typeof startRealtimeListeners === "function"){
-
-        startRealtimeListeners();
-
-    }
-
-
-    /* -----------------------------------------
-       Render Initial UI
-    ----------------------------------------- */
-
-    if(typeof refreshUI === "function"){
-
-        refreshUI();
-
-    }
-
-
-    console.log("Night Games boot complete.");
-
-}
-
-
-/* =========================================================
-   DOM READY BOOT
-   ========================================================= */
-
-document.addEventListener(
-
-    "DOMContentLoaded",
-
-    function(){
-
-        bootApplication();
-
-    }
-
-);
-
-</script>
-
-<!-- ===================================================================== -->
-<!-- END SECTION 21                                                        -->
-<!-- ===================================================================== -->
+</body>
+</html>
