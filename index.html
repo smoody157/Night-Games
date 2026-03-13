@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>NIGHT GAMES v1813 COMPLETE</title>
-<!-- NIGHT GAMES v1813 COMPLETE -->
+<title>Night Games v1732 COMPLETE</title>
+<!-- NIGHT GAMES v1732 COMPLETE -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -2697,7 +2697,7 @@ html, body{
 body{
   display:flex !important;
   flex-direction:column !important;
-  background:#000;
+  background: transparent;
 }
 
 #app{
@@ -2742,7 +2742,7 @@ html, body{
 body{
   display:flex !important;
   flex-direction:column !important;
-  background:#000 !important;
+  background: transparent !important;
 }
 #app{
   flex:1 1 auto !important;
@@ -3627,7 +3627,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1813";window.NG_BUILD_LABEL="Night Games v1813";</script>
+<script>window.NG_BUILD_VERSION="1481";window.NG_BUILD_LABEL="Night Games v1651";</script>
 
 <style id="ng-v1651-header-style">
 #ngHeaderBlock{
@@ -4187,18 +4187,201 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<script id="ng-v1813-early-firebase-config">
-window.firebaseConfig = {
-  apiKey: "AIzaSyC0sdB54z0G73P3epW6GmHqgYvESFcqgTo",
-  authDomain: "gamenightdarts-e7601.firebaseapp.com",
-  projectId: "gamenightdarts-e7601",
-  storageBucket: "gamenightdarts-e7601.firebasestorage.app",
-  messagingSenderId: "270045452251",
-  appId: "1:270045452251:web:5a4a661140a60780e939fe",
-  measurementId: "G-M60TDFYBW0"
-};
-window.__firebaseConfig = window.firebaseConfig;
-</script>
+<style id="ng-v1732-final-visual-fix">
+/* ===== v1732 FINAL VISUAL + BACKGROUND CLEANUP ===== */
+:root{
+  --ng-stage-image: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg");
+  --ng-panel-bg: rgba(255,255,255,.10);
+  --ng-panel-border: rgba(255,255,255,.22);
+  --ng-panel-shadow: 0 12px 36px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.24);
+  --ng-pill-bg: rgba(255,255,255,.10);
+  --ng-pill-border: rgba(255,255,255,.24);
+}
+
+/* one single page background layer */
+html{
+  min-height:100%;
+  background:#070b14 !important;
+}
+body{
+  min-height:100vh !important;
+  min-height:100dvh !important;
+  background:transparent !important;
+  position:relative !important;
+}
+body::before{
+  content:"" !important;
+  position:fixed !important;
+  inset:0 !important;
+  z-index:-1 !important;
+  pointer-events:none !important;
+  background-image:
+    linear-gradient(rgba(8,12,22,.60), rgba(8,12,22,.60)),
+    var(--ng-stage-image) !important;
+  background-size:cover !important;
+  background-position:center center !important;
+  background-repeat:no-repeat !important;
+  background-attachment:fixed !important;
+  filter:saturate(1.05) contrast(1.02) !important;
+}
+
+/* app wrappers must not cover the stage */
+#app, #root, .app, .appShell, .screen, .container, main, .page, .wrapper, .screen.active{
+  background:transparent !important;
+  background-color:transparent !important;
+}
+
+/* kill fullscreen overlay blockers from earlier builds */
+.screen::before,
+.screen::after,
+.container::before,
+.container::after,
+main::before,
+main::after,
+#app::before,
+#app::after{
+  content:none !important;
+  display:none !important;
+  background:none !important;
+}
+
+/* crystal panels */
+.card,
+.panel,
+.ng-panel,
+.glassCard,
+.detailCard,
+#playersPanel,
+#gamesPanel,
+#setup .panel,
+#waiting .panel,
+#lobby .panel,
+#leaderboard .panel,
+#randomizer .panel,
+#detail .panel,
+#game_screen .panel,
+#players .columnCard,
+#players .detailCard{
+  background:var(--ng-panel-bg) !important;
+  background-color:var(--ng-panel-bg) !important;
+  border:1px solid var(--ng-panel-border) !important;
+  border-radius:24px !important;
+  box-shadow:var(--ng-panel-shadow) !important;
+  backdrop-filter: blur(18px) saturate(165%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(165%) !important;
+}
+
+/* list surfaces */
+#playersList, #gamesList, .list, .detailBody, .pickerBody, .statScroll{
+  background:transparent !important;
+}
+
+/* game rows: direct three buttons, no dropdown */
+#gamesList .gameDropRow,
+#gamesList .itemLine,
+#gamesList .ngGameRow{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) auto !important;
+  align-items:center !important;
+  gap:14px !important;
+  padding:14px 12px !important;
+  margin:0 0 10px 0 !important;
+  border-radius:18px !important;
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+#gamesList .gameDropHead,
+#gamesList .gameDropLeft{
+  display:contents !important;
+}
+#gamesList .gameNameBtn,
+#gamesList .ngGameName{
+  appearance:none !important;
+  background:none !important;
+  border:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  text-align:left !important;
+  font-size:28px !important;
+  line-height:1.05 !important;
+  font-weight:900 !important;
+  letter-spacing:.2px !important;
+  color:#eaf6ff !important;
+  text-shadow:0 0 14px rgba(180,230,255,.22), 0 1px 0 rgba(255,255,255,.20) !important;
+}
+#gamesList .gameDropMenu,
+#gamesList .ngGameActions{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:10px !important;
+  max-height:none !important;
+  opacity:1 !important;
+  overflow:visible !important;
+  padding:0 !important;
+}
+#gamesList .gameChevron,
+#gamesList .chevron,
+#gamesList .expandBtn,
+#gamesList .dropdown,
+#gamesList .statusIcon{
+  display:none !important;
+}
+#gamesList .pill,
+#gamesList .ngAction{
+  appearance:none !important;
+  border:1px solid var(--ng-pill-border) !important;
+  background:var(--ng-pill-bg) !important;
+  color:#f6fbff !important;
+  border-radius:16px !important;
+  padding:10px 16px !important;
+  font-size:13px !important;
+  font-weight:800 !important;
+  letter-spacing:.08em !important;
+  text-transform:uppercase !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 10px 24px rgba(0,0,0,.20) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+#gamesList .pill:hover,
+#gamesList .ngAction:hover{
+  transform:translateY(-1px) !important;
+}
+
+/* players rows get same glass treatment */
+#playersList .playerDropRow,
+#playersList .itemLine{
+  background:rgba(255,255,255,.06) !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  border-radius:18px !important;
+  margin:0 0 10px 0 !important;
+}
+#playersList .playerDropHead{
+  padding:14px 12px !important;
+}
+#playersList .playerDropMenu{
+  padding:0 12px 12px 12px !important;
+}
+
+/* small screens */
+@media (max-width: 900px){
+  #gamesList .gameDropRow,
+  #gamesList .itemLine,
+  #gamesList .ngGameRow{
+    grid-template-columns:1fr !important;
+  }
+  #gamesList .gameDropMenu,
+  #gamesList .ngGameActions{
+    justify-content:flex-start !important;
+    flex-wrap:wrap !important;
+  }
+  #gamesList .gameNameBtn,
+  #gamesList .ngGameName{
+    font-size:24px !important;
+  }
+}
+</style>
 
 </head>
 <body>
@@ -4353,9 +4536,20 @@ window.__firebaseConfig = window.firebaseConfig;
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">NIGHT GAMES v1813 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1651 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
-
+<div class="fatal" id="fatal">
+<div class="card">
+<h2>Firebase didn’t start</h2>
+<p>This page uses Firebase modules. If you’re on a web link and still see this, the host is blocking module imports or Firebase is blocked.</p>
+<pre id="fatalMsg">No details.</pre>
+</div>
+</div>
+<script nomodule="">
+    // Very old browsers only
+    document.getElementById("fatal").style.display = "flex";
+    document.getElementById("fatalMsg").textContent = "Your browser doesn’t support ES Modules. Use a modern Safari/Chrome.";
+  </script>
 <script>
     // Debug UI toggle
     (function(){
@@ -4366,7 +4560,54 @@ window.__firebaseConfig = window.firebaseConfig;
     })();
   </script>
 
+<script>
+/* ============================================================================
+  ENTER FALLBACK WIRING (non-module)
+  - Guarantees ENTER button does something even if module script/import fails.
+  - Calls window.ngEnter(email) when available.
+============================================================================ */
+(function(){
+  function qs(id){ return document.getElementById(id); }
+  const enterBtn = qs("enterBtn");
+  const emailInput = qs("emailInput");
+  const statusLine = qs("statusLine");
+  if(!enterBtn || !emailInput) return;
 
+  function setStatus(t){
+    try{ if(statusLine) statusLine.textContent = t; }catch(_){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _); }catch(_le){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", _le); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){ if(typeof ngLogError==="function") ngLogError("Catch", _e); } } }
+}
+}
+  }
+
+  let busy = false;
+  async function run(){
+    if(busy) return;
+    busy = true;
+    try{
+      if(typeof
+      }else{
+        setStatus("Loading…");
+        // small retry window
+        setTimeout(()=>{ busy=false; }, 600);
+        return;
+      }
+    }catch(e){
+  try{ if(typeof ngLogError==="function") ngLogError("Catch", e); }catch(_le){ try{ ngLogError("Catch", _le);}catch(_le){ try{ window.ngLastError = String(_le && (_le.message||_le)); }catch(_e){ if(typeof ngLogError==="function") ngLogError("Catch", _e); } } }
+
+      window.ngProdLog("ENTER fallback error:", e);
+      setStatus("Error.");
+    }
+    busy = false;
+  }
+
+  enterBtn.addEventListener("click", (e)=>{ e.preventDefault(); run(); });
+  emailInput.addEventListener("keydown", (e)=>{
+    if(e.key === "Enter"){ e.preventDefault(); run(); }
+  });
+})();
+</script>
 
 <script>
 // ===================== v1232 NO-MODULE BOOTSTRAP =====================
@@ -4387,7 +4628,7 @@ window.__firebaseConfig = window.firebaseConfig;
     }catch(_e){ if(typeof ngLogError==="function") ngLogError("Catch", _e); }
   };
 
-  window.ngBuild="v1813";
+  window.ngBuild = "v1651";
   window.ngFirebaseStatus = "BOOTSTRAP_START";
   dbg("Bootstrap start","auth: loading","firestore: loading","none");
 
@@ -4412,7 +4653,7 @@ window.ngFirebaseBoot.stage = "module_loaded";
 window.ngFirebaseBoot.ts = Date.now();
 
 
-window.ngBuild="v1813";
+window.ngBuild = "v1651";
 window.ngFirebaseStatus = "BOOTING";
 window.ngLastError = "none";
 
@@ -4496,8 +4737,8 @@ const NG_STORE = {
     const fatalMsg = document.getElementById("fatalMsg");
     function failHard(msg, err){
       console.error(msg, err);
-      try{ fatal.style.display = "none"; }catch(_e){}
-      try{ fatalMsg.textContent = msg + (err ? ("\n\n" + (err.stack||err.message||String(err))) : ""); }catch(_e){}
+      fatal.style.display = "flex";
+      fatalMsg.textContent = msg + (err ? ("\n\n" + (err.stack||err.message||String(err))) : "");
       setDbg("FAIL", "—", "—", msg);
     }
 
@@ -4524,8 +4765,8 @@ const firebaseConfig = {
       projectId: "gamenightdarts-e7601",
       storageBucket: "gamenightdarts-e7601.firebasestorage.app",
       messagingSenderId: "270045452251",
-      appId: "1:270045452251:web:5a4a661140a60780e939fe",
-      measurementId: "G-M60TDFYBW0"
+      appId: "1:270045452251:web:393956ce18b43316e939fe",
+      measurementId: "G-LQEHF02ZVR"
     };
 
     // ===== UI refs =====
@@ -6426,7 +6667,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("NIGHT GAMES v1813 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1651 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -10148,7 +10389,7 @@ document.addEventListener("DOMContentLoaded", function(){
     try{ if(window.NG_DEBUG === true && window.console && typeof window.console.info === "function") window.console.info.apply(window.console, arguments); }catch(__nglogerr){}
   };
     try{ if(window.NG_BUILD_VERSION) window.NG_BUILD_VERSION = BUILD; }catch(_){}
-    try{ if(window.NG_BUILD_LABEL) window.NG_BUILD_LABEL="Night Games v1813" + BUILD; }catch(_){}
+    try{ if(window.NG_BUILD_LABEL) window.NG_BUILD_LABEL = "Night Games v" + BUILD; }catch(_){}
     ["ngVersionMid","ngVersionBelow","landingCopy","globalFooter"].forEach(function(id){
       const el = document.getElementById(id);
       if(!el) return;
@@ -10156,7 +10397,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
     try{
       const gv = document.getElementById("globalFooter");
-      if(gv && !/v1651/.test(gv.textContent||"")) gv.textContent = "NIGHT GAMES v1813 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gv && !/v1651/.test(gv.textContent||"")) gv.textContent = "Night Games v1651 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(_){}
   }
 
@@ -10266,14 +10507,14 @@ document.addEventListener("DOMContentLoaded", function(){
     projectId: "gamenightdarts-e7601",
     storageBucket: "gamenightdarts-e7601.firebasestorage.app",
     messagingSenderId: "270045452251",
-    appId: "1:270045452251:web:5a4a661140a60780e939fe",
-    measurementId: "G-M60TDFYBW0"
+    appId: "1:270045452251:web:393956ce18b43316e939fe",
+    measurementId: "G-LQEHF02ZVR"
   };
   window.firebaseConfig = firebaseConfig;
   window.__firebaseConfig = firebaseConfig;
   window.ngBuild = "v" + BUILD;
   window.NG_BUILD_VERSION = BUILD;
-  window.NG_BUILD_LABEL="Night Games v1813" + BUILD;
+  window.NG_BUILD_LABEL = "Night Games v" + BUILD;
   try{ document.title = "Night Games v" + BUILD; }catch(_){}
 
   const state = {
@@ -10825,7 +11066,7 @@ body{
 
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1813";
+      document.title = "Night Games v1651";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1651";
@@ -10834,7 +11075,7 @@ body{
         el.textContent = "v1651";
       });
       var gf = document.getElementById("globalFooter");
-      if(gf) gf.textContent = "NIGHT GAMES v1813 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
+      if(gf) gf.textContent = "Night Games v1651 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.";
     }catch(e){}
   }
 
@@ -11182,7 +11423,7 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1813";
+      document.title = "Night Games v1651";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1651";
@@ -11372,7 +11613,7 @@ body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1813";
+      document.title = "Night Games v1651";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1651";
@@ -11497,7 +11738,7 @@ body{
 
 /* restore pinned background/stage */
 html, body{
-  background:#000 !important;
+  background: transparent !important;
   background-size:cover !important;
   background-position:center top !important;
   background-attachment:fixed !important;
@@ -11659,7 +11900,7 @@ html, body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1813";
+      document.title = "Night Games v1651";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1651";
@@ -11797,7 +12038,7 @@ html, body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1813";
+      document.title = "Night Games v1651";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1651";
@@ -11918,7 +12159,7 @@ html, body{
 
 /* Restore and pin the stage/background */
 html, body{
-  background: #000 !important;
+  background: transparent !important;
   background-attachment: fixed !important;
   background-position: center top !important;
   background-size: cover !important;
@@ -11996,7 +12237,7 @@ html, body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1813";
+      document.title = "Night Games v1651";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1651";
@@ -12199,7 +12440,7 @@ html, body{
 
 /* 4) Background/stage pinned and visible */
 html, body{
-  background: #000 !important;
+  background: transparent !important;
   background-attachment: fixed !important;
   background-position: center top !important;
   background-size: cover !important;
@@ -12240,7 +12481,7 @@ html, body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1813";
+      document.title = "Night Games v1651";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1651";
@@ -12424,7 +12665,7 @@ html, body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1813";
+      document.title = "Night Games v1651";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1651";
@@ -12697,7 +12938,7 @@ html, body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1813";
+      document.title = "Night Games v1651";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1651";
@@ -12869,7 +13110,7 @@ html, body,
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1813";
+      document.title = "Night Games v1651";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1651";
@@ -13052,7 +13293,7 @@ html, body{
 (function(){
   function setVersion(){
     try{
-      document.title = "NIGHT GAMES v1813";
+      document.title = "Night Games v1651";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1651";
@@ -13223,7 +13464,7 @@ html, body{
 (function(){
   function setVersion1647(){
     try{
-      document.title = "NIGHT GAMES v1813";
+      document.title = "Night Games v1651";
       ["ngVersionMid","ngVersionBelow","ngOneVersion"].forEach(function(id){
         var el = document.getElementById(id);
         if(el) el.textContent = "v1651";
@@ -13714,8 +13955,8 @@ html,body{
 </script>
 
 
-<!-- NG v1700 COMPLETE BACKGROUND / MERGE LOCK -->
-<style id="ng-v1700-complete-background-lock">
+<!-- NG v1732 COMPLETE BACKGROUND / MERGE LOCK -->
+<style id="ng-v1732-complete-background-lock">
 :root{
   --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg") !important;
 }
@@ -13784,7 +14025,7 @@ main,
 }
 </style>
 
-<script id="ng-v1700-complete-background-lock-script">
+<script id="ng-v1732-complete-background-lock-script">
 (function(){
   function unlockBackground(){
     try{
@@ -13821,67 +14062,85 @@ main,
 </script>
 
 
-<script id="ng-v1813-runtime-box">
+<script id="ng-v1732-direct-rows-patch">
 (function(){
-  function ensureBox(){
-    var box = document.getElementById("ngRuntimeBox");
-    if(!box){
-      box = document.createElement("div");
-      box.id = "ngRuntimeBox";
-      box.style.position = "fixed";
-      box.style.left = "0";
-      box.style.right = "0";
-      box.style.bottom = "0";
-      box.style.zIndex = "999999";
-      box.style.background = "rgba(0,0,0,.90)";
-      box.style.color = "#ff9090";
-      box.style.fontFamily = "monospace";
-      box.style.fontSize = "12px";
-      box.style.lineHeight = "1.35";
-      box.style.padding = "10px 12px";
-      box.style.maxHeight = "38vh";
-      box.style.overflow = "auto";
-      document.body.appendChild(box);
-    }
-    return box;
+  const DEFAULT_GAMES = ["01","Cricket","Killer","Shanghai","Around the World","Half It"];
+
+  function getGames(){
+    try{
+      if(Array.isArray(window.GAMES) && window.GAMES.length) return window.GAMES.slice();
+      if(Array.isArray(window.ngGames) && window.ngGames.length) return window.ngGames.slice();
+    }catch(_){}
+    return DEFAULT_GAMES.slice();
   }
-  window.addEventListener("error", function(e){
+
+  function activeGame(){
     try{
-      var line = document.createElement("div");
-      line.textContent = (e.error && (e.error.stack || e.error.message)) || e.message || "Unknown runtime error";
-      ensureBox().appendChild(line);
-    }catch(_){}
+      return (((window.activeSession || {}).game) || "").toString().trim();
+    }catch(_){ return ""; }
+  }
+
+  function buildRows(){
+    const list = document.getElementById("gamesList");
+    if(!list) return false;
+    const games = getGames();
+    const active = activeGame();
+    const ordered = games.slice().sort((a,b)=>{
+      if(a === active) return -1;
+      if(b === active) return 1;
+      return 0;
+    });
+    list.innerHTML = ordered.map(function(g){
+      return `
+        <div class="gameDropRow ngGameRow" data-game="${g}">
+          <div class="gameDropHead">
+            <div class="gameDropLeft">
+              <button class="gameNameBtn ngGameName" type="button" data-action="enter_game" data-value="${g}">${g}</button>
+            </div>
+          </div>
+          <div class="gameDropMenu ngGameActions">
+            <button class="pill ngAction" type="button" data-action="enter_game" data-value="${g}">Enter</button>
+            <button class="pill ngAction" type="button" data-action="game_rules" data-value="${g}">Rules</button>
+            <button class="pill ngAction" type="button" data-action="game_history" data-value="${g}">History</button>
+          </div>
+        </div>`;
+    }).join("");
+    return true;
+  }
+
+  function applyTransparencyCleanup(){
+    [
+      "#app", "#root", ".app", ".screen", ".container", "main", ".page", ".wrapper"
+    ].forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){
+        el.style.background = "transparent";
+        el.style.backgroundColor = "transparent";
+      });
+    });
+  }
+
+  function boot(){
+    applyTransparencyCleanup();
+    buildRows();
+  }
+
+  document.addEventListener("DOMContentLoaded", boot);
+  window.addEventListener("load", function(){
+    boot();
+    setTimeout(boot, 150);
+    setTimeout(boot, 600);
+    setTimeout(boot, 1200);
   });
-  window.addEventListener("unhandledrejection", function(e){
-    try{
-      var line = document.createElement("div");
-      var r = e.reason;
-      line.textContent = "Promise: " + (r && (r.stack || r.message || String(r)));
-      ensureBox().appendChild(line);
-    }catch(_){}
+
+  const mo = new MutationObserver(function(){
+    const list = document.getElementById("gamesList");
+    if(!list) return;
+    if(list.querySelector("[data-toggle-game], .gameChevron")) buildRows();
+  });
+  window.addEventListener("load", function(){
+    mo.observe(document.body, {childList:true, subtree:true});
   });
 })();
-</script>
-
-
-<script id="ng-force-first-screen">
-document.addEventListener("DOMContentLoaded",function(){
-  try{
-    const screens=document.querySelectorAll(".screen");
-    let anyVisible=false;
-    screens.forEach(s=>{
-      const style=getComputedStyle(s);
-      if(style.display!=="none" && style.visibility!=="hidden" && style.opacity!=="0"){
-        anyVisible=true;
-      }
-    });
-    if(!anyVisible && screens.length){
-      screens[0].style.display="block";
-      screens[0].style.opacity="1";
-      screens[0].style.visibility="visible";
-    }
-  }catch(e){console.error(e);}
-});
 </script>
 
 </body>
