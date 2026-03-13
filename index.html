@@ -13863,5 +13863,26 @@ main,
 })();
 </script>
 
+
+<script id="ng-force-first-screen">
+document.addEventListener("DOMContentLoaded",function(){
+  try{
+    const screens=document.querySelectorAll(".screen");
+    let anyVisible=false;
+    screens.forEach(s=>{
+      const style=getComputedStyle(s);
+      if(style.display!=="none" && style.visibility!=="hidden" && style.opacity!=="0"){
+        anyVisible=true;
+      }
+    });
+    if(!anyVisible && screens.length){
+      screens[0].style.display="block";
+      screens[0].style.opacity="1";
+      screens[0].style.visibility="visible";
+    }
+  }catch(e){console.error(e);}
+});
+</script>
+
 </body>
 </html>
