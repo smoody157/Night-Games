@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1862</title>
-<!-- NIGHT GAMES v1862 -->
+<title>Night Games v1863</title>
+<!-- NIGHT GAMES v1863 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3599,7 +3599,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1852";window.NG_BUILD_LABEL="Night Games v1862";</script>
+<script>window.NG_BUILD_VERSION="1852";window.NG_BUILD_LABEL="Night Games v1863";</script>
 
 <style id="ng-v1588-header-style">
 #ngHeaderBlock{
@@ -4159,7 +4159,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1862-header-clean">
+<style id="ng-v1863-header-clean">
   /* hide the old built-in landing header/version so only the new fixed header shows */
   #ngHeader,
   #ngVersionBelow,
@@ -4264,7 +4264,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1862-uniform-clear-panels">
+<style id="ng-v1863-uniform-clear-panels">
   /* ===== Uniform clear-glass panel system across all pages ===== */
   .hub,
   .detailWrap,
@@ -4466,7 +4466,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1862-targeted-fixes">
+<style id="ng-v1863-targeted-fixes">
   /* remove duplicate built-in header; keep only fixed header */
   #ngHeaderBar,
   #ngHeaderBlock,
@@ -4586,7 +4586,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1862-strict-ui-fix">
+<style id="ng-v1863-strict-ui-fix">
   /* ===== strict UI correction pass ===== */
 
   /* ONE header only */
@@ -4779,7 +4779,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1862-header-players-layout">
+<style id="ng-v1863-header-players-layout">
   /* ===== landing header on one line, version below ===== */
   #ngFixedHeader{
     position:fixed !important;
@@ -4902,7 +4902,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1862-landing-header-hint-fix">
+<style id="ng-v1863-landing-header-hint-fix">
   /* landing header: one line for Night Games / Firebase Firestore / Online */
   #ngFixedHeader{
     position:fixed !important;
@@ -5009,7 +5009,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1862-unified-clear-header-fix">
+<style id="ng-v1863-unified-clear-header-fix">
   /* ===== HEADER: one line + version below ===== */
   #ngFixedHeader{
     position:fixed !important;
@@ -5270,7 +5270,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1862-final-header-panel-pass">
+<style id="ng-v1863-final-header-panel-pass">
   /* ===== HEADER: exact requested structure =====
      line 1: Night Games | Firebase Firestore | ● Online
      line 2: version only, centered
@@ -5507,7 +5507,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1862-universal-chrome-touch">
+<style id="ng-v1863-universal-chrome-touch">
   /* ===== HEADER: visually centered on the same baseline ===== */
   #ngFixedHeader{
     position:fixed !important;
@@ -5799,7 +5799,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1862-all-games-layout-pass">
+<style id="ng-v1863-all-games-layout-pass">
   /* ===== Header: same visual center line, version below ===== */
   #ngFixedHeader{
     position:fixed !important;
@@ -6135,6 +6135,300 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   }
 </style>
 
+
+<style id="ng-v1863-setup-centering-header-fix">
+  /* ===== HEADER: one visual center line, version below ===== */
+  #ngFixedHeader{
+    position:fixed !important;
+    top:max(10px, env(safe-area-inset-top)) !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    width:min(980px,96vw) !important;
+    z-index:9999 !important;
+    display:grid !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    grid-template-rows:auto auto !important;
+    row-gap:2px !important;
+    align-items:center !important;
+    pointer-events:none !important;
+  }
+  #ngFixedHeader .ngLeft,
+  #ngFixedHeader .ngBackend,
+  #ngFixedHeader .ngRight{
+    display:flex !important;
+    align-items:center !important;
+    line-height:1 !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+  #ngFixedHeader .ngLeft{
+    grid-column:1 !important; grid-row:1 !important;
+    justify-self:start !important;
+    font-size:clamp(18px,3vw,28px) !important;
+  }
+  #ngFixedHeader .ngCenter{
+    grid-column:2 !important; grid-row:1 / span 2 !important;
+    justify-self:center !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    line-height:1 !important;
+    margin:0 !important; padding:0 !important;
+  }
+  #ngFixedHeader .ngBackend{
+    justify-content:center !important;
+    font-size:clamp(12px,2vw,18px) !important;
+    white-space:nowrap !important;
+  }
+  #ngFixedHeader .ngVersion{
+    font-size:clamp(11px,1.9vw,15px) !important;
+    line-height:1 !important;
+    margin:4px 0 0 0 !important;
+    white-space:nowrap !important;
+  }
+  #ngFixedHeader .ngRight{
+    grid-column:3 !important; grid-row:1 !important;
+    justify-self:end !important;
+    font-size:clamp(12px,2vw,18px) !important;
+    gap:8px !important;
+    white-space:nowrap !important;
+  }
+  #ngFixedHeader .ngRight::before{
+    content:"";
+    width:8px !important; height:8px !important;
+    border-radius:999px !important;
+    background:#52ff78 !important;
+    box-shadow:0 0 10px rgba(82,255,120,.9), 0 0 0 1px rgba(82,255,120,.35) !important;
+    display:inline-block !important;
+    flex:0 0 auto !important;
+  }
+
+  /* lower the artwork sign a touch */
+  .screen::before{ background-position:center 14px !important; }
+
+  /* ===== UNIVERSAL BLACK CHROME ===== */
+  .panel,
+  #gamesPanel,
+  #playersPanel,
+  #setup .panel,
+  #waiting .panel,
+  #detail .panel,
+  #leaderboard .panel,
+  .detailCard,
+  .glassBtn,
+  .glassSelect,
+  .pill,
+  button{
+    transition:
+      background .15s ease,
+      box-shadow .15s ease,
+      border-color .15s ease,
+      transform .08s ease !important;
+  }
+
+  .panel,
+  #gamesPanel,
+  #playersPanel,
+  #setup .panel,
+  #waiting .panel,
+  #detail .panel,
+  #leaderboard .panel,
+  .detailCard{
+    background:linear-gradient(180deg, rgba(20,22,31,.92), rgba(7,8,12,.90)) !important;
+    border:1px solid rgba(255,255,255,.24) !important;
+    border-radius:22px !important;
+    box-shadow:
+      inset 0 1px 8px rgba(255,255,255,.10),
+      inset 0 -2px 8px rgba(0,0,0,.42),
+      0 14px 34px rgba(0,0,0,.22) !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+
+  .glassBtn,
+  .glassSelect,
+  .pill,
+  button{
+    background:linear-gradient(180deg, rgba(20,22,31,.92), rgba(7,8,12,.88)) !important;
+    border:1px solid rgba(255,255,255,.24) !important;
+    box-shadow:
+      inset 0 1px 8px rgba(255,255,255,.10),
+      inset 0 -2px 8px rgba(0,0,0,.42),
+      0 8px 16px rgba(0,0,0,.18) !important;
+  }
+
+  .glassBtn:active,
+  .glassSelect:active,
+  .pill:active,
+  button:active{
+    background:rgba(255,255,255,.13) !important;
+    border-color:rgba(255,255,255,.34) !important;
+    box-shadow:
+      inset 0 1px 8px rgba(255,255,255,.18),
+      inset 0 -1px 5px rgba(0,0,0,.12),
+      0 8px 16px rgba(0,0,0,.16) !important;
+    transform:translateY(1px) !important;
+  }
+
+  /* ===== ALL SETUP/DETAIL/WAITING PAGES CENTERED AND SMALLER ===== */
+  #setup .detailWrap,
+  #waiting .detailWrap,
+  #leaderboard .detailWrap,
+  #detail .detailWrap{
+    position:absolute !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    width:min(640px,92vw) !important;
+    max-width:640px !important;
+    top:clamp(265px, 32vh, 390px) !important;
+    bottom:max(90px, env(safe-area-inset-bottom)) !important;
+    margin:0 auto !important;
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:14px !important;
+    box-sizing:border-box !important;
+    z-index:2 !important;
+  }
+
+  #setup .panel,
+  #waiting .panel,
+  #leaderboard .panel,
+  #detail .panel{
+    width:100% !important;
+    max-width:none !important;
+    min-width:0 !important;
+    padding:14px 16px !important;
+    box-sizing:border-box !important;
+  }
+
+  /* setup inner content */
+  #setupBody{
+    max-height:none !important;
+    overflow:visible !important;
+    padding:0 !important;
+  }
+  .ngSetupStack{
+    width:100% !important;
+    display:grid !important;
+    gap:10px !important;
+  }
+  .fieldLabel{
+    font-size:11px !important;
+    letter-spacing:.10em !important;
+    text-transform:uppercase !important;
+    opacity:.82 !important;
+    margin:2px 0 0 0 !important;
+  }
+  .setupTapRow,
+  .glassBtn.setupTapRow,
+  #setup .glassBtn{
+    width:100% !important;
+    min-height:40px !important;
+    height:40px !important;
+    padding:0 12px !important;
+    border-radius:16px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    font-size:12px !important;
+    gap:10px !important;
+    box-sizing:border-box !important;
+  }
+  .setupTapRow .sub,
+  .glassBtn .sub{
+    font-size:12px !important;
+    opacity:.88 !important;
+    text-align:right !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+  .setupSelectWrap{
+    width:100% !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+  .setupSelect,
+  #setup .glassSelect{
+    width:100% !important;
+    min-height:40px !important;
+    height:40px !important;
+    border-radius:16px !important;
+    padding:0 12px !important;
+    font-size:12px !important;
+    box-sizing:border-box !important;
+  }
+
+  /* setup controls centered and smaller */
+  #setup .controlsRow3{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:8px !important;
+    flex-wrap:nowrap !important;
+  }
+  #setup .controlsRow3 > *{
+    flex:0 0 auto !important;
+  }
+  #setup .controlsRow3 .pill,
+  #setup .controlsRow3 button,
+  #setup .cpBtn{
+    min-width:78px !important;
+    height:30px !important;
+    min-height:30px !important;
+    padding:0 10px !important;
+    font-size:10px !important;
+    letter-spacing:.07em !important;
+    border-radius:999px !important;
+  }
+
+  /* force leaderboard and donate to show in players page */
+  .leaderboardSlot{
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+    width:min(620px,88vw) !important;
+    max-width:620px !important;
+    margin:8px auto !important;
+    padding:0 !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    height:auto !important;
+  }
+  #leaderboardBtn{
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+    width:min(520px,82vw) !important;
+    min-height:34px !important;
+    height:34px !important;
+    font-size:12px !important;
+    letter-spacing:.14em !important;
+  }
+  .donationSlot{
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+    width:min(620px,88vw) !important;
+    max-width:620px !important;
+    margin:8px auto 0 auto !important;
+    padding:0 !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    height:auto !important;
+  }
+  #donationBtn{
+    display:flex !important;
+    justify-content:center !important;
+    align-items:center !important;
+    width:min(420px,70vw) !important;
+    min-height:28px !important;
+    height:28px !important;
+    font-size:11px !important;
+    letter-spacing:.10em !important;
+  }
+</style>
+
 </head>
 <body>
 
@@ -6150,7 +6444,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">v1862</div>
+<div id="ngVersionBelow">v1863</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -6183,7 +6477,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   <div class="ngLeft">Night Games</div>
   <div class="ngCenter">
     <div class="ngBackend">Firebase Firestore</div>
-    <div class="ngVersion">v1862</div>
+    <div class="ngVersion">v1863</div>
   </div>
   <div class="ngRight">Online</div>
 </div>
@@ -6303,7 +6597,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1862 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1863 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -8434,7 +8728,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1862 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1863 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -11849,9 +12143,9 @@ button.pill,
 
 <script id="ng-v1588-final-cleanup-js">
 (function(){
-  try{ document.title = "Night Games v1862"; }catch(_){}
+  try{ document.title = "Night Games v1863"; }catch(_){}
   try{ window.NG_BUILD_VERSION = "1588"; }catch(_){}
-  try{ window.NG_BUILD_LABEL = "Night Games v1862"; }catch(_){}
+  try{ window.NG_BUILD_LABEL = "Night Games v1863"; }catch(_){}
   try{ window.ngBuild = "v1588"; }catch(_){}
 
   function removeSessionUI(){
@@ -11900,7 +12194,7 @@ button.pill,
 </script>
 
 
-<script id="ng-v1862-inline-player-actions">
+<script id="ng-v1863-inline-player-actions">
 (function(){
   function normalizePlayerRows(){
     try{
@@ -11916,7 +12210,7 @@ button.pill,
   function force01FromGames(){
     try{
       document.querySelectorAll('[data-action="enter_game"]').forEach(function(btn){
-        if(btn.dataset.v1862Bound) return;
+        if(btn.dataset.v1863Bound) return;
         btn.addEventListener('click', function(){
           try{
             var val = (btn.getAttribute('data-value') || '').toUpperCase();
@@ -11925,7 +12219,7 @@ button.pill,
             }
           }catch(e){}
         }, true);
-        btn.dataset.v1862Bound = '1';
+        btn.dataset.v1863Bound = '1';
       });
     }catch(e){}
   }
@@ -11943,7 +12237,7 @@ button.pill,
 </script>
 
 
-<script id="ng-v1862-strict-ui-js">
+<script id="ng-v1863-strict-ui-js">
 (function(){
   function normalizeRows(){
     try{
@@ -11994,7 +12288,7 @@ button.pill,
 </script>
 
 
-<script id="ng-v1862-donate-wireup">
+<script id="ng-v1863-donate-wireup">
 (function(){
   function wireDonate(){
     try{
@@ -12013,7 +12307,7 @@ button.pill,
 </script>
 
 
-<script id="ng-v1862-wireups">
+<script id="ng-v1863-wireups">
 (function(){
   function wireDonate(){
     try{
@@ -12041,6 +12335,39 @@ button.pill,
   }, {once:true});
   window.addEventListener('load', function(){
     setTimeout(normalizeLayout,100);
+  }, {once:true});
+})();
+</script>
+
+
+<script id="ng-v1863-setup-layout-pass-js">
+(function(){
+  function keepExtrasVisible(){
+    try{
+      var lb = document.querySelector('.leaderboardSlot');
+      var db = document.querySelector('.donationSlot');
+      if(lb){ lb.style.display='flex'; lb.style.opacity='1'; lb.style.visibility='visible'; }
+      if(db){ db.style.display='flex'; db.style.opacity='1'; db.style.visibility='visible'; }
+    }catch(e){}
+  }
+  function wireDonate(){
+    try{
+      var btn = document.getElementById('donationBtn');
+      if(btn && !btn.dataset.bound){
+        btn.addEventListener('click', function(){
+          window.open('https://venmo.com/u/Steve-Moody-8', '_blank');
+        });
+        btn.dataset.bound = '1';
+      }
+    }catch(e){}
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(keepExtrasVisible,100);
+    setTimeout(keepExtrasVisible,400);
+    setTimeout(wireDonate,120);
+  }, {once:true});
+  window.addEventListener('load', function(){
+    setTimeout(keepExtrasVisible,100);
   }, {once:true});
 })();
 </script>
