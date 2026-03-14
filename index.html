@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v2014 COMPLETE</title>
-<!-- NIGHT GAMES v2014 COMPLETE -->
+<title>Night Games v2016 COMPLETE</title>
+<!-- NIGHT GAMES v2016 COMPLETE -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -4185,81 +4185,6 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   margin-left:6px !important;
 }
 </style>
-
-
-<style id="ng-v2014-panel-transition">
-  :root{
-    --ng-panel-fade-seconds: 5.8s;
-  }
-  @keyframes ng2014PanelChrome {
-    0%{
-      background: linear-gradient(180deg,
-        rgba(255,255,255,.07) 0%,
-        rgba(255,255,255,.035) 55%,
-        rgba(255,255,255,.015) 100%) !important;
-      border-color: rgba(255,255,255,.22) !important;
-      box-shadow:
-        inset 0 1px 10px rgba(255,255,255,.20),
-        inset 0 -8px 20px rgba(0,0,0,.10),
-        0 10px 28px rgba(0,0,0,.10) !important;
-      backdrop-filter: blur(12px) saturate(135%) !important;
-      -webkit-backdrop-filter: blur(12px) saturate(135%) !important;
-    }
-    100%{
-      background: linear-gradient(180deg,
-        rgba(24,26,34,.95) 0%,
-        rgba(10,11,16,.985) 100%) !important;
-      border-color: rgba(255,255,255,.18) !important;
-      box-shadow:
-        inset 0 1px 10px rgba(255,255,255,.10),
-        inset 0 -10px 22px rgba(0,0,0,.40),
-        0 10px 30px rgba(0,0,0,.26) !important;
-      backdrop-filter: blur(12px) saturate(120%) !important;
-      -webkit-backdrop-filter: blur(12px) saturate(120%) !important;
-    }
-  }
-  .panel, .gamePanel, .setupPanel, .glassPanel, .cardPanel, .detailWrap{
-    position: relative;
-  }
-  .ng-panel-transition-active{
-    animation: ng2014PanelChrome var(--ng-panel-fade-seconds) ease forwards !important;
-    will-change: background, border-color, box-shadow, backdrop-filter !important;
-  }
-</style>
-<script id="ng-v2014-panel-transition-script">
-(function(){
-  function visible(el){
-    if(!el) return false;
-    const s = window.getComputedStyle(el);
-    return s.display !== 'none' && s.visibility !== 'hidden' && el.offsetParent !== null;
-  }
-  function applyTransitions(){
-    const nodes = document.querySelectorAll('.panel, .gamePanel, .setupPanel, .glassPanel, .cardPanel, .detailWrap');
-    nodes.forEach(function(el){
-      if(!visible(el)) return;
-      el.classList.remove('ng-panel-transition-active');
-      void el.offsetWidth;
-      el.classList.add('ng-panel-transition-active');
-    });
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    applyTransitions();
-    setTimeout(applyTransitions, 300);
-  });
-  document.addEventListener('click', function(){
-    setTimeout(applyTransitions, 80);
-    setTimeout(applyTransitions, 260);
-  }, true);
-  const obs = new MutationObserver(function(){
-    clearTimeout(window.__ng2014PanelT);
-    window.__ng2014PanelT = setTimeout(applyTransitions, 90);
-  });
-  window.addEventListener('load', function(){
-    obs.observe(document.body, {subtree:true, childList:true, attributes:true, attributeFilter:['style','class','hidden']});
-    applyTransitions();
-  });
-})();
-</script>
 
 </head>
 <body>
@@ -13833,8 +13758,8 @@ html,body{
 </script>
 
 
-<!-- NG v2014 COMPLETE BACKGROUND / MERGE LOCK -->
-<style id="ng-v2014-complete-background-lock">
+<!-- NG v2016 COMPLETE BACKGROUND / MERGE LOCK -->
+<style id="ng-v2016-complete-background-lock">
 :root{
   --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg") !important;
 }
@@ -13903,7 +13828,7 @@ main,
 }
 </style>
 
-<script id="ng-v2014-complete-background-lock-script">
+<script id="ng-v2016-complete-background-lock-script">
 (function(){
   function unlockBackground(){
     try{
@@ -13935,6 +13860,260 @@ main,
   window.addEventListener('pageshow', function(){
     unlockBackground();
     setTimeout(unlockBackground, 150);
+  });
+})();
+</script>
+
+
+<script id="ng-v2016-killer-engine">
+(function(){
+  function isKillerGame(session){
+    try{
+      const g = String((session && (session.gameId || session.game || "") ) || "").toLowerCase();
+      return g === "killer";
+    }catch(_){ return false; }
+  }
+
+  function killerTargets(players){
+    const seq = [20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1];
+    const out = {};
+    (players || []).forEach(function(p, i){ out[p] = seq[i % seq.length]; });
+    return out;
+  }
+
+  function alivePlayers(state){
+    return Object.keys(state || {}).filter(function(p){
+      const e = state[p] || {};
+      return e.alive !== false && (e.lives || 0) > 0;
+    });
+  }
+
+  function initKiller(session){
+    const players = (session && session.setup && session.setup.emails) ? session.setup.emails.slice() : [];
+    if(!players.length) return;
+    session.game = session.game || "Killer";
+    session.gameId = "killer";
+    session.turnIndex = session.turnIndex || 0;
+    session.killer = session.killer || {};
+    const targets = session.killerTargets || killerTargets(players);
+    session.killerTargets = targets;
+
+    players.forEach(function(p){
+      const prev = session.killer[p] || {};
+      session.killer[p] = {
+        target: Number(targets[p]),
+        lives: typeof prev.lives === "number" ? prev.lives : 3,
+        killer: !!prev.killer,
+        alive: typeof prev.alive === "boolean" ? prev.alive : true
+      };
+    });
+
+    let dartsThisTurn = 0;
+
+    function nextTurn(){
+      dartsThisTurn = 0;
+      let idx = Number(session.turnIndex || 0);
+      const max = players.length || 1;
+      for(let step=0; step<max; step++){
+        idx = (idx + 1) % max;
+        const p = players[idx];
+        const e = session.killer[p] || {};
+        if(e.alive !== false && (e.lives || 0) > 0){
+          session.turnIndex = idx;
+          return;
+        }
+      }
+      session.turnIndex = idx;
+    }
+
+    function currentPlayer(){
+      return players[Number(session.turnIndex || 0)] || players[0];
+    }
+
+    function scoreKiller(hitNumber, mult){
+      const current = currentPlayer();
+      const self = session.killer[current];
+      if(!self || session.ended) return;
+      dartsThisTurn += 1;
+
+      const isDouble = String(mult || "S").toUpperCase() === "D";
+      const num = Number(hitNumber || 0);
+
+      if(isDouble){
+        if(num === Number(self.target)){
+          self.killer = true;
+        }else if(self.killer){
+          players.forEach(function(p){
+            if(p === current) return;
+            const e = session.killer[p];
+            if(!e || e.alive === false || (e.lives || 0) <= 0) return;
+            if(num === Number(e.target)){
+              e.lives = Math.max(0, Number(e.lives || 0) - 1);
+              if(e.lives <= 0){
+                e.alive = false;
+              }
+            }
+          });
+        }
+      }
+
+      const alive = alivePlayers(session.killer);
+      if(alive.length === 1){
+        session.winner = alive[0];
+        session.ended = true;
+        return;
+      }
+
+      if(dartsThisTurn >= 3){
+        nextTurn();
+      }
+    }
+
+    session.engine = {
+      score: scoreKiller,
+      nextTurn: nextTurn,
+      mode: "killer"
+    };
+  }
+
+  function prettyNameSafe(email){
+    try{
+      return (typeof prettyName === "function") ? prettyName(email) : String(email || "");
+    }catch(_){ return String(email || ""); }
+  }
+
+  function killerTable(session){
+    const players = (session && session.setup && session.setup.emails) ? session.setup.emails : [];
+    const rows = players.map(function(p){
+      const e = (session.killer && session.killer[p]) || {};
+      return '<tr>' +
+        '<td>' + prettyNameSafe(p) + '</td>' +
+        '<td>' + (e.target || "–") + '</td>' +
+        '<td>' + (typeof e.lives === "number" ? e.lives : 3) + '</td>' +
+        '<td>' + (e.killer ? 'KILLER' : 'HUNTER') + '</td>' +
+        '<td>' + ((e.alive === false || (e.lives || 0) <= 0) ? 'OUT' : 'LIVE') + '</td>' +
+      '</tr>';
+    }).join('');
+    return '<div class="rtWrap"><table><thead><tr><th>Player</th><th>Double</th><th>Lives</th><th>Status</th><th>State</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  }
+
+  function killerControls(session){
+    const players = (session && session.setup && session.setup.emails) ? session.setup.emails : [];
+    const cp = players[Number(session.turnIndex || 0)] || players[0] || '';
+    const ce = (session.killer && session.killer[cp]) || {};
+    const note = '<div class="sub">Current player: ' + prettyNameSafe(cp) +
+      ' • Own double: ' + (ce.target || "–") +
+      ' • Hit D + opponent double to take a life.</div>';
+    const mults = ['S','D','T'].map(function(m){
+      return '<button class="hitBtn'+((window.__selMult||'S')===m?' sel':'')+'" data-mult="'+m+'">'+m+'</button>';
+    }).join('');
+    const nums = [20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1].map(function(n){
+      return '<button class="hitBtn" data-score="'+n+'">'+n+'</button>';
+    }).join('');
+    return note + '<div class="gameGrid">' + mults + nums + '<button class="hitBtn" data-next="1">Next</button></div>';
+  }
+
+  function renderKillerScreen(){
+    if(typeof ensureGameScreen === "function") ensureGameScreen();
+    if(typeof bindGameButtons === "function") bindGameButtons();
+    const body = document.getElementById('gameBody');
+    const title = document.getElementById('gameTitle');
+    if(!body) return;
+    const s = (typeof ensureEngine === "function") ? ensureEngine() : (window.activeSession || null);
+    if(!s || !isKillerGame(s)){
+      return null;
+    }
+    initKiller(s);
+    const players = (s.setup && s.setup.emails) || [];
+    const cp = players[Number(s.turnIndex || 0)] || players[0] || '';
+    if(title) title.textContent = 'Killer';
+    body.innerHTML =
+      '<div class="gameStatus">' +
+        '<div><div style="font-weight:1100;">Killer</div><div class="sub">' + prettyNameSafe(cp) + (s.winner ? (' • Winner ' + prettyNameSafe(s.winner)) : '') + '</div></div>' +
+        '<div class="pill">' + (s.ended ? 'Finished' : 'Live') + '</div>' +
+      '</div>' +
+      killerTable(s) +
+      '<div style="height:12px"></div>' +
+      killerControls(s);
+
+    Array.from(body.querySelectorAll('[data-mult]')).forEach(function(btn){
+      btn.onclick = function(){
+        window.__selMult = btn.getAttribute('data-mult') || 'S';
+        renderKillerScreen();
+      };
+    });
+    Array.from(body.querySelectorAll('[data-score]')).forEach(function(btn){
+      btn.onclick = function(){
+        if(typeof window.addThrow === "function"){
+          window.addThrow({number:Number(btn.getAttribute('data-score')), mult:(window.__selMult || 'S')});
+        }
+      };
+    });
+    Array.from(body.querySelectorAll('[data-next]')).forEach(function(btn){
+      btn.onclick = function(){
+        try{
+          const s = (typeof ensureEngine === "function") ? ensureEngine() : window.activeSession;
+          if(s && s.engine && typeof s.engine.nextTurn === "function"){
+            s.engine.nextTurn();
+            if(typeof localStorage !== "undefined"){
+              localStorage.setItem("ng_active_session", JSON.stringify(s));
+            }
+            if(typeof renderKillerScreen === "function") renderKillerScreen();
+          }
+        }catch(_){}
+      };
+    });
+    return true;
+  }
+
+  const oldRunGameEngine = window.runGameEngine;
+  window.runGameEngine = function(session){
+    if(isKillerGame(session)){
+      initKiller(session);
+      return;
+    }
+    return oldRunGameEngine ? oldRunGameEngine(session) : undefined;
+  };
+
+  const oldAddThrow = window.addThrow;
+  window.addThrow = function(payload){
+    try{
+      const s = (typeof ensureEngine === "function") ? ensureEngine() : (window.activeSession || null);
+      const mode = String((s && s.engine && s.engine.mode) || (s && s.gameId) || "").toLowerCase();
+      if(mode === "killer" && s && s.engine && typeof s.engine.score === "function"){
+        s.engine.score(Number(payload && payload.number || 0), String(payload && payload.mult || "S"));
+        try{ localStorage.setItem("ng_active_session", JSON.stringify(s)); }catch(_){}
+        try{
+          if(typeof db !== "undefined" && window.activeSessionId && db.collection){
+            db.collection("sessions").doc(window.activeSessionId).update({ match: s, killer: s.killer, winner: s.winner || null, ended: !!s.ended });
+          }
+        }catch(_){}
+        renderKillerScreen();
+        return;
+      }
+    }catch(_){}
+    return oldAddThrow ? oldAddThrow(payload) : undefined;
+  };
+
+  const oldRenderGameScreen = window.renderGameScreen;
+  window.renderGameScreen = function(){
+    try{
+      const s = (typeof ensureEngine === "function") ? ensureEngine() : (window.activeSession || null);
+      const mode = String((s && s.engine && s.engine.mode) || (s && s.gameId) || "").toLowerCase();
+      if(mode === "killer" || isKillerGame(s)){
+        const ok = renderKillerScreen();
+        if(ok) return;
+      }
+    }catch(_){}
+    return oldRenderGameScreen ? oldRenderGameScreen() : undefined;
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    try{
+      if(window.activeSession && isKillerGame(window.activeSession)){
+        initKiller(window.activeSession);
+      }
+    }catch(_){}
   });
 })();
 </script>
