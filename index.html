@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v2005</title>
-<!-- NIGHT GAMES v2005 -->
+<title>Night Games v2007</title>
+<!-- NIGHT GAMES v2007 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3599,7 +3599,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="2005";window.NG_BUILD_LABEL="Night Games v2005";</script>
+<script>window.NG_BUILD_VERSION="2007";window.NG_BUILD_LABEL="Night Games v2007";</script>
 
 <style id="ng-v1588-header-style">
 #ngHeaderBlock{
@@ -11458,7 +11458,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 <style id="ng-v2004-panel-transition-only">
   /* =========================
-     v2004 PANEL TRANSITION ONLY
+     v2007 PANEL TRANSITION ONLY
      CHANGE THIS NUMBER TO SPEED UP / SLOW DOWN THE TRANSITION
      >>> PANEL_DARKEN_SECONDS = 5 <<<
      ========================= */
@@ -11514,7 +11514,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">v2004</div>
+<div id="ngVersionBelow">v2007</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -11547,7 +11547,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   <div class="ngLeft">Night Games</div>
   <div class="ngCenter">
     <div class="ngBackend">Firebase Firestore</div>
-    <div class="ngVersion">v2004</div>
+    <div class="ngVersion">v2007</div>
   </div>
   <div class="ngRight">Online</div>
 </div>
@@ -11732,7 +11732,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </section>
 
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v2005 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v2007 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -13879,7 +13879,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v2005 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v2007 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -17283,9 +17283,9 @@ button.pill,
 
 <script id="ng-v1588-final-cleanup-js">
 (function(){
-  try{ document.title="Night Games v2005"; }catch(_){}
-  try{ window.NG_BUILD_VERSION="2005"; }catch(_){}
-  try{ window.NG_BUILD_LABEL="Night Games v2005"; }catch(_){}
+  try{ document.title="Night Games v2007"; }catch(_){}
+  try{ window.NG_BUILD_VERSION="2007"; }catch(_){}
+  try{ window.NG_BUILD_LABEL="Night Games v2007"; }catch(_){}
   try{ window.ngBuild = "v1588"; }catch(_){}
 
   function removeSessionUI(){
@@ -20543,132 +20543,168 @@ button.pill,
 </script>
 
 
-<style id="ng-v2005-panel-transition-style">
-/* v2005 panel-only transition: touches only actual .panel surfaces */
-.panel[data-ng-panel-transition-ready="1"]{
-  will-change: background-color, border-color, box-shadow, backdrop-filter, -webkit-backdrop-filter;
+
+<style id="ng-v2007-panel-transition-style">
+/* v2007 panel transition: panel-only, all pages, no screen/container styling */
+.panel.ng-panel-transition-host,
+#gamesPanel.ng-panel-transition-host,
+#playersPanel.ng-panel-transition-host,
+.detailCard.ng-panel-transition-host{
+  position: relative !important;
+  overflow: hidden !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 55%, rgba(255,255,255,0.03) 100%) !important;
+  border-color: rgba(255,255,255,0.22) !important;
+  box-shadow:
+    inset 0 1px 8px rgba(255,255,255,0.18),
+    inset 0 -3px 10px rgba(0,0,0,0.14),
+    0 10px 24px rgba(0,0,0,0.14) !important;
+  backdrop-filter: blur(12px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(120%) !important;
+}
+.panel.ng-panel-transition-host::before,
+#gamesPanel.ng-panel-transition-host::before,
+#playersPanel.ng-panel-transition-host::before,
+.detailCard.ng-panel-transition-host::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  background: linear-gradient(180deg, rgba(32,36,45,0.00) 0%, rgba(19,23,32,0.00) 42%, rgba(8,10,15,0.00) 100%);
+  opacity: 0;
+  transition: opacity 5.8s ease;
+  z-index: 0;
+}
+.panel.ng-panel-transition-host.ng-panel-dark::before,
+#gamesPanel.ng-panel-transition-host.ng-panel-dark::before,
+#playersPanel.ng-panel-transition-host.ng-panel-dark::before,
+.detailCard.ng-panel-transition-host.ng-panel-dark::before{
+  background: linear-gradient(180deg, rgba(32,36,45,0.88) 0%, rgba(19,23,32,0.92) 42%, rgba(8,10,15,0.96) 100%);
+  opacity: 1;
+}
+.panel.ng-panel-transition-host > *,
+#gamesPanel.ng-panel-transition-host > *,
+#playersPanel.ng-panel-transition-host > *,
+.detailCard.ng-panel-transition-host > *{
+  position: relative;
+  z-index: 1;
 }
 </style>
 
-<script id="ng-v2005-panel-transition-rewire">
+<script id="ng-v2007-panel-transition-rewire">
 (function(){
-  var CLEAR_BG = 'linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))';
-  var CLEAR_BORDER = 'rgba(255,255,255,0.24)';
-  var CLEAR_SHADOW = [
-    'inset 0 1px 0 rgba(255,255,255,0.18)',
-    '0 10px 24px rgba(0,0,0,0.18)'
-  ].join(', ');
-  var DARK_BG = 'linear-gradient(180deg, rgba(20,22,31,0.92), rgba(7,8,12,0.88))';
-  var DARK_BORDER = 'rgba(255,255,255,0.24)';
-  var DARK_SHADOW = [
-    'inset 0 1px 8px rgba(255,255,255,0.10)',
-    'inset 0 -2px 8px rgba(0,0,0,0.42)',
-    '0 8px 16px rgba(0,0,0,0.18)'
-  ].join(', ');
   var DURATION = 5800;
+  var SCREEN_SELECTORS = '.screen.active, #landing.active, #players.active, #setup.active, #waiting.active, #lobby.active, #detail.active, #leaderboard.active, #randomizer.active';
+  var PANEL_SELECTORS = '.panel, #gamesPanel, #playersPanel, .detailCard';
 
   function isVisible(el){
     if(!el) return false;
-    var screen = el.closest('.screen');
-    if(screen){
-      if(screen.classList.contains('active')) return true;
-      var cs = window.getComputedStyle(screen);
-      if(cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity || '1') === 0) return false;
-      if(screen.hidden) return false;
-      return true;
+    var cs = window.getComputedStyle(el);
+    if(cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity || '1') === 0) return false;
+    if(el.hidden) return false;
+    var rect = el.getBoundingClientRect();
+    return !!(rect.width || rect.height);
+  }
+
+  function getVisibleScreens(){
+    var screens = Array.prototype.slice.call(document.querySelectorAll(SCREEN_SELECTORS)).filter(isVisible);
+    if(!screens.length){
+      screens = Array.prototype.slice.call(document.querySelectorAll('.screen')).filter(function(el){
+        return el.classList.contains('active') || isVisible(el);
+      });
     }
-    var cs2 = window.getComputedStyle(el);
-    return !(cs2.display === 'none' || cs2.visibility === 'hidden');
+    return screens;
   }
 
-  function setPanelClear(panel){
+  function getPanelsForScope(scope){
+    return Array.prototype.slice.call(scope.querySelectorAll(PANEL_SELECTORS)).filter(function(el){
+      if(!isVisible(el)) return false;
+      if(el.classList.contains('screen')) return false;
+      return true;
+    });
+  }
+
+  function prepPanel(panel){
     if(!panel) return;
-    panel.dataset.ngPanelTransitionReady = '1';
-    panel.style.setProperty('transition', 'background 5.8s ease, border-color 5.8s ease, box-shadow 5.8s ease, backdrop-filter 5.8s ease, -webkit-backdrop-filter 5.8s ease', 'important');
-    panel.style.setProperty('background', CLEAR_BG, 'important');
-    panel.style.setProperty('background-image', CLEAR_BG, 'important');
-    panel.style.setProperty('background-color', 'rgba(255,255,255,0.04)', 'important');
-    panel.style.setProperty('border-color', CLEAR_BORDER, 'important');
-    panel.style.setProperty('box-shadow', CLEAR_SHADOW, 'important');
-    panel.style.setProperty('backdrop-filter', 'blur(12px)', 'important');
-    panel.style.setProperty('-webkit-backdrop-filter', 'blur(12px)', 'important');
+    panel.classList.add('ng-panel-transition-host');
+    panel.classList.remove('ng-panel-dark');
+    if(panel.__ngPanelTransitionTimer){
+      clearTimeout(panel.__ngPanelTransitionTimer);
+      panel.__ngPanelTransitionTimer = null;
+    }
   }
 
-  function setPanelDark(panel){
-    if(!panel) return;
-    panel.style.setProperty('background', DARK_BG, 'important');
-    panel.style.setProperty('background-image', DARK_BG, 'important');
-    panel.style.setProperty('background-color', 'rgba(8,10,14,0.82)', 'important');
-    panel.style.setProperty('border-color', DARK_BORDER, 'important');
-    panel.style.setProperty('box-shadow', DARK_SHADOW, 'important');
-    panel.style.setProperty('backdrop-filter', 'blur(18px)', 'important');
-    panel.style.setProperty('-webkit-backdrop-filter', 'blur(18px)', 'important');
+  function darkenPanel(panel){
+    if(!panel || !isVisible(panel)) return;
+    panel.classList.add('ng-panel-dark');
   }
 
-  function runPanelTransitionForScreen(screen){
-    if(!screen) return;
-    var panels = Array.prototype.slice.call(screen.querySelectorAll('.panel'));
+  function runTransition(scope){
+    var panels = getPanelsForScope(scope);
     if(!panels.length) return;
     panels.forEach(function(panel){
-      if(panel.__ngPanelTimer){
-        clearTimeout(panel.__ngPanelTimer);
-        panel.__ngPanelTimer = null;
-      }
-      setPanelClear(panel);
-      panel.__ngPanelTimer = setTimeout(function(){
-        if(isVisible(panel)) setPanelDark(panel);
-      }, 80);
+      prepPanel(panel);
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          panel.__ngPanelTransitionTimer = setTimeout(function(){
+            darkenPanel(panel);
+          }, 30);
+        });
+      });
     });
   }
 
   function runForVisibleScreens(){
-    document.querySelectorAll('.screen').forEach(function(screen){
-      if(isVisible(screen)) runPanelTransitionForScreen(screen);
-    });
+    getVisibleScreens().forEach(runTransition);
   }
 
-  function wrapFunction(name){
-    var original = window[name];
-    if(typeof original !== 'function' || original.__ngPanelWrapped) return;
+  function afterNav(){
+    setTimeout(runForVisibleScreens, 0);
+    setTimeout(runForVisibleScreens, 120);
+    setTimeout(runForVisibleScreens, 320);
+  }
+
+  function wrap(name){
+    var fn = window[name];
+    if(typeof fn !== 'function' || fn.__ngPanelWrappedV2007) return;
     var wrapped = function(){
-      var result = original.apply(this, arguments);
-      setTimeout(runForVisibleScreens, 30);
-      setTimeout(runForVisibleScreens, 220);
-      return result;
+      var out = fn.apply(this, arguments);
+      afterNav();
+      return out;
     };
-    wrapped.__ngPanelWrapped = true;
+    wrapped.__ngPanelWrappedV2007 = true;
     window[name] = wrapped;
   }
 
-  function installMutationWatcher(){
-    if(document.documentElement.__ngPanelObserver) return;
+  function observeScreens(){
+    if(document.documentElement.__ngPanelTransitionObserverV2007) return;
     var observer = new MutationObserver(function(mutations){
-      for(var i=0;i<mutations.length;i++){
+      for(var i=0; i<mutations.length; i++){
         var m = mutations[i];
-        if(m.type === 'attributes' && (m.attributeName === 'class' || m.attributeName === 'style' || m.attributeName === 'hidden')){
-          var target = m.target;
-          if(target && target.classList && target.classList.contains('screen')){
-            setTimeout(runForVisibleScreens, 40);
+        if(m.type === 'attributes'){
+          var t = m.target;
+          if(t && (t.classList && t.classList.contains('screen') || t.id === 'landing' || t.id === 'players' || t.id === 'setup' || t.id === 'waiting' || t.id === 'lobby' || t.id === 'detail' || t.id === 'leaderboard' || t.id === 'randomizer')){
+            afterNav();
             return;
           }
         }
         if(m.addedNodes && m.addedNodes.length){
-          setTimeout(runForVisibleScreens, 40);
+          afterNav();
           return;
         }
       }
     });
     observer.observe(document.body, {subtree:true, childList:true, attributes:true, attributeFilter:['class','style','hidden']});
-    document.documentElement.__ngPanelObserver = observer;
+    document.documentElement.__ngPanelTransitionObserverV2007 = observer;
   }
 
   function init(){
-    wrapFunction('show');
-    wrapFunction('showScreen');
-    wrapFunction('ngShow');
-    installMutationWatcher();
+    wrap('show');
+    wrap('showScreen');
+    wrap('ngShow');
+    observeScreens();
     runForVisibleScreens();
-    setTimeout(runForVisibleScreens, 300);
+    setTimeout(runForVisibleScreens, 250);
     setTimeout(runForVisibleScreens, 900);
   }
 
@@ -20678,15 +20714,11 @@ button.pill,
     init();
   }
   window.addEventListener('load', function(){
-    wrapFunction('show');
-    wrapFunction('showScreen');
-    wrapFunction('ngShow');
-    runForVisibleScreens();
+    init();
     setTimeout(runForVisibleScreens, 200);
     setTimeout(runForVisibleScreens, 800);
   }, {once:true});
 })();
 </script>
-
 </body>
 </html>
