@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v2004</title>
-<!-- NIGHT GAMES v2004 -->
+<title>Night Games v2005</title>
+<!-- NIGHT GAMES v2005 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3599,7 +3599,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="2004";window.NG_BUILD_LABEL="Night Games v2004";</script>
+<script>window.NG_BUILD_VERSION="2005";window.NG_BUILD_LABEL="Night Games v2005";</script>
 
 <style id="ng-v1588-header-style">
 #ngHeaderBlock{
@@ -11732,7 +11732,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </section>
 
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v2004 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v2005 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -13879,7 +13879,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v2004 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v2005 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -17283,9 +17283,9 @@ button.pill,
 
 <script id="ng-v1588-final-cleanup-js">
 (function(){
-  try{ document.title="Night Games v2004"; }catch(_){}
-  try{ window.NG_BUILD_VERSION="2004"; }catch(_){}
-  try{ window.NG_BUILD_LABEL="Night Games v2004"; }catch(_){}
+  try{ document.title="Night Games v2005"; }catch(_){}
+  try{ window.NG_BUILD_VERSION="2005"; }catch(_){}
+  try{ window.NG_BUILD_LABEL="Night Games v2005"; }catch(_){}
   try{ window.ngBuild = "v1588"; }catch(_){}
 
   function removeSessionUI(){
@@ -20543,27 +20543,27 @@ button.pill,
 </script>
 
 
-<style id="ng-v2004-panel-transition-style">
-/* v2004 panel-only transition: touches only actual .panel surfaces */
+<style id="ng-v2005-panel-transition-style">
+/* v2005 panel-only transition: touches only actual .panel surfaces */
 .panel[data-ng-panel-transition-ready="1"]{
   will-change: background-color, border-color, box-shadow, backdrop-filter, -webkit-backdrop-filter;
 }
 </style>
 
-<script id="ng-v2004-panel-transition-rewire">
+<script id="ng-v2005-panel-transition-rewire">
 (function(){
-  var CLEAR_BG = 'rgba(255,255,255,0.035)';
+  var CLEAR_BG = 'linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))';
   var CLEAR_BORDER = 'rgba(255,255,255,0.24)';
   var CLEAR_SHADOW = [
     'inset 0 1px 0 rgba(255,255,255,0.18)',
     '0 10px 24px rgba(0,0,0,0.18)'
   ].join(', ');
-  var DARK_BG = 'rgba(8,10,14,0.82)';
-  var DARK_BORDER = 'rgba(255,255,255,0.12)';
+  var DARK_BG = 'linear-gradient(180deg, rgba(20,22,31,0.92), rgba(7,8,12,0.88))';
+  var DARK_BORDER = 'rgba(255,255,255,0.24)';
   var DARK_SHADOW = [
-    'inset 0 1px 0 rgba(255,255,255,0.06)',
-    'inset 0 -14px 28px rgba(0,0,0,0.42)',
-    '0 16px 32px rgba(0,0,0,0.34)'
+    'inset 0 1px 8px rgba(255,255,255,0.10)',
+    'inset 0 -2px 8px rgba(0,0,0,0.42)',
+    '0 8px 16px rgba(0,0,0,0.18)'
   ].join(', ');
   var DURATION = 5800;
 
@@ -20584,8 +20584,10 @@ button.pill,
   function setPanelClear(panel){
     if(!panel) return;
     panel.dataset.ngPanelTransitionReady = '1';
-    panel.style.setProperty('transition', 'background-color 5.8s ease, border-color 5.8s ease, box-shadow 5.8s ease, backdrop-filter 5.8s ease, -webkit-backdrop-filter 5.8s ease', 'important');
-    panel.style.setProperty('background-color', CLEAR_BG, 'important');
+    panel.style.setProperty('transition', 'background 5.8s ease, border-color 5.8s ease, box-shadow 5.8s ease, backdrop-filter 5.8s ease, -webkit-backdrop-filter 5.8s ease', 'important');
+    panel.style.setProperty('background', CLEAR_BG, 'important');
+    panel.style.setProperty('background-image', CLEAR_BG, 'important');
+    panel.style.setProperty('background-color', 'rgba(255,255,255,0.04)', 'important');
     panel.style.setProperty('border-color', CLEAR_BORDER, 'important');
     panel.style.setProperty('box-shadow', CLEAR_SHADOW, 'important');
     panel.style.setProperty('backdrop-filter', 'blur(12px)', 'important');
@@ -20594,7 +20596,9 @@ button.pill,
 
   function setPanelDark(panel){
     if(!panel) return;
-    panel.style.setProperty('background-color', DARK_BG, 'important');
+    panel.style.setProperty('background', DARK_BG, 'important');
+    panel.style.setProperty('background-image', DARK_BG, 'important');
+    panel.style.setProperty('background-color', 'rgba(8,10,14,0.82)', 'important');
     panel.style.setProperty('border-color', DARK_BORDER, 'important');
     panel.style.setProperty('box-shadow', DARK_SHADOW, 'important');
     panel.style.setProperty('backdrop-filter', 'blur(18px)', 'important');
