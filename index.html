@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v2025 ALL ADDED BLOCKS REMOVED</title>
-<!-- NIGHT GAMES v2025 ALL ADDED BLOCKS REMOVED -->
+<title>Night Games v1700 COMPLETE</title>
+<!-- NIGHT GAMES v1700 COMPLETE -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -13758,8 +13758,8 @@ html,body{
 </script>
 
 
-<!-- NG v2025 COMPLETE BACKGROUND / MERGE LOCK -->
-<style id="ng-v2025-complete-background-lock">
+<!-- NG v1700 COMPLETE BACKGROUND / MERGE LOCK -->
+<style id="ng-v1700-complete-background-lock">
 :root{
   --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg") !important;
 }
@@ -13828,7 +13828,7 @@ main,
 }
 </style>
 
-<script id="ng-v2025-complete-background-lock-script">
+<script id="ng-v1700-complete-background-lock-script">
 (function(){
   function unlockBackground(){
     try{
@@ -13861,132 +13861,6 @@ main,
     unlockBackground();
     setTimeout(unlockBackground, 150);
   });
-})();
-</script>
-
-
-<script id="ng-v2025-killer-handoff-fix">
-(function(){
-  function ss(v){ return JSON.parse(JSON.stringify(v||{})); }
-  function safeShow(id){ try{ if(typeof show==='function') show(id); }catch(_){} }
-  function saveLocalSession(s){
-    try{ localStorage.setItem('ng_active_session', JSON.stringify(s)); }catch(_){}
-    try{ window.activeSession = s; }catch(_){}
-  }
-
-  // Replace startSession with a safer order:
-  // 1) mark firestore session started
-  // 2) sync local activeSession
-  // 3) run engine
-  // 4) move to game screen
-  var _oldStartSession = window.startSession;
-  window.startSession = async function(){
-    try{
-      var dbx = window.db || (window.ngFirebase && window.ngFirebase.db);
-      var sid = window.activeSessionId || (window.activeSession && window.activeSession.id);
-      var s = ss(window.activeSession || {});
-      if(!s.gameId && s.game) s.gameId = String(s.game).toLowerCase();
-      s.started = true;
-      s.startedAt = Date.now();
-      saveLocalSession(s);
-
-      if(dbx && sid && typeof setDoc === 'function' && typeof doc === 'function'){
-        await setDoc(doc(dbx, 'sessions', sid), s, { merge:true });
-      }
-
-      try{ if(typeof runGameEngine === 'function') runGameEngine(window.activeSession); }catch(_){}
-      try{ if(typeof renderGameScreen === 'function') renderGameScreen(); }catch(_){}
-      safeShow('game_screen');
-      return true;
-    }catch(e){
-      try{ console.error(e); }catch(_){}
-      return _oldStartSession ? _oldStartSession() : false;
-    }
-  };
-
-  // When waiting room sees started=true, also hydrate activeSession + engine.
-  var _oldListenForSessionStart = window.listenForSessionStart;
-  window.listenForSessionStart = async function(sessionId){
-    try{
-      if(typeof db==='undefined' || typeof doc!=='function' || typeof onSnapshot!=='function') return;
-      const ref = doc(db,'sessions',sessionId);
-      onSnapshot(ref,(snap)=>{
-        const data = snap.data() || {};
-        if(!data) return;
-        if(data.started === true){
-          try{
-            window.activeSessionId = sessionId;
-            window.activeSession = Object.assign({}, window.activeSession || {}, data);
-            saveLocalSession(window.activeSession);
-            if(typeof runGameEngine === 'function') runGameEngine(window.activeSession);
-            if(typeof renderGameScreen === 'function') renderGameScreen();
-          }catch(_){}
-          safeShow('game_screen');
-          setTimeout(function(){
-            try{ if(typeof renderGameScreen === 'function') renderGameScreen(); }catch(_){}
-            safeShow('game_screen');
-          }, 250);
-        }
-      });
-    }catch(e){
-      try{ console.error(e); }catch(_){}
-      if(_oldListenForSessionStart) return _oldListenForSessionStart(sessionId);
-    }
-  };
-
-  // Host auto-start: do not jump screens directly here; call startSession only.
-  var _oldListenForJoins = window.listenForJoins;
-  window.listenForJoins = async function(sessionId){
-    try{
-      if(typeof db === "undefined" || typeof query !== "function" || typeof collection !== "function" || typeof where !== "function" || typeof onSnapshot !== "function"){
-        return;
-      }
-      const expected = (window.activeSession && (window.activeSession.invitedEmails || window.activeSession.invited || [])) || [];
-      const expectedSet = new Set(expected.map(x => String(x||"").toLowerCase()).filter(Boolean));
-      const acceptedSet = new Set();
-
-      const q = query(collection(db, "invites"), where("sessionId", "==", sessionId));
-      onSnapshot(q, (snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          const data = change.doc.data() || {};
-          if(data.status === "accepted"){
-            const key = String((data.fromEmail || data.toEmail || data.to || data.email || "")).toLowerCase();
-            if(key) acceptedSet.add(key);
-          }
-        });
-
-        if(expectedSet.size > 0){
-          let all = true;
-          expectedSet.forEach(v => { if(!acceptedSet.has(v)) all = false; });
-          if(all && !window.__ng2022Started){
-            window.__ng2022Started = true;
-            if(typeof window.startSession === 'function') window.startSession();
-          }
-        }
-      });
-    }catch(e){
-      try{ console.error(e); }catch(_){}
-      if(_oldListenForJoins) return _oldListenForJoins(sessionId);
-    }
-  };
-
-  // Force Killer title/body if game started but screen is blank.
-  var _oldRender = window.renderGameScreen;
-  window.renderGameScreen = function(){
-    try{
-      if(_oldRender) _oldRender();
-      var s = window.activeSession || {};
-      var key = String(s.gameId || s.game || '').toLowerCase();
-      if(key === 'killer'){
-        var title = document.getElementById('gameTitle');
-        var body = document.getElementById('gameBody');
-        if(title && !title.textContent.trim()) title.textContent = 'Killer';
-        if(body && !body.innerHTML.trim()){
-          body.innerHTML = '<div style="font-weight:1100;font-size:22px;margin-bottom:10px;">Killer</div><div style="opacity:.82;">Match connected. If scoring buttons are present, play can start here.</div>';
-        }
-      }
-    }catch(_){}
-  };
 })();
 </script>
 
