@@ -1,10 +1,463 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v1868</title>
-<!-- NIGHT GAMES v1868 -->
+<title>Night Games v1900</title>
+<!-- NIGHT GAMES v1900 -->
+
+<!--
+================================================================================
+NIGHT GAMES v1900 — DOCUMENTED UNIFORM SOURCE
+================================================================================
+PURPOSE
+- This file is the "human-readable baseline" for the current working build.
+- It is intended to be easier to read, inspect, and edit than the previous
+  patch-stack style files.
+- The goal of THIS file is:
+  1) preserve the working build line
+  2) label the important visual controls
+  3) unify the shared panel / button / text system
+  4) make setup + controls easier to edit by hand
+
+IMPORTANT HONEST NOTE
+- This file still contains older legacy logic deeper in the source.
+- The work in this version focuses on creating a CLEANER EDIT SURFACE on top of
+  the working build so a human can quickly locate and change the important parts.
+- In other words: this is the "documented uniform source baseline" to save and
+  build forward from.
+
+HOW TO USE THIS FILE
+- Search for: EDITOR CONTROL CENTER
+- Search for: v1900-uniform
+- Search for: SETUP EDIT ZONE
+- Search for: PANEL SYSTEM
+- Search for: CONTROL PANEL SYSTEM
+- Search for: TRANSITION SYSTEM
+
+SAFE EDIT RULES
+- SAFE TO EDIT:
+  - color variables in the EDITOR CONTROL CENTER
+  - spacing variables in the EDITOR CONTROL CENTER
+  - panel radius / border / background values
+  - setup width / setup top / button width / button height
+  - title font sizes / row heights / gaps
+- BE CAREFUL:
+  - IDs
+  - function names
+  - event wiring
+  - any block marked "behavior-sensitive"
+- DO NOT RENAME unless you mean to refactor behavior:
+  - screen IDs
+  - setupBody
+  - lobbyBody
+  - waitingBody
+  - detailBody
+  - button IDs already used by JS
+
+SECTION MAP
+[SECTION 01] Editor Control Center
+[SECTION 02] Global Uniform Panel System
+[SECTION 03] Global Uniform Button System
+[SECTION 04] Setup Edit Zone
+[SECTION 05] Setup Control Panel System
+[SECTION 06] Transition System
+[SECTION 07] Legacy App Logic (kept for compatibility)
+
+EDITOR NOTES — WHAT NUMBERS MEAN
+- --ng-setup-top:
+    Higher number = setup panel moves DOWN
+    Lower number = setup panel moves UP
+- --ng-setup-width:
+    Higher number = wider setup area
+    Lower number = narrower setup area
+- --ng-panel-radius:
+    Higher number = rounder corners
+    Lower number = sharper corners
+- --ng-row-height:
+    Higher number = taller setup rows / tap rows
+    Lower number = shorter setup rows / tap rows
+- --ng-pill-width:
+    Higher number = wider control buttons
+    Lower number = narrower control buttons
+- --ng-pill-height:
+    Higher number = taller control buttons
+    Lower number = shorter control buttons
+- --ng-transition-seconds:
+    Higher number = slower clear-to-black fade
+    Lower number = faster clear-to-black fade
+
+EDITOR NOTES — WHAT COLORS DO
+- --ng-panel-glass-start:
+    Clear / light glass appearance at the START
+- --ng-panel-glass-end:
+    Black chrome / dark glass appearance at the END
+- --ng-panel-border:
+    Shared border for all main panels
+- --ng-panel-inner-line:
+    Soft highlight inside shared panels
+- --ng-panel-title:
+    Main gold panel title color
+- --ng-panel-text:
+    Primary white text color
+- --ng-panel-muted:
+    Secondary / helper text color
+- --ng-button-bg:
+    Shared black button background
+- --ng-button-border:
+    Shared button border color
+- --ng-button-text:
+    Shared button text color
+
+VISUAL GOAL FOR THIS VERSION
+- All major panels should look like they belong to the SAME system.
+- Setup should visually match the rest of the app.
+- Control buttons should be uniform.
+- Shared spacing and sizing should be editable from one place.
+================================================================================
+-->
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style id="ng-v1900-editor-control-center">
+/* ============================================================================
+   [SECTION 01] EDITOR CONTROL CENTER
+   --------------------------------------------------------------------------
+   This is the FIRST place to edit colors, sizes, spacing, alignment, and
+   transition timing.
+   Search: EDITOR CONTROL CENTER
+============================================================================ */
+
+/* =========================
+   COLOR CONTROL CENTER
+   ========================= */
+:root{
+  --ng-panel-glass-start: rgba(255,255,255,.06); /* lighter start glass */
+  --ng-panel-glass-end: rgba(0,0,0,.68);         /* black chrome end glass */
+  --ng-panel-border: rgba(255,255,255,.16);      /* shared border for panels */
+  --ng-panel-inner-line: rgba(255,255,255,.12);  /* soft inner highlight */
+  --ng-panel-title: rgba(246,219,170,.98);       /* gold panel titles */
+  --ng-panel-text: rgba(255,255,255,.96);        /* main text */
+  --ng-panel-muted: rgba(255,255,255,.78);       /* helper text */
+  --ng-divider: rgba(70,185,255,.38);            /* shared divider line */
+  --ng-button-bg: rgba(0,0,0,.96);               /* black shared button */
+  --ng-button-border: rgba(255,255,255,.20);     /* shared button border */
+  --ng-button-text: rgba(255,255,255,.96);       /* shared button text */
+}
+
+/* =========================
+   SPACING / SIZE CONTROL CENTER
+   ========================= */
+:root{
+  --ng-panel-radius: 22px;       /* all main panel corners */
+  --ng-panel-padding: 18px;      /* inner padding of main panels */
+  --ng-panel-gap: 14px;          /* space between stacked panels */
+  --ng-setup-top: clamp(190px, 23vh, 280px); /* moves setup vertically */
+  --ng-setup-width: min(680px, 92vw);        /* main setup width */
+  --ng-row-height: 58px;         /* setup row height */
+  --ng-player-chip-height: 52px; /* player chip height */
+  --ng-pill-width: 132px;        /* control button width */
+  --ng-pill-height: 38px;        /* control button height */
+  --ng-pill-radius: 999px;       /* round control buttons */
+  --ng-title-size: 30px;         /* shared panel title size */
+  --ng-label-size: 16px;         /* setup row left label size */
+  --ng-value-size: 15px;         /* setup row right value size */
+  --ng-transition-seconds: 6s;   /* clear -> black glass transition time */
+}
+</style>
+
+
+<style id="ng-v1900-uniform-visual-system">
+/* ============================================================================
+   [SECTION 02] GLOBAL UNIFORM PANEL SYSTEM
+   --------------------------------------------------------------------------
+   Search: PANEL SYSTEM
+   This section forces the main visible panels into one shared look.
+============================================================================ */
+.screen .panel{
+  border-radius: var(--ng-panel-radius) !important;
+  border: 1px solid var(--ng-panel-border) !important;
+  box-shadow:
+    inset 0 1px 0 var(--ng-panel-inner-line),
+    inset 0 -14px 22px rgba(0,0,0,.18),
+    0 8px 24px rgba(0,0,0,.18) !important;
+  overflow: hidden !important;
+}
+
+.screen .panel > .sectionHead{
+  padding: 14px 16px 10px 16px !important;
+}
+
+.screen .panel .title{
+  color: var(--ng-panel-title) !important;
+  font-size: var(--ng-title-size) !important;
+  letter-spacing: .08em !important;
+  line-height: 1 !important;
+}
+
+.screen .panel .title + *,
+.screen .panel .sectionHead + *{
+  color: var(--ng-panel-text) !important;
+}
+
+.screen .panel hr,
+.screen .panel .divider{
+  border-color: var(--ng-divider) !important;
+}
+
+/* ============================================================================
+   [SECTION 03] GLOBAL UNIFORM BUTTON SYSTEM
+   --------------------------------------------------------------------------
+   Search: CONTROL PANEL SYSTEM
+   All pill / action buttons are normalized here.
+============================================================================ */
+.pill,
+button.pill,
+.btnAdvance,
+#setupHomeBtn,
+#setupInviteBtn,
+#setupStartGameBtn,
+#setupResetBtn,
+#waitingBackBtn,
+#lobbyInviteBtn,
+#lobbyStartBtn,
+#lobbyRandomizeBtn,
+#lobbyEndBtn,
+#backBtn,
+#homeBtn{
+  background: var(--ng-button-bg) !important;
+  border: 1px solid var(--ng-button-border) !important;
+  color: var(--ng-button-text) !important;
+  min-height: var(--ng-pill-height) !important;
+  height: var(--ng-pill-height) !important;
+  border-radius: var(--ng-pill-radius) !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+/* ============================================================================
+   [SECTION 04] SETUP EDIT ZONE
+   --------------------------------------------------------------------------
+   Search: SETUP EDIT ZONE
+   These controls affect setup width, top position, row styling, and inner
+   alignment. This is the main manual-edit area for setup appearance.
+============================================================================ */
+#setup .detailWrap{
+  width: var(--ng-setup-width) !important;
+  max-width: 680px !important;
+  top: var(--ng-setup-top) !important;
+  bottom: max(82px, calc(env(safe-area-inset-bottom) + 70px)) !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: var(--ng-panel-gap) !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  padding: 0 !important;
+}
+
+#setup .detailWrap > .panel{
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+#setupBody{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+#setupBody .ngSetupStack{
+  display: grid !important;
+  gap: 10px !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#setupBody .setupGameTitle{
+  font-size: var(--ng-title-size) !important;
+  line-height: 1 !important;
+  margin: 0 0 6px 0 !important;
+  padding: 0 6px !important;
+  color: var(--ng-panel-text) !important;
+}
+
+#setupBody .setupIntro{
+  margin: 0 0 12px 0 !important;
+  padding: 0 6px !important;
+  color: var(--ng-panel-muted) !important;
+  opacity: 1 !important;
+}
+
+#setupBody .setupTapRow,
+#setupBody .glassBtn.setupTapRow{
+  width: 100% !important;
+  min-height: var(--ng-row-height) !important;
+  height: var(--ng-row-height) !important;
+  margin: 0 auto !important;
+  padding: 0 18px !important;
+  border-radius: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  background: var(--ng-button-bg) !important;
+  border: 1px solid var(--ng-panel-border) !important;
+  box-shadow: none !important;
+  text-align: left !important;
+}
+
+#setupBody .setupTapRow > span:first-child{
+  font-size: var(--ng-label-size) !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  color: var(--ng-panel-text) !important;
+}
+
+#setupBody .setupTapRow .sub{
+  flex: 1 1 auto !important;
+  text-align: right !important;
+  font-size: var(--ng-value-size) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  color: var(--ng-panel-text) !important;
+  opacity: 1 !important;
+}
+
+#setupBody .setupSelectWrap{
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+#setupBody .setupSelect{
+  width: 100% !important;
+  min-height: 46px !important;
+  height: 46px !important;
+  margin: 0 auto !important;
+  border-radius: 14px !important;
+  background: var(--ng-button-bg) !important;
+  border: 1px solid var(--ng-panel-border) !important;
+  box-shadow: none !important;
+  color: var(--ng-panel-text) !important;
+}
+
+#setupBody .ngPlayerChecks{
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  margin-top: 6px !important;
+}
+
+#setupBody .ngPlayerChecks .chip{
+  min-height: var(--ng-player-chip-height) !important;
+  height: var(--ng-player-chip-height) !important;
+  border-radius: 14px !important;
+  background: var(--ng-button-bg) !important;
+  border: 1px solid var(--ng-panel-border) !important;
+  box-shadow: none !important;
+  color: var(--ng-panel-text) !important;
+}
+
+/* ============================================================================
+   [SECTION 05] SETUP CONTROL PANEL SYSTEM
+   --------------------------------------------------------------------------
+   Search: SETUP CONTROL PANEL SYSTEM
+   This section keeps the setup controls centered and uniform.
+============================================================================ */
+#setup .controlsRow,
+#setup .controlsRow3{
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 14px !important;
+}
+
+#setup .controlsRow .pill,
+#setup .controlsRow3 .pill,
+#setup .controlsRow button,
+#setup .controlsRow3 button,
+#setupHomeBtn,
+#setupInviteBtn,
+#setupStartGameBtn,
+#setupResetBtn{
+  width: var(--ng-pill-width) !important;
+  min-width: var(--ng-pill-width) !important;
+  max-width: var(--ng-pill-width) !important;
+  height: var(--ng-pill-height) !important;
+  min-height: var(--ng-pill-height) !important;
+  padding: 0 12px !important;
+  letter-spacing: .08em !important;
+  font-size: 11px !important;
+}
+
+/* ============================================================================
+   [SECTION 06] TRANSITION SYSTEM
+   --------------------------------------------------------------------------
+   Search: TRANSITION SYSTEM
+   This controls the clear-glass -> black-chrome overlay on visible panels.
+   IMPORTANT: edit duration here by changing --ng-transition-seconds.
+============================================================================ */
+.screen .panel::after{
+  background: rgba(255,255,255,0) !important;
+}
+.screen.ng-glass-run .panel::after{
+  animation: ngV1900PanelGlass var(--ng-transition-seconds) ease forwards !important;
+}
+@keyframes ngV1900PanelGlass{
+  0%{
+    opacity: 1;
+    background: var(--ng-panel-glass-start);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.20),
+      inset 0 -10px 18px rgba(255,255,255,.05);
+  }
+  100%{
+    opacity: 1;
+    background: var(--ng-panel-glass-end);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.08),
+      inset 0 0 34px rgba(0,0,0,.42),
+      inset 0 -26px 34px rgba(0,0,0,.48);
+  }
+}
+
+/* ============================================================================
+   MOBILE FALLBACKS
+============================================================================ */
+@media (max-width: 620px){
+  #setupBody .ngPlayerChecks{
+    grid-template-columns: 1fr !important;
+  }
+  #setup .controlsRow .pill,
+  #setup .controlsRow3 .pill,
+  #setup .controlsRow button,
+  #setup .controlsRow3 button,
+  #setupHomeBtn,
+  #setupInviteBtn,
+  #setupStartGameBtn,
+  #setupResetBtn{
+    width: calc(50% - 10px) !important;
+    min-width: calc(50% - 10px) !important;
+    max-width: calc(50% - 10px) !important;
+  }
+}
+</style>
+
 <style>
 :root{
   --txt: rgba(245,250,255,.94);
@@ -3599,7 +4052,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1852";window.NG_BUILD_LABEL="Night Games v1868";</script>
+<script>window.NG_BUILD_VERSION="1852";window.NG_BUILD_LABEL="Night Games v1900";</script>
 
 <style id="ng-v1588-header-style">
 #ngHeaderBlock{
@@ -4159,7 +4612,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1868-header-clean">
+<style id="ng-v1900-header-clean">
   /* hide the old built-in landing header/version so only the new fixed header shows */
   #ngHeader,
   #ngVersionBelow,
@@ -4264,7 +4717,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1868-uniform-clear-panels">
+<style id="ng-v1900-uniform-clear-panels">
   /* ===== Uniform clear-glass panel system across all pages ===== */
   .hub,
   .detailWrap,
@@ -4466,7 +4919,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1868-targeted-fixes">
+<style id="ng-v1900-targeted-fixes">
   /* remove duplicate built-in header; keep only fixed header */
   #ngHeaderBar,
   #ngHeaderBlock,
@@ -4586,7 +5039,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1868-strict-ui-fix">
+<style id="ng-v1900-strict-ui-fix">
   /* ===== strict UI correction pass ===== */
 
   /* ONE header only */
@@ -4779,7 +5232,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1868-header-players-layout">
+<style id="ng-v1900-header-players-layout">
   /* ===== landing header on one line, version below ===== */
   #ngFixedHeader{
     position:fixed !important;
@@ -4902,7 +5355,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1868-landing-header-hint-fix">
+<style id="ng-v1900-landing-header-hint-fix">
   /* landing header: one line for Night Games / Firebase Firestore / Online */
   #ngFixedHeader{
     position:fixed !important;
@@ -5009,7 +5462,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1868-unified-clear-header-fix">
+<style id="ng-v1900-unified-clear-header-fix">
   /* ===== HEADER: one line + version below ===== */
   #ngFixedHeader{
     position:fixed !important;
@@ -5270,7 +5723,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1868-final-header-panel-pass">
+<style id="ng-v1900-final-header-panel-pass">
   /* ===== HEADER: exact requested structure =====
      line 1: Night Games | Firebase Firestore | ● Online
      line 2: version only, centered
@@ -5507,7 +5960,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1868-universal-chrome-touch">
+<style id="ng-v1900-universal-chrome-touch">
   /* ===== HEADER: visually centered on the same baseline ===== */
   #ngFixedHeader{
     position:fixed !important;
@@ -5799,7 +6252,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1868-all-games-layout-pass">
+<style id="ng-v1900-all-games-layout-pass">
   /* ===== Header: same visual center line, version below ===== */
   #ngFixedHeader{
     position:fixed !important;
@@ -6136,7 +6589,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v1868-setup-centering-header-fix">
+<style id="ng-v1900-setup-centering-header-fix">
   /* ===== HEADER: one visual center line, version below ===== */
   #ngFixedHeader{
     position:fixed !important;
@@ -6597,7 +7050,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 
 </section>
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1868 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v1900 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -8728,7 +9181,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v1868 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v1900 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -12143,9 +12596,9 @@ button.pill,
 
 <script id="ng-v1588-final-cleanup-js">
 (function(){
-  try{ document.title = "Night Games v1868"; }catch(_){}
+  try{ document.title = "Night Games v1900"; }catch(_){}
   try{ window.NG_BUILD_VERSION = "1588"; }catch(_){}
-  try{ window.NG_BUILD_LABEL = "Night Games v1868"; }catch(_){}
+  try{ window.NG_BUILD_LABEL = "Night Games v1900"; }catch(_){}
   try{ window.ngBuild = "v1588"; }catch(_){}
 
   function removeSessionUI(){
@@ -12194,7 +12647,7 @@ button.pill,
 </script>
 
 
-<script id="ng-v1868-inline-player-actions">
+<script id="ng-v1900-inline-player-actions">
 (function(){
   function normalizePlayerRows(){
     try{
@@ -12237,7 +12690,7 @@ button.pill,
 </script>
 
 
-<script id="ng-v1868-strict-ui-js">
+<script id="ng-v1900-strict-ui-js">
 (function(){
   function normalizeRows(){
     try{
@@ -12288,7 +12741,7 @@ button.pill,
 </script>
 
 
-<script id="ng-v1868-donate-wireup">
+<script id="ng-v1900-donate-wireup">
 (function(){
   function wireDonate(){
     try{
@@ -12307,7 +12760,7 @@ button.pill,
 </script>
 
 
-<script id="ng-v1868-wireups">
+<script id="ng-v1900-wireups">
 (function(){
   function wireDonate(){
     try{
@@ -12340,7 +12793,7 @@ button.pill,
 </script>
 
 
-<script id="ng-v1868-setup-layout-pass-js">
+<script id="ng-v1900-setup-layout-pass-js">
 (function(){
   function keepExtrasVisible(){
     try{
@@ -12373,7 +12826,7 @@ button.pill,
 </script>
 
 
-<style id="ng-v1868-setup-position-fix">
+<style id="ng-v1900-setup-position-fix">
 /* setup screen centered lower and not left-shifted */
 #setup .detailWrap{
   position:absolute !important;
@@ -12395,7 +12848,7 @@ button.pill,
 </style>
 
 
-<style id="ng-v1868-setup-and-glass-fix">
+<style id="ng-v1900-setup-and-glass-fix">
   /* setup panel centered and lowered */
   #setup .detailWrap{
     position:absolute !important;
@@ -12426,9 +12879,9 @@ button.pill,
     opacity:0 !important;
   }
   .screen.ng-glass-run .panel::after{
-    animation:ngV1868PanelGlass 6s ease forwards !important;
+    animation:ngV1900PanelGlass 6s ease forwards !important;
   }
-  @keyframes ngV1868PanelGlass{
+  @keyframes ngV1900PanelGlass{
     0%{
       opacity:1;
       background:rgba(255,255,255,0);
@@ -12470,7 +12923,7 @@ button.pill,
   }
 </style>
 
-<script id="ng-v1868-setup-and-glass-js">
+<script id="ng-v1900-setup-and-glass-js">
 (function(){
   function getPlayersSafe(){
     try{
@@ -12644,7 +13097,7 @@ button.pill,
 </script>
 
 
-<style id="ng-v1868-setup-uniform-black">
+<style id="ng-v1900-setup-uniform-black">
   /* setup page layout cleanup */
   #setup .detailWrap{
     width:min(680px, 92vw) !important;
@@ -12793,7 +13246,7 @@ button.pill,
 </style>
 
 
-<style id="ng-v1868-setup-panel-match">
+<style id="ng-v1900-setup-panel-match">
   /* make setup body itself match the outer panel instead of looking like a second panel */
   #setupBody{
     background: transparent !important;
