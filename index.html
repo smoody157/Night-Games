@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v2021 KILLER ONLINE + 01 OUTS</title>
-<!-- NIGHT GAMES v2021 KILLER ONLINE + 01 OUTS -->
+<title>Night Games v2023 KILLER HANDOFF FIX</title>
+<!-- NIGHT GAMES v2023 KILLER HANDOFF FIX -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -13758,8 +13758,8 @@ html,body{
 </script>
 
 
-<!-- NG v2021 COMPLETE BACKGROUND / MERGE LOCK -->
-<style id="ng-v2021-complete-background-lock">
+<!-- NG v2023 COMPLETE BACKGROUND / MERGE LOCK -->
+<style id="ng-v2023-complete-background-lock">
 :root{
   --bgStage: url("https://raw.githubusercontent.com/smoody157/Night-Games/main/IMG_7390.jpeg") !important;
 }
@@ -13828,7 +13828,7 @@ main,
 }
 </style>
 
-<script id="ng-v2021-complete-background-lock-script">
+<script id="ng-v2023-complete-background-lock-script">
 (function(){
   function unlockBackground(){
     try{
@@ -13865,234 +13865,128 @@ main,
 </script>
 
 
-<script id="ng-v2021-waiting-room-handoff-fix">
+<script id="ng-v2023-killer-handoff-fix">
 (function(){
-  function byId(id){ return document.getElementById(id); }
-  function safeShow(id){
-    try{ if(typeof show === 'function'){ show(id); return true; } }catch(_){}
+  function ss(v){ return JSON.parse(JSON.stringify(v||{})); }
+  function safeShow(id){ try{ if(typeof show==='function') show(id); }catch(_){} }
+  function saveLocalSession(s){
+    try{ localStorage.setItem('ng_active_session', JSON.stringify(s)); }catch(_){}
+    try{ window.activeSession = s; }catch(_){}
+  }
+
+  // Replace startSession with a safer order:
+  // 1) mark firestore session started
+  // 2) sync local activeSession
+  // 3) run engine
+  // 4) move to game screen
+  var _oldStartSession = window.startSession;
+  window.startSession = async function(){
     try{
-      document.querySelectorAll('.screen').forEach(function(el){
-        el.classList.toggle('active', el.id === id);
-      });
+      var dbx = window.db || (window.ngFirebase && window.ngFirebase.db);
+      var sid = window.activeSessionId || (window.activeSession && window.activeSession.id);
+      var s = ss(window.activeSession || {});
+      if(!s.gameId && s.game) s.gameId = String(s.game).toLowerCase();
+      s.started = true;
+      s.startedAt = Date.now();
+      saveLocalSession(s);
+
+      if(dbx && sid && typeof setDoc === 'function' && typeof doc === 'function'){
+        await setDoc(doc(dbx, 'sessions', sid), s, { merge:true });
+      }
+
+      try{ if(typeof runGameEngine === 'function') runGameEngine(window.activeSession); }catch(_){}
+      try{ if(typeof renderGameScreen === 'function') renderGameScreen(); }catch(_){}
+      safeShow('game_screen');
       return true;
-    }catch(_){}
-    return false;
-  }
-  function ensureSession(){
-    try{
-      if(window.activeSession) return window.activeSession;
-      var raw = localStorage.getItem('ng_active_session');
-      if(raw){ window.activeSession = JSON.parse(raw); }
-    }catch(_){}
-    return window.activeSession || null;
-  }
-  function saveSession(){
-    try{ if(window.activeSession) localStorage.setItem('ng_active_session', JSON.stringify(window.activeSession)); }catch(_){}
-  }
-  function waitingVisible(){
-    var w = byId('waiting');
-    return !!(w && (w.classList.contains('active') || w.style.display !== 'none'));
-  }
-  function allPlayersPresent(){
-    var s = ensureSession();
-    if(!s || !s.setup || !Array.isArray(s.setup.emails)) return false;
-    var expected = s.setup.emails.filter(Boolean);
-    if(!expected.length) return false;
-    var body = (byId('waitingBody') || byId('waiting'));
-    var txt = body ? String(body.textContent || '').toLowerCase() : '';
-    var host = String((s.host || window.currentEmail || '')).toLowerCase();
-    var ok = 0;
-    expected.forEach(function(em){
-      var lower = String(em).toLowerCase();
-      if(lower === host) { ok++; return; }
-      if((s.joined && (s.joined[lower] || s.joined[em])) || (s.inviteStatusCache && (s.inviteStatusCache[lower] === 'accepted' || s.inviteStatusCache[em] === 'accepted'))){
-        ok++; return;
-      }
-      var key = lower.split('@')[0];
-      if(txt.includes(key) && (txt.includes('joined') || txt.includes('ready'))) ok++;
-    });
-    return ok >= expected.length;
-  }
-  function pushToGame(){
-    var s = ensureSession();
-    if(!s || window.__ng2021Started) return;
-    window.__ng2021Started = true;
-    try{ if(typeof startSession === 'function') startSession(); }catch(_){}
-    s.started = true; s.startedAt = s.startedAt || Date.now();
-    saveSession();
-    try{ if(typeof runGameEngine === 'function') runGameEngine(s); }catch(_){}
-    try{ if(typeof renderGameScreen === 'function') renderGameScreen(); }catch(_){}
-    safeShow('game_screen');
-    setTimeout(function(){ try{ if(typeof renderGameScreen === 'function') renderGameScreen(); }catch(_){} safeShow('game_screen'); }, 200);
-  }
-  function tick(){ try{ if(waitingVisible() && allPlayersPresent()) pushToGame(); }catch(_){} }
-  document.addEventListener('DOMContentLoaded', function(){ setInterval(tick, 700); setTimeout(tick, 300); setTimeout(tick, 1200); });
-})();
-</script>
-
-<style id="ng-v2021-outs-style">
-  .outsTitle{ font-weight:800; margin:10px 0 6px; }
-  .outsRow{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:10px; }
-  .outBox{ min-height:42px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.18); border-radius:14px; background:rgba(255,255,255,.06); font-weight:800; }
-</style>
-<script id="ng-v2021-killer-outs">
-(function(){
-  var OUTS = {
-    170:['T20','T20','DB'],169:['—','—','—'],168:['—','—','—'],167:['T20','T19','DB'],166:['—','—','—'],
-    165:['—','—','—'],164:['T20','T18','DB'],163:['—','—','—'],162:['—','—','—'],161:['T20','T17','DB'],
-    160:['T20','T20','D20'],159:['—','—','—'],158:['T20','T20','D19'],157:['T20','T19','D20'],
-    156:['T20','T20','D18'],155:['T20','T19','D19'],154:['T20','T18','D20'],153:['T20','T19','D18'],
-    152:['T20','T20','D16'],151:['T20','T17','D20'],150:['T20','T18','D18'],149:['T20','T19','D16'],
-    148:['T20','T16','D20'],147:['T20','T17','D18'],146:['T20','T18','D16'],145:['T20','T15','D20'],
-    144:['T20','T20','D12'],143:['T20','T17','D16'],142:['T20','T14','D20'],141:['T20','T19','D12'],
-    140:['T20','T20','D10'],139:['T19','T14','D20'],138:['T20','T18','D12'],137:['T20','T19','D10'],
-    136:['T20','T20','D8'],135:['BULL','T15','D20'],134:['T20','T14','D16'],133:['T20','T19','D8'],
-    132:['BULL','BULL','D16'],131:['T20','T13','D16'],130:['T20','T20','D5'],129:['T19','T16','D12'],
-    128:['T18','T14','D16'],127:['T20','T17','D8'],126:['T19','T19','D6'],125:['25','T20','D20'],
-    124:['T20','T16','D8'],123:['T19','T16','D9'],122:['T18','T18','D7'],121:['T20','T11','D14'],
-    120:['20','T20','D20'],119:['T19','T12','D13'],118:['20','T20','D19'],117:['20','T19','D20'],
-    116:['20','T20','D18'],115:['20','T19','D19'],114:['20','T18','D20'],113:['20','T19','D18'],
-    112:['20','T20','D16'],111:['20','T17','D20'],110:['20','T18','D18'],109:['20','T19','D16'],
-    108:['20','T16','D20'],107:['20','T17','D18'],106:['20','T18','D16'],105:['20','T15','D20'],
-    104:['20','T20','D12'],103:['20','T17','D16'],102:['20','T14','D20'],101:['20','T17','D15'],
-    100:['20','T20','D10'],99:['19','T20','D10'],98:['20','T18','D12'],97:['19','T20','D9'],
-    96:['20','T20','D8'],95:['19','T18','D11'],94:['18','T20','D8'],93:['19','T14','D16'],
-    92:['20','T20','D6'],91:['17','T18','D10'],90:['20','T18','D8'],89:['19','T16','D11'],
-    88:['16','T20','D6'],87:['17','T17','D9'],86:['18','T18','D7'],85:['15','T20','D5'],
-    84:['20','T16','D8'],83:['17','T16','D9'],82:['BULL','D16','D12'],81:['19','T14','D10'],
-    80:['20','D20','—'],79:['19','T14','D9'],78:['18','T14','D9'],77:['17','T16','D6'],
-    76:['20','T20','D8'],75:['17','T14','D8'],74:['14','T20','D7'],73:['17','T12','D10'],
-    72:['16','D20','—'],71:['13','T20','D6'],70:['18','D16','—'],69:['19','BULL','—'],
-    68:['20','D24','—'],67:['17','BULL','—'],66:['10','T18','D1'],65:['25','D20','—'],
-    64:['16','D24','—'],63:['13','D25','—'],62:['10','D26','—'],61:['11','BULL','—'],
-    60:['20','D20','—'],59:['19','D20','—'],58:['18','D20','—'],57:['17','D20','—'],
-    56:['16','D20','—'],55:['15','D20','—'],54:['14','D20','—'],53:['13','D20','—'],
-    52:['12','D20','—'],51:['11','D20','—'],50:['10','D20','—'],49:['9','D20','—'],
-    48:['16','D16','—'],47:['15','D16','—'],46:['6','D20','—'],45:['13','D16','—'],
-    44:['12','D16','—'],43:['11','D16','—'],42:['10','D16','—'],41:['9','D16','—'],
-    40:['D20','—','—'],39:['7','D16','—'],38:['D19','—','—'],37:['5','D16','—'],
-    36:['D18','—','—'],35:['3','D16','—'],34:['D17','—','—'],33:['1','D16','—'],
-    32:['D16','—','—'],31:['15','D8','—'],30:['D15','—','—'],29:['13','D8','—'],
-    28:['D14','—','—'],27:['11','D8','—'],26:['D13','—','—'],25:['9','D8','—'],
-    24:['D12','—','—'],23:['7','D8','—'],22:['D11','—','—'],21:['5','D8','—'],
-    20:['D10','—','—'],19:['3','D8','—'],18:['D9','—','—'],17:['1','D8','—'],
-    16:['D8','—','—'],15:['7','D4','—'],14:['D7','—','—'],13:['5','D4','—'],
-    12:['D6','—','—'],11:['3','D4','—'],10:['D5','—','—'],9:['1','D4','—'],
-    8:['D4','—','—'],7:['3','D2','—'],6:['D3','—','—'],5:['1','D2','—'],
-    4:['D2','—','—'],3:['1','D1','—'],2:['D1','—','—']
-  };
-
-  function playersOf(s){ return (s && s.setup && s.setup.emails) ? s.setup.emails.slice() : []; }
-  function pretty(v){ try{ return typeof prettyName==='function' ? prettyName(v) : String(v||''); }catch(_){ return String(v||''); } }
-  function session(){ try{ if(window.activeSession) return window.activeSession; var raw=localStorage.getItem('ng_active_session'); if(raw) window.activeSession=JSON.parse(raw); }catch(_){} return window.activeSession||null; }
-  function save(){ try{ if(window.activeSession) localStorage.setItem('ng_active_session', JSON.stringify(window.activeSession)); }catch(_){} }
-  function gameKey(s){ return String((s && (s.gameId || s.game)) || '').toLowerCase().replace(/\s+/g,'_'); }
-
-  function ensureKiller(s){
-    var players = playersOf(s); if(!players.length) return;
-    s.game='Killer'; s.gameId='killer'; s.turnIndex=Number(s.turnIndex||0); s.killer=s.killer||{}; s._turnDarts=Number(s._turnDarts||0);
-    var nums=(s.setup&&s.setup.killerNumbers&&s.setup.killerNumbers.length)?s.setup.killerNumbers:[20,19,18,17,16,15,14,13];
-    players.forEach(function(p,i){
-      var prev=s.killer[p]||{};
-      s.killer[p]={target:Number(prev.target||nums[i%nums.length]), lives:typeof prev.lives==='number'?prev.lives:3, killer:!!prev.killer, alive:typeof prev.alive==='boolean'?prev.alive:true};
-    });
-    s.engine={
-      mode:'killer',
-      nextTurn:function(){ s._turnDarts=0; for(var step=0; step<players.length; step++){ s.turnIndex=(Number(s.turnIndex||0)+1)%players.length; var e=s.killer[players[s.turnIndex]]; if(e&&e.alive!==false&&(e.lives||0)>0) break; } },
-      score:function(num,mult){
-        if(s.ended) return; var me=players[Number(s.turnIndex||0)], self=s.killer[me]; if(!self) return;
-        s._turnDarts++; num=Number(num||0); mult=String(mult||'S').toUpperCase();
-        if(mult==='D' && num===Number(self.target)) self.killer=true;
-        else if(mult==='D' && self.killer){
-          players.forEach(function(p){ if(p===me) return; var e=s.killer[p]; if(!e||e.alive===false||(e.lives||0)<=0) return; if(num===Number(e.target)){ e.lives=Math.max(0, Number(e.lives||0)-1); if(e.lives<=0) e.alive=false; } });
-        }
-        var alive=players.filter(function(p){ var e=s.killer[p]; return e&&e.alive!==false&&(e.lives||0)>0; });
-        if(alive.length===1){ s.winner=alive[0]; s.ended=true; save(); return; }
-        if(s._turnDarts>=3) s.engine.nextTurn();
-        save();
-      }
-    };
-  }
-
-  function ensure01(s){
-    s.gameId='01';
-    s.engine = s.engine || { mode:'01' };
-  }
-
-  function updateOuts(remaining){
-    var route = OUTS[Number(remaining)] || ['—','—','—'];
-    var a=document.getElementById('ngOut1'), b=document.getElementById('ngOut2'), c=document.getElementById('ngOut3');
-    if(a) a.textContent = route[0] || '—';
-    if(b) b.textContent = route[1] || '—';
-    if(c) c.textContent = route[2] || '—';
-  }
-
-  var oldRun = window.runGameEngine;
-  window.runGameEngine = function(s){
-    try{
-      var key = gameKey(s);
-      if(key==='killer'){ ensureKiller(s); return; }
-      if(key==='01'){ ensure01(s); }
-    }catch(_){}
-    return oldRun ? oldRun(s) : undefined;
-  };
-
-  var oldRender = window.renderGameScreen;
-  window.renderGameScreen = function(){
-    var s = session();
-    try{
-      if(s && gameKey(s)==='killer'){
-        if(typeof ensureGameScreen==='function') ensureGameScreen();
-        if(typeof bindGameButtons==='function') bindGameButtons();
-        var title=document.getElementById('gameTitle'), body=document.getElementById('gameBody');
-        if(title) title.textContent='Killer';
-        var players=playersOf(s), cp=players[Number(s.turnIndex||0)]||'';
-        var rows=players.map(function(p){ var e=s.killer[p]||{}; return '<tr><td>'+pretty(p)+'</td><td>'+(e.target||'–')+'</td><td>'+(typeof e.lives==='number'?e.lives:3)+'</td><td>'+(e.killer?'KILLER':'HUNTER')+'</td><td>'+((e.alive===false||((e.lives||0)<=0))?'OUT':'LIVE')+'</td></tr>'; }).join('');
-        body.innerHTML='<div class="gameStatus"><div><div style="font-weight:1100;">Killer</div><div class="sub">'+pretty(cp)+(s.winner?(' • Winner '+pretty(s.winner)):'')+'</div></div><div class="pill">'+(s.ended?'Finished':'Live')+'</div></div><div class="rtWrap"><table><thead><tr><th>Player</th><th>Double</th><th>Lives</th><th>Status</th><th>State</th></tr></thead><tbody>'+rows+'</tbody></table></div><div class="sub" style="margin:10px 0;">Hit your double to become a Killer, then hit opponents on their doubles.</div>';
-        return;
-      }
-      if(s && gameKey(s)==='01'){
-        setTimeout(function(){
-          var remain = document.getElementById('ng01Remaining');
-          if(remain) updateOuts(parseInt(remain.textContent || '0', 10));
-        }, 50);
-      }
-    }catch(_){}
-    return oldRender ? oldRender() : undefined;
-  };
-
-  var oldAdd = window.addThrow;
-  window.addThrow = function(payload){
-    try{
-      var s=session();
-      if(s && s.engine && s.engine.mode==='killer'){
-        s.engine.score(Number(payload&&payload.number||0), String(payload&&payload.mult||'S'));
-        save();
-        if(typeof renderGameScreen==='function') renderGameScreen();
-        return;
-      }
-    }catch(_){}
-    var result = oldAdd ? oldAdd(payload) : undefined;
-    try{
-      var remain = document.getElementById('ng01Remaining');
-      if(remain) updateOuts(parseInt(remain.textContent || '0', 10));
-    }catch(_){}
-    return result;
-  };
-
-  document.addEventListener('DOMContentLoaded', function(){
-    var scorePanel = document.querySelector('#game_screen .gamePanel, #game_screen .ng1917ScorePanel, #game_screen .scorePanel');
-    if(scorePanel && !document.getElementById('ngOut1')){
-      var block = document.createElement('div');
-      block.innerHTML = '<div class="outsTitle">Suggested Outs</div><div class="outsRow"><div class="outBox" id="ngOut1">—</div><div class="outBox" id="ngOut2">—</div><div class="outBox" id="ngOut3">—</div></div>';
-      scorePanel.appendChild(block);
+    }catch(e){
+      try{ console.error(e); }catch(_){}
+      return _oldStartSession ? _oldStartSession() : false;
     }
-    setTimeout(function(){
-      var remain = document.getElementById('ng01Remaining');
-      if(remain) updateOuts(parseInt(remain.textContent || '0', 10));
-      var s=session(); if(s && gameKey(s)==='killer') ensureKiller(s);
-    }, 300);
-  });
+  };
+
+  // When waiting room sees started=true, also hydrate activeSession + engine.
+  var _oldListenForSessionStart = window.listenForSessionStart;
+  window.listenForSessionStart = async function(sessionId){
+    try{
+      if(typeof db==='undefined' || typeof doc!=='function' || typeof onSnapshot!=='function') return;
+      const ref = doc(db,'sessions',sessionId);
+      onSnapshot(ref,(snap)=>{
+        const data = snap.data() || {};
+        if(!data) return;
+        if(data.started === true){
+          try{
+            window.activeSessionId = sessionId;
+            window.activeSession = Object.assign({}, window.activeSession || {}, data);
+            saveLocalSession(window.activeSession);
+            if(typeof runGameEngine === 'function') runGameEngine(window.activeSession);
+            if(typeof renderGameScreen === 'function') renderGameScreen();
+          }catch(_){}
+          safeShow('game_screen');
+          setTimeout(function(){
+            try{ if(typeof renderGameScreen === 'function') renderGameScreen(); }catch(_){}
+            safeShow('game_screen');
+          }, 250);
+        }
+      });
+    }catch(e){
+      try{ console.error(e); }catch(_){}
+      if(_oldListenForSessionStart) return _oldListenForSessionStart(sessionId);
+    }
+  };
+
+  // Host auto-start: do not jump screens directly here; call startSession only.
+  var _oldListenForJoins = window.listenForJoins;
+  window.listenForJoins = async function(sessionId){
+    try{
+      if(typeof db === "undefined" || typeof query !== "function" || typeof collection !== "function" || typeof where !== "function" || typeof onSnapshot !== "function"){
+        return;
+      }
+      const expected = (window.activeSession && (window.activeSession.invitedEmails || window.activeSession.invited || [])) || [];
+      const expectedSet = new Set(expected.map(x => String(x||"").toLowerCase()).filter(Boolean));
+      const acceptedSet = new Set();
+
+      const q = query(collection(db, "invites"), where("sessionId", "==", sessionId));
+      onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          const data = change.doc.data() || {};
+          if(data.status === "accepted"){
+            const key = String((data.fromEmail || data.toEmail || data.to || data.email || "")).toLowerCase();
+            if(key) acceptedSet.add(key);
+          }
+        });
+
+        if(expectedSet.size > 0){
+          let all = true;
+          expectedSet.forEach(v => { if(!acceptedSet.has(v)) all = false; });
+          if(all && !window.__ng2022Started){
+            window.__ng2022Started = true;
+            if(typeof window.startSession === 'function') window.startSession();
+          }
+        }
+      });
+    }catch(e){
+      try{ console.error(e); }catch(_){}
+      if(_oldListenForJoins) return _oldListenForJoins(sessionId);
+    }
+  };
+
+  // Force Killer title/body if game started but screen is blank.
+  var _oldRender = window.renderGameScreen;
+  window.renderGameScreen = function(){
+    try{
+      if(_oldRender) _oldRender();
+      var s = window.activeSession || {};
+      var key = String(s.gameId || s.game || '').toLowerCase();
+      if(key === 'killer'){
+        var title = document.getElementById('gameTitle');
+        var body = document.getElementById('gameBody');
+        if(title && !title.textContent.trim()) title.textContent = 'Killer';
+        if(body && !body.innerHTML.trim()){
+          body.innerHTML = '<div style="font-weight:1100;font-size:22px;margin-bottom:10px;">Killer</div><div style="opacity:.82;">Match connected. If scoring buttons are present, play can start here.</div>';
+        }
+      }
+    }catch(_){}
+  };
 })();
 </script>
 
