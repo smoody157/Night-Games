@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v2002</title>
-<!-- NIGHT GAMES v2002 -->
+<title>Night Games v2003</title>
+<!-- NIGHT GAMES v2003 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3599,7 +3599,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="2002";window.NG_BUILD_LABEL="Night Games v2002";</script>
+<script>window.NG_BUILD_VERSION="2003";window.NG_BUILD_LABEL="Night Games v2003";</script>
 
 <style id="ng-v1588-header-style">
 #ngHeaderBlock{
@@ -20543,15 +20543,15 @@ button.pill,
 </script>
 
 
-<style id="ng-v2002-transition-only-style">
-  .ng2002-panel-transition-target{
+<style id="ng-v2003-transition-only-style">
+  .ng2003-panel-transition-target{
     will-change: background, border-color, box-shadow, backdrop-filter, -webkit-backdrop-filter;
   }
 </style>
-<script id="ng-v2002-transition-only-runtime">
+<script id="ng-v2003-transition-only-runtime">
 (function(){
-  var BUILD_VERSION = '2002';
-  var BUILD_LABEL = 'Night Games v2002';
+  var BUILD_VERSION = '2003';
+  var BUILD_LABEL = 'Night Games v2003';
 
   try{
     document.title = BUILD_LABEL;
@@ -20576,7 +20576,7 @@ button.pill,
   ].join(',');
 
   function clearGlassStyle(el){
-    el.classList.add('ng2002-panel-transition-target');
+    el.classList.add('ng2003-panel-transition-target');
     el.style.transition = 'background 5.8s ease, border-color 5.8s ease, box-shadow 5.8s ease, backdrop-filter 5.8s ease, -webkit-backdrop-filter 5.8s ease';
     el.style.background = 'linear-gradient(180deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,.07) 42%, rgba(255,255,255,.03) 100%)';
     el.style.borderColor = 'rgba(255,255,255,.26)';
@@ -20637,14 +20637,14 @@ button.pill,
   function bindShowWrapper(name){
     try{
       var fn = window[name];
-      if(typeof fn !== 'function' || fn.__ng2002Wrapped) return;
+      if(typeof fn !== 'function' || fn.__ng2003Wrapped) return;
       var wrapped = function(){
         var result = fn.apply(this, arguments);
         setTimeout(function(){ runTransition(findCurrentScreen()); }, 20);
         setTimeout(function(){ runTransition(findCurrentScreen()); }, 180);
         return result;
       };
-      wrapped.__ng2002Wrapped = true;
+      wrapped.__ng2003Wrapped = true;
       window[name] = wrapped;
     }catch(e){}
   }
@@ -20656,7 +20656,7 @@ button.pill,
   }
 
   function installObserver(){
-    if(document.documentElement.dataset.ng2002Obs) return;
+    if(document.documentElement.dataset.ng2003Obs) return;
     var observer = new MutationObserver(function(mutations){
       var shouldRun = false;
       for(var i=0;i<mutations.length;i++){
@@ -20674,7 +20674,7 @@ button.pill,
       }
     });
     observer.observe(document.body, {subtree:true, childList:true, attributes:true, attributeFilter:['class','style']});
-    document.documentElement.dataset.ng2002Obs = '1';
+    document.documentElement.dataset.ng2003Obs = '1';
   }
 
   function stampVisibleVersion(){
@@ -20699,5 +20699,153 @@ button.pill,
 </script>
 
 
+
+<style id="ng-v2003-transition-all-pages-style">
+  .ng2003-panel-target{
+    will-change: background, border-color, box-shadow, backdrop-filter, -webkit-backdrop-filter, opacity;
+  }
+</style>
+<script id="ng-v2003-transition-all-pages-runtime">
+(function(){
+  var BUILD_VERSION = '2003';
+  var BUILD_LABEL = 'Night Games v2003';
+  var PANEL_SELECTOR = '.panel, .ng-panel, .detailCard';
+
+  try{
+    document.title = BUILD_LABEL;
+    window.NG_BUILD_VERSION = BUILD_VERSION;
+    window.NG_BUILD_LABEL = BUILD_LABEL;
+  }catch(e){}
+
+  function setStyle(el, prop, value){
+    try{ el.style.setProperty(prop, value, 'important'); }catch(e){}
+  }
+
+  function clearGlass(el){
+    if(!el) return;
+    el.classList.add('ng2003-panel-target');
+    setStyle(el, 'transition', 'background 5.8s ease, border-color 5.8s ease, box-shadow 5.8s ease, backdrop-filter 5.8s ease, -webkit-backdrop-filter 5.8s ease, opacity 5.8s ease');
+    setStyle(el, 'background', 'linear-gradient(180deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,.08) 48%, rgba(255,255,255,.03) 100%)');
+    setStyle(el, 'border', '1px solid rgba(255,255,255,.30)');
+    setStyle(el, 'border-color', 'rgba(255,255,255,.30)');
+    setStyle(el, 'box-shadow', 'inset 0 1px 12px rgba(255,255,255,.14), inset 0 -8px 18px rgba(0,0,0,.12), 0 10px 26px rgba(0,0,0,.12)');
+    setStyle(el, 'backdrop-filter', 'blur(14px) saturate(135%)');
+    setStyle(el, '-webkit-backdrop-filter', 'blur(14px) saturate(135%)');
+    setStyle(el, 'opacity', '1');
+  }
+
+  function blackChrome(el){
+    if(!el) return;
+    setStyle(el, 'background', 'linear-gradient(180deg, rgba(24,27,36,.97) 0%, rgba(10,12,18,.985) 56%, rgba(4,5,8,.995) 100%)');
+    setStyle(el, 'border', '1px solid rgba(255,255,255,.20)');
+    setStyle(el, 'border-color', 'rgba(255,255,255,.20)');
+    setStyle(el, 'box-shadow', 'inset 0 1px 10px rgba(255,255,255,.10), inset 0 -10px 24px rgba(0,0,0,.58), 0 12px 30px rgba(0,0,0,.34)');
+    setStyle(el, 'backdrop-filter', 'blur(2px) saturate(108%)');
+    setStyle(el, '-webkit-backdrop-filter', 'blur(2px) saturate(108%)');
+    setStyle(el, 'opacity', '1');
+  }
+
+  function visibleScreens(){
+    var all = Array.prototype.slice.call(document.querySelectorAll('.screen'));
+    return all.filter(function(s){
+      if(!s) return false;
+      var st = window.getComputedStyle(s);
+      if(st.display === 'none' || st.visibility === 'hidden' || st.opacity === '0') return false;
+      if(s.classList.contains('active')) return true;
+      return s.offsetParent !== null;
+    });
+  }
+
+  function panelsForScreen(screen){
+    if(!screen) return [];
+    var nodes = Array.prototype.slice.call(screen.querySelectorAll(PANEL_SELECTOR));
+    var seen = new Set();
+    return nodes.filter(function(el){
+      if(!el || seen.has(el)) return false;
+      seen.add(el);
+      var rect = el.getBoundingClientRect();
+      return rect.width > 30 && rect.height > 20;
+    });
+  }
+
+  var token = 0;
+  function runForScreen(screen){
+    var my = ++token;
+    var panels = panelsForScreen(screen);
+    if(!panels.length) return;
+    panels.forEach(clearGlass);
+    panels.forEach(function(el){ void el.offsetHeight; });
+    setTimeout(function(){
+      if(my !== token) return;
+      panels.forEach(blackChrome);
+    }, 90);
+  }
+
+  function runAllVisible(){
+    var screens = visibleScreens();
+    if(!screens.length && document.body) screens = [document.body];
+    screens.forEach(runForScreen);
+  }
+
+  function afterNav(){
+    setTimeout(runAllVisible, 25);
+    setTimeout(runAllVisible, 220);
+    setTimeout(runAllVisible, 520);
+  }
+
+  function wrapFunction(name){
+    try{
+      var fn = window[name];
+      if(typeof fn !== 'function' || fn.__ng2003Wrapped) return;
+      var wrapped = function(){
+        var result = fn.apply(this, arguments);
+        afterNav();
+        return result;
+      };
+      wrapped.__ng2003Wrapped = true;
+      window[name] = wrapped;
+    }catch(e){}
+  }
+
+  function stampVersion(){
+    try{
+      document.querySelectorAll('#ngVersionBelow,.screenVersionMid,#ngFixedHeader .ngVersion,[data-build-version]').forEach(function(el){
+        if(el) el.textContent = BUILD_LABEL;
+      });
+    }catch(e){}
+  }
+
+  function installObserver(){
+    if(document.documentElement.dataset.ng2003ObserverInstalled) return;
+    var observer = new MutationObserver(function(mutations){
+      var hit = false;
+      for(var i=0;i<mutations.length;i++) {
+        var m = mutations[i];
+        if(m.type === 'attributes') {
+          if((m.attributeName === 'class' || m.attributeName === 'style') && m.target && (m.target.classList && m.target.classList.contains('screen'))) { hit = true; break; }
+        } else if(m.type === 'childList') {
+          if((m.addedNodes && m.addedNodes.length) || (m.removedNodes && m.removedNodes.length)) { hit = true; break; }
+        }
+      }
+      if(hit) afterNav();
+    });
+    observer.observe(document.body, {subtree:true, childList:true, attributes:true, attributeFilter:['class','style']});
+    document.documentElement.dataset.ng2003ObserverInstalled = '1';
+  }
+
+  function init(){
+    wrapFunction('show');
+    wrapFunction('showScreen');
+    wrapFunction('ngShow');
+    installObserver();
+    stampVersion();
+    afterNav();
+    setTimeout(afterNav, 900);
+  }
+
+  document.addEventListener('DOMContentLoaded', init, {once:true});
+  window.addEventListener('load', init, {once:true});
+})();
+</script>
 </body>
 </html>
