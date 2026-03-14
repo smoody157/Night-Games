@@ -11514,7 +11514,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     <button type="button" class="pill pillMini ngUpdateBtn" id="ngUpdateBtn" style="display:none;">Update</button>
   </div>
 </div>
-<div id="ngVersionBelow">v1931</div>
+<div id="ngVersionBelow">v2000</div>
 <!--
 ================================================================================
   EDIT NOTES (v768)
@@ -11547,7 +11547,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   <div class="ngLeft">Night Games</div>
   <div class="ngCenter">
     <div class="ngBackend">Firebase Firestore</div>
-    <div class="ngVersion">v1931</div>
+    <div class="ngVersion">v2000</div>
   </div>
   <div class="ngRight">Online</div>
 </div>
@@ -11732,7 +11732,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </section>
 
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v1931 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v2000 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -20542,5 +20542,529 @@ button.pill,
 })();
 </script>
 
+
+
+<!-- v2000 full rewire runtime -->
+<style id="ng-v2000-rewire-style">
+  :root{ --ng-panel-fade-ms: 5600ms; }
+  body.ng-panel-fade .panel,
+  body.ng-panel-fade .gamePanel,
+  body.ng-panel-fade .statScroll,
+  body.ng-panel-fade .detailWrap .panel,
+  body.ng-panel-fade .gameBoardWrap > *{
+    transition: background-color var(--ng-panel-fade-ms) ease, box-shadow var(--ng-panel-fade-ms) ease, border-color var(--ng-panel-fade-ms) ease, opacity 380ms ease !important;
+  }
+  body.ng-panel-fade .panel.ng-panel-enter,
+  body.ng-panel-fade .gamePanel.ng-panel-enter,
+  body.ng-panel-fade .statScroll.ng-panel-enter,
+  body.ng-panel-fade .detailWrap .panel.ng-panel-enter,
+  body.ng-panel-fade .gameBoardWrap > *.ng-panel-enter{
+    background: rgba(255,255,255,0.00) !important;
+    box-shadow: none !important;
+    border-color: rgba(255,255,255,0.08) !important;
+  }
+  body.ng-panel-fade .panel.ng-panel-settled,
+  body.ng-panel-fade .gamePanel.ng-panel-settled,
+  body.ng-panel-fade .statScroll.ng-panel-settled,
+  body.ng-panel-fade .detailWrap .panel.ng-panel-settled,
+  body.ng-panel-fade .gameBoardWrap > *.ng-panel-settled{
+    background: linear-gradient(180deg, rgba(28,28,28,.95), rgba(6,6,6,.97)) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 10px 34px rgba(0,0,0,.45) !important;
+    border-color: rgba(255,255,255,0.12) !important;
+  }
+  #ngRewireBanner{ display:none; }
+  .ngSetupField{ margin: 10px 0; }
+  .ngSetupField label{ display:block; margin:0 0 6px; font-size:12px; letter-spacing:.08em; text-transform:uppercase; opacity:.9; }
+  .ngSetupField select{
+    width:100%; min-height:40px; border-radius:12px; padding:0 12px;
+    background: rgba(0,0,0,.45); color:#fff; border:1px solid rgba(255,255,255,.12);
+  }
+  .ngPlayerChecks{ display:grid; gap:8px; margin-top:10px; }
+  .ngPlayerCheck{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.03);
+  }
+  .ngPlayerCheck.is-disabled{ opacity:.45; }
+  .ngPlayerCheck input{ width:18px; height:18px; }
+  .ngSetupSummary{
+    margin-top:12px; padding:10px 12px; border-radius:14px;
+    border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03);
+    font-size:12px; line-height:1.4;
+  }
+  .ngSetupHint{ opacity:.8; font-size:11px; margin-top:6px; }
+  .ngGameShell{ display:grid; gap:12px; }
+  .ngKillerBoard{ display:grid; gap:12px; }
+  .ngKillerCard{ padding:12px; border-radius:16px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); }
+  .ngKillerGrid{ display:grid; gap:10px; }
+  .ngKillerPlayer{ padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.24); }
+  .ngKillerPlayer.is-active{ outline:2px solid rgba(110,255,200,.45); }
+  .ngKillerRow{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px; }
+  .ngKillerMeta{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; font-size:12px; }
+  .ngKillerBadge{ padding:4px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05); }
+  .ngKillerActions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .ngKillerLog{ max-height:220px; overflow:auto; }
+  .ngKillerLog .statRow{ margin-bottom:8px; }
+</style>
+<script id="ng-v2000-rewire-runtime">
+(function(){
+  const VERSION = 'v2000';
+  const SCREEN_IDS = ['landing','players','setup','waiting','lobby','detail','leaderboard','randomizer','game_screen'];
+  const GAME_CONFIGS = {
+    '01': { title:'01', fields:[
+      { key:'variant', label:'Variant', options:['301','501','701'], value:'501' },
+      { key:'inRule', label:'In', options:['Single In','Double In'], value:'Single In' },
+      { key:'outRule', label:'Out', options:['Single Out','Double Out'], value:'Double Out' }
+    ]},
+    'Cricket': { title:'Cricket', fields:[
+      { key:'mode', label:'Style', options:['Standard Cricket','No Score Cricket','Cut-Throat Cricket'], value:'Standard Cricket' },
+      { key:'bull', label:'Bull', options:['On','Off'], value:'On' }
+    ]},
+    'Killer': { title:'Killer', fields:[
+      { key:'lives', label:'Lives', options:['3','5','7'], value:'3' },
+      { key:'numbers', label:'Numbers', options:['Randomizer','Manual'], value:'Randomizer' }
+    ]},
+    'Shanghai': { title:'Shanghai', fields:[
+      { key:'rounds', label:'Rounds', options:['1-7','1-9','1-20'], value:'1-20' },
+      { key:'instantWin', label:'Instant Win', options:['On','Off'], value:'On' }
+    ]},
+    'ATW': { title:'ATW', fields:[
+      { key:'path', label:'Path', options:['1-20','1-20 + Bull','Doubles','Triples'], value:'1-20' },
+      { key:'missRule', label:'Miss Rule', options:['Stay','Go Back'], value:'Stay' }
+    ]},
+    'Half It': { title:'Half It', fields:[
+      { key:'targets', label:'Targets', options:['Classic','Classic + Bull','Custom'], value:'Classic' },
+      { key:'penalty', label:'Penalty', options:['Halve Score','No Penalty'], value:'Halve Score' }
+    ]}
+  };
+
+  const state = window.ngRewireState = {
+    version: VERSION,
+    currentScreen: 'landing',
+    activeGame: '',
+    setup: { count: 2, players: [] },
+    killer: null,
+    transitionTimer: null
+  };
+
+  function byId(id){ return document.getElementById(id); }
+  function qsa(sel, root){ return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+  function text(el){ return ((el && (el.textContent || el.innerText)) || '').trim(); }
+  function uniq(arr){ return Array.from(new Set((arr || []).filter(Boolean))); }
+  function clone(obj){ return JSON.parse(JSON.stringify(obj)); }
+  function safeStop(e){ if(!e) return; e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation(); }
+  function titleCase(s){ return String(s || '').trim(); }
+
+  function updateVersionLabels(){
+    qsa('#ngVersionBelow, .ver').forEach(function(el){ el.textContent = VERSION; });
+    const footer = byId('globalFooter');
+    if(footer){ footer.textContent = 'Night Games ' + VERSION + ' is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.'; }
+    document.title = (document.title || 'Night Games').replace(/v\d+/gi, VERSION);
+  }
+
+  function getPlayers(){
+    let list = [];
+    try{
+      const srcs = [window.lastPeople, window.ngLastPeople, window.registryPeople, window.PLAYERS];
+      srcs.forEach(function(src){
+        if(Array.isArray(src)){
+          src.forEach(function(p, i){
+            const name = titleCase((p && (p.name || p.email || p.id)) || ('Player ' + (i+1)));
+            const id = (p && (p.email || p.id || p.name)) || ('p'+i);
+            if(name) list.push({ id: String(id), name: name });
+          });
+        }
+      });
+    }catch(_e){}
+    if(!list.length){
+      try{
+        qsa('#playersList .glassText, #playersList .itemTitle, #playersList .name').forEach(function(el, i){
+          const name = titleCase(text(el));
+          if(name) list.push({ id:'dom'+i, name:name });
+        });
+      }catch(_e){}
+    }
+    list = uniq(list.map(function(p){ return p.name; })).map(function(name, i){ return { id:'p'+i, name:name }; });
+    if(!list.length){
+      list = ['Player 1','Player 2','Player 3','Player 4'].map(function(name, i){ return { id:'fallback'+i, name:name }; });
+    }
+    return list;
+  }
+
+  function ensureSetupPlayers(){
+    const roster = getPlayers().map(function(p){ return p.name; });
+    const count = Math.max(1, Math.min(4, parseInt(state.setup.count, 10) || 2));
+    let selected = uniq((state.setup.players || []).filter(function(name){ return roster.indexOf(name) !== -1; }));
+    if(!selected.length){ selected = roster.slice(0, count); }
+    if(selected.length < count){
+      roster.forEach(function(name){ if(selected.length < count && selected.indexOf(name) === -1) selected.push(name); });
+    }
+    state.setup.count = count;
+    state.setup.players = selected.slice(0, count);
+  }
+
+  function setupForGame(game){
+    const cfg = clone(GAME_CONFIGS[game] || { title:game, fields:[] });
+    const out = { count: state.setup.count || 2, players: (state.setup.players || []).slice() };
+    (cfg.fields || []).forEach(function(field){ out[field.key] = field.value; });
+    return out;
+  }
+
+  function setActiveGame(game){
+    state.activeGame = game;
+    state.setup = Object.assign(setupForGame(game), state.setup || {});
+    ensureSetupPlayers();
+    window.activeSession = window.activeSession || {};
+    window.activeSession.game = game;
+    window.activeSession.gameId = game;
+    window.activeSession.stage = 'setup';
+    window.activeSession.setup = clone(state.setup);
+  }
+
+  function fieldHtml(field){
+    return '<div class="ngSetupField">' +
+      '<label for="ngSetup_' + field.key + '">' + field.label + '</label>' +
+      '<select id="ngSetup_' + field.key + '" data-setup-key="' + field.key + '">' +
+      (field.options || []).map(function(opt){
+        const sel = String(opt) === String(state.setup[field.key] || field.value || '') ? ' selected' : '';
+        return '<option value="' + opt + '"' + sel + '>' + opt + '</option>';
+      }).join('') +
+      '</select></div>';
+  }
+
+  function playersHtml(){
+    ensureSetupPlayers();
+    const count = Math.max(1, Math.min(4, parseInt(state.setup.count, 10) || 2));
+    const selected = (state.setup.players || []).slice(0, count);
+    return getPlayers().map(function(p){
+      const checked = selected.indexOf(p.name) !== -1;
+      const disabled = !checked && selected.length >= count;
+      return '<label class="ngPlayerCheck' + (disabled ? ' is-disabled' : '') + '">' +
+        '<span>' + p.name + '</span>' +
+        '<input type="checkbox" class="ngSetupPlayer" value="' + p.name + '" ' + (checked ? 'checked' : '') + ' ' + (disabled ? 'data-soft-disabled="1"' : '') + '>' +
+      '</label>';
+    }).join('');
+  }
+
+  function summaryHtml(){
+    ensureSetupPlayers();
+    return '<div class="ngSetupSummary">' +
+      '<div><strong>Selected:</strong> ' + (state.setup.players || []).join(', ') + '</div>' +
+      '<div class="ngSetupHint">Player count controls how many names can be selected.</div>' +
+      '</div>';
+  }
+
+  function buildSetupMarkup(game){
+    const config = GAME_CONFIGS[game] || { title:game, fields:[] };
+    return '<div class="statScroll">' +
+      '<div class="statRow"><div><div class="statLabel">' + config.title + '</div><div class="statHelp">Choose players and game options below, then tap Start Game.</div></div><div class="statVal">Setup</div></div>' +
+      (config.fields || []).map(fieldHtml).join('') +
+      '<div class="ngSetupField"><label for="ngSetup_count">Players</label><select id="ngSetup_count" data-setup-key="count">' +
+      [1,2,3,4].map(function(n){ return '<option value="'+n+'"' + ((parseInt(state.setup.count,10)||2)===n ? ' selected' : '') + '>' + n + '</option>'; }).join('') +
+      '</select></div>' +
+      '<div class="statRow"><div><div class="statLabel">Choose Players</div><div class="statHelp">Tap the exact players you want in this game.</div></div><div class="statVal">Roster</div></div>' +
+      '<div class="ngPlayerChecks" id="ngPlayerChecks">' + playersHtml() + '</div>' +
+      '<div id="playerPickSummary">' + summaryHtml() + '</div>' +
+      '</div>';
+  }
+
+  function syncSetupFromDom(){
+    qsa('[data-setup-key]').forEach(function(el){
+      const key = el.getAttribute('data-setup-key');
+      if(!key) return;
+      state.setup[key] = el.value;
+    });
+    const count = Math.max(1, Math.min(4, parseInt(state.setup.count, 10) || 2));
+    let checked = qsa('.ngSetupPlayer:checked').map(function(el){ return el.value; });
+    checked = uniq(checked).slice(0, count);
+    state.setup.count = count;
+    state.setup.players = checked;
+    ensureSetupPlayers();
+    window.activeSession = window.activeSession || {};
+    window.activeSession.setup = clone(state.setup);
+    const summary = byId('playerPickSummary');
+    if(summary) summary.innerHTML = summaryHtml();
+    qsa('.ngSetupPlayer').forEach(function(el){
+      const holder = el.closest('.ngPlayerCheck');
+      const checkedNow = el.checked;
+      const selected = (state.setup.players || []).slice();
+      const disabled = !checkedNow && selected.length >= count;
+      if(holder) holder.classList.toggle('is-disabled', disabled);
+      if(disabled) el.setAttribute('data-soft-disabled', '1'); else el.removeAttribute('data-soft-disabled');
+    });
+  }
+
+  function renderSetup(){
+    const setupBody = byId('setupBody');
+    if(!setupBody) return;
+    setupBody.innerHTML = buildSetupMarkup(state.activeGame || 'Game');
+    syncSetupFromDom();
+  }
+
+  function applyPanelTransition(){
+    document.body.classList.add('ng-panel-fade');
+    const screen = byId(state.currentScreen);
+    const nodes = qsa('.panel, .gamePanel, .statScroll, .detailWrap .panel, .gameBoardWrap > *', screen || document);
+    nodes.forEach(function(node){
+      node.classList.remove('ng-panel-settled');
+      node.classList.add('ng-panel-enter');
+    });
+    if(state.transitionTimer) clearTimeout(state.transitionTimer);
+    state.transitionTimer = setTimeout(function(){
+      nodes.forEach(function(node){
+        node.classList.remove('ng-panel-enter');
+        node.classList.add('ng-panel-settled');
+      });
+    }, 60);
+  }
+
+  function showScreen(id){
+    const targetId = SCREEN_IDS.indexOf(id) !== -1 ? id : 'landing';
+    SCREEN_IDS.forEach(function(screenId){
+      const el = byId(screenId);
+      if(!el) return;
+      const active = screenId === targetId;
+      el.classList.toggle('active', active);
+      el.style.display = active ? '' : 'none';
+    });
+    state.currentScreen = targetId;
+    if(window.activeSession) window.activeSession.stage = targetId;
+    updateVersionLabels();
+    applyPanelTransition();
+    return true;
+  }
+
+  function renderWaiting(){
+    const host = byId('waitingBody');
+    if(!host) return;
+    ensureSetupPlayers();
+    host.innerHTML = '<div class="statScroll">' +
+      '<div class="statRow"><div><div class="statLabel">' + (state.activeGame || 'Game') + '</div><div class="statHelp">Waiting room connected.</div></div><div class="statVal">Live</div></div>' +
+      (state.setup.players || []).map(function(name){
+        return '<div class="statRow"><div><div class="statLabel">' + name + '</div><div class="statHelp">Connected to ' + state.activeGame + ' waiting room.</div></div><div class="statVal">Ready</div></div>';
+      }).join('') + '</div>';
+  }
+
+  function killerAssignTargets(players, mode){
+    const bag = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+    if(mode === 'Randomizer'){
+      for(let i=bag.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=bag[i]; bag[i]=bag[j]; bag[j]=t; }
+    }
+    return players.map(function(name, idx){
+      return { name:name, lives: parseInt(state.setup.lives,10)||3, target: bag[idx], killer:false, alive:true };
+    });
+  }
+
+  function killerLog(msg){
+    state.killer = state.killer || { log:[] };
+    state.killer.log = state.killer.log || [];
+    state.killer.log.unshift(msg);
+    state.killer.log = state.killer.log.slice(0, 24);
+  }
+
+  function initKiller(){
+    ensureSetupPlayers();
+    state.killer = {
+      players: killerAssignTargets((state.setup.players || []).slice(), state.setup.numbers || 'Randomizer'),
+      turn: 0,
+      log: []
+    };
+    killerLog('Killer game ready. ' + (state.setup.players || []).join(', ') + ' entered the match.');
+  }
+
+  function alivePlayers(){
+    return (state.killer && state.killer.players || []).filter(function(p){ return p.alive; });
+  }
+
+  function getCurrentKillerPlayer(){
+    const players = state.killer && state.killer.players || [];
+    if(!players.length) return null;
+    let idx = state.killer.turn || 0;
+    for(let step=0; step<players.length; step++){
+      const candidate = players[(idx + step) % players.length];
+      if(candidate.alive){
+        state.killer.turn = (idx + step) % players.length;
+        return candidate;
+      }
+    }
+    return players[0];
+  }
+
+  function nextTurn(){
+    const players = state.killer && state.killer.players || [];
+    if(!players.length) return;
+    state.killer.turn = (state.killer.turn + 1) % players.length;
+    getCurrentKillerPlayer();
+    renderKiller();
+  }
+
+  function renderKiller(){
+    const game = byId('game_screen');
+    if(!game) return;
+    if(!state.killer) initKiller();
+    const current = getCurrentKillerPlayer();
+    const winner = alivePlayers().length === 1 ? alivePlayers()[0] : null;
+    game.innerHTML = '<div class="gameBoardWrap"><div class="gamePanel"><div class="ngKillerBoard">' +
+      '<div class="ngKillerCard"><div class="scoreLabel">Killer</div><div class="ngKillerMeta">' +
+      '<div class="ngKillerBadge">Lives: ' + (state.setup.lives || '3') + '</div>' +
+      '<div class="ngKillerBadge">Numbers: ' + (state.setup.numbers || 'Randomizer') + '</div>' +
+      '<div class="ngKillerBadge">Players: ' + (state.setup.players || []).length + '</div>' +
+      '</div><div class="ngSetupHint">Killer is the first fully rewired game path in ' + VERSION + '.</div></div>' +
+      '<div class="ngKillerCard"><div class="statRow"><div><div class="statLabel">Current Turn</div><div class="statHelp">Use the action buttons to run the round.</div></div><div class="statVal">' + (winner ? winner.name + ' Wins' : (current ? current.name : '—')) + '</div></div>' +
+      '<div class="ngKillerActions">' +
+      '<button class="pill" type="button" id="ngKillerOwnDouble">Hit Own Double</button>' +
+      '<button class="pill" type="button" id="ngKillerMissTurn">Miss Turn</button>' +
+      '<button class="pill" type="button" id="ngKillerNextTurn">Next Player</button>' +
+      '<button class="pill" type="button" id="ngKillerReset">Reset Killer</button>' +
+      '<button class="pill" type="button" id="ngKillerBack">Back</button>' +
+      '</div></div>' +
+      '<div class="ngKillerGrid">' +
+      (state.killer.players || []).map(function(p, idx){
+        return '<div class="ngKillerPlayer' + (current && current.name === p.name ? ' is-active' : '') + '">' +
+          '<div class="ngKillerRow"><strong>' + p.name + '</strong><span>Target ' + p.target + '</span></div>' +
+          '<div class="ngKillerMeta"><span class="ngKillerBadge">Lives ' + p.lives + '</span><span class="ngKillerBadge">' + (p.killer ? 'Killer' : 'Not Killer') + '</span><span class="ngKillerBadge">' + (p.alive ? 'Alive' : 'Out') + '</span></div>' +
+          '<div class="ngKillerActions">' + (current && current.killer && current.name !== p.name && p.alive ? '<button class="pill" type="button" data-killer-hit="' + idx + '">Hit ' + p.name + '</button>' : '') + '</div>' +
+        '</div>';
+      }).join('') +
+      '</div></div></div>' +
+      '<div class="gamePanel"><div class="ngKillerCard"><div class="sectionHead"><div class="title">Match Log</div></div><div class="ngKillerLog">' +
+      (state.killer.log || []).map(function(line){ return '<div class="statRow"><div><div class="statHelp">' + line + '</div></div><div class="statVal">Log</div></div>'; }).join('') +
+      '</div></div></div></div>';
+  }
+
+  function killerOwnDouble(){
+    const p = getCurrentKillerPlayer();
+    if(!p) return;
+    if(!p.killer){ p.killer = true; killerLog(p.name + ' hit double ' + p.target + ' and became a Killer.'); }
+    else { killerLog(p.name + ' defended on double ' + p.target + '.'); }
+    renderKiller();
+  }
+
+  function killerHitTarget(index){
+    const attacker = getCurrentKillerPlayer();
+    const target = state.killer && state.killer.players && state.killer.players[index];
+    if(!attacker || !target || !attacker.killer || !target.alive || attacker.name === target.name) return;
+    target.lives = Math.max(0, (parseInt(target.lives,10)||0) - 1);
+    if(target.lives <= 0){ target.alive = false; killerLog(attacker.name + ' knocked ' + target.name + ' out on double ' + target.target + '.'); }
+    else { killerLog(attacker.name + ' hit ' + target.name + '. ' + target.name + ' now has ' + target.lives + ' lives left.'); }
+    renderKiller();
+  }
+
+  function renderGenericGame(){
+    const game = byId('game_screen');
+    if(!game) return;
+    game.innerHTML = '<div class="gameBoardWrap"><div class="gamePanel"><div class="ngGameShell">' +
+      '<div class="scoreLabel">' + (state.activeGame || 'Game') + '</div>' +
+      '<div class="statRow"><div><div class="statLabel">Status</div><div class="statHelp">The game shell is rewired and launching correctly in ' + VERSION + '.</div></div><div class="statVal">Ready</div></div>' +
+      '<div class="statRow"><div><div class="statLabel">Players</div><div class="statHelp">' + (state.setup.players || []).join(', ') + '</div></div><div class="statVal">' + (state.setup.count || 1) + '</div></div>' +
+      Object.keys(state.setup).filter(function(key){ return ['count','players'].indexOf(key) === -1; }).map(function(key){
+        return '<div class="statRow"><div><div class="statLabel">' + key + '</div><div class="statHelp">' + state.setup[key] + '</div></div><div class="statVal">Set</div></div>';
+      }).join('') +
+      '<div class="ngKillerActions"><button class="pill" type="button" id="ngGenericBack">Back</button><button class="pill" type="button" id="ngGenericHome">Home</button></div>' +
+      '</div></div></div>';
+  }
+
+  function startGame(){
+    syncSetupFromDom();
+    if(state.activeGame === 'Killer'){
+      initKiller();
+      showScreen('game_screen');
+      renderKiller();
+      return;
+    }
+    showScreen('game_screen');
+    renderGenericGame();
+  }
+
+  function goHome(){ showScreen('landing'); }
+  function goPlayers(){ showScreen('players'); }
+  function goSetup(game){ if(game) setActiveGame(game); renderSetup(); showScreen('setup'); }
+  function goWaiting(){ syncSetupFromDom(); renderWaiting(); showScreen('waiting'); }
+
+  function normalizeGameName(raw){
+    const val = String(raw || '').trim();
+    const map = { '01':'01', 'cricket':'Cricket', 'killer':'Killer', 'shanghai':'Shanghai', 'atw':'ATW', 'around the world':'ATW', 'half it':'Half It' };
+    return map[val.toLowerCase()] || val;
+  }
+
+  function delegatedClick(e){
+    const btn = e.target && e.target.closest ? e.target.closest('button,[data-action],[data-killer-hit]') : null;
+    if(!btn) return;
+    const id = btn.id || '';
+    const action = btn.getAttribute('data-action') || '';
+    const value = normalizeGameName(btn.getAttribute('data-value') || text(btn));
+
+    if(action === 'enter_game'){
+      safeStop(e); goSetup(value); return;
+    }
+    if(id === 'setupHomeBtn' || id === 'homeBtn' || id === 'ngGenericHome'){
+      safeStop(e); goHome(); return;
+    }
+    if(id === 'setupResetBtn' || id === 'backBtn' || id === 'waitingBackBtn' || id === 'ngKillerBack' || id === 'ngGenericBack' || id === 'ng01BackBtn'){
+      safeStop(e); goPlayers(); return;
+    }
+    if(id === 'setupInviteBtn' || id === 'lobbyInviteBtn'){
+      safeStop(e); goWaiting(); return;
+    }
+    if(id === 'setupStartGameBtn' || id === 'lobbyStartBtn' || id === 'ng01EnterBtn'){
+      safeStop(e); startGame(); return;
+    }
+    if(id === 'lobbyEndBtn'){
+      safeStop(e); goPlayers(); return;
+    }
+    if(id === 'ngKillerOwnDouble'){
+      safeStop(e); killerOwnDouble(); return;
+    }
+    if(id === 'ngKillerMissTurn'){
+      safeStop(e); killerLog(getCurrentKillerPlayer().name + ' missed the turn.'); nextTurn(); return;
+    }
+    if(id === 'ngKillerNextTurn'){
+      safeStop(e); nextTurn(); return;
+    }
+    if(id === 'ngKillerReset'){
+      safeStop(e); initKiller(); renderKiller(); return;
+    }
+    if(btn.hasAttribute('data-killer-hit')){
+      safeStop(e); killerHitTarget(parseInt(btn.getAttribute('data-killer-hit'), 10)); return;
+    }
+
+    const label = value.toLowerCase();
+    if(['01','cricket','killer','shanghai','atw','half it'].indexOf(label) !== -1){
+      safeStop(e); goSetup(normalizeGameName(value)); return;
+    }
+  }
+
+  function delegatedChange(e){
+    const el = e.target;
+    if(!el) return;
+    if(el.matches('[data-setup-key]')){ syncSetupFromDom(); renderSetup(); return; }
+    if(el.matches('.ngSetupPlayer')){
+      const count = Math.max(1, Math.min(4, parseInt(byId('ngSetup_count') && byId('ngSetup_count').value, 10) || state.setup.count || 2));
+      const checked = qsa('.ngSetupPlayer:checked').map(function(box){ return box.value; });
+      if(checked.length > count){
+        el.checked = false;
+      }
+      syncSetupFromDom();
+      return;
+    }
+  }
+
+  function boot(){
+    updateVersionLabels();
+    window.show = showScreen;
+    window.showScreen = showScreen;
+    window.enterGame = function(game){ goSetup(normalizeGameName(game)); return false; };
+    window.readSetup = function(){ syncSetupFromDom(); return clone(state.setup); };
+    document.addEventListener('click', delegatedClick, true);
+    document.addEventListener('change', delegatedChange, true);
+    document.addEventListener('DOMContentLoaded', function(){ updateVersionLabels(); applyPanelTransition(); }, { once:true });
+    ensureSetupPlayers();
+    showScreen('landing');
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once:true });
+  else boot();
+})();
+</script>
 </body>
 </html>
