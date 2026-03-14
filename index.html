@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v2009</title>
-<!-- NIGHT GAMES v2009 -->
+<title>Night Games v2010</title>
+<!-- NIGHT GAMES v2010 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3599,7 +3599,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1852";window.NG_BUILD_LABEL="Night Games v2009";</script>
+<script>window.NG_BUILD_VERSION="1852";window.NG_BUILD_LABEL="Night Games v2010";</script>
 
 <style id="ng-v1588-header-style">
 #ngHeaderBlock{
@@ -11456,9 +11456,9 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v2009-panel-transition-only">
+<style id="ng-v2010-panel-transition-only" media="not all">
   /* =========================
-     v2009 PANEL TRANSITION ONLY
+     v2010 PANEL TRANSITION ONLY
      CHANGE THIS NUMBER TO SPEED UP / SLOW DOWN THE TRANSITION
      >>> PANEL_DARKEN_SECONDS = 5 <<<
      ========================= */
@@ -11466,7 +11466,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
     --panel-darken-seconds: 5s; /* <- change this to 8s, 3s, etc. */
   }
 
-  @keyframes ng2009PanelDarken {
+  @keyframes ng1931PanelDarken {
     0%{
       background: linear-gradient(180deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.02) 100%) !important;
       border-color: rgba(255,255,255,.18) !important;
@@ -11495,7 +11495,50 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   .setupPanel,
   .glassPanel,
   .cardPanel{
-    animation: ng2009PanelDarken var(--panel-darken-seconds) ease forwards !important;
+    animation: ng1931PanelDarken var(--panel-darken-seconds) ease forwards !important;
+  }
+</style>
+
+
+<style id="ng-v2010-panel-transition-css-only">
+  :root{ --ng-panel-transition-seconds: 5.8s; }
+
+  @keyframes ng2010PanelGlassDarken {
+    0%{
+      background: linear-gradient(180deg,
+        rgba(255,255,255,.14) 0%,
+        rgba(255,255,255,.08) 42%,
+        rgba(255,255,255,.03) 100%) !important;
+      border-color: rgba(255,255,255,.18) !important;
+      box-shadow:
+        inset 0 1px 8px rgba(255,255,255,.10),
+        inset 0 -8px 18px rgba(0,0,0,.18),
+        0 8px 24px rgba(0,0,0,.14) !important;
+      backdrop-filter: blur(8px) saturate(120%) !important;
+      -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
+    }
+    100%{
+      background: linear-gradient(180deg,
+        rgba(24,26,34,.96) 0%,
+        rgba(8,9,13,.98) 100%) !important;
+      border-color: rgba(255,255,255,.24) !important;
+      box-shadow:
+        inset 0 1px 10px rgba(255,255,255,.12),
+        inset 0 -10px 22px rgba(0,0,0,.42),
+        0 10px 28px rgba(0,0,0,.28) !important;
+      backdrop-filter: blur(10px) saturate(125%) !important;
+      -webkit-backdrop-filter: blur(10px) saturate(125%) !important;
+    }
+  }
+
+  /* CSS only: no JS hooks, no login/runtime changes */
+  .panel,
+  .gamePanel,
+  .setupPanel,
+  .glassPanel,
+  .cardPanel{
+    animation: ng2010PanelGlassDarken var(--ng-panel-transition-seconds) ease forwards !important;
+    will-change: background, border-color, box-shadow !important;
   }
 </style>
 
@@ -11732,7 +11775,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </section>
 
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v2009 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v2010 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -13879,7 +13922,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v2009 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v2010 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -17283,9 +17326,9 @@ button.pill,
 
 <script id="ng-v1588-final-cleanup-js">
 (function(){
-  try{ document.title = "Night Games v2009"; }catch(_){}
+  try{ document.title = "Night Games v2010"; }catch(_){}
   try{ window.NG_BUILD_VERSION = "1588"; }catch(_){}
-  try{ window.NG_BUILD_LABEL = "Night Games v2009"; }catch(_){}
+  try{ window.NG_BUILD_LABEL = "Night Games v2010"; }catch(_){}
   try{ window.ngBuild = "v1588"; }catch(_){}
 
   function removeSessionUI(){
@@ -20542,137 +20585,5 @@ button.pill,
 })();
 </script>
 
-
-<style id="ng-v1931-panel-transition-surgical-final">
-  :root{ --ng-panel-fade-seconds: 5.8s; }
-</style>
-<script id="ng-v1931-panel-transition-surgical-final-js">
-(function(){
-  var DURATION = '5.8s';
-  var CLEAR_BG = 'linear-gradient(180deg, rgba(255,255,255,.12) 0%, rgba(255,255,255,.06) 42%, rgba(255,255,255,.03) 100%)';
-  var DARK_BG  = 'linear-gradient(180deg, rgba(20,22,31,.96) 0%, rgba(7,8,12,.98) 100%)';
-  var CLEAR_BORDER = 'rgba(255,255,255,.22)';
-  var DARK_BORDER  = 'rgba(255,255,255,.28)';
-  var CLEAR_SHADOW = 'inset 0 1px 8px rgba(255,255,255,.12), inset 0 -8px 18px rgba(0,0,0,.28), 0 8px 24px rgba(0,0,0,.22)';
-  var DARK_SHADOW  = 'inset 0 1px 10px rgba(255,255,255,.14), inset 0 -10px 24px rgba(0,0,0,.42), 0 10px 28px rgba(0,0,0,.30)';
-  var SELECTOR = '.panel,.gamePanel,.setupPanel,.glassPanel,.cardPanel,.detailWrap,.controlsPanel';
-
-  function qsa(sel, root){
-    return Array.prototype.slice.call((root || document).querySelectorAll(sel));
-  }
-
-  function getActiveScreen(){
-    var active = document.querySelector('.screen.active');
-    if(active) return active;
-    var visible = qsa('.screen').find(function(s){
-      return s.offsetParent !== null && getComputedStyle(s).display !== 'none' && getComputedStyle(s).visibility !== 'hidden';
-    });
-    return visible || document.body;
-  }
-
-  function looksLikeFullScreen(el){
-    try{
-      var r = el.getBoundingClientRect();
-      return r.width >= window.innerWidth * 0.98 && r.height >= window.innerHeight * 0.85;
-    }catch(e){ return false; }
-  }
-
-  function isEligiblePanel(el){
-    if(!el || el === document.body || el.classList.contains('screen')) return false;
-    if(looksLikeFullScreen(el)) return false;
-    try{
-      var cs = getComputedStyle(el);
-      if(cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') return false;
-    }catch(e){}
-    return true;
-  }
-
-  function panelListFor(root){
-    var seen = new Set();
-    var out = [];
-    qsa(SELECTOR, root).forEach(function(el){
-      if(isEligiblePanel(el) && !seen.has(el)){
-        seen.add(el);
-        out.push(el);
-      }
-    });
-    return out;
-  }
-
-  function setImportant(el, prop, value){
-    try{ el.style.setProperty(prop, value, 'important'); }catch(e){}
-  }
-
-  function primePanel(el){
-    setImportant(el, 'transition', 'background var(--ng-panel-fade-seconds) ease, border-color var(--ng-panel-fade-seconds) ease, box-shadow var(--ng-panel-fade-seconds) ease');
-    setImportant(el, 'background', CLEAR_BG);
-    setImportant(el, 'border-color', CLEAR_BORDER);
-    setImportant(el, 'box-shadow', CLEAR_SHADOW);
-    el.dataset.ngPanelFadeReady = '1';
-  }
-
-  function darkenPanel(el){
-    setImportant(el, 'background', DARK_BG);
-    setImportant(el, 'border-color', DARK_BORDER);
-    setImportant(el, 'box-shadow', DARK_SHADOW);
-  }
-
-  function replayPanels(root){
-    panelListFor(root || getActiveScreen()).forEach(function(el){
-      primePanel(el);
-      requestAnimationFrame(function(){
-        requestAnimationFrame(function(){
-          darkenPanel(el);
-        });
-      });
-    });
-  }
-
-  function hookNav(name){
-    var fn = window[name];
-    if(typeof fn !== 'function' || fn.__ngPanelWrapped) return;
-    var wrapped = function(){
-      var out = fn.apply(this, arguments);
-      setTimeout(function(){ replayPanels(getActiveScreen()); }, 30);
-      setTimeout(function(){ replayPanels(getActiveScreen()); }, 220);
-      return out;
-    };
-    wrapped.__ngPanelWrapped = true;
-    window[name] = wrapped;
-  }
-
-  function installObserver(){
-    if(document.body.dataset.ngPanelTransitionObserver) return;
-    var mo = new MutationObserver(function(){
-      replayPanels(getActiveScreen());
-    });
-    mo.observe(document.body, {subtree:true, childList:true, attributes:true, attributeFilter:['class','style']});
-    document.body.dataset.ngPanelTransitionObserver = '1';
-  }
-
-  function init(){
-    hookNav('show');
-    hookNav('showScreen');
-    hookNav('ngShow');
-    replayPanels(getActiveScreen());
-    setTimeout(function(){ replayPanels(getActiveScreen()); }, 300);
-    setTimeout(function(){ replayPanels(getActiveScreen()); }, 900);
-    installObserver();
-  }
-
-  document.addEventListener('DOMContentLoaded', init, {once:true});
-  window.addEventListener('load', function(){
-    init();
-    setTimeout(function(){ replayPanels(getActiveScreen()); }, 1200);
-  }, {once:true});
-})();
-</script>
-
-
-<script id="ng-v2009-build-stamp">
-window.NG_BUILD_VERSION="2009";
-window.NG_BUILD_LABEL="Night Games v2009";
-try{document.title="Night Games v2009";}catch(e){}
-</script>
 </body>
 </html>
