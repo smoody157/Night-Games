@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Night Games v2010</title>
-<!-- NIGHT GAMES v2010 -->
+<title>Night Games v2011</title>
+<!-- NIGHT GAMES v2011 -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -3599,7 +3599,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </script>
 
 
-<script>window.NG_BUILD_VERSION="1852";window.NG_BUILD_LABEL="Night Games v2010";</script>
+<script>window.NG_BUILD_VERSION="1852";window.NG_BUILD_LABEL="Night Games v2011";</script>
 
 <style id="ng-v1588-header-style">
 #ngHeaderBlock{
@@ -11456,9 +11456,9 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </style>
 
 
-<style id="ng-v2010-panel-transition-only" media="not all">
+<style id="ng-v1931-panel-transition-only">
   /* =========================
-     v2010 PANEL TRANSITION ONLY
+     v2011 FULL RUNTIME REWIRE
      CHANGE THIS NUMBER TO SPEED UP / SLOW DOWN THE TRANSITION
      >>> PANEL_DARKEN_SECONDS = 5 <<<
      ========================= */
@@ -11496,49 +11496,6 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
   .glassPanel,
   .cardPanel{
     animation: ng1931PanelDarken var(--panel-darken-seconds) ease forwards !important;
-  }
-</style>
-
-
-<style id="ng-v2010-panel-transition-css-only">
-  :root{ --ng-panel-transition-seconds: 5.8s; }
-
-  @keyframes ng2010PanelGlassDarken {
-    0%{
-      background: linear-gradient(180deg,
-        rgba(255,255,255,.14) 0%,
-        rgba(255,255,255,.08) 42%,
-        rgba(255,255,255,.03) 100%) !important;
-      border-color: rgba(255,255,255,.18) !important;
-      box-shadow:
-        inset 0 1px 8px rgba(255,255,255,.10),
-        inset 0 -8px 18px rgba(0,0,0,.18),
-        0 8px 24px rgba(0,0,0,.14) !important;
-      backdrop-filter: blur(8px) saturate(120%) !important;
-      -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
-    }
-    100%{
-      background: linear-gradient(180deg,
-        rgba(24,26,34,.96) 0%,
-        rgba(8,9,13,.98) 100%) !important;
-      border-color: rgba(255,255,255,.24) !important;
-      box-shadow:
-        inset 0 1px 10px rgba(255,255,255,.12),
-        inset 0 -10px 22px rgba(0,0,0,.42),
-        0 10px 28px rgba(0,0,0,.28) !important;
-      backdrop-filter: blur(10px) saturate(125%) !important;
-      -webkit-backdrop-filter: blur(10px) saturate(125%) !important;
-    }
-  }
-
-  /* CSS only: no JS hooks, no login/runtime changes */
-  .panel,
-  .gamePanel,
-  .setupPanel,
-  .glassPanel,
-  .cardPanel{
-    animation: ng2010PanelGlassDarken var(--ng-panel-transition-seconds) ease forwards !important;
-    will-change: background, border-color, box-shadow !important;
   }
 </style>
 
@@ -11775,7 +11732,7 @@ window.NG_AUDIO_FALLBACK = window.NG_AUDIO_FALLBACK || { intro:"New%20Recording%
 </section>
 
 </div>
-<div class="globalFooter" id="globalFooter">Night Games v2010 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
+<div class="globalFooter" id="globalFooter">Night Games v2011 is owned and operated by The Dart Room. © 2026 The Dart Room. All rights reserved.</div>
 
 <div class="fatal" id="fatal">
 <div class="card">
@@ -13922,7 +13879,7 @@ try{
       Notification.requestPermission().catch(()=>{});
     }
     if(Notification.permission === "granted"){
-      new Notification("Night Games v2010 Invite", { body: `${from} invited you to play ${game}.` });
+      new Notification("Night Games v2011 Invite", { body: `${from} invited you to play ${game}.` });
     }
   }
 }catch(e){
@@ -17326,9 +17283,9 @@ button.pill,
 
 <script id="ng-v1588-final-cleanup-js">
 (function(){
-  try{ document.title = "Night Games v2010"; }catch(_){}
+  try{ document.title = "Night Games v2011"; }catch(_){}
   try{ window.NG_BUILD_VERSION = "1588"; }catch(_){}
-  try{ window.NG_BUILD_LABEL = "Night Games v2010"; }catch(_){}
+  try{ window.NG_BUILD_LABEL = "Night Games v2011"; }catch(_){}
   try{ window.ngBuild = "v1588"; }catch(_){}
 
   function removeSessionUI(){
@@ -20582,6 +20539,379 @@ button.pill,
     setTimeout(init, 900);
     setTimeout(init, 1800);
   }, {once:true});
+})();
+</script>
+
+
+<style id="ng-v2011-runtime-rewire-css">
+  :root{ --ng2011-panel-seconds: 5.8s; }
+  .panel.ng2011-panel-live,
+  .gamePanel.ng2011-panel-live,
+  .setupPanel.ng2011-panel-live,
+  .glassPanel.ng2011-panel-live,
+  .cardPanel.ng2011-panel-live{
+    background: linear-gradient(180deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,.08) 42%, rgba(255,255,255,.03) 100%) !important;
+    border-color: rgba(255,255,255,.20) !important;
+    box-shadow:
+      inset 0 1px 8px rgba(255,255,255,.10),
+      inset 0 -8px 18px rgba(0,0,0,.18),
+      0 8px 24px rgba(0,0,0,.14) !important;
+    transition:
+      background var(--ng2011-panel-seconds) ease,
+      border-color var(--ng2011-panel-seconds) ease,
+      box-shadow var(--ng2011-panel-seconds) ease !important;
+  }
+  .panel.ng2011-panel-live.ng2011-panel-dark,
+  .gamePanel.ng2011-panel-live.ng2011-panel-dark,
+  .setupPanel.ng2011-panel-live.ng2011-panel-dark,
+  .glassPanel.ng2011-panel-live.ng2011-panel-dark,
+  .cardPanel.ng2011-panel-live.ng2011-panel-dark{
+    background: linear-gradient(180deg, rgba(22,24,33,.96) 0%, rgba(7,8,12,.98) 100%) !important;
+    border-color: rgba(255,255,255,.26) !important;
+    box-shadow:
+      inset 0 1px 10px rgba(255,255,255,.12),
+      inset 0 -10px 22px rgba(0,0,0,.42),
+      0 10px 28px rgba(0,0,0,.28) !important;
+  }
+</style>
+
+<script id="ng-v2011-runtime-rewire">
+(function(){
+  const BUILD = 'v2011';
+  const state = window.__ng2011 = window.__ng2011 || {
+    game: '',
+    count: 1,
+    emails: [],
+    playerNames: {}
+  };
+
+  function byId(id){ return document.getElementById(id); }
+  function qsa(sel, root){ return Array.from((root || document).querySelectorAll(sel)); }
+  function lower(v){ return String(v||'').trim().toLowerCase(); }
+
+  function visibleVersionSync(){
+    try{ document.title = document.title.replace(/v\d+/ig, BUILD) || ('Night Games ' + BUILD); }catch(e){}
+    ['ngVersionBelow','ngBuild','buildVersion','versionText','versionLabel'].forEach(function(id){
+      try{ var el = byId(id); if(el) el.textContent = BUILD; }catch(e){}
+    });
+    try{
+      qsa('*').forEach(function(el){
+        if(el.childNodes && el.childNodes.length===1 && el.childNodes[0].nodeType===3){
+          var t = (el.textContent||'').trim();
+          if(/^v\d+$/i.test(t)) el.textContent = BUILD;
+        }
+      });
+    }catch(e){}
+  }
+
+  function currentEmail(){
+    return lower(window.currentEmail || window.currentUserEmail || window.userEmail || localStorage.getItem('ng_saved_email') || '');
+  }
+
+  function getRoster(){
+    var out = [];
+    try{
+      if(Array.isArray(window.lastPeople) && window.lastPeople.length){
+        out = window.lastPeople.map(function(p){
+          var email = lower(p && p.email);
+          var name = (p && (p.name || [p.firstName,p.lastName].filter(Boolean).join(' ').trim())) || email;
+          return {email: email, name: name || email};
+        }).filter(function(p){ return p.email; });
+      }
+    }catch(e){}
+    try{
+      if((!out.length) && Array.isArray(window.PLAYERS)){
+        out = window.PLAYERS.map(function(p){
+          var email = lower(p && p.email);
+          var name = (p && (p.name || [p.firstName,p.lastName].filter(Boolean).join(' ').trim())) || email;
+          return {email: email, name: name || email};
+        }).filter(function(p){ return p.email; });
+      }
+    }catch(e){}
+    var me = currentEmail();
+    if(me && !out.some(function(p){ return p.email===me; })){
+      out.unshift({email: me, name: (me.split('@')[0]||'Me')});
+    }
+    out = out.filter(function(p, i, arr){ return arr.findIndex(function(x){ return x.email===p.email; })===i; });
+    out.sort(function(a,b){ return String(a.name).localeCompare(String(b.name)); });
+    return out;
+  }
+
+  function gameIdFromName(name){
+    var n = String(name||'').toLowerCase();
+    if(n === '01' || n === '301' || n === '501' || n === '701') return '01';
+    if(n === 'around the world') return 'atw';
+    return n.replace(/\s+/g, '_');
+  }
+
+  function currentPanels(root){
+    return qsa('.panel,.gamePanel,.setupPanel,.glassPanel,.cardPanel', root || document).filter(function(el){
+      var r = el.getBoundingClientRect();
+      return r.width > 0 && r.height > 0;
+    });
+  }
+
+  function replayPanels(root){
+    currentPanels(root).forEach(function(panel){
+      panel.classList.remove('ng2011-panel-live','ng2011-panel-dark');
+      void panel.offsetWidth;
+      panel.classList.add('ng2011-panel-live');
+      setTimeout(function(){ panel.classList.add('ng2011-panel-dark'); }, 80);
+    });
+  }
+
+  function activeScreen(){
+    return qsa('.screen.active,.screen[style*="display: block"],.screen:not([style*="display: none"])').find(function(el){
+      var r = el.getBoundingClientRect();
+      return r.width > 0 && r.height > 0;
+    }) || document;
+  }
+
+  function safeShow(id){
+    try{
+      if(typeof window.__ng2011_orig_show === 'function') window.__ng2011_orig_show(id);
+      else if(typeof window.show === 'function') window.show(id);
+      else {
+        qsa('.screen').forEach(function(s){ s.classList.remove('active'); s.style.display='none'; });
+        var t = byId(id);
+        if(t){ t.classList.add('active'); t.style.display=''; }
+      }
+    }catch(e){
+      var t = byId(id);
+      if(t){
+        qsa('.screen').forEach(function(s){ s.classList.remove('active'); s.style.display='none'; });
+        t.classList.add('active'); t.style.display='';
+      }
+    }
+    setTimeout(function(){ replayPanels(byId(id) || activeScreen()); }, 40);
+  }
+
+  function syncSetupState(){
+    var count = parseInt((byId('setupCount') && byId('setupCount').value) || state.count || '1', 10) || 1;
+    state.count = count;
+    var checks = qsa('.pickPlayer');
+    var selected = checks.filter(function(c){ return c.checked; }).map(function(c){ return lower(c.value); }).filter(Boolean);
+    if(selected.length > count){
+      selected = selected.slice(0, count);
+      checks.forEach(function(c){ c.checked = selected.indexOf(lower(c.value)) >= 0; });
+    }
+    if(!selected.length){
+      var me = currentEmail();
+      if(me){
+        var meCheck = checks.find(function(c){ return lower(c.value)===me; });
+        if(meCheck){ meCheck.checked = true; selected = [me]; }
+      }
+    }
+    state.emails = selected;
+    try{
+      if(!window.activeSession) window.activeSession = {};
+      if(!window.activeSession.setup) window.activeSession.setup = {};
+      window.activeSession.setup.count = count;
+      window.activeSession.setup.emails = selected.slice();
+      window.activeSession.setup.players = selected.slice();
+    }catch(e){}
+
+    checks.forEach(function(c){
+      var on = !!c.checked;
+      var shouldDisable = !on && selected.length >= count;
+      c.disabled = shouldDisable;
+      var label = c.closest('label,.ngPickerChip,.pickerRow');
+      if(label) label.style.opacity = shouldDisable ? '.6' : '1';
+    });
+
+    var names = selected.map(function(email){
+      var label = checks.find(function(c){ return lower(c.value)===email; });
+      var el = label && label.closest('label');
+      var nm = el && (el.querySelector('span') ? el.querySelector('span').textContent.trim() : '');
+      return nm || state.playerNames[email] || email;
+    });
+    var summary = byId('playerPickSummary');
+    if(summary){
+      summary.textContent = names.length ? (names.length + ' player' + (names.length===1?'':'s') + ': ' + names.join(', ')) : 'Choose players';
+    }
+    var holder = byId('setupPlayersWrapHolder');
+    if(holder){
+      holder.style.display = (count > 1 && holder.dataset.ngOpen === '1') ? 'block' : 'none';
+    }
+  }
+
+  function bindSetupControls(){
+    var countSel = byId('setupCount');
+    if(countSel && !countSel.dataset.ng2011){
+      countSel.dataset.ng2011 = '1';
+      countSel.addEventListener('change', function(){
+        state.count = parseInt(countSel.value || '1', 10) || 1;
+        syncSetupState();
+      }, true);
+    }
+    var pickerBtn = byId('openPlayerPicker');
+    if(pickerBtn && !pickerBtn.dataset.ng2011){
+      pickerBtn.dataset.ng2011 = '1';
+      pickerBtn.addEventListener('click', function(ev){
+        ev.preventDefault(); ev.stopPropagation();
+        var holder = byId('setupPlayersWrapHolder');
+        if(holder){
+          holder.dataset.ngOpen = holder.dataset.ngOpen === '1' ? '0' : '1';
+          syncSetupState();
+        }
+      }, true);
+    }
+    qsa('.pickPlayer').forEach(function(c){
+      if(c.dataset.ng2011) return;
+      c.dataset.ng2011 = '1';
+      state.playerNames[lower(c.value)] = (c.closest('label') && c.closest('label').textContent || '').replace(/\s+/g,' ').trim();
+      c.addEventListener('change', function(ev){
+        var count = parseInt((byId('setupCount') && byId('setupCount').value) || state.count || '1', 10) || 1;
+        var checks = qsa('.pickPlayer');
+        var selected = checks.filter(function(x){ return x.checked; });
+        if(selected.length > count){
+          c.checked = false;
+        }
+        syncSetupState();
+      }, true);
+    });
+    syncSetupState();
+  }
+
+  function openSetupForGame(game){
+    state.game = game || state.game || '01';
+    try{
+      if(typeof window.renderSetupForGame === 'function') window.renderSetupForGame(state.game);
+    }catch(e){}
+    setTimeout(function(){
+      bindSetupControls();
+      safeShow('setup');
+      setTimeout(bindSetupControls, 120);
+    }, 20);
+  }
+
+  function startSelectedGame(){
+    var game = state.game || (window.activeSession && window.activeSession.game) || '01';
+    var count = parseInt((byId('setupCount') && byId('setupCount').value) || state.count || '1', 10) || 1;
+    syncSetupState();
+    var emails = state.emails && state.emails.length ? state.emails.slice(0, count) : [currentEmail()].filter(Boolean);
+
+    window.activeSession = Object.assign(window.activeSession || {}, {
+      game: game,
+      gameName: game,
+      gameId: gameIdFromName(game),
+      setup: Object.assign((window.activeSession && window.activeSession.setup) || {}, {
+        count: count,
+        emails: emails,
+        players: emails
+      })
+    });
+
+    try{
+      if(typeof window.createSessionForGame === 'function' && (!window.activeSession || !window.activeSession.id)){
+        window.createSessionForGame(game);
+      }
+    }catch(e){}
+    try{
+      window.activeSession.game = game;
+      window.activeSession.gameName = game;
+      window.activeSession.gameId = gameIdFromName(game);
+      if(!window.activeSession.setup) window.activeSession.setup = {};
+      window.activeSession.setup.count = count;
+      window.activeSession.setup.emails = emails;
+      window.activeSession.setup.players = emails;
+    }catch(e){}
+
+    var gid = gameIdFromName(game);
+    if(gid === 'killer' && typeof window.initKiller === 'function'){
+      try{ window.initKiller(); }catch(e){}
+      safeShow('game_screen');
+      return;
+    }
+    if(gid === 'cricket' && typeof window.initCricket === 'function'){
+      try{ window.initCricket(); }catch(e){}
+      safeShow('game_screen');
+      return;
+    }
+    if(typeof window.startGameFromSession === 'function'){
+      try{ window.startGameFromSession(); return; }catch(e){}
+    }
+    safeShow('game_screen');
+  }
+
+  function wireGlobalClicks(){
+    if(document.body.dataset.ng2011Clicks) return;
+    document.body.dataset.ng2011Clicks = '1';
+    document.addEventListener('click', function(e){
+      var enterGame = e.target && e.target.closest && e.target.closest('button[data-action="enter_game"],[data-action="enter_game"]');
+      if(enterGame){
+        e.preventDefault(); e.stopPropagation();
+        if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+        openSetupForGame(enterGame.getAttribute('data-value') || enterGame.getAttribute('data-game') || enterGame.textContent.trim());
+        return false;
+      }
+      var id = e.target && e.target.id;
+      if(id === 'setupStartGameBtn'){
+        e.preventDefault(); e.stopPropagation();
+        if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+        startSelectedGame();
+        return false;
+      }
+      if(id === 'setupHomeBtn' || id === 'setupCancelBtn'){
+        e.preventDefault(); e.stopPropagation();
+        safeShow('players');
+        return false;
+      }
+      if(id === 'waitingBackBtn' || id === 'ng01BackBtn'){
+        e.preventDefault(); e.stopPropagation();
+        safeShow('setup');
+        return false;
+      }
+      if(id === 'leaderboardBtn'){
+        e.preventDefault(); e.stopPropagation();
+        safeShow('leaderboard');
+        return false;
+      }
+    }, true);
+  }
+
+  function wrapShowFunctions(){
+    if(typeof window.show === 'function' && !window.__ng2011_orig_show){
+      window.__ng2011_orig_show = window.show;
+      window.show = function(id){
+        var out = window.__ng2011_orig_show.apply(this, arguments);
+        setTimeout(function(){ replayPanels(byId(id) || activeScreen()); }, 40);
+        setTimeout(bindSetupControls, 60);
+        return out;
+      };
+    }
+    ['showScreen','ngShow'].forEach(function(name){
+      if(typeof window[name] === 'function' && !window['__ng2011_orig_'+name]){
+        window['__ng2011_orig_'+name] = window[name];
+        window[name] = function(id){
+          var out = window['__ng2011_orig_'+name].apply(this, arguments);
+          setTimeout(function(){ replayPanels(byId(id) || activeScreen()); }, 40);
+          setTimeout(bindSetupControls, 60);
+          return out;
+        };
+      }
+    });
+  }
+
+  function install(){
+    visibleVersionSync();
+    wrapShowFunctions();
+    wireGlobalClicks();
+    bindSetupControls();
+    setTimeout(function(){ replayPanels(activeScreen()); }, 120);
+  }
+
+  document.addEventListener('DOMContentLoaded', install);
+  window.addEventListener('load', install);
+  setTimeout(install, 400);
+
+  var mo = new MutationObserver(function(){
+    visibleVersionSync();
+    bindSetupControls();
+  });
+  document.addEventListener('DOMContentLoaded', function(){
+    mo.observe(document.documentElement, {subtree:true, childList:true, attributes:true, attributeFilter:['class','style']});
+  });
 })();
 </script>
 
